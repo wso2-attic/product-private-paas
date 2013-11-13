@@ -27,6 +27,7 @@
 		<version>3.0.0-incubating</version>
 	</parent>
 
+    <version>1.0.0</version>
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>org.wso2.private.paas.adc.mgt</artifactId>
 	<packaging>bundle</packaging>
@@ -44,13 +45,13 @@
 		<dependency>
 			<groupId>org.apache.stratos</groupId>
 			<artifactId>org.apache.stratos.lb.cartridge.autoscaler.service.stub</artifactId>
-			<version>${project.version}</version>
+			<version>${apache.stratos.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>org.apache.stratos</groupId>
 			<artifactId>org.apache.stratos.adc.topology.mgt</artifactId>
-			<version>${project.version}</version>
+			<version>${apache.stratos.version}</version>
 		</dependency>
 
 		<dependency>
@@ -62,7 +63,7 @@
 		<dependency>
 			<groupId>org.apache.stratos</groupId>
 			<artifactId>org.apache.stratos.cartridge.agent.stub</artifactId>
-			<version>${project.version}</version>
+			<version>${apache.stratos.version}</version>
 		</dependency>
 
 		<dependency>
@@ -115,7 +116,7 @@
 						<Bundle-Name>${project.artifactId}</Bundle-Name>
 						<Bundle-Activator>
 							org.apache.stratos.adc.mgt.internal.HostingManagementActivator
-                                                </Bundle-Activator>
+                        </Bundle-Activator>
 						<Private-Package>org.apache.stratos.adc.mgt.internal.*</Private-Package>
 						<Export-Package>
 							org.apache.stratos.adc.mgt.utils*,
@@ -138,4 +139,7 @@
 			</plugin>
 		</plugins>
 	</build>
+    <properties>
+        <apache.stratos.version>3.0.0-incubating</apache.stratos.version>
+    </properties>
 </project>
