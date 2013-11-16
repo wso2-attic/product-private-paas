@@ -64,7 +64,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.apache.stratos.adc.mgt</id>
+                            <id>org.wso2.private.paas.adc.mgt</id>
                             <propertiesFile>../../../../etc/feature.properties</propertiesFile>
                             <includedFeatures>
                                 <includedFeatureDef>org.wso2.private.paas:org.wso2.private.paas.adc.mgt.server.feature:${project.version}</includedFeatureDef>

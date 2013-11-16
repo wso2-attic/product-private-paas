@@ -117,7 +117,7 @@
                             <goal>p2-feature-gen</goal>
                         </goals>
                         <configuration>
-                            <id>org.apache.stratos.adc.mgt.server</id>
+                            <id>org.wso2.private.paas.adc.mgt.server</id>
                             <propertiesFile>../../etc/feature.properties</propertiesFile>
                             <adviceFile>
                                 <properties>
@@ -141,7 +141,4 @@
             </plugin>
         </plugins>
     </build>
-    <properties>
-        <apache.stratos.version>3.0.0-incubating</apache.stratos.version>
-    </properties>
 </project>
