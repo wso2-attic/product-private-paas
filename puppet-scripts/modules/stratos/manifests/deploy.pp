@@ -13,8 +13,10 @@ define stratos::deploy ( $security, $target, $owner, $group, $service ) {
       ignore          => '.svn',
       recurse         => true,
       source          => [
+			  "puppet:///modules/stratos/commons/configs/",
                           "puppet:///modules/stratos/${service}/configs/",
-                          "puppet:///modules/stratos/${service}/patches/"]
+                          "puppet:///modules/stratos/${service}/patches/"
+			]
   }
 
   exec {
