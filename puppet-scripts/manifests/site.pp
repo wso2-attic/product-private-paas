@@ -68,3 +68,15 @@ node /node004.*/ inherits base {
         target           => '/mnt',
     }
 }
+
+
+node /node005.*/ inherits base {
+
+    class {'stratos::elb':
+        version          => '3.0.0-incubating',
+        maintenance_mode => 'refresh',
+        auto_scaler      => 'false',
+        auto_failover    => false,
+        target           => '/mnt',
+    }
+}
