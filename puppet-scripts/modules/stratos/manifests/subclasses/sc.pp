@@ -51,6 +51,9 @@ class stratos::sc (
 
   clean {
     $deployment_code:
+      service  => $service_code,
+      version   => $carbon_version,
+      local_dir => $local_package_dir,
       mode   => $maintenance_mode,
       target => $carbon_home,
   }
@@ -68,11 +71,11 @@ class stratos::sc (
   }
 
   deploy { $deployment_code:
+    service  => $service_code,
     security => true,
     owner    => $owner,
     group    => $group,
     target   => $carbon_home,
-    service  => $service_code,
     require  => Initialize[$deployment_code],
   }
 

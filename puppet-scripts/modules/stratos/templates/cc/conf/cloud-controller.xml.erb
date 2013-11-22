@@ -51,7 +51,7 @@
                 is not necessary [0..1]. But you can use this section to avoid specifying 
                 same property over and over again. -->
 	<iaasProviders>
-	<%- if @ec2_provider_enabled == 'true' -%>
+	<%- if @iaas_provider == 'ec2' -%>
         	<iaasProvider type="ec2" name="ec2 specific details">
                 	<className>org.apache.stratos.cloud.controller.iaases.AWSEC2Iaas</className>
                         <provider>aws-ec2</provider>
@@ -64,12 +64,12 @@
                         <property name="securityGroups" value="<%= @ec2_security_groups %>"/>
                         <property name="instanceType" value="<%= @ec2_instance_type %>"/>
                         <property name="autoAssignIp" value="true" />
-                        <property name="keyPair" value="<%= @ec2_keypair %>"/>
+                        <property name="keyPair" value="<%= @ec2_keypair_name %>"/>
                         <maxInstanceLimit>30</maxInstanceLimit>
                         <imageId><%= @ec2_image_id %></imageId>
                 </iaasProvider>
 	<%- end %>
-	<%- if @openstack_provider_enabled == 'true' -%>
+	<%- if @iaas_provider == 'openstack' -%>
                 <iaasProvider type="openstack" name="openstack specific details">
             		<className>org.apache.stratos.cloud.controller.iaases.OpenstackNovaIaas</className>
                         <provider>openstack-nova</provider>

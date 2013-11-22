@@ -1,6 +1,6 @@
 #
 
-class broker (
+class bam (
   $version            = undef,
   $members            = undef,
   $offset	      = '0',
@@ -13,13 +13,15 @@ class broker (
   $auto_failover      = false,
 ) inherits params {
 
-  $deployment_code    = 'broker'
+  $deployment_code    = 'bam'
   $carbon_version     = $version
-  $service_code       = 'mb'
+  $service_code       = 'bam'
   $carbon_home        = "${target}/wso2${service_code}-${carbon_version}"
   $service_templates  = [
 #			    'conf/axis2/axis2.xml',
 			    'conf/carbon.xml',
+			    'conf/etc/cassandra-component.xml',
+			    'conf/etc/cassandra.yaml',
 #			    'conf/log4j.properties',
 #			    'conf/datasources/master-datasources.xml',
 #			    'conf/etc/logging-config.xml',

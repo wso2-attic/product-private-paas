@@ -3,7 +3,7 @@
 #
 #
 
-define stratos::clean ( $service, $local_dir, $version , $mode, $target ) {
+define bam::clean ( $mode, $target ) {
   if $mode == 'refresh' {
     exec{
       "Remove_lock_file_${name}":
@@ -26,7 +26,7 @@ define stratos::clean ( $service, $local_dir, $version , $mode, $target ) {
   elsif $mode == 'zero' {
     exec { "Stop_process_remove_CARBON_HOME_and_pack_${name}":
         path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
-        command => "kill -9 `cat ${target}/wso2carbon.pid` ; rm -rf ${target} ; rm -f ${local_dir}/apache-stratos-${service}-${version}.zip";
+        command => "kill -9 `cat ${target}/wso2carbon.pid` ; rm -rf ${target} ; rm -f ${bam::local_package_dir}/wso2${bam::service_code}-${bam::version}.zip";
     }
   }
 }

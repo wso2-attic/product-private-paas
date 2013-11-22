@@ -1,7 +1,7 @@
 127.0.0.1           localhost
-<%= ipaddress %>    local.<%= @domain %>
-<%= ipaddress %>    bind.<%= @domain %>
-<%= ipaddress %>    <%= @fqdn %>
+<%= @ipaddress %>    local.<%= @domain %>
+<%= @ipaddress %>    bind.<%= @domain %>
+<%= @ipaddress %>    <%= @fqdn %>
 
 <%= @puppetmaster_ip %>    puppetmaster.<%= @domain %>
 <%= @downloads_ip %>    downloads.<%= @domain %>

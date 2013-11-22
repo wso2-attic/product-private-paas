@@ -9,15 +9,17 @@
 #
 #
 
-class broker::params {
+class bam::params {
 
 #    $domain               = 'example.com'
 #    $package_repo         = "http://downloads.${domain}"
 #    $depsync_svn_repo     = "https://svn.${domain}/wso2/repo/"
 #    $local_package_dir    = '/mnt/packs'
+#    $log_path             = '/var/log/apache-stratos'
+#
 #
 ## Service subdomains
-#    $mb_subdomain         = 'mb'
+#    $mb_subdomain         = 'bam'
 #    $management_subdomain = 'management'
 #
 #    $mb_listen_port       = "5677"

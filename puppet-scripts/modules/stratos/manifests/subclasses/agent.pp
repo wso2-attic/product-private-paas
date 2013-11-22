@@ -1,6 +1,6 @@
-# Class: cc
+# Class: agent
 #
-# This class installs Apache Stratos ELB
+# This class installs Apache Stratos SC
 #
 # Parameters:
 #   version          => '2.1.0',
@@ -12,44 +12,42 @@
 #   group            => 'root',
 #   target           => '/mnt',
 #   stage            => deploy,
-#   members          => {'ELB2.example.com' =>4010 };
+#   members          => {'agent2.example.com' =>4010 };
 #
 # Actions:
-#   - Install Apache Stratos ELB
+#   - Install Apache Stratos SC
 #
 #
 
-class stratos::elb (
+class stratos::agent (
   $version            = undef,
   $members            = undef,
   $maintenance_mode   = true,
   $cloud              = false,
+  $owner              = 'root',
+  $group              = 'root',
   $target             = '/mnt',
   $auto_scaler        = false,
   $auto_failover      = false,
 ) inherits params {
 
-  $owner              = 'root'
-  $group              = 'root'
-
-  $deployment_code    = 'elb'
+  $deployment_code    = 'agent'
   $carbon_version     = $version
-  $service_code       = 'elb'
+  $service_code       = 'agent'
   $carbon_home        = "${target}/apache-stratos-${service_code}-${carbon_version}"
   $service_templates  = [
-			    'conf/axis2/axis2.xml',
-#			    'conf/carbon.xml',
-			    'conf/etc/jmx.xml',
-			    'conf/loadbalancer.conf',
-			    'conf/datasources/master-datasources.xml',
+			    'conf/agent.properties',
+			    'conf/carbon.xml',
 #			    'conf/cartridge-config.properties',
 #			    'conf/log4j.properties',
+#			    'conf/datasources/stratos-datasources.xml',
+#			    'conf/datasources/master-datasources.xml',
 #			    'conf/etc/logging-config.xml',
   			]
 
   $commons_templates  = [
   			]
-  tag ('elb')
+  tag ('agent')
 
   clean {
     $deployment_code:
@@ -103,6 +101,18 @@ class stratos::elb (
 #      require    => Deploy[$deployment_code];
 #  }
 
+  exec {
+    'remove_registrants':
+      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
+      command => "rm -rf ${carbon_home}/registrants",
+      require => [
+		Initialize[$deployment_code],
+                Deploy[$deployment_code],
+                Push_templates[$service_templates],
+#                Push_stratos_sh['bin/stratos.sh'],
+		]; 
+  }
+
   start {
     $deployment_code:
       owner   => $owner,
@@ -110,7 +120,8 @@ class stratos::elb (
       require => [  Initialize[$deployment_code],
                     Deploy[$deployment_code],
                     Push_templates[$service_templates],
-        #            Push_stratos_sh['bin/stratos.sh'], 
+		    Exec['remove_registrants']
+#                    Push_stratos_sh['bin/stratos.sh'], 
 		 ],
         }
 }

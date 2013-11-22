@@ -29,4 +29,9 @@ define broker::deploy ( $security, $target, $owner, $group, $service ) {
       command => "rm -rf /tmp/${broker::deployment_code}",
       require => Exec["Copy_${name}_modules_to_carbon_home"];
   }
+
+  notify { 'deploy_${name}':
+	message => "temp is : /tmp/${broker::deployment_code}",
+	
+  }
 }
