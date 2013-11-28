@@ -18,6 +18,7 @@ class gitblit (
   $service_code       = 'gitblit'
   $carbon_home        = "${target}/${service_code}-${carbon_version}"
   $service_templates  = [
+				"data/gitblit.properties",
 				"gitblit.sh",
 				"gitblit-stop.sh",
   			]

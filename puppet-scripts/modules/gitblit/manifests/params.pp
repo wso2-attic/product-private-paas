@@ -16,7 +16,7 @@ class gitblit::params {
 #    $local_package_dir    = '/mnt/packs'
 #
 #    $gitblit
-    $gitblit_http_port	= 8280
-    $gitblit_https_port = 8443
+    $gitblit_http_port	= "8280"
+    $gitblit_https_port = "8443"
 }
 
