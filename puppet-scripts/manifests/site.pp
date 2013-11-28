@@ -254,3 +254,15 @@ node /node007.*/ inherits base {
     }
     
 }
+
+node /node010.*/ inherits base {
+
+    class { 'gitblit':
+        version            => '1.3.2',
+        maintenance_mode   => 'refresh',
+        owner              => 'root',
+        group              => 'root',
+        target             => '/mnt',
+    }
+    
+}
