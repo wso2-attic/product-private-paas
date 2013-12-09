@@ -20,17 +20,17 @@
 #
 
 # Configuration properties
-autoscalerService.url=https://<%= @cc_hostname %>:<%= @cc_https_port %>/services/CloudControllerService/
+autoscalerService.url=https://<%= @cc_ip %>:<%= @cc_https_port %>/services/CloudControllerService/
 autoscaler.time.out=190000
-cartridge.agent.epr=https://<%= @agent_hostname %>:<%= @agent_https_port %>/services/CartridgeAgentService
+cartridge.agent.epr=https://<%= @agent_ip %>:<%= @agent_https_port %>/services/CartridgeAgentService
 #cloud.controller.ip=172.17.0.1
 git.host.name=git.<%= @domain %>
 git.host.ip=<%= @git_ip %>
-git.repo.notification.url=https://<%= @sc_hostname %>:<%= @sc_https_port %>/services/RepoNotificationService/
-identity.server.url=https://<%= @sc_hostname %>:<%= @sc_https_port %>/services/RepoNotificationService/
-repository.info.epr=https://<%= @sc_hostname %>:<%= @sc_https_port %>/services/RepositoryInformationService
+git.repo.notification.url=https://<%= @sc_ip %>:<%= @sc_https_port %>/services/RepoNotificationService/
+identity.server.url=https://<%= @sc_ip %>:<%= @sc_https_port %>/services/RepoNotificationService/
+repository.info.epr=https://<%= @sc_ip %>:<%= @sc_https_port %>/services/RepositoryInformationService
 
-adc.jdbc.url=jdbc:mysql://<%= @mysql_server %>:<%= @mysql_port %>/<%= @stratos_foundation_db %>
+adc.jdbc.url=jdbc:mysql://<%= @mysql_ip %>:<%= @mysql_port %>/<%= @stratos_foundation_db %>
 adc.jdbc.username=<%= @stratos_foundation_db_user %>
 adc.jdbc.password=<%= @stratos_foundation_db_pass  %>
 adc.jdbc.driver=com.mysql.jdbc.Driver
@@ -40,7 +40,7 @@ feature.internalrepo.enabled=false
 feature.multitenant.multiplesubscription.enabled=false
 
 
-mb.server.ip=<%= @mb_hostname %>:<%= @mb_listen_port %>
+mb.server.ip=<%= @mb_ip %>:<%= @mb_listen_port %>
 
 append.script=<%= @carbon_home %>/scripts/add_entry_zone_file.sh
 remove.script=<%= @carbon_home %>/scripts/remove_entry_zone_file.sh

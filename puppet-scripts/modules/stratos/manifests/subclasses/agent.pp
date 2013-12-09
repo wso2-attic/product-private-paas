@@ -21,6 +21,7 @@
 
 class stratos::agent (
   $version            = undef,
+  $offset	      = '0',
   $members            = undef,
   $maintenance_mode   = true,
   $cloud              = false,
@@ -36,8 +37,8 @@ class stratos::agent (
   $service_code       = 'agent'
   $carbon_home        = "${target}/apache-stratos-${service_code}-${carbon_version}"
   $service_templates  = [
-			    'conf/agent.properties',
 			    'conf/carbon.xml',
+			    'conf/agent.properties',
 #			    'conf/cartridge-config.properties',
 #			    'conf/log4j.properties',
 #			    'conf/datasources/stratos-datasources.xml',
@@ -79,17 +80,17 @@ class stratos::agent (
     require  => Initialize[$deployment_code],
   }
 
-  push_templates {
+  push_agent_templates {
     $service_templates:
       target     => $carbon_home,
       directory  => "stratos",
-      service   => $service_code,
+      service  => $service_code,
       require    => Deploy[$deployment_code];
 
     $commons_templates:
       target     => $carbon_home,
       directory  => "stratos",
-      service   => $service_code,
+      service  => $service_code,
       require    => Deploy[$deployment_code];
   }
   
@@ -108,7 +109,7 @@ class stratos::agent (
       require => [
 		Initialize[$deployment_code],
                 Deploy[$deployment_code],
-                Push_templates[$service_templates],
+                Push_agent_templates[$service_templates],
 #                Push_stratos_sh['bin/stratos.sh'],
 		]; 
   }
@@ -119,7 +120,7 @@ class stratos::agent (
       target  => $carbon_home,
       require => [  Initialize[$deployment_code],
                     Deploy[$deployment_code],
-                    Push_templates[$service_templates],
+                    Push_agent_templates[$service_templates],
 		    Exec['remove_registrants']
 #                    Push_stratos_sh['bin/stratos.sh'], 
 		 ],

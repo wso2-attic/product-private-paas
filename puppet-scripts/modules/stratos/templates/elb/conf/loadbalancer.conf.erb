@@ -28,7 +28,7 @@ loadbalancer {
     # autoscaling decision making task
     autoscaler_task org.apache.stratos.mediator.autoscale.lbautoscale.task.ServiceRequestsInFlightAutoscaler;
     # End point reference of the Autoscaler Service
-    autoscaler_service_epr  https://<%= @cc_hostname %>:<%= @cc_port %>/services/CloudControllerService;
+    autoscaler_service_epr  https://<%= @cc_hostname %>:<%= @cc_https_port %>/services/CloudControllerService;
     # interval between two task executions in milliseconds 
     autoscaler_task_interval 60000;
     # after an instance booted up, task will wait maximum till this much of time and let the server started up

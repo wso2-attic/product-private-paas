@@ -21,6 +21,7 @@
 
 class stratos::elb (
   $version            = undef,
+  $offset	      = '0',
   $members            = undef,
   $maintenance_mode   = true,
   $cloud              = false,
@@ -81,7 +82,7 @@ class stratos::elb (
     require  => Initialize[$deployment_code],
   }
 
-  push_templates {
+  push_elb_templates {
     $service_templates:
       target     => $carbon_home,
       directory  => "stratos",
@@ -109,7 +110,7 @@ class stratos::elb (
       target  => $carbon_home,
       require => [  Initialize[$deployment_code],
                     Deploy[$deployment_code],
-                    Push_templates[$service_templates],
+                    Push_elb_templates[$service_templates],
         #            Push_stratos_sh['bin/stratos.sh'], 
 		 ],
         }

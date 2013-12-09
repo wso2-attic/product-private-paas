@@ -66,7 +66,7 @@
                         <property name="autoAssignIp" value="true" />
                         <property name="keyPair" value="<%= @ec2_keypair_name %>"/>
                         <maxInstanceLimit>30</maxInstanceLimit>
-                        <imageId><%= @ec2_image_id %></imageId>
+                        <!-- imageId><%= @ec2_image_id %></imageId -->
                 </iaasProvider>
 	<%- end %>
 	<%- if @iaas_provider == 'openstack' -%>
@@ -75,15 +75,16 @@
                         <provider>openstack-nova</provider>
                         <identity svns:secretAlias="cloud.controller.openstack.identity"><%= @openstack_identity %></identity>
                         <credential svns:secretAlias="cloud.controller.openstack.credential"><%= @openstack_credential %></credential>
-                        <property name="jclouds.endpoint" value="<%= @openstack_endpoint %>" />
+                        <property name="jclouds.endpoint" value="<%= @openstack_jclouds_endpoint %>" />
             		<property name="jclouds.openstack-nova.auto-create-floating-ips" value="false"/>
                         <property name="jclouds.api-version" value="2.0/" />
                         <scaleUpOrder><%= @openstack_scaleup_order %></scaleUpOrder>
                         <scaleDownOrder><%= @openstack_scaledown_order %></scaleDownOrder>
+			<property name="autoAssignIp" value="true"/>
                         <property name="X" value="x" />
                         <property name="Y" value="y" />
 			<maxInstanceLimit>30</maxInstanceLimit>
-                        <imageId><%= @openstack_image_id %></imageId>
+                        <!-- imageId><%= @openstack_image_id %></imageId -->
         	</iaasProvider>
 	<%- end %>
         </iaasProviders>

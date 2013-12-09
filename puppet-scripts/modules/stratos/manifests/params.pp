@@ -131,7 +131,7 @@ class stratos::params {
 #    $openstack_credential		="password" # Openstack login password
 #    $openstack_tenant			="stratos" # openstack project name
 #    $openstack_project_id 		=$openstack_tenant
-#    $openstack_jclouds_endpoint		="http://hostname:5000/v2.0"
+#    $openstack_jclouds_endpoint		="http://hostname:5000/"
 #    $openstack_scaleup_order		=2
 #    $openstack_scaledown_order		=3
 #    $openstack_keypair_name		="mykey"

@@ -21,6 +21,7 @@
 
 class stratos::sc (
   $version            = undef,
+  $offset	      = '0',
   $members            = undef,
   $maintenance_mode   = true,
   $cloud              = false,
@@ -79,7 +80,7 @@ class stratos::sc (
     require  => Initialize[$deployment_code],
   }
 
-  push_templates {
+  push_sc_templates {
     $service_templates:
       target     => $carbon_home,
       directory  => "stratos",
@@ -107,7 +108,7 @@ class stratos::sc (
       target  => $carbon_home,
       require => [  Initialize[$deployment_code],
                     Deploy[$deployment_code],
-                    Push_templates[$service_templates],
+                    Push_sc_templates[$service_templates],
                     Push_stratos_sh['bin/stratos.sh'], 
 		 ],
         }

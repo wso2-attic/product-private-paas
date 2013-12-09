@@ -21,6 +21,7 @@
 
 class stratos::cc (
   $version            = undef,
+  $offset	      = "0",
   $members            = undef,
   $maintenance_mode   = true,
   $cloud              = false,
@@ -101,23 +102,23 @@ class stratos::cc (
     require  => Initialize[$deployment_code],
   }
 
-  push_templates {
+  push_cc_templates {
     $service_templates:
       target     => $carbon_home,
       directory  => "stratos",
-      service   => $service_code,
+      service  => $service_code,
       require    => Deploy[$deployment_code];
 
     $commons_templates:
       target     => $carbon_home,
       directory  => "stratos",
-      service   => $service_code,
+      service  => $service_code,
       require    => Deploy[$deployment_code];
 
     $cartridge_templates:
       target     => $carbon_home,
       directory  => "stratos",
-      service   => $service_code,
+      service  => $service_code,
       require    => Deploy[$deployment_code];
 
   }
@@ -136,7 +137,7 @@ class stratos::cc (
       target  => $carbon_home,
       require => [  Initialize[$deployment_code],
                     Deploy[$deployment_code],
-                    Push_templates[$service_templates],
+                    Push_cc_templates[$service_templates],
         #            Push_stratos_sh['bin/stratos.sh'], 
 		 ],
         }

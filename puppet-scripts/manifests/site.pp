@@ -7,24 +7,32 @@ node configs {
 
     $domain               = 'example.com'
     $package_repo         = "http://downloads.${domain}"
-    $depsync_svn_repo     = "https://svn.${domain}/wso2/repo/"
+#    $depsync_svn_repo     = "https://svn.${domain}/wso2/repo/"
     $local_package_dir    = '/mnt/packs'
     $log_path             = '/var/log/apache-stratos'
 
 # IP addresses 
 
-    $puppetmaster_ip = "10.33.14.2"
-    $downloads_ip    = "10.33.14.2"
-    $svn_ip          = "10.33.14.2"
-    $sc_ip           = "10.33.14.16"
-    $cc_ip           = "10.33.14.27"
-    $agent_ip        = "10.33.14.22"
-    $elb_ip          = "10.33.14.20"
-    $mb_ip           = "10.33.14.11"
-    $git_ip          = "10.33.14.27"
-    $cassandra_ip    = "10.33.14.25"
-    $bam_ip          = "10.33.14.23"
-    $mysql_ip        = "10.33.14.28"
+    $puppetmaster_ip = "10.33.14.20"
+    $downloads_ip    = "10.33.14.21"
+#    $svn_ip          = "10.33.14.2"
+    $sc_ip           = "10.33.14.11"
+    $cc_ip           = "10.33.14.22"
+    $agent_ip        = "10.33.14.25"
+    $elb_ip          = "10.33.14.23"
+    $mb_ip           = "10.33.14.21"
+    $git_ip          = "10.33.14.20"
+    $cassandra_ip    = "127.0.0.1"
+    $bam_ip          = "127.0.0.1"
+    $mysql_ip        = "10.33.14.20"
+
+# Port offsets
+    $elb_port_offset	=0
+    $cc_port_offset	=1
+    $sc_port_offset	=2
+    $bam_port_offset	=3
+    $agent_port_offset	=4
+    $mb_port_offset     =5
 
 # MySQL server configuration details
     $mysql_server         = "mysql.${domain}"
@@ -40,7 +48,7 @@ node configs {
 # Database details
     $registry_user        = 'registry'
     $registry_password    = 'registry'
-    $registry_database    = 'governance'
+    $registry_database    = 'registry'
 
     $userstore_user       = 'userstore'
     $userstore_password   = 'userstore'
@@ -54,7 +62,6 @@ node configs {
     $elb_hostname              ="elb.${domain}"
     $enable_autoscaler         =true
     $enable_embedded_autoscaler=false
-    $elb_port_offset           =0
     $elb_port                  ="9443"
 
 # MB configuration
@@ -68,15 +75,13 @@ node configs {
     $stratos_foundation_db_pass="scdbpassword"
     $sc_https_port="9445"
     $sc_http_port="9765"
-    $sc_port_offset=2
     $sc_hostname="sc.${domain}"
     $cassandra_port="9163"
-    $keypair_path="/home/ubuntu/sshkey.pem"
+    $keypair_path="/home/ubuntu/stratos.pem"
 
 
 # CC configuration
     $cc_https_port="9444"
-    $cc_port_offset=1
     $cc_hostname="cc.${domain}"
     $mb_cassandra_host="cassandra.${domain}"
     $mb_cassandra_port="9161"
@@ -86,11 +91,9 @@ node configs {
     $agent_hostname="agent.${domain}"
     $agent_http_port="9767"
     $agent_https_port="9447"
-    $agent_port_offset=4
 
 
 # BAM configuration
-    $bam_port_offset=3
     $bam_port="9446"
     $bam_receiver_port="7614"
     $bam_receiver_secured_port="7714"
@@ -124,19 +127,20 @@ node configs {
     $openstack_identity			="stratos:stratos" # Openstack project name:Openstack login user
     $openstack_credential		="password" # Openstack login password
     $openstack_tenant			="stratos" # openstack project name
-    $openstack_project_id 		=$openstack_tenant
-    $openstack_jclouds_endpoint		="http://hostname:5000/v2.0"
+    $openstack_project_id 		="${openstack_tenant}"
+    $openstack_jclouds_endpoint		="http://192.168.16.252:5000/v2.0"
+    $openstack_jclouds_endpoint_version ='2.0'
     $openstack_scaleup_order		=2
     $openstack_scaledown_order		=3
-    $openstack_keypair_name		="mykey"
+    $openstack_keypair_name		="stratos"
     $openstack_image_id			="RegionOne/" #No need to change this as of now
     $nova_region			="RegionOne"
-    $openstack_instance_type_tiny	="RegionOne\/1"
-    $openstack_instance_type_small	="RegionOne\/2"
-    $openstack_security_groups		="security-groups"
-    $openstack_php_cartridge_image_id	="omi-3e753d6c"
-    $openstack_mysql_cartridge_image_id	="omi-3e753d6c"
-    $openstack_tomcat_cartridge_image_id="omi-3e753d6c"
+    $openstack_instance_type_tiny	="RegionOne/1"
+    $openstack_instance_type_small	="RegionOne/2"
+    $openstack_security_groups		="default"
+    $openstack_php_cartridge_image_id	="858b2117-ee54-42cc-ab0b-9d0f176729f0"
+    $openstack_mysql_cartridge_image_id	="9e104e9d-2b0a-4b48-b72f-35a65e92ac7d"
+    $openstack_tomcat_cartridge_image_id="4c04d085-2252-4478-af5a-a7439e69a6c6"
 
 # Cassandra configuration
     $cassandra_port1=9160
@@ -149,11 +153,12 @@ node configs {
     $elb_cluster_port="4000"
 
 # Git repo cofiguration. 
-    $git_user="git"
-    $email="git@${domain}"
-    $git_hostname="git.${domain}"
-
-
+    $git_user		= "git"
+    $email		= "git@${domain}"
+    $git_hostname	= "git.${domain}"
+    $gitblit_http_port 	= "10080"
+    $gitblit_https_port = "10443"
+    $gitblit_repo_url   = "http://${git_hostname}:${gitblit_http_port}/git/stratosrepo.git"
 
 }
 
@@ -172,17 +177,27 @@ node base inherits configs{
 	owner   => root,
         group   => root,
         mode    => 775,
-	content => "PATH=\"/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/opt/java/bin\" 
-JAVA_HOME=\"/opt/java\""
+	content => 'PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/opt/java/bin
+JAVA_HOME="/opt/java"'
     }
 }
 
 
-node /node002.*/ inherits base {
+node /puppetmaster.*/ inherits base {
+    class { 'gitblit':
+        version            => '1.3.2',
+        maintenance_mode   => 'refresh',
+        owner              => 'root',
+        group              => 'root',
+        target             => '/mnt',
+    }
+}
 
+node /node002.*/ inherits base {
+# https://github.com/imesh/apache-stratos-tomcat-applications.git
     class { 'broker':
         version            => '2.1.0',
-        offset             => 5,
+        offset             => "${mb_port_offset}",
         maintenance_mode   => 'refresh',
         owner              => 'root',
         group              => 'root',
@@ -195,6 +210,7 @@ node /node003.*/ inherits base {
 
     class {'stratos::sc':
         version          => '3.0.0-incubating',
+        offset           => "${sc_port_offset}",
         maintenance_mode => 'refresh',
         auto_scaler      => 'false',
         auto_failover    => false,
@@ -202,12 +218,14 @@ node /node003.*/ inherits base {
         group            => 'root',
         target           => '/mnt',
     }
+
 }
 
 node /node004.*/ inherits base {
 
     class {'stratos::cc':
         version          => '3.0.0-incubating',
+        offset           => "${cc_port_offset}",
         maintenance_mode => 'refresh',
         auto_scaler      => 'false',
         auto_failover    => false,
@@ -215,13 +233,14 @@ node /node004.*/ inherits base {
         group            => 'root',
         target           => '/mnt',
     }
-}
 
+}
 
 node /node005.*/ inherits base {
 
     class {'stratos::elb':
         version          => '3.0.0-incubating',
+        offset           => "${elb_port_offset}",
         maintenance_mode => 'refresh',
         auto_scaler      => 'false',
         auto_failover    => false,
@@ -233,6 +252,7 @@ node /node006.*/ inherits base {
 
     class {'stratos::agent':
         version          => '3.0.0-incubating',
+        offset           => "${agent_port_offset}",
         maintenance_mode => 'refresh',
         auto_scaler      => 'false',
         auto_failover    => false,
@@ -240,29 +260,19 @@ node /node006.*/ inherits base {
         group            => 'root',
         target           => '/mnt',
     }
+
 }
 
-node /node007.*/ inherits base {
-
-    class { 'bam':
-        version            => '2.3.0',
-        offset             => 0,
-        maintenance_mode   => 'refresh',
-        owner              => 'root',
-        group              => 'root',
-        target             => '/mnt',
-    }
-    
-}
-
-node /node010.*/ inherits base {
-
-    class { 'gitblit':
-        version            => '1.3.2',
-        maintenance_mode   => 'refresh',
-        owner              => 'root',
-        group              => 'root',
-        target             => '/mnt',
-    }
-    
-}
+#node /node007.*/ inherits base {
+#
+#    class { 'bam':
+#        version            => '2.3.0',
+#        offset           => "${bam_port_offset}",
+#        maintenance_mode   => 'refresh',
+#        owner              => 'root',
+#        group              => 'root',
+#        target             => '/mnt',
+#    }
+#    
+#}
+#
