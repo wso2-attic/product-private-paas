@@ -45,14 +45,40 @@ Complete puppet manifest with stratos puppet module.
 
     # echo '*.<your domain>' >/etc/puppet/autosign.conf
 
-5.) Download mysql java connector (mysql-connector-java-x.x.xx-bin.jar) and copy to this path :
+7.) Download mysql java connector (mysql-connector-java-x.x.xx-bin.jar) and copy to this path :
 
     # cp mysql-connector-* /etc/puppet/modules/stratos/files/commons/configs/repository/components/lib/
 
-6.) Restart puppetmaster
+8.) Restart puppetmaster
 
     # service puppetmaster restart
 
+9.) Install apache webserver
+
+    # apt-get install -y apache2
+    
+10.) Download packs into apache webservers '/var/www/' or '/var/www/html/' directory.
+
+    Required packages.
+    + apache-stratos-agent-3.0.0-incubating.zip
+    + apache-stratos-cc-3.0.0-incubating.zip
+    + apache-stratos-cli-3.0.0-incubating.zip
+    + apache-stratos-elb-3.0.0-incubating.zip
+    + apache-stratos-sc-3.0.0-incubating.zip
+        via http://mirror.symnds.com/software/Apache/incubator/stratos/3.0.0-incubating/
+        
+    + jdk-XXXX-linux-x64.tar.gz
+        via http://www.oracle.com/technetwork/java/javase/downloads/index.html
+        
+    + apache-maven-3.0.5-bin.tar.gz
+        via http://maven.apache.org/download.cgi
+     
+    + wso2mb.zip
+        via http://wso2.com/products/message-broker/
+        
+    + mysql-connector-java-x.x.xx-bin.jar
+        via http://dev.mysql.com/downloads/connector/j/
+        
 
 ### On MySQL server
 
