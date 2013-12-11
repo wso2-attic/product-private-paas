@@ -185,7 +185,7 @@ Complete puppet manifest with stratos puppet module.
 
 6.) Add puppet servce URL in '/etc/puppet/puppet.conf' file
 
-    # sed -i '2i server=puppetmaster.example.com' /etc/puppet/puppet.conf
+    # sed -i '2i server=puppetmaster.<your domain>' /etc/puppet/puppet.conf
 
 7.) Update parameter and node settings on puppetmasters 'site.pp' according to your deployment.
 
