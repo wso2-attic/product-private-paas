@@ -6,9 +6,40 @@ Complete puppet manifest with stratos puppet module.
 * Note :-
 
     + This only support Debian based distributions with Puppet 3.X only.
+        
+        Use puppetlabs repositories to install puppet packages: 
+        http://docs.puppetlabs.com/guides/puppetlabs_package_repositories.html
     
     + Run all as __root__.
+    
+    + Require minimal two 8GB RAM instances or four 4GB RAM Instances to install Apache Stratos packages.
+    
+    + Create a Apache Stratos cartridge and upload it to your IaaS: 
+        https://cwiki.apache.org/confluence/display/STRATOS/Creating+a+Cartridge
 
+
+    ```
+                                                                                -------------------       
+                                                                               |                   |
+                    -------------------     -------------------             -------------------    |
+                   |                   |   |                   |           |                   |   |
+                   |   HTTPD           |   |   ELB             |           |                   |   |
+                   |                   |   |                   |           |   Your            |   |
+                   |   PuppetMaster    |   |   CC              |           |   System          |   |
+                   |                   |   |                   |           |                   |   |
+                   |   SC              |   |   Agent           |           |                   |   |
+                   |                   |   |                   |           |                   |   |
+                   |   MB              |   |   MySQL           |           |                   |   |
+                   |                   |   |                   |           |                   |   |
+                   |   GitBlit         |   |                   |           |                   |   |
+                -------------------------------------------------------------------------------------------
+               |                                                   | Your cartridge    |                   |
+               |   OpenStack / EC2                                 |                   |                   |
+               |                                                    -------------------                    |
+                -------------------------------------------------------------------------------------------
+
+
+    ```
 
 ### On puppet master node 
 
