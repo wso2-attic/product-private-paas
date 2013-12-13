@@ -193,7 +193,13 @@ Complete puppet manifest with stratos puppet module.
 
 8.) Run puppet agent on each host.
 
-    Check for the MySQL connectivity.
+    Run this command once in all hosts. It will update '/etc/hosts' files and chech for java.
      
-    # puppet agent -vt
+    # puppet agent -vt --tags wso2base
+     
+    Check for the MySQL connectivity and all hosts must be able to wget packs from the apache2 webserver. 
+    Then run the following command in this orger:
+    gitblit, mb, cc, elb, agent and sc
+     
+    # puppet agent -vt --tags <service code eg: sc>
 
