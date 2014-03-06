@@ -277,6 +277,10 @@ if [[ $as_needed =~ ^[Yy]$ ]]
 then
     echo -e "Deploying a Aplication Server (AS) cartridge at $resource_path/resources/json/appserver-cart.json"
     curl -X POST -H "Content-Type: application/json" -d @'resources/json/appserver-cart.json' -k  -u admin:admin "https://$machine_ip:9445/stratos/admin/cartridge/definition"
+
+    echo -e "Deploying a Application Service service"
+    curl -X POST -H "Content-Type: application/json" -d @'resources/json/appserver-service-deployment.json' -k -u admin:admin https://$machine_ip:9445/stratos/admin/service/definition
+#
 fi
 
 #echo -e "Subscribing to a PHP cartridge at $resource_path/resources/json/subscibe.json"
