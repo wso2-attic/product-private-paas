@@ -1,8 +1,8 @@
 { "serviceDefinitionBean": {
-      "serviceName": "appserverdev",
-      "cartridgeType": "appserverdev",
-      "deploymentPolicyName": "isuruh-ec2",
-      "autoscalingPolicyName": "economyPolicy",
+      "serviceName": "appserver",
+      "cartridgeType": "appserver",
+      "deploymentPolicyName": "deployp",
+      "autoscalingPolicyName": "economy",
       "clusterDomain": "appserverdev.dev.domain",
       "clusterSubDomain": "subdomain2",
       "tenantRange": "*"

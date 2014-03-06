@@ -31,10 +31,6 @@
         {
              "name": "instanceType",
              "value": "m1.medium"
-            },
-            {
-                "name": "keyPair",
-                "value": "stratos-4-m5"
             }
        ]
          }

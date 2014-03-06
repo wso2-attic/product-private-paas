@@ -1,7 +1,7 @@
 { "cartridgeDefinitionBean": {
-      "type": "appserverdev",
+      "type": "appserver",
       "provider": "wso2",
-      "host": "appserverdev.wso2.com",
+      "host": "appserver.wso2.com",
       "displayName": "AppServer",
       "description": "AppServer Cartridge",
       "version": "5.2.0",

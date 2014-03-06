@@ -14,7 +14,22 @@ echo "stratos path $stratos_install_path"
 echo "conf file $setup_path/conf/setup.conf"
 
 #backing up the conf file
-cp -f "$setup_path/conf/setup.conf" "$setup_path/conf/setup.conf.orig"
+# cp -f "$setup_path/conf/setup.conf" "$setup_path/conf/setup.conf.orig"
+
+
+
+backup_file(){
+    if [[  -f "$1.orig" ]];
+    then
+        echo "Restoring from the Original template file $1"
+        cp -f "$1.orig" "$1"
+    else
+        echo -e "Creating a backof of the file $1"
+        cp -f "$1" "$1.orig"
+    fi
+}
+
+backup_file $setup_path/conf/setup.conf
 
 replace_setup_conf(){
     echo "Setting value $2 for property $1 as $2"
@@ -206,7 +221,9 @@ create_registry_database "$registry_db"
 as_config_path="config/as"
 esb_config_path="config/esb"
 
-cp -f "/etc/puppet/manifests/nodes.pp" "/etc/puppet/manifests/nodes.pp.orig"
+
+backup_file "/etc/puppet/manifests/nodes.pp"
+#cp -f "/etc/puppet/manifests/nodes.pp" "/etc/puppet/manifests/nodes.pp.orig"
 
 replace_in_file "PACKAGE_REPO" "$package_repo" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "MB_IP" "$machine_ip" "/etc/puppet/manifests/nodes.pp"
@@ -222,7 +239,8 @@ replace_in_file "AS_CONFIG_PATH" "$as_config_path" "/etc/puppet/manifests/nodes.
 replace_in_file "ESB_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
 
-cp -f "/etc/puppet/modules/appserver/manifests/params.pp" "/etc/puppet/modules/appserver/manifests/params.pp.orig"
+backup_file "/etc/puppet/modules/appserver/manifests/params.pp"
+# cp -f "/etc/puppet/modules/appserver/manifests/params.pp" "/etc/puppet/modules/appserver/manifests/params.pp.orig"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/appserver/manifests/params.pp"
@@ -230,7 +248,8 @@ replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/appserver/m
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/appserver/manifests/params.pp"
 
-cp -f "/etc/puppet/modules/esb/manifests/params.pp" "/etc/puppet/modules/esb/manifests/params.pp.orig"
+backup_file "/etc/puppet/modules/esb/manifests/params.pp"
+#cp -f "/etc/puppet/modules/esb/manifests/params.pp" "/etc/puppet/modules/esb/manifests/params.pp.orig"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/esb/manifests/params.pp"
@@ -238,7 +257,7 @@ replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/esb/manifes
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/params.pp"
 
-#/bin/bash stratos-installer/setup.sh -p "all"
+/bin/bash stratos-installer/setup.sh -p "all"
 
 # waiting a bit since products become up and running
 sleep 1m 
@@ -254,8 +273,11 @@ curl -X POST -H "Content-Type: application/json" -d @'resources/json/deployment-
 echo -e "Deploying a LB cartridge at $resource_path/resources/json/lb-cart.json"
 curl -X POST -H "Content-Type: application/json" -d @'resources/json/lb-cart.json' -k  -u admin:admin "https://$machine_ip:9445/stratos/admin/cartridge/definition"
 
-echo -e "Deploying a Aplication Server (AS) cartridge at $resource_path/resources/json/appserver-cart.json"
-curl -X POST -H "Content-Type: application/json" -d @'resources/json/appserver-cart.json' -k  -u admin:admin "https://$machine_ip:9445/stratos/admin/cartridge/definition"
+if [[ $as_needed =~ ^[Yy]$ ]]
+then
+    echo -e "Deploying a Aplication Server (AS) cartridge at $resource_path/resources/json/appserver-cart.json"
+    curl -X POST -H "Content-Type: application/json" -d @'resources/json/appserver-cart.json' -k  -u admin:admin "https://$machine_ip:9445/stratos/admin/cartridge/definition"
+fi
 
 #echo -e "Subscribing to a PHP cartridge at $resource_path/resources/json/subscibe.json"
 #curl -X POST -H "Content-Type: application/json" -d @'resources/json/subscibe.json' -k  -u admin:admin "https://$machine_ip:9445/stratos/admin/cartridge/subscribe"
