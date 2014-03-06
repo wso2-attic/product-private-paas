@@ -197,8 +197,9 @@ replace_setup_conf "DB_PASSWORD" "$mysql_password"
 sed  "s/REGION/$region/g" resources/json/p1.json > tmp/p1.json
 
 # Create databases for the governence registry
-registry_db="registry"
-create_registry_database "$registry_db"
+# Using the same userstore to the registry
+registry_db="userstore"
+#create_registry_database "$registry_db"
 
 #if [[ $as_needed =~ ^[Yy]$ ]]
 #then

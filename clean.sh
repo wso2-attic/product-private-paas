@@ -43,7 +43,7 @@ if [[  -f stratos-installer/conf/setup.conf.orig ]]; then
     cp -f stratos-installer/conf/setup.conf.orig stratos-installer/conf/setup.conf
 fi
 
-mysql -u $mysql_user -p$mysql_pass -e "DROP DATABASE IF EXISTS registry;"
+#mysql -u $mysql_user -p$mysql_pass -e "DROP DATABASE IF EXISTS registry;"
 
 cd stratos-installer
 /bin/bash clean.sh $1 $2
