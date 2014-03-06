@@ -29,10 +29,6 @@
             {
              "name": "instanceType",
              "value": "m1.medium"
-            },
-            {
-             "name": "keyPair",
-             "value": "sajith_apache_stratos"
             }
           ]
         }
