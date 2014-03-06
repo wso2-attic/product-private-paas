@@ -1,0 +1,58 @@
+{ "cartridgeDefinitionBean": {
+      "type": "php",
+      "provider": "apache",
+      "host": "isuruh.lk",
+      "displayName": "PHP",
+      "description": "PHP Cartridge",
+      "version": "7",
+      "multiTenant": "false",
+      "portMapping": [
+         {
+            "protocol": "http",
+            "port": "80",
+            "proxyPort": "8280"
+         },
+         {
+            "protocol": "https",
+            "port": "443",
+            "proxyPort": "8243"
+         }
+       ],
+      "deployment": {
+        },
+      "persistence": {
+        "isRequired": true,
+        "volume" : [
+            {
+            "device": "/dev/sdf",
+            "mappingPath": "/home/ubuntu/sdf",
+            "size": "11",
+            "removeOnTermination": "false"
+            },
+            {
+            "device": "/dev/sdg",
+            "mappingPath": "/home/ubuntu/sdg",
+            "size": "11",
+            "removeOnTermination": "false"
+            }
+     ]
+     },
+       "iaasProvider": [
+        {
+          "type": "ec2",
+          "imageId": "ap-southeast-1/ami-16d78044",
+          "maxInstanceLimit": "4",
+          "property": [
+            {
+             "name": "instanceType",
+             "value": "m1.medium"
+            },
+            {
+             "name": "keyPair",
+             "value": "udaras2"
+            }
+          ]
+        }
+      ]
+    }
+ }

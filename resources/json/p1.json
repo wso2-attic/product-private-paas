@@ -1,0 +1,17 @@
+{
+"partition":{
+  	"id": "P1",
+  	"provider": "ec2",
+  	"property": [
+      	{
+        	"name": "REGION",
+        	"value": "ap-southeast-1"
+      	},    
+      {
+        	"name": "zone",
+        	"value": "ap-southeast-1a"
+      	}
+  	]
+   }
+}
+
