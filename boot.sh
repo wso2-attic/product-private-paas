@@ -27,10 +27,6 @@ replace_in_file(){
     sed -i "s@$1@$2@g"  $3
 }
 
-replace_in_file(){
-    echo "Setting value $2 for property $1 as $2 in file $3"
-    sed -i "s@$1@$2@g"  $3
-}
 install_mysql(){
     export DEBIAN_FRONTEND=noninteractive
     sudo apt-get -q -y install mysql-server  --force-yes
