@@ -95,7 +95,7 @@ read -p "Enter host user " host_user
 read -p "Enter Puppet  IP " puppet_ip
 read -p "Enter Puppet  hostname  " puppet_host
 read -p "Enter Puppet  environment  " puppet_env
-read -p "Enter package repository URL  " $package_repo
+read -p "Enter package repository URL  " package_repo
 
 # MySQL
 read -p "Please provide MySQL host? " mysql_host
