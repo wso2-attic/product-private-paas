@@ -125,8 +125,8 @@ else
     echo -e "You selected Amazon EC2 "
     read -p "Enter EC2  identity  " ec2_identity
     read -p "Enter EC2  credentials  " ec2_credentials
-    read -p "Enter EC2  keypair name  " ec2_keypair_name
     read -p "Enter EC2  owner id  " ec2_owner_id
+    read -p "Enter EC2  keypair name  " ec2_keypair_name
     read -p "Enter EC2 availability zone  " ec2_availability_zone
     read -p "Enter EC2  security groups  " ec2_security_groups
 
