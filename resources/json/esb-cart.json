@@ -1,10 +1,10 @@
 { "cartridgeDefinitionBean": {
-      "type": "appserver",
+      "type": "esb",
       "provider": "wso2",
-      "host": "appserver.wso2.com",
-      "displayName": "AppServer",
-      "description": "AppServer Cartridge",
-      "version": "5.2.0",
+      "host": "esb.wso2.com",
+      "displayName": "ESB",
+      "description": "ESB Cartridge",
+      "version": "4.8.1",
       "multiTenant": "true",
       "portMapping": [
          {
