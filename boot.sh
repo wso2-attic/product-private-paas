@@ -104,13 +104,26 @@ read -p "Please provide MySQL username. Default username is root " mysql_uname
 echo  "Please provide MySQL password? "
 read -s mysql_password
 
+list_ec2_regions(){
+    echo -e "   Below are the available regions in Amazon EC2"
+    echo -e "   ap-northeast-1 - Asia Pacific (Tokyo) Region"
+    echo -e "   ap-southeast-1 - Asia Pacific (Singapore) Region"
+    echo -e "   ap-southeast-2 - Asia Pacific (Sydney) Region"
+    echo -e "   eu-west-1 - EU (Ireland) Region"
+    echo -e "   sa-east-1 - South America (Sao Paulo) Region"
+    echo -e "   us-east-1 - US East (Northern Virginia) Region"
+    echo -e "   us-west-1 - US West (Northern California) Region"
+    echo -e "   us-west-2 - US West (Oregon) Region"
+}
 
+}
 read -p "Enter your IAAS. EC2 and Openstack are the currently supported IAASs. Enter ec2 for EC2 and os for OpenStack. Default is EC2  " iaas
 if [[ "$iaas" == "os" ]];then
     echo -e "You selected OpenStack "
     read -p "Enter OpensStack  identity  " os_identity
     read -p "Enter OpensStack  credentials  " os_credentials
     read -p "Enter OpensStack  jclouds_endpoint " os_jclouds_endpoint
+    read -p "Enter the region of the IAAS you want to spin up instances " $region
     read -p "Enter OpensStack  keypair name " os_keypair_name
     read -p "Enter OpensStack security groups  " os_security_groups
 
@@ -127,6 +140,8 @@ else
     read -p "Enter EC2  credentials  " ec2_credentials
     read -p "Enter EC2  owner id  " ec2_owner_id
     read -p "Enter EC2  keypair name  " ec2_keypair_name
+    list_ec2_regions
+    read -p "Enter the region of the IAAS you want to spin up instances " $region
     read -p "Enter EC2 availability zone  " ec2_availability_zone
     read -p "Enter EC2  security groups  " ec2_security_groups
 
@@ -139,8 +154,6 @@ else
     replace_setup_conf "EC2_SECURITY_GROUPS" "$ec2_security_groups"
 
 fi
-
-read -p "Enter the region of the IAAS you want to spin up instances " $region
 
 if [ "$machine_ip" == "" ];then
     echo -e "IP is not specified, so proceeding with the default 127.0.0.1"
@@ -156,11 +169,9 @@ if [ "$JAVA_HOME" == "" ];then
     JAVA_HOME=$java_home
 fi
 
-read -p "Do you need to subscribe for the AS (Application Server) cartridge ? y/n " -n 1 -r as_needed
+read -p "Do you need to deploy AS (Application Server) service ? y/n " -n 1 -r as_needed
 echo
-read -p "Do you need to subscribe for the ESB (Enterprise Service Bus) cartridge ? y/n " -n 1 -r  esb_needed
-echo
-read -p "Do you need to subscribe for the BPS (Business Process Server) cartridge ? y/n " -n 1 -r bps_needed
+read -p "Do you need to deploy ESB (Enterprise Service Bus) service ? y/n " -n 1 -r  esb_needed
 echo
 
 replace_setup_conf "JAVAHOME" "$JAVA_HOME"
@@ -201,23 +212,6 @@ sed  "s/REGION/$region/g" resources/json/p1.json > tmp/p1.json
 registry_db="userstore"
 #create_registry_database "$registry_db"
 
-#if [[ $as_needed =~ ^[Yy]$ ]]
-#then
-#    create_registry_database "$registry_db"
-#    create_registry_database "$registry_db"
-#    create_registry_database "$registry_db"
-#    create_registry_database "$registry_db"
-#fi
-#
-#if [[ $esb_needed =~ ^[Yy]$ ]]
-#then
-#    create_registry_database "$registry_db"
-#fi
-#
-#if [[ $bps_needed =~ ^[Yy]$ ]]
-#then
-#    create_registry_database "$registry_db"
-#fi
 
 as_config_path="config/as"
 esb_config_path="config/esb"
@@ -286,9 +280,16 @@ then
 
     echo -e "Deploying a Application Service service"
     curl -X POST -H "Content-Type: application/json" -d @'resources/json/appserver-service-deployment.json' -k -u admin:admin https://$machine_ip:9445/stratos/admin/service/definition
-#
 fi
 
+if [[ $esb_needed =~ ^[Yy]$ ]]
+then
+    echo -e "Esnterprise Service Bus (ESB) cartridge at $resource_path/resources/json/esb-cart.json"
+    curl -X POST -H "Content-Type: application/json" -d @'resources/json/esb-cart.json' -k  -u admin:admin "https://$machine_ip:9445/stratos/admin/cartridge/definition"
+
+    echo -e "Esnterprise Service Bus (ESB) service at esb-service-deployment.json"
+    curl -X POST -H "Content-Type: application/json" -d @'resources/json/esb-service-deployment.json' -k -u admin:admin https://$machine_ip:9445/stratos/admin/service/definition
+fi
 #echo -e "Subscribing to a PHP cartridge at $resource_path/resources/json/subscibe.json"
 #curl -X POST -H "Content-Type: application/json" -d @'resources/json/subscibe.json' -k  -u admin:admin "https://$machine_ip:9445/stratos/admin/cartridge/subscribe"
 
