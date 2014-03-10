@@ -140,10 +140,10 @@ else
     read -p "Enter EC2  credentials  " ec2_credentials
     read -p "Enter EC2  owner id  " ec2_owner_id
     read -p "Enter EC2  keypair name  " ec2_keypair_name
+    read -p "Enter EC2  security groups  " ec2_security_groups
     list_ec2_regions
     read -p "Enter the region of the IAAS you want to spin up instances " $region
     read -p "Enter EC2 availability zone  " ec2_availability_zone
-    read -p "Enter EC2  security groups  " ec2_security_groups
 
     replace_setup_conf "EC2_ENABLED" "true"
     replace_setup_conf "EC2_IDENTITY" "$ec2_identity"
