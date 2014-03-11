@@ -130,7 +130,7 @@ if [ "$machine_ip" == "" ];then
     machine_ip="127.0.0.1"
 fi
 
-
+echo "****javahome before*$JAVA_HOME**************"
 if [ "$JAVA_HOME" == "" ];then
     read -p "JAVA_HOME is not set as a environment variable. Please set it specify it here " java_home
     JAVA_HOME=$java_home
@@ -141,9 +141,9 @@ echo
 read -p "Do you need to deploy ESB (Enterprise Service Bus) service ? y/n " -n 1 -r  esb_needed
 echo
 
-read -p "Are you sure you want to deploy WSO2 Private PAAS ? y/n " -r  confrim
+read -p "Are you sure you want to deploy WSO2 Private PAAS ? y/n " -r  confirm
 
-if [[ $confrim =~ ^[nN]$ ]]
+if [[ $confirm =~ ^[nN]$ ]]
 then
     echo -e "Exiting the instalation."
     exit
@@ -247,11 +247,11 @@ replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/esb/manifes
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/params.pp"
 
-#/bin/bash stratos-installer/setup.sh -p "all"
-export JAVA_HOME=$java_home
+/bin/bash stratos-installer/setup.sh -p "all"
+export JAVA_HOME=$JAVA_HOME
 #unzipping  and running BAM
 echo -e "Unzipping and starting the WSO2 BAM "
-unzip -o $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
+unzip -o -q $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
 nohup $stratos_install_path/wso2bam-2.4.0/bin/wso2server.sh &
 
 # waiting a bit since products become up and running
