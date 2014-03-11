@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Die on any error:
+set -e
+
 current_dir=`pwd`
 setup_path="$current_dir/stratos-installer"
 stratos_pack_path="$current_dir/packs"
@@ -141,9 +144,9 @@ echo
 read -p "Do you need to deploy ESB (Enterprise Service Bus) service ? y/n " -n 1 -r  esb_needed
 echo
 
-read -p "Are you sure you want to deploy WSO2 Private PAAS ? y/n " -n 1 -r  confrim
+read -p "Are you sure you want to deploy WSO2 Private PAAS ? y/n " -n  -r  confirm
 
-if [[ $confrim =~ ^[nN]$ ]]
+if [[ $confirm =~ ^[nN]$ ]]
 then
     echo -e "Exiting the instalation."
     exit
@@ -251,8 +254,8 @@ replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/pa
 
 #unzipping  and running BAM
 echo -e "Unzipping and starting the WSO2 BAM "
-unzip -o $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
-nohup ${$stratos_install_path}/wso2bam-2.4.0bin/wso2server.sh &
+unzip -o -q  $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
+nohup $stratos_install_path/wso2bam-2.4.0/bin/wso2server.sh &
 
 # waiting a bit since products become up and running
 sleep 1m 
