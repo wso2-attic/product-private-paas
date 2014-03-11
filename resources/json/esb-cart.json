@@ -1,0 +1,44 @@
+{ "cartridgeDefinitionBean": {
+      "type": "esb",
+      "provider": "wso2",
+      "host": "esb.wso2.com",
+      "displayName": "ESB",
+      "description": "ESB Cartridge",
+      "version": "4.8.1",
+      "multiTenant": "true",
+      "portMapping": [
+         {
+            "protocol": "http",
+            "port": "9763",
+            "proxyPort": "8280"
+         },
+         {
+            "protocol": "https",
+            "port": "9443",
+            "proxyPort": "8243"
+         }
+       ],
+      "deployment": {
+        },
+       "iaasProvider": [
+        {
+          "type": "ec2",
+          "imageId": "ap-southeast-1/ami-42297810",
+          "maxInstanceLimit": "4",
+          "property": [
+            {
+             "name": "instanceType",
+             "value": "m1.medium"
+            }
+          ]
+        }
+      ],
+      "loadBalancer": {
+        "type": "lb",
+        "property": {
+            "name": "default.load.balancer",
+            "value": "true"
+        }
+      },    
+    }
+ }
