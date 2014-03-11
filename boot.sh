@@ -7,17 +7,6 @@ stratos_install_path="$current_dir/install"
 resource_path="$current_dir/resources"
 cep_artifact_path="$resource_path/cep/artifacts/"
 
-
-echo "setup path $setup_path"
-echo "pack path $stratos_pack_path"
-echo "stratos path $stratos_install_path"
-echo "conf file $setup_path/conf/setup.conf"
-
-#backing up the conf file
-# cp -f "$setup_path/conf/setup.conf" "$setup_path/conf/setup.conf.orig"
-
-
-
 backup_file(){
     if [[  -f "$1.orig" ]];
     then
@@ -32,13 +21,13 @@ backup_file(){
 backup_file $setup_path/conf/setup.conf
 
 replace_setup_conf(){
-    echo "Setting value $2 for property $1 as $2"
+    #echo "Setting value $2 for property $1 as $2"
     setp_conf_file=$setup_path/conf/setup.conf
     sed -i "s@$1@$2@g"  $setp_conf_file
 }
 
 replace_in_file(){
-    echo "Setting value $2 for property $1 as $2 in file $3"
+    #echo "Setting value $2 for property $1 as $2 in file $3"
     sed -i "s@$1@$2@g"  $3
 }
 
@@ -72,19 +61,18 @@ create_registry_database(){
 }
 
 list_ip_addreses(){
- #echo -e "Below are IP addresses assigned to your machine. Please enter prefered IP "
+ # echo -e "Below are IP addresses assigned to your machine. Please enter prefered IP "
  /sbin/ifconfig | grep "inet addr" | awk -F: '{print $2}' | awk '{print $1}'
 }
 
-if mysql_installed;
-then
-    echo -e "MySQL service seems to be running on your machine. \n";
-
-else
-    echo -e "Starting to install MySQL. \n"
-    install_mysql
-fi
-
+#if mysql_installed;
+#then
+#    echo -e "MySQL service seems to be running on your machine. \n";
+#
+#else
+#    echo -e "Starting to install MySQL. \n"
+#    install_mysql
+#fi
 
 read -p "Stratos domain " stratos_domain
 list_ip_addreses
@@ -101,8 +89,8 @@ read -p "Enter package repository URL  " package_repo
 read -p "Please provide MySQL host? " mysql_host
 read -p "Please provide MySQL port. Default port is 3306 " mysql_port
 read -p "Please provide MySQL username. Default username is root " mysql_uname
-echo  "Please provide MySQL password? "
-read -s mysql_password
+read -s -p  "Please provide MySQL password? " mysql_password
+echo ""
 
 list_ec2_regions(){
     echo -e "   Below are the available regions in Amazon EC2"
@@ -116,7 +104,6 @@ list_ec2_regions(){
     echo -e "   us-west-2 - US West (Oregon) Region"
 }
 
-}
 read -p "Enter your IAAS. EC2 and Openstack are the currently supported IAASs. Enter ec2 for EC2 and os for OpenStack. Default is EC2  " iaas
 if [[ "$iaas" == "os" ]];then
     echo -e "You selected OpenStack "
@@ -126,14 +113,6 @@ if [[ "$iaas" == "os" ]];then
     read -p "Enter the region of the IAAS you want to spin up instances " $region
     read -p "Enter OpensStack  keypair name " os_keypair_name
     read -p "Enter OpensStack security groups  " os_security_groups
-
-    replace_setup_conf "OS_ENABLED" "true"
-    replace_setup_conf "OS_IDENTITY" "$os_identity"
-    replace_setup_conf "OS_CREDENTIAL" "$os_credentials"
-    replace_setup_conf "JCLOUDS_ENDPOINT" "$os_jclouds_endpoint"
-    replace_setup_conf "OS_KEYPAIR_NAME" "$os_keypair_name"
-    replace_setup_conf "OS_SECURITY_GROUPS" "$os_security_groups"
-
 else
     echo -e "You selected Amazon EC2 "
     read -p "Enter EC2  identity  " ec2_identity
@@ -144,15 +123,6 @@ else
     list_ec2_regions
     read -p "Enter the region of the IAAS you want to spin up instances " $region
     read -p "Enter EC2 availability zone  " ec2_availability_zone
-
-    replace_setup_conf "EC2_ENABLED" "true"
-    replace_setup_conf "EC2_IDENTITY" "$ec2_identity"
-    replace_setup_conf "EC2_CREDENTIAL" "$ec2_credentials"
-    replace_setup_conf "EC2_KEYPAIR_NAME" "$ec2_keypair_name"
-    replace_setup_conf "EC2_OWNER_ID" "$ec2_owner_id"
-    replace_setup_conf "EC2_AVAILABILITY_ZONE" "$ec2_availability_zone"
-    replace_setup_conf "EC2_SECURITY_GROUPS" "$ec2_security_groups"
-
 fi
 
 if [ "$machine_ip" == "" ];then
@@ -160,9 +130,6 @@ if [ "$machine_ip" == "" ];then
     machine_ip="127.0.0.1"
 fi
 
-replace_setup_conf "STRATOS_SETUP_PATH" "$setup_path"
-replace_setup_conf "PACK_PATH" "$stratos_pack_path"
-replace_setup_conf "INSTALLER_PATH" "$stratos_install_path"
 
 if [ "$JAVA_HOME" == "" ];then
     read -p "JAVA_HOME is not set as a environment variable. Please set it specify it here " java_home
@@ -173,6 +140,18 @@ read -p "Do you need to deploy AS (Application Server) service ? y/n " -n 1 -r a
 echo
 read -p "Do you need to deploy ESB (Enterprise Service Bus) service ? y/n " -n 1 -r  esb_needed
 echo
+
+read -p "Are you sure you want to deploy WSO2 Private PAAS ? y/n " -r  confrim
+
+if [[ $confrim =~ ^[nN]$ ]]
+then
+    echo -e "Exiting the instalation."
+    exit
+fi
+
+replace_setup_conf "STRATOS_SETUP_PATH" "$setup_path"
+replace_setup_conf "PACK_PATH" "$stratos_pack_path"
+replace_setup_conf "INSTALLER_PATH" "$stratos_install_path"
 
 replace_setup_conf "JAVAHOME" "$JAVA_HOME"
 replace_setup_conf "HOST_USER" "$host_user"
@@ -204,6 +183,25 @@ replace_setup_conf "DB_PORT" "$mysql_port"
 replace_setup_conf "DB_USER" "$mysql_uname"
 replace_setup_conf "DB_PASSWORD" "$mysql_password"
 
+if [[ "$iaas" == "os" ]];then
+    replace_setup_conf "OS_ENABLED" "true"
+    replace_setup_conf "OS_IDENTITY" "$os_identity"
+    replace_setup_conf "OS_CREDENTIAL" "$os_credentials"
+    replace_setup_conf "JCLOUDS_ENDPOINT" "$os_jclouds_endpoint"
+    replace_setup_conf "OS_KEYPAIR_NAME" "$os_keypair_name"
+    replace_setup_conf "OS_SECURITY_GROUPS" "$os_security_groups"
+
+else
+    replace_setup_conf "EC2_ENABLED" "true"
+    replace_setup_conf "EC2_IDENTITY" "$ec2_identity"
+    replace_setup_conf "EC2_CREDENTIAL" "$ec2_credentials"
+    replace_setup_conf "EC2_KEYPAIR_NAME" "$ec2_keypair_name"
+    replace_setup_conf "EC2_OWNER_ID" "$ec2_owner_id"
+    replace_setup_conf "EC2_AVAILABILITY_ZONE" "$ec2_availability_zone"
+    replace_setup_conf "EC2_SECURITY_GROUPS" "$ec2_security_groups"
+
+fi
+
 # replace the region of partition file
 sed  "s/REGION/$region/g" resources/json/p1.json > tmp/p1.json
 
@@ -218,7 +216,6 @@ esb_config_path="config/esb"
 
 
 backup_file "/etc/puppet/manifests/nodes.pp"
-#cp -f "/etc/puppet/manifests/nodes.pp" "/etc/puppet/manifests/nodes.pp.orig"
 
 replace_in_file "PACKAGE_REPO" "$package_repo" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "MB_IP" "$machine_ip" "/etc/puppet/manifests/nodes.pp"
@@ -235,7 +232,6 @@ replace_in_file "ESB_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
 
 backup_file "/etc/puppet/modules/appserver/manifests/params.pp"
-# cp -f "/etc/puppet/modules/appserver/manifests/params.pp" "/etc/puppet/modules/appserver/manifests/params.pp.orig"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/appserver/manifests/params.pp"
@@ -244,7 +240,6 @@ replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/appserver/mani
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/appserver/manifests/params.pp"
 
 backup_file "/etc/puppet/modules/esb/manifests/params.pp"
-#cp -f "/etc/puppet/modules/esb/manifests/params.pp" "/etc/puppet/modules/esb/manifests/params.pp.orig"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/esb/manifests/params.pp"
@@ -252,12 +247,12 @@ replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/esb/manifes
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/params.pp"
 
-/bin/bash stratos-installer/setup.sh -p "all"
-
+#/bin/bash stratos-installer/setup.sh -p "all"
+export JAVA_HOME=$java_home
 #unzipping  and running BAM
 echo -e "Unzipping and starting the WSO2 BAM "
 unzip -o $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
-nohup ${$stratos_install_path}/wso2bam-2.4.0bin/wso2server.sh &
+nohup $stratos_install_path/wso2bam-2.4.0/bin/wso2server.sh &
 
 # waiting a bit since products become up and running
 sleep 1m 
@@ -290,7 +285,3 @@ then
     echo -e "Esnterprise Service Bus (ESB) service at esb-service-deployment.json"
     curl -X POST -H "Content-Type: application/json" -d @'resources/json/esb-service-deployment.json' -k -u admin:admin https://$machine_ip:9445/stratos/admin/service/definition
 fi
-#echo -e "Subscribing to a PHP cartridge at $resource_path/resources/json/subscibe.json"
-#curl -X POST -H "Content-Type: application/json" -d @'resources/json/subscibe.json' -k  -u admin:admin "https://$machine_ip:9445/stratos/admin/cartridge/subscribe"
-
-
