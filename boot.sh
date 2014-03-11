@@ -251,8 +251,8 @@ replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/pa
 
 #unzipping  and running BAM
 echo -e "Unzipping and starting the WSO2 BAM "
-unzip -o $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
-nohup ${$stratos_install_path}/wso2bam-2.4.0bin/wso2server.sh &
+unzip -q -o $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
+nohup $stratos_install_path/wso2bam-2.4.0bin/wso2server.sh &
 
 # waiting a bit since products become up and running
 sleep 1m 
