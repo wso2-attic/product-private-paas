@@ -141,9 +141,9 @@ echo
 read -p "Do you need to deploy ESB (Enterprise Service Bus) service ? y/n " -n 1 -r  esb_needed
 echo
 
-read -p "Are you sure you want to deploy WSO2 Private PAAS ? y/n " -r  confrim
+read -p "Are you sure you want to deploy WSO2 Private PAAS ? y/n " -r  confirm
 
-if [[ $confrim =~ ^[nN]$ ]]
+if [[ $confirm =~ ^[nN]$ ]]
 then
     echo -e "Exiting the instalation."
     exit
@@ -284,4 +284,8 @@ then
 
     echo -e "Esnterprise Service Bus (ESB) service at esb-service-deployment.json"
     curl -X POST -H "Content-Type: application/json" -d @'resources/json/esb-service-deployment.json' -k -u admin:admin https://$machine_ip:9445/stratos/admin/service/definition
+<<<<<<< HEAD
 fi
+=======
+fi
+>>>>>>> 1f516e50a25cd8da70e730c37671a22bc7b2ba44
