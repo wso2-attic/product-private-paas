@@ -1,3 +1,0 @@
-#!/usr/bin/env groovy
-def response = "curl -k -X POST [https://<%= @sc_hostname %>:<%= @sc_https_port %>/repo_notification] -d payload={'repository':{'url':'<%= @gitblit_repo_url %>'}}".execute().text
-println response
