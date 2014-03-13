@@ -74,7 +74,7 @@ list_ip_addreses(){
 #    install_mysql
 #fi
 
-read -p "Stratos domain " stratos_domain
+read -p "Please enter a prefered domain name for the private PAAS environment " stratos_domain
 list_ip_addreses
 read -p "Above are the IP addreses assigned to your machine. Please select the prefered IP address " machine_ip
 read -p "Enter host user " host_user
@@ -82,7 +82,6 @@ read -p "Enter host user " host_user
 # Puppet
 read -p "Enter Puppet  IP " puppet_ip
 read -p "Enter Puppet  hostname  " puppet_host
-read -p "Enter Puppet  environment  " puppet_env
 read -p "Enter package repository URL  " package_repo
 
 # MySQL
@@ -130,7 +129,6 @@ if [ "$machine_ip" == "" ];then
     machine_ip="127.0.0.1"
 fi
 
-echo "****javahome before*$JAVA_HOME**************"
 if [ "$JAVA_HOME" == "" ];then
     read -p "JAVA_HOME is not set as a environment variable. Please set it specify it here " java_home
     JAVA_HOME=$java_home
@@ -248,9 +246,10 @@ replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/esb/manifests/
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/params.pp"
 
 /bin/bash stratos-installer/setup.sh -p "all"
+
 export JAVA_HOME=$JAVA_HOME
 #unzipping  and running BAM
-echo -e "Unzipping and starting the WSO2 BAM "
+echo -e "Unzipping and starting WSO2 BAM "
 unzip -o -q $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
 nohup $stratos_install_path/wso2bam-2.4.0/bin/wso2server.sh &
 
@@ -285,3 +284,5 @@ then
     echo -e "Esnterprise Service Bus (ESB) service at esb-service-deployment.json"
     curl -X POST -H "Content-Type: application/json" -d @'resources/json/esb-service-deployment.json' -k -u admin:admin https://$machine_ip:9445/stratos/admin/service/definition
 fi
+
+echo -e ""

@@ -635,10 +635,10 @@ chown $host_user:$host_user $stratos_path -R
 
 echo "Apache Stratos setup has successfully completed"
 
-read -p "Do you want to start the servers [y/n]? " answer
-if [[ $answer != y ]] ; then
-   exit 1
-fi
+#read -p "Do you want to start the servers [y/n]? " answer
+#if [[ $answer != y ]] ; then
+#   exit 1
+#fi
 
 echo "Starting the servers" >> $LOG
 
