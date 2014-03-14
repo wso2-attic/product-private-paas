@@ -19,7 +19,7 @@
 # This class installs WSO2 Appserver
 #
 # Parameters:
-# version            => '5.2.0'
+# version            => '5.2.1'
 # offset             => 1,
 # tribes_port        => 4100,
 # config_db          => 'as_config',

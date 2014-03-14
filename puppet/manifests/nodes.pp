@@ -142,12 +142,12 @@ node /wordpress/ inherits base {
 
 #appserver cartridge node
 node /appserver/ inherits base {
-  $docroot = "/mnt/wso2as-5.2.0"
+  $docroot = "/mnt/wso2as-5.2.1"
   require java	
   class {'agent':}
   class {'appserver':
 
-        version            => '5.2.0',
+        version            => '5.2.1',
         sub_cluster_domain => 'test',
 	members            => false,
 	offset		   => 0,
