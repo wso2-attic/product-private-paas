@@ -69,10 +69,10 @@
     <parameter name="ModulesDirectory">axis2modules</parameter>
 
     <parameter name="userAgent" locked="true">
-        Application Server-5.2.0
+        Application Server-5.2.1
     </parameter>
     <parameter name="server" locked="true">
-        Application Server-5.2.0
+        Application Server-5.2.1
     </parameter>
 
     <!-- ========================================================================-->
@@ -575,6 +575,7 @@
         <phase name="PolicyDetermination"/>
         <phase name="MessageOut"/>
         <phase name="Security"/>
+	<phase name="Transport"/>
         <!--
            The MsgOutObservation phase is used to observe messages just before the
            responses are sent out. In this phase, we could do some things such as SOAP message
