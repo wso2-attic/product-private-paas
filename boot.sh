@@ -1,4 +1,7 @@
-#!/bin/bash
+	#!/bin/bash
+
+# Die on any error:
+set -e
 
 current_dir=`pwd`
 setup_path="$current_dir/stratos-installer"
