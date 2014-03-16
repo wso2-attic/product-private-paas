@@ -142,12 +142,12 @@ node /wordpress/ inherits base {
 
 #appserver cartridge node
 node /appserver/ inherits base {
-  $docroot = "/mnt/wso2as-5.2.0"
+  $docroot = "/mnt/wso2as-5.2.1"
   require java	
   class {'agent':}
   class {'appserver':
 
-        version            => '5.2.0',
+        version            => '5.2.1',
         sub_cluster_domain => 'test',
 	members            => false,
 	offset		   => 0,
@@ -167,7 +167,7 @@ node /appserver/ inherits base {
 }
 
 
-#appserver cartridge node
+#esb cartridge node
 node /esb/ inherits base {
   $docroot = "/mnt/wso2esb-4.8.1"
   require java
@@ -194,6 +194,34 @@ node /esb/ inherits base {
 
 }
 
+
+
+#bps cartridge node
+node /bps/ inherits base {
+  $docroot = "/mnt/wso2bps-3.2.0"
+  require java
+  class {'agent':}
+  class {'bps':
+
+        version            => '3.2.0',
+        sub_cluster_domain => 'test',
+        members            => false,
+    port_mapping       => false,
+        offset             => 0,
+        hazelcast_port        => 4100,
+        config_db          => 'BPS_CONFIG_DB',
+    config_target_path => 'BPS_CONFIG_PATH',
+        maintenance_mode   => 'zero',
+        depsync            => false,
+        clustering         => true,
+        cloud              => true,
+        owner              => 'root',
+        group              => 'root',
+        target             => '/mnt/'
+
+  }
+
+}
 
 
 # stratos components related nodes

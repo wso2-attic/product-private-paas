@@ -14,15 +14,15 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 #
-# Class: appserver
+# Class: bps
 #
-# This class installs WSO2 Appserver
+# This class installs WSO2 BPS
 #
 # Parameters:
-# version            => '5.2.1'
+# version            => '3.2.0'
 # offset             => 1,
 # tribes_port        => 4100,
-# config_db          => 'as_config',
+# config_db          => 'bps_config',
 # maintenance_mode   => 'zero',
 # depsync            => false,
 # sub_cluster_domain => 'mgt',
@@ -33,14 +33,14 @@
 # members            => {'elb2.wso2.com' => 4010, 'elb.wso2.com' => 4010 }
 #
 # Actions:
-#   - Install WSO2 Appserver
+#   - Install WSO2 BPS
 #
 # Requires:
 #
 # Sample Usage:
 #
 
-class appserver (
+class bps (
   $version            = undef,
   $sub_cluster_domain = undef,
   $members            = false,
@@ -57,7 +57,7 @@ class appserver (
   $target             = '/mnt',
 ) inherits params {
 
-  $deployment_code = 'appserver'
+  $deployment_code = 'bps'
   $carbon_version  = $version
   $service_code    = 'as'
   $carbon_home     = "${target}/wso2${service_code}-${carbon_version}"
@@ -92,12 +92,12 @@ class appserver (
 
   tag($service_code)
 
-  appserver::clean { $deployment_code:
+  bps::clean { $deployment_code:
     mode   => $maintenance_mode,
     target => $carbon_home,
   }
 
-  appserver::initialize { $deployment_code:
+  bps::initialize { $deployment_code:
     repo      => $package_repo,
     version   => $carbon_version,
     service   => $service_code,
@@ -108,7 +108,7 @@ class appserver (
     require   => Appserver::Clean[$deployment_code],
   }
 
-  appserver::deploy { $deployment_code:
+  bps::deploy { $deployment_code:
     security => true,
     owner    => $owner,
     group    => $group,
@@ -116,14 +116,14 @@ class appserver (
     require  => Appserver::Initialize[$deployment_code],
   }
 
-  appserver::push_templates {
+  bps::push_templates {
     $service_templates:
       target    => $carbon_home,
       directory => $deployment_code,
       require   => Appserver::Deploy[$deployment_code];
   }
 
-  appserver::start { $deployment_code:
+  bps::start { $deployment_code:
     owner   => $owner,
     target  => $carbon_home,
     require => [
