@@ -1,5 +1,4 @@
 {
-"cartridgeDefinitionBean": {
       "type": "lb",
       "provider": "lb",
       "host": "isuruh.lk",
@@ -43,5 +42,4 @@
       "value": "true"
      }
       ]
-    }
- }
+}

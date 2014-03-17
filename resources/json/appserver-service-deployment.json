@@ -1,10 +1,9 @@
-{ "serviceDefinitionBean": {
+{
       "serviceName": "appserver",
       "cartridgeType": "appserver",
       "deploymentPolicyName": "deployp",
       "autoscalingPolicyName": "economy",
       "clusterDomain": "appserverdev.dev.domain",
       "clusterSubDomain": "subdomain2",
-      "tenantRange": "*"
-    }
- }
+      "tenantRange": "*"    
+}

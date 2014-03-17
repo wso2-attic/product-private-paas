@@ -1,5 +1,4 @@
 {
-  "cartridgeInfoBean": {
     "cartridgeType": "php",
     "alias": "phpcart",
     "repoURL": "https://github.com/lakwarus/testphp.git",
@@ -8,5 +7,4 @@
     "repoPassword": "wso2123",
     "autoscalePolicy": "economy",
     "deploymentPolicy": "deployp"
-  }
 }

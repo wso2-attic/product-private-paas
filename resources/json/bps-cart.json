@@ -1,4 +1,4 @@
-{ "cartridgeDefinitionBean": {
+{
       "type": "bps",
       "provider": "wso2",
       "host": "bps.wso2.com",
@@ -40,5 +40,4 @@
             "value": "true"
         }
       },    
-    }
- }
+}

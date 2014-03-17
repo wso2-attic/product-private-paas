@@ -1,5 +1,4 @@
 {
-"partition":{
   	"id": "P1",
   	"provider": "ec2",
   	"property": [
@@ -12,6 +11,4 @@
         	"value": "ap-southeast-1a"
       	}
   	]
-   }
 }
-
