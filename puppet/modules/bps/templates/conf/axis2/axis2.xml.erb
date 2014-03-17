@@ -69,10 +69,10 @@
     <parameter name="ModulesDirectory">axis2modules</parameter>
 
     <parameter name="userAgent" locked="true">
-        Application Server-5.2.1
+        WSO2 Business Process Server-3.2.0
     </parameter>
     <parameter name="server" locked="true">
-        Application Server-5.2.1
+        WSO2 Business Process Server-3.2.0
     </parameter>
 
     <!-- ========================================================================-->
@@ -619,7 +619,7 @@
          The clustering domain/group. Nodes in the same group will belong to the same multicast
          domain. There will not be interference between nodes in different groups.
         -->
-				<parameter name="domain">wso2.<%= @as_subdomain %>.domain</parameter>
+				<parameter name="domain">wso2.<%= @bps_subdomain %>.domain</parameter>
 
         <!-- The multicast address to be used -->
         <!--<parameter name="mcastAddress">228.0.0.4</parameter>-->

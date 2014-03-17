@@ -1,10 +1,10 @@
-name    'wso2-appserver'
+name    'wso2-bps'
 version '0.1.0'
 source ''
 author 'WSO2 Inc'
 license 'Apache License Version 2.0'
-summary 'WSO2 AS puppet module'
-description 'WSO2 AS 5.2.1 version puppet module'
+summary 'WSO2 BPS puppet module'
+description 'WSO2 BPS 3.2.0 version puppet module'
 project_page ''
 
 ## Add dependencies, if any:

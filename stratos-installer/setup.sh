@@ -635,10 +635,10 @@ chown $host_user:$host_user $stratos_path -R
 
 echo "Apache Stratos setup has successfully completed"
 
-read -p "Do you want to start the servers [y/n]? " answer
-if [[ $answer != y ]] ; then
-   exit 1
-fi
+#read -p "Do you want to start the servers [y/n]? " answer
+#if [[ $answer != y ]] ; then
+#   exit 1
+#fi
 
 echo "Starting the servers" >> $LOG
 
@@ -656,6 +656,3 @@ if [[ $sm == "true" ]]; then
     echo "Management Console : https://$stratos_domain:$sm_https_port/console"
     echo "**************************************************************"
 fi
-
-
-

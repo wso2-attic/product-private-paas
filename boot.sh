@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Die on any error:
+set -e
+
 current_dir=`pwd`
 setup_path="$current_dir/stratos-installer"
 stratos_pack_path="$current_dir/packs"
@@ -74,7 +77,7 @@ list_ip_addreses(){
 #    install_mysql
 #fi
 
-read -p "Stratos domain " stratos_domain
+read -p "Please enter a prefered domain name for the private PAAS environment " stratos_domain
 list_ip_addreses
 read -p "Above are the IP addreses assigned to your machine. Please select the prefered IP address " machine_ip
 read -p "Enter host user " host_user
@@ -82,7 +85,6 @@ read -p "Enter host user " host_user
 # Puppet
 read -p "Enter Puppet  IP " puppet_ip
 read -p "Enter Puppet  hostname  " puppet_host
-read -p "Enter Puppet  environment  " puppet_env
 read -p "Enter package repository URL  " package_repo
 
 # MySQL
@@ -130,7 +132,6 @@ if [ "$machine_ip" == "" ];then
     machine_ip="127.0.0.1"
 fi
 
-
 if [ "$JAVA_HOME" == "" ];then
     read -p "JAVA_HOME is not set as a environment variable. Please set it specify it here " java_home
     JAVA_HOME=$java_home
@@ -140,10 +141,12 @@ read -p "Do you need to deploy AS (Application Server) service ? y/n " -n 1 -r a
 echo
 read -p "Do you need to deploy ESB (Enterprise Service Bus) service ? y/n " -n 1 -r  esb_needed
 echo
+read -p "Do you need to deploy BPS (Business Process Server) service ? y/n " -n 1 -r  bps_needed
+echo
 
-read -p "Are you sure you want to deploy WSO2 Private PAAS ? y/n " -n 1 -r  confrim
+read -p "Are you sure you want to deploy WSO2 Private PAAS ? y/n " -r  confirm
 
-if [[ $confrim =~ ^[nN]$ ]]
+if [[ $confirm =~ ^[nN]$ ]]
 then
     echo -e "Exiting the instalation."
     exit
@@ -225,11 +228,13 @@ replace_in_file "CEP_PORT" "7615" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "DB_HOST" "$mysql_host" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "DB_PORT" "$mysql_port" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "BAM_IP" "$machine_ip" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "BAM_PORT" "7617" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "BAM_PORT" "7611" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "AS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "AS_CONFIG_PATH" "$as_config_path" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "ESB_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "BPS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "BPS_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
 
 backup_file "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
@@ -247,12 +252,20 @@ replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/esb/manifes
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/params.pp"
 
+backup_file "/etc/puppet/modules/bps/manifests/params.pp"
+replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
+replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
+replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/bps/manifests/params.pp"
+replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/bps/manifests/params.pp"
+replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/bps/manifests/params.pp"
+replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/bps/manifests/params.pp"
+
 /bin/bash stratos-installer/setup.sh -p "all"
 
-#unzipping  and running BAM
-echo -e "Unzipping and starting the WSO2 BAM "
-unzip -q -o $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
-nohup $stratos_install_path/wso2bam-2.4.0bin/wso2server.sh &
+export JAVA_HOME=$JAVA_HOME
+echo -e "Unzipping and starting WSO2 BAM "
+unzip -o -q $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
+nohup $stratos_install_path/wso2bam-2.4.0/bin/wso2server.sh &
 
 # waiting a bit since products become up and running
 sleep 1m 
@@ -285,3 +298,15 @@ then
     echo -e "Esnterprise Service Bus (ESB) service at esb-service-deployment.json"
     curl -X POST -H "Content-Type: application/json" -d @'resources/json/esb-service-deployment.json' -k -u admin:admin https://$machine_ip:9445/stratos/admin/service/definition
 fi
+
+if [[ $bps_needed =~ ^[Yy]$ ]]
+then
+    echo -e "Deploying a Business Process Server (BPS) cartridge at $resource_path/resources/json/bps-cart.json"
+    curl -X POST -H "Content-Type: application/json" -d @'resources/json/bps-cart.json' -k  -u admin:admin "https://$machine_ip:9445/stratos/admin/cartridge/definition"
+
+    echo -e "Deploying a Business Process Server service"
+    curl -X POST -H "Content-Type: application/json" -d @'resources/json/bps-service-deployment.json' -k -u admin:admin https://$machine_ip:9445/stratos/admin/service/definition
+fi
+
+
+echo -e ""
