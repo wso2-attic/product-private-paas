@@ -333,22 +333,22 @@ echo ""
 
 if [[ $mb = "true" ]]; then
     if [[ ! -d $mb_path ]]; then
-        unzip $mb_pack_path -d $stratos_path
+        unzip -q $mb_pack_path -d $stratos_path
     fi
 fi
 if [[ $cep = "true" ]]; then
     if [[ ! -d $cep_path ]]; then
-        unzip $cep_pack_path -d $stratos_path
+        unzip -q $cep_pack_path -d $stratos_path
     fi
 fi
 if [[ $cc = "true" ]]; then
     if [[ ! -d $cc_path ]]; then
-        unzip $cc_pack_path -d $stratos_path
+        unzip -q $cc_pack_path -d $stratos_path
     fi
 fi
 if [[ $as = "true" ]]; then
     if [[ ! -d $as_path ]]; then
-        unzip $as_pack_path -d $stratos_path
+        unzip -q $as_pack_path -d $stratos_path
     fi
 fi
 if [[ $sm = "true" ]]; then
@@ -356,7 +356,7 @@ if [[ $sm = "true" ]]; then
         cp -rf ./resources $stratos_path
     fi
     if [[ ! -d $sm_path ]]; then
-        unzip $sm_pack_path -d $stratos_path
+        unzip -q $sm_pack_path -d $stratos_path
     fi
 fi
 
