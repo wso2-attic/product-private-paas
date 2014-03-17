@@ -1,4 +1,4 @@
-{"deploymentPolicy": {
+{
     "id": "deployp",
     "partitionGroup": {
       "id": "ec2",
@@ -11,5 +11,4 @@
         }
       ]
     }
-  }
 }

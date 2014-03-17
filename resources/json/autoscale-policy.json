@@ -1,5 +1,4 @@
 {
-  "autoscalePolicy": {
     "id": "economy",
     "loadThresholds": {
       "requestsInFlight": {
@@ -23,6 +22,5 @@
         "scaleDownMarginOfGradient": "1.0",
         "scaleDownMarginOfSecondDerivative": "0.2"
       }
-    }
-  }
+    }  
 }

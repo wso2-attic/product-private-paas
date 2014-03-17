@@ -1,4 +1,4 @@
-{ "serviceDefinitionBean": {
+{
       "serviceName": "esb",
       "cartridgeType": "esb",
       "deploymentPolicyName": "deployp",
@@ -6,5 +6,4 @@
       "clusterDomain": "esb.dev.domain",
       "clusterSubDomain": "subdomain2",
       "tenantRange": "*"
-    }
- }
+}

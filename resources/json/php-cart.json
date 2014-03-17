@@ -1,4 +1,4 @@
-{ "cartridgeDefinitionBean": {
+{
       "type": "php",
       "provider": "apache",
       "host": "isuruh.lk",
@@ -54,5 +54,4 @@
           ]
         }
       ]
-    }
- }
+}

@@ -1,4 +1,4 @@
-{ "cartridgeDefinitionBean": {
+{
       "type": "appserver",
       "provider": "wso2",
       "host": "appserver.wso2.com",
@@ -40,5 +40,4 @@
             "value": "true"
         }
       },    
-    }
- }
+}
