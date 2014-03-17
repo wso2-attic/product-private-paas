@@ -47,7 +47,7 @@ class bps (
   $offset             = 0,
   $tribes_port        = 4000,
   $config_db          = 'governance',
-  $config_target_path = 'config/as',	
+  $config_target_path = 'config/bps',	
   $maintenance_mode   = true,
   $depsync            = false,
   $clustering         = false,
@@ -59,7 +59,7 @@ class bps (
 
   $deployment_code = 'bps'
   $carbon_version  = $version
-  $service_code    = 'as'
+  $service_code    = 'bps'
   $carbon_home     = "${target}/wso2${service_code}-${carbon_version}"
 
   $service_templates = $sub_cluster_domain ? {
@@ -105,7 +105,7 @@ class bps (
     target    => $target,
     mode      => $maintenance_mode,
     owner     => $owner,
-    require   => Appserver::Clean[$deployment_code],
+    require   => Bps::Clean[$deployment_code],
   }
 
   bps::deploy { $deployment_code:
@@ -113,22 +113,22 @@ class bps (
     owner    => $owner,
     group    => $group,
     target   => $carbon_home,
-    require  => Appserver::Initialize[$deployment_code],
+    require  => Bps::Initialize[$deployment_code],
   }
 
   bps::push_templates {
     $service_templates:
       target    => $carbon_home,
       directory => $deployment_code,
-      require   => Appserver::Deploy[$deployment_code];
+      require   => Bps::Deploy[$deployment_code];
   }
 
   bps::start { $deployment_code:
     owner   => $owner,
     target  => $carbon_home,
     require => [
-      Appserver::Initialize[$deployment_code],
-      Appserver::Deploy[$deployment_code],
+      Bps::Initialize[$deployment_code],
+      Bps::Deploy[$deployment_code],
       Push_templates[$service_templates],
       ],
   }

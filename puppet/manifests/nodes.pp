@@ -206,11 +206,10 @@ node /bps/ inherits base {
         version            => '3.2.0',
         sub_cluster_domain => 'test',
         members            => false,
-    port_mapping       => false,
         offset             => 0,
-        hazelcast_port        => 4100,
-        config_db          => 'BPS_CONFIG_DB',
-    config_target_path => 'BPS_CONFIG_PATH',
+        tribes_port        => 4100,
+        config_db          => 'userstore',
+        config_target_path => 'config/bps',
         maintenance_mode   => 'zero',
         depsync            => false,
         clustering         => true,
@@ -222,7 +221,6 @@ node /bps/ inherits base {
   }
 
 }
-
 
 # stratos components related nodes
 # not supported in alpha version.
