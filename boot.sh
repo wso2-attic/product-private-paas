@@ -1,4 +1,4 @@
-	#!/bin/bash
+#!/bin/bash
 
 # Die on any error:
 set -e
@@ -141,6 +141,8 @@ read -p "Do you need to deploy AS (Application Server) service ? y/n " -n 1 -r a
 echo
 read -p "Do you need to deploy ESB (Enterprise Service Bus) service ? y/n " -n 1 -r  esb_needed
 echo
+read -p "Do you need to deploy BPS (Business Process Server) service ? y/n " -n 1 -r  bps_needed
+echo
 
 read -p "Are you sure you want to deploy WSO2 Private PAAS ? y/n " -r  confirm
 
@@ -231,6 +233,8 @@ replace_in_file "AS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "AS_CONFIG_PATH" "$as_config_path" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "ESB_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "BPS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "BPS_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
 
 backup_file "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
@@ -247,6 +251,14 @@ replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/esb/manifests/para
 replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/params.pp"
+
+backup_file "/etc/puppet/modules/bps/manifests/params.pp"
+replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
+replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
+replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/bps/manifests/params.pp"
+replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/bps/manifests/params.pp"
+replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/bps/manifests/params.pp"
+replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/bps/manifests/params.pp"
 
 /bin/bash stratos-installer/setup.sh -p "all"
 
@@ -287,5 +299,15 @@ then
     echo -e "Esnterprise Service Bus (ESB) service at esb-service-deployment.json"
     curl -X POST -H "Content-Type: application/json" -d @'resources/json/esb-service-deployment.json' -k -u admin:admin https://$machine_ip:9445/stratos/admin/service/definition
 fi
+
+if [[ $bps_needed =~ ^[Yy]$ ]]
+then
+    echo -e "Deploying a Business Process Server (BPS) cartridge at $resource_path/resources/json/bps-cart.json"
+    curl -X POST -H "Content-Type: application/json" -d @'resources/json/bps-cart.json' -k  -u admin:admin "https://$machine_ip:9445/stratos/admin/cartridge/definition"
+
+    echo -e "Deploying a Business Process Server service"
+    curl -X POST -H "Content-Type: application/json" -d @'resources/json/bps-service-deployment.json' -k -u admin:admin https://$machine_ip:9445/stratos/admin/service/definition
+fi
+
 
 echo -e ""
