@@ -278,6 +278,15 @@ echo -e "Unzipping and starting WSO2 BAM "
 unzip -o -q $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
 nohup $stratos_install_path/wso2bam-2.4.0/bin/wso2server.sh &
 
+if [ -e $stratos_pack_path/wso2is-4.6.0-private-paas.zip ]
+then
+   unzip -o -q $stratos_pack_path/wso2is-4.6.0-private-paas.zip -d $stratos_install_path
+   nohup $stratos_install_path/wso2is-4.6.0/bin/wso2server.sh &
+else
+   echo "IS pack [ $stratos_pack_path/wso2is-4.6.0-private-paas.zip ] not found!"
+fi
+
+
 # waiting a bit since products become up and running
 sleep 3m 
 echo -e "Deploying a partition at $resource_path/vcloud/json/partition.json"
