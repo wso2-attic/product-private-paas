@@ -49,23 +49,20 @@ do
         ;;
     *)
         help
-        exit 1
+        #exit 1
         ;;
   esac
 done
 
 function helpclean {
     echo ""
+    echo "Enter DB credentials if you need to clear Stratos DB"
     echo "usage:"
     echo "clean.sh -u <mysql username> -p <mysql password>"
     echo ""
 }
 
 function clean_validate {
-    if [[ ( -z $mysql_user || -z $mysql_pass ) ]]; then
-        helpclean
-        exit 1
-    fi
     if [ -z $stratos_path ]; then
         echo "stratos_path is not set"
         exit 1
@@ -77,53 +74,31 @@ function clean_validate {
 }
 
 clean_validate
-
-read -p "Please confirm that you want to remove stratos databases, servers and logs [y/n] " answer
-if [[ $answer != y ]] ; then
-    exit 1
+if [[ ( -n $mysql_user && -n $mysql_pass ) ]]; then
+	read -p "Please confirm that you want to remove stratos databases, servers and logs [y/n] " answer
+	if [[ $answer != y ]] ; then
+    		exit 1
+	fi
 fi
-
 echo 'Stopping all java processes'
 killall java
 echo 'Waiting for applications to exit'
 sleep 15
 
-echo 'Removing stratos_foundation database'
-mysql -u $mysql_user -p$mysql_pass -e "DROP DATABASE IF EXISTS stratos_foundation;"
-
-echo 'Removing userstore database'
-mysql -u $mysql_user -p$mysql_pass -e "DROP DATABASE IF EXISTS userstore;"
+if [[ ( -n $mysql_user && -n $mysql_pass ) ]]; then
+   echo 'Removing userstore database'
+   mysql -u $mysql_user -p$mysql_pass -e "DROP DATABASE IF EXISTS $userstore_db_schema;"
+fi
 
 if [[ -d $stratos_path/scripts ]]; then
    echo 'Removing scripts'
    rm -rf $stratos_path/scripts
 fi
 
-if [[ -d $mb_path ]]; then
-   echo 'Removing MB'
-   rm -rf $mb_path
-fi
-
-if [[ -d $cep_path ]]; then
-   echo 'Removing CEP'
-   rm -rf $cep_path
-fi
-
-if [[ -d $cc_path ]]; then
-   echo 'Removing CC'
-   rm -rf $cc_path
-fi
-
-if [[ -d $as_path ]]; then
-   echo 'Removing AS'
-   rm -rf $as_path
-fi
-
-if [[ -d $sm_path ]]; then
-   echo 'Removing SM'
-   rm -rf $sm_path
+if [[ -d $stratos_path ]]; then
+   echo 'Removing Stratos'
+   rm -rf $stratos_path/*
 fi
 
 echo 'Removing logs'
 rm -rf $log_path/*
-
