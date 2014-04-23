@@ -22,12 +22,17 @@ node 'base' {
   $local_package_dir    = '/mnt/packs'
   $mb_ip                = 'MB_IP'
   $mb_port              = 'MB_PORT'
+  $mb_type		= 'activemq' #in wso2 mb case, value should be 'wso2mb'
   $cep_ip               = 'CEP_IP'
   $cep_port             = 'CEP_PORT'
   $truststore_password  = 'wso2carbon'
   $java_distribution	= 'jdk-7-linux-x64.tar.gz'
   $java_name		= 'jdk1.7.0'
   $member_type_ip       = 'private'
+  $lb_httpPort 		= '80'
+  $lb_httpsPort 	= '443'
+  $tomcat_version 	= '7.0.52'
+  $enable_log_publisher = 'false'
 
   #following variables required only if you want to install stratos using puppet.
   #not supported in alpha version
@@ -71,14 +76,15 @@ node 'base' {
 
 # php cartridge node
 node /php/ inherits base {
-  $docroot = "/var/www"
+  $docroot = "/var/www/"
   $syslog="/var/log/apache2/error.log"
-  $samlalias="/var/www"
+  $samlalias="/var/www/"
   require java
-  class {'agent':}
+  class {'agent':
+    type => 'php',
+  }
   class {'php':}
-  
-  #install php before agent
+#install php before agent
   Class['php'] ~> Class['agent']
 }
 
@@ -86,14 +92,20 @@ node /php/ inherits base {
 node /lb/ inherits base {
   require java
   class {'agent':}
-  class {'lb': maintenance_mode   => 'norestart',}
+  class {'lb': maintenance_mode => 'norestart',}
 }
 
 # tomcat cartridge node
 node /tomcat/ inherits base {
+  $docroot = "/mnt/apache-tomcat-${tomcat_version}/webapps/"
+  $samlalias="/mnt/apache-tomcat-${tomcat_version}/webapps/"
+
   require java
   class {'agent':}
   class {'tomcat':}
+
+#install tomcat befor agent
+#Class['tomcat'] ~> Class['agent']
 }
 
 # mysql cartridge node
@@ -108,11 +120,13 @@ node /mysql/ inherits base {
 # nodejs cartridge node
 node /nodejs/ inherits base {
   require java
-  class {'agent':}
+  class {'agent':
+    type => 'nodejs',
+  }
   class {'nodejs':}
 
-  #install agent before nodejs
-  Class['agent'] ~> Class['nodejs']
+#install agent before nodejs
+  Class['nodejs'] ~> Class['agent']
 }
 
 # haproxy extension loadbalancer cartridge node
@@ -128,7 +142,7 @@ node /ruby/ inherits base {
   class {'agent':
   }
   class {'ruby':}
-#  Class['agent'] ~> Class['ruby']
+# Class['ruby'] ~> Class['agent']
 }
 
 #wordpress cartridge node
@@ -138,7 +152,6 @@ node /wordpress/ inherits base {
   class {'mysql':}
 
 }
-
 
 #appserver cartridge node
 node /appserver/ inherits base {
@@ -249,3 +262,10 @@ node 'sc.wso2.com' inherits base {
   require java
   class {'manager': maintenance_mode   => 'norestart',}
 }
+
+# default (base) cartridge node
+node /default/ inherits base {
+  require java
+  class {'agent':}
+}
+
