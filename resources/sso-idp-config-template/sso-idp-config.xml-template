@@ -18,7 +18,7 @@
 <SSOIdentityProviderConfig>
 	<ServiceProvider>
 	    <Issuer>ApplicationServer</Issuer>
-	    <AssertionConsumerService>https://localhost:9444/acs</AssertionConsumerService>
+	    <AssertionConsumerService>https://AS_ASSERTION_CONSUMER_HOST:9443/acs</AssertionConsumerService>
 		<EnableSingleLogout>false</EnableSingleLogout>
 	    	<SignResponse>true</SignResponse>
 	    	<EnableAttributeProfile>false</EnableAttributeProfile>
@@ -30,7 +30,7 @@
         </ServiceProvider>
 	<ServiceProvider>
             <Issuer>ESB</Issuer>
-            <AssertionConsumerService>https://localhost:9445/acs</AssertionConsumerService>
+            <AssertionConsumerService>https://ESB_ASSERTION_CONSUMER_HOST:9443/acs</AssertionConsumerService>
                 <EnableSingleLogout>false</EnableSingleLogout>
                 <SignResponse>true</SignResponse>
                 <EnableAttributeProfile>false</EnableAttributeProfile>
@@ -42,7 +42,7 @@
         </ServiceProvider>
         <ServiceProvider>
             <Issuer>BPS</Issuer>
-            <AssertionConsumerService>https://localhost:9446/acs</AssertionConsumerService>
+            <AssertionConsumerService>https://AS_ASSERTION_CONSUMER_HOST:9443/acs</AssertionConsumerService>
                 <EnableSingleLogout>false</EnableSingleLogout>
                 <SignResponse>true</SignResponse>
                 <EnableAttributeProfile>false</EnableAttributeProfile>
