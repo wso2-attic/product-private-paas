@@ -276,12 +276,12 @@ cd $cwd
 export JAVA_HOME=$JAVA_HOME
 echo -e "Unzipping and starting WSO2 BAM "
 unzip -o -q $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
-nohup $stratos_install_path/wso2bam-2.4.0/bin/wso2server.sh &
+nohup $stratos_install_path/wso2bam-2.4.0/bin/wso2server.sh -DportOffset=1 &
 
 if [ -e $stratos_pack_path/wso2is-4.6.0-private-paas.zip ]
 then
    unzip -o -q $stratos_pack_path/wso2is-4.6.0-private-paas.zip -d $stratos_install_path
-   nohup $stratos_install_path/wso2is-4.6.0/bin/wso2server.sh &
+   nohup $stratos_install_path/wso2is-4.6.0/bin/wso2server.sh -DportOffset=2 &
 else
    echo "IS pack [ $stratos_pack_path/wso2is-4.6.0-private-paas.zip ] not found!"
 fi
@@ -289,49 +289,49 @@ fi
 
 # waiting a bit since products become up and running
 sleep 3m 
-echo -e "Deploying a partition at $resource_path/vcloud/json/partition.json"
-curl -X POST -H "Content-Type: application/json" -d @"$resource_path/vcloud/json/partition.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment/partition"
+echo -e "Deploying a partition at $resource_path/json/partition.json"
+curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/partition.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment/partition"
 
 echo -e ""
 echo -e "Deploying a autoscale policy  at $resource_path/json/autoscale-policy.json"
-curl -X POST -H "Content-Type: application/json" -d @"$resource_path/vcloud/json/autoscale-policy.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/autoscale"
+curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/autoscale-policy.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/autoscale"
 
 echo -e ""
 echo -e "Deploying a deployment policy at $resource_path/json/deployment-policy.json"
-curl -X POST -H "Content-Type: application/json" -d @"$resource_path/vcloud/json/deployment-policy.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment"
+curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/deployment-policy.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment"
 
 echo -e ""
 echo -e "Deploying a LB cartridge at $resource_path/json/lb-cart.json"
-curl -X POST -H "Content-Type: application/json" -d @"$resource_path/vcloud/json/lb-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/lb-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
 if [[ $as_needed =~ ^[Yy]$ ]]
 then
     echo -e "Deploying a Aplication Server (AS) cartridge at $resource_path/json/appserver-cart.json"
-    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/vcloud/json/appserver-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/appserver-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
     echo -e "Deploying a Application Service service"
-    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/vcloud/json/appserver-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/appserver-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
 fi
 
 if [[ $esb_needed =~ ^[Yy]$ ]]
 then
 echo -e ""
     echo -e "Enterprise Service Bus (ESB) cartridge at $resource_path/json/esb-cart.json"
-    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/vcloud/json/esb-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/esb-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
 echo -e ""
     echo -e "Enterprise Service Bus (ESB) service at esb-service-deployment.json"
-    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/vcloud/json/esb-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/esb-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
 fi
 
 echo -e ""
 if [[ $bps_needed =~ ^[Yy]$ ]]
 then
     echo -e "Deploying a Business Process Server (BPS) cartridge at $resource_path/json/bps-cart.json"
-    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/vcloud/json/bps-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/bps-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
     echo -e "Deploying a Business Process Server service"
-    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/vcloud/json/bps-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/bps-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
 fi
 
 
