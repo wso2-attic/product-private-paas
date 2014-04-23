@@ -43,17 +43,17 @@ install_mysql(){
     mysqladmin -u $mysql_uname password $mysql_password  ";
 }
 
-mysql_installed(){
-    status=`service mysql status`
-    pattern="start/running"
+#mysql_installed(){
+#    status=`service mysql status`
+#    pattern="start/running"
 
-    if [[ $status ==  *$pattern* ]]
-    then
-        return 0
-    else
-        return 1
-    fi
-}
+#    if [[ $status ==  *$pattern* ]]
+#    then
+#        return 0
+#    else
+#        return 1
+#    fi
+#}
 
 create_registry_database(){
     echo -e "Creating the database $1"
@@ -69,14 +69,6 @@ list_ip_addreses(){
  /sbin/ifconfig | grep "inet addr" | awk -F: '{print $2}' | awk '{print $1}'
 }
 
-#if mysql_installed;
-#then
-#    echo -e "MySQL service seems to be running on your machine. \n";
-#
-#else
-#    echo -e "Starting to install MySQL. \n"
-#    install_mysql
-#fi
 
 read -p "Please enter a prefered domain name for the private PAAS environment " stratos_domain
 list_ip_addreses
@@ -89,11 +81,23 @@ read -p "Enter Puppet  hostname  " puppet_host
 read -p "Enter package repository URL  " package_repo
 
 # MySQL
+read -p "Do you need to install MySQL? " setup_mysql
+
 read -p "Please provide MySQL host? " mysql_host
 read -p "Please provide MySQL port. Default port is 3306 " mysql_port
 read -p "Please provide MySQL username. Default username is root " mysql_uname
-read -s -p  "Please provide MySQL password? " mysql_password
+read -s -p "Please provide MySQL password? " mysql_password
 echo ""
+
+if [[ $setup_mysql =~ ^[Yy]$ ]]
+then
+    echo -e "Starting to install MySQL. \n"
+    install_mysql
+
+else
+    echo -e "Setup did not install MySQL. \n";
+fi
+
 
 list_ec2_regions(){
     echo -e "   Below are the available regions in Amazon EC2"
