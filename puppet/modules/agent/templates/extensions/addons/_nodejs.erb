@@ -15,14 +15,7 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# Starts the service once the deployment is successful.
-
-define agent::start ($target, $owner) {
-  exec { "starting_${name}":
-    user    => $owner,
-    path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
-    unless  => "test -f ${target}/wso2carbon.lck",
-    cwd     => "${target}/bin/",
-    command => "touch ${target}/wso2carbon.lck; bash stratos.sh > /dev/null 2>&1 &",
-  }
-}
+export PATH="/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin:/root/bin"
+NODEJS_HOME=<%= @stratos_app_path %>
+npm install express
+node web.js > /dev/null 2&1 &
