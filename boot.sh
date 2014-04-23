@@ -282,15 +282,6 @@ echo -e "Unzipping and starting WSO2 BAM "
 unzip -o -q $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
 nohup $stratos_install_path/wso2bam-2.4.0/bin/wso2server.sh -DportOffset=1 &
 
-if [ -e $stratos_pack_path/wso2is-4.6.0-private-paas.zip ]
-then
-   unzip -o -q $stratos_pack_path/wso2is-4.6.0-private-paas.zip -d $stratos_install_path
-   nohup $stratos_install_path/wso2is-4.6.0/bin/wso2server.sh -DportOffset=2 &
-else
-   echo "IS pack [ $stratos_pack_path/wso2is-4.6.0-private-paas.zip ] not found!"
-fi
-
-
 # waiting a bit since products become up and running
 sleep 3m 
 echo -e "Deploying a partition at $resource_path/json/partition.json"
@@ -336,6 +327,32 @@ then
 
     echo -e "Deploying a Business Process Server service"
     curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/bps-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+fi
+
+# wait till services are active
+echo -e "Waiting till all the services are active.."
+sleep 5m
+
+if [ -e $stratos_pack_path/wso2is-4.6.0.zip ]
+then
+   unzip -o -q $stratos_pack_path/wso2is-4.6.0.zip -d $stratos_install_path
+   
+   # copy the templated master-datasource.xml and replace the relevant parameters
+   cp ./resources/datasource-template/master-datasource.xml.template $stratos_install_path/wso2is-4.6.0/repository/conf/datasources/master-datasources.xml
+   replace_in_file 'MYSQL_HOST' $mysql_host $stratos_install_path/wso2is-4.6.0/repository/conf/datasources/master-datasources.xml
+   replace_in_file 'MYSQL_USER' $mysql_uname $stratos_install_path/wso2is-4.6.0/repository/conf/datasources/master-datasources.xml
+   replace_in_file 'MYSQL_PASSWORD' $mysql_password $stratos_install_path/wso2is-4.6.0/repository/conf/datasources/master-datasources.xml
+
+   # copy the templated sso-idp-config.xml file and repalce relevant parameters
+   cp ./resources/sso-idp-config-template/sso-idp-config.xml-template $stratos_install_path/wso2is-4.6.0/repository/conf/datasources/sso-idp-config.xml
+   # replace relevant stuff - TODO: get LB IP and do the stuff
+
+   # copy the identity.saml2.sso.mgt jar to dropins
+   cp ./resources/libs/org.wso2.stratos.identity.saml2.sso.mgt-2.2.0.jar $stratos_install_path/wso2is-4.6.0/repository/components/dropins
+
+   nohup $stratos_install_path/wso2is-4.6.0/bin/wso2server.sh -DportOffset=2 &
+else
+   echo "IS pack [ $stratos_pack_path/wso2is-4.6.0-private-paas.zip ] not found!"
 fi
 
 
