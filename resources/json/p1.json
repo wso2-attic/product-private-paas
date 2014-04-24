@@ -3,8 +3,8 @@
   	"provider": "ec2",
   	"property": [
       	{
-        	"name": "REGION",
-        	"value": "ap-southeast-1"
+        	"name": "region",
+        	"value": "REGION"
       	},    
       {
         	"name": "zone",
