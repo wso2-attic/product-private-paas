@@ -83,6 +83,7 @@ read -p "Enter package repository URL :" package_repo
 # MySQL
 read -p "Do you need to install MySQL? [y/n] :" setup_mysql
 
+read -p "Please provide MySQL host? " mysql_host
 read -p "Please provide MySQL port. Default port is 3306 :" mysql_port
 read -p "Please provide MySQL username. Default username is root :" mysql_uname
 read -s -p "Please provide MySQL password :" mysql_password
