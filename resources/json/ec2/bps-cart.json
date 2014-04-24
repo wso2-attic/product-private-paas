@@ -1,21 +1,21 @@
 {
-      "type": "esb",
+      "type": "bps",
       "provider": "wso2",
-      "host": "esb.wso2.com",
-      "displayName": "ESB",
-      "description": "ESB Cartridge",
-      "version": "4.8.1",
+      "host": "bps.wso2.com",
+      "displayName": "Business Process Server",
+      "description": "BPS Cartridge",
+      "version": "3.2.1",
       "multiTenant": "true",
       "portMapping": [
          {
             "protocol": "http",
             "port": "9763",
-            "proxyPort": "8280"
+            "proxyPort": "80"
          },
          {
             "protocol": "https",
             "port": "9443",
-            "proxyPort": "8243"
+            "proxyPort": "443"
          }
        ],
       "deployment": {
@@ -23,7 +23,7 @@
        "iaasProvider": [
         {
           "type": "ec2",
-          "imageId": "ap-southeast-1/ami-42297810",
+          "imageId": "ap-southeast-1/ami-d8a4f78a",
           "maxInstanceLimit": "4",
           "property": [
             {
