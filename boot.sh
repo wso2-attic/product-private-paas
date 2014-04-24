@@ -83,7 +83,6 @@ read -p "Enter package repository URL :" package_repo
 # MySQL
 read -p "Do you need to install MySQL? [y/n] :" setup_mysql
 
-read -p "Please provide MySQL host? :" mysql_host
 read -p "Please provide MySQL port. Default port is 3306 :" mysql_port
 read -p "Please provide MySQL username. Default username is root :" mysql_uname
 read -s -p "Please provide MySQL password :" mysql_password
@@ -98,6 +97,15 @@ else
     echo -e "Setup did not install MySQL. \n";
 fi
 
+# make MySQL bind adress 0.0.0.0
+if [ -e '/etc/mysql/my.cnf' ]
+then
+        replace_in_file "bind-address.*" "bind-address=0.0.0.0" /etc/mysql/my.cnf
+        # restart MySQL
+        service mysql restart
+else
+        echo 'my.cnf not found. Unable to set listen address to 0.0.0.0'
+fi
 
 list_ec2_regions(){
     echo -e "   Below are the available regions in Amazon EC2"
