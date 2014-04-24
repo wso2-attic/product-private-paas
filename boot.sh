@@ -43,6 +43,22 @@ install_mysql(){
     mysqladmin -u $mysql_uname password $mysql_password  ";
 }
 
+install_puppet() {
+    args=("-m" "-d${stratos_domain}")
+    echo -e "\nRunning puppet installation with arguments: ${args[@]}" 
+	
+    cwd=$(pwd)
+    cd puppetinstall
+    /bin/bash puppetinstall "${args[@]}"
+    cd $cwd
+
+    # copy puppet configurations form private pass repo
+    cp -rf puppet/* /etc/puppet/
+    
+    # modify autosign.conf
+    echo "*."$stratos_domain > /etc/puppet/autosign.conf     
+}
+
 #mysql_installed(){
 #    status=`service mysql status`
 #    pattern="start/running"
@@ -76,8 +92,11 @@ read -p "Above are the IP addreses assigned to your machine. Please select the p
 read -p "Enter host user :" host_user
 
 # Puppet
-read -p "Enter Puppet IP :" puppet_ip
-read -p "Enter Puppet hostname :" puppet_host
+install_puppet
+puppet_ip=$machine_ip
+echo -e "Puppet ip is $puppet_ip".
+puppet_host="puppet."$stratos_domain
+echo -e "Puppet hostname is $puppet_host".
 read -p "Enter package repository URL :" package_repo
 
 # MySQL
@@ -93,7 +112,6 @@ if [[ $setup_mysql =~ ^[Yy]$ ]]
 then
     echo -e "Starting to install MySQL. \n"
     install_mysql
-
 else
     echo -e "Setup did not install MySQL. \n";
 fi
