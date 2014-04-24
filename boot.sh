@@ -70,23 +70,23 @@ list_ip_addreses(){
 }
 
 
-read -p "Please enter a prefered domain name for the private PAAS environment " stratos_domain
+read -p "Please enter a prefered domain name for the private PAAS environment :" stratos_domain
 list_ip_addreses
-read -p "Above are the IP addreses assigned to your machine. Please select the prefered IP address " machine_ip
-read -p "Enter host user " host_user
+read -p "Above are the IP addreses assigned to your machine. Please select the prefered IP address :" machine_ip
+read -p "Enter host user :" host_user
 
 # Puppet
-read -p "Enter Puppet  IP " puppet_ip
-read -p "Enter Puppet  hostname  " puppet_host
-read -p "Enter package repository URL  " package_repo
+read -p "Enter Puppet IP :" puppet_ip
+read -p "Enter Puppet hostname :" puppet_host
+read -p "Enter package repository URL :" package_repo
 
 # MySQL
-read -p "Do you need to install MySQL? " setup_mysql
+read -p "Do you need to install MySQL? [y/n] :" setup_mysql
 
-read -p "Please provide MySQL host? " mysql_host
-read -p "Please provide MySQL port. Default port is 3306 " mysql_port
-read -p "Please provide MySQL username. Default username is root " mysql_uname
-read -s -p "Please provide MySQL password? " mysql_password
+read -p "Please provide MySQL host? :" mysql_host
+read -p "Please provide MySQL port. Default port is 3306 :" mysql_port
+read -p "Please provide MySQL username. Default username is root :" mysql_uname
+read -s -p "Please provide MySQL password :" mysql_password
 echo ""
 
 if [[ $setup_mysql =~ ^[Yy]$ ]]
@@ -111,29 +111,29 @@ list_ec2_regions(){
     echo -e "   us-west-2 - US West (Oregon) Region"
 }
 
-read -p "Enter your IAAS. vCloud, EC2 and Openstack are the currently supported IAASs. Enter vcloud for vCloud ec2 for EC2 and os for OpenStack." iaas
+read -p "Enter your IAAS. vCloud, EC2 and Openstack are the currently supported IAASs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack " iaas
 if [[ "$iaas" == "os" ]];then
-    echo -e "You selected OpenStack "
-    read -p "Enter OpensStack  identity  " os_identity
-    read -p "Enter OpensStack  credentials  " os_credentials
-    read -p "Enter OpensStack  jclouds_endpoint " os_jclouds_endpoint
-    read -p "Enter the region of the IAAS you want to spin up instances " $region
-    read -p "Enter OpensStack  keypair name " os_keypair_name
-    read -p "Enter OpensStack security groups  " os_security_groups
+    echo -e "You selected OpenStack. "
+    read -p "Enter OpensStack identity :" os_identity
+    read -p "Enter OpensStack credentials :" os_credentials
+    read -p "Enter OpensStack jclouds_endpoint :" os_jclouds_endpoint
+    read -p "Enter the region of the IAAS you want to spin up instances :" $region
+    read -p "Enter OpensStack keypair name :" os_keypair_name
+    read -p "Enter OpensStack security groups :" os_security_groups
 else  if [[ "$iaas" == "ec2" ]];then
-    echo -e "You selected Amazon EC2 "
-    read -p "Enter EC2  identity  " ec2_identity
-    read -p "Enter EC2  credentials  " ec2_credentials
-    read -p "Enter EC2  owner id  " ec2_owner_id
-    read -p "Enter EC2  keypair name  " ec2_keypair_name
-    read -p "Enter EC2  security groups  " ec2_security_groups
+    echo -e "You selected Amazon EC2. "
+    read -p "Enter EC2 identity :" ec2_identity
+    read -p "Enter EC2 credentials :" ec2_credentials
+    read -p "Enter EC2 owner id :" ec2_owner_id
+    read -p "Enter EC2 keypair name :" ec2_keypair_name
+    read -p "Enter EC2 security groups :" ec2_security_groups
     list_ec2_regions
-    read -p "Enter the region of the IAAS you want to spin up instances " $region
-    read -p "Enter EC2 availability zone  " ec2_availability_zone
+    read -p "Enter the region of the IAAS you want to spin up instances :" $region
+    read -p "Enter EC2 availability zone :" ec2_availability_zone
 else  if [[ "$iaas" == "vcloud" ]];then
-    read -p "Enter vCloud  identity  " vcloud_identity
-    read -p "Enter vCloud  credentials  " vcloud_credentials
-    read -p "Enter vCloud  jclouds_endpoint " vcloud_jclouds_endpoint
+    read -p "Enter vCloud identity :" vcloud_identity
+    read -p "Enter vCloud credentials :" vcloud_credentials
+    read -p "Enter vCloud jclouds_endpoint :" vcloud_jclouds_endpoint
 fi
 fi
 fi
@@ -148,14 +148,14 @@ if [ "$JAVA_HOME" == "" ];then
     JAVA_HOME=$java_home
 fi
 
-read -p "Do you need to deploy AS (Application Server) service ? y/n " -n 1 -r as_needed
+read -p "Do you need to deploy AS (Application Server) service ? [y/n] " -n 1 -r as_needed
 echo
-read -p "Do you need to deploy ESB (Enterprise Service Bus) service ? y/n " -n 1 -r  esb_needed
+read -p "Do you need to deploy ESB (Enterprise Service Bus) service ? [y/n] " -n 1 -r  esb_needed
 echo
-read -p "Do you need to deploy BPS (Business Process Server) service ? y/n " -n 1 -r  bps_needed
+read -p "Do you need to deploy BPS (Business Process Server) service ? [y/n] " -n 1 -r  bps_needed
 echo
 
-read -p "Are you sure you want to start WSO2 Private PAAS ? y/n " -r  confirm
+read -p "Are you sure you want to start WSO2 Private PAAS ? [y/n] " -r  confirm
 
 if [[ $confirm =~ ^[nN]$ ]]
 then
@@ -173,7 +173,6 @@ replace_setup_conf "HOST_USER" "$host_user"
 replace_setup_conf "STRATOS_DOMAIN" "$stratos_domain"
 
 replace_setup_conf "machine_ip" "$machine_ip"
-
 
 replace_setup_conf "puppet-ip" "$puppet_ip"
 replace_setup_conf "puppet-host" "$puppet_host"
@@ -218,7 +217,7 @@ fi
 fi
 
 # replace the region of partition file
-sed  "s/REGION/$region/g" resources/json/p1.json > tmp/p1.json
+sed  "s/REGION/$region/g" resources/json/$iaas/p1.json > tmp/p1.json
 
 # Create databases for the governence registry
 # Using the same userstore to the registry
@@ -284,49 +283,49 @@ nohup $stratos_install_path/wso2bam-2.4.0/bin/wso2server.sh -DportOffset=1 &
 
 # waiting a bit since products become up and running
 sleep 3m 
-echo -e "Deploying a partition at $resource_path/json/partition.json"
-curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/partition.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment/partition"
+echo -e "Deploying a partition at $resource_path/json/$iaas/partition.json"
+curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/partition.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment/partition"
 
 echo -e ""
-echo -e "Deploying a autoscale policy  at $resource_path/json/autoscale-policy.json"
-curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/autoscale-policy.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/autoscale"
+echo -e "Deploying a autoscale policy  at $resource_path/json/$iaas/autoscale-policy.json"
+curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/autoscale-policy.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/autoscale"
 
 echo -e ""
-echo -e "Deploying a deployment policy at $resource_path/json/deployment-policy.json"
-curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/deployment-policy.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment"
+echo -e "Deploying a deployment policy at $resource_path/json/$iaas/deployment-policy.json"
+curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/deployment-policy.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment"
 
 echo -e ""
-echo -e "Deploying a LB cartridge at $resource_path/json/lb-cart.json"
-curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/lb-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+echo -e "Deploying a LB cartridge at $resource_path/json/$iaas/lb-cart.json"
+curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/lb-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
 if [[ $as_needed =~ ^[Yy]$ ]]
 then
-    echo -e "Deploying a Aplication Server (AS) cartridge at $resource_path/json/appserver-cart.json"
-    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/appserver-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+    echo -e "Deploying a Aplication Server (AS) cartridge at $resource_path/json/$iaas/appserver-cart.json"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/appserver-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
     echo -e "Deploying a Application Service service"
-    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/appserver-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/appserver-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
 fi
 
 if [[ $esb_needed =~ ^[Yy]$ ]]
 then
 echo -e ""
-    echo -e "Enterprise Service Bus (ESB) cartridge at $resource_path/json/esb-cart.json"
-    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/esb-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+    echo -e "Enterprise Service Bus (ESB) cartridge at $resource_path/json/$iaas/esb-cart.json"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/esb-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
 echo -e ""
     echo -e "Enterprise Service Bus (ESB) service at esb-service-deployment.json"
-    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/esb-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/esb-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
 fi
 
 echo -e ""
 if [[ $bps_needed =~ ^[Yy]$ ]]
 then
-    echo -e "Deploying a Business Process Server (BPS) cartridge at $resource_path/json/bps-cart.json"
-    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/bps-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+    echo -e "Deploying a Business Process Server (BPS) cartridge at $resource_path/json/$iaas/bps-cart.json"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/bps-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
     echo -e "Deploying a Business Process Server service"
-    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/bps-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/bps-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
 fi
 
 # wait till services are active
