@@ -56,7 +56,7 @@ install_puppet() {
     cp -rf puppet/* /etc/puppet/
     
     # modify autosign.conf
-    echo "*."$stratos_domain > /etc/puppet/autosign.conf     
+    echo $stratos_domain > /etc/puppet/autosign.conf     
 }
 
 #mysql_installed(){
@@ -274,6 +274,8 @@ replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/node
 replace_in_file "BPS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "BPS_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
 
+cp -f $stratos_pack_path/wso2as-5.2.1.zip /etc/puppet/modules/appserver/files
+cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/appserver/files/configs/repository/components/lib
 backup_file "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
@@ -282,6 +284,8 @@ replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/appserver/m
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/appserver/manifests/params.pp"
 
+cp -f $stratos_pack_path/wso2esb-4.8.1.zip /etc/puppet/modules/esb/files
+cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/esb/files/configs/repository/components/lib
 backup_file "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
@@ -290,6 +294,8 @@ replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/esb/manifes
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/params.pp"
 
+cp -f $stratos_pack_path/wso2bps-3.2.0.zip /etc/puppet/modules/bps/files
+cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/bps/files/configs/repository/components/lib
 backup_file "/etc/puppet/modules/bps/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
