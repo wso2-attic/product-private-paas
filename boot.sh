@@ -10,7 +10,8 @@ stratos_install_path="$current_dir/install"
 resource_path="$current_dir/resources"
 cep_artifact_path="$resource_path/cep/artifacts/"
 puppet_env="stratos"
-cep_port=5611
+puppet_installed="false"
+cep_port=7611
 
 backup_file(){
     if [[  -f "$1.orig" ]];
@@ -57,7 +58,7 @@ install_puppet() {
     cp -rf puppet/* /etc/puppet/
     
     # modify autosign.conf
-    echo $stratos_domain > /etc/puppet/autosign.conf     
+    echo "*."$stratos_domain > /etc/puppet/autosign.conf     
 }
 
 #mysql_installed(){
@@ -86,19 +87,34 @@ list_ip_addreses(){
  /sbin/ifconfig | grep "inet addr" | awk -F: '{print $2}' | awk '{print $1}'
 }
 
+check_for_puppet(){
+# Checking for puppet
+    if [[ -d '/var/lib/puppet' ]]; then
+	$puppet_installed="true"
+    fi
+}
 
-read -p "Please enter a prefered domain name for the private PAAS environment :" stratos_domain
+check_for_puppet
+
+if [[ $puppet_installed = "true" ]]; then
+    stratos_domain=$(dnsdomainname)
+    echo "Domain name for the private PAAS environment"
+else
+    read -p "Please enter a prefered domain name for the private PAAS environment : " stratos_domain
+fi
 list_ip_addreses
 read -p "Above are the IP addreses assigned to your machine. Please select the prefered IP address :" machine_ip
 read -p "Enter host user :" host_user
 
 # Puppet
-install_puppet
+# Puppet
+if [[ $puppet_installed = "false" ]]; then
+    install_puppet
+fi
 puppet_ip=$machine_ip
-echo -e "Puppet ip is $puppet_ip".
+echo -e "Puppet ip is $puppet_ip"
 puppet_host="puppet."$stratos_domain
-echo -e "Puppet hostname is $puppet_host".
-read -p "Enter package repository URL :" package_repo
+echo -e "Puppet hostname is $puppet_host"
 
 # MySQL
 read -p "Do you need to install MySQL? [y/n] :" setup_mysql
@@ -243,8 +259,6 @@ else if [[ "$iaas" == "vcloud" ]];then
     replace_setup_conf "VCLOUD_CREDENTIAL" "$vcloud_credentials"
     replace_setup_conf "VCLOUD_JCLOUDS_ENDPOINT" "$vcloud_jclouds_endpoint"
 fi
-fi
-fi
 
 # replace the region of partition file
 sed  "s/REGION/$region/g" resources/json/$iaas/p1.json > tmp/p1.json
@@ -257,6 +271,18 @@ registry_db="userstore"
 
 as_config_path="config/as"
 esb_config_path="config/esb"
+
+# Copy files to /etc/puppet 
+
+cp -f $stratos_pack_path/apache-stratos-cartridge-agent-4.0.0-incubating-bin.zip /etc/puppet/modules/agent/files
+cp -f $stratos_pack_path/apache-stratos-load-balancer-4.0.0-incubating.zip /etc/puppet/modules/lb/files
+cp -f $stratos_pack_path/jdk-7u45-linux-x64.tar.gz /etc/puppet/modules/java/files
+cp -f $stratos_pack_path/wso2as-5.2.1.zip /etc/puppet/modules/appserver/files
+cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/appserver/files/configs/repository/components/lib
+cp -f $stratos_pack_path/wso2esb-4.8.1.zip /etc/puppet/modules/esb/files
+cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/esb/files/configs/repository/components/lib
+cp -f $stratos_pack_path/wso2bps-3.2.0.zip /etc/puppet/modules/bps/files
+cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/bps/files/configs/repository/components/lib
 
 
 backup_file "/etc/puppet/manifests/nodes.pp"
@@ -276,9 +302,10 @@ replace_in_file "ESB_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "BPS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "BPS_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "JAVA_FILE" "jdk-7u45-linux-x64.tar.gz" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "JAVA_NAME" "jdk1.7.45" "/etc/puppet/manifests/nodes.pp"
 
-cp -f $stratos_pack_path/wso2as-5.2.1.zip /etc/puppet/modules/appserver/files
-cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/appserver/files/configs/repository/components/lib
+# Application Server
 backup_file "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
@@ -287,8 +314,7 @@ replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/appserver/m
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/appserver/manifests/params.pp"
 
-cp -f $stratos_pack_path/wso2esb-4.8.1.zip /etc/puppet/modules/esb/files
-cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/esb/files/configs/repository/components/lib
+# ESB
 backup_file "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
@@ -297,8 +323,7 @@ replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/esb/manifes
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/params.pp"
 
-cp -f $stratos_pack_path/wso2bps-3.2.0.zip /etc/puppet/modules/bps/files
-cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/bps/files/configs/repository/components/lib
+# BPS
 backup_file "/etc/puppet/modules/bps/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
@@ -306,6 +331,9 @@ replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/bps/manifests/para
 replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/bps/manifests/params.pp"
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/bps/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/bps/manifests/params.pp"
+
+# Restart puppet master after configurations
+/etc/init.d/puppetmasterd restart
 
 cwd=$(pwd)
 cd stratos-installer
