@@ -1,4 +1,4 @@
-#!/bin/bash
+et !/bin/bash
 
 # Die on any error:
 set -e
@@ -55,9 +55,6 @@ install_puppet() {
     /bin/bash puppetinstall "${args[@]}"
     cd $cwd
 
-    # copy puppet configurations form private pass repo
-    cp -rf puppet/* /etc/puppet/
-    
     # modify autosign.conf
     echo "*."$stratos_domain > /etc/puppet/autosign.conf     
 }
@@ -112,6 +109,10 @@ read -p "Enter host user :" host_user
 if [[ $puppet_installed = "false" ]]; then
     install_puppet
 fi
+
+# copy puppet configurations form private pass repo
+cp -rf puppet/* /etc/puppet/
+
 puppet_ip=$machine_ip
 echo -e "Puppet ip is $puppet_ip"
 puppet_host="puppet."$stratos_domain
@@ -260,7 +261,7 @@ elif [[ "$iaas" == "vcloud" ]];then
 fi
 
 # replace the region of partition file
-sed  "s/REGION/$region/g" resources/json/$iaas/p1.json > tmp/p1.json
+sed  "s/REGION/$region/g" resources/json/$iaas/partition.json > tmp/partition.json
 
 # Create databases for the governence registry
 # Using the same userstore to the registry
@@ -332,7 +333,7 @@ replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/bps/manifests/
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/bps/manifests/params.pp"
 
 # Restart puppet master after configurations
-/etc/init.d/puppetmasterd restart
+/etc/init.d/puppetmaster restart
 
 cwd=$(pwd)
 cd stratos-installer
@@ -342,10 +343,9 @@ cd $cwd
 # Copy activemq client jars to puppet
 for activemq_client_lib in "${activemq_client_libs[@]}" 
     do
-	cp -f $stratos_install_path/apache-activemq-5.9.1/$activemq_client_lib /etc/puppet/agent/files/activemq/
-        cp -f $stratos_install_path/apache-activemq-5.9.1/$activemq_client_lib /etc/puppet/lb/files/activemq/
+	cp -f $stratos_install_path/apache-activemq-5.9.1/lib/$activemq_client_lib /etc/puppet/modules/agent/files/activemq/
+        cp -f $stratos_install_path/apache-activemq-5.9.1/lib/$activemq_client_lib /etc/puppet/modules/lb/files/activemq/
     done
-}
 
 export JAVA_HOME=$JAVA_HOME
 echo -e "Unzipping and starting WSO2 BAM "
@@ -354,8 +354,8 @@ nohup $stratos_install_path/wso2bam-2.4.0/bin/wso2server.sh -DportOffset=1 &
 
 # waiting a bit since products become up and running
 sleep 3m 
-echo -e "Deploying a partition at $resource_path/json/$iaas/partition.json"
-curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/partition.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment/partition"
+echo -e "Deploying a partition at tmp/partition.json"
+curl -X POST -H "Content-Type: application/json" -d @"tmp/partition.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment/partition"
 
 echo -e ""
 echo -e "Deploying a autoscale policy  at $resource_path/json/$iaas/autoscale-policy.json"
