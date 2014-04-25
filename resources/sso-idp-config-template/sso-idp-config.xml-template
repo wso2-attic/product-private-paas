@@ -42,7 +42,7 @@
         </ServiceProvider>
         <ServiceProvider>
             <Issuer>BPS</Issuer>
-            <AssertionConsumerService>https://AS_ASSERTION_CONSUMER_HOST:9443/acs</AssertionConsumerService>
+            <AssertionConsumerService>https://BPS_ASSERTION_CONSUMER_HOST:9443/acs</AssertionConsumerService>
                 <EnableSingleLogout>false</EnableSingleLogout>
                 <SignResponse>true</SignResponse>
                 <EnableAttributeProfile>false</EnableAttributeProfile>

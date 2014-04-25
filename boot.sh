@@ -378,7 +378,17 @@ then
 
    # copy the templated sso-idp-config.xml file and repalce relevant parameters
    cp ./resources/sso-idp-config-template/sso-idp-config.xml-template $stratos_install_path/wso2is-4.6.0/repository/conf/datasources/sso-idp-config.xml
-   # replace relevant stuff - TODO: get LB IP and do the stuff
+   # call the python script to get LB ip
+   lb_ip=$(python -c 'import agent; print agent.getLBIp()')
+   # update the /etc/hosts file
+   echo $lb_ip  appserver.wso2.com >> /etc/hosts
+   echo $lb_ip  esb.wso2.com >> /etc/hosts
+   echo $lb_ip  bps.wso2.com >> /etc/hosts
+
+   # replace the sso-idp-config.xml file
+   replace_in_file 'AS_ASSERTION_CONSUMER_HOST' appserver.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/datasources/sso-idp-config.xml
+   replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/datasources/sso-idp-config.xml
+   replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/datasources/sso-idp-config.xml
 
    # copy the identity.saml2.sso.mgt jar to dropins
    cp ./resources/libs/org.wso2.stratos.identity.saml2.sso.mgt-2.2.0.jar $stratos_install_path/wso2is-4.6.0/repository/components/dropins
