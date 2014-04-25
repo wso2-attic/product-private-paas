@@ -123,6 +123,8 @@ then
         replace_in_file "bind-address.*" "bind-address=0.0.0.0" /etc/mysql/my.cnf
         # restart MySQL
         service mysql restart
+        #update privileges
+        mysql -u$mysql_uname -p$mysql_password -e "GRANT ALL PRIVILEGES ON *.* TO $mysql_uname@'%' IDENTIFIED BY '$mysql_password'; FLUSH PRIVILEGES;"
 else
         echo 'my.cnf not found. Unable to set listen address to 0.0.0.0'
 fi
