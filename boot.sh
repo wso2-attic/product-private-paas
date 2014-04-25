@@ -12,6 +12,7 @@ cep_artifact_path="$resource_path/cep/artifacts/"
 puppet_env="stratos"
 puppet_installed="false"
 cep_port=7611
+activemq_client_libs=(activemq-broker-5.9.1.jar  activemq-client-5.9.1.jar  geronimo-j2ee-management_1.1_spec-1.0.1.jar  geronimo-jms_1.1_spec-1.1.1.jar  hawtbuf-1.9.jar)
 
 backup_file(){
     if [[  -f "$1.orig" ]];
@@ -90,7 +91,7 @@ list_ip_addreses(){
 check_for_puppet(){
 # Checking for puppet
     if [[ -d '/var/lib/puppet' ]]; then
-	$puppet_installed="true"
+	puppet_installed="true"
     fi
 }
 
@@ -98,12 +99,12 @@ check_for_puppet
 
 if [[ $puppet_installed = "true" ]]; then
     stratos_domain=$(dnsdomainname)
-    echo "Domain name for the private PAAS environment"
+    echo "Domain name for the private PAAS environment "$stratos_domain
 else
     read -p "Please enter a prefered domain name for the private PAAS environment : " stratos_domain
 fi
 list_ip_addreses
-read -p "Above are the IP addreses assigned to your machine. Please select the prefered IP address :" machine_ip
+read -p "Above are the IP addreses assigned to your machine. Please select the prefered IP address : " machine_ip
 read -p "Enter host user :" host_user
 
 # Puppet
@@ -117,12 +118,12 @@ puppet_host="puppet."$stratos_domain
 echo -e "Puppet hostname is $puppet_host"
 
 # MySQL
-read -p "Do you need to install MySQL? [y/n] :" setup_mysql
+read -p "Do you need to install MySQL? [y/n] : " setup_mysql
 
 read -p "Please provide MySQL host? " mysql_host
-read -p "Please provide MySQL port. Default port is 3306 :" mysql_port
-read -p "Please provide MySQL username. Default username is root :" mysql_uname
-read -s -p "Please provide MySQL password :" mysql_password
+read -p "Please provide MySQL port. Default port is 3306 : " mysql_port
+read -p "Please provide MySQL username. Default username is root : " mysql_uname
+read -s -p "Please provide MySQL password : " mysql_password
 echo ""
 
 if [[ $setup_mysql =~ ^[Yy]$ ]]
@@ -160,28 +161,26 @@ list_ec2_regions(){
 read -p "Enter your IAAS. vCloud, EC2 and Openstack are the currently supported IAASs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack " iaas
 if [[ "$iaas" == "os" ]];then
     echo -e "You selected OpenStack. "
-    read -p "Enter OpensStack identity :" os_identity
-    read -p "Enter OpensStack credentials :" os_credentials
-    read -p "Enter OpensStack jclouds_endpoint :" os_jclouds_endpoint
-    read -p "Enter the region of the IAAS you want to spin up instances :" $region
-    read -p "Enter OpensStack keypair name :" os_keypair_name
-    read -p "Enter OpensStack security groups :" os_security_groups
-else  if [[ "$iaas" == "ec2" ]];then
+    read -p "Enter OpensStack identity : " os_identity
+    read -p "Enter OpensStack credentials : " os_credentials
+    read -p "Enter OpensStack jclouds_endpoint : " os_jclouds_endpoint
+    read -p "Enter the region of the IAAS you want to spin up instances : " $region
+    read -p "Enter OpensStack keypair name : " os_keypair_name
+    read -p "Enter OpensStack security groups : " os_security_groups
+elif [[ "$iaas" == "ec2" ]];then
     echo -e "You selected Amazon EC2. "
-    read -p "Enter EC2 identity :" ec2_identity
-    read -p "Enter EC2 credentials :" ec2_credentials
-    read -p "Enter EC2 owner id :" ec2_owner_id
-    read -p "Enter EC2 keypair name :" ec2_keypair_name
-    read -p "Enter EC2 security groups :" ec2_security_groups
+    read -p "Enter EC2 identity : " ec2_identity
+    read -p "Enter EC2 credentials : " ec2_credentials
+    read -p "Enter EC2 owner id : " ec2_owner_id
+    read -p "Enter EC2 keypair name : " ec2_keypair_name
+    read -p "Enter EC2 security groups : " ec2_security_groups
     list_ec2_regions
-    read -p "Enter the region of the IAAS you want to spin up instances :" $region
-    read -p "Enter EC2 availability zone :" ec2_availability_zone
-else  if [[ "$iaas" == "vcloud" ]];then
-    read -p "Enter vCloud identity :" vcloud_identity
-    read -p "Enter vCloud credentials :" vcloud_credentials
-    read -p "Enter vCloud jclouds_endpoint :" vcloud_jclouds_endpoint
-fi
-fi
+    read -p "Enter the region of the IAAS you want to spin up instances : " $region
+    read -p "Enter EC2 availability zone : " ec2_availability_zone
+elif [[ "$iaas" == "vcloud" ]];then
+    read -p "Enter vCloud identity : " vcloud_identity
+    read -p "Enter vCloud credentials : " vcloud_credentials
+    read -p "Enter vCloud jclouds_endpoint : " vcloud_jclouds_endpoint
 fi
 
 if [ "$machine_ip" == "" ];then
@@ -245,7 +244,7 @@ if [[ "$iaas" == "os" ]];then
     replace_setup_conf "OS_JCLOUDS_ENDPOINT" "$os_jclouds_endpoint"
     replace_setup_conf "OS_KEYPAIR_NAME" "$os_keypair_name"
     replace_setup_conf "OS_SECURITY_GROUPS" "$os_security_groups"
-else if [[ "$iaas" == "ec2" ]];then
+elif [[ "$iaas" == "ec2" ]];then
     replace_setup_conf "EC2_ENABLED" "true"
     replace_setup_conf "EC2_IDENTITY" "$ec2_identity"
     replace_setup_conf "EC2_CREDENTIAL" "$ec2_credentials"
@@ -253,7 +252,7 @@ else if [[ "$iaas" == "ec2" ]];then
     replace_setup_conf "EC2_OWNER_ID" "$ec2_owner_id"
     replace_setup_conf "EC2_AVAILABILITY_ZONE" "$ec2_availability_zone"
     replace_setup_conf "EC2_SECURITY_GROUPS" "$ec2_security_groups"
-else if [[ "$iaas" == "vcloud" ]];then
+elif [[ "$iaas" == "vcloud" ]];then
     replace_setup_conf "VCLOUD_ENABLED" "true"
     replace_setup_conf "VCLOUD_IDENTITY" "$vcloud_identity"
     replace_setup_conf "VCLOUD_CREDENTIAL" "$vcloud_credentials"
@@ -339,6 +338,14 @@ cwd=$(pwd)
 cd stratos-installer
 /bin/bash setup.sh -p "default" -s
 cd $cwd
+
+# Copy activemq client jars to puppet
+for activemq_client_lib in "${activemq_client_libs[@]}" 
+    do
+	cp -f $stratos_install_path/apache-activemq-5.9.1/$activemq_client_lib /etc/puppet/agent/files/activemq/
+        cp -f $stratos_install_path/apache-activemq-5.9.1/$activemq_client_lib /etc/puppet/lb/files/activemq/
+    done
+}
 
 export JAVA_HOME=$JAVA_HOME
 echo -e "Unzipping and starting WSO2 BAM "
