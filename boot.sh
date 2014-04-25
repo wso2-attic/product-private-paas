@@ -10,6 +10,7 @@ stratos_install_path="$current_dir/install"
 resource_path="$current_dir/resources"
 cep_artifact_path="$resource_path/cep/artifacts/"
 puppet_env="stratos"
+cep_port=5611
 
 backup_file(){
     if [[  -f "$1.orig" ]];
@@ -262,7 +263,7 @@ replace_in_file "PACKAGE_REPO" "$package_repo" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "MB_IP" "$machine_ip" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "MB_PORT" "61616" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "CEP_IP" "$machine_ip" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "CEP_PORT" "7615" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "CEP_PORT" "$cep_port" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "DB_HOST" "$mysql_host" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "DB_PORT" "$mysql_port" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "BAM_IP" "$machine_ip" "/etc/puppet/manifests/nodes.pp"
