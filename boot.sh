@@ -165,7 +165,7 @@ if [[ "$iaas" == "os" ]];then
     read -p "Enter OpensStack identity : " os_identity
     read -p "Enter OpensStack credentials : " os_credentials
     read -p "Enter OpensStack jclouds_endpoint : " os_jclouds_endpoint
-    read -p "Enter the region of the IAAS you want to spin up instances : " $region
+    read -p "Enter the region of the IAAS you want to spin up instances : " region
     read -p "Enter OpensStack keypair name : " os_keypair_name
     read -p "Enter OpensStack security groups : " os_security_groups
 elif [[ "$iaas" == "ec2" ]];then
@@ -176,7 +176,7 @@ elif [[ "$iaas" == "ec2" ]];then
     read -p "Enter EC2 keypair name : " ec2_keypair_name
     read -p "Enter EC2 security groups : " ec2_security_groups
     list_ec2_regions
-    read -p "Enter the region of the IAAS you want to spin up instances : " $region
+    read -p "Enter the region of the IAAS you want to spin up instances : " region
     read -p "Enter EC2 availability zone : " ec2_availability_zone
 elif [[ "$iaas" == "vcloud" ]];then
     read -p "Enter vCloud identity : " vcloud_identity
