@@ -2,7 +2,7 @@ import urllib2,base64,json
 
 def getLBIp():
 
-  url = 'https://localhost:9445/stratos/admin/cluster/lb'
+  url = 'https://localhost:9443/stratos/admin/cluster/lb'
   request = urllib2.Request(url)
 
   base64string = base64.encodestring('%s:%s' % ('admin', 'admin')).replace('\n', '')
