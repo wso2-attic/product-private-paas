@@ -414,7 +414,7 @@ then
    replace_in_file 'MYSQL_PASSWORD' $mysql_password $stratos_install_path/wso2is-4.6.0/repository/conf/datasources/master-datasources.xml
 
    # copy the templated sso-idp-config.xml file and repalce relevant parameters
-   cp ./resources/sso-idp-config-template/sso-idp-config.xml-template $stratos_install_path/wso2is-4.6.0/repository/conf/datasources/sso-idp-config.xml
+   cp ./resources/sso-idp-config-template/sso-idp-config.xml-template $stratos_install_path/wso2is-4.6.0/repository/conf/sso-idp-config.xml
    # call the python script to get LB ip
    lb_ip=$(python -c 'import agent; print agent.getLBIp()')
    # update the /etc/hosts file
@@ -423,16 +423,16 @@ then
    echo $lb_ip  bps.wso2.com >> /etc/hosts
 
    # replace the sso-idp-config.xml file
-   replace_in_file 'AS_ASSERTION_CONSUMER_HOST' appserver.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/datasources/sso-idp-config.xml
-   replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/datasources/sso-idp-config.xml
-   replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/datasources/sso-idp-config.xml
+   replace_in_file 'AS_ASSERTION_CONSUMER_HOST' appserver.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/sso-idp-config.xml
+   replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/sso-idp-config.xml
+   replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/sso-idp-config.xml
 
    # copy the identity.saml2.sso.mgt jar to dropins
    cp ./resources/libs/org.wso2.stratos.identity.saml2.sso.mgt-2.2.0.jar $stratos_install_path/wso2is-4.6.0/repository/components/dropins
 
    nohup $stratos_install_path/wso2is-4.6.0/bin/wso2server.sh -DportOffset=2 &
 else
-   echo "IS pack [ $stratos_pack_path/wso2is-4.6.0-private-paas.zip ] not found!"
+   echo "IS pack [ $stratos_pack_path/wso2is-4.6.0.zip ] not found!"
 fi
 
 
