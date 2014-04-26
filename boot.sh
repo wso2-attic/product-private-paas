@@ -1,4 +1,4 @@
-et !/bin/bash
+set !/bin/bash
 
 # Die on any error:
 set -e
