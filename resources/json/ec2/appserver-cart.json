@@ -39,5 +39,5 @@
             "name": "default.load.balancer",
             "value": "true"
         }
-      },    
+      }    
 }
