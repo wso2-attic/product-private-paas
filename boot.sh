@@ -303,7 +303,8 @@ replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/node
 replace_in_file "BPS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "BPS_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "JAVA_FILE" "jdk-7u45-linux-x64.tar.gz" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "JAVA_NAME" "jdk1.7.45" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "JAVA_NAME" "jdk1.7.0_45" "/etc/puppet/manifests/nodes.pp"
+# JAVA_NAME should be match with extracting dir name of java tar.gz archive, eg. jdk-7u45-linux-x64.tar.gz -> jdk1.7.0_45
 
 # Application Server
 backup_file "/etc/puppet/modules/appserver/manifests/params.pp"
