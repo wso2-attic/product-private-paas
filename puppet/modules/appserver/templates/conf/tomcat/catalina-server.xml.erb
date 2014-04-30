@@ -26,8 +26,8 @@
 	proxyPort="80"
     -->
     <Connector  protocol="org.apache.coyote.http11.Http11NioProtocol"
-                proxyPort="80"
                 port="9763"
+		proxyPort="<%= @http_proxy_port %>"
                 redirectPort="9443" 
                 bindOnInit="false"
                 maxHttpHeaderSize="8192"
@@ -51,8 +51,8 @@
 	proxyPort="443"
     -->
     <Connector  protocol="org.apache.coyote.http11.Http11NioProtocol"
-                proxyPort="443"
                 port="9443"
+		proxyPort="<%= @https_proxy_port %>"
                 bindOnInit="false"
                 sslProtocol="TLS"
                 maxHttpHeaderSize="8192"

@@ -45,12 +45,12 @@
        This is will become part of the End Point Reference of the
        services deployed on this server instance.
     -->
-		<HostName><%= @as_subdomain%>.<%= @domain %></HostName>
+		<HostName><%= @stratos_instance_data_host_name %></HostName>
     <!--
     Host name to be used for the Carbon management console
     -->
 		<%- if @sub_cluster_domain == 'mgt' -%>
-		<MgtHostName><%= @management_subdomain %>.<%= @as_subdomain %>.<%= @domain %></MgtHostName>
+		<MgtHostName><%= @management_subdomain %>.<%= @stratos_instance_data_host_name %></MgtHostName>
 		<%- end -%>
 
     <!--

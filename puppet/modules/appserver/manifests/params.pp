@@ -67,4 +67,8 @@ class appserver::params {
   $user_search_base         = 'ou=system'
   $group_search_base        = 'ou=system'
   $sharedgroup_search_base  = 'ou=SharedGroups,dc=wso2,dc=org'
+
+  #Proxy ports
+  $http_proxy_port             = '80'
+  $https_proxy_port             = '443'
 }
