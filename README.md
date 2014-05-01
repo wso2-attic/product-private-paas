@@ -1,1 +1,1 @@
-WSO2 Private PaaS
+WSO2 Private PaaS.
