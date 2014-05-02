@@ -46,4 +46,10 @@ done
 #mysql -u $mysql_user -p$mysql_pass -e "DROP DATABASE IF EXISTS registry;"
 
 cd stratos-installer
-/bin/bash clean.sh $1 $2
+
+space=' '
+
+user=$1$space$2
+pass=$3$space$4
+
+/bin/bash clean.sh $user $pass
