@@ -35,12 +35,11 @@ do
         pushd source
         mvn clean install 
         popd
-	echo " Built Successfully. Now copying the distribution to <private-paas-home>/packs"
-        ;;
-    t)
-        echo "in t..."
-        command="mvns cleans installs"
-	echo "copy as well.."
+	    echo " Built Successfully. Now copying the distribution to <private-paas-home>/packs"
+        cp source/products/stratos/modules/distribution/target/*.zip packs/
+        cp source/products/cartridge-agent/modules/distribution/target/*.zip packs/
+        cp source/products/load-balancer/modules/distribution/target/*.zip packs/
+
         ;;
     *)
         help
