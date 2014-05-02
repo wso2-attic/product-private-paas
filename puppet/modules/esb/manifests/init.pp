@@ -72,7 +72,7 @@ class esb (
       'conf/carbon.xml',
 #      'conf/datasources/master-datasources.xml',
 #      'conf/registry.xml',
-#      'conf/tomcat/catalina-server.xml',
+      'conf/tomcat/catalina-server.xml',
 #      'conf/user-mgt.xml',
       ],
     'worker' => [
@@ -80,7 +80,7 @@ class esb (
       'conf/carbon.xml',
 #      'conf/datasources/master-datasources.xml',
 #      'conf/registry.xml',
-#      'conf/tomcat/catalina-server.xml',
+      'conf/tomcat/catalina-server.xml',
 #      'conf/user-mgt.xml',
       ],
     default => [
@@ -88,7 +88,7 @@ class esb (
       'conf/carbon.xml',
       'conf/datasources/master-datasources.xml',
       'conf/registry.xml',
-#      'conf/tomcat/catalina-server.xml',
+      'conf/tomcat/catalina-server.xml',
       'conf/user-mgt.xml',
       'conf/log4j.properties',
       ],
