@@ -575,6 +575,7 @@ public class ServiceUtils {
                     //cartridge.setStatus(CartridgeConstants.NOT_SUBSCRIBED);
                     cartridge.setCartridgeAlias("-");
                     cartridge.setPersistence(cartridgeInfo.getPersistence());
+                    cartridge.setServiceGroup(cartridgeInfo.getServiceGroup());
 
                     if(cartridgeInfo.getLbConfig() != null && cartridgeInfo.getProperties() != null) {
                         for(Property property: cartridgeInfo.getProperties()) {

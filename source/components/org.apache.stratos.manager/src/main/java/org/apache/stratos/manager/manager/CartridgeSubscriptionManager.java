@@ -302,13 +302,20 @@ public class CartridgeSubscriptionManager {
         	encryptedRepoPassword = "";
         }
 
+        if(log.isDebugEnabled()) {
+            log.debug("Repository with url: " + subscriptionData.getRepositoryURL() +
+                    " username: " + subscriptionData.getRepositoryUsername() +
+                    " Type: " + subscriptionData.getRepositoryType());
+        }
+        // Create subscriber
+        Subscriber subscriber = new Subscriber(subscriptionData.getTenantAdminUsername(), subscriptionData.getTenantId(), subscriptionData.getTenantDomain());
+        cartridgeSubscription.setSubscriber(subscriber);
+        cartridgeSubscription.setAlias(subscriptionData.getCartridgeAlias());
+
         // Create repository
         Repository repository = cartridgeSubscription.manageRepository(subscriptionData.getRepositoryURL(), subscriptionData.getRepositoryUsername(),
                 encryptedRepoPassword,
                 subscriptionData.isPrivateRepository());
-
-        // Create subscriber
-        Subscriber subscriber = new Subscriber(subscriptionData.getTenantAdminUsername(), subscriptionData.getTenantId(), subscriptionData.getTenantDomain());
 
         // set the LB cluster id relevant to this service cluster
         cartridgeSubscription.setLbClusterId(lbClusterId);

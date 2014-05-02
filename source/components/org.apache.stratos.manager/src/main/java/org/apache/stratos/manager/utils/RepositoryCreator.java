@@ -120,7 +120,7 @@ public class RepositoryCreator implements Runnable {
 			handleException(e.getMessage(), e);
 		}
 		
-		repository.setUrl(System.getProperty(CartridgeConstants.INTERNAL_GIT_URL)+repoName);
+		repository.setUrl(System.getProperty(CartridgeConstants.INTERNAL_GIT_URL) + "/" + repoName);
 		repository.setUserName(userName);
 		repository.setPassword(password);
 		

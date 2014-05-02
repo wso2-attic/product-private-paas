@@ -52,6 +52,9 @@ public class InternalRepoBasedCartridgeSubscription extends CartridgeSubscriptio
 			RepositoryRequiredException,
 			RepositoryCredentialsRequiredException,
 			RepositoryTransportException, InvalidRepositoryException {
+        if(log.isDebugEnabled()) {
+            log.debug("Managing internal repo for repo URL: " + repoURL);
+        }
 		
 		Repository repository = null;
 		String defaultRepoUserName = System.getProperty(CartridgeConstants.INTERNAL_GIT_USERNAME);
