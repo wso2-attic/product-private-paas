@@ -1,0 +1,9 @@
+{
+      "serviceName": "apistore",
+      "cartridgeType": "apistore",
+      "deploymentPolicyName": "deployp",
+      "autoscalingPolicyName": "economy",
+      "clusterDomain": "gateway.dev.domain",
+      "clusterSubDomain": "subdomain2",
+      "tenantRange": "*"    
+}

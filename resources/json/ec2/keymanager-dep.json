@@ -1,0 +1,9 @@
+{
+      "serviceName": "keymanager",
+      "cartridgeType": "keymanager",
+      "deploymentPolicyName": "deployp",
+      "autoscalingPolicyName": "economy",
+      "clusterDomain": "keymanager.dev.domain",
+      "clusterSubDomain": "subdomain2",
+      "tenantRange": "*"    
+}
