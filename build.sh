@@ -27,19 +27,32 @@ do
         echo " Build using maven "
 	pushd source
         mvn clean install 
+
+      STATUS=$?
+	if [ $STATUS -eq 0 ]; then
+		echo " Built Successfully. You may copy the distribution to <private-paas-home>/packs location "
+	else
+		echo ""
+		echo " Build Failure. Please try again"
+	fi
 	popd
-        echo " Built Successfully. You may copy the distribution to <private-paas-home>/packs location "
         ;;
     c)
         echo " Build using maven "
         pushd source
-        mvn clean install 
-        popd
+        mvn clean install
+    
+     STATUS=$?
+        if [ $STATUS -eq 0 ]; then
 	    echo " Built Successfully. Now copying the distribution to <private-paas-home>/packs"
-        cp source/products/stratos/modules/distribution/target/*.zip packs/
-        cp source/products/cartridge-agent/modules/distribution/target/*.zip packs/
-        cp source/products/load-balancer/modules/distribution/target/*.zip packs/
-
+	    cp products/stratos/modules/distribution/target/*.zip ../packs/
+	    cp products/cartridge-agent/modules/distribution/target/*.zip ../packs/
+            cp products/load-balancer/modules/distribution/target/*.zip ../packs/
+        else
+		echo ""
+                echo " Build Failure. Please try again"
+        fi
+	popd
         ;;
     *)
         help
