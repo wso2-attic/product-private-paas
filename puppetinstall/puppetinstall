@@ -236,6 +236,7 @@ function install_on_ubuntu(){
 # Configure puppet master
 	    	${ECHO} "Configuring puppet master ... "	    	
 	    	${ECHO} -e "*.${DOMAIN}" > /etc/puppet/autosign.conf && : || print_error "Failed to configure puppet master's '/etc/puppet/autosign.conf'."
+		${SED} -i "/server=*/d" /etc/puppet/puppet.conf && print_ok || print_error "Failed to configure puppet master's '/etc/puppet/puppet.conf'."
 	    	${SED} -i "2i server=${MASTERHOSTNAME}" /etc/puppet/puppet.conf && print_ok || print_error "Failed to configure puppet master's '/etc/puppet/puppet.conf'."
 	    	print_message "Restarting puppet master service ... "
 	    	/etc/init.d/puppetmaster restart && ${ECHO} -e "Installation completed successfully." || print_error "Failed to restart puppet master."		
@@ -297,7 +298,7 @@ function install_on_redhat(){
 # Configure puppet master
 	    	${ECHO} "Configuring puppet server ... "
 	    	${ECHO} -e "*.${DOMAIN}" > /etc/puppet/autosign.conf && : || print_error "Failed to configure puppet master's '/etc/puppet/autosign.conf'."
-		${SED} -i "/server=*/d" /etc/puppet/puppet.conf && print_ok || print_error "Failed to configure puppet agent's '/etc/puppet/puppet.conf'."
+		${SED} -i "/server=*/d" /etc/puppet/puppet.conf && print_ok || print_error "Failed to configure puppet master's '/etc/puppet/puppet.conf'."
 	    	${SED} -i "2i server=${MASTERHOSTNAME}" /etc/puppet/puppet.conf && print_ok || print_error "Failed to configure puppet server's '/etc/puppet/puppet.conf'."
 	    	print_message "Restarting puppet server service ... "
 	    	/etc/init.d/puppetmaster restart && ${ECHO} -e "Installation completed successfully. \nOpen port 8140 via IPtables." || print_error "Failed to restart puppet server."		
