@@ -250,11 +250,13 @@ public class CartridgeAgent implements Runnable {
             	repoInformation.setRepoPassword("");
             }else {
             	repoInformation.setRepoPassword(repoPassword);
-            }            
+            }
+            log.info("repo URL:" + repoURL);
             repoInformation.setRepoUrl(repoURL);
             repoInformation.setRepoPath(localRepoPath);
             repoInformation.setTenantId(tenantId);
             repoInformation.setMultitenant(isMultitenant);
+            repoInformation.setCommitEnabled(artifactUpdatedEvent.isCommitEnabled());
             boolean cloneExists = GitBasedArtifactRepository.getInstance().cloneExists(repoInformation);
             GitBasedArtifactRepository.getInstance().checkout(repoInformation);
 

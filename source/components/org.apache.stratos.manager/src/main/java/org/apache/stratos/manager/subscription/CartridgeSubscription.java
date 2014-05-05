@@ -120,7 +120,10 @@ public abstract class CartridgeSubscription implements Serializable {
     }
 
     public void addDomains(Set<String> domains) {
-        domains.addAll(domains);
+        if(domains != null && domains.size() !=0) {
+            domains.addAll(domains);
+        }
+
     }
 
     public void removeDomain(String domain) {

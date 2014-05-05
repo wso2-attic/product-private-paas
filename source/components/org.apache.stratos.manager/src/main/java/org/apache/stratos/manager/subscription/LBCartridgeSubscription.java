@@ -41,6 +41,8 @@ import org.apache.stratos.manager.subscriber.Subscriber;
 import org.apache.stratos.manager.subscription.tenancy.SubscriptionTenancyBehaviour;
 import org.apache.stratos.manager.utils.ApplicationManagementUtil;
 
+import java.util.Set;
+
 public class LBCartridgeSubscription extends CartridgeSubscription {
 
     private LoadBalancerCategory loadBalancerCategory;
@@ -59,9 +61,8 @@ public class LBCartridgeSubscription extends CartridgeSubscription {
         super(cartridgeInfo, subscriptionTenancyBehaviour);
         setLoadBalancerCategory(loadBalancerCategory);
     }
-
     public void createSubscription (Subscriber subscriber, String alias, String autoscalingPolicy,
-                                    String deploymentPolicyName, Repository repository)
+                                    String deploymentPolicyName, Repository repository, Set<String> domains)
             throws ADCException, PolicyException, UnregisteredCartridgeException, InvalidCartridgeAliasException,
             DuplicateCartridgeAliasException, RepositoryRequiredException, AlreadySubscribedException,
             RepositoryCredentialsRequiredException, InvalidRepositoryException, RepositoryTransportException {

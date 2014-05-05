@@ -57,6 +57,7 @@ public class InstanceNotificationPublisher {
         artifactUpdateEvent.setRepoPassword(repository.getPassword());
         artifactUpdateEvent.setRepoURL(repository.getUrl());
         artifactUpdateEvent.setTenantId(tenantId);
+        artifactUpdateEvent.setCommitEnabled(repository.isCommitEnabled());
 
         log.info(String.format("Publishing artifact updated event: [cluster] %s " +
                 "[repo-URL] %s [repo-username] %s [repo-password] %s [tenant-id] %s",

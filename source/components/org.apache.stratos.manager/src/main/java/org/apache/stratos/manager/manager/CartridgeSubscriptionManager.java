@@ -320,6 +320,10 @@ public class CartridgeSubscriptionManager {
                 encryptedRepoPassword,
                 subscriptionData.isPrivateRepository());
 
+        if(repository != null) {
+            repository.setCommitEnabled(subscriptionData.isCommitsEnabled());
+        }
+
         // set the LB cluster id relevant to this service cluster
         cartridgeSubscription.setLbClusterId(lbClusterId);
 
