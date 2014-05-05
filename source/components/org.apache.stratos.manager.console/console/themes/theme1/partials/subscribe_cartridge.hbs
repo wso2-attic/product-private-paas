@@ -56,7 +56,7 @@
                     <div class="form-inline">
                         <input name="repoURL"
                                type="text"
-                               class="required form-control input-xlarge js-help"
+                               class="form-control input-xlarge js-help"
                                data-help="Specify a repository URL of the artifacts."
                                data-help-x-offset="50"
                                data-help-y-offset="10"
@@ -204,7 +204,7 @@
         var $commitsEnabled = $('#commitsEnabled');
 
         var toggleCredentials = function(){
-            if($public_check.is(':checked') && !$commitsEnabled.is(":checked") ){
+            if($public_check.is(':checked')){
                 $('#credential_container').hide();
             }else{
                 $('#credential_container').show();
