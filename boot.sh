@@ -2,8 +2,8 @@
 
 # Die on any error:
 set -e
-
 current_dir=`pwd`
+source "$current_dir/conf.sh"
 setup_path="$current_dir/stratos-installer"
 stratos_pack_path="$current_dir/packs"
 stratos_install_path="$current_dir/install"
@@ -278,13 +278,13 @@ esb_config_path="config/esb"
 
 cp -f $stratos_pack_path/apache-stratos-cartridge-agent-4.0.0-incubating-bin.zip /etc/puppet/modules/agent/files
 cp -f $stratos_pack_path/apache-stratos-load-balancer-4.0.0-incubating.zip /etc/puppet/modules/lb/files
-cp -f $stratos_pack_path/jdk-7u45-linux-x64.tar.gz /etc/puppet/modules/java/files
+cp -f $stratos_pack_path/$JAVA_FILE_DISTRUBUTION /etc/puppet/modules/java/files
 cp -f $stratos_pack_path/wso2as-5.2.1.zip /etc/puppet/modules/appserver/files
-cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/appserver/files/configs/repository/components/lib
+cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/appserver/files/configs/repository/components/lib
 cp -f $stratos_pack_path/wso2esb-4.8.1.zip /etc/puppet/modules/esb/files
-cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/esb/files/configs/repository/components/lib
+cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/esb/files/configs/repository/components/lib
 cp -f $stratos_pack_path/wso2bps-3.2.0.zip /etc/puppet/modules/bps/files
-cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/bps/files/configs/repository/components/lib
+cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/bps/files/configs/repository/components/lib
 
 
 backup_file "/etc/puppet/manifests/nodes.pp"
@@ -304,8 +304,8 @@ replace_in_file "ESB_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "BPS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "BPS_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "JAVA_FILE" "jdk-7u45-linux-x64.tar.gz" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "JAVA_NAME" "jdk1.7.0_45" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "JAVA_FILE" "$JAVA_FILE_DISTRUBUTION" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "JAVA_NAME" "$JAVA_NAME_EXTRACTED" "/etc/puppet/manifests/nodes.pp"
 # JAVA_NAME should be match with extracting dir name of java tar.gz archive, eg. jdk-7u45-linux-x64.tar.gz -> jdk1.7.0_45
 
 # Application Server
@@ -358,8 +358,8 @@ cd $cwd
 # Copy activemq client jars to puppet
 for activemq_client_lib in "${activemq_client_libs[@]}" 
     do
-	cp -f $stratos_install_path/apache-activemq-5.9.1/lib/$activemq_client_lib /etc/puppet/modules/agent/files/activemq/
-        cp -f $stratos_install_path/apache-activemq-5.9.1/lib/$activemq_client_lib /etc/puppet/modules/lb/files/activemq/
+	cp -f $stratos_install_path/$ACTIVE_MQ_EXTRACTED/lib/$activemq_client_lib /etc/puppet/modules/agent/files/activemq/
+        cp -f $stratos_install_path/$ACTIVE_MQ_EXTRACTED/lib/$activemq_client_lib /etc/puppet/modules/lb/files/activemq/
     done
 
 export JAVA_HOME=$JAVA_HOME
