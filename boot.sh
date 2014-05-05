@@ -200,6 +200,8 @@ read -p "Do you need to deploy ESB (Enterprise Service Bus) service ? [y/n] " -n
 echo
 read -p "Do you need to deploy BPS (Business Process Server) service ? [y/n] " -n 1 -r  bps_needed
 echo
+read -p "Do you need to deploy APIM (API Manager) service ? [y/n] " -n 1 -r  apim_needed
+echo
 
 read -p "Are you sure you want to start WSO2 Private PAAS ? [y/n] " -r  confirm
 
@@ -333,6 +335,18 @@ replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/bps/manifes
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/bps/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/bps/manifests/params.pp"
 
+# APIM
+backup_file "/etc/puppet/modules/bps/manifests/params.pp"
+replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/apimanager/manifests/params.pp"
+replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/apimanager/manifests/params.pp"
+replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/apimanager/manifests/params.pp"
+replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/apimanager/manifests/params.pp"
+replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
+replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/apimanager/manifests/params.pp"
+replace_in_file "CONFIG_DB" "config" "/etc/puppet/modules/apimanager/manifests/params.pp"
+replace_in_file "STATS_DB" "amstats" "/etc/puppet/modules/apimanager/manifests/params.pp"
+replace_in_file "APIM_DB" "apim" "/etc/puppet/modules/apimanager/manifests/params.pp"
+
 # Restart puppet master after configurations
 /etc/init.d/puppetmaster restart
 
@@ -378,6 +392,35 @@ then
     echo -e "Deploying a Application Service service"
     curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/appserver-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
 fi
+
+#if [[ $apim_needed =~ ^[Yy]$ ]]
+#then
+#    echo -e "Deploying a API Manager (AM) cartridge at $resource_path/json/$iaas/gateway.json"
+#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/gateway.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+#
+##    echo -e "Deploying a Application Service service"
+#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/gateway-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+#
+#    echo -e "Deploying a API Manager (AM) cartridge at $resource_path/json/$iaas/keymanager.json"
+#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/keymanager.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+##
+#    echo -e "Deploying a Application Service service"
+#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/keymanager-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+##
+#    echo -e "Deploying a API Manager (AM) cartridge at $resource_path/json/$iaas/publisher.json"
+#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/publisher.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+##
+#    echo -e "Deploying a Application Service service"
+#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/publisher-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+##
+#    echo -e "Deploying a API Manager (AM) cartridge at $resource_path/json/$iaas/store.json"
+#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/store.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+#
+#    echo -e "Deploying a Application Service service"
+#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/store-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+##
+#   
+#fi
 
 if [[ $esb_needed =~ ^[Yy]$ ]]
 then

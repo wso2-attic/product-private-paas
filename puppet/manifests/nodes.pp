@@ -235,6 +235,119 @@ node /bps/ inherits base {
 
 }
 
+
+node /gateway/ inherits base {
+  $docroot = "/mnt/wso2am-1.6.0"
+  require java
+  class {'agent':}
+  class {'apimanager':
+
+	version            => "1.6.0",
+  env                => undef,
+  #sub_cluster_domain => 'mgt',
+  sub_cluster_domain => undef,
+  local_member_port  => '5000',
+  members            => {'127.0.0.1' => '4000'},
+  port_mapping       => false,
+  amtype             => 'gateway',
+  offset             => 0,
+  config_database          => 'config',
+  maintenance_mode   => 'refresh',
+  depsync            => false,
+  clustering         => true,
+  cloud              => true,
+  owner              => 'root',
+  group              => 'root',
+  target             => '/mnt'
+
+  }
+
+}
+
+node /keymanager/ inherits base {
+  $docroot = "/mnt/wso2am-1.6.0"
+  require java
+  class {'agent':}
+  class {'apimanager':
+
+        version            => "1.6.0",
+  env                => undef,
+  sub_cluster_domain => undef,
+  local_member_port  => '5000',
+  members            => {'127.0.0.1' => '4000'},
+  port_mapping       => false,
+  amtype             => 'keymanager',
+  offset             => 0,
+  config_database          => 'config',
+  maintenance_mode   => 'refresh',
+  depsync            => false,
+  clustering         => true,
+  cloud              => true,
+  owner              => 'root',
+  group              => 'root',
+  target             => '/mnt'
+
+  }
+
+}
+
+
+node /apistore/ inherits base {
+  $docroot = "/mnt/wso2am-1.6.0"
+  require java
+  class {'agent':}
+  class {'apimanager':
+
+        version            => "1.6.0",
+  env                => undef,
+  sub_cluster_domain => undef,
+  local_member_port  => '5000',
+  members            => {'127.0.0.1' => '4000'},
+  port_mapping       => false,
+  amtype             => 'apistore',
+  offset             => 0,
+  config_database          => 'config',
+  maintenance_mode   => 'refresh',
+  depsync            => false,
+  clustering         => true,
+  cloud              => true,
+  owner              => 'root',
+  group              => 'root',
+  target             => '/mnt'
+
+  }
+
+}
+
+
+node /publisher/ inherits base {
+  $docroot = "/mnt/wso2am-1.6.0"
+  require java
+  class {'agent':}
+  class {'apimanager':
+
+        version            => "1.6.0",
+  env                => undef,
+  sub_cluster_domain => undef,
+  local_member_port  => '5000',
+  members            => {'127.0.0.1' => '4000'},
+  port_mapping       => false,
+  amtype             => 'publisher',
+  offset             => 0,
+  config_database          => 'config',
+  maintenance_mode   => 'refresh',
+  depsync            => false,
+  clustering         => true,
+  cloud              => true,
+  owner              => 'root',
+  group              => 'root',
+  target             => '/mnt'
+
+  }
+
+}
+
+
 # stratos components related nodes
 # not supported in alpha version.
 node 'autoscaler.wso2.com' inherits base {

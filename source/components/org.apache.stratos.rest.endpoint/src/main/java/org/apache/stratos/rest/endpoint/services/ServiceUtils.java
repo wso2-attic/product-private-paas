@@ -1051,6 +1051,22 @@ public class ServiceUtils {
         return arrCluster;
 
     }
+    
+	public static org.apache.stratos.rest.endpoint.bean.topology.Cluster[] getClustersForCartridgeType(String cartridgeType) {
+
+		Set<Cluster> clusterSet = TopologyClusterInformationModel
+				.getInstance()
+				.getClusters(cartridgeType);
+		List<org.apache.stratos.rest.endpoint.bean.topology.Cluster> clusters = new ArrayList<org.apache.stratos.rest.endpoint.bean.topology.Cluster>();
+		for (Cluster cluster : clusterSet) {
+			clusters.add(PojoConverter.populateClusterPojos(cluster));
+		}
+		org.apache.stratos.rest.endpoint.bean.topology.Cluster[] arrCluster = new org.apache.stratos.rest.endpoint.bean.topology.Cluster[clusters
+				.size()];
+		arrCluster = clusters.toArray(arrCluster);
+		return arrCluster;
+
+	}
 
     // return the cluster id for the lb. This is a temp fix.
     /*private static String subscribeToLb(String cartridgeType, String loadBalancedCartridgeType, String lbAlias,
