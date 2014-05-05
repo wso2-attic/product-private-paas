@@ -28,6 +28,7 @@ import org.apache.stratos.cloud.controller.stub.pojo.Properties;
 import org.apache.stratos.cloud.controller.stub.pojo.Property;
 import org.apache.stratos.manager.client.CloudControllerServiceClient;
 import org.apache.stratos.manager.dao.CartridgeSubscriptionInfo;
+import org.apache.stratos.manager.deploy.service.Service;
 import org.apache.stratos.manager.dto.SubscriptionInfo;
 import org.apache.stratos.manager.exception.*;
 import org.apache.stratos.manager.lb.category.*;
@@ -293,23 +294,38 @@ public class CartridgeSubscriptionManager {
         // Create the CartridgeSubscription instance
         CartridgeSubscription cartridgeSubscription = CartridgeSubscriptionFactory.getCartridgeSubscriptionInstance(cartridgeInfo, tenancyBehaviour);
 
-        // Generate and set the key
-        String subscriptionKey = CartridgeSubscriptionUtils.generateSubscriptionKey();
-        cartridgeSubscription.setSubscriptionKey(subscriptionKey);
         
-        String encryptedRepoPassword;
-        String repositoryPassword = subscriptionData.getRepositoryPassword();
-        if(repositoryPassword != null && !repositoryPassword.isEmpty()) {
-        	encryptedRepoPassword = RepoPasswordMgtUtil.encryptPassword(repositoryPassword, subscriptionKey);
-        } else {
-        	encryptedRepoPassword = "";
+        // For MT cartridges subscription key should not be generated for every subscription,
+        // instead use the already generated key at the time of service deployment
+        String subscriptionKey = null;
+        if(cartridgeInfo.getMultiTenant()) {
+        	try {
+				Service service = new DataInsertionAndRetrievalManager().getService(subscriptionData.getCartridgeType());
+				if(service != null) {
+					subscriptionKey = service.getSubscriptionKey();
+				}else {
+					String msg = "Could not find service for cartridge type [" + subscriptionData.getCartridgeType() + "] " ;
+					log.error(msg);				
+					throw new ADCException(msg);
+				}
+			} catch (Exception e) {
+				String msg = "Exception has occurred in get service for cartridge type [" + subscriptionData.getCartridgeType() + "] " ;
+				log.error(msg);				
+				throw new ADCException(msg, e);
+			}
+        }else {
+        	// Generate and set the key
+            subscriptionKey = CartridgeSubscriptionUtils.generateSubscriptionKey();
         }
+        
+        cartridgeSubscription.setSubscriptionKey(subscriptionKey);
 
         if(log.isDebugEnabled()) {
             log.debug("Repository with url: " + subscriptionData.getRepositoryURL() +
                     " username: " + subscriptionData.getRepositoryUsername() +
                     " Type: " + subscriptionData.getRepositoryType());
         }
+        
         // Create subscriber
         Subscriber subscriber = new Subscriber(subscriptionData.getTenantAdminUsername(), subscriptionData.getTenantId(), subscriptionData.getTenantDomain());
         cartridgeSubscription.setSubscriber(subscriber);
@@ -317,11 +333,24 @@ public class CartridgeSubscriptionManager {
 
         // Create repository
         Repository repository = cartridgeSubscription.manageRepository(subscriptionData.getRepositoryURL(), subscriptionData.getRepositoryUsername(),
-                encryptedRepoPassword,
+        		subscriptionData.getRepositoryPassword(),
                 subscriptionData.isPrivateRepository());
 
+        // Update repository attributes
         if(repository != null) {
+        	
             repository.setCommitEnabled(subscriptionData.isCommitsEnabled());
+            
+            // Encrypt repository password
+            String encryptedRepoPassword;
+            String repositoryPassword = repository.getPassword();
+            if(repositoryPassword != null && !repositoryPassword.isEmpty()) {
+            	encryptedRepoPassword = RepoPasswordMgtUtil.encryptPassword(repositoryPassword, subscriptionKey);
+            } else {
+            	encryptedRepoPassword = "";
+            }
+            repository.setPassword(encryptedRepoPassword);
+            
         }
 
         // set the LB cluster id relevant to this service cluster
