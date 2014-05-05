@@ -17,6 +17,16 @@
             "protocol": "https",
             "port": "9443",
             "proxyPort": "443"
+         },
+	{
+            "protocol": "http",
+            "port": "8280",
+            "proxyPort": "8280"
+         },
+         {
+            "protocol": "https",
+            "port": "8243",
+            "proxyPort": "8243"
          }
        ],
       "deployment": {
