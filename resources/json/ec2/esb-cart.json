@@ -16,14 +16,25 @@
             "protocol": "https",
             "port": "9443",
             "proxyPort": "443"
+         },
+	  {
+            "protocol": "http",
+            "port": "8280",
+            "proxyPort": "8280"
+         },
+         {
+            "protocol": "https",
+            "port": "8243",
+            "proxyPort": "8243"
          }
+
        ],
       "deployment": {
         },
        "iaasProvider": [
         {
           "type": "ec2",
-          "imageId": "ap-southeast-1/ami-d8a4f78a",
+          "imageId": "ap-southeast-1/ami-3c0f5d6e",
           "maxInstanceLimit": "4",
           "property": [
             {
