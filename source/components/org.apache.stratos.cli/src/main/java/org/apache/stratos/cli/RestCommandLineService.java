@@ -1898,4 +1898,53 @@ public class RestCommandLineService {
 		public CartridgeWrapper() {
 		}
 	}
+
+    public boolean isMultiTenant(String type) throws CommandException {
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        try {
+            HttpResponse response = restClient.doGet(httpClient, restClient.getBaseURL() + listAvailableCartridgesRestEndpoint);
+
+            String responseCode = "" + response.getStatusLine().getStatusCode();
+            String resultString = getHttpResponseString(response);
+            if (resultString == null) {
+                return false;
+            }
+
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+
+            if (!responseCode.equals(CliConstants.RESPONSE_OK)) {
+                ExceptionMapper exception = gson.fromJson(resultString, ExceptionMapper.class);
+                System.out.println(exception);
+                return false;
+            }
+
+            CartridgeList cartridgeList = gson.fromJson(resultString, CartridgeList.class);
+
+            if (cartridgeList == null) {
+                System.out.println("Available cartridge list is null");
+                return false;
+            }
+
+            ArrayList<Cartridge> multiTenetCartridge = new ArrayList<Cartridge>();
+
+            for (Cartridge cartridge : cartridgeList.getCartridge()) {
+                if (cartridge.isMultiTenant() && cartridge.getCartridgeType().equals(type)) {
+                    multiTenetCartridge.add(cartridge);
+                }
+            }
+
+            if (multiTenetCartridge.size() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (Exception e) {
+            handleException("Exception in listing available cartridges", e);
+            return false;
+        } finally {
+            httpClient.getConnectionManager().shutdown();
+        }
+    }
 }
