@@ -263,7 +263,9 @@ elif [[ "$iaas" == "vcloud" ]];then
 fi
 
 # replace the region of partition file
-sed  "s/REGION/$region/g" resources/json/$iaas/partition.json > tmp/partition.json
+sed  "s/REGION/$region/g" resources/json/$iaas/partition.json > tmp/partition_tmp.json
+sed  "s/AVAILABILITY_ZONE/$ec2_availability_zone/g" tmp/partition_tmp.json > tmp/partition.json
+rm tmp/partition_tmp.json
 
 # Create databases for the governence registry
 # Using the same userstore to the registry

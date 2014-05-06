@@ -6,9 +6,9 @@
         	"name": "region",
         	"value": "REGION"
       	},    
-      {
+        {
         	"name": "zone",
-        	"value": "ap-southeast-1a"
+        	"value": "AVAILABILITY_ZONE"
       	}
   	]
 }
