@@ -1,0 +1,36 @@
+{
+      "type": "is",
+      "provider": "wso2",
+      "host": "is.wso2.com",
+      "displayName": "IS",
+      "description": "IS Cartridge",
+      "version": "4.6.0",
+      "multiTenant": "true",
+      "portMapping": [
+         {
+            "protocol": "http",
+            "port": "9763",
+            "proxyPort": "80"
+         },
+         {
+            "protocol": "https",
+            "port": "9443",
+            "proxyPort": "443"
+         }
+       ],
+      "deployment": {
+        },
+       "iaasProvider": [
+        {
+          "type": "ec2",
+          "imageId": "ap-southeast-1/ami-3c0f5d6e",
+          "maxInstanceLimit": "4",
+          "property": [
+            {
+             "name": "instanceType",
+             "value": "m1.medium"
+            }
+          ]
+        }
+      ]
+}
