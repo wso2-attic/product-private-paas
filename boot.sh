@@ -196,6 +196,8 @@ fi
 
 read -p "Do you need to deploy AS (Application Server) service ? [y/n] " -n 1 -r as_needed
 echo
+read -p "Do you need to deploy IS (Identty Server) service ? [y/n] " -n 1 -r  is_needed
+echo
 read -p "Do you need to deploy ESB (Enterprise Service Bus) service ? [y/n] " -n 1 -r  esb_needed
 echo
 read -p "Do you need to deploy BPS (Business Process Server) service ? [y/n] " -n 1 -r  bps_needed
@@ -307,6 +309,8 @@ replace_in_file "AS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "AS_CONFIG_PATH" "$as_config_path" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "ESB_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "IS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "IS_CONFIG_PATH" "$is_config_path" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "BPS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "BPS_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "JAVA_FILE" "$JAVA_FILE_DISTRUBUTION" "/etc/puppet/manifests/nodes.pp"
@@ -321,6 +325,16 @@ replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/appserver/manifest
 replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/appserver/manifests/params.pp"
+
+
+# IS
+backup_file "/etc/puppet/modules/is/manifests/params.pp"
+replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/is/manifests/params.pp"
+replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/is/manifests/params.pp"
+replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/is/manifests/params.pp"
+replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/is/manifests/params.pp"
+replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/is/manifests/params.pp"
+replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/is/manifests/params.pp"
 
 # ESB
 backup_file "/etc/puppet/modules/esb/manifests/params.pp"
@@ -398,6 +412,17 @@ then
     curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/appserver-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
 fi
 
+if [[ $is_needed =~ ^[Yy]$ ]]
+then
+echo -e ""
+    echo -e "Identity Server (IS) cartridge at $resource_path/json/$iaas/esb-cart.json"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/is-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+
+echo -e ""
+    echo -e "Identity Server (IS) service at is-service-deployment.json"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/is-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+fi
+
 if [[ $apim_needed =~ ^[Yy]$ ]]
 then
     echo -e "Deploying a API Manager (AM) cartridge at $resource_path/json/$iaas/gateway.json"
@@ -472,6 +497,7 @@ then
 
    # replace the sso-idp-config.xml file
    replace_in_file 'AS_ASSERTION_CONSUMER_HOST' appserver.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/sso-idp-config.xml
+   replace_in_file 'IS_ASSERTION_CONSUMER_HOST' is.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/sso-idp-config.xml
    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/sso-idp-config.xml
    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/sso-idp-config.xml
 
