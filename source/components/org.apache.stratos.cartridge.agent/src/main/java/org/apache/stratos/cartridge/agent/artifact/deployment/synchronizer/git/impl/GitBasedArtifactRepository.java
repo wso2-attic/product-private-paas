@@ -144,8 +144,11 @@ public class GitBasedArtifactRepository {
 
 		if (isMultitenant) {
 			if (tenantId == SUPER_TENANT_ID) {
-				repoPathBuilder.append(gitLocalRepoPath).append(
-						SUPER_TENANT_APP_PATH);
+				// create temp directory for super tenant apps
+				String dirPath = "/tmp/"+SUPER_TENANT_ID;
+				boolean dirStatus = new File(dirPath).mkdir();
+			    log.info("super tenant temp directory created status : " + dirStatus);
+				repoPathBuilder.append(dirPath);
 			} else {
 				// create folder with tenant id
 				createTenantDir(tenantId, gitLocalRepoPath);
@@ -540,7 +543,7 @@ public class GitBasedArtifactRepository {
                 }
 
                 // execute artifact update extension
-                ExtensionUtils.executeArtifactsUpdatedExtension();
+                ExtensionUtils.executeArtifactsUpdatedExtension(String.valueOf(gitRepoCtx.getTenantId()));
             }
 
         } catch (InvalidConfigurationException e) {
@@ -550,7 +553,7 @@ public class GitBasedArtifactRepository {
             Utilities.deleteFolderStructure(new File(gitRepoCtx.getGitLocalRepoPath()));
             cloneRepository(gitRepoCtx);
             // execute artifact update extension
-            ExtensionUtils.executeArtifactsUpdatedExtension();
+            ExtensionUtils.executeArtifactsUpdatedExtension(String.valueOf(gitRepoCtx.getTenantId()));
             return true;
 
         } catch (JGitInternalException e) {
@@ -567,7 +570,7 @@ public class GitBasedArtifactRepository {
             Utilities.deleteFolderStructure(new File(gitRepoCtx.getGitLocalRepoPath()));
             cloneRepository(gitRepoCtx);
             // execute artifact update extension
-            ExtensionUtils.executeArtifactsUpdatedExtension();
+            ExtensionUtils.executeArtifactsUpdatedExtension(String.valueOf(gitRepoCtx.getTenantId()));
             return true;
 
         } catch (GitAPIException e) {

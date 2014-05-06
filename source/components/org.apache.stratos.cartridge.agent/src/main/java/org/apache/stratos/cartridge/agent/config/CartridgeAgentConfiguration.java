@@ -57,6 +57,7 @@ public class CartridgeAgentConfiguration {
     private String persistenceMappings;
     private final boolean isCommitsEnabled;
     private final String listenAddress;
+    private boolean isInternalRepo;
 
     private CartridgeAgentConfiguration() {
     	parameters = loadParametersFile();
@@ -76,6 +77,7 @@ public class CartridgeAgentConfiguration {
             persistenceMappings = readPersisenceMapping();
             isCommitsEnabled = readCommitsEnabled(CartridgeAgentConstants.COMMIT_ENABLED);
             listenAddress = System.getProperty(CartridgeAgentConstants.LISTEN_ADDRESS);
+            isInternalRepo = readInternalRepo(CartridgeAgentConstants.INTERNAL_REPO);
 
         } catch (ParameterNotFoundException e) {
             throw new RuntimeException(e);
@@ -112,6 +114,11 @@ public class CartridgeAgentConfiguration {
 	private boolean readMultitenant(String multitenant) throws ParameterNotFoundException {
     	String multitenantStringValue = readParameterValue(multitenant);
     	return Boolean.parseBoolean(multitenantStringValue);
+	}
+	
+	private boolean readInternalRepo(String internalRepo) throws ParameterNotFoundException {
+    	String internalRepoStringValue = readParameterValue(internalRepo);
+    	return Boolean.parseBoolean(internalRepoStringValue);
 	}
 
 	/**
@@ -274,4 +281,10 @@ public class CartridgeAgentConfiguration {
     public String getListenAddress() {
         return listenAddress;
     }
+
+	public boolean isInternalRepo() {
+		return isInternalRepo;
+	}
+    
+    
 }

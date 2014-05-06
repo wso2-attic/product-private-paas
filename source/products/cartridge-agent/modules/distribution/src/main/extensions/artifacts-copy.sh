@@ -25,12 +25,5 @@
 #
 
 log=/var/log/apache-stratos/cartridge-agent-extensions.log
-echo "Artifacts updated" | tee -a $log
-
-if [ "$1" == "-1234" ]; then
-        echo " Super tenant artifact update event is received. " | tee -a $log
-	cp -rf /tmp/-1234/* /
-else
-        #echo " Id is not -1234" | tee -a $log
-fi
-
+cp -rf $1* $2
+echo "Artifacts Copied" | tee -a $log

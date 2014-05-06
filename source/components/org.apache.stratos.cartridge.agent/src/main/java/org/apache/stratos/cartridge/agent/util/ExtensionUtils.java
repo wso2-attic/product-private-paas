@@ -100,13 +100,13 @@ public class ExtensionUtils {
         }
     }
 
-    public static void executeArtifactsUpdatedExtension() {
+    public static void executeArtifactsUpdatedExtension(String tenantId) {
         try {
             if(log.isDebugEnabled()) {
                 log.debug("Executing artifacts updated extension");
             }
             String command = prepareCommand(CartridgeAgentConstants.ARTIFACTS_UPDATED_SH);
-            CommandUtils.executeCommand(command);
+            CommandUtils.executeCommand(command +" " + tenantId );
         }
         catch (Exception e) {
             log.error("Could not execute artifacts updated extension", e);
@@ -130,6 +130,20 @@ public class ExtensionUtils {
         }
         catch (Exception e) {
                 log.error("Could not execute volume mounting extension", e);
+        }
+    }
+    
+    
+    public static void executeCopyArtifactsExtension(String source, String destination) {
+        try {
+            if(log.isDebugEnabled()) {
+                log.debug("Executing artifacts copy extension");
+            }
+            String command = prepareCommand(CartridgeAgentConstants.ARTIFACTS_COPY_SH);
+            CommandUtils.executeCommand(command +" " + source + " " + destination );
+        }
+        catch (Exception e) {
+            log.error("Could not execute artifacts copy extension", e);
         }
     }
 }
