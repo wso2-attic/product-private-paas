@@ -539,6 +539,8 @@ fi
 if [[ !(-d $stratos_extract_path) ]]; then
     echo "Extracting Apache Stratos"
     unzip -q $stratos_pack_zip -d $stratos_path
+    rsync -avz --exclude=*.md ../patches/* $stratos_path/apache-stratos-4.0.0-incubating/repository/components/patches/
+    cp -rf ../themes/theme1/* $stratos_path/apache-stratos-4.0.0-incubating/repository/deployment/server/jaggeryapps/console/themes/theme1/
     mv -f $stratos_path/apache-stratos-4.0.0-incubating $stratos_extract_path
 fi
 
