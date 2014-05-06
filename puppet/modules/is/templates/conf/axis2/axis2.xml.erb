@@ -589,7 +589,7 @@
     </phaseOrder>
 
     <clustering class="org.wso2.carbon.core.clustering.hazelcast.HazelcastClusteringAgent"
-                enable="false">
+                enable="<%= @clustering %>">
 
         <!--
            This parameter indicates whether the cluster has to be automatically initalized
@@ -611,7 +611,7 @@
                     is deemed to have left the cluster, it will be detected by the Group Membership
                     Service (GMS) using a TCP ping mechanism.
         -->
-        <parameter name="membershipScheme">multicast</parameter>
+        <parameter name="membershipScheme">wka</parameter>
         <!--<parameter name="licenseKey">xxx</parameter>-->
         <!--<parameter name="mgtCenterURL">http://localhost:8081/mancenter/</parameter>-->
 
@@ -619,7 +619,7 @@
          The clustering domain/group. Nodes in the same group will belong to the same multicast
          domain. There will not be interference between nodes in different groups.
         -->
-        <parameter name="domain">wso2.carbon.domain</parameter>
+        <parameter name="domain">wso2.<%= @is_subdomain %>.domain</parameter>
 
         <!-- The multicast address to be used -->
         <!--<parameter name="mcastAddress">228.0.0.4</parameter>-->
@@ -636,11 +636,11 @@
            Multicasting would be done using this interface.
         -->
         <!--
-            <parameter name="mcastBindAddress">127.0.0.1</parameter>
+            <parameter name="mcastBindAddress">bind.<%= @domain %></parameter>
         -->
         <!-- The host name or IP address of this member -->
 
-        <parameter name="localMemberHost">127.0.0.1</parameter>
+        <parameter name="localMemberHost"><%= @ipaddress %></parameter>
 
         <!--
             The bind adress of this member. The difference between localMemberHost & localMemberBindAddress
@@ -655,7 +655,7 @@
         The TCP port used by this member. This is the port through which other nodes will
         contact this member
          -->
-        <parameter name="localMemberPort">4000</parameter>
+        <parameter name="localMemberPort"><%= @clustering_local_port %></parameter>
 
         <!--
             The bind port of this member. The difference between localMemberPort & localMemberBindPort
@@ -672,7 +672,9 @@
         <parameter name="properties">
             <property name="backendServerURL" value="https://${hostName}:${httpsPort}/services/"/>
             <property name="mgtConsoleURL" value="https://${hostName}:${httpsPort}/"/>
-            <property name="subDomain" value="worker"/>
+  <%- if @sub_cluster_domain -%>
+            <property name="subDomain" value="<%= @sub_cluster_domain %>"/>
+ <%- end -%>
         </parameter>
 
         <!--
@@ -681,7 +683,7 @@
         -->
         <members>
             <member>
-                <hostName>127.0.0.1</hostName>
+                <hostName><%= @stratos_instance_data_wso2_elb_host %></hostName>
                 <port>4000</port>
             </member>
         </members>

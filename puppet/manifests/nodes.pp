@@ -190,7 +190,7 @@ node /is/ inherits base {
         sub_cluster_domain => 'test',
         members            => false,
         offset             => 0,
-        tribes_port        => 4100,
+        clustering_local_port        => 4100,
         config_db          => 'IS_CONFIG_DB',
         config_target_path => 'IS_CONFIG_PATH',
         maintenance_mode   => 'zero',
