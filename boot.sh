@@ -196,7 +196,7 @@ fi
 
 read -p "Do you need to deploy AS (Application Server) service ? [y/n] " -n 1 -r as_needed
 echo
-read -p "Do you need to deploy IS (Identty Server) service ? [y/n] " -n 1 -r  is_needed
+read -p "Do you need to deploy IS (Identity Server) service ? [y/n] " -n 1 -r  is_needed
 echo
 read -p "Do you need to deploy ESB (Enterprise Service Bus) service ? [y/n] " -n 1 -r  esb_needed
 echo
