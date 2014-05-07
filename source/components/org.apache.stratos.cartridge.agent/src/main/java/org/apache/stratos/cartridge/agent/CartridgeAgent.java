@@ -102,6 +102,15 @@ public class CartridgeAgent implements Runnable {
     					10, TimeUnit.SECONDS);
     		}
         }
+        
+        if(CartridgeAgentConfiguration.getInstance().isInternalRepo()){
+        	// Start periodic file copy for super tenant
+        	// From repo/deployment/server to /tmp/-1234
+			ScheduledExecutorService scheduler = Executors
+					.newScheduledThreadPool(1);
+			scheduler.scheduleWithFixedDelay(new ArtifactCopyTask(), 0,
+					10, TimeUnit.SECONDS);
+        }
 
         String persistanceMappingsPayload = CartridgeAgentConfiguration.getInstance().getPersistenceMappings();
         if(persistanceMappingsPayload != null) {
@@ -295,8 +304,9 @@ public class CartridgeAgent implements Runnable {
             repoInformation.setCommitEnabled(artifactUpdatedEvent.isCommitEnabled());
             boolean cloneExists = GitBasedArtifactRepository.getInstance().cloneExists(repoInformation);
             GitBasedArtifactRepository.getInstance().checkout(repoInformation);
-
-            ExtensionUtils.executeArtifactsUpdatedExtension();
+           
+            ExtensionUtils.executeArtifactsUpdatedExtension(tenantId);
+            
 
             if(!cloneExists){
                 // Executed git clone, publish instance activated event

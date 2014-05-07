@@ -100,13 +100,13 @@ public class ExtensionUtils {
         }
     }
 
-    public static void executeArtifactsUpdatedExtension() {
+    public static void executeArtifactsUpdatedExtension(String tenantId) {
         try {
             if(log.isDebugEnabled()) {
                 log.debug("Executing artifacts updated extension");
             }
             String command = prepareCommand(CartridgeAgentConstants.ARTIFACTS_UPDATED_SH);
-            CommandUtils.executeCommand(command);
+            CommandUtils.executeCommand(command +" " + tenantId );
         }
         catch (Exception e) {
             log.error("Could not execute artifacts updated extension", e);
@@ -148,14 +148,26 @@ public class ExtensionUtils {
 
     public static void executeSubscriptionDomainRemovedExtension(String domain) {
         try {
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Executing subscription domain removed extension: [domain] %s");
             }
             String command = prepareCommand(CartridgeAgentConstants.SUBSCRIPTION_DOMAIN_ADDED_SH + " " + domain);
             CommandUtils.executeCommand(command);
+        } catch (Exception e) {
+            log.error("Could not execute subscription domain removed extension", e);
+        }
+    }
+    
+    public static void executeCopyArtifactsExtension(String source, String destination) {
+        try {
+            if(log.isDebugEnabled()) {
+                log.debug("Executing artifacts copy extension");
+            }
+            String command = prepareCommand(CartridgeAgentConstants.ARTIFACTS_COPY_SH);
+            CommandUtils.executeCommand(command +" " + source + " " + destination );
         }
         catch (Exception e) {
-            log.error("Could not execute subscription domain removed extension", e);
+            log.error("Could not execute artifacts copy extension", e);
         }
     }
 }
