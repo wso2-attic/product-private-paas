@@ -265,10 +265,12 @@ public class SubscribeCommand implements Command<StratosCommandContext> {
                     password = context.getApplication().getInput("GIT Repository Password", '*');
                 }
 
+                RestCommandLineService.getInstance().listCartridge(type);
+                /*
                 RestCommandLineService.getInstance().subscribe(type, alias, repoURL, privateRepo, username,
                         password, asPolicy, depPolicy, size, removeOnTermination,
                         persistanceMapping, commitsEnabled);
-
+                */
                 return CliConstants.SUCCESSFUL_CODE;
 
             } catch (ParseException e) {

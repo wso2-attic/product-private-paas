@@ -95,6 +95,7 @@ public class RestCommandLineService {
     private final String activateTenantRestEndPoint = "/stratos/admin/tenant/activate";
     private final String listAllTenantRestEndPoint = "/stratos/admin/tenant/list";
 
+
     private static class SingletonHolder {
 		private final static RestCommandLineService INSTANCE = new RestCommandLineService();
 	}
@@ -210,6 +211,37 @@ public class RestCommandLineService {
         this.restClient = restClient;
     }
 
+    public void listCartridge(String cartridgeType) {
+        ///cartridge/available/info/{cartridgeType}
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+
+        HttpResponse response = null;
+        try {
+            String endpoint = restClient.getBaseURL() + "/stratos/admin/cartridge/available/info/"+cartridgeType;
+            System.out.println("***** Sending to " + endpoint);
+            response = restClient.doGet(httpClient, endpoint);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String responseCode = "" + response.getStatusLine().getStatusCode();
+            String resultString = getHttpResponseString(response);
+            System.out.println("**************** " + resultString);
+            if (resultString == null) {
+                return;
+            }
+
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+
+            if ( ! responseCode.equals(CliConstants.RESPONSE_OK)) {
+                ExceptionMapper exception = gson.fromJson(resultString, ExceptionMapper.class);
+                System.out.println(exception);
+                return;
+            }
+
+
+    }
     // List currently available multi tenant and single tenant cartridges
     public void listAvailableCartridges() throws CommandException {
         DefaultHttpClient httpClient = new DefaultHttpClient();
