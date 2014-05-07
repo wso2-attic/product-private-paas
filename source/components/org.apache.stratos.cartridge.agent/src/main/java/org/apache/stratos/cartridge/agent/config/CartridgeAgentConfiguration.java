@@ -58,6 +58,7 @@ public class CartridgeAgentConfiguration {
     private final boolean isCommitsEnabled;
     private final String listenAddress;
     private boolean isInternalRepo;
+    private final String tenantId;
 
     private CartridgeAgentConfiguration() {
     	parameters = loadParametersFile();
@@ -78,6 +79,7 @@ public class CartridgeAgentConfiguration {
             isCommitsEnabled = readCommitsEnabled(CartridgeAgentConstants.COMMIT_ENABLED);
             listenAddress = System.getProperty(CartridgeAgentConstants.LISTEN_ADDRESS);
             isInternalRepo = readInternalRepo(CartridgeAgentConstants.INTERNAL_REPO);
+            tenantId = readParameterValue(CartridgeAgentConstants.TENANT_ID);
 
         } catch (ParameterNotFoundException e) {
             throw new RuntimeException(e);
@@ -212,13 +214,8 @@ public class CartridgeAgentConfiguration {
     private List<String> readLogFilePaths () {
 
         String logFileStr = null;
-        try {
-            logFileStr = readParameterValue(CartridgeAgentConstants.LOG_FILE_PATHS);
-        } catch (ParameterNotFoundException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("Cannot read log file path : " + e.getMessage());
-            }
-        }
+        logFileStr = System.getProperty(CartridgeAgentConstants.LOG_FILE_PATHS);
+
         if (logFileStr == null || logFileStr.isEmpty()) {
             return null;
         }
@@ -285,6 +282,9 @@ public class CartridgeAgentConfiguration {
 	public boolean isInternalRepo() {
 		return isInternalRepo;
 	}
-    
+	
+	public String getTenantId() {
+        return tenantId;
+    }
     
 }

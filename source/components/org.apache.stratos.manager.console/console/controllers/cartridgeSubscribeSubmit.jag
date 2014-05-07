@@ -39,9 +39,7 @@
     var commitsEnabled = request.getParameter('commitsEnabled');
     var serviceGroup = request.getParameter('serviceGroup');
 
-    //	log.info("*************************:" + serviceGroup);
-    var serviceGroup = 'apim';
-	if(persistencerequired == "on"){
+    if(persistencerequired == "on"){
         persistencerequired = true;
     } else {
         persistencerequired = false;
