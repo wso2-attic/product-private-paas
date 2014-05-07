@@ -264,7 +264,7 @@ elif [[ "$iaas" == "vcloud" ]];then
     replace_setup_conf "VCLOUD_JCLOUDS_ENDPOINT" "$vcloud_jclouds_endpoint"
 fi
 
-# replace the region of partition file
+# replace the region and zone of partition file
 sed  "s/REGION/$region/g" resources/json/$iaas/partition.json > tmp/partition_tmp.json
 sed  "s/AVAILABILITY_ZONE/$ec2_availability_zone/g" tmp/partition_tmp.json > tmp/partition.json
 rm tmp/partition_tmp.json
