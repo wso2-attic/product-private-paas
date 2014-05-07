@@ -244,7 +244,14 @@ public class RestCommandLineService {
             ArrayList<Cartridge> multiTenetCartridge = new ArrayList<Cartridge>();
             ArrayList<Cartridge> singleTentCartridge = new ArrayList<Cartridge>();
 
+            HashSet<String> existingServiceGroups = new HashSet<String>();
+
             for (Cartridge cartridge : cartridgeList.getCartridge()) {
+                if(existingServiceGroups.contains(cartridge.getServiceGroup())){
+                    continue;
+                }else{
+                    existingServiceGroups.add(cartridge.getServiceGroup());
+                }
                 if (cartridge.isMultiTenant()) {
                     multiTenetCartridge.add(cartridge);
                 }
@@ -361,7 +368,6 @@ public class RestCommandLineService {
 
             String responseCode = "" + response.getStatusLine().getStatusCode();
             String resultString = getHttpResponseString(response);
-            
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
             
