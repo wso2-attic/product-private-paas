@@ -293,6 +293,10 @@ cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/esb/files/configs/
 cp -f $stratos_pack_path/wso2bps-3.2.0.zip /etc/puppet/modules/bps/files
 cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/bps/files/configs/repository/components/lib
 
+# Copy patches to /etc/puppet
+cp -rf ./patches/patch0008/ /etc/puppet/modules/esb/files/patches
+cp -rf ./patches/patch0008/ /etc/puppet/modules/bps/files/patches
+cp -rf ./patches/patch0009/ /etc/puppet/modules/appserver/files/patches
 
 backup_file "/etc/puppet/manifests/nodes.pp"
 
