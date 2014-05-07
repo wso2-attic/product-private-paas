@@ -45,6 +45,7 @@ properties="-Dmb.ip=MB-IP
 	    -Dmonitoring.server.secure.port=MONITORING-SERVER-SECURE-PORT
 	    -Dmonitoring.server.admin.username=MONITORING-SERVER-ADMIN-USERNAME
 	    -Dmonitoring.server.admin.password=MONITORING-SERVER-ADMIN-PASSWORD"
+	    -Dlog.file.paths=LOG_FILE_PATHS
 
 # Uncomment below line to enable remote debugging
 #debug="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"

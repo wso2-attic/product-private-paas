@@ -77,6 +77,7 @@ node 'base' {
 # php cartridge node
 node /php/ inherits base {
   $docroot = "/var/www/"
+  $log_file_paths = "/var/log/apach2/error.log"
   $syslog="/var/log/apache2/error.log"
   $samlalias="/var/www/"
   require java
@@ -99,7 +100,7 @@ node /lb/ inherits base {
 node /tomcat/ inherits base {
   $docroot = "/mnt/apache-tomcat-${tomcat_version}/webapps/"
   $samlalias="/mnt/apache-tomcat-${tomcat_version}/webapps/"
-
+  $log_file_paths = "/mnt/apache-tomcat-${tomcat_version}/logs/catalina.out"
   require java
   class {'agent':}
   class {'tomcat':}
