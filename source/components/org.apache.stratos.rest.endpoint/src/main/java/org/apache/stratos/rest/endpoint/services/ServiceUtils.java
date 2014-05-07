@@ -1204,4 +1204,53 @@ public class ServiceUtils {
         return stratosAdminResponse;
     }
 
+    public static StratosAdminResponse addSubscriptionDomain(ConfigurationContext configurationContext, String cartridgeType,
+                                                              String subscriptionAlias, String domainName, String applicationAlias) throws RestAPIException {
+        try {
+            int tenantId = ApplicationManagementUtil.getTenantId(configurationContext);
+            cartridgeSubsciptionManager.addSubscriptionDomain(tenantId, subscriptionAlias, domainName, applicationAlias);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new RestAPIException(e.getMessage(), e);
+        }
+
+        StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
+        stratosAdminResponse.setMessage("Successfully added domains to cartridge subscription");
+        return stratosAdminResponse;
+    }
+
+    public static List<String> getSubscriptionDomains(ConfigurationContext configurationContext, String cartridgeType,
+                                                      String subscriptionAlias) throws RestAPIException {
+        try {
+            int tenantId = ApplicationManagementUtil.getTenantId(configurationContext);
+            return cartridgeSubsciptionManager.getSubscriptionDomains(tenantId, subscriptionAlias);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new RestAPIException(e.getMessage(), e);
+        }
+    }
+
+    public static String isSubscriptionDomainValid(String domain) throws RestAPIException {
+        try {
+            return String.valueOf(cartridgeSubsciptionManager.isSubscriptionDomainValid(domain));
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new RestAPIException(e.getMessage(), e);
+        }
+    }
+
+    public static StratosAdminResponse removeSubscriptionDomain(ConfigurationContext configurationContext, String cartridgeType,
+                                                                String subscriptionAlias, String domain) throws RestAPIException {
+        try {
+            int tenantId = ApplicationManagementUtil.getTenantId(configurationContext);
+            cartridgeSubsciptionManager.removeSubscriptionDomain(tenantId, subscriptionAlias, domain);
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new RestAPIException(e.getMessage(), e);
+        }
+
+        StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
+        stratosAdminResponse.setMessage("Successfully removed domains from cartridge subscription");
+        return stratosAdminResponse;
+    }
 }
