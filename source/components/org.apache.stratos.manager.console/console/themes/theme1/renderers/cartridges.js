@@ -28,7 +28,6 @@ var render = function (theme, data, meta, require) {
         var cartridges = data.cartridges.cartridge,cartridges_new =[];
 
 
-
         for (var i = 0; i < cartridges.length; i++) {
             if(cartridges[i].serviceGroup != undefined){
                 if(!cartridges[i].done){
@@ -37,6 +36,7 @@ var render = function (theme, data, meta, require) {
                     var newObj = {};
                     var serviceGroup = cartridges[i].serviceGroup;
                     newObj.serviceGroup = serviceGroup;
+                    newObj.cartridgeType = cartridges[i].cartridgeType;
                     newObj.items = [];
                     newObj.items.push(parse(stringify(cartridges[i])));
 

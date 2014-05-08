@@ -38,10 +38,15 @@ import org.apache.stratos.messaging.event.Event;
 import org.apache.stratos.messaging.event.instance.notifier.ArtifactUpdatedEvent;
 import org.apache.stratos.messaging.event.instance.notifier.InstanceCleanupClusterEvent;
 import org.apache.stratos.messaging.event.instance.notifier.InstanceCleanupMemberEvent;
+import org.apache.stratos.messaging.event.tenant.SubscriptionDomainAddedEvent;
+import org.apache.stratos.messaging.event.tenant.SubscriptionDomainRemovedEvent;
 import org.apache.stratos.messaging.listener.instance.notifier.ArtifactUpdateEventListener;
 import org.apache.stratos.messaging.listener.instance.notifier.InstanceCleanupClusterEventListener;
 import org.apache.stratos.messaging.listener.instance.notifier.InstanceCleanupMemberEventListener;
+import org.apache.stratos.messaging.listener.tenant.SubscriptionDomainsAddedEventListener;
+import org.apache.stratos.messaging.listener.tenant.SubscriptionDomainsRemovedEventListener;
 import org.apache.stratos.messaging.message.receiver.instance.notifier.InstanceNotifierEventReceiver;
+import org.apache.stratos.messaging.message.receiver.tenant.TenantEventReceiver;
 
 import java.util.List;
 import java.util.concurrent.Executors;
@@ -96,6 +101,15 @@ public class CartridgeAgent implements Runnable {
     			scheduler.scheduleWithFixedDelay(new RepositoryFileListener(), 0,
     					10, TimeUnit.SECONDS);
     		}
+        }
+        
+        if(CartridgeAgentConfiguration.getInstance().isInternalRepo()){
+        	// Start periodic file copy for super tenant
+        	// From repo/deployment/server to /tmp/-1234
+			ScheduledExecutorService scheduler = Executors
+					.newScheduledThreadPool(1);
+			scheduler.scheduleWithFixedDelay(new ArtifactCopyTask(), 0,
+					10, TimeUnit.SECONDS);
         }
 
         String persistanceMappingsPayload = CartridgeAgentConfiguration.getInstance().getPersistenceMappings();
@@ -156,6 +170,37 @@ public class CartridgeAgent implements Runnable {
         });
         Thread eventReceiverThread = new Thread(eventReceiver);
         eventReceiverThread.start();
+        if(log.isInfoEnabled()) {
+            log.info("Instance notifier event message receiver thread started");
+        }
+
+        if(log.isDebugEnabled()) {
+            log.debug("Starting tenant event message receiver thread");
+        }
+        TenantEventReceiver tenantEventReceiver = new TenantEventReceiver();
+
+        tenantEventReceiver.addEventListener(new SubscriptionDomainsAddedEventListener() {
+            @Override
+            protected void onEvent(Event event) {
+                SubscriptionDomainAddedEvent subscriptionDomainAddedEvent = (SubscriptionDomainAddedEvent)event;
+                ExtensionUtils.executeSubscriptionDomainAddedExtension(subscriptionDomainAddedEvent.getDomainName(),
+                        subscriptionDomainAddedEvent.getApplicationContext());
+            }
+        });
+
+        tenantEventReceiver.addEventListener(new SubscriptionDomainsRemovedEventListener() {
+            @Override
+            protected void onEvent(Event event) {
+                SubscriptionDomainRemovedEvent subscriptionDomainRemovedEvent = (SubscriptionDomainRemovedEvent)event;
+                ExtensionUtils.executeSubscriptionDomainRemovedExtension(subscriptionDomainRemovedEvent.getDomainName());
+            }
+        });
+
+        Thread tenantEventReceiverThread = new Thread(tenantEventReceiver);
+        tenantEventReceiverThread.start();
+        if(log.isInfoEnabled()) {
+            log.info("Tenant event message receiver thread started");
+        }
 
         // Wait until message receiver is subscribed to the topic to
         // send the instance started event
@@ -250,15 +295,18 @@ public class CartridgeAgent implements Runnable {
             	repoInformation.setRepoPassword("");
             }else {
             	repoInformation.setRepoPassword(repoPassword);
-            }            
+            }
+            log.info("repo URL:" + repoURL);
             repoInformation.setRepoUrl(repoURL);
             repoInformation.setRepoPath(localRepoPath);
             repoInformation.setTenantId(tenantId);
             repoInformation.setMultitenant(isMultitenant);
+            repoInformation.setCommitEnabled(artifactUpdatedEvent.isCommitEnabled());
             boolean cloneExists = GitBasedArtifactRepository.getInstance().cloneExists(repoInformation);
             GitBasedArtifactRepository.getInstance().checkout(repoInformation);
-
-            ExtensionUtils.executeArtifactsUpdatedExtension();
+           
+            ExtensionUtils.executeArtifactsUpdatedExtension(tenantId);
+            
 
             if(!cloneExists){
                 // Executed git clone, publish instance activated event

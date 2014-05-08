@@ -17,6 +17,13 @@
 # Initializing the deployment
 
 define bps::initialize ($repo, $version, $service, $local_dir, $target, $mode, $owner,) {
+
+ file {
+    "/${local_dir}/wso2${service}-${version}.zip":
+      ensure => present,
+      source => "puppet:///modules/bps/wso2${service}-${version}.zip";
+    }
+
   exec {
     "creating_target_for_${name}":
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
@@ -31,7 +38,7 @@ define bps::initialize ($repo, $version, $service, $local_dir, $target, $mode, $
       path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       cwd       => $local_dir,
       unless    => "test -f ${local_dir}/wso2${service}-${version}.zip",
-      command   => "wget -q ${repo}/wso2${service}-${version}.zip",
+      command   => "puppet:///modules/bps/wso2${service}-${version}.zip",
       logoutput => 'on_failure',
       creates   => "${local_dir}/wso2${service}-${version}.zip",
       timeout   => 0,

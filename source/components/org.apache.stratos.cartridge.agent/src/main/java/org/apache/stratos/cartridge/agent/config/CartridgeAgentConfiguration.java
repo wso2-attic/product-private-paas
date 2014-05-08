@@ -57,6 +57,8 @@ public class CartridgeAgentConfiguration {
     private String persistenceMappings;
     private final boolean isCommitsEnabled;
     private final String listenAddress;
+    private boolean isInternalRepo;
+    private final String tenantId;
 
     private CartridgeAgentConfiguration() {
     	parameters = loadParametersFile();
@@ -76,6 +78,8 @@ public class CartridgeAgentConfiguration {
             persistenceMappings = readPersisenceMapping();
             isCommitsEnabled = readCommitsEnabled(CartridgeAgentConstants.COMMIT_ENABLED);
             listenAddress = System.getProperty(CartridgeAgentConstants.LISTEN_ADDRESS);
+            isInternalRepo = readInternalRepo(CartridgeAgentConstants.INTERNAL_REPO);
+            tenantId = readParameterValue(CartridgeAgentConstants.TENANT_ID);
 
         } catch (ParameterNotFoundException e) {
             throw new RuntimeException(e);
@@ -112,6 +116,11 @@ public class CartridgeAgentConfiguration {
 	private boolean readMultitenant(String multitenant) throws ParameterNotFoundException {
     	String multitenantStringValue = readParameterValue(multitenant);
     	return Boolean.parseBoolean(multitenantStringValue);
+	}
+	
+	private boolean readInternalRepo(String internalRepo) throws ParameterNotFoundException {
+    	String internalRepoStringValue = readParameterValue(internalRepo);
+    	return Boolean.parseBoolean(internalRepoStringValue);
 	}
 
 	/**
@@ -205,13 +214,8 @@ public class CartridgeAgentConfiguration {
     private List<String> readLogFilePaths () {
 
         String logFileStr = null;
-        try {
-            logFileStr = readParameterValue(CartridgeAgentConstants.LOG_FILE_PATHS);
-        } catch (ParameterNotFoundException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("Cannot read log file path : " + e.getMessage());
-            }
-        }
+        logFileStr = System.getProperty(CartridgeAgentConstants.LOG_FILE_PATHS);
+
         if (logFileStr == null || logFileStr.isEmpty()) {
             return null;
         }
@@ -274,4 +278,13 @@ public class CartridgeAgentConfiguration {
     public String getListenAddress() {
         return listenAddress;
     }
+
+	public boolean isInternalRepo() {
+		return isInternalRepo;
+	}
+	
+	public String getTenantId() {
+        return tenantId;
+    }
+    
 }

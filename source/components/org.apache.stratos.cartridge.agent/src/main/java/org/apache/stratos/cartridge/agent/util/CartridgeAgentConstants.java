@@ -33,6 +33,9 @@ public class CartridgeAgentConstants implements Serializable{
     public static final String ARTIFACTS_UPDATED_SH = "artifacts-updated.sh";
     public static final String CLEAN_UP_SH = "clean.sh";
     public static final String MOUNT_VOLUMES_SH = "mount_volumes.sh";
+    public static final String SUBSCRIPTION_DOMAIN_ADDED_SH = "subscription-domain-added.sh";
+    public static final String SUBSCRIPTION_DOMAIN_REMOVED_SH = "subscription-domain-removed.sh";
+    public static final String ARTIFACTS_COPY_SH = "artifacts-copy.sh";
 	
 	public static final String CARTRIDGE_KEY = "CARTRIDGE_KEY";
 	public static final String APP_PATH = "APP_PATH";
@@ -41,9 +44,10 @@ public class CartridgeAgentConstants implements Serializable{
     public static final String NETWORK_PARTITION_ID = "NETWORK_PARTITION_ID";
     public static final String PARTITION_ID = "PARTITION_ID";
     public static final String MEMBER_ID = "MEMBER_ID";
+    public static final String TENANT_ID= "TENANT_ID";
     public static final String REPO_URL = "REPO_URL";
     public static final String PORTS = "PORTS";
-    public static final String LOG_FILE_PATHS = "LOG_FILE_PATHS";
+    public static final String LOG_FILE_PATHS = "log.file.paths";
     public static final String MEMORY_CONSUMPTION = "memory_consumption";
     public static final String LOAD_AVERAGE = "load_average";
     public static final String PORTS_NOT_OPEN = "ports_not_open";
@@ -53,4 +57,5 @@ public class CartridgeAgentConstants implements Serializable{
     public static final String COMMIT_ENABLED = "COMMIT_ENABLED";
 
     public static final String LISTEN_ADDRESS = "listen.address";
+    public static final String INTERNAL_REPO = "INTERNAL";
 }

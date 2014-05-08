@@ -95,6 +95,7 @@ public class RestCommandLineService {
     private final String activateTenantRestEndPoint = "/stratos/admin/tenant/activate";
     private final String listAllTenantRestEndPoint = "/stratos/admin/tenant/list";
 
+
     private static class SingletonHolder {
 		private final static RestCommandLineService INSTANCE = new RestCommandLineService();
 	}
@@ -210,6 +211,85 @@ public class RestCommandLineService {
         this.restClient = restClient;
     }
 
+    public Cartridge listCartridge(String cartridgeType) {
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+
+        HttpResponse response = null;
+        try {
+            String endpoint = restClient.getBaseURL() + "/stratos/admin/cartridge/available/info/"+cartridgeType;
+            //System.out.println("***** Sending to " + endpoint);
+            response = restClient.doGet(httpClient, endpoint);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String responseCode = "" + response.getStatusLine().getStatusCode();
+            String resultString = getHttpResponseString(response);
+            //System.out.println("**************** " + resultString);
+            if (resultString == null) {
+                return null;
+            }
+
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+
+            if ( ! responseCode.equals(CliConstants.RESPONSE_OK)) {
+                ExceptionMapper exception = gson.fromJson(resultString, ExceptionMapper.class);
+                System.out.println(exception);
+                return null;
+            }
+        Cartridge cartridge = gson.fromJson(resultString, Cartridge.class);
+        return cartridge;
+
+    }
+
+    public ArrayList<Cartridge> listCartridges(String serviceGroup) {
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+
+        HttpResponse response = null;
+        try {
+            response = restClient.doGet(httpClient, restClient.getBaseURL() + listAvailableCartridgesRestEndpoint);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String responseCode = "" + response.getStatusLine().getStatusCode();
+        String resultString = getHttpResponseString(response);
+        System.out.println("**************** " + resultString);
+        if (resultString == null) {
+            return null;
+        }
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+
+        if ( ! responseCode.equals(CliConstants.RESPONSE_OK)) {
+            ExceptionMapper exception = gson.fromJson(resultString, ExceptionMapper.class);
+            System.out.println(exception);
+            return null;
+        }
+
+        CartridgeList cartridgeList = gson.fromJson(resultString, CartridgeList.class);
+
+        ArrayList<Cartridge> cartridgesInServiceGroup = new ArrayList<Cartridge>();
+        System.out.println("*********** count " + cartridgeList.getCartridge().size());
+
+        for(int i=0; i< cartridgeList.getCartridge().size(); i++){
+            System.out.println("000000000000000000" + cartridgeList.getCartridge().get(i).getDisplayName());
+        }
+        for(Cartridge cart : cartridgeList.getCartridge()){
+            System.out.println("@@" + cart.getDisplayName());
+
+            if(serviceGroup.equals(cart.getServiceGroup())){
+                //cartridgesInServiceGroup.add(cart);
+                //System.out.println("###" + cart.getDisplayName());
+            }
+
+        }
+
+        return cartridgesInServiceGroup;
+    }
+
     // List currently available multi tenant and single tenant cartridges
     public void listAvailableCartridges() throws CommandException {
         DefaultHttpClient httpClient = new DefaultHttpClient();
@@ -244,7 +324,14 @@ public class RestCommandLineService {
             ArrayList<Cartridge> multiTenetCartridge = new ArrayList<Cartridge>();
             ArrayList<Cartridge> singleTentCartridge = new ArrayList<Cartridge>();
 
+            HashSet<String> existingServiceGroups = new HashSet<String>();
+
             for (Cartridge cartridge : cartridgeList.getCartridge()) {
+                if(existingServiceGroups.contains(cartridge.getServiceGroup())){
+                    continue;
+                }else{
+                    existingServiceGroups.add(cartridge.getServiceGroup());
+                }
                 if (cartridge.isMultiTenant()) {
                     multiTenetCartridge.add(cartridge);
                 }
@@ -361,7 +448,6 @@ public class RestCommandLineService {
 
             String responseCode = "" + response.getStatusLine().getStatusCode();
             String resultString = getHttpResponseString(response);
-            
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
             
@@ -1898,4 +1984,53 @@ public class RestCommandLineService {
 		public CartridgeWrapper() {
 		}
 	}
+
+    public boolean isMultiTenant(String type) throws CommandException {
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        try {
+            HttpResponse response = restClient.doGet(httpClient, restClient.getBaseURL() + listAvailableCartridgesRestEndpoint);
+
+            String responseCode = "" + response.getStatusLine().getStatusCode();
+            String resultString = getHttpResponseString(response);
+            if (resultString == null) {
+                return false;
+            }
+
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+
+            if (!responseCode.equals(CliConstants.RESPONSE_OK)) {
+                ExceptionMapper exception = gson.fromJson(resultString, ExceptionMapper.class);
+                System.out.println(exception);
+                return false;
+            }
+
+            CartridgeList cartridgeList = gson.fromJson(resultString, CartridgeList.class);
+
+            if (cartridgeList == null) {
+                System.out.println("Available cartridge list is null");
+                return false;
+            }
+
+            ArrayList<Cartridge> multiTenetCartridge = new ArrayList<Cartridge>();
+
+            for (Cartridge cartridge : cartridgeList.getCartridge()) {
+                if (cartridge.isMultiTenant() && cartridge.getCartridgeType().equals(type)) {
+                    multiTenetCartridge.add(cartridge);
+                }
+            }
+
+            if (multiTenetCartridge.size() > 0) {
+                return true;
+            } else {
+                return false;
+            }
+
+        } catch (Exception e) {
+            handleException("Exception in listing available cartridges", e);
+            return false;
+        } finally {
+            httpClient.getConnectionManager().shutdown();
+        }
+    }
 }

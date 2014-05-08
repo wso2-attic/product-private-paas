@@ -26,12 +26,15 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.stratos.cli.RestCommandLineService;
+import org.apache.stratos.cli.beans.cartridge.Cartridge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.stratos.cli.Command;
 import org.apache.stratos.cli.StratosCommandContext;
 import org.apache.stratos.cli.exception.CommandException;
 import org.apache.stratos.cli.utils.CliConstants;
+
+import java.util.ArrayList;
 
 public class SubscribeCommand implements Command<StratosCommandContext> {
 
@@ -138,6 +141,7 @@ public class SubscribeCommand implements Command<StratosCommandContext> {
             boolean privateRepo = false;
             boolean persistanceMapping = false;
             boolean commitsEnabled = false;
+            boolean isMultiTenant = false;
 
             final CommandLineParser parser = new GnuParser();
             CommandLine commandLine;
@@ -153,16 +157,12 @@ public class SubscribeCommand implements Command<StratosCommandContext> {
                     return CliConstants.BAD_ARGS_CODE;
                 }
 
+                // This will check the subscribe cartridge type is multi tenant or single tenant
+                isMultiTenant = RestCommandLineService.getInstance().isMultiTenant(type);
+
                 if (logger.isDebugEnabled()) {
                     logger.debug("Subscribing to {} cartridge with alias {}", type, alias);
                 }
-
-                //if (commandLine.hasOption(CliConstants.POLICY_OPTION)) {
-                //	if (logger.isTraceEnabled()) {
-                //		logger.trace("Policy option is passed");
-                //	}
-                //	policy = commandLine.getOptionValue(CliConstants.POLICY_OPTION);
-                //}
                 if (commandLine.hasOption(CliConstants.AUTOSCALING_POLICY_OPTION)) {
                     if (logger.isTraceEnabled()) {
                         logger.trace("Autoscaling policy option is passed");
@@ -181,12 +181,6 @@ public class SubscribeCommand implements Command<StratosCommandContext> {
                     }
                     repoURL = commandLine.getOptionValue(CliConstants.REPO_URL_OPTION);
                 }
-                //if (commandLine.hasOption(CliConstants.PRIVATE_REPO_OPTION)) {
-                //	if (logger.isTraceEnabled()) {
-                //		logger.trace("privateRepo option is passed");
-                //	}
-                //	privateRepo = true;
-                //}
                 if (commandLine.hasOption(CliConstants.VOLUME_SIZE_OPTION)) {
                     if (logger.isTraceEnabled()) {
                         logger.trace("Volume size option is passed");
@@ -252,13 +246,13 @@ public class SubscribeCommand implements Command<StratosCommandContext> {
                     commitsEnabled = true;
                 }
 
-                if (depPolicy == null) {
+                if ( ! isMultiTenant && depPolicy == null) {
                     System.out.println("Deployment policy is required.");
                     context.getStratosApplication().printUsage(getName());
                     return CliConstants.BAD_ARGS_CODE;
                 }
 
-                if (asPolicy == null) {
+                if ( ! isMultiTenant && asPolicy == null) {
                     System.out.println("Autoscaling policy is required.");
                     context.getStratosApplication().printUsage(getName());
                     return CliConstants.BAD_ARGS_CODE;
@@ -274,9 +268,22 @@ public class SubscribeCommand implements Command<StratosCommandContext> {
                     password = context.getApplication().getInput("GIT Repository Password", '*');
                 }
 
-                RestCommandLineService.getInstance().subscribe(type, alias, repoURL, privateRepo, username,
-                        password, asPolicy, depPolicy, size, removeOnTermination,
-                        persistanceMapping, commitsEnabled);
+                Cartridge cartridge = RestCommandLineService.getInstance().listCartridge(type);
+                if(cartridge == null){
+                    System.out.println("No cartridge found with the type " + type);
+                }
+                String serviceGroup = cartridge.getServiceGroup();
+
+                ArrayList<Cartridge> cartridgesInSeriviceGroup = RestCommandLineService.getInstance().listCartridges(serviceGroup);
+
+                for (Cartridge cat : cartridgesInSeriviceGroup){
+                    System.out.println("Subscribing to " + cartridge.getCartridgeType());
+                    /*
+                    RestCommandLineService.getInstance().subscribe(cartridge.getCartridgeType(), alias, repoURL, privateRepo, username,
+                            password, asPolicy, depPolicy, size, removeOnTermination,
+                            persistanceMapping, commitsEnabled);
+                    */
+                }
 
                 return CliConstants.SUCCESSFUL_CODE;
 

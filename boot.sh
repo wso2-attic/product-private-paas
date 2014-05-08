@@ -2,8 +2,8 @@
 
 # Die on any error:
 set -e
-
 current_dir=`pwd`
+source "$current_dir/conf.sh"
 setup_path="$current_dir/stratos-installer"
 stratos_pack_path="$current_dir/packs"
 stratos_install_path="$current_dir/install"
@@ -196,6 +196,8 @@ fi
 
 read -p "Do you need to deploy AS (Application Server) service ? [y/n] " -n 1 -r as_needed
 echo
+read -p "Do you need to deploy IS (Identity Server) service ? [y/n] " -n 1 -r  is_needed
+echo
 read -p "Do you need to deploy ESB (Enterprise Service Bus) service ? [y/n] " -n 1 -r  esb_needed
 echo
 read -p "Do you need to deploy BPS (Business Process Server) service ? [y/n] " -n 1 -r  bps_needed
@@ -262,13 +264,18 @@ elif [[ "$iaas" == "vcloud" ]];then
     replace_setup_conf "VCLOUD_JCLOUDS_ENDPOINT" "$vcloud_jclouds_endpoint"
 fi
 
-# replace the region of partition file
-sed  "s/REGION/$region/g" resources/json/$iaas/partition.json > tmp/partition.json
+# replace the region and zone of partition file
+sed  "s/REGION/$region/g" resources/json/$iaas/partition.json > tmp/partition_tmp.json
+sed  "s/AVAILABILITY_ZONE/$ec2_availability_zone/g" tmp/partition_tmp.json > tmp/partition.json
+rm tmp/partition_tmp.json
 
 # Create databases for the governence registry
 # Using the same userstore to the registry
 registry_db="userstore"
 #create_registry_database "$registry_db"
+apim_db="apim_db"
+apim_stats="amstats"
+am_config="am_config"
 
 
 as_config_path="config/as"
@@ -278,14 +285,18 @@ esb_config_path="config/esb"
 
 cp -f $stratos_pack_path/apache-stratos-cartridge-agent-4.0.0-incubating-bin.zip /etc/puppet/modules/agent/files
 cp -f $stratos_pack_path/apache-stratos-load-balancer-4.0.0-incubating.zip /etc/puppet/modules/lb/files
-cp -f $stratos_pack_path/jdk-7u45-linux-x64.tar.gz /etc/puppet/modules/java/files
+cp -f $stratos_pack_path/$JAVA_FILE_DISTRUBUTION /etc/puppet/modules/java/files
 cp -f $stratos_pack_path/wso2as-5.2.1.zip /etc/puppet/modules/appserver/files
-cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/appserver/files/configs/repository/components/lib
+cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/appserver/files/configs/repository/components/lib
 cp -f $stratos_pack_path/wso2esb-4.8.1.zip /etc/puppet/modules/esb/files
-cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/esb/files/configs/repository/components/lib
+cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/esb/files/configs/repository/components/lib
 cp -f $stratos_pack_path/wso2bps-3.2.0.zip /etc/puppet/modules/bps/files
-cp -f $stratos_pack_path/mysql-connector-java-5.1.29-bin.jar /etc/puppet/modules/bps/files/configs/repository/components/lib
+cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/bps/files/configs/repository/components/lib
 
+# Copy patches to /etc/puppet
+cp -rf ./patches/patch0008/ /etc/puppet/modules/esb/files/patches
+cp -rf ./patches/patch0008/ /etc/puppet/modules/bps/files/patches
+cp -rf ./patches/patch0009/ /etc/puppet/modules/appserver/files/patches
 
 backup_file "/etc/puppet/manifests/nodes.pp"
 
@@ -302,10 +313,12 @@ replace_in_file "AS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "AS_CONFIG_PATH" "$as_config_path" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "ESB_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "IS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "IS_CONFIG_PATH" "$is_config_path" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "BPS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
 replace_in_file "BPS_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "JAVA_FILE" "jdk-7u45-linux-x64.tar.gz" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "JAVA_NAME" "jdk1.7.0_45" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "JAVA_FILE" "$JAVA_FILE_DISTRUBUTION" "/etc/puppet/manifests/nodes.pp"
+replace_in_file "JAVA_NAME" "$JAVA_NAME_EXTRACTED" "/etc/puppet/manifests/nodes.pp"
 # JAVA_NAME should be match with extracting dir name of java tar.gz archive, eg. jdk-7u45-linux-x64.tar.gz -> jdk1.7.0_45
 
 # Application Server
@@ -316,6 +329,16 @@ replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/appserver/manifest
 replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/appserver/manifests/params.pp"
+
+
+# IS
+backup_file "/etc/puppet/modules/is/manifests/params.pp"
+replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/is/manifests/params.pp"
+replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/is/manifests/params.pp"
+replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/is/manifests/params.pp"
+replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/is/manifests/params.pp"
+replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/is/manifests/params.pp"
+replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/is/manifests/params.pp"
 
 # ESB
 backup_file "/etc/puppet/modules/esb/manifests/params.pp"
@@ -336,16 +359,16 @@ replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/bps/manifests/
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/bps/manifests/params.pp"
 
 # APIM
-backup_file "/etc/puppet/modules/bps/manifests/params.pp"
+backup_file "/etc/puppet/modules/apimanager/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/apimanager/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/apimanager/manifests/params.pp"
 replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/apimanager/manifests/params.pp"
 replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/apimanager/manifests/params.pp"
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/apimanager/manifests/params.pp"
-replace_in_file "CONFIG_DB" "config" "/etc/puppet/modules/apimanager/manifests/params.pp"
-replace_in_file "STATS_DB" "amstats" "/etc/puppet/modules/apimanager/manifests/params.pp"
-replace_in_file "APIM_DB" "apim" "/etc/puppet/modules/apimanager/manifests/params.pp"
+replace_in_file "CONFIG_DB" "$am_config" "/etc/puppet/modules/apimanager/manifests/params.pp"
+replace_in_file "STATS_DB" "$apim_stats" "/etc/puppet/modules/apimanager/manifests/params.pp"
+replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
 
 # Restart puppet master after configurations
 /etc/init.d/puppetmaster restart
@@ -358,8 +381,8 @@ cd $cwd
 # Copy activemq client jars to puppet
 for activemq_client_lib in "${activemq_client_libs[@]}" 
     do
-	cp -f $stratos_install_path/apache-activemq-5.9.1/lib/$activemq_client_lib /etc/puppet/modules/agent/files/activemq/
-        cp -f $stratos_install_path/apache-activemq-5.9.1/lib/$activemq_client_lib /etc/puppet/modules/lb/files/activemq/
+	cp -f $stratos_install_path/$ACTIVE_MQ_EXTRACTED/lib/$activemq_client_lib /etc/puppet/modules/agent/files/activemq/
+        cp -f $stratos_install_path/$ACTIVE_MQ_EXTRACTED/lib/$activemq_client_lib /etc/puppet/modules/lb/files/activemq/
     done
 
 export JAVA_HOME=$JAVA_HOME
@@ -393,34 +416,44 @@ then
     curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/appserver-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
 fi
 
-#if [[ $apim_needed =~ ^[Yy]$ ]]
-#then
-#    echo -e "Deploying a API Manager (AM) cartridge at $resource_path/json/$iaas/gateway.json"
-#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/gateway.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
-#
-##    echo -e "Deploying a Application Service service"
-#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/gateway-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
-#
-#    echo -e "Deploying a API Manager (AM) cartridge at $resource_path/json/$iaas/keymanager.json"
-#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/keymanager.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
-##
-#    echo -e "Deploying a Application Service service"
-#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/keymanager-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
-##
-#    echo -e "Deploying a API Manager (AM) cartridge at $resource_path/json/$iaas/publisher.json"
-#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/publisher.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
-##
-#    echo -e "Deploying a Application Service service"
-#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/publisher-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
-##
-#    echo -e "Deploying a API Manager (AM) cartridge at $resource_path/json/$iaas/store.json"
-#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/store.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
-#
-#    echo -e "Deploying a Application Service service"
-#    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/store-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
-##
-#   
-#fi
+if [[ $is_needed =~ ^[Yy]$ ]]
+then
+echo -e ""
+    echo -e "Identity Server (IS) cartridge at $resource_path/json/$iaas/is-cart.json"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/is-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+
+echo -e ""
+    echo -e "Identity Server (IS) service at is-service-deployment.json"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/is-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+fi
+
+if [[ $apim_needed =~ ^[Yy]$ ]]
+then
+    echo -e "Deploying a API Manager (AM) cartridge at $resource_path/json/$iaas/gateway.json"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/gateway.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+
+    echo -e "Deploying a Application Service service"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/gateway-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+
+    echo -e "Deploying a API Manager (AM) cartridge at $resource_path/json/$iaas/keymanager.json"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/keymanager.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+
+    echo -e "Deploying a Application Service service"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/keymanager-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+
+    echo -e "Deploying a API Manager (AM) cartridge at $resource_path/json/$iaas/publisher.json"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/publisher.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+
+    echo -e "Deploying a Application Service service"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/publisher-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+
+    echo -e "Deploying a API Manager (AM) cartridge at $resource_path/json/$iaas/store.json"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/store.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+
+    echo -e "Deploying a Application Service service"
+    curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/store-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+
+fi
 
 if [[ $esb_needed =~ ^[Yy]$ ]]
 then
@@ -468,6 +501,7 @@ then
 
    # replace the sso-idp-config.xml file
    replace_in_file 'AS_ASSERTION_CONSUMER_HOST' appserver.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/sso-idp-config.xml
+   replace_in_file 'IS_ASSERTION_CONSUMER_HOST' is.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/sso-idp-config.xml
    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/sso-idp-config.xml
    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.wso2.com $stratos_install_path/wso2is-4.6.0/repository/conf/sso-idp-config.xml
 

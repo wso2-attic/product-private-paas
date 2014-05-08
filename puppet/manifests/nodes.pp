@@ -77,6 +77,7 @@ node 'base' {
 # php cartridge node
 node /php/ inherits base {
   $docroot = "/var/www/"
+  $log_file_paths = "/var/log/apach2/error.log"
   $syslog="/var/log/apache2/error.log"
   $samlalias="/var/www/"
   require java
@@ -99,7 +100,7 @@ node /lb/ inherits base {
 node /tomcat/ inherits base {
   $docroot = "/mnt/apache-tomcat-${tomcat_version}/webapps/"
   $samlalias="/mnt/apache-tomcat-${tomcat_version}/webapps/"
-
+  $log_file_paths = "/mnt/apache-tomcat-${tomcat_version}/logs/catalina.out"
   require java
   class {'agent':}
   class {'tomcat':}
@@ -179,6 +180,31 @@ node /appserver/ inherits base {
 
 }
 
+#is cartridge node
+node /is/ inherits base {
+  $docroot = "/mnt/wso2is-4.6.0"
+  require java
+  class {'agent':}
+  class {'is':
+
+        version            => '4.6.0',
+        sub_cluster_domain => 'test',
+        members            => false,
+        offset             => 0,
+        clustering_local_port        => 4100,
+        config_db          => 'IS_CONFIG_DB',
+        config_target_path => 'IS_CONFIG_PATH',
+        maintenance_mode   => 'zero',
+        depsync            => false,
+        clustering         => false,
+        cloud              => true,
+        owner              => 'root',
+        group              => 'root',
+        target             => '/mnt/'
+
+  }
+
+}
 
 #esb cartridge node
 node /esb/ inherits base {

@@ -26,6 +26,16 @@
 # Die on any error:
 set -e
 
+replace_in_file(){
+    #echo "Setting value $2 for property $1 as $2 in file $3"
+    sed -i "s@$1@$2@g"  $3
+}
+
+current_directory=`pwd`
+replace_in_file 'MYSQL_CONNECTOR' $MYSQL_CONNECTOR $current_directory/conf/setup.conf
+replace_in_file 'ACTIVE_MQ_DISTRIBUTION' $ACTIVE_MQ_DISTRIBUTION $current_directory/conf/setup.conf
+replace_in_file 'ACTIVE_MQ_EXTRACTED' $ACTIVE_MQ_EXTRACTED $current_directory/conf/setup.conf
+
 source "./conf/setup.conf"
 export LOG=$log_path/stratos-setup.log
 
@@ -529,6 +539,8 @@ fi
 if [[ !(-d $stratos_extract_path) ]]; then
     echo "Extracting Apache Stratos"
     unzip -q $stratos_pack_zip -d $stratos_path
+    cp -rf ../patches/patch0008/ $stratos_path/apache-stratos-4.0.0-incubating/repository/components/patches/
+    cp -rf ../themes/theme1/* $stratos_path/apache-stratos-4.0.0-incubating/repository/deployment/server/jaggeryapps/console/themes/theme1/
     mv -f $stratos_path/apache-stratos-4.0.0-incubating $stratos_extract_path
 fi
 
@@ -536,7 +548,7 @@ if [[ ($profile = "default" && $config_mb = "true") ]]; then
     echo "Extracting ActiveMQ"
     tar -xzf $activemq_pack -C $stratos_path
     # disable amqp connector to prevent conflicts with openstack
-    sed -r -i -e 's@^(\s*)(<transportConnector name="amqp".*\s*)$@\1<!--\2-->@g' $stratos_path/apache-activemq-5.9.1/conf/activemq.xml
+    sed -r -i -e 's@^(\s*)(<transportConnector name="amqp".*\s*)$@\1<!--\2-->@g' $stratos_path/$ACTIVE_MQ_EXTRACTED/conf/activemq.xml
 fi
 
 general_setup

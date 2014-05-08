@@ -45,7 +45,8 @@ properties="-Dmb.ip=<%= @mb_ip %>
             -Dmonitoring.server.secure.port=<%= @bam_secure_port %>
             -Dmonitoring.server.admin.username=<%= @bam_username %>
             -Dmonitoring.server.admin.password=<%= @bam_password %>
-	    -DAPP_PATH=<%= @docroot %>"
+	    -DAPP_PATH=<%= @docroot %>
+	    -Dlog.file.paths=<%= @log_file_paths %>"
 
 # Uncomment below line to enable remote debugging
 #debug="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
