@@ -59,7 +59,7 @@ public class InternalRepoBasedCartridgeSubscription extends CartridgeSubscriptio
 		Repository repository = null;
 		String defaultRepoUserName = System.getProperty(CartridgeConstants.INTERNAL_GIT_USERNAME);
 		String defaultRepoPassword = System.getProperty(CartridgeConstants.INTERNAL_GIT_PASSWORD);
-		String[] dirArray = {"README.MD"};
+		String[] dirArray = {"test"};
 		
 		// Repo URL will be generated inside createInternalRepository method
 		RepositoryInfoBean repoInfoBean = new RepositoryInfoBean(repoURL, getAlias(), getSubscriber().getTenantDomain(),

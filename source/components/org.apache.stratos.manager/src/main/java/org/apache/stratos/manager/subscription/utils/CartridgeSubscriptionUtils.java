@@ -63,6 +63,7 @@ public class CartridgeSubscriptionUtils {
         basicPayloadData.setMultitenant(String.valueOf(cartridgeInfo.getMultiTenant()));
         basicPayloadData.setPortMappings(createPortMappingPayloadString(cartridgeInfo));
         basicPayloadData.setServiceName(cartridgeInfo.getType());
+        basicPayloadData.setProvider(cartridgeInfo.getProvider());
 
         if(repository != null) {
             basicPayloadData.setGitRepositoryUrl(repository.getUrl());

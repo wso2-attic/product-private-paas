@@ -290,6 +290,12 @@ public class CloudControllerServiceImpl implements CloudControllerService {
             addToPayload(payload, "LB_CLUSTER_ID", memberContext.getLbClusterId());
             addToPayload(payload, "NETWORK_PARTITION_ID", memberContext.getNetworkPartitionId());
             addToPayload(payload, "PARTITION_ID", partitionId);
+            if(memberContext.getProperties() != null) {
+                for(Map.Entry<Object, Object> entry: memberContext.getProperties().entrySet()) {
+                    addToPayload(payload, entry.getKey().toString(), entry.getValue().toString());
+
+                }
+            }
 
             Iaas iaas = iaasProvider.getIaas();
             if(ctxt.isVolumeRequired()){
