@@ -27,6 +27,7 @@ import org.apache.stratos.common.util.CommonUtil;
 import org.apache.stratos.manager.dto.Cartridge;
 import org.apache.stratos.manager.dto.SubscriptionInfo;
 import org.apache.stratos.manager.subscription.CartridgeSubscription;
+import org.apache.stratos.manager.subscription.SubscriptionDomain;
 import org.apache.stratos.rest.endpoint.ServiceHolder;
 import org.apache.stratos.rest.endpoint.Utils;
 import org.apache.stratos.rest.endpoint.annotation.AuthorizationAction;
@@ -42,6 +43,7 @@ import org.apache.stratos.rest.endpoint.bean.cartridge.definition.CartridgeDefin
 import org.apache.stratos.rest.endpoint.bean.cartridge.definition.ServiceDefinitionBean;
 import org.apache.stratos.rest.endpoint.bean.repositoryNotificationInfoBean.Payload;
 import org.apache.stratos.rest.endpoint.bean.repositoryNotificationInfoBean.Repository;
+import org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean;
 import org.apache.stratos.rest.endpoint.bean.topology.Cluster;
 import org.apache.stratos.rest.endpoint.exception.RestAPIException;
 import org.apache.stratos.tenant.mgt.core.TenantPersistor;
@@ -1032,37 +1034,36 @@ public class StratosAdmin extends AbstractAdmin {
     }
 
     @POST
-    @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domain/")
+    @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domains")
     @Consumes("application/json")
     @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    public StratosAdminResponse addSubscriptionDomain(@PathParam("cartridgeType") String cartridgeType,
-                                                      @PathParam("subscriptionAlias") String subscriptionAlias,
-                                                      SubscriptionDomainRequest request) throws RestAPIException {
+    public StratosAdminResponse addSubscriptionDomains(@PathParam("cartridgeType") String cartridgeType,
+                                                       @PathParam("subscriptionAlias") String subscriptionAlias,
+                                                       SubscriptionDomainRequest request) throws RestAPIException {
 
-        return ServiceUtils.addSubscriptionDomain(getConfigContext(), cartridgeType, subscriptionAlias, request.getDomainName(), request.getApplicationContext());
+        return ServiceUtils.addSubscriptionDomains(getConfigContext(), cartridgeType, subscriptionAlias, request);
     }
 
     @GET
-    @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domain/")
+    @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domains")
     @Consumes("application/json")
     @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    public String[] getSubscriptionDomains(@PathParam("cartridgeType") String cartridgeType,
-                                           @PathParam("subscriptionAlias") String subscriptionAlias) throws RestAPIException {
-
-        return (String[]) ServiceUtils.getSubscriptionDomains(getConfigContext(), cartridgeType, subscriptionAlias).toArray();
+    public SubscriptionDomainBean[] getSubscriptionDomains(@PathParam("cartridgeType") String cartridgeType,
+                                                           @PathParam("subscriptionAlias") String subscriptionAlias) throws RestAPIException {
+        return ServiceUtils.getSubscriptionDomains(getConfigContext(), cartridgeType, subscriptionAlias).toArray(new SubscriptionDomainBean[0]);
     }
 
     @GET
-    @Path("/cartridge/subscription/domain/{domainName}/is-valid")
+    @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domains/{domainName}")
     @Consumes("application/json")
     @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    public String isSubscriptionDomainValid(@PathParam("domainName") String domainName) throws RestAPIException {
-
-        return ServiceUtils.isSubscriptionDomainValid(domainName);
+    public SubscriptionDomainBean getSubscriptionDomain(@PathParam("cartridgeType") String cartridgeType,
+                                                        @PathParam("subscriptionAlias") String subscriptionAlias, @PathParam("domainName") String domainName) throws RestAPIException {
+        return ServiceUtils.getSubscriptionDomain(getConfigContext(), cartridgeType, subscriptionAlias, domainName);
     }
 
     @DELETE
-    @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domain/{domainName}")
+    @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domains/{domainName}")
     @Consumes("application/json")
     @AuthorizationAction("/permission/protected/manage/monitor/tenants")
     public StratosAdminResponse removeSubscriptionDomain(@PathParam("cartridgeType") String cartridgeType,

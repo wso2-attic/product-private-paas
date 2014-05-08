@@ -211,14 +211,13 @@ public class RestCommandLineService {
         this.restClient = restClient;
     }
 
-    public void listCartridge(String cartridgeType) {
-        ///cartridge/available/info/{cartridgeType}
+    public Cartridge listCartridge(String cartridgeType) {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
         HttpResponse response = null;
         try {
             String endpoint = restClient.getBaseURL() + "/stratos/admin/cartridge/available/info/"+cartridgeType;
-            System.out.println("***** Sending to " + endpoint);
+            //System.out.println("***** Sending to " + endpoint);
             response = restClient.doGet(httpClient, endpoint);
         } catch (Exception e) {
             e.printStackTrace();
@@ -226,9 +225,9 @@ public class RestCommandLineService {
 
         String responseCode = "" + response.getStatusLine().getStatusCode();
             String resultString = getHttpResponseString(response);
-            System.out.println("**************** " + resultString);
+            //System.out.println("**************** " + resultString);
             if (resultString == null) {
-                return;
+                return null;
             }
 
             GsonBuilder gsonBuilder = new GsonBuilder();
@@ -237,11 +236,60 @@ public class RestCommandLineService {
             if ( ! responseCode.equals(CliConstants.RESPONSE_OK)) {
                 ExceptionMapper exception = gson.fromJson(resultString, ExceptionMapper.class);
                 System.out.println(exception);
-                return;
+                return null;
             }
-
+        Cartridge cartridge = gson.fromJson(resultString, Cartridge.class);
+        return cartridge;
 
     }
+
+    public ArrayList<Cartridge> listCartridges(String serviceGroup) {
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+
+        HttpResponse response = null;
+        try {
+            response = restClient.doGet(httpClient, restClient.getBaseURL() + listAvailableCartridgesRestEndpoint);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String responseCode = "" + response.getStatusLine().getStatusCode();
+        String resultString = getHttpResponseString(response);
+        System.out.println("**************** " + resultString);
+        if (resultString == null) {
+            return null;
+        }
+
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        Gson gson = gsonBuilder.create();
+
+        if ( ! responseCode.equals(CliConstants.RESPONSE_OK)) {
+            ExceptionMapper exception = gson.fromJson(resultString, ExceptionMapper.class);
+            System.out.println(exception);
+            return null;
+        }
+
+        CartridgeList cartridgeList = gson.fromJson(resultString, CartridgeList.class);
+
+        ArrayList<Cartridge> cartridgesInServiceGroup = new ArrayList<Cartridge>();
+        System.out.println("*********** count " + cartridgeList.getCartridge().size());
+
+        for(int i=0; i< cartridgeList.getCartridge().size(); i++){
+            System.out.println("000000000000000000" + cartridgeList.getCartridge().get(i).getDisplayName());
+        }
+        for(Cartridge cart : cartridgeList.getCartridge()){
+            System.out.println("@@" + cart.getDisplayName());
+
+            if(serviceGroup.equals(cart.getServiceGroup())){
+                //cartridgesInServiceGroup.add(cart);
+                //System.out.println("###" + cart.getDisplayName());
+            }
+
+        }
+
+        return cartridgesInServiceGroup;
+    }
+
     // List currently available multi tenant and single tenant cartridges
     public void listAvailableCartridges() throws CommandException {
         DefaultHttpClient httpClient = new DefaultHttpClient();
