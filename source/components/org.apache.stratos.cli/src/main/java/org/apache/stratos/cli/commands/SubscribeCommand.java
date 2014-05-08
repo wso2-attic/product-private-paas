@@ -26,12 +26,15 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.stratos.cli.RestCommandLineService;
+import org.apache.stratos.cli.beans.cartridge.Cartridge;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.stratos.cli.Command;
 import org.apache.stratos.cli.StratosCommandContext;
 import org.apache.stratos.cli.exception.CommandException;
 import org.apache.stratos.cli.utils.CliConstants;
+
+import java.util.ArrayList;
 
 public class SubscribeCommand implements Command<StratosCommandContext> {
 
@@ -265,9 +268,22 @@ public class SubscribeCommand implements Command<StratosCommandContext> {
                     password = context.getApplication().getInput("GIT Repository Password", '*');
                 }
 
-                RestCommandLineService.getInstance().subscribe(type, alias, repoURL, privateRepo, username,
-                        password, asPolicy, depPolicy, size, removeOnTermination,
-                        persistanceMapping, commitsEnabled);
+                Cartridge cartridge = RestCommandLineService.getInstance().listCartridge(type);
+                if(cartridge == null){
+                    System.out.println("No cartridge found with the type " + type);
+                }
+                String serviceGroup = cartridge.getServiceGroup();
+
+                ArrayList<Cartridge> cartridgesInSeriviceGroup = RestCommandLineService.getInstance().listCartridges(serviceGroup);
+
+                for (Cartridge cat : cartridgesInSeriviceGroup){
+                    System.out.println("Subscribing to " + cartridge.getCartridgeType());
+                    /*
+                    RestCommandLineService.getInstance().subscribe(cartridge.getCartridgeType(), alias, repoURL, privateRepo, username,
+                            password, asPolicy, depPolicy, size, removeOnTermination,
+                            persistanceMapping, commitsEnabled);
+                    */
+                }
 
                 return CliConstants.SUCCESSFUL_CODE;
 
