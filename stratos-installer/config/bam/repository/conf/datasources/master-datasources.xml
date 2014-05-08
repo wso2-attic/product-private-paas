@@ -88,6 +88,70 @@
                 </configuration>
             </definition>
         </datasource>
+
+        
+
+        <!-- Data Sources required for the dashboard -->
+
+        <datasource>
+            <name>WSO2BAM_CASSANDRA_DATASOURCE</name>
+            <description>The datasource used for Cassandra data</description>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>jdbc:cassandra://CASSANDRA_HOST:CASSANDRA_PORT/EVENT_KS</url>
+                    <username>CASSANDRA_USER</username>
+                    <password>CASSANDRA_PASSWORD</password>
+                </configuration>
+            </definition>
+        </datasource>
+
+        <datasource>
+            <name>WSO2BAM_UTIL_DATASOURCE</name>
+            <description>The datasource used for BAM utilities, such as message store etc..</description>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>jdbc:cassandra://CASSANDRA_HOST:CASSANDRA_PORT/BAM_UTIL_KS</url>
+                    <username>CASSANDRA_USER</username>
+                    <password>CASSANDRA_PASSWORD</password>
+                </configuration>
+            </definition>
+        </datasource>
+
+        <datasource>
+            <name>WSO2BAM_HIVE_INCREMENTAL_DATASOURCE</name>
+            <definition type="RDBMS">
+                <configuration>
+                    <username>admin</username>
+                    <password>admin</password>
+                    <dataSourceProps>
+                        <property name="replicationFactor">1</property>
+                        <property name="strategyClass">org.apache.cassandra.locator.SimpleStrategy</property>
+                        <property name="readConsistencyLevel">QUORUM</property>
+                        <property name="writeConsistencyLevel">QUORUM</property>
+                        <property name="keyspaceName">HIVE_INCREMENTAL_KS</property>
+                    </dataSourceProps>
+                </configuration>
+            </definition>
+        </datasource>
+
+        <datasource>
+            <name>WSO2MYSQL_DATASOURCE</name>
+            <description>The datasource used for BAM Statistics dashboard</description>
+            <definition type="RDBMS">
+                    <configuration>
+                            <url>jdbc:mysql://MYSQL_HOSTNAME:MYSQL_PORT/StratosStats</url>
+                            <username>MYSQL_USERNAME</username>
+                            <password>MYSQL_PASSWORD</password>
+                            <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                            <maxActive>50</maxActive>
+                            <maxWait>60000</maxWait>
+                            <testOnBorrow>true</testOnBorrow>
+                            <validationQuery>SELECT 1</validationQuery>
+                            <validationInterval>30000</validationInterval>
+                    </configuration>
+            </definition>
+        </datasource>
+
         <!-- For an explanation of the properties, see: http://people.apache.org/~fhanik/jdbc-pool/jdbc-pool.html -->
         <!--datasource>
             <name>SAMPLE_DATA_SOURCE</name>
