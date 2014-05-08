@@ -56,7 +56,7 @@ public class MemberContext implements Serializable{
     //network partition id
     private String networkPartitionId;
 
-    private java.util.Properties properties;
+    //private java.util.Properties properties;
     
     public MemberContext(String id, String clusterId, Partition partition) {
         this.memberId = id;
@@ -204,11 +204,11 @@ public class MemberContext implements Serializable{
 		this.instanceId = instanceId;
 	}
 
-    public java.util.Properties getProperties() {
+    /*public java.util.Properties getProperties() {
         return properties;
     }
 
     public void setProperties(Properties properties) {
         this.properties = properties;
-    }
+    }*/
 }
