@@ -38,8 +38,10 @@ import org.apache.stratos.messaging.event.instance.status.InstanceStartedEvent;
 import org.apache.stratos.messaging.event.topology.MemberActivatedEvent;
 import org.apache.stratos.messaging.event.topology.MemberMaintenanceModeEvent;
 import org.apache.stratos.messaging.event.topology.MemberReadyToShutdownEvent;
+import org.apache.stratos.messaging.util.Constants;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -63,7 +65,12 @@ public class TopologyBuilder {
             for (Cartridge cartridge : cartridgeList) {
                 if (!topology.serviceExists(cartridge.getType())) {
                     service = new Service(cartridge.getType(), cartridge.isMultiTenant() ? ServiceType.MultiTenant : ServiceType.SingleTenant);
-                     List<PortMapping> portMappings = cartridge.getPortMappings();
+                    List<PortMapping> portMappings = cartridge.getPortMappings();
+                    Properties properties = new Properties();
+                    for (Map.Entry<String, String> entry : cartridge.getProperties().entrySet()) {
+                        properties.setProperty(entry.getKey(), entry.getValue());
+                    }
+                    service.setProperties(properties);
                     Port port;
                     //adding ports to the event
                     for (PortMapping portMapping : portMappings) {
@@ -125,6 +132,9 @@ public class TopologyBuilder {
                 if(service.getServiceType() == ServiceType.MultiTenant) {
                     cluster.setTenantRange(registrant.getTenantRange());
                 }
+                if(service.getProperties().getProperty(Constants.IS_PRIMARY) != null) {
+                    props.setProperty(Constants.IS_PRIMARY, service.getProperties().getProperty(Constants.IS_PRIMARY));
+                }
                 cluster.setProperties(props);
                 cluster.setLbCluster(isLb);
             } else {
@@ -133,6 +143,9 @@ public class TopologyBuilder {
                 cluster.addHostName(registrant.getHostName());
                 if(service.getServiceType() == ServiceType.MultiTenant) {
                     cluster.setTenantRange(registrant.getTenantRange());
+                }
+                if(service.getProperties().getProperty(Constants.IS_PRIMARY) != null) {
+                    props.setProperty(Constants.IS_PRIMARY, service.getProperties().getProperty(Constants.IS_PRIMARY));
                 }
                 cluster.setProperties(props);
                 cluster.setLbCluster(isLb);

@@ -101,7 +101,7 @@ else
     read -p "Please enter a prefered domain name for the private PAAS environment : " stratos_domain
 fi
 list_ip_addreses
-read -p "Above are the IP addreses assigned to your machine. Please select the prefered IP address : " machine_ip
+read -p "Above are the IP addresses assigned to your machine. Please select the preferred IP address : " machine_ip
 read -p "Enter host user :" host_user
 
 # Puppet
@@ -190,7 +190,7 @@ if [ "$machine_ip" == "" ];then
 fi
 
 if [ "$JAVA_HOME" == "" ];then
-    read -p "JAVA_HOME is not set as a environment variable. Please set it specify it here " java_home
+    read -p "JAVA_HOME is not set as a environment variable. Please specify it here " java_home
     JAVA_HOME=$java_home
 fi
 
