@@ -118,8 +118,14 @@ public class CartridgeAgentConfiguration {
     	return Boolean.parseBoolean(multitenantStringValue);
 	}
 	
-	private boolean readInternalRepo(String internalRepo) throws ParameterNotFoundException {
-    	String internalRepoStringValue = readParameterValue(internalRepo);
+	private boolean readInternalRepo(String internalRepo) {
+    	String internalRepoStringValue = null;
+		try {
+			internalRepoStringValue = readParameterValue(internalRepo);
+		} catch (ParameterNotFoundException e) {
+			// Missing INTERNAL parameter is not an exception
+			log.info(" INTERNAL payload parameter is not found");
+		}
     	return Boolean.parseBoolean(internalRepoStringValue);
 	}
 
