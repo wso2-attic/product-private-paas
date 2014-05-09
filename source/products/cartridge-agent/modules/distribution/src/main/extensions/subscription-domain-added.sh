@@ -19,10 +19,16 @@
 # under the License.
 #
 # --------------------------------------------------------------
-# This extension script will be executed when a subscription domain added
-# event is received by the cartridge agent.
+# This extension script will be executed when subscription domain
+# added event is received.
 # --------------------------------------------------------------
 #
 
 log=/var/log/apache-stratos/cartridge-agent-extensions.log
-echo "Subscription domain added: [tenant-id] $1 [tenant-domain] $2 [domain-name] $3 [application-context] $4" | tee -a $log
+OUTPUT=`date`": Subscription Domain Added Event"
+OUTPUT="$OUTPUT STRATOS_SUBSCRIPTION_SERVICE_NAME: ${STRATOS_SUBSCRIPTION_SERVICE_NAME},"
+OUTPUT="$OUTPUT STRATOS_SUBSCRIPTION_DOMAIN_NAME: ${STRATOS_SUBSCRIPTION_DOMAIN_NAME},"
+OUTPUT="$OUTPUT STRATOS_SUBSCRIPTION_TENANT_ID: ${STRATOS_SUBSCRIPTION_TENANT_ID},"
+OUTPUT="$OUTPUT STRATOS_SUBSCRIPTION_TENANT_DOMAIN: $STRATOS_SUBSCRIPTION_TENANT_DOMAIN},"
+OUTPUT="$OUTPUT STRATOS_SUBSCRIPTION_APPLICATION_CONTEXT: ${STRATOS_SUBSCRIPTION_APPLICATION_CONTEXT}"
+echo $OUTPUT | tee -a $log

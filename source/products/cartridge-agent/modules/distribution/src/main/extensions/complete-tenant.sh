@@ -19,10 +19,12 @@
 # under the License.
 #
 # --------------------------------------------------------------
-# This extension script will be executed once the update artifacts
-# event is received and they are copied to the given path.
+# This extension script will be executed when complete tenant
+# event is received.
 # --------------------------------------------------------------
 #
 
 log=/var/log/apache-stratos/cartridge-agent-extensions.log
-echo `date`": Artifacts Updated Event" | tee -a $log
+echo `date`": Complete Tenant Event: " | tee -a $log
+echo "Member List: ${STRATOS_MEMBER_LIST_JSON}" | tee -a $log
+echo "Tenant List: ${STRATOS_TENANT_LIST_JSON}" | tee -a $log
