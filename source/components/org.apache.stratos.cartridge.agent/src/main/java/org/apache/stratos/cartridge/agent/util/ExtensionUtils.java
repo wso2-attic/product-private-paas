@@ -68,14 +68,15 @@ public class ExtensionUtils {
         return envParameters;
     }
 
-    public static void executeStartServersExtension() {
+    public static void executeStartServersExtension(Map<String, String> envParameters) {
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Executing start servers extension");
             }
             String script = System.getProperty(CartridgeAgentConstants.START_SERVERS_SCRIPT);
             String command = prepareCommand(script);
-            String output = CommandUtils.executeCommand(command);
+            cleanProcessParameters(envParameters);
+            String output = CommandUtils.executeCommand(command, envParameters);
             if (log.isDebugEnabled()) {
                 log.debug("Start server script returned:" + output);
             }
@@ -111,7 +112,8 @@ public class ExtensionUtils {
             }
             String script = System.getProperty(CartridgeAgentConstants.INSTANCE_STARTED_SCRIPT);
             String command = prepareCommand(script);
-            String output = CommandUtils.executeCommand(command);
+            cleanProcessParameters(envParameters);
+            String output = CommandUtils.executeCommand(command, envParameters);
             if (log.isDebugEnabled()) {
                 log.debug("Instance started script returned:" + output);
             }
