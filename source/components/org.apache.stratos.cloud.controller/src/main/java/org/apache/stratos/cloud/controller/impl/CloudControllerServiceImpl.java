@@ -290,12 +290,14 @@ public class CloudControllerServiceImpl implements CloudControllerService {
             addToPayload(payload, "LB_CLUSTER_ID", memberContext.getLbClusterId());
             addToPayload(payload, "NETWORK_PARTITION_ID", memberContext.getNetworkPartitionId());
             addToPayload(payload, "PARTITION_ID", partitionId);
-            /*if(memberContext.getProperties() != null) {
-                for(Map.Entry<Object, Object> entry: memberContext.getProperties().entrySet()) {
-                    addToPayload(payload, entry.getKey().toString(), entry.getValue().toString());
-
+            if(memberContext.getProperties() != null) {
+            	org.apache.stratos.cloud.controller.pojo.Properties props1 = memberContext.getProperties();
+                if (props1 != null) {
+                    for (Property prop : props1.getProperties()) {
+                        addToPayload(payload, prop.getName(), prop.getValue());
+                    }
                 }
-            }*/
+            }
 
             Iaas iaas = iaasProvider.getIaas();
             if(ctxt.isVolumeRequired()){
