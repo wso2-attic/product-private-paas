@@ -31,4 +31,4 @@ echo "LB PUBLIC IP: $STRATOS_LB_PUBLIC_IP}" | tee -a $log
 echo "STRATOS_PARAM_FILE_PATH: ${STRATOS_PARAM_FILE_PATH}"
 echo "Member List: ${STRATOS_MEMBER_LIST_JSON}" | tee -a $log
 echo "Complete Topology: ${STRATOS_TOPOLOGY_JSON}" | tee -a $log
-echo "Members in LB List: ${STRATOS_MEMBERS_IN_LB_JSON}" | tee -a $log
+echo "Members in LB: ${STRATOS_MEMBERS_IN_LB_JSON}" | tee -a $log

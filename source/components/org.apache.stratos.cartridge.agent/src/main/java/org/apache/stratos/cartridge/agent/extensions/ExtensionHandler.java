@@ -37,6 +37,8 @@ public interface ExtensionHandler {
 
     public void onArtifactUpdateEvent(ArtifactUpdatedEvent event);
 
+    public void onArtifactUpdateEvent(String tenantId);
+
     public void onInstanceCleanupClusterEvent(InstanceCleanupClusterEvent instanceCleanupClusterEvent);
 
     public void onInstanceCleanupMemberEvent(InstanceCleanupMemberEvent instanceCleanupMemberEvent);

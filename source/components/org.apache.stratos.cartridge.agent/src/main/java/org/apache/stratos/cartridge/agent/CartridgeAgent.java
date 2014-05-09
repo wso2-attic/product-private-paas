@@ -70,7 +70,7 @@ import java.util.concurrent.TimeUnit;
 public class CartridgeAgent implements Runnable {
 
     private static final Log log = LogFactory.getLog(CartridgeAgent.class);
-    private final ExtensionHandler extensionHandler = new DefaultExtensionHandler();
+    private static final ExtensionHandler extensionHandler = new DefaultExtensionHandler();
     private boolean terminated;
 
     private static void publishLogs(LogPublisherManager logPublisherManager) {
@@ -130,7 +130,16 @@ public class CartridgeAgent implements Runnable {
         CartridgeAgentEventPublisher.publishInstanceStartedEvent();
 
         // Execute start servers extension
-        extensionHandler.startServerExtension();
+        try {
+            TopologyManager.acquireReadLock();
+            extensionHandler.startServerExtension();
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Error processing start servers event", e);
+            }
+        } finally {
+            TopologyManager.releaseReadLock();
+        }
 
         // Wait for all ports to be active
         CartridgeAgentUtils.waitUntilPortsActive(CartridgeAgentConfiguration.getInstance().getListenAddress(),
@@ -163,7 +172,7 @@ public class CartridgeAgent implements Runnable {
             // From repo/deployment/server to /tmp/-1234
             ScheduledExecutorService scheduler = Executors
                     .newScheduledThreadPool(1);
-            scheduler.scheduleWithFixedDelay(new ArtifactCopyTask(extensionHandler), 0,
+            scheduler.scheduleWithFixedDelay(new ArtifactCopyTask(), 0,
                     10, TimeUnit.SECONDS);
         }
 
@@ -462,5 +471,9 @@ public class CartridgeAgent implements Runnable {
 
     public void terminate() {
         terminated = true;
+    }
+
+    public static ExtensionHandler getExtensionHandler() {
+        return extensionHandler;
     }
 }
