@@ -565,6 +565,8 @@ else
     cep_setup   
 fi
 
+/bin/bash ./setup_bam_logging.sh
+
 # ------------------------------------------------
 # Mapping domain/host names 
 # ------------------------------------------------
