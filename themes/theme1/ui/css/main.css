@@ -114,26 +114,23 @@ div.password-wrapper input.input-password{
 }
 /* Sticky footer styles
      -------------------------------------------------- */
-
-html,
-body {
-    height: 100%;
-    /* The html and body elements cannot have any padding or margin. */
-}
-
-/* Wrapper for page content to push down footer */
-#wrap {
+html {
+    position: relative;
     min-height: 100%;
-    height: auto !important;
-    height: 100%;
-    /* Negative indent footer by it's height */
-    margin: 0 auto -35px;
 }
+body {
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
+}
+
 
 /* Set the fixed height of the footer here */
-#push,
 #footer {
-    height: 62px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    /* Set the fixed height of the footer here */
+    height: 60px;
     padding-top:10px;
 
 }
@@ -288,6 +285,15 @@ h4{
 .cartridge-description{
     padding-top:10px;
     font-size: 12px;
+}
+.cartridge-description-repo{
+    padding-top:10px;
+    font-size: 12px;
+    padding-left:10px;
+    padding-bottom:10px;
+    background: #fff;
+    color:#444;
+    border-radius: 2px;
 }
 
 .lb-description{
@@ -539,15 +545,36 @@ li.dropdown ul.dropdown-menu li a i{
 #wrap > div.container, .main-menu div.container{
     min-width: 800px;
 }
-@media (max-width: 980px) {
+
+
+@media (max-width: 1200px) {
+    .sub-menu{
+        font-size: 11px;
+    }
+    .responsive-gap-maker{
+        margin-top: 160px;
+    }
+}
+@media (max-width: 990px) {
     .sub-menu-wizard{
         font-size: 11px;
     }
+    .responsive-gap-maker{
+        margin-top: 210px;
+    }
+    .config-responsive-fixer{
+        margin-left:0;
+        padding-left:0;
+        margin-top:20px;
+    }
 }
-@media (max-width: 1200px) {
-    .sub-menu{
-            font-size: 11px;
-        }
+@media (max-width: 900px) {
+    .breadcrumb-strip div[class*='col-lg-']{
+        padding-bottom:10px;
+    }
+    .responsive-gap-maker{
+        margin-top: 210px;
+    }
 }
 label.error{
     color: #be0000;
@@ -587,4 +614,55 @@ label.error{
     position: absolute;
     margin-left: 0;
     margin-top: 20px;
+}
+.dashboard-wrapper-a{
+    background: #111;
+}
+.dashboard-wrapper-a h1{
+    color:#fff;
+    margin-bottom: 5px;
+}
+.dashboard-wrapper-a p{
+    color: #aeaeae;
+}
+.dashboard-wrapper-b{
+    background: transparent url(../img/panel-back.png) repeat left top;
+    border-radius: 5px 5px 5px 5px;
+    padding: 10px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 450px;
+    border: solid 1px #444;
+    color:#fff;
+}
+.dashboard-wrapper-b-content{
+    border: solid 1px #ccc;
+    background: #fff;
+}
+.close-btn{
+    color: #FFFFFF;
+    font-size: 20px;
+    position: absolute;
+    right: 6px;
+    top: 0;
+    z-index: 100;
+}
+.data-title{
+    font-weight: bold;
+    margin-top:10px;
+}
+.data-title + div{
+    color:#444;
+}
+.action-buttons{
+    white-space: nowrap;
+}
+pre{
+    margin-top:20px;
+}
+.serviceGroup-child-wrapper{
+    border-top: solid 1px #ccc;
+    margin-bottom:5px;
+    margin-top:10px;
 }
