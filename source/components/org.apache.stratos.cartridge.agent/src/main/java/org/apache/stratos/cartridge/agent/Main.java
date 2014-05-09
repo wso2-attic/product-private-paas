@@ -51,10 +51,6 @@ public class Main {
                     }
                 }
             });
-            // Configure log4j properties
-            if (log.isDebugEnabled()) {
-                log.debug("Configuring log4j.properties file path");
-            }
 
             // Generate jndi.properties file
             JndiConfigurator.configure();

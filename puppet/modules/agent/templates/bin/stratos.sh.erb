@@ -31,7 +31,7 @@ properties="-Dmb.ip=<%= @mb_ip %>
             -Dthrift.receiver.port=<%= @cep_port %>
             -Djndi.properties.template.file.path=<%= @carbon_home %>/conf/templates/jndi.properties.template
             -Djndi.properties.dir=<%= @carbon_home %>/conf
-            -Dlog4j.properties.file.path=<%= @carbon_home %>/conf/log4j.properties
+            -Dlog4j.configuration=<%= @carbon_home %>/conf/log4j.properties
             -Dparam.file.path=<%= @carbon_home %>/payload/launch-params
             -Dextensions.dir=${script_path}/../extensions
             -Dcep.stats.publisher.enabled=true
@@ -46,7 +46,21 @@ properties="-Dmb.ip=<%= @mb_ip %>
             -Dmonitoring.server.admin.username=<%= @bam_username %>
             -Dmonitoring.server.admin.password=<%= @bam_password %>
 	    -DAPP_PATH=<%= @docroot %>
-	    -Dlog.file.paths=<%= @log_file_paths %>"
+	    -Dlog.file.paths=<%= @log_file_paths %>
+            -Dextension.instance.started=<%= @extension_instance_started %>
+            -Dextension.start.servers=<%= @extension_start_servers %>
+            -Dextension.instance.activated=<%= @extension_instance_activated %>
+            -Dextension.artifacts.updated=<%= @extension_artifacts_updated %>
+            -Dextension.clean=<%= @extension_clean %>
+            -Dextension.mount.volumes=<%= @extension_mount_volumes %>
+            -Dextension.member.activated=<%= @extension_member_activated %>
+	    -Dextension.member.terminated=<%= @extension_member_terminated %>
+	    -Dextension.member.suspended=<%= @extension_member_suspended %>
+            -Dextension.complete.topology=<%= @extension_complete_topology %>
+            -Dextension.complete.tenant=<%= @extension_complete_tenant %>
+            -Dextension.subscription.domain.added=<%= @extension_subscription_domain_added %>
+            -Dextension.subscription.domain.removed=<%= @extension_subscription_domain_removed %>
+            -Dextension.artifacts.copy=<%= @extension_artifacts_copy %>"
 
 # Uncomment below line to enable remote debugging
 #debug="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
