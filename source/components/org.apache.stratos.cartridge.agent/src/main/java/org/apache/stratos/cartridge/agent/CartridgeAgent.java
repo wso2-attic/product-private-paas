@@ -158,7 +158,7 @@ public class CartridgeAgent implements Runnable {
             }
         }
 
-        if(CartridgeAgentConfiguration.getInstance().isInternalRepo()){
+        if (CartridgeAgentConfiguration.getInstance().isInternalRepo()) {
             // Start periodic file copy for super tenant
             // From repo/deployment/server to /tmp/-1234
             ScheduledExecutorService scheduler = Executors
@@ -353,7 +353,7 @@ public class CartridgeAgent implements Runnable {
         }
     }
 
-    protected void registerTenantEventListeners(){
+    protected void registerTenantEventListeners() {
 
         if (log.isDebugEnabled()) {
             log.debug("Starting tenant event message receiver thread");
@@ -435,8 +435,8 @@ public class CartridgeAgent implements Runnable {
 
     protected void validateRequiredSystemProperties() {
         String jndiPropertiesDir = System.getProperty(CartridgeAgentConstants.JNDI_PROPERTIES_DIR);
-        if(StringUtils.isBlank(jndiPropertiesDir)) {
-            if(log.isErrorEnabled()){
+        if (StringUtils.isBlank(jndiPropertiesDir)) {
+            if (log.isErrorEnabled()) {
                 log.error(String.format("System property not found: %s", CartridgeAgentConstants.JNDI_PROPERTIES_DIR));
             }
             return;

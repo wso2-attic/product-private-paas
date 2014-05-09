@@ -59,6 +59,7 @@
                 <include>complete-tenant.sh</include>
                 <include>subscription-domain-added.sh</include>
                 <include>subscription-domain-removed.sh</include>
+                <include>artifacts-copy.sh</include>
             </includes>
         </fileSet>
         <fileSet>
