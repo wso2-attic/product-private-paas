@@ -8,6 +8,7 @@ import java.io.File;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.cartridge.agent.config.CartridgeAgentConfiguration;
+import org.apache.stratos.cartridge.agent.extensions.ExtensionHandler;
 import org.apache.stratos.cartridge.agent.util.ExtensionUtils;
 
 /**
@@ -16,6 +17,11 @@ import org.apache.stratos.cartridge.agent.util.ExtensionUtils;
 public class ArtifactCopyTask implements Runnable {
 
 	private static final Log log = LogFactory.getLog(ArtifactCopyTask.class);
+    private final ExtensionHandler extensionHandler;
+
+    public ArtifactCopyTask(ExtensionHandler extensionHandler){
+        this.extensionHandler = extensionHandler;
+    }
 	
 	@Override
 	public void run() {
@@ -31,7 +37,7 @@ public class ArtifactCopyTask implements Runnable {
 		String des = "/tmp/-1234";
 		
 		if (new File(des).exists() ) {
-			ExtensionUtils.executeCopyArtifactsExtension(src, des);	
+			extensionHandler.onCopyArtifactsExtension(src, des);
 		}		
 	}
 

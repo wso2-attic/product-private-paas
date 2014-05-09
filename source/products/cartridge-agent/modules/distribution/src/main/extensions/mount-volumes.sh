@@ -19,7 +19,8 @@
 # under the License.
 #
 # --------------------------------------------------------------
-# This extension script will be executed to start the servers.
+# This extension script will be executed to mount volumes
+# to the instance.
 # --------------------------------------------------------------
 #
 
