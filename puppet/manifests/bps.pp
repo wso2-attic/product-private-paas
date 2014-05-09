@@ -13,31 +13,31 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 # ----------------------------------------------------------------------------
+#
 
-# stratos components related nodes
-# not supported in alpha version.
-node 'autoscaler.wso2.com' inherits base {
+# BPS cartridge node
+node /bps/ inherits base {
+  $docroot = "/mnt/wso2bps-3.2.0"
   require java
-  class {'autoscaler': maintenance_mode => 'norestart',}
-}
+  class {'agent':}
+  class {'bps':
 
-node 'cc.wso2.com' inherits base {
-  require java
-  class {'cc': maintenance_mode   => 'norestart',}
-}
+        version            => '3.2.0',
+        sub_cluster_domain => 'test',
+        members            => false,
+        offset             => 0,
+        tribes_port        => 4100,
+        config_db          => 'userstore',
+        config_target_path => 'config/bps',
+        maintenance_mode   => 'zero',
+        depsync            => false,
+        clustering         => false,
+        cloud              => true,
+        owner              => 'root',
+        group              => 'root',
+        target             => '/mnt/'
 
-node 'cep.wso2.com' inherits base {
-  require java
-  class {'cep': maintenance_mode   => 'norestart',}
-}
+  }
 
-
-node 'mb.wso2.com' inherits base {
-  require java
-  class {'messagebroker': maintenance_mode   => 'norestart',}
-}
-
-node 'sc.wso2.com' inherits base {
-  require java
-  class {'manager': maintenance_mode   => 'norestart',}
+  Class['stratos_base'] -> Class['java'] -> Class['bps'] ~> Class['agent']
 }
