@@ -89,7 +89,6 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         if (log.isInfoEnabled()) {
             log.info(String.format("Artifact update event received: %s", artifactUpdatedEvent.toString()));
         }
-
         String clusterIdInPayload = CartridgeAgentConfiguration.getInstance().getClusterId();
         String localRepoPath = CartridgeAgentConfiguration.getInstance().getAppPath();
         String clusterIdInMessage = artifactUpdatedEvent.getClusterId();
@@ -117,8 +116,14 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             repoInformation.setMultitenant(isMultitenant);
             boolean cloneExists = GitBasedArtifactRepository.getInstance().cloneExists(repoInformation);
             GitBasedArtifactRepository.getInstance().checkout(repoInformation);
-
-            ExtensionUtils.executeArtifactsUpdatedExtension();
+            Map<String, String> env = new HashMap<String, String>();
+            env.put("STRATOS_CLUSTER_ID", artifactUpdatedEvent.getClusterId());
+            env.put("STRATOS_TENANT_ID", artifactUpdatedEvent.getTenantId());
+            env.put("STRATOS_REPO_URL", artifactUpdatedEvent.getRepoURL());
+            env.put("STRATOS_REPO_PASSWORD", artifactUpdatedEvent.getRepoPassword());
+            env.put("STRATOS_REPO_USERNAME", artifactUpdatedEvent.getRepoUserName());
+            env.put("STRATOS_STATUS", artifactUpdatedEvent.getStatus());
+            ExtensionUtils.executeArtifactsUpdatedExtension(env);
 
             if (!cloneExists) {
                 // Executed git clone, publish instance activated event
@@ -153,6 +158,12 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         }
     }
 
+    @Override
+    public void onArtifactUpdateEvent(String tenantId){
+        Map<String, String> env = new HashMap<String, String>();
+        env.put("STRATOS_TENANT_ID", tenantId);
+        ExtensionUtils.executeArtifactsUpdatedExtension(env);
+    }
 
     @Override
     public void onInstanceCleanupClusterEvent(InstanceCleanupClusterEvent instanceCleanupClusterEvent) {

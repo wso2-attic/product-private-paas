@@ -142,14 +142,15 @@ public class ExtensionUtils {
         }
     }
 
-    public static void executeArtifactsUpdatedExtension() {
+    public static void executeArtifactsUpdatedExtension(Map<String, String> envParameters) {
         try {
             if (log.isDebugEnabled()) {
                 log.debug("Executing artifacts updated extension");
             }
             String script = System.getProperty(CartridgeAgentConstants.ARTIFACTS_UPDATED_SCRIPT);
             String command = prepareCommand(script);
-            String output = CommandUtils.executeCommand(command);
+            cleanProcessParameters(envParameters);
+            String output = CommandUtils.executeCommand(command, envParameters);
             if (log.isDebugEnabled()) {
                 log.debug("Artifacts updated script returned:" + output);
             }
