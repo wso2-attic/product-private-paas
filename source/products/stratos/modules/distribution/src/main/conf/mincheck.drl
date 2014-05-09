@@ -48,6 +48,7 @@ global org.apache.stratos.messaging.domain.topology.Topology $topology;
 global java.util.Map partitionCtxts;
 global java.lang.String clusterId;
 global java.lang.String lbRef;
+global java.lang.Boolean isPrimary;
 
 rule "Minimum Rule"
 dialect "mvel"

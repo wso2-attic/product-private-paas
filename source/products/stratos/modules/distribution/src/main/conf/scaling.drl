@@ -53,6 +53,8 @@ global java.lang.String lbRef;
 global java.lang.Boolean rifReset;
 global java.lang.Boolean mcReset;
 global java.lang.Boolean laReset;
+global java.lang.Boolean isPrimary;
+global java.util.List primaryMembers;
 
 rule "Scaling Rule"
 dialect "mvel"
@@ -133,7 +135,7 @@ dialect "mvel"
 
                     for(MemberStatsContext memberStatsContext: partitionContext.getMemberStatsContexts().values()){
 					
-						if( !$primaryMemberList.contains(memberStatsContext.getMemberId()) ) {
+						if( !primaryMembers.contains(memberStatsContext.getMemberId()) ) {
 						
                         LoadAverage loadAverage = memberStatsContext.getLoadAverage();
                         log.debug("[scale-down] " + " [cluster] "
