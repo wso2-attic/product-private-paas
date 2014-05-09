@@ -59,7 +59,7 @@ dialect "mvel"
 	       eval($ctxt.getNonTerminatedMemberCount() < $ctxt.getMinimumMemberCount())
 
        then
-	       $delegator.delegateSpawn($ctxt, clusterId, lbRef);
+	       $delegator.delegateSpawn($ctxt, clusterId, lbRef, isPrimary);
 	       
 end
 

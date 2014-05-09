@@ -175,6 +175,10 @@ public class AutoscalerUtil {
                 log.debug("Set the lb reference type: "+value);
             }
         }
+        
+        // set hasPrimary property
+        // hasPrimary is true if there are primary members available in that cluster
+        clusterMonitor.setHasPrimary(Boolean.parseBoolean(cluster.getProperties().getProperty(Constants.IS_PRIMARY)));
 
         log.info("Cluster monitor created: "+clusterMonitor.toString());
         return clusterMonitor;
