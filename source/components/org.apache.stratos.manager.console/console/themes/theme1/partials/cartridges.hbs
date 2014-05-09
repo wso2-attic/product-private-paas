@@ -35,12 +35,12 @@
                 <div class="box-container">
                     <div class="row">
 
-                        <div class="col-lg-2">
+                        <div class="col-lg-3">
 
                             <div class="box-left"><i class="icons-default icons-{{cartridgeType}} big-pro-icons"></i></div>
 
                         </div>
-                        <div class="col-lg-10">
+                        <div class="col-lg-9">
                             <a  href="{{url "/subscribe_cartridge.jag"}}?cartridgeType={{cartridgeType}}&serviceGroup={{serviceGroup}}"><h3>{{serviceGroup}}</h3></a>
 
                             {{#each items}}
@@ -71,10 +71,10 @@
                 <div class="col-md-6">
                     <div class="box-container">
                         <div class="row">
-                            <div class="col-lg-2">
+                            <div class="col-lg-3">
                                 <div class="box-left"><i class="icons-default icons-{{cartridgeType}} big-pro-icons"></i></div>
                             </div>
-                            <div class="col-lg-10">
+                            <div class="col-lg-9">
                                 {{#if loadBalancer}}
                                 <h3>{{displayName}} - {{version}}</h3>
                                 <div class="cartridge-description">{{description}}</div>
