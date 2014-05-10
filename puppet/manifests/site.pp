@@ -14,4 +14,8 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 #
+# import many manifest files with node definitions
+import 'nodes/*.pp'
 
+# import a single manifest file with node definitions
+import 'nodes.pp'

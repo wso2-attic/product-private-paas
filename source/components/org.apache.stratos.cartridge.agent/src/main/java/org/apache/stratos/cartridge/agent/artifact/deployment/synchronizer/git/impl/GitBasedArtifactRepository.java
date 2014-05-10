@@ -525,7 +525,7 @@ public class GitBasedArtifactRepository {
                 }
 
                 // execute artifact update extension
-                extensionHandler.onArtifactUpdateEvent(String.valueOf(gitRepoCtx.getTenantId()));
+                extensionHandler.onArtifactUpdateSchedulerEvent(String.valueOf(gitRepoCtx.getTenantId()));
             }
 
         } catch (InvalidConfigurationException e) {
@@ -535,7 +535,7 @@ public class GitBasedArtifactRepository {
             Utilities.deleteFolderStructure(new File(gitRepoCtx.getGitLocalRepoPath()));
             cloneRepository(gitRepoCtx);
             // execute artifact update extension
-            extensionHandler.onArtifactUpdateEvent(String.valueOf(gitRepoCtx.getTenantId()));
+            extensionHandler.onArtifactUpdateSchedulerEvent(String.valueOf(gitRepoCtx.getTenantId()));
             return true;
 
         } catch (JGitInternalException e) {
@@ -552,7 +552,7 @@ public class GitBasedArtifactRepository {
             Utilities.deleteFolderStructure(new File(gitRepoCtx.getGitLocalRepoPath()));
             cloneRepository(gitRepoCtx);
             // execute artifact update extension
-            extensionHandler.onArtifactUpdateEvent(String.valueOf(gitRepoCtx.getTenantId()));
+            extensionHandler.onArtifactUpdateSchedulerEvent(String.valueOf(gitRepoCtx.getTenantId()));
             return true;
 
         } catch (GitAPIException e) {

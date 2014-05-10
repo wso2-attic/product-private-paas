@@ -33,8 +33,7 @@ class agent(
   $service_templates = [
     'bin/stratos.sh',
     'conf/templates/jndi.properties.template',
-    'conf/log4j.properties',
-    'extensions/artifacts-updated.sh',
+    'conf/log4j.properties',   
     'extensions/clean.sh',
     'extensions/instance-activated.sh',
     'extensions/instance-started.sh',
