@@ -165,7 +165,8 @@ public class ClusterMonitor extends AbstractMonitor{
     public String toString() {
         return "ClusterMonitor [clusterId=" + clusterId + ", serviceId=" + serviceId +
                ", deploymentPolicy=" + deploymentPolicy + ", autoscalePolicy=" + autoscalePolicy +
-               ", lbReferenceType=" + lbReferenceType + "]";
+               ", lbReferenceType=" + lbReferenceType + 
+               ", hasPrimary=" + hasPrimary +" ]";
     }
 
     public String getLbReferenceType() {
