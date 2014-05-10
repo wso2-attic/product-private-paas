@@ -25,7 +25,12 @@ import org.apache.stratos.autoscaler.PartitionContext;
 import org.apache.stratos.autoscaler.deployment.policy.DeploymentPolicy;
 import org.apache.stratos.autoscaler.policy.model.AutoscalePolicy;
 import org.apache.stratos.autoscaler.rule.AutoscalerRuleEvaluator;
+import org.apache.stratos.cloud.controller.stub.pojo.MemberContext;
+import org.apache.stratos.cloud.controller.stub.pojo.Properties;
+import org.apache.stratos.cloud.controller.stub.pojo.Property;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -38,7 +43,8 @@ public class ClusterMonitor extends AbstractMonitor{
 
     private static final Log log = LogFactory.getLog(ClusterMonitor.class);    
     private String lbReferenceType;
-
+    private boolean hasPrimary;
+    
     public ClusterMonitor(String clusterId, String serviceId, DeploymentPolicy deploymentPolicy,
                           AutoscalePolicy autoscalePolicy) {
         this.clusterId = clusterId;
@@ -88,9 +94,12 @@ public class ClusterMonitor extends AbstractMonitor{
 
             //minimum check per partition
             for(PartitionContext partitionContext: networkPartitionContext.getPartitionCtxts().values()){
-
+           	
+            	
                 minCheckKnowledgeSession.setGlobal("clusterId", clusterId);
                 minCheckKnowledgeSession.setGlobal("lbRef", lbReferenceType);
+                log.info("Setting isPrimary for min check : "+ hasPrimary);
+                minCheckKnowledgeSession.setGlobal("isPrimary", hasPrimary);
                 
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Running minimum check for partition %s ", partitionContext.getPartitionId()));
@@ -106,6 +115,23 @@ public class ClusterMonitor extends AbstractMonitor{
             boolean loadAverageReset = networkPartitionContext.isLoadAverageReset();
             if(rifReset || memoryConsumptionReset || loadAverageReset){
 
+            	List<String> primaryMemberList = new ArrayList<String>();            	
+				for (PartitionContext partitionContext : networkPartitionContext.getPartitionCtxts().values()) {
+					for (MemberContext memberContext : partitionContext.getActiveMembers()) {
+						Properties props = memberContext.getProperties();
+						for (Property prop : props.getProperties()) {
+							if (prop.getName().equals("PRIMARY")) {
+								if (Boolean.parseBoolean(prop.getValue())) {
+									// memberContext.getMemberId() -- member is primary
+									primaryMemberList.add(memberContext.getMemberId());
+								}
+							}
+						}
+					}
+				}
+                //String []primaryMemberArray = new String[primaryMemberList.size()];
+                //primaryMemberList.toArray(primaryMemberArray);                
+                
                 scaleCheckKnowledgeSession.setGlobal("clusterId", clusterId);
                 //scaleCheckKnowledgeSession.setGlobal("deploymentPolicy", deploymentPolicy);
                 scaleCheckKnowledgeSession.setGlobal("autoscalePolicy", autoscalePolicy);
@@ -113,11 +139,15 @@ public class ClusterMonitor extends AbstractMonitor{
                 scaleCheckKnowledgeSession.setGlobal("mcReset", memoryConsumptionReset);
                 scaleCheckKnowledgeSession.setGlobal("laReset", loadAverageReset);
                 scaleCheckKnowledgeSession.setGlobal("lbRef", lbReferenceType);
+                log.info("Setting isPrimary for scle rule : "+ hasPrimary);
+                scaleCheckKnowledgeSession.setGlobal("isPrimary", hasPrimary);
+                scaleCheckKnowledgeSession.setGlobal("primaryMembers", primaryMemberList);
+                
 
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Running scale check for network partition %s ", networkPartitionContext.getId()));
                 }
-
+                
                 scaleCheckFactHandle = AutoscalerRuleEvaluator.evaluateScaleCheck(scaleCheckKnowledgeSession
                         , scaleCheckFactHandle, networkPartitionContext);
 
@@ -135,7 +165,8 @@ public class ClusterMonitor extends AbstractMonitor{
     public String toString() {
         return "ClusterMonitor [clusterId=" + clusterId + ", serviceId=" + serviceId +
                ", deploymentPolicy=" + deploymentPolicy + ", autoscalePolicy=" + autoscalePolicy +
-               ", lbReferenceType=" + lbReferenceType + "]";
+               ", lbReferenceType=" + lbReferenceType + 
+               ", hasPrimary=" + hasPrimary +" ]";
     }
 
     public String getLbReferenceType() {
@@ -145,4 +176,13 @@ public class ClusterMonitor extends AbstractMonitor{
     public void setLbReferenceType(String lbReferenceType) {
         this.lbReferenceType = lbReferenceType;
     }
+    
+	public boolean isHasPrimary() {
+		return hasPrimary;
+	}
+
+	public void setHasPrimary(boolean hasPrimary) {
+		this.hasPrimary = hasPrimary;
+	}    
+    
 }

@@ -997,6 +997,7 @@ public class ServiceUtils {
         subscriptionData.setRepositoryPassword(cartridgeInfoBean.getRepoPassword());
         subscriptionData.setCommitsEnabled(cartridgeInfoBean.isCommitsEnabled());
         subscriptionData.setServiceGroup(cartridgeInfoBean.getServiceGroup());
+        //subscriptionData.setServiceName(cartridgeInfoBean.getServiceName()); // For MT cartridges
         
         if (cartridgeInfoBean.isPersistanceRequired()) {
             // Add persistence related properties to PersistenceContext

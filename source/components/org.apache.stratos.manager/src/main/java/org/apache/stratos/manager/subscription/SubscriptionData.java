@@ -46,7 +46,8 @@ public class SubscriptionData {
     private boolean isCommitsEnabled;
     private String serviceGroup;
     private Set<String> domains;
-
+    private String serviceName;
+    
     public SubscriptionData() {
         this.domains = new HashSet<String>();
     }
@@ -194,4 +195,13 @@ public class SubscriptionData {
     public Set<String> getDomains() {
         return Collections.unmodifiableSet(domains);
     }
+
+	public String getServiceName() {
+		return serviceName;
+	}
+
+	public void setServiceName(String serviceName) {
+		this.serviceName = serviceName;
+	}
+    
 }

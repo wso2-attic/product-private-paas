@@ -21,7 +21,6 @@ package org.apache.stratos.cloud.controller.pojo;
 import org.apache.stratos.cloud.controller.deployment.partition.Partition;
 
 import java.io.Serializable;
-import java.util.Properties;
 
 /**
  * Holds information about a Member.
@@ -56,7 +55,7 @@ public class MemberContext implements Serializable{
     //network partition id
     private String networkPartitionId;
 
-    //private java.util.Properties properties;
+    private Properties properties;
     
     public MemberContext(String id, String clusterId, Partition partition) {
         this.memberId = id;
@@ -204,11 +203,11 @@ public class MemberContext implements Serializable{
 		this.instanceId = instanceId;
 	}
 
-    /*public java.util.Properties getProperties() {
+    public Properties getProperties() {
         return properties;
     }
 
     public void setProperties(Properties properties) {
         this.properties = properties;
-    }*/
+    }
 }

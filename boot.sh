@@ -385,10 +385,10 @@ for activemq_client_lib in "${activemq_client_libs[@]}"
         cp -f $stratos_install_path/$ACTIVE_MQ_EXTRACTED/lib/$activemq_client_lib /etc/puppet/modules/lb/files/activemq/
     done
 
-export JAVA_HOME=$JAVA_HOME
-echo -e "Unzipping and starting WSO2 BAM "
-unzip -o -q $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
-nohup $stratos_install_path/wso2bam-2.4.0/bin/wso2server.sh -DportOffset=1 &
+# export JAVA_HOME=$JAVA_HOME
+# echo -e "Unzipping and starting WSO2 BAM "
+# unzip -o -q $stratos_pack_path/wso2bam-2.4.0.zip -d $stratos_install_path
+# nohup $stratos_install_path/wso2bam-2.4.0/bin/wso2server.sh -DportOffset=1 &
 
 # waiting a bit since products become up and running
 sleep 3m 
