@@ -292,11 +292,15 @@ cp -f $stratos_pack_path/wso2esb-4.8.1.zip /etc/puppet/modules/esb/files
 cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/esb/files/configs/repository/components/lib
 cp -f $stratos_pack_path/wso2bps-3.2.0.zip /etc/puppet/modules/bps/files
 cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/bps/files/configs/repository/components/lib
+cp -f $stratos_pack_path/wso2am-1.6.0.zip /etc/puppet/modules/apimanager/files
+cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/apimanager/files/configs/repository/components/lib
+
 
 # Copy patches to /etc/puppet
 cp -rf ./patches/patch0008/ /etc/puppet/modules/esb/files/patches
 cp -rf ./patches/patch0008/ /etc/puppet/modules/bps/files/patches
 cp -rf ./patches/patch0009/ /etc/puppet/modules/appserver/files/patches
+cp -rf ./patches/patch0009/ /etc/puppet/modules/apimanager/files/patches
 
 backup_file "/etc/puppet/manifests/nodes.pp"
 
@@ -402,6 +406,12 @@ curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/
 echo -e ""
 echo -e "Deploying a deployment policy at $resource_path/json/$iaas/deployment-policy.json"
 curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/deployment-policy.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment"
+
+
+echo -e ""
+echo -e "Deploying a deployment policy at $resource_path/json/$iaas/deployment-flat.json"
+curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/deployment-flat.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment"
+
 
 echo -e ""
 echo -e "Deploying a LB cartridge at $resource_path/json/$iaas/lb-cart.json"
