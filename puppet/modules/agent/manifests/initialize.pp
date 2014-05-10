@@ -18,16 +18,13 @@
 # Initializing the deployment
 
 define agent::initialize ($repo, $version, $service, $local_dir, $target, $owner,) {
-  file {
-    "/${local_dir}/":
-      ensure => present;
-  }
+
   file {
     "/${local_dir}/apache-stratos-${service}-${version}-bin.zip":
       ensure => present,
-      source => "puppet:///modules/agent/apache-stratos-${service}-${version}-bin.zip",
-      require => File["/${local_dir}/"];
+      source => "puppet:///modules/agent/apache-stratos-${service}-${version}-bin.zip";      
   }
+
   exec {
     "creating_target_for_${name}":
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
