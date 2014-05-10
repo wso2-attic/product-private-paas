@@ -123,6 +123,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             env.put("STRATOS_REPO_PASSWORD", artifactUpdatedEvent.getRepoPassword());
             env.put("STRATOS_REPO_USERNAME", artifactUpdatedEvent.getRepoUserName());
             env.put("STRATOS_STATUS", artifactUpdatedEvent.getStatus());
+            env.put("STRATOS_ARTIFACT_UPDATE_EVENT", "true");
             ExtensionUtils.executeArtifactsUpdatedExtension(env);
 
             if (!cloneExists) {
@@ -159,9 +160,10 @@ public class DefaultExtensionHandler implements ExtensionHandler {
     }
 
     @Override
-    public void onArtifactUpdateEvent(String tenantId){
+    public void onArtifactUpdateSchedulerEvent(String tenantId){
         Map<String, String> env = new HashMap<String, String>();
         env.put("STRATOS_TENANT_ID", tenantId);
+        env.put("STRATOS_ARTIFACT_UPDATE_SCHEDULER", "true");
         ExtensionUtils.executeArtifactsUpdatedExtension(env);
     }
 
