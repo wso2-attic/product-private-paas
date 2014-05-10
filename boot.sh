@@ -302,30 +302,24 @@ cp -rf ./patches/patch0008/ /etc/puppet/modules/bps/files/patches
 cp -rf ./patches/patch0009/ /etc/puppet/modules/appserver/files/patches
 cp -rf ./patches/patch0009/ /etc/puppet/modules/apimanager/files/patches
 
-backup_file "/etc/puppet/manifests/nodes.pp"
-
-replace_in_file "PACKAGE_REPO" "$package_repo" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "MB_IP" "$machine_ip" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "MB_PORT" "61616" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "CEP_IP" "$machine_ip" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "CEP_PORT" "$cep_port" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "DB_HOST" "$mysql_host" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "DB_PORT" "$mysql_port" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "BAM_IP" "$machine_ip" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "BAM_PORT" "7612" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "AS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "AS_CONFIG_PATH" "$as_config_path" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "ESB_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "IS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "IS_CONFIG_PATH" "$is_config_path" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "BPS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "BPS_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "JAVA_FILE" "$JAVA_FILE_DISTRUBUTION" "/etc/puppet/manifests/nodes.pp"
-replace_in_file "JAVA_NAME" "$JAVA_NAME_EXTRACTED" "/etc/puppet/manifests/nodes.pp"
+backup_file "/etc/puppet/manifests/nodes/base.pp"
+replace_in_file "PACKAGE_REPO" "$package_repo" "/etc/puppet/manifests/nodes/base.pp"
+replace_in_file "MB_IP" "$machine_ip" "/etc/puppet/manifests/nodes/base.pp"
+replace_in_file "MB_PORT" "61616" "/etc/puppet/manifests/nodes/base.pp"
+replace_in_file "CEP_IP" "$machine_ip" "/etc/puppet/manifests/nodes/base.pp"
+replace_in_file "CEP_PORT" "$cep_port" "/etc/puppet/manifests/nodes/base.pp"
+replace_in_file "DB_HOST" "$mysql_host" "/etc/puppet/manifests/nodes/base.pp"
+replace_in_file "DB_PORT" "$mysql_port" "/etc/puppet/manifests/nodes/base.pp"
+replace_in_file "BAM_IP" "$machine_ip" "/etc/puppet/manifests/nodes/base.pp"
+replace_in_file "BAM_PORT" "7612" "/etc/puppet/manifests/nodes/base.pp"
+replace_in_file "JAVA_FILE" "$JAVA_FILE_DISTRUBUTION" "/etc/puppet/manifests/nodes/base.pp"
+replace_in_file "JAVA_NAME" "$JAVA_NAME_EXTRACTED" "/etc/puppet/manifests/nodes/base.pp"
 # JAVA_NAME should be match with extracting dir name of java tar.gz archive, eg. jdk-7u45-linux-x64.tar.gz -> jdk1.7.0_45
 
 # Application Server
+backup_file "/etc/puppet/manifests/nodes/appserver.pp"
+replace_in_file "AS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes/appserver.pp"
+replace_in_file "AS_CONFIG_PATH" "$as_config_path" "/etc/puppet/manifests/nodes/appserver.pp"
 backup_file "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
@@ -336,6 +330,9 @@ replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/appserver/manife
 
 
 # IS
+backup_file "/etc/puppet/manifests/nodes/is.pp"
+replace_in_file "IS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes/is.pp"
+replace_in_file "IS_CONFIG_PATH" "$is_config_path" "/etc/puppet/manifests/nodes/is.pp"
 backup_file "/etc/puppet/modules/is/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/is/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/is/manifests/params.pp"
@@ -345,6 +342,9 @@ replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/is/manifests/p
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/is/manifests/params.pp"
 
 # ESB
+backup_file "/etc/puppet/manifests/nodes/esb.pp"
+replace_in_file "ESB_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes/esb.pp"
+replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes/esb.pp"
 backup_file "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
@@ -354,6 +354,9 @@ replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/esb/manifests/
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/params.pp"
 
 # BPS
+backup_file "/etc/puppet/manifests/nodes/bps.pp"
+replace_in_file "BPS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes/bps.pp"
+replace_in_file "BPS_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes/bps.pp"
 backup_file "/etc/puppet/modules/bps/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
