@@ -19,33 +19,25 @@
 
 define lb::initialize ($repo, $version, $service, $local_dir, $target, $mode, $owner,) {
 
-  file {
-    "/${local_dir}/apache-stratos-${service}-${version}.zip":
-      ensure => present,
-      source => "puppet:///modules/lb/apache-stratos-${service}-${version}.zip";
-  }
-
   exec {
     "creating_target_for_${name}":
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-      command => "mkdir -p ${target}",
-      require => File["/${local_dir}/apache-stratos-${service}-${version}.zip"];
+      command => "mkdir -p ${target}";
 
     "creating_local_package_repo_for_${name}":
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
       unless  => "test -d ${local_dir}",
       command => "mkdir -p ${local_dir}";
+  }
 
-    "downloading_stratos${service}-${version}.zip_for_${name}":
-      path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-      cwd       => $local_dir,
-      unless    => "test -f ${local_dir}/apache-stratos-${service}-${version}.zip",
-      command   => "puppet:///modules/lb/apache-stratos-${service}-${version}.zip",
-      logoutput => 'on_failure',
-      creates   => "${local_dir}/apache-stratos-${service}-${version}.zip",
-      timeout   => 0,
+  file {
+    "/${local_dir}/apache-stratos-${service}-${version}.zip":
+      ensure => present,
+      source => "puppet:///modules/lb/apache-stratos-${service}-${version}.zip",
       require   => Exec["creating_local_package_repo_for_${name}", "creating_target_for_${name}"];
+  }
 
+  exec {
     "extracting_stratos${service}-${version}.zip_for_${name}":
       path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       cwd       => $target,
@@ -54,7 +46,7 @@ define lb::initialize ($repo, $version, $service, $local_dir, $target, $mode, $o
       logoutput => 'on_failure',
       creates   => "${target}/apache-stratos-${service}-${version}/repository",
       timeout   => 0,
-      require   => Exec["downloading_stratos${service}-${version}.zip_for_${name}"];
+      require   => File["/${local_dir}/apache-stratos-${service}-${version}.zip"];
 
     "setting_permission_for_${name}":
       path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
