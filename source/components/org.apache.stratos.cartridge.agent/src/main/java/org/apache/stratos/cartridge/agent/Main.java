@@ -21,6 +21,7 @@ package org.apache.stratos.cartridge.agent;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.log4j.PropertyConfigurator;
 import org.apache.stratos.cartridge.agent.config.CartridgeAgentConfiguration;
 import org.apache.stratos.cartridge.agent.config.configurator.JndiConfigurator;
 import org.apache.stratos.messaging.broker.publish.EventPublisherPool;
@@ -51,6 +52,9 @@ public class Main {
                     }
                 }
             });
+            
+            
+            PropertyConfigurator.configure(System.getProperty("log4j.configuration"));
 
             // Generate jndi.properties file
             JndiConfigurator.configure();
