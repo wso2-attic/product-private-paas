@@ -2,7 +2,7 @@
       "type": "gateway",
       "provider": "internal",
       "serviceGroup": "apim",
-      "host": "manager.gateway.am.wso2.com",
+      "host": "gateway.am.wso2.com",
       "displayName": "API Manager - Gateway",
       "description": "API Manager - Gateway Cartridge",
       "version": "1.6.0",
@@ -28,6 +28,7 @@
             "port": "8243",
             "proxyPort": "8243"
          }
+
        ],
       "deployment": {
         },
@@ -43,7 +44,7 @@
             },
             {
              "name": "keyPair",
-             "value": "reks-private-paas"
+             "value": "sajith_apache_stratos"
             }
           ]
         }
@@ -54,6 +55,17 @@
             "name": "default.load.balancer",
             "value": "true"
         }
-      }    
+      }  , 
+
+	 "property": [
+     {
+     "name": "PRIMARY",
+     "value": "true"
+    },
+    {
+     "name": "payload_parameter.SERIVCE_GROUP",
+     "value": "apim"
+    }
+      ] 
     
  }

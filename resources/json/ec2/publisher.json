@@ -2,7 +2,7 @@
       "type": "publisher",
       "provider": "wso2",
       "serviceGroup": "apim",
-      "host": "am.wso2.com",
+      "host": "publisher.am.wso2.com",
       "displayName": "API Manager - Publisher",
       "description": "API Manager - PUblisher Cartridge",
       "version": "1.6.0",
@@ -33,7 +33,7 @@
             },
             {
              "name": "keyPair",
-             "value": "reks-private-paas"
+             "value": "sajith_apache_stratos"
             }
           ]
         }

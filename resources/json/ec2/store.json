@@ -2,7 +2,7 @@
       "type": "apistore",
       "provider": "wso2",
       "serviceGroup": "apim",
-      "host": "am.wso2.com",
+      "host": "store.am.wso2.com",
       "displayName": "API Manager - Store",
       "description": "API Manager - Store Cartridge",
       "version": "1.6.0",
@@ -33,7 +33,7 @@
             },
             {
              "name": "keyPair",
-             "value": "reks-private-paas"
+             "value": "sajith_apache_stratos"
             }
           ]
         }
