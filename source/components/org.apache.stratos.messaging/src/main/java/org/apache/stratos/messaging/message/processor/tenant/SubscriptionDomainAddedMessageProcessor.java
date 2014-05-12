@@ -52,7 +52,7 @@ public class SubscriptionDomainAddedMessageProcessor extends MessageProcessor {
             }
 
             // Parse complete message and build event
-            SubscriptionDomainAddedEvent event = (SubscriptionDomainAddedEvent) Util.jsonToObject(message, SubscriptionDomainAddedMessageProcessor.class);
+            SubscriptionDomainAddedEvent event = (SubscriptionDomainAddedEvent) Util.jsonToObject(message, SubscriptionDomainAddedEvent.class);
 
             try {
                 TenantManager.acquireWriteLock();
