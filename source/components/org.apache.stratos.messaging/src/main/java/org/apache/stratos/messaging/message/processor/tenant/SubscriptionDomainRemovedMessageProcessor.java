@@ -23,7 +23,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.messaging.domain.tenant.Subscription;
 import org.apache.stratos.messaging.domain.tenant.Tenant;
-import org.apache.stratos.messaging.event.tenant.SubscriptionDomainAddedEvent;
+import org.apache.stratos.messaging.event.tenant.SubscriptionDomainRemovedEvent;
 import org.apache.stratos.messaging.message.processor.MessageProcessor;
 import org.apache.stratos.messaging.message.receiver.tenant.TenantManager;
 import org.apache.stratos.messaging.util.Util;
@@ -44,14 +44,14 @@ public class SubscriptionDomainRemovedMessageProcessor extends MessageProcessor 
 
     @Override
     public boolean process(String type, String message, Object object) {
-        if (SubscriptionDomainAddedEvent.class.getName().equals(type)) {
+        if (SubscriptionDomainRemovedEvent.class.getName().equals(type)) {
             // Return if tenant manager has not initialized
             if (!TenantManager.getInstance().isInitialized()) {
                 return false;
             }
 
             // Parse complete message and build event
-            SubscriptionDomainAddedEvent event = (SubscriptionDomainAddedEvent) Util.jsonToObject(message, SubscriptionDomainRemovedMessageProcessor.class);
+            SubscriptionDomainRemovedEvent event = (SubscriptionDomainRemovedEvent) Util.jsonToObject(message, SubscriptionDomainRemovedEvent.class);
 
             try {
                 TenantManager.acquireWriteLock();

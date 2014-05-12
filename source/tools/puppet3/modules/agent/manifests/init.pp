@@ -16,7 +16,7 @@
 # under the License.
 
 class agent(
-  $version = '4.0.0-incubating',
+  $version = '4.0.0-wso2v1',
   $owner   = 'root',
   $group   = 'root',
   $target  = '/mnt',
