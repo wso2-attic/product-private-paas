@@ -119,7 +119,11 @@ list_ip_addreses
 read -p "Above are the IP addresses assigned to your machine. Please select the preferred IP address : " machine_ip
 read -p "Enter host user :" host_user
 
-# Puppet
+if [ "$machine_ip" == "" ];then
+    echo -e "Machine IP is not specified, so proceeding with the default 127.0.0.1"
+    machine_ip="127.0.0.1"
+fi
+
 # Puppet
 if [[ $puppet_installed = "false" ]]; then
     install_puppet
@@ -128,9 +132,15 @@ fi
 # copy puppet configurations form private pass repo
 cp -rf puppet/* /etc/puppet/
 
-puppet_ip=$machine_ip
+read -p "Please enter the Puppet Master IP Address : " puppet_ip
+if [[ -z "$puppet_ip" ]]
+	puppet_ip=$machine_ip
+fi
 echo -e "Puppet ip is $puppet_ip"
-puppet_host="puppet."$stratos_domain
+read -p "Please enter the Puppetr Master Host Name : " puppet_host
+if [[ -z "$puppet_host" ]]
+ 	puppet_host="puppet."$stratos_domain
+fi
 echo -e "Puppet hostname is $puppet_host"
 
 # MySQL
@@ -161,7 +171,7 @@ then
 else
         echo 'my.cnf not found. Unable to set listen address to 0.0.0.0'
 fi
-read -p "Enter your IAAS. vCloud, EC2 and Openstack are the currently supported IAASs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack " iaas
+read -p "Enter your IaaS. vCloud, EC2 and Openstack are the currently supported IaaSs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack " iaas
 if [[ "$iaas" == "os" ]];then
     echo -e "You selected OpenStack. "
     read -p "Enter OpensStack identity : " os_identity
@@ -184,11 +194,6 @@ elif [[ "$iaas" == "vcloud" ]];then
     read -p "Enter vCloud identity : " vcloud_identity
     read -p "Enter vCloud credentials : " vcloud_credentials
     read -p "Enter vCloud jclouds_endpoint : " vcloud_jclouds_endpoint
-fi
-
-if [ "$machine_ip" == "" ];then
-    echo -e "IP is not specified, so proceeding with the default 127.0.0.1"
-    machine_ip="127.0.0.1"
 fi
 
 if [ "$JAVA_HOME" == "" ];then
