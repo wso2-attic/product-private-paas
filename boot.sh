@@ -20,7 +20,7 @@ backup_file(){
         echo "Restoring from the Original template file $1"
         cp -f "$1.orig" "$1"
     else
-        echo -e "Creating a backof of the file $1"
+        echo -e "Creating a backup of the file $1"
         cp -f "$1" "$1.orig"
     fi
 }
