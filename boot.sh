@@ -96,9 +96,9 @@ check_for_puppet
 
 if [[ $puppet_installed = "true" ]]; then
     stratos_domain=$(dnsdomainname)
-    echo "Domain name for the private PAAS environment "$stratos_domain
+    echo "Domain name for the private PaaS environment "$stratos_domain
 else
-    read -p "Please enter a prefered domain name for the private PAAS environment : " stratos_domain
+    read -p "Please enter a preferred domain name for the private PaaS environment : " stratos_domain
 fi
 list_ip_addreses
 read -p "Above are the IP addresses assigned to your machine. Please select the preferred IP address : " machine_ip
@@ -205,7 +205,7 @@ echo
 read -p "Do you need to deploy APIM (API Manager) service ? [y/n] " -n 1 -r  apim_needed
 echo
 
-read -p "Are you sure you want to start WSO2 Private PAAS ? [y/n] " -r  confirm
+read -p "Are you sure you want to start WSO2 Private PaaS ? [y/n] " -r  confirm
 
 if [[ $confirm =~ ^[nN]$ ]]
 then
