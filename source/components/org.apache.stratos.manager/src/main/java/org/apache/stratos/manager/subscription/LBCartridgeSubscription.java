@@ -62,7 +62,7 @@ public class LBCartridgeSubscription extends CartridgeSubscription {
         setLoadBalancerCategory(loadBalancerCategory);
     }
     public void createSubscription (Subscriber subscriber, String alias, String autoscalingPolicy,
-                                    String deploymentPolicyName, Repository repository, Set<String> domains)
+                                    String deploymentPolicyName, Repository repository)
             throws ADCException, PolicyException, UnregisteredCartridgeException, InvalidCartridgeAliasException,
             DuplicateCartridgeAliasException, RepositoryRequiredException, AlreadySubscribedException,
             RepositoryCredentialsRequiredException, InvalidRepositoryException, RepositoryTransportException {
