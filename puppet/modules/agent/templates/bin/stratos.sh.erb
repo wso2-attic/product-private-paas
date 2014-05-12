@@ -31,7 +31,7 @@ properties="-Dmb.ip=<%= @mb_ip %>
             -Dthrift.receiver.port=<%= @cep_port %>
             -Djndi.properties.template.file.path=<%= @carbon_home %>/conf/templates/jndi.properties.template
             -Djndi.properties.dir=<%= @carbon_home %>/conf
-            -Dlog4j.configuration=<%= @carbon_home %>/conf/log4j.properties
+            -Dlog4j.configuration=file://<%= @carbon_home %>/conf/log4j.properties
             -Dparam.file.path=<%= @carbon_home %>/payload/launch-params
             -Dextensions.dir=${script_path}/../extensions
             -Dcep.stats.publisher.enabled=true

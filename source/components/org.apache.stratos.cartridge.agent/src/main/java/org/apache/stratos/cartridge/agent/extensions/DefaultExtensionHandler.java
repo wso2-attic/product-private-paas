@@ -653,14 +653,19 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         }
     }
 
+    private boolean isTopologyActivated(){
+        TopologyManager.acquireReadLock();
+        boolean active = TopologyManager.getTopology().isInitialized();
+        TopologyManager.releaseReadLock();
+        return active;
+    }
+
     @Override
     public void startServerExtension() {
-        boolean active = false;
-        while (!active) {
+        while (!isTopologyActivated()) {
             if (log.isInfoEnabled()) {
                 log.info("Waiting for complete topology event...");
             }
-            active = TopologyManager.getTopology().isInitialized();
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {

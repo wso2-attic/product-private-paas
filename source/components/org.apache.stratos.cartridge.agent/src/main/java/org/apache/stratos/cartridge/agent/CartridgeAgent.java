@@ -131,14 +131,13 @@ public class CartridgeAgent implements Runnable {
 
         // Execute start servers extension
         try {
-            TopologyManager.acquireReadLock();
             extensionHandler.startServerExtension();
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
                 log.error("Error processing start servers event", e);
             }
         } finally {
-            TopologyManager.releaseReadLock();
+
         }
 
         // Wait for all ports to be active
