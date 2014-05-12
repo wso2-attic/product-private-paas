@@ -283,8 +283,8 @@ esb_config_path="config/esb"
 
 # Copy files to /etc/puppet 
 
-cp -f $stratos_pack_path/apache-stratos-cartridge-agent-4.0.0-incubating-bin.zip /etc/puppet/modules/agent/files
-cp -f $stratos_pack_path/apache-stratos-load-balancer-4.0.0-incubating.zip /etc/puppet/modules/lb/files
+cp -f $stratos_pack_path/apache-stratos-cartridge-agent-4.0.0-wso2v1-bin.zip /etc/puppet/modules/agent/files
+cp -f $stratos_pack_path/apache-stratos-load-balancer-4.0.0-wso2v1.zip /etc/puppet/modules/lb/files
 cp -f $stratos_pack_path/$JAVA_FILE_DISTRUBUTION /etc/puppet/modules/java/files
 cp -f $stratos_pack_path/wso2as-5.2.1.zip /etc/puppet/modules/appserver/files
 cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/appserver/files/configs/repository/components/lib
