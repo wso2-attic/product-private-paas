@@ -29,7 +29,7 @@
 #
 
 class lb (
-  $version            = '4.0.0-incubating',
+  $version            = '4.0.0-wso2v1'
   $offset             = 0,
   $tribes_port        = 4000,
   $maintenance_mode   = true,
