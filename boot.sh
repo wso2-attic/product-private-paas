@@ -25,7 +25,6 @@ backup_file(){
     fi
 }
 
-backup_file $setup_path/conf/setup.conf
 
 replace_setup_conf(){
     #echo "Setting value $2 for property $1 as $2"
@@ -92,6 +91,21 @@ check_for_puppet(){
     fi
 }
 
+
+list_ec2_regions(){
+    echo -e "   Below are the available regions in Amazon EC2"
+    echo -e "   ap-northeast-1 - Asia Pacific (Tokyo) Region"
+    echo -e "   ap-southeast-1 - Asia Pacific (Singapore) Region"
+    echo -e "   ap-southeast-2 - Asia Pacific (Sydney) Region"
+    echo -e "   eu-west-1 - EU (Ireland) Region"
+    echo -e "   sa-east-1 - South America (Sao Paulo) Region"
+    echo -e "   us-east-1 - US East (Northern Virginia) Region"
+    echo -e "   us-west-1 - US West (Northern California) Region"
+    echo -e "   us-west-2 - US West (Oregon) Region"
+}
+
+# main flow
+backup_file $setup_path/conf/setup.conf
 check_for_puppet
 
 if [[ $puppet_installed = "true" ]]; then
@@ -146,18 +160,6 @@ then
 else
         echo 'my.cnf not found. Unable to set listen address to 0.0.0.0'
 fi
-
-list_ec2_regions(){
-    echo -e "   Below are the available regions in Amazon EC2"
-    echo -e "   ap-northeast-1 - Asia Pacific (Tokyo) Region"
-    echo -e "   ap-southeast-1 - Asia Pacific (Singapore) Region"
-    echo -e "   ap-southeast-2 - Asia Pacific (Sydney) Region"
-    echo -e "   eu-west-1 - EU (Ireland) Region"
-    echo -e "   sa-east-1 - South America (Sao Paulo) Region"
-    echo -e "   us-east-1 - US East (Northern Virginia) Region"
-    echo -e "   us-west-1 - US West (Northern California) Region"
-    echo -e "   us-west-2 - US West (Oregon) Region"
-}
 
 read -p "Enter your IAAS. vCloud, EC2 and Openstack are the currently supported IAASs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack " iaas
 if [[ "$iaas" == "os" ]];then
