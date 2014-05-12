@@ -44,8 +44,7 @@ else
    ${ECHO} -e  `date`": Starting servers in clustering mode..." | tee -a $log
    if [ ${VERBOSE} -eq 1 ]; then
       printParameters
-   fi
-   update_hosts_file
+   fi   
    configure_wk_members
 fi
 
@@ -115,13 +114,15 @@ backup_file(){
 function configure_wk_members(){
 
 	print_message "Configuring well known members..."
-	backup_file ${APP_PATH}/repository/conf/axis2.xml
 
 	wk_xml=""
         keymgr_xml=""
 	line="WELL_KNOWN_MEMBERS"
 	AXIS2_XML_FILE=${APP_PATH}/repository/conf/axis2.xml
 	API_MANAGER_XML_FILE=${APP_PATH}/repository/conf/api-manager.xml
+
+	backup_file ${AXIS2_XML_FILE}
+	backup_file ${API_MANAGER_XML_FILE}
 
 	if [ "${STRATOS_SERVICE_GROUP}" = "apim" ] ; then
 		if [ "${STRATOS_SERVICE_NAME}" = "apistore" ||  "${STRATOS_SERVICE_NAME}" = "publisher" ] ; then
@@ -143,7 +144,7 @@ function configure_wk_members(){
 				member_ip=STRATOS_WK_GATEWAY_MEMBER_$i_IP
 				member_port=STRATOS_WK_GATEWAY_MEMBER_$i_PORT
 				${ECHO} -e  "$i => ${!member_ip}:${!member_port}"
-				$wk_xml="${wk_xml}<member><hostName>${!member_ip}</hostName><port>${!member_port}</port></member>"
+				$wk_xml="${wk_xml}<member><hostName>${!member_ip}</hostName><port>4000</port></member>"
 			done
 			sed -i "s/${line}/${wk_xml}/g" ${AXIS2_XML_FILE} && print_message "Well known member configuration successful" || print_error "Failed to configure well known members"
 
