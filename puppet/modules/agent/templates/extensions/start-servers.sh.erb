@@ -50,12 +50,11 @@ else
 fi
 
 update_hosts_file
-${CD} ${STRATOS_APP_PATH} || print_error "Failed to cd to '${STRATOS_APP_PATH}'"
 
 if [ -f ${STRATOS_APP_PATH}/wso2carbon.lck ]; then
     print_message "Server is already running...lock file exists"
 else
-    ${STRATOS_RUN_COMMAND} || print_error "Failed to run startup script '${STRATOS_RUN_COMMAND}'"
+    ${STRATOS_APP_PATH}/wso2server.sh > /dev/null 2>&1 & || print_error "Failed to run startup script"
 fi
 
 function printParameters(){
@@ -119,13 +118,24 @@ function configure_wk_members(){
 	backup_file ${APP_PATH}/repository/conf/axis2.xml
 
 	wk_xml=""
+        keymgr_xml=""
 	line="WELL_KNOWN_MEMBERS"
+	AXIS2_XML_FILE=${APP_PATH}/repository/conf/axis2.xml
+	API_MANAGER_XML_FILE=${APP_PATH}/repository/conf/api-manager.xml
 
 	if [ "${STRATOS_SERVICE_GROUP}" = "apim" ] ; then
 		if [ "${STRATOS_SERVICE_NAME}" = "apistore" ||  "${STRATOS_SERVICE_NAME}" = "publisher" ] ; then
 			print_message "Configuring ${STRATOS_SERVICE_NAME}..."
+			wk_xml="${wk_xml}<member><hostName>${STRATOS_WK_APISTORE_MEMBER_IP}</hostName><port>4000</port><member>"
+			wk_xml="${wk_xml}<member><hostName>${STRATOS_WK_PUBLISHER_MEMBER_IP}</hostName><port>4000</port><member>"
+			sed -i "s/${line}/${wk_xml}/g" ${AXIS2_XML_FILE} && print_message "Well known member configuration successful" || print_error "Failed to configure well known members"
+
+			keymgr_xml="<ServerURL>https://${STRATOS_WK_KEYMGR_MEMBER_IP}:9443/services/</ServerURL>"
+			sed -i "s/${line}/${keymgr_xml}/g" ${API_MANAGER_XML_FILE} && print_message "Keymanager member added" || print_error "Failed to add keymanager member
+
 		elif [ "${STRATOS_SERVICE_NAME}" = "keymanager" ] ; then
 			print_message "Configuring keymanager..."
+
 		elif [ "${STRATOS_SERVICE_NAME}" = "gateway" ] ; then
 			print_message "Configuring gateway..."
 			for i in `seq 2 ${STRATOS_WK_MEMBER_COUNT}`
@@ -135,6 +145,10 @@ function configure_wk_members(){
 				${ECHO} -e  "$i => ${!member_ip}:${!member_port}"
 				$wk_xml="${wk_xml}<member><hostName>${!member_ip}</hostName><port>${!member_port}</port></member>"
 			done
+			sed -i "s/${line}/${wk_xml}/g" ${AXIS2_XML_FILE} && print_message "Well known member configuration successful" || print_error "Failed to configure well known members"
+
+			keymgr_xml="<ServerURL>https://${STRATOS_WK_KEYMGR_MEMBER_IP}:9443/services/</ServerURL>"
+			sed -i "s/${line}/${keymgr_xml}/g" ${API_MANAGER_XML_FILE} && print_message "Keymanager member added" || print_error "Failed to add keymanager member"
 		fi
 
 		
@@ -149,7 +163,7 @@ function configure_wk_members(){
 		done
 	fi
 	
-	sed -i "s/${line}/${wk_xml}/g" ${APP_PATH}/repository/conf/axis2.xml && print_message "Well known member configuration successful" || print_error "Failed to configure well known members"
+	
 
 }
 
