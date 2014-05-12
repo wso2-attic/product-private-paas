@@ -159,7 +159,7 @@ list_ec2_regions(){
     echo -e "   us-west-2 - US West (Oregon) Region"
 }
 
-read -p "Enter your IAAS. vCloud, EC2 and Openstack are the currently supported IAASs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack " iaas
+read -p "Enter your IaaS. vCloud, EC2 and Openstack are the currently supported IaaSs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack " iaas
 if [[ "$iaas" == "os" ]];then
     echo -e "You selected OpenStack. "
     read -p "Enter OpensStack identity : " os_identity
