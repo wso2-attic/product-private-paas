@@ -104,6 +104,11 @@ list_ip_addreses
 read -p "Above are the IP addresses assigned to your machine. Please select the preferred IP address : " machine_ip
 read -p "Enter host user :" host_user
 
+if [ "$machine_ip" == "" ];then
+    echo -e "Machine IP is not specified, so proceeding with the default 127.0.0.1"
+    machine_ip="127.0.0.1"
+fi
+
 # Puppet
 # Puppet
 if [[ $puppet_installed = "false" ]]; then
@@ -159,13 +164,13 @@ list_ec2_regions(){
     echo -e "   us-west-2 - US West (Oregon) Region"
 }
 
-read -p "Enter your IAAS. vCloud, EC2 and Openstack are the currently supported IAASs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack " iaas
+read -p "Enter your IaaS. vCloud, EC2 and Openstack are the currently supported IaaSs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack " iaas
 if [[ "$iaas" == "os" ]];then
     echo -e "You selected OpenStack. "
     read -p "Enter OpensStack identity : " os_identity
     read -p "Enter OpensStack credentials : " os_credentials
     read -p "Enter OpensStack jclouds_endpoint : " os_jclouds_endpoint
-    read -p "Enter the region of the IAAS you want to spin up instances : " region
+    read -p "Enter the region of the IaaS you want to spin up instances : " region
     read -p "Enter OpensStack keypair name : " os_keypair_name
     read -p "Enter OpensStack security groups : " os_security_groups
 elif [[ "$iaas" == "ec2" ]];then
@@ -176,17 +181,12 @@ elif [[ "$iaas" == "ec2" ]];then
     read -p "Enter EC2 keypair name : " ec2_keypair_name
     read -p "Enter EC2 security groups : " ec2_security_groups
     list_ec2_regions
-    read -p "Enter the region of the IAAS you want to spin up instances : " region
+    read -p "Enter the region of the IaaS you want to spin up instances : " region
     read -p "Enter EC2 availability zone : " ec2_availability_zone
 elif [[ "$iaas" == "vcloud" ]];then
     read -p "Enter vCloud identity : " vcloud_identity
     read -p "Enter vCloud credentials : " vcloud_credentials
     read -p "Enter vCloud jclouds_endpoint : " vcloud_jclouds_endpoint
-fi
-
-if [ "$machine_ip" == "" ];then
-    echo -e "IP is not specified, so proceeding with the default 127.0.0.1"
-    machine_ip="127.0.0.1"
 fi
 
 if [ "$JAVA_HOME" == "" ];then
