@@ -42,7 +42,7 @@ define is::initialize ($repo, $version, $service, $local_dir, $target, $mode, $o
       logoutput => 'on_failure',
       creates   => "${local_dir}/wso2${service}-${version}.zip",
       timeout   => 0,
-      require   => Exec["creating_local_package_repo_for_${name}", "creating_target_for_${name}"];
+      require   => [File["/${local_dir}/wso2${service}-${version}.zip"], Exec["creating_local_package_repo_for_${name}", "creating_target_for_${name}"]];
 
     "extracting_wso2${service}-${version}.zip_for_${name}":
       path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
