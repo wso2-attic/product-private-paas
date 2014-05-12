@@ -20,12 +20,11 @@ backup_file(){
         echo "Restoring from the Original template file $1"
         cp -f "$1.orig" "$1"
     else
-        echo -e "Creating a backof of the file $1"
+        echo -e "Creating a backup of the file $1"
         cp -f "$1" "$1.orig"
     fi
 }
 
-backup_file $setup_path/conf/setup.conf
 
 replace_setup_conf(){
     #echo "Setting value $2 for property $1 as $2"
@@ -92,8 +91,24 @@ check_for_puppet(){
     fi
 }
 
-check_for_puppet
 
+
+list_ec2_regions(){
+    echo -e "   Below are the available regions in Amazon EC2"
+    echo -e "   ap-northeast-1 - Asia Pacific (Tokyo) Region"
+    echo -e "   ap-southeast-1 - Asia Pacific (Singapore) Region"
+    echo -e "   ap-southeast-2 - Asia Pacific (Sydney) Region"
+    echo -e "   eu-west-1 - EU (Ireland) Region"
+    echo -e "   sa-east-1 - South America (Sao Paulo) Region"
+    echo -e "   us-east-1 - US East (Northern Virginia) Region"
+    echo -e "   us-west-1 - US West (Northern California) Region"
+    echo -e "   us-west-2 - US West (Oregon) Region"
+}
+
+# main function
+
+backup_file $setup_path/conf/setup.conf
+check_for_puppet
 if [[ $puppet_installed = "true" ]]; then
     stratos_domain=$(dnsdomainname)
     echo "Domain name for the private PAAS environment "$stratos_domain
@@ -104,7 +119,11 @@ list_ip_addreses
 read -p "Above are the IP addresses assigned to your machine. Please select the preferred IP address : " machine_ip
 read -p "Enter host user :" host_user
 
-# Puppet
+if [ "$machine_ip" == "" ];then
+    echo -e "Machine IP is not specified, so proceeding with the default 127.0.0.1"
+    machine_ip="127.0.0.1"
+fi
+
 # Puppet
 if [[ $puppet_installed = "false" ]]; then
     install_puppet
@@ -113,9 +132,15 @@ fi
 # copy puppet configurations form private pass repo
 cp -rf puppet/* /etc/puppet/
 
-puppet_ip=$machine_ip
+read -p "Please enter the Puppet Master IP Address : " puppet_ip
+if [[ -z "$puppet_ip" ]]
+	puppet_ip=$machine_ip
+fi
 echo -e "Puppet ip is $puppet_ip"
-puppet_host="puppet."$stratos_domain
+read -p "Please enter the Puppetr Master Host Name : " puppet_host
+if [[ -z "$puppet_host" ]]
+ 	puppet_host="puppet."$stratos_domain
+fi
 echo -e "Puppet hostname is $puppet_host"
 
 # MySQL
@@ -146,20 +171,7 @@ then
 else
         echo 'my.cnf not found. Unable to set listen address to 0.0.0.0'
 fi
-
-list_ec2_regions(){
-    echo -e "   Below are the available regions in Amazon EC2"
-    echo -e "   ap-northeast-1 - Asia Pacific (Tokyo) Region"
-    echo -e "   ap-southeast-1 - Asia Pacific (Singapore) Region"
-    echo -e "   ap-southeast-2 - Asia Pacific (Sydney) Region"
-    echo -e "   eu-west-1 - EU (Ireland) Region"
-    echo -e "   sa-east-1 - South America (Sao Paulo) Region"
-    echo -e "   us-east-1 - US East (Northern Virginia) Region"
-    echo -e "   us-west-1 - US West (Northern California) Region"
-    echo -e "   us-west-2 - US West (Oregon) Region"
-}
-
-read -p "Enter your IAAS. vCloud, EC2 and Openstack are the currently supported IAASs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack " iaas
+read -p "Enter your IaaS. vCloud, EC2 and Openstack are the currently supported IaaSs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack " iaas
 if [[ "$iaas" == "os" ]];then
     echo -e "You selected OpenStack. "
     read -p "Enter OpensStack identity : " os_identity
@@ -182,11 +194,6 @@ elif [[ "$iaas" == "vcloud" ]];then
     read -p "Enter vCloud identity : " vcloud_identity
     read -p "Enter vCloud credentials : " vcloud_credentials
     read -p "Enter vCloud jclouds_endpoint : " vcloud_jclouds_endpoint
-fi
-
-if [ "$machine_ip" == "" ];then
-    echo -e "IP is not specified, so proceeding with the default 127.0.0.1"
-    machine_ip="127.0.0.1"
 fi
 
 if [ "$JAVA_HOME" == "" ];then
