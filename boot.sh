@@ -104,6 +104,11 @@ list_ip_addreses
 read -p "Above are the IP addresses assigned to your machine. Please select the preferred IP address : " machine_ip
 read -p "Enter host user :" host_user
 
+if [ "$machine_ip" == "" ];then
+    echo -e "Machine IP is not specified, so proceeding with the default 127.0.0.1"
+    machine_ip="127.0.0.1"
+fi
+
 # Puppet
 # Puppet
 if [[ $puppet_installed = "false" ]]; then
@@ -182,11 +187,6 @@ elif [[ "$iaas" == "vcloud" ]];then
     read -p "Enter vCloud identity : " vcloud_identity
     read -p "Enter vCloud credentials : " vcloud_credentials
     read -p "Enter vCloud jclouds_endpoint : " vcloud_jclouds_endpoint
-fi
-
-if [ "$machine_ip" == "" ];then
-    echo -e "IP is not specified, so proceeding with the default 127.0.0.1"
-    machine_ip="127.0.0.1"
 fi
 
 if [ "$JAVA_HOME" == "" ];then
