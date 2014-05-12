@@ -34,7 +34,8 @@ var render = function (theme, data, meta, require) {
                         deploymentPolicies:data.deploymentPolicies.deploymentPolicy,
                         mtServiceInfo:data.mtServiceInfo.serviceDefinitionBean,
                         cartridge:cartridge,
-                        cartridgeType:meta.request.getParameter('cartridgeType')
+                        cartridgeType:meta.request.getParameter('cartridgeType'),
+                        serviceGroup:meta.request.getParameter('serviceGroup')
                     }
                 }
             ],

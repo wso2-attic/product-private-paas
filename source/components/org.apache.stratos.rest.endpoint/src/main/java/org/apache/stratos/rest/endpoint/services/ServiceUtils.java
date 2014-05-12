@@ -899,7 +899,9 @@ public class ServiceUtils {
                     }
                 }
             }
-			
+            if(subscription.getCartridgeInfo().getServiceGroup() != null) {
+            	cartridge.setServiceGroup(subscription.getCartridgeInfo().getServiceGroup());
+            }
 			return cartridge;
 			
 		} catch (Exception e) {
