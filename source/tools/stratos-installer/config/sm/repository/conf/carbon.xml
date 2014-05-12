@@ -40,7 +40,7 @@
     <!--
        Product Version
     -->
-    <version>4.0.0-incubating</version>
+    <version>4.0.0-wso2v1</version>
 
     <!--
        Host name or IP address of the machine hosting this server

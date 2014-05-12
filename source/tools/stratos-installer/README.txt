@@ -1,4 +1,4 @@
-Apache Stratos 4.0.0-incubating
+Apache Stratos 4.0.0-wso2v1
 -----------------------------
 
 Apache Stratos (Incubating) is a polyglot PaaS framework, providing developers a cloud-based environment for developing, testing, and running scalable applications.
