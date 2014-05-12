@@ -131,7 +131,7 @@ function configure_wk_members(){
 			sed -i "s/${line}/${wk_xml}/g" ${AXIS2_XML_FILE} && print_message "Well known member configuration successful" || print_error "Failed to configure well known members"
 
 			keymgr_xml="<ServerURL>https://${STRATOS_WK_KEYMGR_MEMBER_IP}:9443/services/</ServerURL>"
-			sed -i "s/${line}/${keymgr_xml}/g" ${API_MANAGER_XML_FILE} && print_message "Keymanager member added" || print_error "Failed to add keymanager member
+			sed -i "s/${line}/${keymgr_xml}/g" ${API_MANAGER_XML_FILE} && print_message "Keymanager member added" || print_error "Failed to add keymanager member"
 
 		elif [ "${STRATOS_SERVICE_NAME}" = "keymanager" ] ; then
 			print_message "Configuring keymanager..."
