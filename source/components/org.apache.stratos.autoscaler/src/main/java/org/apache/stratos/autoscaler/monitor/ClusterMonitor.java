@@ -98,7 +98,6 @@ public class ClusterMonitor extends AbstractMonitor{
             	
                 minCheckKnowledgeSession.setGlobal("clusterId", clusterId);
                 minCheckKnowledgeSession.setGlobal("lbRef", lbReferenceType);
-                log.info("Setting isPrimary for min check : "+ hasPrimary);
                 minCheckKnowledgeSession.setGlobal("isPrimary", hasPrimary);
                 
                 if (log.isDebugEnabled()) {
@@ -119,6 +118,7 @@ public class ClusterMonitor extends AbstractMonitor{
 				for (PartitionContext partitionContext : networkPartitionContext.getPartitionCtxts().values()) {
 					for (MemberContext memberContext : partitionContext.getActiveMembers()) {
 						Properties props = memberContext.getProperties();
+						if(props !=null && props.getProperties() !=null) {
 						for (Property prop : props.getProperties()) {
 							if (prop.getName().equals("PRIMARY")) {
 								if (Boolean.parseBoolean(prop.getValue())) {
@@ -127,10 +127,9 @@ public class ClusterMonitor extends AbstractMonitor{
 								}
 							}
 						}
+						}
 					}
-				}
-                //String []primaryMemberArray = new String[primaryMemberList.size()];
-                //primaryMemberList.toArray(primaryMemberArray);                
+				}             
                 
                 scaleCheckKnowledgeSession.setGlobal("clusterId", clusterId);
                 //scaleCheckKnowledgeSession.setGlobal("deploymentPolicy", deploymentPolicy);
@@ -139,11 +138,9 @@ public class ClusterMonitor extends AbstractMonitor{
                 scaleCheckKnowledgeSession.setGlobal("mcReset", memoryConsumptionReset);
                 scaleCheckKnowledgeSession.setGlobal("laReset", loadAverageReset);
                 scaleCheckKnowledgeSession.setGlobal("lbRef", lbReferenceType);
-                log.info("Setting isPrimary for scle rule : "+ hasPrimary);
                 scaleCheckKnowledgeSession.setGlobal("isPrimary", hasPrimary);
                 scaleCheckKnowledgeSession.setGlobal("primaryMembers", primaryMemberList);
-                
-
+              	
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Running scale check for network partition %s ", networkPartitionContext.getId()));
                 }
