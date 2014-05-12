@@ -82,7 +82,8 @@ public class LbClusterMonitor extends AbstractMonitor{
 
                 if (partitionContext != null) {
                     minCheckKnowledgeSession.setGlobal("clusterId", clusterId);
-
+                    minCheckKnowledgeSession.setGlobal("isPrimary", false);
+                    
                     if (log.isDebugEnabled()) {
                         log.debug(String.format("Running minimum check for partition %s ",
                                                 partitionContext.getPartitionId()));

@@ -291,9 +291,11 @@ public class CloudControllerServiceImpl implements CloudControllerService {
             addToPayload(payload, "NETWORK_PARTITION_ID", memberContext.getNetworkPartitionId());
             addToPayload(payload, "PARTITION_ID", partitionId);
             if(memberContext.getProperties() != null) {
-                for(Map.Entry<Object, Object> entry: memberContext.getProperties().entrySet()) {
-                    addToPayload(payload, entry.getKey().toString(), entry.getValue().toString());
-
+            	org.apache.stratos.cloud.controller.pojo.Properties props1 = memberContext.getProperties();
+                if (props1 != null) {
+                    for (Property prop : props1.getProperties()) {
+                        addToPayload(payload, prop.getName(), prop.getValue());
+                    }
                 }
             }
 

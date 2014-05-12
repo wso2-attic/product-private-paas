@@ -1,26 +1,8 @@
-/*
- *
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- *
-*/
-
 body, div, h1,h2,h3,h4,h5, p, span{
     font-family: 'Open Sans', sans-serif;
+}
+body{
+    background-color: #EFEFEF;
 }
 a{cursor: pointer}
 a:hover{text-decoration: none}
@@ -53,7 +35,7 @@ h2.login-sub-title{
     display: inline-block;
 }
 .login-box-top{
-    background: #e8ebeb url(../img/clouds.png) no-repeat 40px 10px;
+    background: #888 url(../img/clouds.png) no-repeat 40px 10px;
     border-radius: 0;
     -webkit-border-top-left-radius: 8px;
     -webkit-border-top-right-radius: 8px;
@@ -65,7 +47,8 @@ h2.login-sub-title{
     padding-bottom:10px;
 }
 .login-box-bottom{
-    background: #c1c1c1;
+    color:#fff;
+    background: #444;
     border-radius: 0;
     -webkit-border-bottom-right-radius: 8px;
     -webkit-border-bottom-left-radius: 8px;
@@ -155,10 +138,11 @@ body {
     background: #e8ebeb;
 }
 .main-menu{
-    background: #e8ebeb;
+    background: #444;
     -webkit-box-shadow: 1px 3px 4px 1px rgba(71,71,71,1);
     -moz-box-shadow: 1px 3px 4px 1px rgba(71,71,71,1);
     box-shadow: 1px 3px 4px 1px rgba(71,71,71,1);
+    color:#fff;
 }
 .shadow-wrapper{
     background: transparent url(../img/repeat.png) repeat-x;
@@ -192,10 +176,10 @@ body {
     padding:5px 20px;
     text-align: center;
     font-size: 14px;
-    color:#444;
+    color:#d9f4ff;
 }
 .custom-nav ul li a:hover{
-    background: #c8d6df;
+    background: #666;
     text-decoration: none;
 }
 .custom-nav ul li i{
@@ -213,6 +197,9 @@ body {
 }
 .navbar-brand{
     padding:10px 0 0 0;
+}
+.navbar-brand img{
+    width:190px;
 }
 .help-section p {
     font-size: 12px;
@@ -377,8 +364,9 @@ h4{
 .sub-menu-wizard li{
     list-style: none;
     float:left;
-    background: #dcdcdc;
+    background: #666;
     text-align: center;
+    color:#999;
 }
 .sub-menu-wizard li.no-background{
     background: transparent;
@@ -413,7 +401,7 @@ h4{
     content: '';
     border-style: solid;
     border-width: 27px 0 28px 10px;
-    border-color: transparent #dcdcdc;
+    border-color: transparent #666;
     display: block;
     width: 0;
     z-index: 1;
@@ -439,7 +427,7 @@ div.in-active-wizard-item{
     height: 55px;
 }
 ul.sub-menu-wizard li.active-no-background{
-    background: #dcdcdc;
+    background: #666;
 }
 /* inactive menu */
 .sub-menu-inactive{
@@ -453,11 +441,11 @@ ul.sub-menu-wizard li.active-no-background{
     float:left;
     display:block;
     padding:15px 10px;
-    border-left: solid 1px #f2f5f5;
-    border-right: solid 1px #d1d3d3;
+    border-left: solid 1px #888;
+    border-right: solid 1px #888;
     height: 55px;
     color:#888;
-    background: #ddd;
+    background: #444;
 }
 #messageModal i{
     font-size:75px;
@@ -515,6 +503,9 @@ div.success{
 label.required{
     font-weight: bold;
 }
+li.dropdown ul.dropdown-menu{
+    background: #444;
+}
 li.dropdown ul.dropdown-menu li{
     float: none;
 }
@@ -558,8 +549,8 @@ li.dropdown ul.dropdown-menu li a i{
 
 @media (max-width: 1200px) {
     .sub-menu{
-            font-size: 11px;
-        }
+        font-size: 11px;
+    }
     .responsive-gap-maker{
         margin-top: 160px;
     }
@@ -590,7 +581,7 @@ label.error{
     padding-bottom: 10px;
 }
 .loginError{
-    color: #BE0000;
+    color: #bf0000;
     margin-top: -27px;
     position: absolute;
     text-align: center;
@@ -668,10 +659,10 @@ label.error{
     white-space: nowrap;
 }
 pre{
-   margin-top:20px;
+    margin-top:20px;
 }
 .serviceGroup-child-wrapper{
-    border: solid 1px #ccc;
+    border-top: solid 1px #ccc;
     margin-bottom:5px;
-    background: #fff;
+    margin-top:10px;
 }

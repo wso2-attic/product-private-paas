@@ -22,10 +22,12 @@ package org.apache.stratos.cartridge.agent.util;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.stratos.cartridge.agent.config.CartridgeAgentConfiguration;
 import org.apache.stratos.common.util.CommandUtils;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Cartridge agent extension utility methods.
@@ -35,81 +37,140 @@ public class ExtensionUtils {
 
     private static String getExtensionsDir() {
         String extensionsDir = System.getProperty(CartridgeAgentConstants.EXTENSIONS_DIR);
-        if(StringUtils.isBlank(extensionsDir)) {
+        if (StringUtils.isBlank(extensionsDir)) {
             throw new RuntimeException(String.format("System property not found: %s", CartridgeAgentConstants.EXTENSIONS_DIR));
         }
         return extensionsDir;
     }
 
-    private static String prepareCommand(String scriptFile) {
+    private static String prepareCommand(String scriptFile) throws FileNotFoundException {
         String extensionsDir = getExtensionsDir();
-        return (extensionsDir.endsWith(File.separator)) ?
-                extensionsDir + scriptFile:
+        String filePath = (extensionsDir.endsWith(File.separator)) ?
+                extensionsDir + scriptFile :
                 extensionsDir + File.separator + scriptFile;
+
+        File file = new File(filePath);
+        if (file.exists() && !file.isDirectory()) {
+            return filePath;
+        }
+
+        throw new FileNotFoundException("Script file not found:" + filePath);
     }
 
-    public static void executeStartServersExtension() {
+    private static Map<String, String> cleanProcessParameters(Map<String, String> envParameters){
+        Iterator<Map.Entry<String,String>> iter = envParameters.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry<String,String> entry = iter.next();
+            if(entry.getValue() == null){
+                iter.remove();
+            }
+        }
+        return envParameters;
+    }
+
+    public static void executeStartServersExtension(Map<String, String> envParameters) {
         try {
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Executing start servers extension");
             }
-            String command = prepareCommand(CartridgeAgentConstants.START_SERVERS_SH);
-            CommandUtils.executeCommand(command);
-        }
-        catch (Exception e) {
-            log.error("Could not execute start servers extension", e);
+            String script = System.getProperty(CartridgeAgentConstants.START_SERVERS_SCRIPT);
+            String command = prepareCommand(script);
+            cleanProcessParameters(envParameters);
+            String output = CommandUtils.executeCommand(command, envParameters);
+            if (log.isDebugEnabled()) {
+                log.debug("Start server script returned:" + output);
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Could not execute start servers extension", e);
+            }
         }
     }
 
     public static void executeCleanupExtension() {
         try {
-            if(log.isDebugEnabled()) {
-                log.debug("Executing start servers extension");
+            if (log.isDebugEnabled()) {
+                log.debug("Executing cleanup extension");
             }
-            String command = prepareCommand(CartridgeAgentConstants.CLEAN_UP_SH);
-            CommandUtils.executeCommand(command);
-        }
-        catch (Exception e) {
-            log.error("Could not execute start servers extension", e);
+            String script = System.getProperty(CartridgeAgentConstants.CLEAN_UP_SCRIPT);
+            String command = prepareCommand(script);
+            String output = CommandUtils.executeCommand(command);
+            if (log.isDebugEnabled()) {
+                log.debug("Cleanup script returned:" + output);
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Could not execute cleanup extension", e);
+            }
         }
     }
 
-    public static void executeInstanceStartedExtension() {
+    public static void executeInstanceStartedExtension(Map<String, String> envParameters) {
         try {
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Executing instance started extension");
             }
-            String command = prepareCommand(CartridgeAgentConstants.INSTANCE_STARTED_SH);
-            CommandUtils.executeCommand(command);
-        }
-        catch (Exception e) {
-            log.error("Could not execute instance started extension", e);
+            String script = System.getProperty(CartridgeAgentConstants.INSTANCE_STARTED_SCRIPT);
+            String command = prepareCommand(script);
+            cleanProcessParameters(envParameters);
+            String output = CommandUtils.executeCommand(command, envParameters);
+            if (log.isDebugEnabled()) {
+                log.debug("Instance started script returned:" + output);
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Could not execute instance started extension", e);
+            }
         }
     }
 
     public static void executeInstanceActivatedExtension() {
         try {
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Executing instance activated extension");
             }
-            String command = prepareCommand(CartridgeAgentConstants.INSTANCE_ACTIVATED_SH);
-            CommandUtils.executeCommand(command);
-        }
-        catch (Exception e) {
-            log.error("Could not execute instance activated extension", e);
+            String script = System.getProperty(CartridgeAgentConstants.INSTANCE_ACTIVATED_SCRIPT);
+            String command = prepareCommand(script);
+            String output = CommandUtils.executeCommand(command);
+            if (log.isDebugEnabled()) {
+                log.debug("Instance activated script returned:" + output);
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Could not execute instance activated extension", e);
+            }
         }
     }
 
-    public static void executeArtifactsUpdatedExtension(String tenantId) {
+    public static void executeArtifactsUpdatedExtension(Map<String, String> envParameters) {
         try {
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Executing artifacts updated extension");
             }
-            String command = prepareCommand(CartridgeAgentConstants.ARTIFACTS_UPDATED_SH);
-            CommandUtils.executeCommand(command +" " + tenantId );
+            String script = System.getProperty(CartridgeAgentConstants.ARTIFACTS_UPDATED_SCRIPT);
+            String command = prepareCommand(script);
+            cleanProcessParameters(envParameters);
+            String output = CommandUtils.executeCommand(command, envParameters);
+            if (log.isDebugEnabled()) {
+                log.debug("Artifacts updated script returned:" + output);
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Could not execute artifacts updated extension", e);
+            }
+        }
+    }
+
+    public static void executeCopyArtifactsExtension(String source, String destination) {
+        try {
+            if(log.isDebugEnabled()) {
+                log.debug("Executing artifacts copy extension");
+            }
+            String command = prepareCommand(CartridgeAgentConstants.ARTIFACTS_COPY_SCRIPT);
+            CommandUtils.executeCommand(command +" " + source + " " + destination );
         }
         catch (Exception e) {
-            log.error("Could not execute artifacts updated extension", e);
+            log.error("Could not execute artifacts copy extension", e);
         }
     }
 
@@ -119,55 +180,156 @@ public class ExtensionUtils {
      */
     public static void executeVolumeMountExtension(String persistenceMappingsPayload) {
         try {
-            if(log.isDebugEnabled()) {
-                    log.debug(String.format("Executing volume mounting extension: [payload] %s", persistenceMappingsPayload));
+            if (log.isDebugEnabled()) {
+                log.debug(String.format("Executing volume mounting extension: [payload] %s", persistenceMappingsPayload));
             }
-            String command = prepareCommand(CartridgeAgentConstants.MOUNT_VOLUMES_SH);
+            String script = System.getProperty(CartridgeAgentConstants.MOUNT_VOLUMES_SCRIPT);
+            String command = prepareCommand(script);
             //String payloadPath = System.getProperty(CartridgeAgentConstants.PARAM_FILE_PATH);
             // add payload file path as argument so inside the script we can source
             // it  to get the env variables set by the startup script
-            CommandUtils.executeCommand(command + " " + persistenceMappingsPayload);
-        }
-        catch (Exception e) {
-                log.error("Could not execute volume mounting extension", e);
-        }
-    }
-
-    public static void executeSubscriptionDomainAddedExtension(String domain, String applicationContext) {
-        try {
-            if(log.isDebugEnabled()) {
-                log.debug("Executing subscription domain added extension: [domain] %s [application-context] %s");
+            String output = CommandUtils.executeCommand(command + " " + persistenceMappingsPayload);
+            if (log.isDebugEnabled()) {
+                log.debug("Volume mount script returned:" + output);
             }
-            String command = prepareCommand(CartridgeAgentConstants.SUBSCRIPTION_DOMAIN_ADDED_SH + " " + domain + " " + applicationContext);
-            CommandUtils.executeCommand(command);
-        }
-        catch (Exception e) {
-            log.error("Could not execute subscription domain added extension", e);
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Could not execute volume mounting extension", e);
+            }
         }
     }
 
-    public static void executeSubscriptionDomainRemovedExtension(String domain) {
+    public static void executeMemberActivatedExtension(Map<String, String> envParameters) {
         try {
             if (log.isDebugEnabled()) {
-                log.debug("Executing subscription domain removed extension: [domain] %s");
+                log.debug("Executing member activated extension");
             }
-            String command = prepareCommand(CartridgeAgentConstants.SUBSCRIPTION_DOMAIN_ADDED_SH + " " + domain);
-            CommandUtils.executeCommand(command);
+            String script = System.getProperty(CartridgeAgentConstants.MEMBER_ACTIVATED_SCRIPT);
+            String command = prepareCommand(script);
+            cleanProcessParameters(envParameters);
+            String output = CommandUtils.executeCommand(command, envParameters);
+            if (log.isDebugEnabled()) {
+                log.debug("Member activated script returned:" + output);
+            }
         } catch (Exception e) {
-            log.error("Could not execute subscription domain removed extension", e);
+            if (log.isErrorEnabled()) {
+                log.error("Could not execute member activated extension", e);
+            }
         }
     }
-    
-    public static void executeCopyArtifactsExtension(String source, String destination) {
+
+    public static void executeMemberTerminatedExtension(Map<String, String> envParameters) {
         try {
-            if(log.isDebugEnabled()) {
-                log.debug("Executing artifacts copy extension");
+            if (log.isDebugEnabled()) {
+                log.debug("Executing member terminated extension");
             }
-            String command = prepareCommand(CartridgeAgentConstants.ARTIFACTS_COPY_SH);
-            CommandUtils.executeCommand(command +" " + source + " " + destination );
+            String script = System.getProperty(CartridgeAgentConstants.MEMBER_TERMINATED_SCRIPT);
+            String command = prepareCommand(script);
+            cleanProcessParameters(envParameters);
+            String output = CommandUtils.executeCommand(command, envParameters);
+            if (log.isDebugEnabled()) {
+                log.debug("Member terminated script returned:" + output);
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Could not execute member terminated extension", e);
+            }
         }
-        catch (Exception e) {
-            log.error("Could not execute artifacts copy extension", e);
+    }
+
+    public static void executeMemberSuspendedExtension(Map<String, String> envParameters) {
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Executing member suspended extension");
+            }
+            String script = System.getProperty(CartridgeAgentConstants.MEMBER_SUSPENDED_SCRIPT);
+            String command = prepareCommand(script);
+            cleanProcessParameters(envParameters);
+            String output = CommandUtils.executeCommand(command, envParameters);
+            if (log.isDebugEnabled()) {
+                log.debug("Member suspended script returned:" + output);
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Could not execute member suspended extension", e);
+            }
+        }
+    }
+
+    public static void executeCompleteTopologyExtension(Map<String, String> envParameters) {
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Executing complete topology extension");
+            }
+            String script = System.getProperty(CartridgeAgentConstants.COMPLETE_TOPOLOGY_SCRIPT);
+            String command = prepareCommand(script);
+            cleanProcessParameters(envParameters);
+            String output = CommandUtils.executeCommand(command, envParameters);
+            if (log.isDebugEnabled()) {
+                log.debug("Complete topology script returned:" + output);
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Could not execute complete topology extension", e);
+            }
+        }
+    }
+
+    public static void executeCompleteTenantExtension(Map<String, String> envParameters) {
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Executing complete tenant extension");
+            }
+            String script = System.getProperty(CartridgeAgentConstants.COMPLETE_TENANT_SCRIPT);
+            String command = prepareCommand(script);
+            cleanProcessParameters(envParameters);
+            String output = CommandUtils.executeCommand(command, envParameters);
+            if (log.isDebugEnabled()) {
+                log.debug("Complete tenant script returned:" + output);
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Could not execute complete tenant extension", e);
+            }
+        }
+    }
+
+    public static void executeSubscriptionDomainAddedExtension(Map<String, String> envParameters) {
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Executing subscription domain added extension");
+            }
+            String script = System.getProperty(CartridgeAgentConstants.SUBSCRIPTION_DOMAIN_ADDED_SCRIPT);
+            String command = prepareCommand(script);
+            cleanProcessParameters(envParameters);
+            String output = CommandUtils.executeCommand(command, envParameters);
+            if (log.isDebugEnabled()) {
+                log.debug("Subscription domain added script returned:" + output);
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Could not execute subscription domain added extension", e);
+            }
+        }
+    }
+
+    public static void executeSubscriptionDomainRemovedExtension(Map<String, String> envParameters) {
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Executing subscription domain removed extension");
+            }
+            String script = System.getProperty(CartridgeAgentConstants.SUBSCRIPTION_DOMAIN_REMOVED_SCRIPT);
+            String command = prepareCommand(script);
+            cleanProcessParameters(envParameters);
+            String output = CommandUtils.executeCommand(command, envParameters);
+            if (log.isDebugEnabled()) {
+                log.debug("Subscription domain removed script returned:" + output);
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Could not execute subscription domain removed extension", e);
+            }
+
         }
     }
 }

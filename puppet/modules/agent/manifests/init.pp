@@ -33,11 +33,21 @@ class agent(
   $service_templates = [
     'bin/stratos.sh',
     'conf/templates/jndi.properties.template',
-    'extensions/artifacts-updated.sh',
+    'conf/log4j.properties',   
     'extensions/clean.sh',
     'extensions/instance-activated.sh',
     'extensions/instance-started.sh',
     'extensions/start-servers.sh',
+    'extensions/artifacts-copy.sh',
+    'extensions/artifacts-updated.sh',
+    'extensions/complete-tenant.sh',
+    'extensions/complete-topology.sh',
+    'extensions/member-activated.sh',
+    'extensions/member-suspended.sh',
+    'extensions/member-terminated.sh',
+    'extensions/mount-volumes.sh',
+    'extensions/subscription-domain-added.sh',
+    'extensions/subscription-domain-removed.sh',
     ]
 
   agent::initialize { $deployment_code:

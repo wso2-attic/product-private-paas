@@ -378,6 +378,7 @@
                     <xs:element minOccurs="0" name="nodeId" nillable="true" type="xs:string"></xs:element>
                     <xs:element minOccurs="0" name="partition" nillable="true" type="ax220:Partition"></xs:element>
                     <xs:element minOccurs="0" name="privateIpAddress" nillable="true" type="xs:string"></xs:element>
+					<xs:element minOccurs="0" name="properties" nillable="true" type="ax221:Properties"></xs:element>
                     <xs:element minOccurs="0" name="publicIpAddress" nillable="true" type="xs:string"></xs:element>
                 </xs:sequence>
             </xs:complexType>
