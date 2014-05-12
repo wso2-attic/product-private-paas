@@ -39,13 +39,11 @@ import org.apache.stratos.messaging.event.instance.notifier.InstanceCleanupMembe
 import org.apache.stratos.messaging.event.tenant.CompleteTenantEvent;
 import org.apache.stratos.messaging.event.tenant.SubscriptionDomainAddedEvent;
 import org.apache.stratos.messaging.event.tenant.SubscriptionDomainRemovedEvent;
-import org.apache.stratos.messaging.event.topology.CompleteTopologyEvent;
-import org.apache.stratos.messaging.event.topology.MemberActivatedEvent;
-import org.apache.stratos.messaging.event.topology.MemberSuspendedEvent;
-import org.apache.stratos.messaging.event.topology.MemberTerminatedEvent;
+import org.apache.stratos.messaging.event.topology.*;
 import org.apache.stratos.messaging.message.receiver.tenant.TenantManager;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyManager;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -67,6 +65,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 log.debug("Processing instance started event...");
             }
             Map<String, String> env = new HashMap<String, String>();
+            env.put("APP_PATH", CartridgeAgentConfiguration.getInstance().getAppPath());
             env.put("STRATOS_PARAM_FILE_PATH", System.getProperty(CartridgeAgentConstants.PARAM_FILE_PATH));
             ExtensionUtils.executeInstanceStartedExtension(env);
         } catch (Exception e) {
@@ -117,6 +116,8 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             boolean cloneExists = GitBasedArtifactRepository.getInstance().cloneExists(repoInformation);
             GitBasedArtifactRepository.getInstance().checkout(repoInformation);
             Map<String, String> env = new HashMap<String, String>();
+            env.put("STRATOS_APP_PATH", CartridgeAgentConfiguration.getInstance().getAppPath());
+            env.put("STRATOS_RUN_COMMAND", "wso2server.sh > /dev/null 2>&1 &");
             env.put("STRATOS_CLUSTER_ID", artifactUpdatedEvent.getClusterId());
             env.put("STRATOS_TENANT_ID", artifactUpdatedEvent.getTenantId());
             env.put("STRATOS_REPO_URL", artifactUpdatedEvent.getRepoURL());
@@ -160,8 +161,10 @@ public class DefaultExtensionHandler implements ExtensionHandler {
     }
 
     @Override
-    public void onArtifactUpdateSchedulerEvent(String tenantId){
+    public void onArtifactUpdateSchedulerEvent(String tenantId) {
         Map<String, String> env = new HashMap<String, String>();
+        env.put("STRATOS_APP_PATH", CartridgeAgentConfiguration.getInstance().getAppPath());
+        env.put("STRATOS_RUN_COMMAND", "wso2server.sh > /dev/null 2>&1 &");
         env.put("STRATOS_TENANT_ID", tenantId);
         env.put("STRATOS_ARTIFACT_UPDATE_SCHEDULER", "true");
         ExtensionUtils.executeArtifactsUpdatedExtension(env);
@@ -273,6 +276,8 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         if (isRelevantMemberEvent(memberActivatedEvent.getServiceName(), memberActivatedEvent.getClusterId(),
                 memberActivatedEvent.getMemberId(), lbClusterId)) {
             Map<String, String> env = new HashMap<String, String>();
+            env.put("STRATOS_APP_PATH", CartridgeAgentConfiguration.getInstance().getAppPath());
+            env.put("STRATOS_RUN_COMMAND", "wso2server.sh > /dev/null 2>&1 &");
             env.put("STRATOS_MEMBER_IP", memberActivatedEvent.getMemberIp());
             env.put("STRATOS_MEMBER_ID", memberActivatedEvent.getMemberId());
             env.put("STRATOS_CLUSTER_ID", memberActivatedEvent.getClusterId());
@@ -381,6 +386,8 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             return;
         }
         Map<String, String> env = new HashMap<String, String>();
+        env.put("STRATOS_APP_PATH", CartridgeAgentConfiguration.getInstance().getAppPath());
+        env.put("STRATOS_RUN_COMMAND", "wso2server.sh > /dev/null 2>&1 &");
         Collection<Member> membersInLb = new ArrayList<Member>();
         // if this instance is a LB, get all the members that belong to this LB cluster
         if (cluster.isLbCluster()) {
@@ -441,6 +448,8 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             log.debug("Complete tenants:" + tenantListJson);
         }
         Map<String, String> env = new HashMap<String, String>();
+        env.put("STRATOS_APP_PATH", CartridgeAgentConfiguration.getInstance().getAppPath());
+        env.put("STRATOS_RUN_COMMAND", "wso2server.sh > /dev/null 2>&1 &");
         String lbClusterIdInPayload = CartridgeAgentConfiguration.getInstance().getLbClusterId();
         String[] memberIps = getLbMemberIp(lbClusterIdInPayload);
         if (memberIps != null && memberIps.length > 1) {
@@ -497,6 +506,8 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
             Collection<Member> members = cluster.getMembers();
             Map<String, String> env = new HashMap<String, String>();
+            env.put("STRATOS_APP_PATH", CartridgeAgentConfiguration.getInstance().getAppPath());
+            env.put("STRATOS_RUN_COMMAND", "wso2server.sh > /dev/null 2>&1 &");
             env.put("STRATOS_MEMBER_IP", cluster.getMember(memberTerminatedEvent.getMemberId()).getMemberIp());
             env.put("STRATOS_MEMBER_ID", memberTerminatedEvent.getMemberId());
             env.put("STRATOS_CLUSTER_ID", memberTerminatedEvent.getClusterId());
@@ -569,24 +580,24 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         Service service = topology.getService(memberSuspendedEvent.getServiceName());
         if (service == null) {
             if (log.isErrorEnabled()) {
-                log.error(String.format("Member terminated event service not found in topology..." +
-                        "failed to execute member terminated event [service] %s", memberSuspendedEvent.getServiceName()));
+                log.error(String.format("Member suspended event service not found in topology..." +
+                        "failed to execute member suspended event [service] %s", memberSuspendedEvent.getServiceName()));
             }
             return;
         }
         Cluster cluster = service.getCluster(memberSuspendedEvent.getClusterId());
         if (cluster == null) {
             if (log.isErrorEnabled()) {
-                log.error(String.format("Member terminated event cluster id not found in topology..." +
-                        "failed to execute member terminated event [service] %s", memberSuspendedEvent.getClusterId()));
+                log.error(String.format("Member suspended event cluster id not found in topology..." +
+                        "failed to execute member suspended event [service] %s", memberSuspendedEvent.getClusterId()));
             }
             return;
         }
-        Member terminatedMember = cluster.getMember(memberSuspendedEvent.getClusterId());
-        if (terminatedMember == null) {
+        Member suspendedMember = cluster.getMember(memberSuspendedEvent.getClusterId());
+        if (suspendedMember == null) {
             if (log.isErrorEnabled()) {
-                log.error(String.format("Member terminated event member id not found in topology..." +
-                        "failed to execute member terminated event [member] %s", memberSuspendedEvent.getMemberId()));
+                log.error(String.format("Member suspended event member id not found in topology..." +
+                        "failed to execute member suspended event [member] %s", memberSuspendedEvent.getMemberId()));
             }
             return;
         }
@@ -597,6 +608,8 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 memberSuspendedEvent.getMemberId(), lbClusterId)) {
             Collection<Member> members = cluster.getMembers();
             Map<String, String> env = new HashMap<String, String>();
+            env.put("STRATOS_APP_PATH", CartridgeAgentConfiguration.getInstance().getAppPath());
+            env.put("STRATOS_RUN_COMMAND", "wso2server.sh > /dev/null 2>&1 &");
             env.put("STRATOS_MEMBER_IP", cluster.getMember(clusterId).getMemberIp());
             env.put("STRATOS_MEMBER_ID", memberSuspendedEvent.getMemberId());
             env.put("STRATOS_CLUSTER_ID", memberSuspendedEvent.getClusterId());
@@ -653,31 +666,248 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         }
     }
 
-    private boolean isTopologyActivated(){
-        TopologyManager.acquireReadLock();
-        boolean active = TopologyManager.getTopology().isInitialized();
-        TopologyManager.releaseReadLock();
-        return active;
+    @Override
+    public void onMemberStartedEvent(MemberStartedEvent memberStartedEvent) {
+        if (log.isInfoEnabled()) {
+            log.info(String.format("Member started event received: [service] %s [cluster] %s",
+                    memberStartedEvent.getServiceName(), memberStartedEvent.getClusterId()));
+        }
+
+        if (log.isDebugEnabled()) {
+            String msg = gson.toJson(memberStartedEvent);
+            log.debug("Member started event msg:" + msg);
+        }
+
+        String clusterId = memberStartedEvent.getClusterId();
+        Topology topology = TopologyManager.getTopology();
+        Service service = topology.getService(memberStartedEvent.getServiceName());
+        if (service == null) {
+            if (log.isErrorEnabled()) {
+                log.error(String.format("Member started event service not found in topology..." +
+                        "failed to execute member started event [service] %s", memberStartedEvent.getServiceName()));
+            }
+            return;
+        }
+        Cluster cluster = service.getCluster(memberStartedEvent.getClusterId());
+        if (cluster == null) {
+            if (log.isErrorEnabled()) {
+                log.error(String.format("Member started event cluster id not found in topology..." +
+                        "failed to execute member started event [service] %s", memberStartedEvent.getClusterId()));
+            }
+            return;
+        }
+        Member startedMember = cluster.getMember(memberStartedEvent.getClusterId());
+        if (startedMember == null) {
+            if (log.isErrorEnabled()) {
+                log.error(String.format("Member started event member id not found in topology..." +
+                        "failed to execute member started event [member] %s", memberStartedEvent.getMemberId()));
+            }
+            return;
+        }
+        String lbClusterId = cluster.getMember(memberStartedEvent.getClusterId()).getLbClusterId();
+
+        // check whether new member is in the same member cluster or LB cluster of this instance
+        if (isRelevantMemberEvent(memberStartedEvent.getServiceName(), memberStartedEvent.getClusterId(),
+                memberStartedEvent.getMemberId(), lbClusterId)) {
+            Collection<Member> members = cluster.getMembers();
+            Map<String, String> env = new HashMap<String, String>();
+            env.put("STRATOS_APP_PATH", CartridgeAgentConfiguration.getInstance().getAppPath());
+            env.put("STRATOS_RUN_COMMAND", "wso2server.sh > /dev/null 2>&1 &");
+            env.put("STRATOS_MEMBER_IP", cluster.getMember(clusterId).getMemberIp());
+            env.put("STRATOS_MEMBER_ID", memberStartedEvent.getMemberId());
+            env.put("STRATOS_CLUSTER_ID", memberStartedEvent.getClusterId());
+            env.put("STRATOS_LB_CLUSTER_ID", lbClusterId);
+            env.put("STRATOS_NETWORK_PARTITION_ID", memberStartedEvent.getNetworkPartitionId());
+            env.put("STRATOS_SERVICE_NAME", memberStartedEvent.getServiceName());
+            env.put("STRATOS_MEMBER_LIST_JSON", gson.toJson(members, memberType));
+            String[] memberIps = getLbMemberIp(lbClusterId);
+            if (memberIps != null && memberIps.length > 1) {
+                env.put("STRATOS_LB_IP", memberIps[0]);
+                env.put("STRATOS_LB_PUBLIC_IP", memberIps[1]);
+            }
+            env.put("STRATOS_PARAM_FILE_PATH", System.getProperty(CartridgeAgentConstants.PARAM_FILE_PATH));
+            env.put("STRATOS_TOPOLOGY_JSON", gson.toJson(topology.getServices(), serviceType));
+
+            Properties serviceProperties = service.getProperties();
+            if (serviceProperties != null) {
+                for (Map.Entry<Object, Object> entry : serviceProperties.entrySet()) {
+                    env.put("STRATOS_SERVICE_PROPERTY_" + entry.getKey().toString(), entry.getValue().toString());
+                    if (log.isDebugEnabled()) {
+                        log.debug(String.format("Service property added: [key] %s [value] %s",
+                                entry.getKey().toString(), entry.getValue().toString()));
+                    }
+                }
+            }
+
+            Properties clusterProperties = cluster.getProperties();
+            if (clusterProperties != null) {
+                for (Map.Entry<Object, Object> entry : clusterProperties.entrySet()) {
+                    env.put("STRATOS_CLUSTER_PROPERTY_" + entry.getKey().toString(), entry.getValue().toString());
+                    if (log.isDebugEnabled()) {
+                        log.debug(String.format("Cluster property added: [key] %s [value] %s",
+                                entry.getKey().toString(), entry.getValue().toString()));
+                    }
+                }
+            }
+
+            Member member = cluster.getMember(memberStartedEvent.getMemberId());
+            if (member != null && member.getProperties() != null) {
+                for (Map.Entry<Object, Object> entry : member.getProperties().entrySet()) {
+                    env.put("STRATOS_MEMBER_PROPERTY_" + entry.getKey().toString(), entry.getValue().toString());
+                    if (log.isDebugEnabled()) {
+                        log.debug(String.format("Member property added: [key] %s [value] %s",
+                                entry.getKey().toString(), entry.getValue().toString()));
+                    }
+                }
+            }
+
+            ExtensionUtils.executeMemberStartedExtension(env);
+        } else {
+            if (log.isDebugEnabled()) {
+                log.debug("Member suspended event is not relevant...skipping agent extension");
+            }
+        }
     }
 
-    @Override
-    public void startServerExtension() {
-        while (!isTopologyActivated()) {
+    private boolean isWKMemberGroupReady(Map<String, String> envParameters, int minCount) {
+        TopologyManager.acquireReadLock();
+        Topology topology = TopologyManager.getTopology();
+        if (topology == null || !topology.isInitialized()) {
+            return false;
+        }
+        String serviceGroupInPayload = CartridgeAgentConfiguration.getInstance().getServiceGroup();
+        envParameters.put("STRATOS_SERVICE_GROUP", serviceGroupInPayload);
+
+        // clustering logic for apimanager
+        if (serviceGroupInPayload != null && serviceGroupInPayload.equals("apim")) {
+
+            Collection<Cluster> apistoreClusterCollection = topology.getService("apistore").getClusters();
+            Collection<Cluster> publisherClusterCollection = topology.getService("publisher").getClusters();
+            Collection<Cluster> gatewayClusterCollection = topology.getService("gateway").getClusters();
+            Collection<Cluster> keymgrClusterCollection = topology.getService("keymanager").getClusters();
+
+            if (CartridgeAgentConfiguration.getInstance().getServiceName().equals("apistore") ||
+                    CartridgeAgentConfiguration.getInstance().getServiceName().equals("publisher")) {
+                List<Member> apistoreMemberList = new ArrayList<Member>();
+                for (Member member : apistoreClusterCollection.iterator().next().getMembers()) {
+                    if (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated)) {
+                        apistoreMemberList.add(member);
+                    }
+                }
+                if (apistoreMemberList.isEmpty()) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("API Store members not yet created");
+                    }
+                    return false;
+                }
+                Member apistoreMember = apistoreMemberList.get(0);
+                envParameters.put("STRATOS_WK_APISTORE_MEMBER_IP", apistoreMember.getMemberIp());
+                envParameters.put("STRATOS_WK_APISTORE_MEMBER_PORT", "4000");
+
+                List<Member> publisherMemberList = new ArrayList<Member>();
+                for (Member member : publisherClusterCollection.iterator().next().getMembers()) {
+                    if (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated)) {
+                        publisherMemberList.add(member);
+                    }
+                }
+                if (publisherMemberList.isEmpty()) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("API Publisher members not yet created");
+                    }
+                    return false;
+                }
+                Member publisherMember = publisherMemberList.get(0);
+                envParameters.put("STRATOS_WK_PUBLISHER_MEMBER_IP", publisherMember.getMemberIp());
+                envParameters.put("STRATOS_WK_PUBLISHER_MEMBER_PORT", "4000");
+                return true;
+
+            } else if (CartridgeAgentConfiguration.getInstance().getServiceName().equals("gateway")) {
+
+                List<Member> keymgrMemberList = new ArrayList<Member>();
+                for (Member member : keymgrClusterCollection.iterator().next().getMembers()) {
+                    if (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated)) {
+                        keymgrMemberList.add(member);
+                    }
+                }
+
+                if (keymgrMemberList.isEmpty()) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("API Keymanager members not yet created");
+                    }
+                    return false;
+                }
+                Member keymgrMember = keymgrMemberList.get(0);
+                envParameters.put("STRATOS_WK_KEYMGR_MEMBER_IP", keymgrMember.getMemberIp());
+                envParameters.put("STRATOS_WK_KEYMGR_MEMBER_PORT", "4000");
+
+                List<Member> wkGatewayMembers = new ArrayList<Member>();
+                int idx = 0;
+                for (Member gatewayMem : gatewayClusterCollection.iterator().next().getMembers()) {
+                    if (gatewayMem.getProperties() != null &&
+                            gatewayMem.getProperties().containsKey("PRIMARY") &&
+                            gatewayMem.getProperties().getProperty("PRIMARY").toLowerCase().equals("true") &&
+                            (gatewayMem.getStatus().equals(MemberStatus.Starting) || gatewayMem.getStatus().equals(MemberStatus.Activated))
+                            ) {
+                        wkGatewayMembers.add(gatewayMem);
+                        envParameters.put("STRATOS_WK_GATEWAY_MEMBER_" + idx + "_IP", gatewayMem.getMemberIp());
+                        envParameters.put("STRATOS_WK_GATEWAY_MEMBER_" + idx + "_PORT", "4000");
+                        idx++;
+                    }
+                }
+                if (idx >= minCount) {
+                    return true;
+                }
+            } else if (CartridgeAgentConfiguration.getInstance().getServiceName().equals("keymanager")) {
+
+                return true;
+
+            }
+        } else {
+            String serviceNameInPayload = CartridgeAgentConfiguration.getInstance().getServiceName();
+            String clusterIdInPayload = CartridgeAgentConfiguration.getInstance().getClusterId();
+            Service service = topology.getService(serviceNameInPayload);
+            Cluster cluster = service.getCluster(clusterIdInPayload);
+
+            List<Member> wkMembers = new ArrayList<Member>();
+            int idx = 0;
+            for (Member member : cluster.getMembers()) {
+                if (member.getProperties() != null &&
+                        member.getProperties().containsKey("PRIMARY") &&
+                        member.getProperties().getProperty("PRIMARY").toLowerCase().equals("true") &&
+                        (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated))
+                        ) {
+                    wkMembers.add(member);
+                    envParameters.put("STRATOS_WK_MEMBER_" + idx + "_IP", member.getMemberIp());
+                    envParameters.put("STRATOS_WK_MEMBER_" + idx + "_PORT", "4000");
+                    idx++;
+                }
+            }
+            if (idx >= minCount) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void waitForWKMembers(Map<String, String> envParameters) {
+        int minCount = Integer.parseInt(CartridgeAgentConfiguration.getInstance().getMinCount());
+        while (!isWKMemberGroupReady(envParameters, minCount)) {
             if (log.isInfoEnabled()) {
-                log.info("Waiting for complete topology event...");
+                log.info(String.format("Waiting for %d well known members...", minCount));
             }
             try {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
             }
         }
-        if (log.isInfoEnabled()) {
-            log.info("Complete topology event received");
-        }
+    }
 
+    @Override
+    public void startServerExtension() {
         String serviceNameInPayload = CartridgeAgentConfiguration.getInstance().getServiceName();
         String clusterIdInPayload = CartridgeAgentConfiguration.getInstance().getClusterId();
         String lbClusterIdInPayload = CartridgeAgentConfiguration.getInstance().getLbClusterId();
+
         Topology topology = TopologyManager.getTopology();
         Service service = topology.getService(serviceNameInPayload);
         if (service == null) {
@@ -695,7 +925,25 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             }
             return;
         }
+
+        // store environment variable parameters to be passed to extension shell script
         Map<String, String> env = new HashMap<String, String>();
+        env.put("STRATOS_APP_PATH", CartridgeAgentConfiguration.getInstance().getAppPath());
+        env.put("STRATOS_RUN_COMMAND", "wso2server.sh > /dev/null 2>&1 &");
+
+        // if clustering is enabled wait until all well known members have started
+        String flagClustering = CartridgeAgentConfiguration.getInstance().getIsClustered();
+        if (flagClustering != null && flagClustering.toLowerCase().equals("true")) {
+            env.put("STRATOS_CLUSTERING", "true");
+            env.put("STRATOS_WK_MEMBER_COUNT", CartridgeAgentConfiguration.getInstance().getMinCount());
+            if (CartridgeAgentConfiguration.getInstance().getIsPrimary().toLowerCase().equals("true")) {
+                env.put("STRATOS_PRIMARY", "true");
+            } else {
+                env.put("STRATOS_PRIMARY", "false");
+            }
+            waitForWKMembers(env);
+        }
+
         Collection<Member> membersInLb = new ArrayList<Member>();
         // if this instance is a LB, get all the members that belong to this LB cluster
         if (cluster.isLbCluster()) {
@@ -770,6 +1018,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         }
 
         Map<String, String> env = new HashMap<String, String>();
+        env.put("STRATOS_APP_PATH", CartridgeAgentConfiguration.getInstance().getAppPath());
         env.put("STRATOS_SUBSCRIPTION_SERVICE_NAME", subscriptionDomainAddedEvent.getServiceName());
         env.put("STRATOS_SUBSCRIPTION_DOMAIN_NAME", subscriptionDomainAddedEvent.getDomainName());
         env.put("STRATOS_SUBSCRIPTION_TENANT_ID", Integer.toString(subscriptionDomainAddedEvent.getTenantId()));
@@ -795,7 +1044,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
     public void onSubscriptionDomainRemovedEvent(SubscriptionDomainRemovedEvent subscriptionDomainRemovedEvent) {
         String tenantDomain = findTenantDomain(subscriptionDomainRemovedEvent.getTenantId());
         if (log.isInfoEnabled()) {
-            log.info(String.format("Subscription domain added event received: [tenant-id] %d [tenant-domain] %s " +
+            log.info(String.format("Subscription domain removed event received: [tenant-id] %d [tenant-domain] %s " +
                             "[domain-name] %s",
                     subscriptionDomainRemovedEvent.getTenantId(),
                     tenantDomain,
@@ -809,6 +1058,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         }
 
         Map<String, String> env = new HashMap<String, String>();
+        env.put("STRATOS_APP_PATH", CartridgeAgentConfiguration.getInstance().getAppPath());
         env.put("STRATOS_SUBSCRIPTION_SERVICE_NAME", subscriptionDomainRemovedEvent.getServiceName());
         env.put("STRATOS_SUBSCRIPTION_DOMAIN_NAME", subscriptionDomainRemovedEvent.getDomainName());
         env.put("STRATOS_SUBSCRIPTION_TENANT_ID", Integer.toString(subscriptionDomainRemovedEvent.getTenantId()));

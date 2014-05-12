@@ -34,7 +34,7 @@ define appserver::initialize ($repo, $version, $service, $local_dir, $target, $m
       ensure => present,
       source => "puppet:///modules/appserver/wso2${service}-${version}.zip",
       require   => Exec["creating_local_package_repo_for_${name}", "creating_target_for_${name}"];
-    }
+  }
 
   exec {
     "extracting_wso2${service}-${version}.zip_for_${name}":

@@ -19,13 +19,13 @@
 # under the License.
 #
 # --------------------------------------------------------------
-# This extension script will be executed when member activated
+# This extension script will be executed when member suspended
 # event is received.
 # --------------------------------------------------------------
 #
 
 log=/var/log/apache-stratos/cartridge-agent-extensions.log
-OUTPUT=`date`": Member Activated Event: "
+OUTPUT=`date`": Member Started Event: "
 OUTPUT="$OUTPUT MEMBER_ID: ${STRATOS_MEMBER_ID}, "
 OUTPUT="$OUTPUT MEMBER_IP: ${STRATOS_MEMBER_IP}, "
 OUTPUT="$OUTPUT CLUSTER_ID: ${STRATOS_CLUSTER_ID}, "

@@ -134,14 +134,15 @@ class apimanager (
       require   => Apimanager::Deploy["${deployment_code}_${amtype}"];
   }
 
-  apimanager::start { "${deployment_code}_${amtype}":
-    owner   => $owner,
-    target  => $carbon_home,
-    require => [
-      Apimanager::Initialize["${deployment_code}_${amtype}"],
-      Apimanager::Deploy["${deployment_code}_${amtype}"],
-      Apimanager::Push_templates[$service_templates],
-      File["${carbon_home}/bin/wso2server.sh"],
-      ],
-  }
+#  apimanager::start { "${deployment_code}_${amtype}":
+#    owner   => $owner,
+#    target  => $carbon_home,
+#    require => [
+#      Apimanager::Initialize["${deployment_code}_${amtype}"],
+#      Apimanager::Deploy["${deployment_code}_${amtype}"],
+#      Apimanager::Push_templates[$service_templates],
+#      File["${carbon_home}/bin/wso2server.sh"],
+#      ],
+#  }
+
 }
