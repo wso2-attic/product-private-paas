@@ -33,10 +33,11 @@
           ]
         }
       ],
-"property":[
-     {   
-       "name": "payload_parameter.WSO2_ELB_HOST",
-       "value": "54.254.27.215"
-     }   
-   ] 
+      "loadBalancer": {
+        "type": "lb",
+        "property": {
+            "name": "default.load.balancer",
+            "value": "true"
+        }
+      },    
 }

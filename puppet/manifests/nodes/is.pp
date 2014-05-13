@@ -17,12 +17,12 @@
 
 # IS cartridge node
 node /is/ inherits base {
-  $docroot = "/mnt/wso2is-4.6.0"
+  $docroot = "/mnt/wso2is-5.0.0"
   require java
   class {'agent':}
   class {'is':
 
-        version            => '4.6.0',
+        version            => '5.0.0',
         sub_cluster_domain => 'test',
         members            => false,
         offset             => 0,
