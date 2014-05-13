@@ -33,7 +33,7 @@ properties="-Dmb.ip=<%= @mb_ip %>
             -Djndi.properties.dir=<%= @carbon_home %>/conf
             -Dlog4j.configuration=file://<%= @carbon_home %>/conf/log4j.properties
             -Dparam.file.path=<%= @carbon_home %>/payload/launch-params
-            -Dextensions.dir=<%= @carbon_home %>/../extensions
+            -Dextensions.dir=<%= @carbon_home %>/extensions
             -Dcep.stats.publisher.enabled=true
             -Djavax.net.ssl.trustStore=<%= @carbon_home %>/security/client-truststore.jks
             -Djavax.net.ssl.trustStorePassword=<%= @truststore_password %>
