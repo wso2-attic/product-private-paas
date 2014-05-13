@@ -134,14 +134,15 @@ class esb (
       require   => Esb::Deploy[$deployment_code],
   }
 
-  esb::start { $deployment_code:
-    owner   => $owner,
-    target  => $carbon_home,
-    require => [
-      Esb::Initialize[$deployment_code],
-      Esb::Deploy[$deployment_code],
-      Push_templates[$service_templates],
-      Push_templates[$common_templates],
-      ],
-  }
+#  esb::start { $deployment_code:
+#    owner   => $owner,
+#    target  => $carbon_home,
+#    require => [
+#      Esb::Initialize[$deployment_code],
+#      Esb::Deploy[$deployment_code],
+#      Push_templates[$service_templates],
+#      Push_templates[$common_templates],
+#      ],
+#  }
+
 }

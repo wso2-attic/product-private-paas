@@ -20,7 +20,6 @@ package org.apache.stratos.cartridge.agent;
  *
 */
 
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -40,20 +39,14 @@ import org.apache.stratos.messaging.event.instance.notifier.InstanceCleanupMembe
 import org.apache.stratos.messaging.event.tenant.CompleteTenantEvent;
 import org.apache.stratos.messaging.event.tenant.SubscriptionDomainAddedEvent;
 import org.apache.stratos.messaging.event.tenant.SubscriptionDomainRemovedEvent;
-import org.apache.stratos.messaging.event.topology.CompleteTopologyEvent;
-import org.apache.stratos.messaging.event.topology.MemberActivatedEvent;
-import org.apache.stratos.messaging.event.topology.MemberSuspendedEvent;
-import org.apache.stratos.messaging.event.topology.MemberTerminatedEvent;
+import org.apache.stratos.messaging.event.topology.*;
 import org.apache.stratos.messaging.listener.instance.notifier.ArtifactUpdateEventListener;
 import org.apache.stratos.messaging.listener.instance.notifier.InstanceCleanupClusterEventListener;
 import org.apache.stratos.messaging.listener.instance.notifier.InstanceCleanupMemberEventListener;
 import org.apache.stratos.messaging.listener.tenant.CompleteTenantEventListener;
 import org.apache.stratos.messaging.listener.tenant.SubscriptionDomainsAddedEventListener;
 import org.apache.stratos.messaging.listener.tenant.SubscriptionDomainsRemovedEventListener;
-import org.apache.stratos.messaging.listener.topology.CompleteTopologyEventListener;
-import org.apache.stratos.messaging.listener.topology.MemberActivatedEventListener;
-import org.apache.stratos.messaging.listener.topology.MemberSuspendedEventListener;
-import org.apache.stratos.messaging.listener.topology.MemberTerminatedEventListener;
+import org.apache.stratos.messaging.listener.topology.*;
 import org.apache.stratos.messaging.message.receiver.instance.notifier.InstanceNotifierEventReceiver;
 import org.apache.stratos.messaging.message.receiver.tenant.TenantEventReceiver;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyEventReceiver;
@@ -72,39 +65,6 @@ public class CartridgeAgent implements Runnable {
     private static final Log log = LogFactory.getLog(CartridgeAgent.class);
     private static final ExtensionHandler extensionHandler = new DefaultExtensionHandler();
     private boolean terminated;
-
-    private static void publishLogs(LogPublisherManager logPublisherManager) {
-
-        // check if enabled
-        if (DataPublisherConfiguration.getInstance().isEnabled()) {
-
-            List<String> logFilePaths = CartridgeAgentConfiguration.getInstance().getLogFilePaths();
-            if (logFilePaths == null) {
-                log.error("No valid log file paths found, no logs will be published");
-                return;
-
-            } else {
-                // initialize the log publishing
-                try {
-                    logPublisherManager.init(DataPublisherConfiguration.getInstance());
-
-                } catch (DataPublisherException e) {
-                    log.error("Error occurred in log publisher initialization", e);
-                    return;
-                }
-
-                // start a log publisher for each file path
-                for (String logFilePath : logFilePaths) {
-                    try {
-                        logPublisherManager.start(logFilePath);
-
-                    } catch (DataPublisherException e) {
-                        log.error("Error occurred in publishing logs ", e);
-                    }
-                }
-            }
-        }
-    }
 
     @Override
     public void run() {
@@ -129,6 +89,9 @@ public class CartridgeAgent implements Runnable {
         // Publish instance started event
         CartridgeAgentEventPublisher.publishInstanceStartedEvent();
 
+        // wait for complete topology
+        waitForCompleteTopology();
+
         // Execute start servers extension
         try {
             TopologyManager.acquireReadLock();
@@ -137,7 +100,7 @@ public class CartridgeAgent implements Runnable {
             if (log.isErrorEnabled()) {
                 log.error("Error processing start servers event", e);
             }
-        } finally {
+        }finally {
             TopologyManager.releaseReadLock();
         }
 
@@ -181,13 +144,11 @@ public class CartridgeAgent implements Runnable {
             extensionHandler.volumeMountExtension(persistenceMappingsPayload);
         }
 
-
-        // Keep the thread live until terminated
-
         // start log publishing
         LogPublisherManager logPublisherManager = new LogPublisherManager();
         publishLogs(logPublisherManager);
 
+        // Keep the thread live until terminated
         while (!terminated) {
             try {
                 Thread.sleep(1000);
@@ -196,6 +157,28 @@ public class CartridgeAgent implements Runnable {
         }
 
         logPublisherManager.stop();
+    }
+
+    private boolean isTopologyInitialized() {
+        TopologyManager.acquireReadLock();
+        boolean active = TopologyManager.getTopology().isInitialized();
+        TopologyManager.releaseReadLock();
+        return active;
+    }
+
+    private void waitForCompleteTopology() {
+        while (!isTopologyInitialized()) {
+            if (log.isInfoEnabled()) {
+                log.info("Waiting for complete topology event...");
+            }
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+            }
+        }
+        if (log.isInfoEnabled()) {
+            log.info("[start server extension] Complete topology event received");
+        }
     }
 
     protected void subscribeToTopicsAndRegisterListeners() {
@@ -245,6 +228,7 @@ public class CartridgeAgent implements Runnable {
                 }
             }
         });
+
         Thread instanceNotifierEventReceiverThread = new Thread(instanceNotifierEventReceiver);
         instanceNotifierEventReceiverThread.start();
         if (log.isInfoEnabled()) {
@@ -255,8 +239,7 @@ public class CartridgeAgent implements Runnable {
             log.debug("Starting tenant event message receiver thread");
         }
 
-        // Wait until message receiver is subscribed to the topic to
-        // send the instance started event
+        // Wait until message receiver is subscribed to the topic to send the instance started event
         while (!instanceNotifierEventReceiver.isSubscribed()) {
             try {
                 Thread.sleep(2000);
@@ -355,6 +338,26 @@ public class CartridgeAgent implements Runnable {
             }
         });
 
+        topologyEventReceiver.addEventListener(new MemberStartedEventListener() {
+            @Override
+            protected void onEvent(Event event) {
+                try {
+                    TopologyManager.acquireReadLock();
+                    if (log.isDebugEnabled()) {
+                        log.debug("Member started event received");
+                    }
+                    MemberStartedEvent memberStartedEvent = (MemberStartedEvent) event;
+                    extensionHandler.onMemberStartedEvent(memberStartedEvent);
+                } catch (Exception e) {
+                    if (log.isErrorEnabled()) {
+                        log.error("Error processing member started event", e);
+                    }
+                } finally {
+                    TopologyManager.releaseReadLock();
+                }
+            }
+        });
+
         Thread thread = new Thread(topologyEventReceiver);
         thread.start();
         if (log.isDebugEnabled()) {
@@ -374,6 +377,7 @@ public class CartridgeAgent implements Runnable {
             @Override
             protected void onEvent(Event event) {
                 try {
+                    TopologyManager.acquireReadLock();
                     if (log.isDebugEnabled()) {
                         log.debug("Subscription domain added event received");
                     }
@@ -383,6 +387,8 @@ public class CartridgeAgent implements Runnable {
                     if (log.isErrorEnabled()) {
                         log.error("Error processing subscription domains added event", e);
                     }
+                } finally {
+                    TopologyManager.releaseReadLock();
                 }
 
             }
@@ -392,6 +398,7 @@ public class CartridgeAgent implements Runnable {
             @Override
             protected void onEvent(Event event) {
                 try {
+                    TopologyManager.acquireReadLock();
                     if (log.isDebugEnabled()) {
                         log.debug("Subscription domain removed event received");
                     }
@@ -401,13 +408,14 @@ public class CartridgeAgent implements Runnable {
                     if (log.isErrorEnabled()) {
                         log.error("Error processing subscription domains removed event", e);
                     }
+                } finally {
+                    TopologyManager.releaseReadLock();
                 }
             }
         });
 
         tenantEventReceiver.addEventListener(new CompleteTenantEventListener() {
             private boolean initialized;
-
             @Override
             protected void onEvent(Event event) {
                 if (!initialized) {
@@ -458,8 +466,6 @@ public class CartridgeAgent implements Runnable {
             }
             return;
         }
-        //sending event on the maintenance mode
-        CartridgeAgentEventPublisher.publishMaintenanceModeEvent();
 
         String extensionsDir = System.getProperty(CartridgeAgentConstants.EXTENSIONS_DIR);
         if (StringUtils.isBlank(extensionsDir)) {
@@ -469,11 +475,40 @@ public class CartridgeAgent implements Runnable {
         }
     }
 
-    public void terminate() {
-        terminated = true;
+    private static void publishLogs(LogPublisherManager logPublisherManager) {
+        // check if enabled
+        if (DataPublisherConfiguration.getInstance().isEnabled()) {
+            List<String> logFilePaths = CartridgeAgentConfiguration.getInstance().getLogFilePaths();
+            if (logFilePaths == null) {
+                log.error("No valid log file paths found, no logs will be published");
+                return;
+            } else {
+                // initialize the log publishing
+                try {
+                    logPublisherManager.init(DataPublisherConfiguration.getInstance());
+
+                } catch (DataPublisherException e) {
+                    log.error("Error occurred in log publisher initialization", e);
+                    return;
+                }
+
+                // start a log publisher for each file path
+                for (String logFilePath : logFilePaths) {
+                    try {
+                        logPublisherManager.start(logFilePath);
+                    } catch (DataPublisherException e) {
+                        log.error("Error occurred in publishing logs ", e);
+                    }
+                }
+            }
+        }
     }
 
     public static ExtensionHandler getExtensionHandler() {
         return extensionHandler;
+    }
+
+    public void terminate() {
+        terminated = true;
     }
 }

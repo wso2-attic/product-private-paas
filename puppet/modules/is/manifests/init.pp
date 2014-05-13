@@ -123,13 +123,14 @@ class is (
       require   => IS::Deploy[$deployment_code];
   }
 
-  is::start { $deployment_code:
-    owner   => $owner,
-    target  => $carbon_home,
-    require => [
-      IS::Initialize[$deployment_code],
-      IS::Deploy[$deployment_code],
-      Push_templates[$service_templates],
-      ],
-  }
+#  is::start { $deployment_code:
+#    owner   => $owner,
+#    target  => $carbon_home,
+#    require => [
+#      IS::Initialize[$deployment_code],
+#      IS::Deploy[$deployment_code],
+#      Push_templates[$service_templates],
+#      ],
+#  }
+
 }

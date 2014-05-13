@@ -73,6 +73,7 @@ node 'base' {
   $extension_artifacts_updated            = 'artifacts-updated.sh'
   $extension_clean                        = 'clean.sh'
   $extension_mount_volumes                = 'mount-volumes.sh'
+  $extension_member_started               = 'member-started.sh'
   $extension_member_activated             = 'member-activated.sh'
   $extension_member_terminated            = 'member-terminated.sh'
   $extension_member_suspended             = 'member-suspended.sh'
