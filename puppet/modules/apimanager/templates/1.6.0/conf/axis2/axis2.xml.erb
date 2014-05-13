@@ -720,13 +720,7 @@
                "membershipScheme" above is set to "wka"
             -->
         <members>
-        <%- if @members -%>
-        <%- @members.each_pair do |hostname,port| -%>
-        <member>
-            <hostName><%= hostname %></hostName>
-            <port><%= port %></port>
-        </member>
-        <%- end -%><%- end -%>
+        WELL_KNOWN_MEMBERS
         </members>
         <!--
         Enable the groupManagement entry if you need to run this node as a cluster manager.

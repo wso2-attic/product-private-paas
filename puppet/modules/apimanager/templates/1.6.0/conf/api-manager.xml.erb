@@ -53,9 +53,10 @@
         <Username>admin</Username>
         <Password>admin</Password>
         <%- else -%>
-        <ServerURL>https://<%= @keymanager_subdomain %>.<%= @am_subdomain %>.<%= @domain %>:<%= @keymanager_mgt_https_port %>/services/</ServerURL>
+        KEYMANAGER_SERVER_URL
+        <!-- <ServerURL>https://<%= @keymanager_subdomain %>.<%= @am_subdomain %>.<%= @domain %>:<%= @keymanager_mgt_https_port %>/services/</ServerURL> -->
         <Username><%= @admin_username %></Username>
-        <Password><%= @admin_password %></Password>
+        <Password><%= @admin_password %></Password>        
         <%- end -%>
     </AuthManager>
 

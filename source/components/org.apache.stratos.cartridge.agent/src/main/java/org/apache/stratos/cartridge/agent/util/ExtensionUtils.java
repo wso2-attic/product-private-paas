@@ -237,6 +237,25 @@ public class ExtensionUtils {
         }
     }
 
+    public static void executeMemberStartedExtension(Map<String, String> envParameters) {
+        try {
+            if (log.isDebugEnabled()) {
+                log.debug("Executing member started extension");
+            }
+            String script = System.getProperty(CartridgeAgentConstants.MEMBER_STARTED_SCRIPT);
+            String command = prepareCommand(script);
+            cleanProcessParameters(envParameters);
+            String output = CommandUtils.executeCommand(command, envParameters);
+            if (log.isDebugEnabled()) {
+                log.debug("Member started script returned:" + output);
+            }
+        } catch (Exception e) {
+            if (log.isErrorEnabled()) {
+                log.error("Could not execute member started extension", e);
+            }
+        }
+    }
+
     public static void executeMemberSuspendedExtension(Map<String, String> envParameters) {
         try {
             if (log.isDebugEnabled()) {

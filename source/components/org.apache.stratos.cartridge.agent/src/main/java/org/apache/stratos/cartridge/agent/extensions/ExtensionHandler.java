@@ -25,10 +25,7 @@ import org.apache.stratos.messaging.event.instance.notifier.InstanceCleanupMembe
 import org.apache.stratos.messaging.event.tenant.CompleteTenantEvent;
 import org.apache.stratos.messaging.event.tenant.SubscriptionDomainAddedEvent;
 import org.apache.stratos.messaging.event.tenant.SubscriptionDomainRemovedEvent;
-import org.apache.stratos.messaging.event.topology.CompleteTopologyEvent;
-import org.apache.stratos.messaging.event.topology.MemberActivatedEvent;
-import org.apache.stratos.messaging.event.topology.MemberSuspendedEvent;
-import org.apache.stratos.messaging.event.topology.MemberTerminatedEvent;
+import org.apache.stratos.messaging.event.topology.*;
 
 public interface ExtensionHandler {
     public void onInstanceStartedEvent();
@@ -52,6 +49,8 @@ public interface ExtensionHandler {
     public void onMemberTerminatedEvent(MemberTerminatedEvent memberTerminatedEvent);
 
     public void onMemberSuspendedEvent(MemberSuspendedEvent memberSuspendedEvent);
+
+    public void onMemberStartedEvent(MemberStartedEvent memberStartedEvent);
 
     public void startServerExtension();
 

@@ -52,9 +52,6 @@ public class Main {
                     }
                 }
             });
-            
-            
-            PropertyConfigurator.configure(System.getProperty("log4j.configuration"));
 
             // Generate jndi.properties file
             JndiConfigurator.configure();

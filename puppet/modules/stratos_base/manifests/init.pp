@@ -18,11 +18,7 @@
 class stratos_base(
   $ensure = 'present',
   $autoupgrade=true, 
-){ 
-
-  file {'/${local_package_dir}/':
-      ensure => present;
-  }
+){
 
   if ! ($ensure in [ "present", "absent" ]) {
     fail("ensure parameter must be absent or present")

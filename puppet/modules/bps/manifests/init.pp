@@ -123,13 +123,14 @@ class bps (
       require   => Bps::Deploy[$deployment_code];
   }
 
-  bps::start { $deployment_code:
-    owner   => $owner,
-    target  => $carbon_home,
-    require => [
-      Bps::Initialize[$deployment_code],
-      Bps::Deploy[$deployment_code],
-      Push_templates[$service_templates],
-      ],
-  }
+#  bps::start { $deployment_code:
+#    owner   => $owner,
+#    target  => $carbon_home,
+#    require => [
+#      Bps::Initialize[$deployment_code],
+#      Bps::Deploy[$deployment_code],
+#      Push_templates[$service_templates],
+#      ],
+#  }
+
 }

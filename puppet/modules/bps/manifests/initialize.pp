@@ -18,12 +18,6 @@
 
 define bps::initialize ($repo, $version, $service, $local_dir, $target, $mode, $owner,) {
 
- file {
-    "/${local_dir}/wso2${service}-${version}.zip":
-      ensure => present,
-      source => "puppet:///modules/bps/wso2${service}-${version}.zip";
-    }
-
   exec {
     "creating_target_for_${name}":
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
@@ -33,7 +27,16 @@ define bps::initialize ($repo, $version, $service, $local_dir, $target, $mode, $
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
       unless  => "test -d ${local_dir}",
       command => "mkdir -p ${local_dir}";
+  }
 
+  file {
+    "/${local_dir}/wso2${service}-${version}.zip":
+      ensure => present,
+      source => "puppet:///modules/bps/wso2${service}-${version}.zip",
+      require   => Exec["creating_local_package_repo_for_${name}", "creating_target_for_${name}"];
+  }
+
+  exec {
     "downloading_wso2${service}-${version}.zip_for_${name}":
       path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       cwd       => $local_dir,
@@ -42,7 +45,7 @@ define bps::initialize ($repo, $version, $service, $local_dir, $target, $mode, $
       logoutput => 'on_failure',
       creates   => "${local_dir}/wso2${service}-${version}.zip",
       timeout   => 0,
-      require   => Exec["creating_local_package_repo_for_${name}", "creating_target_for_${name}"];
+      require   => File["/${local_dir}/wso2${service}-${version}.zip"];
 
     "extracting_wso2${service}-${version}.zip_for_${name}":
       path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',

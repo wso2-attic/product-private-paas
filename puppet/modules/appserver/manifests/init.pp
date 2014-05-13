@@ -123,13 +123,14 @@ class appserver (
       require   => Appserver::Deploy[$deployment_code];
   }
 
-  appserver::start { $deployment_code:
-    owner   => $owner,
-    target  => $carbon_home,
-    require => [
-      Appserver::Initialize[$deployment_code],
-      Appserver::Deploy[$deployment_code],
-      Push_templates[$service_templates],
-      ],
-  }
+#  appserver::start { $deployment_code:
+#    owner   => $owner,
+#    target  => $carbon_home,
+#    require => [
+#      Appserver::Initialize[$deployment_code],
+#      Appserver::Deploy[$deployment_code],
+#      Push_templates[$service_templates],
+#      ],
+#  }
+
 }

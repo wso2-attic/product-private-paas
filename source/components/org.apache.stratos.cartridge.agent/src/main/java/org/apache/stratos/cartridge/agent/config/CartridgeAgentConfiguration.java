@@ -48,20 +48,24 @@ public class CartridgeAgentConfiguration {
     private final String repoUrl;
     private final List<Integer> ports;
     private final List<String> logFilePaths;
-    private Map<String, String> parameters;
-    private boolean isMultitenant;
-    private String persistenceMappings;
     private final boolean isCommitsEnabled;
     private final String listenAddress;
     private final String lbClusterId;
-    private boolean isInternalRepo;
     private final String tenantId;
+    private final String isClustered;
+    private final String minCount;
+    private Map<String, String> parameters;
+    private boolean isMultitenant;
+    private String persistenceMappings;
+    private boolean isInternalRepo;
+    private String isPrimary;
 
     private CartridgeAgentConfiguration() {
         parameters = loadParametersFile();
 
         try {
             serviceGroup = readServiceGroup();
+            isClustered = readClustering();
             serviceName = readParameterValue(CartridgeAgentConstants.SERVICE_NAME);
             clusterId = readParameterValue(CartridgeAgentConstants.CLUSTER_ID);
             networkPartitionId = readParameterValue(CartridgeAgentConstants.NETWORK_PARTITION_ID);
@@ -73,13 +77,14 @@ public class CartridgeAgentConfiguration {
             ports = readPorts();
             logFilePaths = readLogFilePaths();
             isMultitenant = readMultitenant(CartridgeAgentConstants.MULTITENANT);
-            persistenceMappings = readPersisenceMapping();
+            persistenceMappings = readPersistenceMapping();
             isCommitsEnabled = readCommitsEnabled(CartridgeAgentConstants.COMMIT_ENABLED);
             listenAddress = System.getProperty(CartridgeAgentConstants.LISTEN_ADDRESS);
             isInternalRepo = readInternalRepo(CartridgeAgentConstants.INTERNAL_REPO);
             tenantId = readParameterValue(CartridgeAgentConstants.TENANT_ID);
             lbClusterId = readParameterValue(CartridgeAgentConstants.LB_CLUSTER_ID);
-
+            minCount = readParameterValue(CartridgeAgentConstants.MIN_INSTANCE_COUNT);
+            isPrimary = readIsPrimary();
         } catch (ParameterNotFoundException e) {
             throw new RuntimeException(e);
         }
@@ -99,6 +104,29 @@ public class CartridgeAgentConfiguration {
             log.debug(String.format("repo-url: %s", repoUrl));
             log.debug(String.format("ports: %s", ports.toString()));
         }
+    }
+
+    private String readIsPrimary(){
+        if (parameters.containsKey(CartridgeAgentConstants.CLUSTERING_PRIMARY_KEY)) {
+            return parameters.get(CartridgeAgentConstants.CLUSTERING_PRIMARY_KEY);
+        }
+        return null;
+    }
+
+    /**
+     * Get cartridge agent configuration singleton instance.
+     *
+     * @return
+     */
+    public static CartridgeAgentConfiguration getInstance() {
+        if (instance == null) {
+            synchronized (CartridgeAgentConfiguration.class) {
+                if (instance == null) {
+                    instance = new CartridgeAgentConfiguration();
+                }
+            }
+        }
+        return instance;
     }
 
     private boolean readCommitsEnabled(String commitEnabled) {
@@ -128,23 +156,7 @@ public class CartridgeAgentConfiguration {
         return Boolean.parseBoolean(internalRepoStringValue);
     }
 
-    /**
-     * Get cartridge agent configuration singleton instance.
-     *
-     * @return
-     */
-    public static CartridgeAgentConfiguration getInstance() {
-        if (instance == null) {
-            synchronized (CartridgeAgentConfiguration.class) {
-                if (instance == null) {
-                    instance = new CartridgeAgentConfiguration();
-                }
-            }
-        }
-        return instance;
-    }
-
-    private String readPersisenceMapping() {
+    private String readPersistenceMapping() {
         String persistenceMapping = null;
         try {
             persistenceMapping = readParameterValue("PERSISTENCE_MAPPING");
@@ -195,6 +207,14 @@ public class CartridgeAgentConfiguration {
     private String readServiceGroup() {
         if (parameters.containsKey(CartridgeAgentConstants.SERVICE_GROUP)) {
             return parameters.get(CartridgeAgentConstants.SERVICE_GROUP);
+        } else {
+            return null;
+        }
+    }
+
+    private String readClustering() {
+        if (parameters.containsKey(CartridgeAgentConstants.CLUSTERING)) {
+            return parameters.get(CartridgeAgentConstants.CLUSTERING);
         } else {
             return null;
         }
@@ -310,5 +330,17 @@ public class CartridgeAgentConfiguration {
 
     public String getServiceGroup() {
         return serviceGroup;
+    }
+
+    public String getIsClustered() {
+        return isClustered;
+    }
+
+    public String getMinCount() {
+        return minCount;
+    }
+
+    public String getIsPrimary() {
+        return isPrimary;
     }
 }
