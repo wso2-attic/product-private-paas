@@ -22,6 +22,7 @@ package org.apache.stratos.cartridge.agent.util;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.stratos.cartridge.agent.config.CartridgeAgentConfiguration;
 import org.apache.stratos.common.util.CommandUtils;
 
 import java.io.File;
@@ -76,7 +77,9 @@ public class ExtensionUtils {
             String script = System.getProperty(CartridgeAgentConstants.START_SERVERS_SCRIPT);
             String command = prepareCommand(script);
             cleanProcessParameters(envParameters);
-            String output = CommandUtils.executeCommand(command, envParameters);
+             String cmd = CartridgeAgentConfiguration.getInstance().getAppPath()+"/bin/wso2server.sh";
+             String output = CommandUtils.executeCommand(cmd);
+            //String output = CommandUtils.executeCommand(command, envParameters);
             if (log.isDebugEnabled()) {
                 log.debug("Start server script returned:" + output);
             }
