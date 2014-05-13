@@ -31,7 +31,9 @@
     <div class="row">
         <div class="col-lg-12">
             <form method="post" role="form" action="{{url "/controllers/cartridgeSubscribeSubmit.jag"}}" id="subscribeCartridgeForm">
-	    <!--input name="serviceGroup" type="hidden" value="{{serviceGroup}}" /-->
+	        {{#if cartridge.serviceGroup}}
+                <input name="serviceGroup" type="hidden" value="{{serviceGroup}}" />
+            {{/if}}
             <div class="form-group">
                 <label class="required">Public URL:</label>
                 <div class="form-inline">
