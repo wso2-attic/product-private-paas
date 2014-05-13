@@ -32,7 +32,7 @@
             }
           ]
         }
-      ]
+      ],
 "property":[
      {   
        "name": "payload_parameter.WSO2_ELB_HOST",
