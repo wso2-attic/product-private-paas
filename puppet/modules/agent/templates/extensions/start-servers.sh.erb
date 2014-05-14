@@ -28,33 +28,11 @@ trap 'error_handler ${LINENO} $?' ERR
 
 log=/var/log/apache-stratos/cartridge-agent-extensions-start.servers.log
 VERBOSE=1
-DATE=`which date`
-ECHO=`which echo`
-CD=`which cd`
-
-export JAVA_HOME=/opt/java
-
-if [[ -z $STRATOS_CLUSTERING ]]; then
-   ${ECHO} -e  `date`": Starting servers..." | tee -a $log
-   if [ ${VERBOSE} -eq 1 ]; then
-      printParameters
-   fi
-
-else
-   ${ECHO} -e  `date`": Starting servers in clustering mode..." | tee -a $log
-   if [ ${VERBOSE} -eq 1 ]; then
-      printParameters
-   fi   
-   configure_wk_members
-fi
-
-update_hosts_file
-
-if [ -f ${STRATOS_APP_PATH}/wso2carbon.lck ]; then
-    print_message "Server is already running...lock file exists"
-else
-    ${STRATOS_APP_PATH}/wso2server.sh > /dev/null 2>&1 & || print_error "Failed to run startup script"
-fi
+DATE=`which date` || print_error "date command not found"
+ECHO=`which echo` || print_error "echo command not found"
+GREP=`which grep` || print_error "grep command not found"
+PS=`which ps` || print_error "ps command not found"
+SED=`which sed` || print_error "sed command not found"
 
 function printParameters(){
 	${ECHO} -e  "LB IP: ${STRATOS_LB_IP}" | tee -a $log
@@ -76,95 +54,162 @@ function error_handler(){
 
 function print_message(){
 	if [ ${VERBOSE} -eq 1 ]; then
-    		${ECHO} -e "[INFO] " $1
+    		${ECHO} -e "[INFO] " $1 | tee -a $log
 	fi    
 }
 
-function print_ok(){
-	if [ ${VERBOSE} -eq 1 ]; then
-    		${ECHO} -e "[Done]"  	 
-	fi
-}
-
 function print_error(){
-	if [ ${VERBOSE} -eq 1 ]; then
-    		${ECHO} -e " [Error]\n"$1
-	else
-    		${ECHO} -e "[Error] " $1
-	fi
+	${ECHO} -e "[Error] " $1 | tee -a $log	
 	exit 1
 }
 
-function update_hosts_file(){
-        (${GREP} -q '<%= @stratos_instance_data_host_name %>' /etc/hosts || ${ECHO} "${STRATOS_LB_IP}  <%= @stratos_instance_data_host_name %>" >> /etc/hosts) && print_ok || print_error "Failed to update '/etc/hosts' file. "
-	
+function verify_file_exists(){
+	if [[ ! -f $1 ]] ; then
+		print_error "File not found: $1"
+	fi
 }
 
-backup_file(){
+function update_hosts_file(){
+	instance_hostname="<%= @stratos_instance_data_host_name %>"
+        (${GREP} -q "${instance_hostname}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${instance_hostname}" >> /etc/hosts \
+	  && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${instance_hostname}")) \
+	  || print_error "Failed to update '/etc/hosts' file. "
+}
+
+function backup_file(){
     if [[  -f "$1.orig" ]];
     then
-        echo "Restoring from the Original template file $1"
+        print_message "Restoring from the Original template file $1"
         cp -f "$1.orig" "$1"
     else
-        echo -e "Creating a backup of the file $1"
+        print_message "Creating a backup of the file $1"
         cp -f "$1" "$1.orig"
     fi
 }
 
 function configure_wk_members(){
 
-	print_message "Configuring well known members..."
+	print_message "Performing clustering configuration for ${STRATOS_SERVICE_NAME}..."
 
-	wk_xml=""
-        keymgr_xml=""
-	line="WELL_KNOWN_MEMBERS"
-	AXIS2_XML_FILE=${APP_PATH}/repository/conf/axis2.xml
-	API_MANAGER_XML_FILE=${APP_PATH}/repository/conf/api-manager.xml
+	WKA_XML=""
+        KEYMGR_XML=""
+	WKA_LINE="@WELL_KNOWN_MEMBERS"
+	KEYMGR_LINE="@KEYMANAGER_SERVER_URL"
 
+	AXIS2_XML_FILE=${STRATOS_APP_PATH}/repository/conf/axis2/axis2.xml
 	backup_file ${AXIS2_XML_FILE}
-	backup_file ${API_MANAGER_XML_FILE}
+	
 
-	if [ "${STRATOS_SERVICE_GROUP}" = "apim" ] ; then
-		if [ "${STRATOS_SERVICE_NAME}" = "apistore" ||  "${STRATOS_SERVICE_NAME}" = "publisher" ] ; then
-			print_message "Configuring ${STRATOS_SERVICE_NAME}..."
-			wk_xml="${wk_xml}<member><hostName>${STRATOS_WK_APISTORE_MEMBER_IP}</hostName><port>4000</port><member>"
-			wk_xml="${wk_xml}<member><hostName>${STRATOS_WK_PUBLISHER_MEMBER_IP}</hostName><port>4000</port><member>"
-			sed -i "s/${line}/${wk_xml}/g" ${AXIS2_XML_FILE} && print_message "Well known member configuration successful" || print_error "Failed to configure well known members"
+	if [[ (! -z $STRATOS_SERVICE_GROUP) && "${STRATOS_SERVICE_GROUP}" = "apim" ]] ; then
+		API_MANAGER_XML_FILE=${STRATOS_APP_PATH}/repository/conf/api-manager.xml
+		backup_file ${API_MANAGER_XML_FILE}
 
-			keymgr_xml="<ServerURL>https://${STRATOS_WK_KEYMGR_MEMBER_IP}:9443/services/</ServerURL>"
-			sed -i "s/${line}/${keymgr_xml}/g" ${API_MANAGER_XML_FILE} && print_message "Keymanager member added" || print_error "Failed to add keymanager member"
+		if [[ "${STRATOS_SERVICE_NAME}" = "apistore" ||  "${STRATOS_SERVICE_NAME}" = "publisher" ]] ; then
 
-		elif [ "${STRATOS_SERVICE_NAME}" = "keymanager" ] ; then
-			print_message "Configuring keymanager..."
+			print_message "Configuring axis2.xml for ${STRATOS_SERVICE_NAME}..."
+			WKA_XML=$"${WKA_XML}<member><hostName>${STRATOS_WK_APISTORE_MEMBER_IP}</hostName><port>4000</port></member>\n"
+			WKA_XML=$"${WKA_XML}<member><hostName>${STRATOS_WK_PUBLISHER_MEMBER_IP}</hostName><port>4000</port></member>\n"
+			print_message "${STRATOS_SERVICE_NAME} WKA_XML => ${WKA_XML}"
+			verify_file_exists ${AXIS2_XML_FILE}
+			${SED} -i "s%${WKA_LINE}%${WKA_XML}%g" ${AXIS2_XML_FILE} && print_message "${STRATOS_SERVICE_NAME} WKA configuration successful" || print_error "Failed to configure well known members"
 
-		elif [ "${STRATOS_SERVICE_NAME}" = "gateway" ] ; then
+			KEYMGR_XML="<ServerURL>https://${STRATOS_WK_KEYMGR_MEMBER_IP}:9443/services/</ServerURL>"
+			print_message "${STRATOS_SERVICE_NAME} KEYMGR_XML => ${KEYMGR_XML}"
+			verify_file_exists ${API_MANAGER_XML_FILE}
+			${SED} -i "s%${KEYMGR_LINE}%${KEYMGR_XML}%g" ${API_MANAGER_XML_FILE} && print_message "keymanager member added" || print_error "Failed to add keymanager member"
+
+		elif [[ "${STRATOS_SERVICE_NAME}" = "keymanager" ]] ; then
+
+			print_message "In keymanager...nothing to do"
+
+		elif [[ "${STRATOS_SERVICE_NAME}" = "gateway" ]] ; then
+
 			print_message "Configuring gateway..."
-			for i in `seq 2 ${STRATOS_WK_MEMBER_COUNT}`
-			do		    		
-				member_ip=STRATOS_WK_GATEWAY_MEMBER_$i_IP
-				member_port=STRATOS_WK_GATEWAY_MEMBER_$i_PORT
-				${ECHO} -e  "$i => ${!member_ip}:${!member_port}"
-				$wk_xml="${wk_xml}<member><hostName>${!member_ip}</hostName><port>4000</port></member>"
-			done
-			sed -i "s/${line}/${wk_xml}/g" ${AXIS2_XML_FILE} && print_message "Well known member configuration successful" || print_error "Failed to configure well known members"
+			if [[ -z $STRATOS_WK_MEMBER_COUNT || $STRATOS_WK_MEMBER_COUNT -eq 0 ]] ; then
+				print_error "WKA member count is 0"
+			else
+			
+				for i in `seq 0 $(( ${STRATOS_WK_MEMBER_COUNT} - 1 ))`
+				do		    		
+					member_ip="STRATOS_WK_GATEWAY_MEMBER_${i}_IP"
+					if [[ -z ${!member_ip} ]] ; then
+						print_error "WKA is null for STRATOS_WK_GATEWAY_MEMBER_${i}_IP"
+					fi
+					print_message  "$i => ${!member_ip}"
+					WKA_XML=$"${WKA_XML}<member><hostName>${!member_ip}</hostName><port>4000</port></member>\n"
+				done
+				print_message "${STRATOS_SERVICE_NAME} WKA_XML => ${WKA_XML}"
+				verify_file_exists ${AXIS2_XML_FILE}
+				${SED} -i "s%${WKA_LINE}%${KEYMGR_XML}%g" ${AXIS2_XML_FILE} && print_message "gateway WKA configuration successful" || print_error "Failed to configure well known members"
 
-			keymgr_xml="<ServerURL>https://${STRATOS_WK_KEYMGR_MEMBER_IP}:9443/services/</ServerURL>"
-			sed -i "s/${line}/${keymgr_xml}/g" ${API_MANAGER_XML_FILE} && print_message "Keymanager member added" || print_error "Failed to add keymanager member"
+				KEYMGR_XML="<ServerURL>https://${STRATOS_WK_KEYMGR_MEMBER_IP}:9443/services/</ServerURL>"
+				print_message "${STRATOS_SERVICE_NAME} KEYMGR_XML => ${KEYMGR_XML}"
+				verify_file_exists ${API_MANAGER_XML_FILE}
+				${SED} -i "s%${KEYMGR_LINE}%${KEYMGR_XML}%g" ${API_MANAGER_XML_FILE} && print_message "keymanager member added" || print_error "Failed to add keymanager member"
+			fi
 		fi
 
 		
 	else
 		print_message "Configuring ${STRATOS_SERVICE_NAME}..."
-		for i in `seq 2 ${STRATOS_WK_MEMBER_COUNT}`
+		for i in `seq 0 $(( ${STRATOS_WK_MEMBER_COUNT} - 1 ))`
 		do		    		
-			member_ip=STRATOS_WK_MEMBER_$i_IP
-			member_port=STRATOS_WK_MEMBER_$i_PORT
-			${ECHO} -e  "$i => ${!member_ip}:${!member_port}"
-			$wk_xml="${wk_xml}<member><hostName>${!member_ip}</hostName><port>${!member_port}</port></member>"
+			member_ip="STRATOS_WK_GATEWAY_MEMBER_${i}_IP"
+			if [[ -z ${!member_ip} ]] ; then
+				print_error "WKA is null for STRATOS_WK_GATEWAY_MEMBER_${i}_IP"
+			fi
+			print_message  "$i => ${!member_ip}"
+			WKA_XML=$"${WKA_XML}<member><hostName>${!member_ip}</hostName><port>4000</port></member>\n"			
 		done
-	fi
-	
-	
 
+		print_message "${STRATOS_SERVICE_NAME} WKA_XML => ${WKA_XML}"
+		verify_file_exists ${AXIS2_XML_FILE}
+		${SED} -i "s%${WKA_LINE}%${WKA_XML}%g" ${AXIS2_XML_FILE} && print_message "${STRATOS_SERVICE_NAME} WKA configuration successful" || print_error "Failed to configure well known members"
+	fi
 }
+
+# Check if APP_PATH exists
+if [[ ! -d $STRATOS_APP_PATH ]] ; then
+	print_error "APP_PATH is not found at: ${STRATOS_APP_PATH}"
+fi
+
+# Check if product server is already running
+if [[ -f $STRATOS_APP_PATH/wso2carbon.pid ]] ; then
+    PID=`cat $STRATOS_APP_PATH/wso2carbon.pid`
+    if  ${PS} -p $PID > /dev/null ; then
+      ${ECHO} -e `date`": process is already running...skipping start servers"      
+      exit 0
+    fi   
+fi
+
+# Set JAVA_HOME if it is not already set
+if [[ -z $JAVA_HOME ]] ; then
+	print_message "Setting JAVA_HOME to /opt/java"
+	export JAVA_HOME=/opt/java
+fi
+
+# Check if clustering is enabled for this product
+if [[ -z $STRATOS_CLUSTERING ]] ; then
+   ${ECHO} -e  `date`": starting servers in stand-alone mode..." | tee -a $log
+   if [[ ${VERBOSE} -eq 1 ]]; then
+      printParameters
+   fi
+
+else
+   ${ECHO} -e  `date`": starting servers in clustering mode..." | tee -a $log
+   if [[ ${VERBOSE} -eq 1 ]] ; then
+      printParameters
+   fi
+   # Do the WKA configuration to support clustering
+   configure_wk_members
+fi
+
+# Update the /etc/hosts file with LB instance IP
+update_hosts_file
+
+# Run start server command
+verify_file_exists $STRATOS_APP_PATH/bin/wso2server.sh
+$STRATOS_APP_PATH/bin/wso2server.sh $* > /dev/null 2>&1 &
+print_message "Executed run command: $STRATOS_APP_PATH/bin/wso2server.sh $*"
+${ECHO} -e `date`": start servers extension successfully completed."
 

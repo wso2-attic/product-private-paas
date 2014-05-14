@@ -32,7 +32,7 @@ public interface ExtensionHandler {
 
     public void onInstanceActivatedEvent();
 
-    public void onArtifactUpdateEvent(ArtifactUpdatedEvent event);
+    public void onArtifactUpdatedEvent(ArtifactUpdatedEvent event);
 
     public void onArtifactUpdateSchedulerEvent(String tenantId);
 
