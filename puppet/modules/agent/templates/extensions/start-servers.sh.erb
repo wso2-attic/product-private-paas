@@ -30,31 +30,6 @@ log=/var/log/apache-stratos/cartridge-agent-extensions-start.servers.log
 VERBOSE=1
 DATE=`which date`
 ECHO=`which echo`
-CD=`which cd`
-
-export JAVA_HOME=/opt/java
-
-if [[ -z $STRATOS_CLUSTERING ]]; then
-   ${ECHO} -e  `date`": Starting servers..." | tee -a $log
-   if [ ${VERBOSE} -eq 1 ]; then
-      printParameters
-   fi
-
-else
-   ${ECHO} -e  `date`": Starting servers in clustering mode..." | tee -a $log
-   if [ ${VERBOSE} -eq 1 ]; then
-      printParameters
-   fi   
-   configure_wk_members
-fi
-
-update_hosts_file
-
-if [ -f ${STRATOS_APP_PATH}/wso2carbon.lck ]; then
-    print_message "Server is already running...lock file exists"
-else
-    ${STRATOS_APP_PATH}/wso2server.sh > /dev/null 2>&1 & || print_error "Failed to run startup script"
-fi
 
 function printParameters(){
 	${ECHO} -e  "LB IP: ${STRATOS_LB_IP}" | tee -a $log
@@ -96,8 +71,9 @@ function print_error(){
 }
 
 function update_hosts_file(){
-        (${GREP} -q '<%= @stratos_instance_data_host_name %>' /etc/hosts || ${ECHO} "${STRATOS_LB_IP}  <%= @stratos_instance_data_host_name %>" >> /etc/hosts) && print_ok || print_error "Failed to update '/etc/hosts' file. "
-	
+	$instance_hostname="<%= @stratos_instance_data_host_name %>"
+        (${GREP} -q $instance_hostname /etc/hosts || ${ECHO} "${STRATOS_LB_IP}  ${instance_hostname}" >> /etc/hosts) && \
+	print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${instance_hostname}" || print_error "Failed to update '/etc/hosts' file. "
 }
 
 backup_file(){
@@ -167,4 +143,38 @@ function configure_wk_members(){
 	
 
 }
+
+# Check if product server is already running
+if [[ -f $STRATOS_APP_PATH/wso2carbon.pid ]]; then
+    PID=`cat $STRATOS_APP_PATH/wso2carbon.pid`
+    if  ps -p $PID >&- ; then
+      ${ECHO} -e "Process is already running"
+      ${ECHO} -e "Skipping start servers..."
+      exit 0
+    fi   
+fi
+
+# Set JAVA_HOME if it is not already set
+if [[ -z $JAVA_HOME ]]; then
+	export JAVA_HOME=/opt/java
+fi
+
+if [[ -z $STRATOS_CLUSTERING ]]; then
+   ${ECHO} -e  `date`": Starting servers in stand-alone mode..." | tee -a $log
+   if [[ ${VERBOSE} -eq 1 ]]; then
+      printParameters
+   fi
+
+else
+   ${ECHO} -e  `date`": Starting servers in clustering mode..." | tee -a $log
+   if [[ ${VERBOSE} -eq 1 ]]; then
+      printParameters
+   fi   
+   configure_wk_members
+fi
+
+update_hosts_file
+
+$STRATOS_APP_PATH/wso2server.sh $* > /dev/null 2>&1 & || print_error "Failed to run startup script. Returned with: `${ECHO} -e $?`"
+${ECHO} -e "Server Start extension successfully completed."
 

@@ -49,6 +49,7 @@ import org.apache.stratos.messaging.listener.tenant.SubscriptionDomainsRemovedEv
 import org.apache.stratos.messaging.listener.topology.*;
 import org.apache.stratos.messaging.message.receiver.instance.notifier.InstanceNotifierEventReceiver;
 import org.apache.stratos.messaging.message.receiver.tenant.TenantEventReceiver;
+import org.apache.stratos.messaging.message.receiver.tenant.TenantManager;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyEventReceiver;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyManager;
 
@@ -89,19 +90,13 @@ public class CartridgeAgent implements Runnable {
         // Publish instance started event
         CartridgeAgentEventPublisher.publishInstanceStartedEvent();
 
-        // wait for complete topology
-        waitForCompleteTopology();
-
         // Execute start servers extension
         try {
-            TopologyManager.acquireReadLock();
             extensionHandler.startServerExtension();
         } catch (Exception e) {
             if (log.isErrorEnabled()) {
                 log.error("Error processing start servers event", e);
             }
-        }finally {
-            TopologyManager.releaseReadLock();
         }
 
         // Wait for all ports to be active
@@ -159,28 +154,6 @@ public class CartridgeAgent implements Runnable {
         logPublisherManager.stop();
     }
 
-    private boolean isTopologyInitialized() {
-        TopologyManager.acquireReadLock();
-        boolean active = TopologyManager.getTopology().isInitialized();
-        TopologyManager.releaseReadLock();
-        return active;
-    }
-
-    private void waitForCompleteTopology() {
-        while (!isTopologyInitialized()) {
-            if (log.isInfoEnabled()) {
-                log.info("Waiting for complete topology event...");
-            }
-            try {
-                Thread.sleep(5000);
-            } catch (InterruptedException e) {
-            }
-        }
-        if (log.isInfoEnabled()) {
-            log.info("[start server extension] Complete topology event received");
-        }
-    }
-
     protected void subscribeToTopicsAndRegisterListeners() {
         if (log.isDebugEnabled()) {
             log.debug("Starting instance notifier event message receiver thread");
@@ -191,7 +164,7 @@ public class CartridgeAgent implements Runnable {
             @Override
             protected void onEvent(Event event) {
                 try {
-                    extensionHandler.onArtifactUpdateEvent((ArtifactUpdatedEvent) event);
+                    extensionHandler.onArtifactUpdatedEvent((ArtifactUpdatedEvent) event);
                 } catch (Exception e) {
                     if (log.isErrorEnabled()) {
                         log.error("Error processing artifact update event", e);
@@ -372,12 +345,11 @@ public class CartridgeAgent implements Runnable {
         }
 
         TenantEventReceiver tenantEventReceiver = new TenantEventReceiver();
-
         tenantEventReceiver.addEventListener(new SubscriptionDomainsAddedEventListener() {
             @Override
             protected void onEvent(Event event) {
                 try {
-                    TopologyManager.acquireReadLock();
+                    TenantManager.acquireReadLock();
                     if (log.isDebugEnabled()) {
                         log.debug("Subscription domain added event received");
                     }
@@ -388,7 +360,7 @@ public class CartridgeAgent implements Runnable {
                         log.error("Error processing subscription domains added event", e);
                     }
                 } finally {
-                    TopologyManager.releaseReadLock();
+                    TenantManager.releaseReadLock();
                 }
 
             }
@@ -398,7 +370,7 @@ public class CartridgeAgent implements Runnable {
             @Override
             protected void onEvent(Event event) {
                 try {
-                    TopologyManager.acquireReadLock();
+                    TenantManager.acquireReadLock();
                     if (log.isDebugEnabled()) {
                         log.debug("Subscription domain removed event received");
                     }
@@ -409,7 +381,7 @@ public class CartridgeAgent implements Runnable {
                         log.error("Error processing subscription domains removed event", e);
                     }
                 } finally {
-                    TopologyManager.releaseReadLock();
+                    TenantManager.releaseReadLock();
                 }
             }
         });
@@ -420,7 +392,7 @@ public class CartridgeAgent implements Runnable {
             protected void onEvent(Event event) {
                 if (!initialized) {
                     try {
-                        TopologyManager.acquireReadLock();
+                        TenantManager.acquireReadLock();
                         if (log.isDebugEnabled()) {
                             log.debug("Complete tenant event received");
                         }
@@ -432,7 +404,7 @@ public class CartridgeAgent implements Runnable {
                             log.error("Error processing complete tenant event", e);
                         }
                     } finally {
-                        TopologyManager.releaseReadLock();
+                        TenantManager.releaseReadLock();
                     }
 
                 } else {
