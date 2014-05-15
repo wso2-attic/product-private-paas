@@ -677,11 +677,12 @@ public class CloudControllerServiceImpl implements CloudControllerService {
                     // persist in registry
                     persist();
 
-                    String memberID = memberContext.getMemberId();
 
                     // trigger topology
-                    TopologyBuilder.handleMemberSpawned(memberID, cartridgeType, clusterId, memberContext.getNetworkPartitionId(),
-                            partition.getId(), ip, memberContext.getLbClusterId(),publicIp);
+                    TopologyBuilder.handleMemberSpawned(cartridgeType, clusterId, 
+                    		partition.getId(), ip, publicIp, memberContext);
+                    
+                    String memberID = memberContext.getMemberId();
 
                     // update the topology with the newly spawned member
                     // publish data
