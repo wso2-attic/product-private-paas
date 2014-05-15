@@ -1,0 +1,63 @@
+{   
+      "type": "publisher",
+      "provider": "wso2",
+      "serviceGroup": "apim",
+      "host": "publisher.am.wso2.com",
+      "displayName": "API Manager - Publisher",
+      "description": "API Manager - PUblisher Cartridge",
+      "version": "1.6.0",
+      "multiTenant": "true",
+      "portMapping": [
+         {
+            "protocol": "http",
+            "port": "9763",
+            "proxyPort": "80"
+         },
+         {
+            "protocol": "https",
+            "port": "9443",
+            "proxyPort": "443"
+         }
+       ],
+      "deployment": {
+        },
+       "iaasProvider": [
+        {
+          "type": "openstack",
+          "imageId": "RegionOne/ca6d9f89-f39b-42a1-a1c1-ba36833a9e12",
+          "maxInstanceLimit": "4",
+          "property": [
+            {
+             "name": "instanceType",
+             "value": "RegionOne/3"
+            },
+            {
+             "name": "keyPair",
+             "value": "stratos-s4"
+            }
+          ]
+        }
+      ],
+      "loadBalancer": {
+        "type": "lb",
+        "property": {
+            "name": "default.load.balancer",
+            "value": "true"
+        }
+      },
+      "property": [
+        {
+          "name": "PRIMARY",
+          "value": "true"
+        },
+        {
+          "name": "payload_parameter.SERIVCE_GROUP",
+          "value": "apim"
+        },
+        {
+          "name": "payload_parameter.CLUSTERING",
+          "value": "true"
+        }
+      ]
+    
+ }

@@ -1,0 +1,47 @@
+{
+      "type": "appserver",
+      "provider": "wso2",
+      "host": "appserver.wso2.com",
+      "displayName": "AppServer",
+      "description": "AppServer Cartridge",
+      "version": "5.2.0",
+      "multiTenant": "true",
+      "portMapping": [
+         {
+            "protocol": "http",
+            "port": "9763",
+            "proxyPort": "80"
+         },
+         {
+            "protocol": "https",
+            "port": "9443",
+            "proxyPort": "443"
+         }
+       ],
+      "deployment": {
+        },
+       "iaasProvider": [
+        {
+          "type": "openstack",
+          "imageId": "RegionOne/ca6d9f89-f39b-42a1-a1c1-ba36833a9e12",
+          "maxInstanceLimit": "4",
+          "property": [
+            {
+             "name": "instanceType",
+             "value": "RegionOne/3"
+            },
+            {
+             "name": "keyPair",
+             "value": "stratos-s4"
+            }
+          ]
+        }
+      ],
+      "loadBalancer": {
+        "type": "lb",
+        "property": {
+            "name": "default.load.balancer",
+            "value": "true"
+        }
+      }    
+}

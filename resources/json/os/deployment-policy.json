@@ -1,0 +1,14 @@
+{
+    "id": "deployp",
+    "partitionGroup": {
+      "id": "openstack",
+      "partitionAlgo": "one-after-another",
+      "partition": [
+        {
+          "id": "P1",
+          "partitionMax": "3",
+          "partitionMin": "2"
+        }
+      ]
+    }
+}
