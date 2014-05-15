@@ -686,6 +686,9 @@
                 <hostName><%= @stratos_instance_data_wso2_elb_host %></hostName>
                 <port>4000</port>
             </member>
+        <%- if @clustering == true -%>
+@WELL_KNOWN_MEMBERS
+	<%- end -%>
         </members>
 
         <!--
