@@ -204,8 +204,10 @@ read -p "Do you need to deploy BPS (Business Process Server) service ? [y/n] " -
 echo
 read -p "Do you need to deploy APIM (API Manager) service ? [y/n] " -n 1 -r  apim_needed
 echo
-
-read -p "Are you sure you want to start WSO2 Private PAAS ? [y/n] " -r  confirm
+if [[ $apim_needed =~ ^[Yy]$ ]]
+    then
+       read -p "Do you need clustering for keymanger ? [y/n] " -n 1 -r clustering_keymanager
+fi
 
 if [[ $confirm =~ ^[nN]$ ]]
 then
@@ -373,9 +375,16 @@ replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/apimanager/manifes
 replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/apimanager/manifests/params.pp"
 replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/apimanager/manifests/params.pp"
-replace_in_file "CONFIG_DB" "$am_config" "/etc/puppet/modules/apimanager/manifests/params.pp"
 replace_in_file "STATS_DB" "$apim_stats" "/etc/puppet/modules/apimanager/manifests/params.pp"
 replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
+replace_in_file "GATEWAY_CONFIG_DB" "gateway_config_db" "/etc/puppet/manifests/nodes/api.pp"
+replace_in_file "STORE_CONFIG_DB" "store_config_db" "/etc/puppet/manifests/nodes/api.pp"
+if [[ $clustering_keymanager =~ ^[Yy]$ ]]
+then
+	replace_in_file "KAYMANAGER_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes/api.pp"
+        replace_in_file "KAYMANAGER_CLOUD" "$registry_db" "/etc/puppet/manifests/nodes/api.pp"
+        replace_in_file "KAYMANAGER_CLUSTERING" "$registry_db" "/etc/puppet/manifests/nodes/api.pp"
+fi
 
 # Restart puppet master after configurations
 /etc/init.d/puppetmaster restart
