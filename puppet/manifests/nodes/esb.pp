@@ -24,10 +24,10 @@ node /esb/ inherits base {
 
         version            => '4.8.1',
         sub_cluster_domain => 'test',
-        members            => false,
+        members            => undef,
 	port_mapping	   => false,
         offset             => 0,
-        hazelcast_port        => 4100,
+        hazelcast_port     => 4000,
         config_db          => 'ESB_CONFIG_DB',
 	config_target_path => 'ESB_CONFIG_PATH',
         maintenance_mode   => 'zero',

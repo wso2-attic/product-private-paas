@@ -619,7 +619,7 @@
          The clustering domain/group. Nodes in the same group will belong to the same multicast
          domain. There will not be interference between nodes in different groups.
         -->
-				<parameter name="domain">wso2.<%= @as_subdomain %>.domain</parameter>
+	<parameter name="domain">wso2.<%= @as_subdomain %>.domain</parameter>
 
         <!-- The multicast address to be used -->
         <!--<parameter name="mcastAddress">228.0.0.4</parameter>-->
@@ -653,7 +653,7 @@
         The TCP port used by this member. This is the port through which other nodes will
         contact this member
          -->
-				<parameter name="localMemberPort"><%= @tribes_port %></parameter>
+	<parameter name="localMemberPort"><%= @hazelcast_port %></parameter>
 
         <!--
             The bind port of this member. The difference between localMemberPort & localMemberBindPort
