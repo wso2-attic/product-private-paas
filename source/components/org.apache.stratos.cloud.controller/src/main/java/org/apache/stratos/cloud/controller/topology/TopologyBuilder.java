@@ -25,6 +25,7 @@ import org.apache.stratos.cloud.controller.exception.InvalidMemberException;
 import org.apache.stratos.cloud.controller.impl.CloudControllerServiceImpl;
 import org.apache.stratos.cloud.controller.pojo.Cartridge;
 import org.apache.stratos.cloud.controller.pojo.ClusterContext;
+import org.apache.stratos.cloud.controller.pojo.MemberContext;
 import org.apache.stratos.cloud.controller.pojo.PortMapping;
 import org.apache.stratos.cloud.controller.pojo.Registrant;
 import org.apache.stratos.cloud.controller.publisher.CartridgeInstanceDataPublisher;
@@ -187,33 +188,43 @@ public class TopologyBuilder {
         TopologyEventPublisher.sendClusterRemovedEvent(ctxt, deploymentPolicy);
     }
 
-    public static void handleMemberSpawned(String memberId, String serviceName, String clusterId,
-                                           String networkPartitionId, String partitionId, String privateIp, String lbClusterId, String publicIp) {
-        //adding the new member to the cluster after it is successfully started in IaaS.
-        Topology topology = TopologyManager.getTopology();
-        Service service = topology.getService(serviceName);
-        Cluster cluster = service.getCluster(clusterId);
+	public static void handleMemberSpawned(String serviceName,
+			String clusterId, String partitionId,
+			String privateIp, String publicIp, MemberContext context) {
+		// adding the new member to the cluster after it is successfully started
+		// in IaaS.
+		Topology topology = TopologyManager.getTopology();
+		Service service = topology.getService(serviceName);
+		Cluster cluster = service.getCluster(clusterId);
+		String memberId = context.getMemberId();
+		String networkPartitionId = context.getNetworkPartitionId();
+		String lbClusterId = context.getLbClusterId();
 
-        if (cluster.memberExists(memberId)) {
-        	log.warn(String.format("Member %s already exists", memberId));
-        	return;
-        }
+		if (cluster.memberExists(memberId)) {
+			log.warn(String.format("Member %s already exists", memberId));
+			return;
+		}
 
-        try {
-            TopologyManager.acquireWriteLock();
-            Member member = new Member(serviceName, clusterId, networkPartitionId, partitionId, memberId);
-            member.setStatus(MemberStatus.Created);
-            member.setMemberIp(privateIp);
-            member.setLbClusterId(lbClusterId);
-            member.setMemberPublicIp(publicIp);
-            cluster.addMember(member);
-            TopologyManager.updateTopology(topology);
-        } finally {
-            TopologyManager.releaseWriteLock();
-        }
-        TopologyEventPublisher.sendInstanceSpawnedEvent(serviceName, clusterId, networkPartitionId, partitionId, memberId, lbClusterId, publicIp, privateIp);
-    }
-
+		try {
+			TopologyManager.acquireWriteLock();
+			Member member = new Member(serviceName, clusterId,
+					networkPartitionId, partitionId, memberId);
+			member.setStatus(MemberStatus.Created);
+			member.setMemberIp(privateIp);
+			member.setLbClusterId(lbClusterId);
+			member.setMemberPublicIp(publicIp);
+			member.setProperties(CloudControllerUtil.toJavaUtilProperties(context.getProperties()));
+			cluster.addMember(member);
+			TopologyManager.updateTopology(topology);
+		} finally {
+			TopologyManager.releaseWriteLock();
+		}
+		
+		TopologyEventPublisher.sendInstanceSpawnedEvent(serviceName, clusterId,
+				networkPartitionId, partitionId, memberId, lbClusterId,
+				publicIp, privateIp);
+	}
+    
     public static void handleMemberStarted(InstanceStartedEvent instanceStartedEvent) {
         Topology topology = TopologyManager.getTopology();
         Service service = topology.getService(instanceStartedEvent.getServiceName());
