@@ -31,7 +31,7 @@ node /is/ inherits base {
         config_target_path => 'IS_CONFIG_PATH',
         maintenance_mode   => 'zero',
         depsync            => false,
-        clustering         => false,
+        clustering         => 'CLUSTERING',
         cloud              => true,
         owner              => 'root',
         group              => 'root',

@@ -31,7 +31,7 @@ node /appserver/ inherits base {
         config_target_path => 'AS_CONFIG_PATH',
         maintenance_mode   => 'zero',
         depsync            => false,
-        clustering         => false,
+        clustering         => 'CLUSTERING',
 	cloud		   => true,
         owner              => 'root',
         group              => 'root',

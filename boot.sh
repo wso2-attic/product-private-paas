@@ -194,21 +194,123 @@ if [ "$JAVA_HOME" == "" ];then
     JAVA_HOME=$java_home
 fi
 
+
+# Create databases for the governence registry
+# Using the same userstore to the registry
+registry_db="userstore"
+#create_registry_database "$registry_db"
+apim_db="apim_db"
+apim_stats="amstats"
+
+as_config_path="config/as"
+esb_config_path="config/esb"
+
+as_config_db="as_config"
+esb_config_db="esb_config"
+is_config_db="is_config"
+bps_config_db="bps_config"
+apim_store_config_db="apim_store_config"
+apim_publisher_config_db="apim_publisher_config"
+apim_gateway_config_db="apim_gateway_config"
+apim_keymanager_config_db="apim_keymanager_config"
+
+as_clustering="false"
+is_clustering="false"
+esb_clustering="false"
+bps_clustering="false"
+
+#backup mysql.sql
+backup_file $setup_path/resources/mysql.sql
 read -p "Do you need to deploy AS (Application Server) service ? [y/n] " -n 1 -r as_needed
 echo
+
+if [[ $as_needed =~ ^[Yy]$ ]]
+	then
+   read -p "Do you need to enable clustering for AS ? [y/n] " -n 1 -r clustering_appserver 
+   echo
+
+   if [[ $clustering_appserver =~ ^[Yy]$ ]]
+      then 
+      as_clustering="true"
+   fi
+   	
+   #appserver config db changes 
+   echo "create database if not exists $as_config_db;" >> $setup_path/resources/mysql.sql
+fi
+
 read -p "Do you need to deploy IS (Identity Server) service ? [y/n] " -n 1 -r  is_needed
 echo
+if [[ $is_needed =~ ^[Yy]$ ]]
+	then
+   read -p "Do you need to enable clustering for IS ? [y/n] " -n 1 -r clustering_is
+   echo
+
+   if [[ $clustering_is =~ ^[Yy]$ ]]
+      then
+      is_clustering="true"
+   fi
+
+   #is config db changes 
+   echo "create database if not exists $is_config_db;" >> $setup_path/resources/mysql.sql
+fi
+
+
+
 read -p "Do you need to deploy ESB (Enterprise Service Bus) service ? [y/n] " -n 1 -r  esb_needed
 echo
+if [[ $esb_needed =~ ^[Yy]$ ]]
+	then
+   read -p "Do you need to enable clustering for ESB ? [y/n] " -n 1 -r clustering_esb
+   echo
+
+   if [[ $clustering_esb =~ ^[Yy]$ ]]
+      then
+      esb_clustering="true"
+   fi
+
+   #esb config db changes 
+   echo "create database if not exists $esb_config_db;" >> $setup_path/resources/mysql.sql
+fi
+
+
+
 read -p "Do you need to deploy BPS (Business Process Server) service ? [y/n] " -n 1 -r  bps_needed
 echo
+if [[ $bps_needed =~ ^[Yy]$ ]]
+then
+   read -p "Do you need to enable clustering for BPS ? [y/n] " -n 1 -r clustering_bps
+   echo
+
+   if [[ $clustering_bps =~ ^[Yy]$ ]]
+      then
+      bps_clustering="true"
+   fi
+
+
+   #bps config db changes 
+   echo "create database if not exists $bps_config_db;" >> $setup_path/resources/mysql.sql
+fi
+
+
 read -p "Do you need to deploy APIM (API Manager) service ? [y/n] " -n 1 -r  apim_needed
 echo
 if [[ $apim_needed =~ ^[Yy]$ ]]
     then
        read -p "Do you need clustering for keymanger ? [y/n] " -n 1 -r clustering_keymanager
+
+   #apim config db changes 
+   echo "create database if not exists $apim_db;" >> $setup_path/resources/mysql.sql 
+   echo "create database if not exists $apim_stats;" >> $setup_path/resources/mysql.sql
+   echo "create database if not exists $apim_store_config_db;" >> $setup_path/resources/mysql.sql
+   
+   # config dbs for publisher and store are the same -- 
+   # cat $setup_path/resources/mysql.sql >> "create database if not exists $apim_publisher_config;"
+   echo "create database if not exists $apim_gateway_config_db;" >> $setup_path/resources/mysql.sql
+   echo "create database if not exists $apim_keymanager_config_db;" >> $setup_path/resources/mysql.sql
+
 fi
 
+echo ""
 read -p "Are you sure you want to start WSO2 Private PAAS ? [y/n] " -r  confirm
 echo
 
@@ -274,18 +376,6 @@ sed  "s/REGION/$region/g" resources/json/$iaas/partition.json > tmp/partition_tm
 sed  "s/AVAILABILITY_ZONE/$ec2_availability_zone/g" tmp/partition_tmp.json > tmp/partition.json
 rm tmp/partition_tmp.json
 
-# Create databases for the governence registry
-# Using the same userstore to the registry
-registry_db="userstore"
-#create_registry_database "$registry_db"
-apim_db="apim_db"
-apim_stats="amstats"
-am_config="am_config"
-
-
-as_config_path="config/as"
-esb_config_path="config/esb"
-
 # Copy files to /etc/puppet 
 
 cp -f $stratos_pack_path/apache-stratos-cartridge-agent-4.0.0-wso2v1-bin.zip /etc/puppet/modules/agent/files
@@ -323,8 +413,9 @@ replace_in_file "JAVA_NAME" "$JAVA_NAME_EXTRACTED" "/etc/puppet/manifests/nodes/
 
 # Application Server
 backup_file "/etc/puppet/manifests/nodes/appserver.pp"
-replace_in_file "AS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes/appserver.pp"
+replace_in_file "AS_CONFIG_DB" "$as_config_db" "/etc/puppet/manifests/nodes/appserver.pp"
 replace_in_file "AS_CONFIG_PATH" "$as_config_path" "/etc/puppet/manifests/nodes/appserver.pp"
+replace_in_file "CLUSTERING" "$as_clustering" "/etc/puppet/manifests/nodes/appserver.pp"
 backup_file "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
@@ -336,8 +427,9 @@ replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/appserver/manife
 
 # IS
 backup_file "/etc/puppet/manifests/nodes/is.pp"
-replace_in_file "IS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes/is.pp"
+replace_in_file "IS_CONFIG_DB" "$is_config_db" "/etc/puppet/manifests/nodes/is.pp"
 replace_in_file "IS_CONFIG_PATH" "$is_config_path" "/etc/puppet/manifests/nodes/is.pp"
+replace_in_file "CLUSTERING" "$is_clustering" "/etc/puppet/manifests/nodes/is.pp"
 backup_file "/etc/puppet/modules/is/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/is/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/is/manifests/params.pp"
@@ -348,8 +440,9 @@ replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/is/manifests/par
 
 # ESB
 backup_file "/etc/puppet/manifests/nodes/esb.pp"
-replace_in_file "ESB_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes/esb.pp"
+replace_in_file "ESB_CONFIG_DB" "$esb_config_db" "/etc/puppet/manifests/nodes/esb.pp"
 replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes/esb.pp"
+replace_in_file "CLUSTERING" "$esb_clustering" "/etc/puppet/manifests/nodes/esb.pp"
 backup_file "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
@@ -360,8 +453,9 @@ replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/pa
 
 # BPS
 backup_file "/etc/puppet/manifests/nodes/bps.pp"
-replace_in_file "BPS_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes/bps.pp"
+replace_in_file "BPS_CONFIG_DB" "$bps_db" "/etc/puppet/manifests/nodes/bps.pp"
 replace_in_file "BPS_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes/bps.pp"
+replace_in_file "CLUSTERING" "$bps_clustering" "/etc/puppet/manifests/nodes/bps.pp"
 backup_file "/etc/puppet/modules/bps/manifests/params.pp"
 replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
 replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
@@ -380,11 +474,11 @@ replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/apimanager/man
 replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/apimanager/manifests/params.pp"
 replace_in_file "STATS_DB" "$apim_stats" "/etc/puppet/modules/apimanager/manifests/params.pp"
 replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
-replace_in_file "GATEWAY_CONFIG_DB" "gateway_config_db" "/etc/puppet/manifests/nodes/api.pp"
-replace_in_file "STORE_CONFIG_DB" "store_config_db" "/etc/puppet/manifests/nodes/api.pp"
+replace_in_file "GATEWAY_CONFIG_DB" "$apim_gateway_config_db" "/etc/puppet/manifests/nodes/api.pp"
+replace_in_file "STORE_CONFIG_DB" "$apim_store_config_db" "/etc/puppet/manifests/nodes/api.pp"
 if [[ $clustering_keymanager =~ ^[Yy]$ ]]
 then
-	replace_in_file "KAYMANAGER_CONFIG_DB" "$registry_db" "/etc/puppet/manifests/nodes/api.pp"
+	replace_in_file "KAYMANAGER_CONFIG_DB" "$apim_keymanager_config_db" "/etc/puppet/manifests/nodes/api.pp"
         replace_in_file "KAYMANAGER_CLOUD" "$registry_db" "/etc/puppet/manifests/nodes/api.pp"
         replace_in_file "KAYMANAGER_CLUSTERING" "$registry_db" "/etc/puppet/manifests/nodes/api.pp"
 fi
