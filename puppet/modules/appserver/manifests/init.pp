@@ -43,7 +43,7 @@
 class appserver (
   $version            = undef,
   $sub_cluster_domain = undef,
-  $members            = false,
+  $members            = undef,
   $offset             = 0,
   $tribes_port        = 4000,
   $config_db          = 'governance',
