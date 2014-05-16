@@ -46,7 +46,7 @@ class apimanager (
   $version            = "1.6.0",
   $env                = undef,
   $sub_cluster_domain = undef,
-  $local_member_port  = '5000',
+  $hazelcast_port     = 4000,
   $members            = undef,
   $port_mapping       = false,
   $amtype	      = undef,

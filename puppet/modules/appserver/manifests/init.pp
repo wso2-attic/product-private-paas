@@ -45,7 +45,7 @@ class appserver (
   $sub_cluster_domain = undef,
   $members            = undef,
   $offset             = 0,
-  $tribes_port        = 4000,
+  $hazelcast_port     = 4000,
   $config_db          = 'governance',
   $config_target_path = 'config/as',	
   $maintenance_mode   = true,
