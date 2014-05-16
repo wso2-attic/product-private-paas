@@ -209,6 +209,9 @@ if [[ $apim_needed =~ ^[Yy]$ ]]
        read -p "Do you need clustering for keymanger ? [y/n] " -n 1 -r clustering_keymanager
 fi
 
+read -p "Are you sure you want to start WSO2 Private PAAS ? [y/n] " -r  confirm
+echo
+
 if [[ $confirm =~ ^[nN]$ ]]
 then
     echo -e "Exiting the instalation."
