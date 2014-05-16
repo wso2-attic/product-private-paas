@@ -31,7 +31,7 @@ node /bps/ inherits base {
         config_target_path => 'config/bps',
         maintenance_mode   => 'zero',
         depsync            => false,
-        clustering         => 'CLUSTERING',
+        clustering         => CLUSTERING,
         cloud              => true,
         owner              => 'root',
         group              => 'root',
