@@ -23,7 +23,11 @@
 # settings will override the settings in this file.
 #
 
+<%- if @enable_log_publisher == 'true' -%>
 log4j.rootLogger=INFO, CARBON_CONSOLE, CARBON_LOGFILE, CARBON_MEMORY, LOGEVENT
+<% else %>
+log4j.rootLogger=INFO, CARBON_CONSOLE, CARBON_LOGFILE, CARBON_MEMORY
+<%- end -%>
 
 log4j.logger.AUDIT_LOG=INFO, AUDIT_LOGFILE
 log4j.logger.org.apache.axis2.wsdl.codegen.writer.PrettyPrinter=ERROR, CARBON_LOGFILE, CARBON_MEMORY
@@ -121,6 +125,8 @@ log4j.appender.CARBON_SYS_LOG.SyslogHost=localhost
 log4j.appender.CARBON_SYS_LOG.Facility=USER
 log4j.appender.CARBON_SYS_LOG.threshold=DEBUG
 
+<%- if @enable_log_publisher == 'true' -%>
+
 # LOGEVENT is set to be a LogEventAppender using a PatternLayout to send logs to LOGEVENT 
 log4j.appender.LOGEVENT=org.wso2.carbon.logging.appender.LogEventAppender
 log4j.appender.LOGEVENT.url=tcp://<%= @bam_ip %>:<%= @bam_port %>
@@ -130,6 +136,8 @@ log4j.appender.LOGEVENT.userName=admin
 log4j.appender.LOGEVENT.password=admin
 log4j.appender.LOGEVENT.processingLimit=1000
 log4j.appender.LOGEVENT.maxTolerableConsecutiveFailure=20
+
+<%- end -%>
 
 # Appender config to CARBON_TRACE_LOGFILE
 log4j.appender.CARBON_TRACE_LOGFILE=org.apache.log4j.DailyRollingFileAppender
