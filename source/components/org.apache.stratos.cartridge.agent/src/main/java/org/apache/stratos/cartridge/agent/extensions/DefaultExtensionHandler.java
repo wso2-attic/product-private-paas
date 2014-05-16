@@ -21,6 +21,7 @@ package org.apache.stratos.cartridge.agent.extensions;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -406,9 +407,10 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
     @Override
     public void onMemberStartedEvent(MemberStartedEvent memberStartedEvent) {
-        if (log.isInfoEnabled()) {
+        String memberId = memberStartedEvent.getMemberId();
+		if (log.isInfoEnabled()) {
             log.info(String.format("Member started event received: [service] %s [cluster] %s [member] %s",
-                    memberStartedEvent.getServiceName(), memberStartedEvent.getClusterId(), memberStartedEvent.getMemberId()));
+                    memberStartedEvent.getServiceName(), memberStartedEvent.getClusterId(), memberId));
         }
 
         if (log.isDebugEnabled()) {
@@ -417,27 +419,26 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         }
 
         boolean isConsistent = ExtensionUtils.checkTopologyConsistency(memberStartedEvent.getServiceName(),
-                memberStartedEvent.getClusterId(), memberStartedEvent.getMemberId());
+                memberStartedEvent.getClusterId(), memberId);
         if (!isConsistent) {
             if (log.isErrorEnabled()) {
                 log.error("Topology is inconsistent...failed to execute member started event");
             }
             return;
         }
-        String clusterId = memberStartedEvent.getClusterId();
         Topology topology = TopologyManager.getTopology();
         Service service = topology.getService(memberStartedEvent.getServiceName());
         Cluster cluster = service.getCluster(memberStartedEvent.getClusterId());
-        Member startedMember = cluster.getMember(memberStartedEvent.getClusterId());
-        String lbClusterId = cluster.getMember(memberStartedEvent.getMemberId()).getLbClusterId();
+        Member startedMember = cluster.getMember(memberId);
+        String lbClusterId = cluster.getMember(memberId).getLbClusterId();
 
         // check whether new member is in the same member cluster or LB cluster of this instance
         if (ExtensionUtils.isRelevantMemberEvent(memberStartedEvent.getServiceName(),
                 memberStartedEvent.getClusterId(), lbClusterId)) {
             Collection<Member> members = cluster.getMembers();
             Map<String, String> env = new HashMap<String, String>();
-            env.put("STRATOS_MEMBER_STARTED_MEMBER_IP", cluster.getMember(clusterId).getMemberIp());
-            env.put("STRATOS_MEMBER_STARTED_MEMBER_ID", memberStartedEvent.getMemberId());
+            env.put("STRATOS_MEMBER_STARTED_MEMBER_IP", startedMember.getMemberIp());
+            env.put("STRATOS_MEMBER_STARTED_MEMBER_ID", memberId);
             env.put("STRATOS_MEMBER_STARTED_CLUSTER_ID", memberStartedEvent.getClusterId());
             env.put("STRATOS_MEMBER_STARTED_LB_CLUSTER_ID", lbClusterId);
             env.put("STRATOS_MEMBER_STARTED_NETWORK_PARTITION_ID", memberStartedEvent.getNetworkPartitionId());
@@ -588,11 +589,13 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 }
             }
             if (idx + 1 >= minCount) {
+            	idx = 0;
                 for (Member member : wkMembers){
                     envParameters.put("STRATOS_WK_MEMBER_" + idx + "_IP", member.getMemberIp());
                     if (log.isDebugEnabled()){
-                        log.debug("STRATOS_WK_GATEWAY_MEMBER_" + idx + "_IP: " + member.getMemberIp());
+                        log.debug("STRATOS_WK_MEMBER_" + idx + "_IP: " + member.getMemberIp());
                     }
+                    idx++;
                 }
                 return true;
             }
