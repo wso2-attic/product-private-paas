@@ -56,8 +56,7 @@
             "value": "true"
         }
       }  , 
-
-	 "property": [
+         "property": [
      {
      "name": "PRIMARY",
      "value": "true"
@@ -65,7 +64,20 @@
     {
      "name": "payload_parameter.SERIVCE_GROUP",
      "value": "apim"
+    },
+    {
+     "name": "payload_parameter.CLUSTERING",
+     "value": "true"
+    },
+    {
+     "name": "payload_parameter.COMMIT_ENABLED",
+     "value": "true"
+    } ,
+    {
+     "name": "payload_parameter.KEYMANAGER_HOST_NAME",
+     "value": "keymanager.am.wso2.com"
     }
+
       ] 
     
  }
