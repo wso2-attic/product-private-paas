@@ -71,9 +71,30 @@ function verify_file_exists(){
 
 function update_hosts_file(){
 	instance_hostname="<%= @stratos_instance_data_host_name %>"
-        (${GREP} -q "${instance_hostname}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${instance_hostname} # Stratos LB instance private IP" >> /etc/hosts \
+	(${GREP} -q "${instance_hostname}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${instance_hostname} # Stratos LB instance private IP" >> /etc/hosts \
 	  && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${instance_hostname}")) \
 	  || print_error "Failed to update '/etc/hosts' file. "
+
+        if [[ "${STRATOS_SERVICE_NAME}" = "apistore" ||  "${STRATOS_SERVICE_NAME}" = "publisher" ]] ; then
+		gateway_host_name="<%= @stratos_instance_data_gateway_host_name %>"
+		keymanager_host_name="<%= @stratos_instance_data_keymanager_host_name %>"
+
+		(${GREP} -q "${gateway_host_name}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${gateway_host_name} # Stratos LB instance private IP" >> /etc/hosts \
+	  && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${gateway_host_name}")) \
+	  || print_error "Failed to update '/etc/hosts' file. "
+
+		(${GREP} -q "${keymanager_host_name}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${keymanager_host_name} # Stratos LB instance private IP" >> /etc/hosts \
+	  && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${keymanager_host_name}")) \
+	  || print_error "Failed to update '/etc/hosts' file. "
+
+	elif [[ "${STRATOS_SERVICE_NAME}" = "gateway" ]] ; then
+		keymanager_hostname="<%= @stratos_instance_data_keymanager_host_name %>"
+		
+		(${GREP} -q "${keymanager_host_name}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${keymanager_host_name} # Stratos LB instance private IP" >> /etc/hosts \
+	  && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${keymanager_host_name}")) \
+	  || print_error "Failed to update '/etc/hosts' file. "
+	
+	fi
 }
 
 function backup_file(){

@@ -48,13 +48,12 @@
         <!--
             Server URL of the Authentication service
         -->
-        <%- if @amtype == 'standalone' or  @amtype == 'keymanager' -%>
+        <%- if @amtype == 'keymanager' -%>
         <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}/services/</ServerURL>
         <Username>admin</Username>
         <Password>admin</Password>
         <%- else -%>
-@KEYMANAGER_SERVER_URL
-        <!-- <ServerURL>https://<%= @keymanager_subdomain %>.<%= @am_subdomain %>.<%= @domain %>:<%= @keymanager_mgt_https_port %>/services/</ServerURL> -->
+	<ServerURL>https://<%= @stratos_instance_data_keymanager_host_name %>:<%= @keymanager_mgt_https_port %>/services/</ServerURL> -->
         <Username><%= @admin_username %></Username>
         <Password><%= @admin_password %></Password>        
         <%- end -%>
@@ -130,10 +129,10 @@
 			<!--
             			Server URL of the API gateway.
         		-->
-                <%- if @amtype == 'standalone' -%>
+                 <%- if @amtype == 'gateway' or @amtype == 'keymanager' -%>
                     <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}/services/</ServerURL>
                 <%- else -%>
-                    <ServerURL>https://<%= @management_subdomain %>.<%= @gateway_subdomain %>.<%= @am_subdomain %>.<%= @domain %>:<%= @gateway_https_proxy_port %>/services/</ServerURL>
+                    <ServerURL>https://<%= @stratos_instance_data_gateway_host_name %>:<%= @gateway_https_proxy_port %>/services/</ServerURL>
                 <%- end -%>
 			<!--
             			Admin username for the API gateway.
@@ -146,10 +145,10 @@
 			<!--
             			Endpoint URLs for the APIs hosted in this API gateway.
         		-->
-                <%- if @amtype == 'standalone' -%>
+                <%- if @amtype == 'gateway' or @amtype == 'keymanager' -%>
                     <GatewayEndpoint>http://${carbon.local.ip}:${http.nio.port},https://${carbon.local.ip}:${https.nio.port}</GatewayEndpoint>
                 <%- else -%>
-                        <GatewayEndpoint>http://<%= @gateway_subdomain %>.<%= @am_subdomain %>.<%= @domain %>:<%= @gateway_https_nio_proxy_port %>,https://<%= @gateway_subdomain %>.<%= @am_subdomain %>.<%= @domain %>:<%= @gateway_http_nio_proxy_port %></GatewayEndpoint>
+                        <GatewayEndpoint>http://<%= @stratos_instance_data_gateway_host_name %>:<%= @gateway_https_nio_proxy_port %>,https://<%= @stratos_instance_data_gateway_host_name %>:<%= @gateway_http_nio_proxy_port %></GatewayEndpoint>
                 <%- end -%>
                 </Environment>
         </Environments>
@@ -251,10 +250,10 @@
             Server URL of the API key manager
         -->
 
-        <%- if @amtype == 'standalone' or @amtype == 'keymanager' -%>
+        <%- if @amtype == 'keymanager' -%>
         <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}/services/</ServerURL>
         <%- else -%>
-        <ServerURL>https://<%= @keymanager_subdomain %>.<%= @am_subdomain %>.<%= @domain %>:<%= @keymanager_mgt_https_port %>/services/</ServerURL>
+        	<ServerURL>https://<%= @stratos_instance_data_keymanager_host_name %>:<%= @keymanager_mgt_https_port %>/services/</ServerURL>	
         <%- end -%>
         <!--
             Admin username for API key manager.
