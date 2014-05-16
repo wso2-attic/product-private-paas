@@ -154,9 +154,9 @@ function configure_wk_members(){
 		print_message "Configuring ${STRATOS_SERVICE_NAME}..."
 		for i in `seq 0 $(( ${STRATOS_WK_MEMBER_COUNT} - 1 ))`
 		do		    		
-			member_ip="STRATOS_WK_GATEWAY_MEMBER_${i}_IP"
+			member_ip="STRATOS_WK_MEMBER_${i}_IP"
 			if [[ -z ${!member_ip} ]] ; then
-				print_error "WKA is null for STRATOS_WK_GATEWAY_MEMBER_${i}_IP"
+				print_error "WKA is null for STRATOS_WK_MEMBER_${i}_IP"
 			fi
 			print_message  "$i => ${!member_ip}"
 			WKA_XML=$"${WKA_XML}<member><hostName>${!member_ip}</hostName><port>4000</port></member>\n"			
