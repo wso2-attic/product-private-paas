@@ -681,15 +681,21 @@
            The list of static or well-known members. These entries will only be valid if the
            "membershipScheme" above is set to "wka"
         -->
-        <members>
-            <member>
-                <hostName><%= @stratos_instance_data_wso2_elb_host %></hostName>
-                <port>4000</port>
-            </member>
-        <%- if @clustering == true -%>
-@WELL_KNOWN_MEMBERS
+
+	<members>
+	<%- if @clustering == true -%>
+                <%- if @members -%>
+                        <%- @members.each_pair do |hostname,port| -%>
+                        <member>
+                            <hostName><%= hostname %></hostName>
+                            <port><%= port %></port>
+                        </member>
+                        <%- end -%>		
+                <%- else -%>
+@WELL_KNOWN_MEMBERS                
+		<%- end -%>
 	<%- end -%>
-        </members>
+	</members>
 
         <!--
         Enable the groupManagement entry if you need to run this node as a cluster manager.
