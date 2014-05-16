@@ -1,0 +1,49 @@
+{
+      "type": "lb",
+      "provider": "lb",
+      "host": "isuruh.lk",
+      "displayName": "load balancer",
+      "description": "LB Cartridge",
+      "version": "4",
+      "defaultAutoscalingPolicy": "economyPolicy",
+      "multiTenant": "false",
+      "portMapping": [
+         {
+      "protocol": "http",
+          "port": "8280",
+          "proxyPort": "8280"
+         },
+         {
+      "protocol": "https",
+          "port": "8243",
+          "proxyPort": "8243"
+         }
+       ],
+      "deployment": {
+        },
+       "iaasProvider": [
+     {
+          "type": "openstack",
+          "imageId": "RegionOne/ca6d9f89-f39b-42a1-a1c1-ba36833a9e12",
+          "maxInstanceLimit": "5",
+          "property": [
+            {
+             "name": "instanceType",
+             "value": "RegionOne/3"
+            },
+            {
+             "name": "keyPair",
+             "value": "stratos-s4"
+            }
+       ]
+         }
+      ],
+     "loadBalancer": {
+        },
+      "property": [
+     {
+      "name": "load.balancer",
+      "value": "true"
+     }
+      ]
+}

@@ -21,7 +21,6 @@ package org.apache.stratos.cartridge.agent.extensions;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -314,7 +313,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         Topology topology = TopologyManager.getTopology();
         Service service = topology.getService(memberTerminatedEvent.getServiceName());
         Cluster cluster = service.getCluster(memberTerminatedEvent.getClusterId());
-        Member terminatedMember = cluster.getMember(memberTerminatedEvent.getClusterId());
+        Member terminatedMember = cluster.getMember(memberTerminatedEvent.getMemberId());
         String lbClusterId = cluster.getMember(memberTerminatedEvent.getClusterId()).getLbClusterId();
 
         // check whether terminated member is within the same cluster, LB cluster or service group
@@ -323,7 +322,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
             Collection<Member> members = cluster.getMembers();
             Map<String, String> env = new HashMap<String, String>();
-            env.put("STRATOS_MEMBER_TERMINATED_MEMBER_IP", cluster.getMember(memberTerminatedEvent.getMemberId()).getMemberIp());
+            env.put("STRATOS_MEMBER_TERMINATED_MEMBER_IP", terminatedMember.getMemberIp());
             env.put("STRATOS_MEMBER_TERMINATED_MEMBER_ID", memberTerminatedEvent.getMemberId());
             env.put("STRATOS_MEMBER_TERMINATED_CLUSTER_ID", memberTerminatedEvent.getClusterId());
             env.put("STRATOS_MEMBER_TERMINATED_LB_CLUSTER_ID", lbClusterId);
@@ -373,7 +372,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         Topology topology = TopologyManager.getTopology();
         Service service = topology.getService(memberSuspendedEvent.getServiceName());
         Cluster cluster = service.getCluster(memberSuspendedEvent.getClusterId());
-        Member suspendedMember = cluster.getMember(memberSuspendedEvent.getClusterId());
+        Member suspendedMember = cluster.getMember(memberSuspendedEvent.getMemberId());
         String lbClusterId = cluster.getMember(memberSuspendedEvent.getClusterId()).getLbClusterId();
 
         // check whether new member is in the same member cluster or LB cluster of this instance
@@ -381,7 +380,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 memberSuspendedEvent.getClusterId(), lbClusterId)) {
             Collection<Member> members = cluster.getMembers();
             Map<String, String> env = new HashMap<String, String>();
-            env.put("STRATOS_MEMBER_SUSPENDED_MEMBER_IP", cluster.getMember(clusterId).getMemberIp());
+            env.put("STRATOS_MEMBER_SUSPENDED_MEMBER_IP", suspendedMember.getMemberIp());
             env.put("STRATOS_MEMBER_SUSPENDED_MEMBER_ID", memberSuspendedEvent.getMemberId());
             env.put("STRATOS_MEMBER_SUSPENDED_CLUSTER_ID", memberSuspendedEvent.getClusterId());
             env.put("STRATOS_MEMBER_SUSPENDED_LB_CLUSTER_ID", lbClusterId);
@@ -407,10 +406,9 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
     @Override
     public void onMemberStartedEvent(MemberStartedEvent memberStartedEvent) {
-        String memberId = memberStartedEvent.getMemberId();
-		if (log.isInfoEnabled()) {
+        if (log.isInfoEnabled()) {
             log.info(String.format("Member started event received: [service] %s [cluster] %s [member] %s",
-                    memberStartedEvent.getServiceName(), memberStartedEvent.getClusterId(), memberId));
+                    memberStartedEvent.getServiceName(), memberStartedEvent.getClusterId(), memberStartedEvent.getMemberId()));
         }
 
         if (log.isDebugEnabled()) {
@@ -419,18 +417,19 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         }
 
         boolean isConsistent = ExtensionUtils.checkTopologyConsistency(memberStartedEvent.getServiceName(),
-                memberStartedEvent.getClusterId(), memberId);
+                memberStartedEvent.getClusterId(), memberStartedEvent.getMemberId());
         if (!isConsistent) {
             if (log.isErrorEnabled()) {
                 log.error("Topology is inconsistent...failed to execute member started event");
             }
             return;
         }
+        String clusterId = memberStartedEvent.getClusterId();
         Topology topology = TopologyManager.getTopology();
         Service service = topology.getService(memberStartedEvent.getServiceName());
         Cluster cluster = service.getCluster(memberStartedEvent.getClusterId());
-        Member startedMember = cluster.getMember(memberId);
-        String lbClusterId = cluster.getMember(memberId).getLbClusterId();
+        Member startedMember = cluster.getMember(memberStartedEvent.getMemberId());
+        String lbClusterId = cluster.getMember(memberStartedEvent.getMemberId()).getLbClusterId();
 
         // check whether new member is in the same member cluster or LB cluster of this instance
         if (ExtensionUtils.isRelevantMemberEvent(memberStartedEvent.getServiceName(),
@@ -438,7 +437,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             Collection<Member> members = cluster.getMembers();
             Map<String, String> env = new HashMap<String, String>();
             env.put("STRATOS_MEMBER_STARTED_MEMBER_IP", startedMember.getMemberIp());
-            env.put("STRATOS_MEMBER_STARTED_MEMBER_ID", memberId);
+            env.put("STRATOS_MEMBER_STARTED_MEMBER_ID", memberStartedEvent.getMemberId());
             env.put("STRATOS_MEMBER_STARTED_CLUSTER_ID", memberStartedEvent.getClusterId());
             env.put("STRATOS_MEMBER_STARTED_LB_CLUSTER_ID", lbClusterId);
             env.put("STRATOS_MEMBER_STARTED_NETWORK_PARTITION_ID", memberStartedEvent.getNetworkPartitionId());
@@ -462,7 +461,6 @@ public class DefaultExtensionHandler implements ExtensionHandler {
     }
 
     private boolean isWKMemberGroupReady(Map<String, String> envParameters, int minCount) {
-        TopologyManager.acquireReadLock();
         Topology topology = TopologyManager.getTopology();
         if (topology == null || !topology.isInitialized()) {
             return false;
@@ -475,31 +473,34 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         // clustering logic for apimanager
         if (serviceGroupInPayload != null && serviceGroupInPayload.equals("apim")) {
 
-            Collection<Cluster> apistoreClusterCollection = topology.getService("apistore").getClusters();
-            Collection<Cluster> publisherClusterCollection = topology.getService("publisher").getClusters();
-            Collection<Cluster> gatewayClusterCollection = topology.getService("gateway").getClusters();
             Collection<Cluster> keymgrClusterCollection = topology.getService("keymanager").getClusters();
 
-            List<Member> keymgrMemberList = new ArrayList<Member>();
-            for (Member member : keymgrClusterCollection.iterator().next().getMembers()) {
-                if ((member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated))) {
-                    keymgrMemberList.add(member);
-                }
-            }
-
-            if (keymgrMemberList.isEmpty()) {
-                if (log.isDebugEnabled()) {
-                    log.debug("API Keymanager members not yet created");
-                }
-                return false;
-            }
-            Member keymgrMember = keymgrMemberList.get(0);
-            envParameters.put("STRATOS_WK_KEYMGR_MEMBER_IP", keymgrMember.getMemberIp());
-            envParameters.put("STRATOS_WK_KEYMGR_MEMBER_PORT", "4000");
-
-
+            // handle apistore and publisher case
             if (CartridgeAgentConfiguration.getInstance().getServiceName().equals("apistore") ||
                     CartridgeAgentConfiguration.getInstance().getServiceName().equals("publisher")) {
+
+                Collection<Cluster> apistoreClusterCollection = topology.getService("apistore").getClusters();
+                Collection<Cluster> publisherClusterCollection = topology.getService("publisher").getClusters();
+
+                List<Member> keymgrMemberList = new ArrayList<Member>();
+                for (Member member : keymgrClusterCollection.iterator().next().getMembers()) {
+                    if ((member.getStatus().equals(MemberStatus.Activated))) {
+                        keymgrMemberList.add(member);
+                    }
+                }
+
+                if (keymgrMemberList.isEmpty()) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("API Keymanager members not yet created");
+                    }
+                    return false;
+                }
+                Member keymgrMember = keymgrMemberList.get(0);
+                envParameters.put("STRATOS_WK_KEYMGR_MEMBER_IP", keymgrMember.getMemberIp());
+                if (log.isDebugEnabled()) {
+                    log.debug("STRATOS_WK_KEYMGR_MEMBER_IP: " + keymgrMember.getMemberIp());
+                }
+
                 List<Member> apistoreMemberList = new ArrayList<Member>();
                 for (Member member : apistoreClusterCollection.iterator().next().getMembers()) {
                     if (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated)) {
@@ -514,7 +515,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 }
                 Member apistoreMember = apistoreMemberList.get(0);
                 envParameters.put("STRATOS_WK_APISTORE_MEMBER_IP", apistoreMember.getMemberIp());
-                if (log.isDebugEnabled()){
+                if (log.isDebugEnabled()) {
                     log.debug("STRATOS_WK_APISTORE_MEMBER_IP: " + apistoreMember.getMemberIp());
                 }
 
@@ -532,16 +533,36 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 }
                 Member publisherMember = publisherMemberList.get(0);
                 envParameters.put("STRATOS_WK_PUBLISHER_MEMBER_IP", publisherMember.getMemberIp());
-                if (log.isDebugEnabled()){
+                if (log.isDebugEnabled()) {
                     log.debug("STRATOS_WK_PUBLISHER_MEMBER_IP: " + publisherMember.getMemberIp());
                 }
 
                 return true;
 
             } else if (CartridgeAgentConfiguration.getInstance().getServiceName().equals("gateway")) {
+                // handle gateway case
 
+                List<Member> keymgrMemberList = new ArrayList<Member>();
+                for (Member member : keymgrClusterCollection.iterator().next().getMembers()) {
+                    if ((member.getStatus().equals(MemberStatus.Activated))) {
+                        keymgrMemberList.add(member);
+                    }
+                }
+
+                if (keymgrMemberList.isEmpty()) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("API Keymanager members not yet created");
+                    }
+                    return false;
+                }
+                Member keymgrMember = keymgrMemberList.get(0);
+                envParameters.put("STRATOS_WK_KEYMGR_MEMBER_IP", keymgrMember.getMemberIp());
+                if (log.isDebugEnabled()) {
+                    log.debug("STRATOS_WK_KEYMGR_MEMBER_IP: " + keymgrMember.getMemberIp());
+                }
+
+                Collection<Cluster> gatewayClusterCollection = topology.getService("gateway").getClusters();
                 List<Member> wkGatewayMembers = new ArrayList<Member>();
-                int idx = 0;
                 for (Member gatewayMem : gatewayClusterCollection.iterator().next().getMembers()) {
                     if (gatewayMem.getProperties() != null &&
                             gatewayMem.getProperties().containsKey("PRIMARY") &&
@@ -549,18 +570,19 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                             (gatewayMem.getStatus().equals(MemberStatus.Starting) || gatewayMem.getStatus().equals(MemberStatus.Activated))
                             ) {
                         wkGatewayMembers.add(gatewayMem);
-                        if (log.isDebugEnabled()){
-                            log.debug("STRATOS_WK_GATEWAY_MEMBER_" + idx + "_IP: " + gatewayMem.getMemberIp());
+                        if (log.isDebugEnabled()) {
+                            log.debug("Found gateway WKA: STRATOS_WK_GATEWAY_MEMBER_IP: " + gatewayMem.getMemberIp());
                         }
-                        idx++;
                     }
                 }
-                if (idx + 1 >= minCount) {
-                    for (Member member : wkGatewayMembers){
+                if (wkGatewayMembers.size() >= minCount) {
+                    int idx = 0;
+                    for (Member member : wkGatewayMembers) {
                         envParameters.put("STRATOS_WK_GATEWAY_MEMBER_" + idx + "_IP", member.getMemberIp());
-                        if (log.isDebugEnabled()){
+                        if (log.isDebugEnabled()) {
                             log.debug("STRATOS_WK_GATEWAY_MEMBER_" + idx + "_IP: " + member.getMemberIp());
                         }
+                        idx++;
                     }
                     return true;
                 }
@@ -574,25 +596,23 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             Cluster cluster = service.getCluster(clusterIdInPayload);
 
             List<Member> wkMembers = new ArrayList<Member>();
-            int idx = 0;
             for (Member member : cluster.getMembers()) {
                 if (member.getProperties() != null &&
                         member.getProperties().containsKey("PRIMARY") &&
                         member.getProperties().getProperty("PRIMARY").toLowerCase().equals("true") &&
                         (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated))
-                    ) {
+                        ) {
                     wkMembers.add(member);
-                    if (log.isDebugEnabled()){
-                        log.debug("STRATOS_WK_MEMBER_" + idx + "_IP: " + member.getMemberIp());
+                    if (log.isDebugEnabled()) {
+                        log.debug("Found WKA: STRATOS_WK_MEMBER_IP: " + member.getMemberIp());
                     }
-                    idx++;
                 }
             }
-            if (idx + 1 >= minCount) {
-            	idx = 0;
-                for (Member member : wkMembers){
+            if (wkMembers.size() >= minCount) {
+                int idx = 0;
+                for (Member member : wkMembers) {
                     envParameters.put("STRATOS_WK_MEMBER_" + idx + "_IP", member.getMemberIp());
-                    if (log.isDebugEnabled()){
+                    if (log.isDebugEnabled()) {
                         log.debug("STRATOS_WK_MEMBER_" + idx + "_IP: " + member.getMemberIp());
                     }
                     idx++;
@@ -605,7 +625,8 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
     private void waitForWKMembers(Map<String, String> envParameters) {
         int minCount = Integer.parseInt(CartridgeAgentConfiguration.getInstance().getMinCount());
-        while (!isWKMemberGroupReady(envParameters, minCount)) {
+        boolean isWKMemberGroupReady = false;
+        while (!isWKMemberGroupReady) {
             if (log.isInfoEnabled()) {
                 log.info(String.format("Waiting for %d well known members...", minCount));
             }
@@ -613,6 +634,10 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 Thread.sleep(5000);
             } catch (InterruptedException e) {
             }
+
+            TopologyManager.acquireReadLock();
+            isWKMemberGroupReady = isWKMemberGroupReady(envParameters, minCount);
+            TopologyManager.releaseReadLock();
         }
     }
 
@@ -655,7 +680,12 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 } else {
                     env.put("STRATOS_PRIMARY", "false");
                 }
+                TopologyManager.releaseReadLock();
                 waitForWKMembers(env);
+                if (log.isInfoEnabled()) {
+                    log.info(String.format("All well known members have started! Resuming start server extension..."));
+                }
+                TopologyManager.acquireReadLock();
             }
 
             env.put("STRATOS_TOPOLOGY_JSON", gson.toJson(topology.getServices(), serviceType));

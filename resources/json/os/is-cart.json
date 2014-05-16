@@ -1,0 +1,42 @@
+{
+      "type": "is",
+      "provider": "wso2",
+      "host": "is.wso2.com",
+      "displayName": "IS",
+      "description": "IS Cartridge",
+      "version": "4.6.0",
+      "multiTenant": "true",
+      "portMapping": [
+         {
+            "protocol": "http",
+            "port": "9763",
+            "proxyPort": "80"
+         },
+         {
+            "protocol": "https",
+            "port": "9443",
+            "proxyPort": "443"
+         }
+       ],
+      "deployment": {
+        },
+       "iaasProvider": [
+        {
+          "type": "openstack",
+          "imageId": "RegionOne/ca6d9f89-f39b-42a1-a1c1-ba36833a9e12",
+          "maxInstanceLimit": "4",
+          "property": [
+            {
+             "name": "instanceType",
+             "value": "RegionOne/3"
+            }
+          ]
+        }
+      ],
+"property":[
+     {   
+       "name": "payload_parameter.WSO2_ELB_HOST",
+       "value": "54.254.27.215"
+     }   
+   ] 
+}

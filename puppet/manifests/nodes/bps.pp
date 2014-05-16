@@ -24,9 +24,9 @@ node /bps/ inherits base {
 
         version            => '3.2.0',
         sub_cluster_domain => 'test',
-        members            => false,
+        members            => undef,
         offset             => 0,
-        tribes_port        => 4100,
+        hazelcast_port     => 4000,
         config_db          => 'userstore',
         config_target_path => 'config/bps',
         maintenance_mode   => 'zero',

@@ -26,7 +26,7 @@ node /appserver/ inherits base {
         sub_cluster_domain => 'test',
 	members            => undef,
 	offset		   => 0,
-        tribes_port        => 4000,
+        hazelcast_port     => 4000,
 	config_db          => 'AS_CONFIG_DB',
         config_target_path => 'AS_CONFIG_PATH',
         maintenance_mode   => 'zero',

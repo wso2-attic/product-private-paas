@@ -619,7 +619,7 @@
          The clustering domain/group. Nodes in the same group will belong to the same multicast
          domain. There will not be interference between nodes in different groups.
         -->
-				<parameter name="domain">wso2.<%= @as_subdomain %>.domain</parameter>
+	<parameter name="domain">wso2.<%= @as_subdomain %>.domain</parameter>
 
         <!-- The multicast address to be used -->
         <!--<parameter name="mcastAddress">228.0.0.4</parameter>-->
@@ -653,7 +653,7 @@
         The TCP port used by this member. This is the port through which other nodes will
         contact this member
          -->
-				<parameter name="localMemberPort"><%= @tribes_port %></parameter>
+	<parameter name="localMemberPort"><%= @hazelcast_port %></parameter>
 
         <!--
             The bind port of this member. The difference between localMemberPort & localMemberBindPort
@@ -679,19 +679,24 @@
            The list of static or well-known members. These entries will only be valid if the
            "membershipScheme" above is set to "wka"
         -->
+	
+
         <members>
-                <% if @members %>
+	<%- if @clustering == true -%>
+                <%- if @members -%>
                         <%- @members.each_pair do |hostname,port| -%>
                         <member>
                             <hostName><%= hostname %></hostName>
                             <port><%= port %></port>
                         </member>
-                        <%- end -%>
-                <% else %>
-@WELL_KNOWN_MEMBERS
-                <% end %>
+                        <%- end -%>		
+                <%- else -%>
+@WELL_KNOWN_MEMBERS                
+		<%- end -%>
+	<%- end -%>
         </members>
-        
+
+	
 	<!--
         Enable the groupManagement entry if you need to run this node as a cluster manager.
         Multiple application domains with different GroupManagementAgent implementations

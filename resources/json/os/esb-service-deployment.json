@@ -1,0 +1,9 @@
+{
+      "serviceName": "esb",
+      "cartridgeType": "esb",
+      "deploymentPolicyName": "deployp",
+      "autoscalingPolicyName": "economy",
+      "clusterDomain": "esb.dev.domain",
+      "clusterSubDomain": "subdomain2",
+      "tenantRange": "*"
+}

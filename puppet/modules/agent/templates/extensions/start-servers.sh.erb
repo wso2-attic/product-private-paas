@@ -71,7 +71,7 @@ function verify_file_exists(){
 
 function update_hosts_file(){
 	instance_hostname="<%= @stratos_instance_data_host_name %>"
-        (${GREP} -q "${instance_hostname}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${instance_hostname}" >> /etc/hosts \
+        (${GREP} -q "${instance_hostname}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${instance_hostname} # Stratos LB instance private IP" >> /etc/hosts \
 	  && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${instance_hostname}")) \
 	  || print_error "Failed to update '/etc/hosts' file. "
 }
@@ -140,7 +140,7 @@ function configure_wk_members(){
 				done
 				print_message "${STRATOS_SERVICE_NAME} WKA_XML => ${WKA_XML}"
 				verify_file_exists ${AXIS2_XML_FILE}
-				${SED} -i "s%${WKA_LINE}%${KEYMGR_XML}%g" ${AXIS2_XML_FILE} && print_message "gateway WKA configuration successful" || print_error "Failed to configure well known members"
+				${SED} -i "s%${WKA_LINE}%${WKA_XML}%g" ${AXIS2_XML_FILE} && print_message "gateway WKA configuration successful" || print_error "Failed to configure well known members"
 
 				KEYMGR_XML="<ServerURL>https://${STRATOS_WK_KEYMGR_MEMBER_IP}:9443/services/</ServerURL>"
 				print_message "${STRATOS_SERVICE_NAME} KEYMGR_XML => ${KEYMGR_XML}"

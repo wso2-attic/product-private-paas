@@ -694,7 +694,7 @@
         The TCP port used by this member. This is the port through which other nodes will
         contact this member
          -->
-        <parameter name="localMemberPort"><%= @local_member_port %></parameter>
+        <parameter name="localMemberPort"><%= @hazelcast_port %></parameter>
 
         <!--
             The bind port of this member. The difference between localMemberPort & localMemberBindPort
@@ -720,7 +720,8 @@
                "membershipScheme" above is set to "wka"
             -->
         <members>
-		<%- if @amtype == 'standalone' and @members -%>
+	<%- if @clustering == true -%>
+		<%- if @members -%>
 			<%- @members.each_pair do |hostname,port| -%>
 			<member>
 			    <hostName><%= hostname %></hostName>
@@ -730,6 +731,7 @@
 		<%- else %->
 @WELL_KNOWN_MEMBERS
 		<%- end -%>
+	<%- end -%>
         </members>
         <!--
         Enable the groupManagement entry if you need to run this node as a cluster manager.

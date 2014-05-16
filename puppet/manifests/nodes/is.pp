@@ -24,9 +24,9 @@ node /is/ inherits base {
 
         version            => '5.0.0',
         sub_cluster_domain => 'test',
-        members            => false,
+        members            => undef,
         offset             => 0,
-        clustering_local_port        => 4100,
+        hazelcast_port     => 4000,
         config_db          => 'IS_CONFIG_DB',
         config_target_path => 'IS_CONFIG_PATH',
         maintenance_mode   => 'zero',
