@@ -79,10 +79,17 @@ public class ExtensionUtils {
         // Add LB instance public/private IPs to environment parameters
         String lbClusterIdInPayload = CartridgeAgentConfiguration.getInstance().getLbClusterId();
         String[] memberIps = getLbMemberIp(lbClusterIdInPayload);
+        String lbIp, lbPublicIp;
         if (memberIps != null && memberIps.length > 1) {
-            envParameters.put("STRATOS_LB_IP", memberIps[0]);
-            envParameters.put("STRATOS_LB_PUBLIC_IP", memberIps[1]);
+        	lbIp = memberIps[0];
+        	lbPublicIp = memberIps[1];
+        } else {
+        	lbIp = CartridgeAgentConfiguration.getInstance().getLbPrivateIp();
+        	lbPublicIp = CartridgeAgentConfiguration.getInstance().getLbPublicIp();
         }
+        
+        envParameters.put("STRATOS_LB_IP", lbIp);
+        envParameters.put("STRATOS_LB_PUBLIC_IP", lbPublicIp);
 
         Topology topology = TopologyManager.getTopology();
         if (topology.isInitialized()){

@@ -54,6 +54,8 @@ public class CartridgeAgentConstants implements Serializable{
     public static final String COMMIT_ENABLED = "COMMIT_ENABLED";
     public static final String LISTEN_ADDRESS = "listen.address";
     public static final String INTERNAL_REPO = "INTERNAL";
+    public static final String LB_PRIVATE_IP = "lb.private.ip";
+    public static final String LB_PUBLIC_IP = "lb.public.ip";
 
     // stratos.sh extension points shell scripts names keys
     public static final String INSTANCE_STARTED_SCRIPT = "extension.instance.started";
