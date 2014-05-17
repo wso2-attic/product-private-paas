@@ -18,6 +18,8 @@
 # ESB cartridge node
 node /esb/ inherits base {
   $docroot = "/mnt/wso2esb-4.8.1"
+  $lb_private_ip = ""
+  $lb_public_ip = ""
   require java
   class {'agent':}
   class {'esb':
