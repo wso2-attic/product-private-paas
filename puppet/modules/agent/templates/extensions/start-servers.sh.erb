@@ -36,7 +36,7 @@ SED=`which sed` || print_error "sed command not found"
 
 function printParameters(){
 	${ECHO} -e  "LB IP: ${STRATOS_LB_IP}" | tee -a $log
-	${ECHO} -e  "LB PUBLIC IP: $STRATOS_LB_PUBLIC_IP}" | tee -a $log
+	${ECHO} -e  "LB PUBLIC IP: ${STRATOS_LB_PUBLIC_IP}" | tee -a $log
 	${ECHO} -e  "STRATOS_PARAM_FILE_PATH: ${STRATOS_PARAM_FILE_PATH}"
 	${ECHO} -e  "Member List: ${STRATOS_MEMBER_LIST_JSON}" | tee -a $log
 	${ECHO} -e  "Complete Topology: ${STRATOS_TOPOLOGY_JSON}" | tee -a $log
