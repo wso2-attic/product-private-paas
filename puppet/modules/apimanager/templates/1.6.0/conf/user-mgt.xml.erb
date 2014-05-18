@@ -24,7 +24,7 @@
                   <Password><%= @admin_password %></Password>
                 </AdminUser>
             <EveryOneRoleName>everyone</EveryOneRoleName> <!-- By default users in this role sees the registry root -->
-            <%- if @cloud == true or @clustering == true -%>
+            <%- if @cloud == true or @clustering == true  or @amtype == 'keymanager'  -%>
             <Property name="dataSource">jdbc/<%= @userstore_database %></Property>
             <%- else -%>
             <Property name="dataSource">jdbc/WSO2CarbonDB</Property>

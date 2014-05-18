@@ -87,14 +87,14 @@ function update_hosts_file(){
 	  && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${keymanager_host_name}")) \
 	  || print_error "Failed to update '/etc/hosts' file. "
 
-	elif [[ "${STRATOS_SERVICE_NAME}" = "gateway" ]] ; then
-		keymanager_hostname="<%= @stratos_instance_data_keymanager_host_name %>"
-		
-		(${GREP} -q "${keymanager_host_name}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${keymanager_host_name} # Stratos LB instance private IP" >> /etc/hosts \
-	  && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${keymanager_host_name}")) \
-	  || print_error "Failed to update '/etc/hosts' file. "
-	
-	fi
+	 elif [[ "${STRATOS_SERVICE_NAME}" = "gateway" ]] ; then
+                keymanager_hostname="<%= @stratos_instance_data_keymanager_host_name %>"
+
+                (${GREP} -q "${keymanager_hostname}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${keymanager_hostname} # Stratos LB instance private IP" >> /etc/hosts \
+          && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${keymanager_hostname}")) \
+          || print_error "Failed to update '/etc/hosts' file. "
+
+        fi	
 }
 
 function backup_file(){

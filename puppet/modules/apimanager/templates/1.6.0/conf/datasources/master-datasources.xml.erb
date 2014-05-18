@@ -25,7 +25,7 @@
             </definition>
         </datasource>
 
-        <%- if @cloud == true or @clustering == true -%>
+        <%- if @cloud == true or @clustering == true  or @amtype == 'keymanager'   -%>
         <%= scope.function_template(['apimanager/1.6.0/conf/datasources/master-datasources/_remote.erb']) -%>
         <%- end -%>
 
