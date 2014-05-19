@@ -539,6 +539,7 @@ if [[ $is_needed =~ ^[Yy]$ ]]
 then
 echo -e ""
     cp -f $stratos_pack_path/wso2is-5.0.0.zip /etc/puppet/modules/is/files
+    cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/is/files/configs/repository/components/lib
     echo -e "Identity Server (IS) cartridge at $resource_path/json/$iaas/is-cart.json"
     curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/is-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
