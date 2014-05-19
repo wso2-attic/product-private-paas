@@ -82,7 +82,7 @@ public class CartridgeAgentConfiguration {
             persistenceMappings = readPersistenceMapping();
             isCommitsEnabled = readCommitsEnabled(CartridgeAgentConstants.COMMIT_ENABLED);
             listenAddress = System.getProperty(CartridgeAgentConstants.LISTEN_ADDRESS);
-            isInternalRepo = readInternalRepo(CartridgeAgentConstants.INTERNAL_REPO);
+            isInternalRepo = readInternalRepo(CartridgeAgentConstants.PROVIDER);
             tenantId = readParameterValue(CartridgeAgentConstants.TENANT_ID);
             lbClusterId = readParameterValue(CartridgeAgentConstants.LB_CLUSTER_ID);
             minCount = readParameterValue(CartridgeAgentConstants.MIN_INSTANCE_COUNT);
@@ -161,7 +161,12 @@ public class CartridgeAgentConfiguration {
             // Missing INTERNAL parameter is not an exception
             log.info(" INTERNAL payload parameter is not found");
         }
-        return Boolean.parseBoolean(internalRepoStringValue);
+
+        if(internalRepoStringValue.equals(CartridgeAgentConstants.INTERNAL)) {
+            return true;
+        } else{
+            return false;
+        }
     }
 
     private String readPersistenceMapping() {

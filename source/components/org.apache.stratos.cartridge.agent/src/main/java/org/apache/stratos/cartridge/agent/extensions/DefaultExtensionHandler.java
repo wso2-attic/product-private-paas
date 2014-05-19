@@ -473,33 +473,12 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         // clustering logic for apimanager
         if (serviceGroupInPayload != null && serviceGroupInPayload.equals("apim")) {
 
-            Collection<Cluster> keymgrClusterCollection = topology.getService("keymanager").getClusters();
-
             // handle apistore and publisher case
             if (CartridgeAgentConfiguration.getInstance().getServiceName().equals("apistore") ||
                     CartridgeAgentConfiguration.getInstance().getServiceName().equals("publisher")) {
 
                 Collection<Cluster> apistoreClusterCollection = topology.getService("apistore").getClusters();
                 Collection<Cluster> publisherClusterCollection = topology.getService("publisher").getClusters();
-
-                List<Member> keymgrMemberList = new ArrayList<Member>();
-                for (Member member : keymgrClusterCollection.iterator().next().getMembers()) {
-                    if ((member.getStatus().equals(MemberStatus.Activated))) {
-                        keymgrMemberList.add(member);
-                    }
-                }
-
-                if (keymgrMemberList.isEmpty()) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("API Keymanager members not yet created");
-                    }
-                    return false;
-                }
-                Member keymgrMember = keymgrMemberList.get(0);
-                envParameters.put("STRATOS_WK_KEYMGR_MEMBER_IP", keymgrMember.getMemberIp());
-                if (log.isDebugEnabled()) {
-                    log.debug("STRATOS_WK_KEYMGR_MEMBER_IP: " + keymgrMember.getMemberIp());
-                }
 
                 List<Member> apistoreMemberList = new ArrayList<Member>();
                 for (Member member : apistoreClusterCollection.iterator().next().getMembers()) {
@@ -541,25 +520,6 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
             } else if (CartridgeAgentConfiguration.getInstance().getServiceName().equals("gateway")) {
                 // handle gateway case
-
-                List<Member> keymgrMemberList = new ArrayList<Member>();
-                for (Member member : keymgrClusterCollection.iterator().next().getMembers()) {
-                    if ((member.getStatus().equals(MemberStatus.Activated))) {
-                        keymgrMemberList.add(member);
-                    }
-                }
-
-                if (keymgrMemberList.isEmpty()) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("API Keymanager members not yet created");
-                    }
-                    return false;
-                }
-                Member keymgrMember = keymgrMemberList.get(0);
-                envParameters.put("STRATOS_WK_KEYMGR_MEMBER_IP", keymgrMember.getMemberIp());
-                if (log.isDebugEnabled()) {
-                    log.debug("STRATOS_WK_KEYMGR_MEMBER_IP: " + keymgrMember.getMemberIp());
-                }
 
                 Collection<Cluster> gatewayClusterCollection = topology.getService("gateway").getClusters();
                 List<Member> wkGatewayMembers = new ArrayList<Member>();
