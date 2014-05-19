@@ -23,7 +23,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.messaging.domain.tenant.Tenant;
 import org.wso2.carbon.base.MultitenantConstants;
-import org.wso2.carbon.utils.CarbonUtils;
 
 import java.util.HashMap;
 import java.util.List;
