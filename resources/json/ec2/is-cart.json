@@ -4,7 +4,7 @@
       "host": "is.wso2.com",
       "displayName": "IS",
       "description": "IS Cartridge",
-      "version": "4.6.0",
+      "version": "5.0.0",
       "multiTenant": "true",
       "portMapping": [
          {
