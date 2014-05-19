@@ -114,7 +114,9 @@ public class CartridgeAgent implements Runnable {
                 scheduler.scheduleWithFixedDelay(new RepositoryFileListener(), 0,
                         10, TimeUnit.SECONDS);
             }
-        } else if ("null".equals(repoUrl) || StringUtils.isBlank(repoUrl)) {
+        }
+
+        if ("null".equals(repoUrl) || StringUtils.isBlank(repoUrl)) {
             if (log.isInfoEnabled()) {
                 log.info("No artifact repository found");
             }
