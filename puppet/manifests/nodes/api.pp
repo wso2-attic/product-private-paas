@@ -17,7 +17,7 @@
 
 # API - gateway cartridge node
 node /gateway/ inherits base {
-  $docroot = "/mnt/wso2am-1.6.0"
+  $docroot = "/mnt/${server_ip}/wso2am-1.6.0"
   require java
   class {'agent':}
   class {'apimanager':
@@ -38,7 +38,7 @@ node /gateway/ inherits base {
         cloud              => true,
         owner              => 'root',
         group              => 'root',
-        target             => '/mnt'
+        target             => "/mnt/${server_ip}"
   }
 
   Class['stratos_base'] -> Class['java'] -> Class['apimanager'] ~> Class['agent']
@@ -47,7 +47,7 @@ node /gateway/ inherits base {
 
 # API - keymanager cartridge node
 node /keymanager/ inherits base {
-  $docroot = "/mnt/wso2am-1.6.0"
+  $docroot = "/mnt/${server_ip}/wso2am-1.6.0"
   require java
   class {'agent':}
   class {'apimanager':
@@ -67,7 +67,7 @@ node /keymanager/ inherits base {
         cloud              => 'KEYMANGER_CLOUD',
         owner              => 'root',
         group              => 'root',
-        target             => '/mnt'
+        target             => "/mnt/${server_ip}"
 
   }
 
@@ -76,7 +76,7 @@ node /keymanager/ inherits base {
 
 # API - apistore cartridge node
 node /apistore/ inherits base {
-  $docroot = "/mnt/wso2am-1.6.0"
+  $docroot = "/mnt/${server_ip}/wso2am-1.6.0"
   require java
   class {'agent':}
   class {'apimanager':
@@ -96,7 +96,7 @@ node /apistore/ inherits base {
         cloud              => true,
         owner              => 'root',
         group              => 'root',
-        target             => '/mnt'
+        target             => "/mnt/${server_ip}"
 
   }
 
@@ -105,7 +105,7 @@ node /apistore/ inherits base {
 
 # API - publisher cartridge node
 node /publisher/ inherits base {
-  $docroot = "/mnt/wso2am-1.6.0"
+  $docroot = "/mnt/${server_ip}/wso2am-1.6.0"
   require java
   class {'agent':}
   class {'apimanager':
@@ -125,7 +125,7 @@ node /publisher/ inherits base {
         cloud              => true,
         owner              => 'root',
         group              => 'root',
-        target             => '/mnt'
+        target             => "/mnt/${server_ip}"
   }
 
   Class['stratos_base'] -> Class['java'] -> Class['apimanager'] ~> Class['agent']

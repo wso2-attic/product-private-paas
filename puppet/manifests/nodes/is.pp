@@ -17,7 +17,7 @@
 
 # IS cartridge node
 node /is/ inherits base {
-  $docroot = "/mnt/wso2is-5.0.0"
+  $docroot = "/mnt/${server_ip}/wso2is-5.0.0"
   require java
   class {'agent':}
   class {'is':
@@ -35,7 +35,7 @@ node /is/ inherits base {
         cloud              => true,
         owner              => 'root',
         group              => 'root',
-        target             => '/mnt/'
+        target             => "/mnt/${server_ip}"
 
   }
 

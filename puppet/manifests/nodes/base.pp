@@ -34,6 +34,8 @@ node 'base' {
   $lb_httpsPort 	= '443'
   $tomcat_version 	= '7.0.52'
   $enable_log_publisher = 'false'
+  $server_ip            = $ipaddress
+
 
   #following variables required only if you want to install stratos using puppet.
   #not supported in alpha version
