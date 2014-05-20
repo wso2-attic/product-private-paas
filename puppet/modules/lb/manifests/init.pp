@@ -36,7 +36,7 @@ class lb (
   $members            = {},
   $owner              = 'root',
   $group              = 'root',
-  $target             = '/mnt',
+  $target             = "/mnt/${server_ip}",
 ) inherits params {
 
 
