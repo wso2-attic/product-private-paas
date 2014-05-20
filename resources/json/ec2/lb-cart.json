@@ -6,6 +6,7 @@
       "description": "LB Cartridge",
       "version": "4",
       "defaultAutoscalingPolicy": "economyPolicy",
+      "defaultDeploymentPolicy": "deployf",
       "multiTenant": "false",
       "portMapping": [
          {
