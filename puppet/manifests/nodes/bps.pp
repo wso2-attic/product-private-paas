@@ -17,7 +17,7 @@
 
 # BPS cartridge node
 node /bps/ inherits base {
-  $docroot = "/mnt/wso2bps-3.2.0"
+  $docroot = "/mnt/${server_ip}/wso2bps-3.2.0"
   require java
   class {'agent':}
   class {'bps':
@@ -35,7 +35,7 @@ node /bps/ inherits base {
         cloud              => true,
         owner              => 'root',
         group              => 'root',
-        target             => '/mnt/'
+        target             => "/mnt/${server_ip}"
 
   }
 

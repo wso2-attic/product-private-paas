@@ -17,9 +17,7 @@
 
 # ESB cartridge node
 node /esb/ inherits base {
-  $docroot = "/mnt/wso2esb-4.8.1"
-  $lb_private_ip = ""
-  $lb_public_ip = ""
+  $docroot = "/mnt/${server_ip}/wso2esb-4.8.1"
   require java
   class {'agent':}
   class {'esb':
@@ -38,7 +36,7 @@ node /esb/ inherits base {
         cloud              => true,
         owner              => 'root',
         group              => 'root',
-        target             => '/mnt/'
+        target             => "/mnt/${server_ip}"
 
   }
 

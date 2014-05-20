@@ -43,7 +43,7 @@
 #
 
 class apimanager (
-  $version            = "1.6.0",
+  $version            = "1.7.0",
   $env                = undef,
   $sub_cluster_domain = undef,
   $hazelcast_port     = 4000,

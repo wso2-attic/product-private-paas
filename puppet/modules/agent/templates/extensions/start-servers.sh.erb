@@ -134,11 +134,6 @@ function configure_wk_members(){
 			verify_file_exists ${AXIS2_XML_FILE}
 			${SED} -i "s%${WKA_LINE}%${WKA_XML}%g" ${AXIS2_XML_FILE} && print_message "${STRATOS_SERVICE_NAME} WKA configuration successful" || print_error "Failed to configure well known members"
 
-			KEYMGR_XML="<ServerURL>https://${STRATOS_WK_KEYMGR_MEMBER_IP}:9443/services/</ServerURL>"
-			print_message "${STRATOS_SERVICE_NAME} KEYMGR_XML => ${KEYMGR_XML}"
-			verify_file_exists ${API_MANAGER_XML_FILE}
-			${SED} -i "s%${KEYMGR_LINE}%${KEYMGR_XML}%g" ${API_MANAGER_XML_FILE} && print_message "keymanager member added" || print_error "Failed to add keymanager member"
-
 		elif [[ "${STRATOS_SERVICE_NAME}" = "keymanager" ]] ; then
 
 			print_message "In keymanager...nothing to do"
@@ -176,10 +171,7 @@ function configure_wk_members(){
 				verify_file_exists ${AXIS2_XML_FILE}
 				${SED} -i "s%${WKA_LINE}%${WKA_XML}%g" ${AXIS2_XML_FILE} && print_message "gateway WKA configuration successful" || print_error "Failed to configure well known members"
 
-				KEYMGR_XML="<ServerURL>https://${STRATOS_WK_KEYMGR_MEMBER_IP}:9443/services/</ServerURL>"
-				print_message "${STRATOS_SERVICE_NAME} KEYMGR_XML => ${KEYMGR_XML}"
-				verify_file_exists ${API_MANAGER_XML_FILE}
-				${SED} -i "s%${KEYMGR_LINE}%${KEYMGR_XML}%g" ${API_MANAGER_XML_FILE} && print_message "keymanager member added" || print_error "Failed to add keymanager member"
+				
 			fi
 		fi
 

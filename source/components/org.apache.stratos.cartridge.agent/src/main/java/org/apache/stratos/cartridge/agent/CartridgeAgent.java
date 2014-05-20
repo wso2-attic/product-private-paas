@@ -105,6 +105,17 @@ public class CartridgeAgent implements Runnable {
 
         // Check repo url
         String repoUrl = CartridgeAgentConfiguration.getInstance().getRepoUrl();
+        if(CartridgeAgentConfiguration.getInstance().isMultitenant()) {
+            if (CartridgeAgentConfiguration.getInstance().isInternalRepo() &&
+                    CartridgeAgentConfiguration.getInstance().isCommitsEnabled()) {
+                log.info(" Commits enabled. Starting File listener ");
+                ScheduledExecutorService scheduler = Executors
+                        .newScheduledThreadPool(1);
+                scheduler.scheduleWithFixedDelay(new RepositoryFileListener(), 0,
+                        10, TimeUnit.SECONDS);
+            }
+        }
+
         if ("null".equals(repoUrl) || StringUtils.isBlank(repoUrl)) {
             if (log.isInfoEnabled()) {
                 log.info("No artifact repository found");
@@ -128,6 +139,7 @@ public class CartridgeAgent implements Runnable {
         if (CartridgeAgentConfiguration.getInstance().isInternalRepo()) {
             // Start periodic file copy for super tenant
             // From repo/deployment/server to /tmp/-1234
+
             ScheduledExecutorService scheduler = Executors
                     .newScheduledThreadPool(1);
             scheduler.scheduleWithFixedDelay(new ArtifactCopyTask(), 0,

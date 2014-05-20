@@ -17,7 +17,7 @@
 
 # appserver cartridge node
 node /appserver/ inherits base {
-  $docroot = "/mnt/wso2as-5.2.1"
+  $docroot = "/mnt/${server_ip}/wso2as-5.2.1"
   require java	
   class {'agent':}
   class {'appserver':
@@ -35,7 +35,7 @@ node /appserver/ inherits base {
 	cloud		   => true,
         owner              => 'root',
         group              => 'root',
-        target             => '/mnt/'
+        target             => "/mnt/${server_ip}"
 
   }
 

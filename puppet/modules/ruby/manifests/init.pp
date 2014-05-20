@@ -1,4 +1,4 @@
-class ruby( $target = '/mnt' ) {
+class ruby( $target = "/mnt/${server_ip}" ) {
 
   if $stratos_app_path {
     $ruby_home = $stratos_app_path

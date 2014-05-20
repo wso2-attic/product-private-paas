@@ -32,8 +32,12 @@ node 'base' {
   $member_type_ip       = 'private'
   $lb_httpPort 		= '80'
   $lb_httpsPort 	= '443'
+  $lb_private_ip 	= ''
+  $lb_public_ip 	= ''
   $tomcat_version 	= '7.0.52'
   $enable_log_publisher = 'false'
+  $server_ip            = $ipaddress
+
 
   #following variables required only if you want to install stratos using puppet.
   #not supported in alpha version

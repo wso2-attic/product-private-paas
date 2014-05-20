@@ -19,7 +19,7 @@ class agent(
   $version = '4.0.0-wso2v1',
   $owner   = 'root',
   $group   = 'root',
-  $target  = '/mnt',
+  $target  = "/mnt/${server_ip}",
   $type    = 'default',
 ){
 
