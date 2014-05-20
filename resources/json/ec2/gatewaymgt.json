@@ -1,10 +1,10 @@
 {   
-      "type": "apistore",
-      "provider": "wso2",
+      "type": "gatewaymgt",
+      "provider": "internal",
       "serviceGroup": "apim",
-      "host": "store.am.wso2.com",
-      "displayName": "API Manager - Store",
-      "description": "API Manager - Store Cartridge",
+      "host": "mgt.gateway.am.wso2.com",
+      "displayName": "API Manager - Gateway",
+      "description": "API Manager - Gateway Cartridge",
       "version": "1.6.0",
       "multiTenant": "true",
       "portMapping": [
@@ -17,7 +17,18 @@
             "protocol": "https",
             "port": "9443",
             "proxyPort": "443"
+         },
+	{
+            "protocol": "http",
+            "port": "8280",
+            "proxyPort": "8280"
+         },
+         {
+            "protocol": "https",
+            "port": "8243",
+            "proxyPort": "8243"
          }
+
        ],
       "deployment": {
         },
@@ -44,8 +55,8 @@
             "name": "default.load.balancer",
             "value": "true"
         }
-      },
-	"property": [
+      }  , 
+         "property": [
      {
      "name": "PRIMARY",
      "value": "true"
@@ -59,20 +70,13 @@
      "value": "true"
     },
     {
-     "name": "payload_parameter.GATEWAY_HOST_NAME",
-     "value": "gateway.am.wso2.com"
-    },
-    {
-     "name": "payload_parameter.GATEWAY_MGT_HOST_NAME",
-     "value": "mgt.gateway.am.wso2.com"
-    },
+     "name": "payload_parameter.COMMIT_ENABLED",
+     "value": "true"
+    } ,
     {
      "name": "payload_parameter.KEYMANAGER_HOST_NAME",
      "value": "keymanager.am.wso2.com"
     }
-
-
-]
-    
+      ] 
     
  }

@@ -60,7 +60,11 @@
     {
      "name": "payload_parameter.GATEWAY_HOST_NAME",
      "value": "gateway.am.wso2.com"
-    } ,
+    },
+    {
+     "name": "payload_parameter.GATEWAY_MGT_HOST_NAME",
+     "value": "mgt.gateway.am.wso2.com"
+    },
     {
      "name": "payload_parameter.KEYMANAGER_HOST_NAME",
      "value": "keymanager.am.wso2.com"
