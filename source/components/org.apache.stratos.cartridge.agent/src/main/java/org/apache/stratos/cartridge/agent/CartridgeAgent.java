@@ -106,8 +106,7 @@ public class CartridgeAgent implements Runnable {
         // Check repo url
         String repoUrl = CartridgeAgentConfiguration.getInstance().getRepoUrl();
         if(CartridgeAgentConfiguration.getInstance().isMultitenant()) {
-            if (CartridgeAgentConfiguration.getInstance().isInternalRepo() &&
-                    CartridgeAgentConfiguration.getInstance().isCommitsEnabled()) {
+            if (CartridgeAgentConfiguration.getInstance().isCommitsEnabled()) {
                 log.info(" Commits enabled. Starting File listener ");
                 ScheduledExecutorService scheduler = Executors
                         .newScheduledThreadPool(1);
