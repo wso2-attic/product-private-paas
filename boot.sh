@@ -380,10 +380,14 @@ replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/apimanager/manifests/p
 # Restart puppet master after configurations
 /etc/init.d/puppetmaster restart
 
+echo "export apim_needed=$apim_needed" >> tmpVariable.sh
+
 cwd=$(pwd)
 cd stratos-installer
 /bin/bash setup.sh -p "default" -s
 cd $cwd
+
+rm -rf tmpVariable.sh
 
 # Copy activemq client jars to puppet
 for activemq_client_lib in "${activemq_client_libs[@]}" 
