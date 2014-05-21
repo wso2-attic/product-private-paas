@@ -17,28 +17,56 @@
 
 # API - gateway cartridge node
 node /gateway/ inherits base {
-  $docroot = "/mnt/wso2am-1.6.0"
+  $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
   require java
   class {'agent':}
   class {'apimanager':
 
-        version            => "1.6.0",
+        version            => "1.7.0",
         env                => undef,
         #sub_cluster_domain => 'mgt',
         sub_cluster_domain => undef,
-        local_member_port  => '5000',
-        members            => {'127.0.0.1' => '4000'},
+        hazelcast_port     => 4000,
+        members            => undef,
         port_mapping       => false,
         amtype             => 'gateway',
         offset             => 0,
-        config_database    => 'config',
+        config_database    => 'GATEWAY_CONFIG_DB',
         maintenance_mode   => 'refresh',
         depsync            => false,
         clustering         => true,
         cloud              => true,
         owner              => 'root',
         group              => 'root',
-        target             => '/mnt'
+        target             => "/mnt/${server_ip}"
+  }
+
+  Class['stratos_base'] -> Class['java'] -> Class['apimanager'] ~> Class['agent']
+}
+
+node /gatewaymgt/ inherits base {
+  $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
+  require java
+  class {'agent':}
+  class {'apimanager':
+
+        version            => "1.7.0",
+        env                => undef,
+        #sub_cluster_domain => 'mgt',
+        sub_cluster_domain => undef,
+        hazelcast_port     => 4000,
+        members            => undef,
+        port_mapping       => false,
+        amtype             => 'gateway',
+        offset             => 0,
+        config_database    => 'GATEWAY_CONFIG_DB',
+        maintenance_mode   => 'refresh',
+        depsync            => false,
+        clustering         => true,
+        cloud              => true,
+        owner              => 'root',
+        group              => 'root',
+        target             => "/mnt/${server_ip}"
   }
 
   Class['stratos_base'] -> Class['java'] -> Class['apimanager'] ~> Class['agent']
@@ -47,27 +75,27 @@ node /gateway/ inherits base {
 
 # API - keymanager cartridge node
 node /keymanager/ inherits base {
-  $docroot = "/mnt/wso2am-1.6.0"
+  $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
   require java
   class {'agent':}
   class {'apimanager':
 
-        version            => "1.6.0",
+        version            => "1.7.0",
         env                => undef,
         sub_cluster_domain => undef,
-        local_member_port  => '5000',
-        members            => {'127.0.0.1' => '4000'},
+        hazelcast_port     => 4000,
+        members            => undef,
         port_mapping       => false,
         amtype             => 'keymanager',
         offset             => 0,
-        config_database    => 'config',
+        config_database    => 'KAYMANAGER_CONFIG_DB',
         maintenance_mode   => 'refresh',
         depsync            => false,
-        clustering         => true,
-        cloud              => true,
+        clustering         => 'KEYMANGER_CLUSTERING',
+        cloud              => 'KEYMANGER_CLOUD',
         owner              => 'root',
         group              => 'root',
-        target             => '/mnt'
+        target             => "/mnt/${server_ip}"
 
   }
 
@@ -76,27 +104,27 @@ node /keymanager/ inherits base {
 
 # API - apistore cartridge node
 node /apistore/ inherits base {
-  $docroot = "/mnt/wso2am-1.6.0"
+  $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
   require java
   class {'agent':}
   class {'apimanager':
 
-        version            => "1.6.0",
+        version            => "1.7.0",
         env                => undef,
         sub_cluster_domain => undef,
-        local_member_port  => '5000',
-        members            => {'127.0.0.1' => '4000'},
+        hazelcast_port     => 4000,
+        members            => undef,
         port_mapping       => false,
         amtype             => 'apistore',
         offset             => 0,
-        config_database    => 'config',
+        config_database    => 'STORE_CONFIG_DB',
         maintenance_mode   => 'refresh',
         depsync            => false,
         clustering         => true,
         cloud              => true,
         owner              => 'root',
         group              => 'root',
-        target             => '/mnt'
+        target             => "/mnt/${server_ip}"
 
   }
 
@@ -105,27 +133,27 @@ node /apistore/ inherits base {
 
 # API - publisher cartridge node
 node /publisher/ inherits base {
-  $docroot = "/mnt/wso2am-1.6.0"
+  $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
   require java
   class {'agent':}
   class {'apimanager':
 
-        version            => "1.6.0",
+        version            => "1.7.0",
         env                => undef,
         sub_cluster_domain => undef,
-        local_member_port  => '5000',
-        members            => {'127.0.0.1' => '4000'},
+        hazelcast_port     => 4000,
+        members            => undef,
         port_mapping       => false,
         amtype             => 'publisher',
         offset             => 0,
-        config_database    => 'config',
+        config_database    => 'STORE_CONFIG_DB',
         maintenance_mode   => 'refresh',
         depsync            => false,
         clustering         => true,
         cloud              => true,
         owner              => 'root',
         group              => 'root',
-        target             => '/mnt'
+        target             => "/mnt/${server_ip}"
   }
 
   Class['stratos_base'] -> Class['java'] -> Class['apimanager'] ~> Class['agent']

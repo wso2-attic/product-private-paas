@@ -17,25 +17,25 @@
 
 # appserver cartridge node
 node /appserver/ inherits base {
-  $docroot = "/mnt/wso2as-5.2.1"
+  $docroot = "/mnt/${server_ip}/wso2as-5.2.1"
   require java	
   class {'agent':}
   class {'appserver':
 
         version            => '5.2.1',
         sub_cluster_domain => 'test',
-	members            => false,
+	members            => undef,
 	offset		   => 0,
-        tribes_port        => 4100,
-        config_db          => 'AS_CONFIG_DB',
-	config_target_path => 'AS_CONFIG_PATH',
+        hazelcast_port     => 4000,
+	config_db          => 'AS_CONFIG_DB',
+        config_target_path => 'AS_CONFIG_PATH',
         maintenance_mode   => 'zero',
         depsync            => false,
-        clustering         => false,
+        clustering         => CLUSTERING,
 	cloud		   => true,
         owner              => 'root',
         group              => 'root',
-        target             => '/mnt/'
+        target             => "/mnt/${server_ip}"
 
   }
 

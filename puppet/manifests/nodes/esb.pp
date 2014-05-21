@@ -17,26 +17,26 @@
 
 # ESB cartridge node
 node /esb/ inherits base {
-  $docroot = "/mnt/wso2esb-4.8.1"
+  $docroot = "/mnt/${server_ip}/wso2esb-4.8.1"
   require java
   class {'agent':}
   class {'esb':
 
         version            => '4.8.1',
         sub_cluster_domain => 'test',
-        members            => false,
-	port_mapping	   => false,
+        members            => undef,
+	port_mapping	   => { 8280 => 9763, 8243 => 9443, 80 => 8280, 443 => 8243},
         offset             => 0,
-        hazelcast_port        => 4100,
+        hazelcast_port     => 4000,
         config_db          => 'ESB_CONFIG_DB',
 	config_target_path => 'ESB_CONFIG_PATH',
         maintenance_mode   => 'zero',
         depsync            => false,
-        clustering         => false,
+        clustering         => CLUSTERING,
         cloud              => true,
         owner              => 'root',
         group              => 'root',
-        target             => '/mnt/'
+        target             => "/mnt/${server_ip}"
 
   }
 

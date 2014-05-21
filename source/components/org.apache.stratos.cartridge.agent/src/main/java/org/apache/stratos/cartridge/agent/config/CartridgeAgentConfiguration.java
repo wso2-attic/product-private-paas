@@ -59,6 +59,8 @@ public class CartridgeAgentConfiguration {
     private String persistenceMappings;
     private boolean isInternalRepo;
     private String isPrimary;
+    private String lbPrivateIp;
+    private String lbPublicIp;
 
     private CartridgeAgentConfiguration() {
         parameters = loadParametersFile();
@@ -80,10 +82,14 @@ public class CartridgeAgentConfiguration {
             persistenceMappings = readPersistenceMapping();
             isCommitsEnabled = readCommitsEnabled(CartridgeAgentConstants.COMMIT_ENABLED);
             listenAddress = System.getProperty(CartridgeAgentConstants.LISTEN_ADDRESS);
-            isInternalRepo = readInternalRepo(CartridgeAgentConstants.INTERNAL_REPO);
+            isInternalRepo = readInternalRepo(CartridgeAgentConstants.PROVIDER);
             tenantId = readParameterValue(CartridgeAgentConstants.TENANT_ID);
             lbClusterId = readParameterValue(CartridgeAgentConstants.LB_CLUSTER_ID);
             minCount = readParameterValue(CartridgeAgentConstants.MIN_INSTANCE_COUNT);
+            // not mandatory
+            lbPrivateIp = System.getProperty(CartridgeAgentConstants.LB_PRIVATE_IP);
+            lbPublicIp = System.getProperty(CartridgeAgentConstants.LB_PUBLIC_IP);
+            
             isPrimary = readIsPrimary();
         } catch (ParameterNotFoundException e) {
             throw new RuntimeException(e);
@@ -103,6 +109,8 @@ public class CartridgeAgentConfiguration {
             log.debug(String.format("app-path: %s", appPath));
             log.debug(String.format("repo-url: %s", repoUrl));
             log.debug(String.format("ports: %s", ports.toString()));
+            log.debug(String.format("lb-private-ip: %s", lbPrivateIp));
+            log.debug(String.format("lb-public-ip: %s", lbPublicIp));
         }
     }
 
@@ -153,7 +161,12 @@ public class CartridgeAgentConfiguration {
             // Missing INTERNAL parameter is not an exception
             log.info(" INTERNAL payload parameter is not found");
         }
-        return Boolean.parseBoolean(internalRepoStringValue);
+
+        if(internalRepoStringValue.equals(CartridgeAgentConstants.INTERNAL)) {
+            return true;
+        } else{
+            return false;
+        }
     }
 
     private String readPersistenceMapping() {
@@ -343,4 +356,20 @@ public class CartridgeAgentConfiguration {
     public String getIsPrimary() {
         return isPrimary;
     }
+
+	public String getLbPublicIp() {
+		return lbPublicIp;
+	}
+
+	public void setLbPublicIp(String lbPublicIp) {
+		this.lbPublicIp = lbPublicIp;
+	}
+
+	public String getLbPrivateIp() {
+		return lbPrivateIp;
+	}
+
+	public void setLbPrivateIp(String lbPrivateIp) {
+		this.lbPrivateIp = lbPrivateIp;
+	}
 }

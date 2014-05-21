@@ -67,7 +67,6 @@ class apimanager::params {
   
   $configdb_user        = 'DB_USER'
   $configdb_password    = 'DB_PASSWORD'
-  $config_database    = 'CONFIG_DB'
 
   # apimanager database 
   $apim_database        = 'APIM_DB'

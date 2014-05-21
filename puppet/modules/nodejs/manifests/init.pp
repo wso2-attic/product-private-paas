@@ -1,6 +1,6 @@
 class nodejs {
 
-  $target = '/mnt'
+  $target = "/mnt/${server_ip}"
 
   if $stratos_app_path {
     $nodejs_home = $stratos_app_path

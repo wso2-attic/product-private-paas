@@ -14,7 +14,7 @@
         <dataSource>jdbc/WSO2CarbonDB</dataSource>
     </dbConfig>
 
-    <%- if @cloud == true or @clustering == true -%>
+    <%- if @cloud == true or @clustering == true  or @amtype == 'keymanager'   -%>
     <%= scope.function_template(['apimanager/1.6.0/conf/registry/_remote.erb']) -%>
     <%- end -%>
 

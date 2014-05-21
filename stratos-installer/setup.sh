@@ -419,7 +419,6 @@ function sm_setup() {
     popd
 
     mysql -u$userstore_db_user -p$userstore_db_pass < $resource_path/mysql.sql
-    mysql -u$userstore_db_user -p$userstore_db_pass < $resource_path/apim.sql
     echo "End configuring the SM"
 }
 

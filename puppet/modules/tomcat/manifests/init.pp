@@ -2,7 +2,7 @@ class tomcat(
   $version = '7.0.50',
   $owner   = 'root',
   $group   = 'root',
-  $target  = '/mnt',
+  $target  = "/mnt/${server_ip}",
 ){
 
   $package_name    = "apache-tomcat-${version}"

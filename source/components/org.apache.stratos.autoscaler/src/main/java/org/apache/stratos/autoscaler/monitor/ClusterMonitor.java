@@ -123,6 +123,8 @@ public class ClusterMonitor extends AbstractMonitor{
 							if (prop.getName().equals("PRIMARY")) {
 								if (Boolean.parseBoolean(prop.getValue())) {
 									// memberContext.getMemberId() -- member is primary
+									log.debug("Adding member id [" + memberContext.getMemberId() + "] " +
+											"member instance id ["+ memberContext.getInstanceId()  +"] as a primary member");
 									primaryMemberList.add(memberContext.getMemberId());
 								}
 							}
@@ -138,11 +140,13 @@ public class ClusterMonitor extends AbstractMonitor{
                 scaleCheckKnowledgeSession.setGlobal("mcReset", memoryConsumptionReset);
                 scaleCheckKnowledgeSession.setGlobal("laReset", loadAverageReset);
                 scaleCheckKnowledgeSession.setGlobal("lbRef", lbReferenceType);
-                scaleCheckKnowledgeSession.setGlobal("isPrimary", hasPrimary);
+                scaleCheckKnowledgeSession.setGlobal("isPrimary", false);
                 scaleCheckKnowledgeSession.setGlobal("primaryMembers", primaryMemberList);
+                
               	
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Running scale check for network partition %s ", networkPartitionContext.getId()));
+                    log.debug(" Primary members : " + primaryMemberList);
                 }
                 
                 scaleCheckFactHandle = AutoscalerRuleEvaluator.evaluateScaleCheck(scaleCheckKnowledgeSession

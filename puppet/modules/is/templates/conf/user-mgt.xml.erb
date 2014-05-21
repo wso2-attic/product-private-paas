@@ -24,8 +24,8 @@
                      <Password>admin</Password>
                 </AdminUser>
             <EveryOneRoleName>everyone</EveryOneRoleName> <!-- By default users in this role sees the registry root -->
-            <Property name="dataSource">jdbc/WSO2CarbonDB</Property>
-        </Configuration>
+            <Property name="dataSource">jdbc/<%= @userstore_database %></Property>
+	</Configuration>
 	<!-- Following is the default user store manager. This user store manager is based on embedded-apacheds LDAP. It reads/writes users and roles into the 		     default apacheds LDAP user store. Descriptions about each of the following properties can be found in user management documentation of the 	 respective product. In case if user core cache domain is needed to identify uniquely set property <Property name="UserCoreCacheIdentifier">domain</Property>
 	     Note: Do not comment within UserStoreManager tags. Cause, specific tag names are used as tokens when building configurations for products. -->
 	<!--UserStoreManager class="org.wso2.carbon.user.core.ldap.ReadWriteLDAPUserStoreManager">
@@ -278,6 +278,12 @@
             <Property name="MaxRoleNameListLength">100</Property>
             <Property name="MaxUserNameListLength">100</Property>
         </UserStoreManager>
+
+ <%- if @usermgt == 'readonly_ldap' -%>
+    <%= scope.function_template(['is/conf/user-mgt/_roldap.erb']) -%>
+    <%- elsif @usermgt == 'readwrite_ldap' -%>
+    <%= scope.function_template(['is/conf/user-mgt/_rwldap.erb']) -%>
+    <%- end -%> 
 
 	<!--	Following configuration is for the CassandraUserStoreManager. The CassandraUserStoreManager is capable of using a Cassandra
 		database as a user store. This user manager supports multiple credentials for authentication. Credential types can be defined

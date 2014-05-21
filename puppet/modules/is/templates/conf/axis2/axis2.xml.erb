@@ -655,7 +655,7 @@
         The TCP port used by this member. This is the port through which other nodes will
         contact this member
          -->
-        <parameter name="localMemberPort"><%= @clustering_local_port %></parameter>
+        <parameter name="localMemberPort"><%= @hazelcast_port %></parameter>
 
         <!--
             The bind port of this member. The difference between localMemberPort & localMemberBindPort
@@ -681,12 +681,21 @@
            The list of static or well-known members. These entries will only be valid if the
            "membershipScheme" above is set to "wka"
         -->
-        <members>
-            <member>
-                <hostName><%= @stratos_instance_data_wso2_elb_host %></hostName>
-                <port>4000</port>
-            </member>
-        </members>
+
+	<members>
+	<%- if @clustering == true -%>
+                <%- if @members -%>
+                        <%- @members.each_pair do |hostname,port| -%>
+                        <member>
+                            <hostName><%= hostname %></hostName>
+                            <port><%= port %></port>
+                        </member>
+                        <%- end -%>		
+                <%- else -%>
+@WELL_KNOWN_MEMBERS                
+		<%- end -%>
+	<%- end -%>
+	</members>
 
         <!--
         Enable the groupManagement entry if you need to run this node as a cluster manager.

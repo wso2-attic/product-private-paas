@@ -27,7 +27,9 @@
     -->
     <Connector  protocol="org.apache.coyote.http11.Http11NioProtocol"
                 port="9763"
-                proxyPort="<%= @lb_httpPort %>"
+               <%- if @port_mapping -%>
+                proxyPort="<%= @port_mapping.index('9763') %>"
+               <%- end %>
                 redirectPort="9443" 
                 bindOnInit="false"
                 maxHttpHeaderSize="8192"
@@ -52,7 +54,9 @@
     -->
     <Connector  protocol="org.apache.coyote.http11.Http11NioProtocol"
                 port="9443"
-                proxyPort="<%= @lb_httpsPort %>"
+               <%- if @port_mapping -%>
+                proxyPort="<%= @port_mapping.index('9443') %>"
+               <%- end %>
                 bindOnInit="false"
                 sslProtocol="TLS"
                 maxHttpHeaderSize="8192"

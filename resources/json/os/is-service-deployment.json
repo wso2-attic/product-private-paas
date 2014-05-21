@@ -1,0 +1,9 @@
+{
+      "serviceName": "is",
+      "cartridgeType": "is",
+      "deploymentPolicyName": "deployp",
+      "autoscalingPolicyName": "economy",
+      "clusterDomain": "isdev.dev.domain",
+      "clusterSubDomain": "subdomain2",
+      "tenantRange": "*"    
+}
