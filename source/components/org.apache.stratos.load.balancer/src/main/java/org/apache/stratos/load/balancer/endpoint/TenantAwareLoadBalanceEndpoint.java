@@ -237,16 +237,18 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
             }
             String url = extractUrl(synCtx);
             int tenantId = scanUrlForTenantId(url);
-            if (tenantExists(tenantId)) {
+            if(tenantId == -1) {
+               // If there is no tenant involves in the URL, Find next member from host name
+               member = requestDelegator.findNextMemberFromHostName(targetHost);
+            } else if (tenantExists(tenantId)) {
                 // Tenant found, find member from hostname and tenant id
                 member = requestDelegator.findNextMemberFromTenantId(targetHost, tenantId);
             } else {
-                // Tenant id not found in URL, find member from host name
-                member = requestDelegator.findNextMemberFromHostName(targetHost);
+                // Tenant id not found in the subscription for the URL which has tenant domain.
+                throwSynapseException(synCtx, 403, String.format("You are unauthorized to access"));
             }
         } else {
-            // Find next member from host name
-            member = requestDelegator.findNextMemberFromHostName(targetHost);
+
         }
 
         if (member == null)
