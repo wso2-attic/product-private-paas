@@ -1,8 +1,8 @@
 {   
-      "type": "gateway",
+      "type": "gatewaymgt",
       "provider": "internal",
       "serviceGroup": "apim",
-      "host": "gateway.am.wso2.com",
+      "host": "mgt.gateway.am.wso2.com",
       "displayName": "API Manager - Gateway",
       "description": "API Manager - Gateway Cartridge",
       "version": "1.6.0",
@@ -49,33 +49,33 @@
         }
       ],
       "loadBalancer": {
-          "type": "lb",
-          "property": 
-             {
-               "name": "default.load.balancer",
-               "value": "true"
-             }
-      },
-      "property": [
-        {
-          "name": "PRIMARY",
-          "value": "true"
-        },
-        {
-          "name": "payload_parameter.SERIVCE_GROUP",
-          "value": "apim"
-        },
-        {
-          "name": "payload_parameter.CLUSTERING",
-          "value": "true"
-        },
-        {
-          "name": "payload_parameter.COMMIT_ENABLED",
-          "value": "false"
-        },        
-        {
-          "name": "payload_parameter.KEYMANAGER_HOST_NAME",
-          "value": "keymanager.am.wso2.com"
+        "type": "lb",
+        "property": {
+            "name": "default.load.balancer",
+            "value": "true"
         }
-      ]
+      }, 
+      "property": [
+         {
+            "name": "PRIMARY",
+            "value": "true"
+         },
+         {
+            "name": "payload_parameter.SERIVCE_GROUP",
+            "value": "apim"
+         },
+         {
+            "name": "payload_parameter.CLUSTERING",
+            "value": "true"
+         },
+         {
+            "name": "payload_parameter.COMMIT_ENABLED",
+            "value": "true"
+         },
+         {
+            "name": "payload_parameter.KEYMANAGER_HOST_NAME",
+            "value": "keymanager.am.wso2.com"
+         }
+      ] 
+    
  }

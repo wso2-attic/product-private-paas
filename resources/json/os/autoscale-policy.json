@@ -1,26 +1,26 @@
 {
-    "id": "economy",
-    "loadThresholds": {
-      "requestsInFlight": {
-        "average": "300",
-        "gradient": "0",
-        "secondDerivative": "0",
-        "scaleDownMarginOfGradient": "1.0",
-        "scaleDownMarginOfSecondDerivative": "0.2"
-      },
-      "memoryConsumption": {
-        "average": "6000",
-        "gradient": "0",
-        "secondDerivative": "0",
-        "scaleDownMarginOfGradient": "1.0",
-        "scaleDownMarginOfSecondDerivative": "0.2"
-      },
-      "loadAverage": {
-        "average": "6000",
-        "gradient": "0",
-        "secondDerivative": "0",
-        "scaleDownMarginOfGradient": "1.0",
-        "scaleDownMarginOfSecondDerivative": "0.2"
-      }
-    }  
+  "id": "economy",
+  "loadThresholds": {
+    "requestsInFlight": {
+      "average": 50,
+      "secondDerivative": 0.2,
+      "gradient": 10,
+      "scaleDownMarginOfGradient": 20,
+      "scaleDownMarginOfSecondDerivative": 0.5
+    },
+    "memoryConsumption": {
+      "average": 70,
+      "secondDerivative": 0.2,
+      "gradient": 10,
+      "scaleDownMarginOfGradient": 20,
+      "scaleDownMarginOfSecondDerivative": 0.5
+    },
+    "loadAverage": {
+      "average": 100,
+      "secondDerivative": 0.2,
+      "gradient": 20,
+      "scaleDownMarginOfGradient": 20,
+      "scaleDownMarginOfSecondDerivative": 0.5
+    }
+  }
 }

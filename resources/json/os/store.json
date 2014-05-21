@@ -24,8 +24,7 @@
        "iaasProvider": [
         {
           "type": "openstack",
-          "imageId": "RegionOne/ca6d9f89-f39b-42a1-a1c1-ba36833a9e12",
-          "maxInstanceLimit": "4",
+          "imageId": "RegionOne/38778b81-65af-4df9-99af-f3e0ed2a6519",         
           "property": [
             {
              "name": "instanceType",
@@ -33,7 +32,7 @@
             },
             {
              "name": "keyPair",
-             "value": "stratos-s4"
+             "value": "ravihansa3000"
             }
           ]
         }
@@ -53,10 +52,22 @@
         {
           "name": "payload_parameter.SERIVCE_GROUP",
           "value": "apim"
-        },
+        },   
         {
           "name": "payload_parameter.CLUSTERING",
           "value": "true"
+        },        
+        {
+          "name": "payload_parameter.GATEWAY_HOST_NAME",
+          "value": "gateway.am.wso2.com"
+        },
+        {
+          "name": "payload_parameter.GATEWAY_MGT_HOST_NAME",
+          "value": "mgt.gateway.am.wso2.com"
+        },
+        {
+          "name": "payload_parameter.KEYMANAGER_HOST_NAME",
+          "value": "keymanager.am.wso2.com"
         }
-      ]    
+      ]
  }
