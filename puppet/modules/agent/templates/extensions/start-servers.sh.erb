@@ -138,22 +138,39 @@ function configure_wk_members(){
 
 			print_message "In keymanager...nothing to do"
 
-		elif [[ "${STRATOS_SERVICE_NAME}" = "gateway" ]] ; then
+		elif [[ "${STRATOS_SERVICE_NAME}" = "gateway"  ||  "${STRATOS_SERVICE_NAME}" = "gatewaymgt" ]] ; then
 
 			print_message "Configuring gateway..."
 			if [[ -z $STRATOS_WK_MEMBER_COUNT || $STRATOS_WK_MEMBER_COUNT -eq 0 ]] ; then
 				print_error "WKA member count is 0"
 			else
-			
-				for i in `seq 0 $(( ${STRATOS_WK_MEMBER_COUNT} - 1 ))`
-				do		    		
-					member_ip="STRATOS_WK_GATEWAY_MEMBER_${i}_IP"
-					if [[ -z ${!member_ip} ]] ; then
-						print_error "WKA is null for STRATOS_WK_GATEWAY_MEMBER_${i}_IP"
-					fi
-					print_message  "$i => ${!member_ip}"
-					WKA_XML=$"${WKA_XML}<member><hostName>${!member_ip}</hostName><port>4000</port></member>\n"
-				done
+				if [[ ! -z ${STRATOS_GW_MGR_IS_PRIMARY} && ${STRATOS_GW_MGR_IS_PRIMARY} = 'true' ]] ; then
+					print_message "Gateway Manager is primary"
+					WKA_XML=$"${WKA_XML}<member><hostName>${STRATOS_WK_GW_MGR_MEMBER_IP}</hostName><port>4000</port></member>\n"
+					for i in `seq 0 $(( ${STRATOS_GW_WORKER_MEMBER_COUNT} - 1 ))`
+                                	do                              
+                                        	member_worker_ip_name="STRATOS_WK_GW_WORKER_MEMBER_${i}_IP"
+						member_worker_ip=${!member_worker_ip_name}
+                                        		if [[ -z ${!member_worker_ip} ]] ; then
+                                                		print_error "WKA is null for STRATOS_WK_GW_WORKER_MEMBER_${i}_IP"
+                                        		fi
+                                        	print_message  "$i => ${!member_worker_ip}"
+                                        	WKA_XML=$"${WKA_XML}<member><hostName>${!member_worker_ip}</hostName><port>4000</port></member>\n"
+                                	done			
+			        else
+					print_message "Gateway Manager is not primary"
+					for i in `seq 0 $(( ${STRATOS_GW_WORKER_MEMBER_COUNT} - 1 ))`
+                                        do 
+                                                member_worker_ip_name="STRATOS_WK_GW_WORKER_MEMBER_${i}_IP"
+						member_worker_ip=${!member_worker_ip_name}
+                                                        if [[ -z ${!member_worker_ip} ]] ; then
+                                                                print_error "WKA is null for STRATOS_WK_GW_WORKER_MEMBER_${i}_IP"
+                                                        fi
+                                                print_message  "$i => ${!member_worker_ip}"
+                                                WKA_XML=$"${WKA_XML}<member><hostName>${!member_worker_ip}</hostName><port>4000</port></member>\n"
+                                        done		
+				fi
+				
 				print_message "${STRATOS_SERVICE_NAME} WKA_XML => ${WKA_XML}"
 				verify_file_exists ${AXIS2_XML_FILE}
 				${SED} -i "s%${WKA_LINE}%${WKA_XML}%g" ${AXIS2_XML_FILE} && print_message "gateway WKA configuration successful" || print_error "Failed to configure well known members"

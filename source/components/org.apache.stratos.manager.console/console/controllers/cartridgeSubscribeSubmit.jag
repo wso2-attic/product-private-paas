@@ -87,12 +87,27 @@
                 }
             }
             log.info("~~~~~~~~~~~~~~~~~~~~~~~~:" + stringify(step_data));
+
+            var repoUrl = null;
             for(var i=0;i<step_data.length;i++) {
                 //subscribe to cartridges separately which falls in the same service group
                 jsonRequest.alias = alias + Math.floor((Math.random() * 10000) + 1);
-		 jsonRequest.cartridgeType = step_data[i].cartridgeType;   
-             var re = utils.consoleAppUtil.subscribeToCartridge(jsonRequest);
+		        jsonRequest.cartridgeType = step_data[i].cartridgeType;
+
+		        // the following is a great dirty hack to share the same repo between gateway workers and gateway managers :(
+		        if (repoUrl != null) {
+		            log.info("Setting previously created internal repo URL " + repoUrl);
+		            // if a repoUrl has been returne with previous subscription response, set it to request params
+		            jsonRequest.repoURL = repoUrl;
+                }
+
+                var re = utils.consoleAppUtil.subscribeToCartridge(jsonRequest);
                 log.info("********************:" + stringify(jsonRequest) + "\n &&&&&&&&&&&\n" + stringify(re)) ;
+                // check if the repo Url returned in response is valid. If so, assign it to a variable to use in the next
+                // subscription call
+                if (re.repositoryURL != null || re.repositoryURL != undefined) {
+                    repoUrl = re.repositoryURL;
+                }
             }
         }
     } else {

@@ -72,12 +72,36 @@ install_puppet() {
 #}
 
 create_registry_database(){
-    echo -e "Creating the database $1"
+    echo -e "Creating the registry database $1"
 
-    cp -f "$resource_path/registry.sql" "$resource_path/registry.sql.orig"
-    sed -i "s@REGISTRY_DB_SCHEMA@$1@g"  "$resource_path/registry.sql.orig"
-    mysql -u$mysql_uname -p$mysql_password < "$resource_path/registry.sql.orig"
-    rm "$resource_path/registry.sql.orig"
+    cp -f "$resource_path/dbscripts/registry.sql" "$resource_path/dbscripts/registry.sql.orig"
+    sed -i "s@REGISTRY_DB_SCHEMA@$1@g"  "$resource_path/dbscripts/registry.sql.orig"
+    mysql -u$mysql_uname -p$mysql_password < "$resource_path/dbscripts/registry.sql.orig"
+    rm "$resource_path/dbscripts/registry.sql.orig"
+}
+
+
+create_config_database(){
+    echo -e "Creating the config database $1"
+
+    cp -f "$resource_path/dbscripts/config.sql" "$resource_path/dbscripts/$1_config.sql"
+    cp -f "$resource_path/dbscripts/$1_config.sql" "$resource_path/dbscripts/$1_config.sql.orig"
+    sed -i "s@CONFIG_DB_SCHEMA@$1@g"  "$resource_path/dbscripts/$1_config.sql.orig"
+    mysql -u$mysql_uname -p$mysql_password < "$resource_path/dbscripts/$1_config.sql.orig"
+    rm "$resource_path/dbscripts/$1_config.sql.orig"
+}
+
+
+create_apim_database(){
+
+    echo -e "Creating the apim database $1"
+    
+    cp -f "$resource_path/dbscripts/apim.sql" "$resource_path/dbscripts/apim.sql.orig"
+    sed -i "s@APIM_DB_SCHEMA@$1@g"  "$resource_path/dbscripts/apim.sql.orig"
+    mysql -u$mysql_uname -p$mysql_password < "$resource_path/dbscripts/apim.sql.orig"
+    rm "$resource_path/dbscripts/apim.sql.orig"
+
+
 }
 
 list_ip_addreses(){
@@ -198,8 +222,8 @@ fi
 
 # Create databases for the governence registry
 # Using the same userstore to the registry
-registry_db="userstore"
-#create_registry_database "$registry_db"
+registry_db="registry"
+create_registry_database "$registry_db"
 apim_db="apim_db"
 apim_stats="amstats"
 
@@ -236,7 +260,8 @@ if [[ $as_needed =~ ^[Yy]$ ]]
    fi
    	
    #appserver config db changes 
-   echo "create database if not exists $as_config_db;" >> $setup_path/resources/mysql.sql
+   create_config_database "$as_config_db"
+   #echo "create database if not exists $as_config_db;" >> $setup_path/resources/mysql.sql
 fi
 
 read -p "Do you need to deploy IS (Identity Server) service ? [y/n] " -n 1 -r  is_needed
@@ -252,7 +277,8 @@ if [[ $is_needed =~ ^[Yy]$ ]]
    fi
 
    #is config db changes 
-   echo "create database if not exists $is_config_db;" >> $setup_path/resources/mysql.sql
+   create_config_database "$is_config_db"
+   #echo "create database if not exists $is_config_db;" >> $setup_path/resources/mysql.sql
 fi
 
 
@@ -270,7 +296,8 @@ if [[ $esb_needed =~ ^[Yy]$ ]]
    fi
 
    #esb config db changes 
-   echo "create database if not exists $esb_config_db;" >> $setup_path/resources/mysql.sql
+   create_config_database "$esb_config_db"
+   #echo "create database if not exists $esb_config_db;" >> $setup_path/resources/mysql.sql
 fi
 
 
@@ -289,7 +316,8 @@ then
 
 
    #bps config db changes 
-   echo "create database if not exists $bps_config_db;" >> $setup_path/resources/mysql.sql
+   create_config_database "$bps_config_db"
+   #echo "create database if not exists $bps_config_db;" >> $setup_path/resources/mysql.sql
 fi
 
 
@@ -300,14 +328,21 @@ if [[ $apim_needed =~ ^[Yy]$ ]]
        read -p "Do you need clustering for keymanger ? [y/n] " -n 1 -r clustering_keymanager
 
    #apim config db changes 
-   echo "create database if not exists $apim_db;" >> $setup_path/resources/mysql.sql 
-   echo "create database if not exists $apim_stats;" >> $setup_path/resources/mysql.sql
-   echo "create database if not exists $apim_store_config_db;" >> $setup_path/resources/mysql.sql
+   #echo "create database if not exists $apim_db;" >> $setup_path/resources/mysql.sql 
+   create_apim_database "$apim_db"    
+	
+   #echo "create database if not exists $apim_stats;" >> $setup_path/resources/mysql.sql
+
+   #echo "create database if not exists $apim_store_config_db;" >> $setup_path/resources/mysql.sql
+   create_config_database "$apim_store_config_db"   
    
    # config dbs for publisher and store are the same -- 
    # cat $setup_path/resources/mysql.sql >> "create database if not exists $apim_publisher_config;"
-   echo "create database if not exists $apim_gateway_config_db;" >> $setup_path/resources/mysql.sql
-   echo "create database if not exists $apim_keymanager_config_db;" >> $setup_path/resources/mysql.sql
+   #echo "create database if not exists $apim_gateway_config_db;" >> $setup_path/resources/mysql.sql
+   #echo "create database if not exists $apim_keymanager_config_db;" >> $setup_path/resources/mysql.sql
+   create_config_database "$apim_gateway_config_db"   
+   create_config_database "$apim_keymanager_config_db"   
+
 
 fi
 
@@ -480,8 +515,8 @@ replace_in_file "STORE_CONFIG_DB" "$apim_store_config_db" "/etc/puppet/manifests
 if [[ $clustering_keymanager =~ ^[Yy]$ ]]
 then
 	replace_in_file "KAYMANAGER_CONFIG_DB" "$apim_keymanager_config_db" "/etc/puppet/manifests/nodes/api.pp"
-        replace_in_file "KAYMANAGER_CLOUD" "$registry_db" "/etc/puppet/manifests/nodes/api.pp"
-        replace_in_file "KAYMANAGER_CLUSTERING" "$registry_db" "/etc/puppet/manifests/nodes/api.pp"
+        replace_in_file "KAYMANAGER_CLOUD" "true" "/etc/puppet/manifests/nodes/api.pp"
+        replace_in_file "KAYMANAGER_CLUSTERING" "true" "/etc/puppet/manifests/nodes/api.pp"
 fi
 
 # Restart puppet master after configurations
