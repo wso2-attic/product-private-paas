@@ -522,6 +522,8 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                     CartridgeAgentConfiguration.getInstance().getServiceName().equals("gateway")) {
                 // handle gateway case
 
+                log.info("#################### gateway case");
+
 
                 /*List<Member> keymgrMemberList = new ArrayList<Member>();
                 for (Member member : keymgrClusterCollection.iterator().next().getMembers()) {
@@ -548,9 +550,12 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                     if ((member.getStatus().equals(MemberStatus.Starting)) || (member.getStatus().equals(MemberStatus.Activated))) {
                         if (member.getProperties().containsKey("PRIMARY") && member.getProperties().getProperty("PRIMARY").toLowerCase().equals("true")) {
                             envParameters.put("STRATOS_GW_MGR_IS_PRIMARY", "true");
+                            log.info("#################### STRATOS_GW_MGR_IS_PRIMARY: true");
                         } else {
                             envParameters.put("STRATOS_GW_MGR_IS_PRIMARY", "false");
+                            log.info("#################### STRATOS_GW_MGR_IS_PRIMARY: false");
                         }
+
                         apiGWMgrMembers.add(member);
                     }
                 }
@@ -559,6 +564,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                     if (log.isDebugEnabled()) {
                         log.debug("API Gateway manager members not yet created");
                     }
+                    log.info("#################### No gateway manager members");
                     return false;
                 }
 
@@ -568,6 +574,8 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 if (log.isDebugEnabled()) {
                     log.debug("STRATOS_WK_GW_MGR_MEMBER_IP: " + apiGWMgrMember.getMemberIp());
                 }
+
+                log.info("#################### gateway manager member: " + apiGWMgrMember.getMemberIp() + ", " + apiGWMgrMember.getMemberPublicIp());
 
                 // there will be multiple gateway workers, so capture all the IPs
                 // format: 'STRATOS_WK_GW_WORKER_MEMBER_<MEMBER_NO>_IP'
@@ -584,6 +592,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                         if (log.isDebugEnabled()) {
                             log.debug("Found gateway WKA: STRATOS_WK_GW_WORKER_MEMBER_IP: " + gatewayWorkerMember.getMemberIp());
                         }
+                        log.info("#################### gateway worker member: " + gatewayWorkerMember.getMemberIp() + ", " + gatewayWorkerMember.getMemberPublicIp());
                     }
                 }
                 int gatewayWorkerMemberCount = 0;
@@ -595,14 +604,17 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                             log.debug("STRATOS_WK_GW_WORKER_MEMBER_" + idx + "_IP: " + member.getMemberIp());
                         }
                         idx++;
+                        log.info("#################### STRATOS_WK_GW_WORKER_MEMBER_" + idx + "_IP: " + member.getMemberIp() + ", " + member.getMemberPublicIp());
                     }
                     gatewayWorkerMemberCount = wkGatewayWorkerMembers.size();
                     envParameters.put("STRATOS_GW_WORKER_MEMBER_COUNT", Integer.toString(gatewayWorkerMemberCount));
+                    log.info("#################### gateway worker member count: " + gatewayWorkerMemberCount);
 
                     return true;
                 }
 
                 envParameters.put("STRATOS_GW_WORKER_MEMBER_COUNT", Integer.toString(gatewayWorkerMemberCount));
+                log.info("#################### gateway worker member count: " + gatewayWorkerMemberCount);
 
             } else if (CartridgeAgentConfiguration.getInstance().getServiceName().equals("keymanager")) {
                 return true;
