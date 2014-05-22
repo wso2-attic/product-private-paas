@@ -222,7 +222,7 @@ public class TopologyBuilder {
 		
 		TopologyEventPublisher.sendInstanceSpawnedEvent(serviceName, clusterId,
 				networkPartitionId, partitionId, memberId, lbClusterId,
-				publicIp, privateIp);
+				publicIp, privateIp, context);
 	}
     
     public static void handleMemberStarted(InstanceStartedEvent instanceStartedEvent) {
@@ -429,6 +429,7 @@ public class TopologyBuilder {
     public static void handleMemberTerminated(String serviceName, String clusterId, String networkPartitionId, String partitionId, String memberId) {
         Topology topology = TopologyManager.getTopology();
         Service service = topology.getService(serviceName);
+        Properties properties;
         if (service == null) {
             log.warn(String.format("Service %s does not exist",
                                                      serviceName));
@@ -451,12 +452,13 @@ public class TopologyBuilder {
 
         try {
             TopologyManager.acquireWriteLock();
+            properties = member.getProperties();
             cluster.removeMember(member);
             TopologyManager.updateTopology(topology);
         } finally {
             TopologyManager.releaseWriteLock();
         }
-        TopologyEventPublisher.sendMemberTerminatedEvent(serviceName, clusterId, networkPartitionId, partitionId, memberId);
+        TopologyEventPublisher.sendMemberTerminatedEvent(serviceName, clusterId, networkPartitionId, partitionId, memberId, properties);
     }
 
     public static void handleMemberSuspended() {
