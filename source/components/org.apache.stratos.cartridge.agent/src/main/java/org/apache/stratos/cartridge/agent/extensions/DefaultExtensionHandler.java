@@ -518,34 +518,104 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
                 return true;
 
-            } else if (CartridgeAgentConfiguration.getInstance().getServiceName().equals("gateway")) {
+            } else if (CartridgeAgentConfiguration.getInstance().getServiceName().equals("gatewaymgt") ||
+                    CartridgeAgentConfiguration.getInstance().getServiceName().equals("gateway")) {
                 // handle gateway case
 
-                Collection<Cluster> gatewayClusterCollection = topology.getService("gateway").getClusters();
-                List<Member> wkGatewayMembers = new ArrayList<Member>();
-                for (Member gatewayMem : gatewayClusterCollection.iterator().next().getMembers()) {
-                    if (gatewayMem.getProperties() != null &&
-                            gatewayMem.getProperties().containsKey("PRIMARY") &&
-                            gatewayMem.getProperties().getProperty("PRIMARY").toLowerCase().equals("true") &&
-                            (gatewayMem.getStatus().equals(MemberStatus.Starting) || gatewayMem.getStatus().equals(MemberStatus.Activated))
-                            ) {
-                        wkGatewayMembers.add(gatewayMem);
-                        if (log.isDebugEnabled()) {
-                            log.debug("Found gateway WKA: STRATOS_WK_GATEWAY_MEMBER_IP: " + gatewayMem.getMemberIp());
-                        }
+                log.info("#################### gateway case");
+
+
+                /*List<Member> keymgrMemberList = new ArrayList<Member>();
+                for (Member member : keymgrClusterCollection.iterator().next().getMembers()) {
+                    if ((member.getStatus().equals(MemberStatus.Activated))) {
+                        keymgrMemberList.add(member);
                     }
                 }
-                if (wkGatewayMembers.size() >= minCount) {
-                    int idx = 0;
-                    for (Member member : wkGatewayMembers) {
-                        envParameters.put("STRATOS_WK_GATEWAY_MEMBER_" + idx + "_IP", member.getMemberIp());
+
+                if (keymgrMemberList.isEmpty()) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("API Keymanager members not yet created");
+                    }
+                    return false;
+                }
+                Member keymgrMember = keymgrMemberList.get(0);
+                envParameters.put("STRATOS_WK_KEYMGR_MEMBER_IP", keymgrMember.getMemberIp());
+                if (log.isDebugEnabled()) {
+                    log.debug("STRATOS_WK_KEYMGR_MEMBER_IP: " + keymgrMember.getMemberIp());
+                } */
+
+                Collection<Cluster> apiGWMgrClusters = topology.getService("gatewaymgt").getClusters();
+                List<Member> apiGWMgrMembers = new ArrayList<Member>();
+                for (Member member : apiGWMgrClusters.iterator().next().getMembers()) {
+                    if ((member.getStatus().equals(MemberStatus.Starting)) || (member.getStatus().equals(MemberStatus.Activated))) {
+                        if (member.getProperties().containsKey("PRIMARY") && member.getProperties().getProperty("PRIMARY").toLowerCase().equals("true")) {
+                            envParameters.put("STRATOS_GW_MGR_IS_PRIMARY", "true");
+                            log.info("#################### STRATOS_GW_MGR_IS_PRIMARY: true");
+                        } else {
+                            envParameters.put("STRATOS_GW_MGR_IS_PRIMARY", "false");
+                            log.info("#################### STRATOS_GW_MGR_IS_PRIMARY: false");
+                        }
+
+                        apiGWMgrMembers.add(member);
+                    }
+                }
+
+                if (apiGWMgrMembers.isEmpty()) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("API Gateway manager members not yet created");
+                    }
+                    log.info("#################### No gateway manager members");
+                    return false;
+                }
+
+                //only one gateway manager, just get the IP of that
+                Member apiGWMgrMember = apiGWMgrMembers.get(0);
+                envParameters.put("STRATOS_WK_GW_MGR_MEMBER_IP", apiGWMgrMember.getMemberIp());
+                if (log.isDebugEnabled()) {
+                    log.debug("STRATOS_WK_GW_MGR_MEMBER_IP: " + apiGWMgrMember.getMemberIp());
+                }
+
+                log.info("#################### gateway manager member: " + apiGWMgrMember.getMemberIp() + ", " + apiGWMgrMember.getMemberPublicIp());
+
+                // there will be multiple gateway workers, so capture all the IPs
+                // format: 'STRATOS_WK_GW_WORKER_MEMBER_<MEMBER_NO>_IP'
+                Collection<Cluster> apiGWWorkerClusters = topology.getService("gateway").getClusters();
+
+                List<Member> wkGatewayWorkerMembers = new ArrayList<Member>();
+                for (Member gatewayWorkerMember : apiGWWorkerClusters.iterator().next().getMembers()) {
+                    if (gatewayWorkerMember.getProperties() != null &&
+                            gatewayWorkerMember.getProperties().containsKey("PRIMARY") &&
+                            gatewayWorkerMember.getProperties().getProperty("PRIMARY").toLowerCase().equals("true") &&
+                            (gatewayWorkerMember.getStatus().equals(MemberStatus.Starting) || gatewayWorkerMember.getStatus().equals(MemberStatus.Activated))
+                            ) {
+                        wkGatewayWorkerMembers.add(gatewayWorkerMember);
                         if (log.isDebugEnabled()) {
-                            log.debug("STRATOS_WK_GATEWAY_MEMBER_" + idx + "_IP: " + member.getMemberIp());
+                            log.debug("Found gateway WKA: STRATOS_WK_GW_WORKER_MEMBER_IP: " + gatewayWorkerMember.getMemberIp());
+                        }
+                        log.info("#################### gateway worker member: " + gatewayWorkerMember.getMemberIp() + ", " + gatewayWorkerMember.getMemberPublicIp());
+                    }
+                }
+                int gatewayWorkerMemberCount = 0;
+                if (wkGatewayWorkerMembers.size() >= minCount) {
+                    int idx = 0;
+                    for (Member member : wkGatewayWorkerMembers) {
+                        envParameters.put("STRATOS_WK_GW_WORKER_MEMBER_" + idx + "_IP", member.getMemberIp());
+                        if (log.isDebugEnabled()) {
+                            log.debug("STRATOS_WK_GW_WORKER_MEMBER_" + idx + "_IP: " + member.getMemberIp());
                         }
                         idx++;
+                        log.info("#################### STRATOS_WK_GW_WORKER_MEMBER_" + idx + "_IP: " + member.getMemberIp() + ", " + member.getMemberPublicIp());
                     }
+                    gatewayWorkerMemberCount = wkGatewayWorkerMembers.size();
+                    envParameters.put("STRATOS_GW_WORKER_MEMBER_COUNT", Integer.toString(gatewayWorkerMemberCount));
+                    log.info("#################### gateway worker member count: " + gatewayWorkerMemberCount);
+
                     return true;
                 }
+
+                envParameters.put("STRATOS_GW_WORKER_MEMBER_COUNT", Integer.toString(gatewayWorkerMemberCount));
+                log.info("#################### gateway worker member count: " + gatewayWorkerMemberCount);
+
             } else if (CartridgeAgentConfiguration.getInstance().getServiceName().equals("keymanager")) {
                 return true;
             }

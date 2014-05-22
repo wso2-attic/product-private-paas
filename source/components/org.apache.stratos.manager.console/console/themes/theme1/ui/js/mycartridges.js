@@ -22,6 +22,7 @@
 $(function () {
     $('.un-subscribe-btn').click(function () {
         $('#alias').val($(this).attr('data-alias'));
+        $('#serviceGroup').val($(this).attr('service-group'));
         popbox.message({content: '<div>Un-subscribe will delete all your instances.</div><div>Are you sure you want to un-subscribe?</div>', type: 'confirm',
             okCallback: function () {
                 $('#cForm').submit();

@@ -26,6 +26,8 @@
 # Die on any error:
 set -e
 
+source "../tmpVariable.sh"
+
 replace_in_file(){
     #echo "Setting value $2 for property $1 as $2 in file $3"
     sed -i "s@$1@$2@g"  $3
@@ -563,6 +565,16 @@ else
     as_setup
     sm_setup
     cep_setup   
+fi
+
+# Setup Gitblit Server
+if [[ $apim_needed =~ ^[Yy]$ ]]
+then
+    /bin/bash ./gitblit.sh
+    sed -i '$a internal.repo.username=admin' $stratos_extract_path/repository/conf/cartridge-config.properties
+    sed -i '$a internal.repo.password=admin' $stratos_extract_path/repository/conf/cartridge-config.properties
+    sed -i '$a internal.git.url=http://PUPPET_IP:8290' $stratos_extract_path/repository/conf/cartridge-config.properties
+    sed -i "s@PUPPET_IP@$puppet_ip@g" $stratos_extract_path/repository/conf/cartridge-config.properties
 fi
 
 # Starting BAM server

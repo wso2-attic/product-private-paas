@@ -522,10 +522,14 @@ fi
 # Restart puppet master after configurations
 /etc/init.d/puppetmaster restart
 
+echo "export apim_needed=$apim_needed" >> tmpVariable.sh
+
 cwd=$(pwd)
 cd stratos-installer
 /bin/bash setup.sh -p "default" -s
 cd $cwd
+
+rm -rf tmpVariable.sh
 
 # Copy activemq client jars to puppet
 for activemq_client_lib in "${activemq_client_libs[@]}" 
@@ -662,8 +666,6 @@ then
    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/sso-idp-config.xml
    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/sso-idp-config.xml
 
-   # copy the identity.saml2.sso.mgt jar to dropins
-   cp ./resources/libs/org.wso2.stratos.identity.saml2.sso.mgt-2.2.0.jar $stratos_install_path/wso2is-5.0.0/repository/components/dropins
 
    nohup $stratos_install_path/wso2is-5.0.0/bin/wso2server.sh -DportOffset=2 &
 else
