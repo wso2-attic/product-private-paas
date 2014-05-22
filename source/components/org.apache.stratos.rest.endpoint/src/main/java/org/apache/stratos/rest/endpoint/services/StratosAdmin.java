@@ -386,8 +386,7 @@ public class StratosAdmin extends AbstractAdmin {
     @Consumes("application/json")
     @AuthorizationAction("/permission/protected/manage/monitor/tenants")
     public Cluster[] getClusters(@PathParam("cartridgeType") String cartridgeType) throws RestAPIException {
-
-        return ServiceUtils.getClustersForTenantAndCartridgeType(getConfigContext(), cartridgeType);
+        return ServiceUtils.getClustersForCartridgeType(cartridgeType);
     }
     
     @GET
