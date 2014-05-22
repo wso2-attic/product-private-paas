@@ -31,6 +31,7 @@ import org.apache.stratos.cloud.controller.stub.pojo.Property;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -112,12 +113,22 @@ public class ClusterMonitor extends AbstractMonitor{
             boolean rifReset = networkPartitionContext.isRifReset();
             boolean memoryConsumptionReset = networkPartitionContext.isMemoryConsumptionReset();
             boolean loadAverageReset = networkPartitionContext.isLoadAverageReset();
+
+			boolean startAsPrimary = false;
             if(rifReset || memoryConsumptionReset || loadAverageReset){
 
             	List<String> primaryMemberList = new ArrayList<String>();            	
 				for (PartitionContext partitionContext : networkPartitionContext.getPartitionCtxts().values()) {
+					if(log.isDebugEnabled()) {
+						log.debug(" Partition context [" + partitionContext.getPartitionId() + 
+							"] Active member count [" + partitionContext.getActiveMemberCount() +
+							"] Active members [" + partitionContext.getActiveMembers() +"] ");
+					}					
 					for (MemberContext memberContext : partitionContext.getActiveMembers()) {
 						Properties props = memberContext.getProperties();
+						if (log.isDebugEnabled()) {
+							log.debug(" Properties [" + props + "] ");
+						}
 						if(props !=null && props.getProperties() !=null) {
 						for (Property prop : props.getProperties()) {
 							if (prop.getName().equals("PRIMARY")) {
@@ -131,8 +142,13 @@ public class ClusterMonitor extends AbstractMonitor{
 						}
 						}
 					}
-				}             
-                
+					
+					// Decide whether to start the new member as a primary or non-primary
+					if(primaryMemberList.size() < partitionContext.getActiveMemberCount()) {						
+						startAsPrimary = true;
+					}					
+				}    
+				
                 scaleCheckKnowledgeSession.setGlobal("clusterId", clusterId);
                 //scaleCheckKnowledgeSession.setGlobal("deploymentPolicy", deploymentPolicy);
                 scaleCheckKnowledgeSession.setGlobal("autoscalePolicy", autoscalePolicy);
@@ -140,13 +156,14 @@ public class ClusterMonitor extends AbstractMonitor{
                 scaleCheckKnowledgeSession.setGlobal("mcReset", memoryConsumptionReset);
                 scaleCheckKnowledgeSession.setGlobal("laReset", loadAverageReset);
                 scaleCheckKnowledgeSession.setGlobal("lbRef", lbReferenceType);
-                scaleCheckKnowledgeSession.setGlobal("isPrimary", false);
+                scaleCheckKnowledgeSession.setGlobal("isPrimary", startAsPrimary);
                 scaleCheckKnowledgeSession.setGlobal("primaryMembers", primaryMemberList);
                 
               	
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Running scale check for network partition %s ", networkPartitionContext.getId()));
                     log.debug(" Primary members : " + primaryMemberList);
+                    log.debug(" Start as primary : " + startAsPrimary);
                 }
                 
                 scaleCheckFactHandle = AutoscalerRuleEvaluator.evaluateScaleCheck(scaleCheckKnowledgeSession

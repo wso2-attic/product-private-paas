@@ -130,7 +130,8 @@ public class AutoscalerUtil {
                         memberContext.setClusterId(member.getClusterId());
                         memberContext.setMemberId(memberId);
                         memberContext.setPartition(partition);
-
+                        memberContext.setProperties(convertMemberPropsToMemberContextProps(member.getProperties()));
+                        
                         if(MemberStatus.Activated.equals(member.getStatus())){
                             partitionContext.addActiveMember(memberContext);
 //                            networkPartitionContext.increaseMemberCountOfPartition(partition.getNetworkPartitionId(), 1);
@@ -184,7 +185,20 @@ public class AutoscalerUtil {
         return clusterMonitor;
     }
     
-    public static LbClusterMonitor getLBClusterMonitor(Cluster cluster) throws PolicyValidationException, PartitionValidationException {
+    private static Properties convertMemberPropsToMemberContextProps(
+			java.util.Properties properties) {
+    	Properties props = new Properties();
+    	for (Map.Entry<Object, Object> e : properties.entrySet()	) {
+			Property prop = new Property();
+			prop.setName((String)e.getKey());
+			prop.setValue((String)e.getValue());
+			props.addProperties(prop);
+		}    	
+		return props;
+	}
+
+
+	public static LbClusterMonitor getLBClusterMonitor(Cluster cluster) throws PolicyValidationException, PartitionValidationException {
         // FIXME fix the following code to correctly update
         // AutoscalerContext context = AutoscalerContext.getInstance();
         if (null == cluster) {
