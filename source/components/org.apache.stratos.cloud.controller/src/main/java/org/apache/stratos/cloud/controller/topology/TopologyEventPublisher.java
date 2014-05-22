@@ -21,7 +21,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.cloud.controller.pojo.Cartridge;
 import org.apache.stratos.cloud.controller.pojo.ClusterContext;
+import org.apache.stratos.cloud.controller.pojo.MemberContext;
 import org.apache.stratos.cloud.controller.pojo.PortMapping;
+import org.apache.stratos.cloud.controller.util.CloudControllerUtil;
 import org.apache.stratos.messaging.broker.publish.EventPublisher;
 import org.apache.stratos.messaging.broker.publish.EventPublisherPool;
 import org.apache.stratos.messaging.domain.topology.Cluster;
@@ -34,6 +36,7 @@ import org.apache.stratos.messaging.event.topology.*;
 import org.apache.stratos.messaging.util.Constants;
 
 import java.util.List;
+import java.util.Properties;
 
 /**
  * this is to send the relevant events from cloud controller to topology topic
@@ -97,11 +100,12 @@ public class TopologyEventPublisher {
     }
 
     public static void sendInstanceSpawnedEvent(String serviceName, String clusterId, String networkPartitionId, String partitionId, String memberId,
-    		String lbClusterId, String publicIp, String privateIp) {
+    		String lbClusterId, String publicIp, String privateIp, MemberContext context) {
         InstanceSpawnedEvent instanceSpawnedEvent = new InstanceSpawnedEvent(serviceName, clusterId, networkPartitionId, partitionId, memberId);
         instanceSpawnedEvent.setLbClusterId(lbClusterId);
         instanceSpawnedEvent.setMemberIp(privateIp);
         instanceSpawnedEvent.setMemberPublicIp(publicIp);
+        instanceSpawnedEvent.setProperties(CloudControllerUtil.toJavaUtilProperties(context.getProperties()));
         if(log.isInfoEnabled()) {
             log.info(String.format("Publishing instance spawned event: [service] %s [cluster] %s [network-partition] %s [partition] %s [member] %s [lb-cluster-id] %s",
                     serviceName, clusterId, networkPartitionId, partitionId, memberId, lbClusterId));
@@ -145,8 +149,10 @@ public class TopologyEventPublisher {
        }
 
 
-    public static void sendMemberTerminatedEvent(String serviceName, String clusterId, String networkPartitionId, String partitionId, String memberId) {
+    public static void sendMemberTerminatedEvent(String serviceName, String clusterId, String networkPartitionId,
+                                                 String partitionId, String memberId, Properties properties) {
         MemberTerminatedEvent memberTerminatedEvent = new MemberTerminatedEvent(serviceName, clusterId, networkPartitionId, partitionId, memberId);
+        memberTerminatedEvent.setProperties(properties);
         if(log.isInfoEnabled()) {
             log.info(String.format("Publishing member terminated event: [service] %s [cluster] %s [network-partition] %s [partition] %s [member] %s", serviceName, clusterId, networkPartitionId, partitionId, memberId));
         }
