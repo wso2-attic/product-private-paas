@@ -255,7 +255,7 @@ public class RestCommandLineService {
 
         String responseCode = "" + response.getStatusLine().getStatusCode();
         String resultString = getHttpResponseString(response);
-        System.out.println("**************** " + resultString);
+
         if (resultString == null) {
             return null;
         }
@@ -272,19 +272,11 @@ public class RestCommandLineService {
         CartridgeList cartridgeList = gson.fromJson(resultString, CartridgeList.class);
 
         ArrayList<Cartridge> cartridgesInServiceGroup = new ArrayList<Cartridge>();
-        System.out.println("*********** count " + cartridgeList.getCartridge().size());
 
-        for(int i=0; i< cartridgeList.getCartridge().size(); i++){
-            System.out.println("000000000000000000" + cartridgeList.getCartridge().get(i).getDisplayName());
-        }
-        for(Cartridge cart : cartridgeList.getCartridge()){
-            System.out.println("@@" + cart.getDisplayName());
-
-            if(serviceGroup.equals(cart.getServiceGroup())){
-                //cartridgesInServiceGroup.add(cart);
-                //System.out.println("###" + cart.getDisplayName());
+        for(int i = 0; i < cartridgeList.getCartridge().size(); i++){
+            if(serviceGroup.equals(cartridgeList.getCartridge().get(i).getServiceGroup())){
+                cartridgesInServiceGroup.add(cartridgeList.getCartridge().get(i));
             }
-
         }
 
         return cartridgesInServiceGroup;
@@ -814,23 +806,8 @@ public class RestCommandLineService {
         DefaultHttpClient httpClient = new DefaultHttpClient();
 
         CartridgeInfoBean cartridgeInfoBean = new CartridgeInfoBean();
-        cartridgeInfoBean.setCartridgeType(null);
-        cartridgeInfoBean.setAlias(null);
-        cartridgeInfoBean.setRepoURL(null);
-        cartridgeInfoBean.setPrivateRepo(false);
-        cartridgeInfoBean.setRepoUsername(null);
-        cartridgeInfoBean.setRepoPassword(null);
-        cartridgeInfoBean.setAutoscalePolicy(null);
-        cartridgeInfoBean.setDeploymentPolicy(null);
-        cartridgeInfoBean.setSize(size);
-        cartridgeInfoBean.setRemoveOnTermination(remoOnTermination);
-        cartridgeInfoBean.setPersistanceRequired(persistanceMapping);
-        cartridgeInfoBean.setCommitsEnabled(enableCommits);
-
         GsonBuilder gsonBuilder = new GsonBuilder();
         Gson gson = gsonBuilder.create();
-
-        String jsonSubscribeString = gson.toJson(cartridgeInfoBean, CartridgeInfoBean.class);
 
         try {
             cartridgeInfoBean.setCartridgeType(cartridgeType);
@@ -846,7 +823,7 @@ public class RestCommandLineService {
             cartridgeInfoBean.setPersistanceRequired(persistanceMapping);
             cartridgeInfoBean.setCommitsEnabled(enableCommits);
             
-            jsonSubscribeString = gson.toJson(cartridgeInfoBean, CartridgeInfoBean.class);
+            String jsonSubscribeString = gson.toJson(cartridgeInfoBean, CartridgeInfoBean.class);
 
             HttpResponse response = restClient.doPost(httpClient, restClient.getBaseURL() + subscribCartridgeRestEndpoint,
                     jsonSubscribeString);
