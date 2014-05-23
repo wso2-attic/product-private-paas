@@ -141,10 +141,9 @@ public class ClusterMonitor extends AbstractMonitor{
 							}
 						}
 						}
-					}
-					
+					}					
 					// Decide whether to start the new member as a primary or non-primary
-					if(primaryMemberList.size() < partitionContext.getActiveMemberCount()) {						
+					if(primaryMemberList.size() < partitionContext.getMinimumMemberCount()) {						
 						startAsPrimary = true;
 					}					
 				}    
