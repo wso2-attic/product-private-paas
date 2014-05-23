@@ -414,16 +414,39 @@ rm tmp/partition_tmp.json
 
 # Copy files to /etc/puppet 
 
+chmod 777 $stratos_pack_path/*
+
+rm -rf /etc/puppet/modules/agent/files/apache-stratos-cartridge-agent-4.0.0-wso2v1-bin.zip
 cp -f $stratos_pack_path/apache-stratos-cartridge-agent-4.0.0-wso2v1-bin.zip /etc/puppet/modules/agent/files
+
+rm -rf /etc/puppet/modules/lb/files/apache-stratos-load-balancer-4.0.0-wso2v1.zip
 cp -f $stratos_pack_path/apache-stratos-load-balancer-4.0.0-wso2v1.zip /etc/puppet/modules/lb/files
+
+rm -rf /etc/puppet/modules/java/files/$JAVA_FILE_DISTRUBUTION
 cp -f $stratos_pack_path/$JAVA_FILE_DISTRUBUTION /etc/puppet/modules/java/files
+
+rm -rf /etc/puppet/modules/appserver/files/wso2as-5.2.1.zip
 cp -f $stratos_pack_path/wso2as-5.2.1.zip /etc/puppet/modules/appserver/files
+
+rm -rf /etc/puppet/modules/appserver/files/configs/repository/components/lib/$MYSQL_CONNECTOR
 cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/appserver/files/configs/repository/components/lib
+
+rm -rf /etc/puppet/modules/esb/files/wso2esb-4.8.1.zip
 cp -f $stratos_pack_path/wso2esb-4.8.1.zip /etc/puppet/modules/esb/files
+
+rm -rf /etc/puppet/modules/esb/files/configs/repository/components/lib/$MYSQL_CONNECTOR
 cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/esb/files/configs/repository/components/lib
+
+rm -rf /etc/puppet/modules/bps/files/wso2bps-3.2.0.zip
 cp -f $stratos_pack_path/wso2bps-3.2.0.zip /etc/puppet/modules/bps/files
+
+rm -rf /etc/puppet/modules/bps/files/configs/repository/components/lib/$MYSQL_CONNECTOR
 cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/bps/files/configs/repository/components/lib
+
+rm -rf /etc/puppet/modules/apimanager/files/wso2am-1.6.0.zip
 cp -f $stratos_pack_path/wso2am-1.6.0.zip /etc/puppet/modules/apimanager/files
+
+rm -rf /etc/puppet/modules/apimanager/files/configs/repository/components/lib/$MYSQL_CONNECTOR
 cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/apimanager/files/configs/repository/components/lib
 
 
