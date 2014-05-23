@@ -243,6 +243,17 @@ as_clustering="false"
 is_clustering="false"
 esb_clustering="false"
 bps_clustering="false"
+config_sso="false"
+
+read -p "Do you need to setup WSO2 Identity Server as a core service and configure SSO feature ? [y/n] " -n 1 -r sso_needed
+echo
+
+if [[ $sso_needed =~ ^[Yy]$ ]]
+   then 
+   export public_ip=$(curl -s http://checkip.dyndns.org | awk '{print $6}' | awk -F'<' '{print $1}')
+   config_sso="true"
+fi
+
 
 #backup mysql.sql
 backup_file $setup_path/resources/mysql.sql
@@ -541,6 +552,19 @@ then
         replace_in_file "KAYMANAGER_CLOUD" "true" "/etc/puppet/manifests/nodes/api.pp"
         replace_in_file "KAYMANAGER_CLUSTERING" "true" "/etc/puppet/manifests/nodes/api.pp"
 fi
+
+# SSO
+if [[ "$config_sso" == "true" ]];then
+# appserver
+backup_file "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
+replace_in_file "SSO_DISABLED" "false" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
+replace_in_file "IDP_URL" "$public_ip" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
+else
+# appserver
+backup_file "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
+replace_in_file "SSO_DISABLED" "true" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
+fi
+
 
 # Restart puppet master after configurations
 /etc/init.d/puppetmaster restart

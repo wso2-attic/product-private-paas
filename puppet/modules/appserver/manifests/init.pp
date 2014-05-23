@@ -87,6 +87,7 @@ class appserver (
       'conf/tomcat/catalina-server.xml',
       'conf/user-mgt.xml',
       'conf/log4j.properties',
+      'conf/security/authenticators.xml',
       ],
   }
 
