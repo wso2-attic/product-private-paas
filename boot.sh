@@ -385,6 +385,8 @@ replace_setup_conf "DB_PORT" "$mysql_port"
 replace_setup_conf "DB_USER" "$mysql_uname"
 replace_setup_conf "DB_PASSWORD" "$mysql_password"
 
+replace_setup_conf "REGISTRY_DB" "$registry_db"
+
 if [[ "$iaas" == "os" ]];then
     replace_setup_conf "OS_ENABLED" "true"
     replace_setup_conf "OS_IDENTITY" "$os_identity"

@@ -406,6 +406,19 @@ function sm_setup() {
     sed -i "s@USERSTORE_DB_USER@$userstore_db_user@g" repository/conf/datasources/master-datasources.xml
     sed -i "s@USERSTORE_DB_PASS@$userstore_db_pass@g" repository/conf/datasources/master-datasources.xml
 
+    sed -i "s@REGISTRY_DB_HOSTNAME@$registry_db_hostname@g" repository/conf/datasources/master-datasources.xml
+    sed -i "s@REGISTRY_DB_PORT@$registry_db_port@g" repository/conf/datasources/master-datasources.xml
+    sed -i "s@REGISTRY_DB_SCHEMA@$registry_db_schema@g" repository/conf/datasources/master-datasources.xml
+    sed -i "s@REGISTRY_DB_USER@$registry_db_user@g" repository/conf/datasources/master-datasources.xml
+    sed -i "s@REGISTRY_DB_PASS@$registry_db_pass@g" repository/conf/datasources/master-datasources.xml
+
+    echo "In repository/conf/registry.xml"
+    sed -i "s@REGISTRY_DB_HOSTNAME@$registry_db_hostname@g" repository/conf/registry.xml
+    sed -i "s@REGISTRY_DB_PORT@$registry_db_port@g" repository/conf/registry.xml
+    sed -i "s@REGISTRY_DB_SCHEMA@$registry_db_schema@g" repository/conf/registry.xml
+    sed -i "s@REGISTRY_DB_USER@$registry_db_user@g" repository/conf/registry.xml
+    
+
     popd
 
     # Database Configuration
