@@ -59,7 +59,7 @@ public class CartridgeSubscriptionUtils {
         BasicPayloadData basicPayloadData = new BasicPayloadData();
         basicPayloadData.setApplicationPath(cartridgeInfo.getBaseDir());
         basicPayloadData.setSubscriptionKey(subscriptionKey);
-        basicPayloadData.setDeployment("default");//currently hard coded to default
+        //basicPayloadData.setDeployment("default");//currently hard coded to default
         basicPayloadData.setMultitenant(String.valueOf(cartridgeInfo.getMultiTenant()));
         basicPayloadData.setPortMappings(createPortMappingPayloadString(cartridgeInfo));
         basicPayloadData.setServiceName(cartridgeInfo.getType());
@@ -98,7 +98,7 @@ public class CartridgeSubscriptionUtils {
         basicPayloadData.setApplicationPath(service.getCartridgeInfo().getBaseDir());
         basicPayloadData.setSubscriptionKey(service.getSubscriptionKey());
         basicPayloadData.setClusterId(service.getClusterId());
-        basicPayloadData.setDeployment("default");//currently hard coded to default
+        //basicPayloadData.setDeployment("default");//currently hard coded to default
         basicPayloadData.setHostName(service.getHostName());
         basicPayloadData.setMultitenant(String.valueOf(service.getCartridgeInfo().getMultiTenant()));
         basicPayloadData.setPortMappings(createPortMappingPayloadString(service.getCartridgeInfo()));

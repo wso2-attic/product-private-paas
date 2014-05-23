@@ -61,6 +61,9 @@ public class CartridgeAgentConfiguration {
     private String isPrimary;
     private String lbPrivateIp;
     private String lbPublicIp;
+    private String deployment;
+    private String managerServiceName;
+    private String workerServiceName;
 
     private CartridgeAgentConfiguration() {
         parameters = loadParametersFile();
@@ -89,7 +92,13 @@ public class CartridgeAgentConfiguration {
             // not mandatory
             lbPrivateIp = System.getProperty(CartridgeAgentConstants.LB_PRIVATE_IP);
             lbPublicIp = System.getProperty(CartridgeAgentConstants.LB_PUBLIC_IP);
-            
+
+            deployment = readDeployment();
+            log.info("******************** DEPLOYMENT: " + deployment);
+            managerServiceName = readManagerServiceType();
+            log.info("******************** MANAGER_SERVICE_NAME: " + managerServiceName);
+            workerServiceName = readWorkerServiceType();
+            log.info("******************** WORKER_SERVICE_NAME: " + workerServiceName);
             isPrimary = readIsPrimary();
         } catch (ParameterNotFoundException e) {
             throw new RuntimeException(e);
@@ -112,6 +121,27 @@ public class CartridgeAgentConfiguration {
             log.debug(String.format("lb-private-ip: %s", lbPrivateIp));
             log.debug(String.format("lb-public-ip: %s", lbPublicIp));
         }
+    }
+
+    private String readDeployment(){
+        if (parameters.containsKey(CartridgeAgentConstants.DEPLOYMENT)) {
+            return parameters.get(CartridgeAgentConstants.DEPLOYMENT);
+        }
+        return null;
+    }
+
+    private String readManagerServiceType(){
+        if (parameters.containsKey(CartridgeAgentConstants.MANAGER_SERVICE_TYPE)) {
+            return parameters.get(CartridgeAgentConstants.MANAGER_SERVICE_TYPE);
+        }
+        return null;
+    }
+
+    private String readWorkerServiceType(){
+        if (parameters.containsKey(CartridgeAgentConstants.WORKER_SERVICE_TYPE)) {
+            return parameters.get(CartridgeAgentConstants.WORKER_SERVICE_TYPE);
+        }
+        return null;
     }
 
     private String readIsPrimary(){
@@ -372,4 +402,28 @@ public class CartridgeAgentConfiguration {
 	public void setLbPrivateIp(String lbPrivateIp) {
 		this.lbPrivateIp = lbPrivateIp;
 	}
+
+    public String getDeployment() {
+        return deployment;
+    }
+
+    public void setDeployment(String deployment) {
+        this.deployment = deployment;
+    }
+
+    public String getManagerServiceName() {
+        return managerServiceName;
+    }
+
+    public void setManagerServiceName(String managerServiceName) {
+        this.managerServiceName = managerServiceName;
+    }
+
+    public String getWorkerServiceName() {
+        return workerServiceName;
+    }
+
+    public void setWorkerServiceName(String workerServiceName) {
+        this.workerServiceName = workerServiceName;
+    }
 }

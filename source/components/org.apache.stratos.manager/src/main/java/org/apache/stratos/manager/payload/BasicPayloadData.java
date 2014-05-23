@@ -75,8 +75,8 @@ public class BasicPayloadData implements Serializable {
         payloadBuilder.append(",");
         payloadBuilder.append("CARTRIDGE_KEY=" + getSubscriptionKey());
         payloadBuilder.append(",");
-        payloadBuilder.append("DEPLOYMENT=" + getDeployment());
-        payloadBuilder.append(",");
+        //payloadBuilder.append("DEPLOYMENT=" + getDeployment());
+        //payloadBuilder.append(",");
         //payloadBuilder.append("APP_PATH=" + getApplicationPath());
         //payloadBuilder.append(",");
         payloadBuilder.append("REPO_URL=" + getGitRepositoryUrl());
