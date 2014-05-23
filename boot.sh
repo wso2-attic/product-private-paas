@@ -457,7 +457,7 @@ rm -rf /etc/puppet/modules/bps/files/configs/repository/components/lib/$MYSQL_CO
 cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/bps/files/configs/repository/components/lib
 
 rm -rf /etc/puppet/modules/apimanager/files/wso2am-1.6.0.zip
-cp -f $stratos_pack_path/wso2am-1.6.0.zip /etc/puppet/modules/apimanager/files
+cp -f $stratos_pack_path/wso2am-1.7.0.zip /etc/puppet/modules/apimanager/files
 
 rm -rf /etc/puppet/modules/apimanager/files/configs/repository/components/lib/$MYSQL_CONNECTOR
 cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/apimanager/files/configs/repository/components/lib
