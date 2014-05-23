@@ -548,10 +548,11 @@ replace_in_file "STATS_DB" "$apim_stats" "/etc/puppet/modules/apimanager/manifes
 replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
 replace_in_file "GATEWAY_CONFIG_DB" "$apim_gateway_config_db" "/etc/puppet/manifests/nodes/api.pp"
 replace_in_file "STORE_CONFIG_DB" "$apim_store_config_db" "/etc/puppet/manifests/nodes/api.pp"
+replace_in_file "KAYMANAGER_CONFIG_DB" "$apim_keymanager_config_db" "/etc/puppet/manifests/nodes/api.pp"
+replace_in_file "KAYMANAGER_CLOUD" "true" "/etc/puppet/manifests/nodes/api.pp"
+
 if [[ $clustering_keymanager =~ ^[Yy]$ ]]
 then
-	replace_in_file "KAYMANAGER_CONFIG_DB" "$apim_keymanager_config_db" "/etc/puppet/manifests/nodes/api.pp"
-        replace_in_file "KAYMANAGER_CLOUD" "true" "/etc/puppet/manifests/nodes/api.pp"
         replace_in_file "KAYMANAGER_CLUSTERING" "true" "/etc/puppet/manifests/nodes/api.pp"
 fi
 
