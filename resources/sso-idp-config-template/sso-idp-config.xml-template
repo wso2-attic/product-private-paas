@@ -16,6 +16,26 @@
  ~ under the License.
  -->
 <SSOIdentityProviderConfig>
+    <ServiceProviders>
+	<ServiceProvider>
+	    <Issuer>wso2.my.dashboard</Issuer>
+	    <AssertionConsumerService>https://IDP_URL:9443/dashboard/acs</AssertionConsumerService>
+	    <SignAssertion>true</SignAssertion>
+	    <SignResponse>true</SignResponse>
+	    <EnableAttributeProfile>false</EnableAttributeProfile>
+	    <IncludeAttributeByDefault>false</IncludeAttributeByDefault>
+	    <Claims>
+	    	<Claim>http://wso2.org/claims/role</Claim>
+	    	<Claim>http://wso2.org/claims/emailaddress</Claim>
+	    </Claims>
+	    <EnableSingleLogout>false</EnableSingleLogout>
+	    <SingleLogoutUrl></SingleLogoutUrl>
+	    <EnableAudienceRestriction>true</EnableAudienceRestriction>
+	    <AudiencesList>
+	    	<Audience>carbonServer</Audience>
+	    </AudiencesList>
+	    <ConsumingServiceIndex></ConsumingServiceIndex>
+	</ServiceProvider> 
 	<ServiceProvider>
 	    <Issuer>ApplicationServer</Issuer>
 	    <AssertionConsumerService>https://AS_ASSERTION_CONSUMER_HOST:9443/acs</AssertionConsumerService>
@@ -52,4 +72,5 @@
                         <Audience>BPS</Audience>
                 </AudiencesList>
         </ServiceProvider>
+    </ServiceProviders>
 </SSOIdentityProviderConfig>
