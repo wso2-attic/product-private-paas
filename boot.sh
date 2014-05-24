@@ -698,6 +698,10 @@ then
 
    #copy mysql connector jar	
    cp -f $stratos_pack_path/$MYSQL_CONNECTOR $stratos_install_path/wso2is-5.0.0/repository/components/lib
+
+   #populating IS specific databases
+   mysql -u$mysql_uname -p$mysql_password -Duserstore < $stratos_install_path/wso2is-5.0.0/dbscripts/identity/mysql.sql
+   mysql -u$mysql_uname -p$mysql_password -Duserstore < $stratos_install_path/wso2is-5.0.0/dbscripts/identity/application-mgt/mysql.sql
    
    # copy the templated master-datasource.xml and replace the relevant parameters
    cp ./resources/datasource-template/master-datasource.xml.template $stratos_install_path/wso2is-5.0.0/repository/conf/datasources/master-datasources.xml
