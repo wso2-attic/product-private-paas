@@ -691,6 +691,7 @@ fi
 echo -e "Waiting till all the services are active.."
 sleep 5m
 
+if [[ "$config_sso" == "true" ]];then
 if [ -e $stratos_pack_path/wso2is-5.0.0.zip ]
 then
    unzip -o -q $stratos_pack_path/wso2is-5.0.0.zip -d $stratos_install_path
@@ -719,12 +720,13 @@ then
    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
    replace_in_file 'IDP_URL' "$public_ip" $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
-
+   replace_in_file '<HostName>.*</HostName>' "<HostName>$public_ip</HostName>" $stratos_install_path/wso2is-5.0.0/repository/conf/carbon.xml
+   replace_in_file '<MgtHostName>.*</MgtHostName>' "<MgtHostName>$public_ip</MgtHostName>" $stratos_install_path/wso2is-5.0.0/repository/conf/carbon.xml
 
    nohup $stratos_install_path/wso2is-5.0.0/bin/wso2server.sh -DportOffset=2 &
 else
    echo "IS pack [ $stratos_pack_path/wso2is-5.0.0.zip ] not found!"
 fi
-
+fi
 
 echo -e "Completed.."
