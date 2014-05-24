@@ -120,9 +120,9 @@ check_for_puppet
 
 if [[ $puppet_installed = "true" ]]; then
     stratos_domain=$(dnsdomainname)
-    echo "Domain name for the private PAAS environment "$stratos_domain
+    echo "Domain name for the private PaaS environment "$stratos_domain
 else
-    read -p "Please enter a prefered domain name for the private PAAS environment : " stratos_domain
+    read -p "Please enter a preferred domain name for the private PaaS environment : " stratos_domain
 fi
 list_ip_addreses
 read -p "Above are the IP addresses assigned to your machine. Please select the preferred IP address : " machine_ip
@@ -358,7 +358,7 @@ if [[ $apim_needed =~ ^[Yy]$ ]]
 fi
 
 echo ""
-read -p "Are you sure you want to start WSO2 Private PAAS ? [y/n] " -r  confirm
+read -p "Are you sure you want to start WSO2 Private PaaS ? [y/n] " -r  confirm
 echo
 
 if [[ $confirm =~ ^[nN]$ ]]
@@ -691,12 +691,17 @@ fi
 echo -e "Waiting till all the services are active.."
 sleep 5m
 
+if [[ "$config_sso" == "true" ]];then
 if [ -e $stratos_pack_path/wso2is-5.0.0.zip ]
 then
    unzip -o -q $stratos_pack_path/wso2is-5.0.0.zip -d $stratos_install_path
 
    #copy mysql connector jar	
    cp -f $stratos_pack_path/$MYSQL_CONNECTOR $stratos_install_path/wso2is-5.0.0/repository/components/lib
+
+   #populating IS specific databases
+   mysql -u$mysql_uname -p$mysql_password -Duserstore < $stratos_install_path/wso2is-5.0.0/dbscripts/identity/mysql.sql
+   mysql -u$mysql_uname -p$mysql_password -Duserstore < $stratos_install_path/wso2is-5.0.0/dbscripts/identity/application-mgt/mysql.sql
    
    # copy the templated master-datasource.xml and replace the relevant parameters
    cp ./resources/datasource-template/master-datasource.xml.template $stratos_install_path/wso2is-5.0.0/repository/conf/datasources/master-datasources.xml
@@ -719,12 +724,13 @@ then
    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
    replace_in_file 'IDP_URL' "$public_ip" $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
-
+   replace_in_file '<HostName>.*</HostName>' "<HostName>$public_ip</HostName>" $stratos_install_path/wso2is-5.0.0/repository/conf/carbon.xml
+   replace_in_file '<MgtHostName>.*</MgtHostName>' "<MgtHostName>$public_ip</MgtHostName>" $stratos_install_path/wso2is-5.0.0/repository/conf/carbon.xml
 
    nohup $stratos_install_path/wso2is-5.0.0/bin/wso2server.sh -DportOffset=2 &
 else
    echo "IS pack [ $stratos_pack_path/wso2is-5.0.0.zip ] not found!"
 fi
-
+fi
 
 echo -e "Completed.."
