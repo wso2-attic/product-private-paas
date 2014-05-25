@@ -25,10 +25,17 @@ export JAVA_NAME_EXTRACTED=jdk1.7.0_51 # Extracted JDK folder name
 export MYSQL_CONNECTOR=mysql-connector-java-5.1.29-bin.jar # Relevant MySQL connector
 
 # General configuration
+export JAVA_HOME=${JAVA_HOME:-}
 export log_path=/var/log/apache-stratos
 export stratos_domain=""
 export machine_ip=""
 export host_user=""
+export auto_start_servers="true"
+
+# External Puppetmaster
+export puppet_external=""
+export puppet_external_ip=""
+export puppet_external_host=""
 
 # IaaS configuration
 export iaas=""

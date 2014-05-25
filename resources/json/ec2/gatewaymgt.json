@@ -61,6 +61,18 @@
              "value": "apim"
           },
           {
+             "name": "payload_parameter.DEPLOYMENT",
+             "value": "manager"
+          },
+          {
+             "name": "payload_parameter.MANAGER_SERVICE_TYPE",
+             "value": "gatewaymgt"
+          },
+          {
+             "name": "payload_parameter.WORKER_SERVICE_TYPE",
+             "value": "gateway"
+          },
+          {
              "name": "payload_parameter.CLUSTERING",
              "value": "true"
           },

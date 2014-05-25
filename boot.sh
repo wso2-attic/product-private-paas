@@ -42,8 +42,11 @@ puppet_installed="false"
 cep_port=7611
 activemq_client_libs=(activemq-broker-5.9.1.jar  activemq-client-5.9.1.jar  geronimo-j2ee-management_1.1_spec-1.0.1.jar  geronimo-jms_1.1_spec-1.1.1.jar  hawtbuf-1.9.jar)
 export LOG=$log_path/stratos-setup.log
+
+# Usage modes
 silent_mode="false"
 puppet_only="false"
+config_mode="false"
 
 # Registry databases
 registry_db="registry"
@@ -69,8 +72,7 @@ function help() {
 }
 
 function backup_file() {
-    if [[  -f "$1.orig" ]];
-    then
+    if [[  -f "$1.orig" ]]; then
         echo "Restoring from the Original template file $1"
         cp -f "$1.orig" "$1"
     else
@@ -166,10 +168,12 @@ function read_user_input() {
 
 function setup_apache_stratos() {
 
-    # Copy files to /etc/puppet
-    cp -f $stratos_pack_path/apache-stratos-cartridge-agent-4.0.0-wso2v1-bin.zip /etc/puppet/modules/agent/files
-    cp -f $stratos_pack_path/apache-stratos-load-balancer-4.0.0-wso2v1.zip /etc/puppet/modules/lb/files
-    cp -f $stratos_pack_path/$JAVA_FILE_DISTRUBUTION /etc/puppet/modules/java/files
+    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
+       # Copy files to /etc/puppet
+       cp -f $stratos_pack_path/apache-stratos-cartridge-agent-4.0.0-wso2v1-bin.zip /etc/puppet/modules/agent/files
+       cp -f $stratos_pack_path/apache-stratos-load-balancer-4.0.0-wso2v1.zip /etc/puppet/modules/lb/files
+       cp -f $stratos_pack_path/$JAVA_FILE_DISTRUBUTION /etc/puppet/modules/java/files         
+    fi    
 
     # In puppet only mode, do not change Apache Stratos product configurations
     if [[ $puppet_only = "true" ]]; then
@@ -291,35 +295,39 @@ function get_core_services_confirmations() {
 }
 
 function setup_as() {
-    # Copy AS patches to Puppet
-    cp -rf $current_dir/patches/patch0009/ /etc/puppet/modules/appserver/files/patches/repository/components/patches
 
-    # Copy packs files to Puppet
-    cp -f $stratos_pack_path/wso2as-5.2.1.zip /etc/puppet/modules/appserver/files
-    cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/appserver/files/configs/repository/components/lib
+    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
+        # Copy AS patches to Puppet
+        cp -rf $current_dir/patches/patch0009/ /etc/puppet/modules/appserver/files/patches/repository/components/patches
 
-    # appserver node parameters
-    replace_in_file "CLUSTERING" "$as_clustering" "/etc/puppet/manifests/nodes/appserver.pp"
-    replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
-    replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
-    replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/appserver/manifests/params.pp"
-    replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/appserver/manifests/params.pp"
-    replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/appserver/manifests/params.pp"
-    replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/appserver/manifests/params.pp"
+        # Copy packs files to Puppet
+        cp -f $stratos_pack_path/wso2as-5.2.1.zip /etc/puppet/modules/appserver/files
+        cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/appserver/files/configs/repository/components/lib
 
-    # Configure SSO in appserver
-    if [[ "$config_sso" == "true" ]] ; then      
-       backup_file "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
-       replace_in_file "SSO_DISABLED" "false" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
-       replace_in_file "IDP_URL" "$machine_ip" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
-    else       
-       backup_file "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
-       replace_in_file "SSO_DISABLED" "true" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
+        # appserver node parameters
+        replace_in_file "CLUSTERING" "$as_clustering" "/etc/puppet/manifests/nodes/appserver.pp"
+        replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
+        replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
+        replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/appserver/manifests/params.pp"
+        replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/appserver/manifests/params.pp"
+        replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/appserver/manifests/params.pp"
+        replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/appserver/manifests/params.pp"
+
+        # Configure SSO in appserver
+        if [[ "$config_sso" == "true" ]] ; then      
+           backup_file "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
+           replace_in_file "SSO_DISABLED" "false" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
+           replace_in_file "IDP_URL" "$machine_ip" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
+        else       
+           backup_file "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
+           replace_in_file "SSO_DISABLED" "true" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
+        fi
     fi
 
     if [[ "$puppet_only" = "true" ]]; then
        return
     fi
+
     #appserver config db changes 
     create_config_database "$as_config_db"
 
@@ -339,29 +347,33 @@ function setup_as() {
 
 
 function setup_bps() {
-    # Copy BPS patches to Puppet
-    cp -rf $current_dir/patches/patch0008/ /etc/puppet/modules/bps/files/patches/repository/components/patches
 
-    # Copy packs files to Puppet
-    cp -f $stratos_pack_path/wso2bps-3.2.0.zip /etc/puppet/modules/bps/files
-    cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/bps/files/configs/repository/components/lib
+    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
+        # Copy BPS patches to Puppet
+        cp -rf $current_dir/patches/patch0008/ /etc/puppet/modules/bps/files/patches/repository/components/patches
 
-    # bps node parameters
-    backup_file "/etc/puppet/manifests/nodes/bps.pp"
-    replace_in_file "BPS_CONFIG_DB" "$bps_db" "/etc/puppet/manifests/nodes/bps.pp"
-    replace_in_file "BPS_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes/bps.pp"
-    replace_in_file "CLUSTERING" "$bps_clustering" "/etc/puppet/manifests/nodes/bps.pp"
-    backup_file "/etc/puppet/modules/bps/manifests/params.pp"
-    replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
-    replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
-    replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/bps/manifests/params.pp"
-    replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/bps/manifests/params.pp"
-    replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/bps/manifests/params.pp"
-    replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/bps/manifests/params.pp"
+        # Copy packs files to Puppet
+        cp -f $stratos_pack_path/wso2bps-3.2.0.zip /etc/puppet/modules/bps/files
+        cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/bps/files/configs/repository/components/lib
+
+        # bps node parameters
+        backup_file "/etc/puppet/manifests/nodes/bps.pp"
+        replace_in_file "BPS_CONFIG_DB" "$bps_db" "/etc/puppet/manifests/nodes/bps.pp"
+        replace_in_file "BPS_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes/bps.pp"
+        replace_in_file "CLUSTERING" "$bps_clustering" "/etc/puppet/manifests/nodes/bps.pp"
+        backup_file "/etc/puppet/modules/bps/manifests/params.pp"
+        replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
+        replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
+        replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/bps/manifests/params.pp"
+        replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/bps/manifests/params.pp"
+        replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/bps/manifests/params.pp"
+        replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/bps/manifests/params.pp"        
+    fi
 
     if [[ "$puppet_only" = "true" ]]; then
-       return
+           return
     fi
+
     #bps config db changes 
     create_config_database "$bps_config_db"
 
@@ -381,29 +393,33 @@ function setup_bps() {
 
 
 function setup_esb() {
-    # Copy ESB patches to Puppet
-    cp -rf $current_dir/patches/patch0008/ /etc/puppet/modules/esb/files/patches/repository/components/patches
 
-    # Copy packs files to Puppet
-    cp -f $stratos_pack_path/wso2esb-4.8.1.zip /etc/puppet/modules/esb/files
-    cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/esb/files/configs/repository/components/lib
+    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
+       # Copy ESB patches to Puppet
+       cp -rf $current_dir/patches/patch0008/ /etc/puppet/modules/esb/files/patches/repository/components/patches
 
-    # esb node parameters
-    backup_file "/etc/puppet/manifests/nodes/esb.pp"
-    replace_in_file "ESB_CONFIG_DB" "$esb_config_db" "/etc/puppet/manifests/nodes/esb.pp"
-    replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes/esb.pp"
-    replace_in_file "CLUSTERING" "$esb_clustering" "/etc/puppet/manifests/nodes/esb.pp"
-    backup_file "/etc/puppet/modules/esb/manifests/params.pp"
-    replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
-    replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
-    replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/esb/manifests/params.pp"
-    replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/esb/manifests/params.pp"
-    replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/esb/manifests/params.pp"
-    replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/params.pp"
+       # Copy packs files to Puppet
+       cp -f $stratos_pack_path/wso2esb-4.8.1.zip /etc/puppet/modules/esb/files
+       cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/esb/files/configs/repository/components/lib
+
+       # esb node parameters
+       backup_file "/etc/puppet/manifests/nodes/esb.pp"
+       replace_in_file "ESB_CONFIG_DB" "$esb_config_db" "/etc/puppet/manifests/nodes/esb.pp"
+       replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes/esb.pp"
+       replace_in_file "CLUSTERING" "$esb_clustering" "/etc/puppet/manifests/nodes/esb.pp"
+       backup_file "/etc/puppet/modules/esb/manifests/params.pp"
+       replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
+       replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
+       replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/esb/manifests/params.pp"
+       replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/esb/manifests/params.pp"
+       replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/esb/manifests/params.pp"
+       replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/params.pp"       
+    fi
 
     if [[ "$puppet_only" = "true" ]]; then
-       return
+          return
     fi
+
     #esb config db changes 
     create_config_database "$esb_config_db"
 
@@ -477,23 +493,25 @@ function setup_is() {
 }
 
 function setup_apim() {
-    # Copy ESB patches to Puppet
-    cp -rf $current_dir/patches/patch0009/ /etc/puppet/modules/apimanager/files/patches/repository/components/patches
-    cp -f $stratos_pack_path/wso2am-1.6.0.zip /etc/puppet/modules/apimanager/files
-    cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/apimanager/files/configs/repository/components/lib
+    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
+       # Copy ESB patches to Puppet
+       cp -rf $current_dir/patches/patch0009/ /etc/puppet/modules/apimanager/files/patches/repository/components/patches
+       cp -f $stratos_pack_path/wso2am-1.6.0.zip /etc/puppet/modules/apimanager/files
+       cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/apimanager/files/configs/repository/components/lib
 
-    # apim node parameters
-    backup_file "/etc/puppet/modules/apimanager/manifests/params.pp"
-    replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/apimanager/manifests/params.pp"
-    replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/apimanager/manifests/params.pp"
-    replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/apimanager/manifests/params.pp"
-    replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/apimanager/manifests/params.pp"
-    replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
-    replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/apimanager/manifests/params.pp"
-    replace_in_file "STATS_DB" "$apim_stats_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
-    replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
-    replace_in_file "GATEWAY_CONFIG_DB" "$apim_gateway_config_db" "/etc/puppet/manifests/nodes/api.pp"
-    replace_in_file "STORE_CONFIG_DB" "$apim_store_publisher_config_db" "/etc/puppet/manifests/nodes/api.pp"
+       # apim node parameters
+       backup_file "/etc/puppet/modules/apimanager/manifests/params.pp"
+       replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/apimanager/manifests/params.pp"
+       replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/apimanager/manifests/params.pp"
+       replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/apimanager/manifests/params.pp"
+       replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/apimanager/manifests/params.pp"
+       replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
+       replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/apimanager/manifests/params.pp"
+       replace_in_file "STATS_DB" "$apim_stats_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
+       replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
+       replace_in_file "GATEWAY_CONFIG_DB" "$apim_gateway_config_db" "/etc/puppet/manifests/nodes/api.pp"
+       replace_in_file "STORE_CONFIG_DB" "$apim_store_publisher_config_db" "/etc/puppet/manifests/nodes/api.pp"       
+    fi
 
     # In puppet only mode, do not change other configurations
     if [[ $puppet_only = "true" ]]; then
@@ -508,11 +526,11 @@ function setup_apim() {
     # Configure cartridge definition json
     backup_file $current_dir/resources/json/$iaas/gateway-cart.json
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/gateway-cart.json"
-    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/gateway-cart.json"   
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/gateway.json"   
 
     backup_file $current_dir/resources/json/$iaas/gatewaymgt-cart.json
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/gatewaymgt-cart.json"
-    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/gatewaymgt-cart.json"
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/gatewaymgt.json"
 
     backup_file $current_dir/resources/json/$iaas/keymanager.json
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/keymanager.json"
@@ -527,7 +545,7 @@ function setup_apim() {
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/store.json"
 }
 
-function configure_products() {
+function deploy_puppet() {
     # Copy Puppet scripts from private-paas repo
     cp -rf puppet/* /etc/puppet/
 
@@ -549,17 +567,31 @@ function configure_products() {
     
     replace_in_file "JAVA_FILE" "$JAVA_FILE_DISTRUBUTION" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "JAVA_NAME" "$JAVA_NAME_EXTRACTED" "/etc/puppet/manifests/nodes/base.pp"
-    # JAVA_NAME should match extracted directory name of Java tar.gz archive, eg. jdk-7u45-linux-x64.tar.gz -> jdk1.7.0_45    
+    # JAVA_NAME should match extracted directory name of Java tar.gz archive, eg. jdk-7u45-linux-x64.tar.gz -> jdk1.7.0_45
+}
+
+function configure_products() {
+
+    # Create databases for the governence registry
+    # Using the same userstore to the registry    
+    create_registry_database "$registry_db"
+
+    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
+       deploy_puppet
+    fi    
 
     # Configure Apache Stratos
     setup_apache_stratos
 
-    # Copy activemq client jars to puppet
-    for activemq_client_lib in "${activemq_client_libs[@]}" 
-        do
-	    cp -f $stratos_install_path/$ACTIVE_MQ_EXTRACTED/lib/$activemq_client_lib /etc/puppet/modules/agent/files/activemq/
-            cp -f $stratos_install_path/$ACTIVE_MQ_EXTRACTED/lib/$activemq_client_lib /etc/puppet/modules/lb/files/activemq/
-        done
+    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
+
+       # Copy activemq client jars to puppet
+          for activemq_client_lib in "${activemq_client_libs[@]}" 
+              do
+	          cp -f $stratos_install_path/$ACTIVE_MQ_EXTRACTED/lib/$activemq_client_lib /etc/puppet/modules/agent/files/activemq/
+                  cp -f $stratos_install_path/$ACTIVE_MQ_EXTRACTED/lib/$activemq_client_lib /etc/puppet/modules/lb/files/activemq/
+              done
+    fi  
 
     # Configure LB cartridge definition json
     backup_file $current_dir/resources/json/$iaas/lb-cart.json
@@ -586,8 +618,10 @@ function configure_products() {
        setup_apim
     fi    
 
-    # Restart Puppetmaster after configurations
-    /etc/init.d/puppetmaster restart
+    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
+       # Restart Puppetmaster after configurations
+       /etc/init.d/puppetmaster restart
+    fi
 }
 
 function init() {
@@ -604,6 +638,7 @@ function init() {
         echo "Domain name for the WSO2 Private PaaS environment: $stratos_domain"
     else   
         stratos_domain=$(read_user_input "Please enter a prefered domain name for the WSO2 Private PaaS environment : " "" $stratos_domain )
+        echo "Using Stratos domain: $stratos_domain"
     fi
 
     list_ip_addreses
@@ -615,15 +650,29 @@ function init() {
         machine_ip="127.0.0.1"
     fi
 
-    # Install Puppetmaster if it is not already installed
-    if [[ $puppet_installed = "false" ]]; then
-        install_puppet
-    fi
+    machine_ip=$(read_user_input "Above are the IP addresses assigned to your machine. Please select the preferred IP address : " "" $machine_ip )
 
-    puppet_ip=$machine_ip
-    echo -e "Puppetmaster IP address is $puppet_ip"
-    puppet_host="puppet."$stratos_domain
-    echo -e "Puppetmaster hostname is $puppet_host"
+    # Configure an external Puppetmaster
+    puppet_external=$(read_user_input "Do you need to configure an external Puppetmaster? [y/n] : " "" $puppet_external )
+
+    if [[ $puppet_external =~ ^[Yy]$ ]]; then
+       echo -e "Configuring an external Puppetmaster...\n"
+       puppet_external_ip=$(read_user_input "Please enter external Puppetmaster IP : " "" $puppet_external_ip )
+       puppet_external_host=$(read_user_input "Please enter external Puppetmaster hostname : " "" $puppet_external_host )
+ 
+       puppet_ip=$puppet_external_ip
+       puppet_host=$puppet_external_host
+    else
+       # Install Puppetmaster if it is not already installed
+       if [[ $puppet_installed = "false" ]]; then        
+          install_puppet
+       fi
+
+       puppet_ip=$machine_ip
+       echo -e "Puppetmaster IP address is $puppet_ip"
+       puppet_host="puppet."$stratos_domain
+       echo -e "Puppetmaster hostname is $puppet_host"
+    fi    
 
     # Configure MySQL 
     setup_mysql=$(read_user_input "Do you need to install MySQL? [y/n] : " "" $setup_mysql )
@@ -637,19 +686,19 @@ function init() {
     if [[ $setup_mysql =~ ^[Yy]$ ]]; then
         echo -e "\nStarting MySQL installation... \n"
         install_mysql
+
+        # Make MySQL bind to IP address 0.0.0.0
+            if [[ -e '/etc/mysql/my.cnf' ]]; then
+                replace_in_file "bind-address.*" "bind-address=0.0.0.0" /etc/mysql/my.cnf
+                # Restart MySQL service
+                service mysql restart
+                # Update privileges        
+               mysql -u$mysql_uname -p$mysql_password -e "GRANT ALL PRIVILEGES ON *.* TO $mysql_uname@'%' IDENTIFIED BY '$mysql_password'; FLUSH PRIVILEGES;"
+            else
+                echo 'my.cnf not found. Unable to set listen address to 0.0.0.0'
+            fi
     else
         echo -e "\nSkipping MySQL installation... \n";
-    fi
-
-    # Make MySQL bind to IP address 0.0.0.0
-    if [[ -e '/etc/mysql/my.cnf' ]]; then
-        replace_in_file "bind-address.*" "bind-address=0.0.0.0" /etc/mysql/my.cnf
-        # Restart MySQL service
-        service mysql restart
-        # Update privileges        
-        mysql -u$mysql_uname -p$mysql_password -e "GRANT ALL PRIVILEGES ON *.* TO $mysql_uname@'%' IDENTIFIED BY '$mysql_password'; FLUSH PRIVILEGES;"
-    else
-        echo 'my.cnf not found. Unable to set listen address to 0.0.0.0'
     fi
 
     # Set JAVA_HOME environment variable
@@ -765,7 +814,7 @@ function deploy_wso2_ppaas_services() {
     fi
 
     # wait till services are active
-    echo -e "Waiting till all the services are active.."
+    echo -e "\nWaiting till all the services are active...\n"
     sleep 5m
 }
 
@@ -790,21 +839,24 @@ if [ "$UID" -ne "0" ]; then
 fi
 
 
-while getopts ":sph" opts
+while getopts ":sph --config" opts
 do
   case $opts in
     s)
         export silent_mode="true"
-    ;;
+        ;;
     p)
         export puppet_only="true"
+        ;;
+    config)
+        export config_mode="true"
         ;;
     h)
         help
         exit 0
         ;;
     *)
-        ${ECHO} -e "boot.sh: Invalid option: -${OPTARG}"        	
+        ${ECHO} -e "boot.sh: Invalid option: -${OPTARG}" 	
         exit 1
     ;;
   esac
@@ -817,13 +869,28 @@ init
 get_core_services_confirmations
 
 # On silent mode, start the servers without prompting anything from the user
-if [[ $silent_mode = "true" ]]; then
-    echo -e "\nboot.sh: Running in silent mode\n"
-    start_servers    
-elif [[ $puppet_only = "true" ]]; then
-    echo -e "\nboot.sh: Running in puppet only mode\n"
-    configure_products
-    echo -e "boot.sh: Puppet configuration completed"
+if [[ "$silent_mode" = "true" ]]; then
+
+     echo -e "\nboot.sh: Running in silent mode\n"
+     start_servers    
+
+elif [[ "$puppet_only" = "true" ]]; then
+
+     echo -e "\nboot.sh: Running in puppet only mode\n"
+     configure_products
+     echo -e "boot.sh: Puppet configuration completed"
+
+elif [[ "$config_mode" = "true" ]]; then
+
+     echo -e "\nboot.sh: Running in config mode. All service deployments will be skipped.\n"
+     # Do the product specific configurations
+     configure_products         
+
+     # Start core services
+     if [[ "$auto_start_servers" = "true" ]]; then
+        start_servers
+     fi
+
 else
      # Get user confirmations to deploy WSO2 PPaaS services
      get_service_deployment_confirmations 
@@ -832,7 +899,9 @@ else
      configure_products         
 
      # Start core servers
-     start_servers
+     if [[ "$auto_start_servers" = "true" ]]; then
+        start_servers
+     fi
 
      # Deploy cartridges to Apache Stratos
      deploy_wso2_ppaas_services
