@@ -16,7 +16,7 @@
 #
 
 # appserver cartridge node
-node /appserver/ inherits base {
+node /[0-9]{1,12}.(default|manager|worker).appserver/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2as-5.2.1"
   require java	
   class {'agent':}

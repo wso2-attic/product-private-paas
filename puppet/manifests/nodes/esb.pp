@@ -16,7 +16,7 @@
 #
 
 # ESB cartridge node
-node /esb/ inherits base {
+node /[0-9]{1,12}.(default|manager|worker).esb/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2esb-4.8.1"
   require java
   class {'agent':}
