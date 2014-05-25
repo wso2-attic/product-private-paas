@@ -4,8 +4,8 @@
       "serviceGroup": "apim",
       "host": "publisher.am.wso2.com",
       "displayName": "API Manager - Publisher",
-      "description": "API Manager - PUblisher Cartridge",
-      "version": "1.6.0",
+      "description": "API Manager - Publisher Cartridge",
+      "version": "1.7.0",
       "multiTenant": "true",
       "portMapping": [
          {

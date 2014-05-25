@@ -496,7 +496,7 @@ function setup_apim() {
     if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
        # Copy ESB patches to Puppet
        cp -rf $current_dir/patches/patch0009/ /etc/puppet/modules/apimanager/files/patches/repository/components/patches
-       cp -f $stratos_pack_path/wso2am-1.6.0.zip /etc/puppet/modules/apimanager/files
+       cp -f $stratos_pack_path/wso2am-1.7.0.zip /etc/puppet/modules/apimanager/files
        cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/apimanager/files/configs/repository/components/lib
 
        # apim node parameters
@@ -524,12 +524,12 @@ function setup_apim() {
     create_config_database "$apim_keymanager_config_db"
 
     # Configure cartridge definition json
-    backup_file $current_dir/resources/json/$iaas/gateway-cart.json
-    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/gateway-cart.json"
+    backup_file $current_dir/resources/json/$iaas/gateway.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/gateway.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/gateway.json"   
 
-    backup_file $current_dir/resources/json/$iaas/gatewaymgt-cart.json
-    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/gatewaymgt-cart.json"
+    backup_file $current_dir/resources/json/$iaas/gatewaymgt.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/gatewaymgt.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/gatewaymgt.json"
 
     backup_file $current_dir/resources/json/$iaas/keymanager.json

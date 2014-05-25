@@ -5,7 +5,7 @@
       "host": "keymanager.am.wso2.com",
       "displayName": "API Manager - Keymanager",
       "description": "API Manager - Keymanager Cartridge",
-      "version": "1.6.0",     
+      "version": "1.7.0",     
       "multiTenant": "true",
       "portMapping": [
          {
