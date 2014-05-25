@@ -124,23 +124,28 @@ mysql -u$dashboard_db_user -p$dashboard_db_pass < $resource_path/dashboard.sql
 # -----------------------------------------------
 echo "Setting up Hadoop"
 
-tar xzf $hadoop_pack_path -C $stratos_path
+if [[ -e $hadoop_pack_path ]]; then
+   tar xzf $hadoop_pack_path -C $stratos_path
 
-sudo apt-get -q -y install ssh --force-yes
-sudo apt-get -q -y install rsync --force-yes
+   sudo apt-get -q -y install ssh --force-yes
+   sudo apt-get -q -y install rsync --force-yes
 
-cp -f $current_dir/config/hadoop/core-site.xml $hadoop_path/conf/
-cp -f $current_dir/config/hadoop/hdfs-site.xml $hadoop_path/conf/
-cp -f $current_dir/config/hadoop/mapred-site.xml $hadoop_path/conf/
-#setting java_home in hadoop-env.sh
-echo "export JAVA_HOME=$JAVA_HOME" >> $hadoop_path/conf/hadoop-env.sh
+   cp -f $current_dir/config/hadoop/core-site.xml $hadoop_path/conf/
+   cp -f $current_dir/config/hadoop/hdfs-site.xml $hadoop_path/conf/
+   cp -f $current_dir/config/hadoop/mapred-site.xml $hadoop_path/conf/
+   #setting java_home in hadoop-env.sh
+   echo "export JAVA_HOME=$JAVA_HOME" >> $hadoop_path/conf/hadoop-env.sh
 
-echo -e  'y\n' | ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
-cat ~/.ssh/id_dsa.pub >> ~/.ssh/authorized_keys
+   echo -e  'y\n' | ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
+   cat ~/.ssh/id_dsa.pub >> ~/.ssh/authorized_keys
 
-echo 'Y' | $hadoop_path/bin/hadoop namenode -format -a
+   echo 'Y' | $hadoop_path/bin/hadoop namenode -format -a
 
-# Start BAM server
-start_bam
+   # Start BAM server
+   start_bam
+else
+   echo "Gitblit pack [ $gitblit_pack_path ] not found!"
+   exit 1
+fi
 
 # END

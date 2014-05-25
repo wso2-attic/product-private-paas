@@ -5,7 +5,7 @@
       "host": "store.am.wso2.com",
       "displayName": "API Manager - Store",
       "description": "API Manager - Store Cartridge",
-      "version": "1.6.0",
+      "version": "1.7.0",
       "multiTenant": "true",
       "portMapping": [
          {

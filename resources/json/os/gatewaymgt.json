@@ -3,9 +3,9 @@
       "provider": "internal",
       "serviceGroup": "apim",
       "host": "mgt.gateway.am.wso2.com",
-      "displayName": "API Manager - Gateway",
-      "description": "API Manager - Gateway Cartridge",
-      "version": "1.6.0",
+      "displayName": "API Manager - Gateway Manager",
+      "description": "API Manager - Gateway Manager Cartridge",
+      "version": "1.7.0",
       "multiTenant": "true",
       "portMapping": [
          {
