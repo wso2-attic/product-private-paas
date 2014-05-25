@@ -33,7 +33,7 @@ define agent::initialize ($repo, $version, $service, $local_dir, $target, $owner
   file {
     "/${local_dir}/apache-stratos-${service}-${version}-bin.zip":
       ensure => present,
-      source => "puppet:///modules/agent/apache-stratos-${service}-${version}-bin.zip",
+      source => ["puppet:///modules/agent/apache-stratos-${service}-${version}-bin.zip", "puppet:///packs/apache-stratos-${service}-${version}-bin.zip"],
       require   => Exec["creating_local_package_repo_for_${name}", "creating_target_for_${name}"];
   }
 

@@ -32,7 +32,7 @@ define is::initialize ($repo, $version, $service, $local_dir, $target, $mode, $o
   file {
     "/${local_dir}/wso2${service}-${version}.zip":
       ensure => present,
-      source => "puppet:///modules/is/wso2${service}-${version}.zip",
+      source => ["puppet:///modules/is/wso2${service}-${version}.zip", "puppet:///packs/wso2${service}-${version}.zip"],
       require   => Exec["creating_local_package_repo_for_${name}", "creating_target_for_${name}"];
   }
 
