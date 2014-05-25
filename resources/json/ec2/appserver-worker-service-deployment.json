@@ -1,0 +1,9 @@
+{
+      "serviceName": "appserverworker",
+      "cartridgeType": "appserverworker",
+      "deploymentPolicyName": "deployp",
+      "autoscalingPolicyName": "economy",
+      "clusterDomain": "appserverdev.dev.domain",
+      "clusterSubDomain": "subdomain2",
+      "tenantRange": "*"    
+}

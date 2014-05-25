@@ -521,249 +521,33 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
             } else if (CartridgeAgentConfiguration.getInstance().getServiceName().equals("gatewaymgt") ||
                     CartridgeAgentConfiguration.getInstance().getServiceName().equals("gateway")) {
-//                // handle gateway case
-//
-//                log.info("#################### gateway case");
-//
-//
-//                /*List<Member> keymgrMemberList = new ArrayList<Member>();
-//                for (Member member : keymgrClusterCollection.iterator().next().getMembers()) {
-//                    if ((member.getStatus().equals(MemberStatus.Activated))) {
-//                        keymgrMemberList.add(member);
-//                    }
-//                }
-//
-//                if (keymgrMemberList.isEmpty()) {
-//                    if (log.isDebugEnabled()) {
-//                        log.debug("API Keymanager members not yet created");
-//                    }
-//                    return false;
-//                }
-//                Member keymgrMember = keymgrMemberList.get(0);
-//                envParameters.put("STRATOS_WK_KEYMGR_MEMBER_IP", keymgrMember.getMemberIp());
-//                if (log.isDebugEnabled()) {
-//                    log.debug("STRATOS_WK_KEYMGR_MEMBER_IP: " + keymgrMember.getMemberIp());
-//                } */
-//
-//                Collection<Cluster> apiGWMgrClusters = topology.getService("gatewaymgt").getClusters();
-//                List<Member> apiGWMgrMembers = new ArrayList<Member>();
-//                for (Member member : apiGWMgrClusters.iterator().next().getMembers()) {
-//                    if ((member.getStatus().equals(MemberStatus.Starting)) || (member.getStatus().equals(MemberStatus.Activated))) {
-//                        if (member.getProperties().containsKey("PRIMARY") && member.getProperties().getProperty("PRIMARY").toLowerCase().equals("true")) {
-//                            envParameters.put("STRATOS_GW_MGR_IS_PRIMARY", "true");
-//                            log.info("#################### STRATOS_GW_MGR_IS_PRIMARY: true");
-//                        } else {
-//                            envParameters.put("STRATOS_GW_MGR_IS_PRIMARY", "false");
-//                            log.info("#################### STRATOS_GW_MGR_IS_PRIMARY: false");
-//                        }
-//
-//                        apiGWMgrMembers.add(member);
-//                    }
-//                }
-//
-//                if (apiGWMgrMembers.isEmpty()) {
-//                    if (log.isDebugEnabled()) {
-//                        log.debug("API Gateway manager members not yet created");
-//                    }
-//                    log.info("#################### No gateway manager members");
-//                    return false;
-//                }
-//
-//                //only one gateway manager, just get the IP of that
-//                Member apiGWMgrMember = apiGWMgrMembers.get(0);
-//                envParameters.put("STRATOS_WK_GW_MGR_MEMBER_IP", apiGWMgrMember.getMemberIp());
-//                if (log.isDebugEnabled()) {
-//                    log.debug("STRATOS_WK_GW_MGR_MEMBER_IP: " + apiGWMgrMember.getMemberIp());
-//                }
-//
-//                log.info("#################### gateway manager member: " + apiGWMgrMember.getMemberIp() + ", " + apiGWMgrMember.getMemberPublicIp());
-//                int minGatewayWorkerMemberCount = 1;
-//                boolean minGwMemberCountFound = false;
-//
-//                // there will be multiple gateway workers, so capture all the IPs
-//                // format: 'STRATOS_WK_GW_WORKER_MEMBER_<MEMBER_NO>_IP'
-//                Collection<Cluster> apiGWWorkerClusters = topology.getService("gateway").getClusters();
-//
-//                List<Member> wkGatewayWorkerMembers = new ArrayList<Member>();
-//                for (Member gatewayWorkerMember : apiGWWorkerClusters.iterator().next().getMembers()) {
-//                    if (gatewayWorkerMember.getProperties() != null &&
-//                            gatewayWorkerMember.getProperties().containsKey("PRIMARY") &&
-//                            gatewayWorkerMember.getProperties().getProperty("PRIMARY").toLowerCase().equals("true") &&
-//                            (gatewayWorkerMember.getStatus().equals(MemberStatus.Starting) || gatewayWorkerMember.getStatus().equals(MemberStatus.Activated))
-//                            ) {
-//                        wkGatewayWorkerMembers.add(gatewayWorkerMember);
-//                        if (log.isDebugEnabled()) {
-//                            log.debug("Found gateway WKA: STRATOS_WK_GW_WORKER_MEMBER_IP: " + gatewayWorkerMember.getMemberIp());
-//                        }
-//                        log.info("#################### gateway worker member: " + gatewayWorkerMember.getMemberIp() + ", " + gatewayWorkerMember.getMemberPublicIp());
-//                        if (!minGwMemberCountFound) {
-//                            minGatewayWorkerMemberCount = getMinInstanceCountFromMemberProperties(gatewayWorkerMember);
-//                            minGwMemberCountFound = true;
-//                        }
-//                    }
-//                }
-//
-//                int gatewayWorkerMemberCount = 0;
-//                if (wkGatewayWorkerMembers.size() >= minGatewayWorkerMemberCount) {
-//                    int idx = 0;
-//                    for (Member member : wkGatewayWorkerMembers) {
-//                        envParameters.put("STRATOS_WK_GW_WORKER_MEMBER_" + idx + "_IP", member.getMemberIp());
-//                        if (log.isDebugEnabled()) {
-//                            log.debug("STRATOS_WK_GW_WORKER_MEMBER_" + idx + "_IP: " + member.getMemberIp());
-//                        }
-//                        idx++;
-//                        log.info("#################### STRATOS_WK_GW_WORKER_MEMBER_" + idx + "_IP: " + member.getMemberIp() + ", " + member.getMemberPublicIp());
-//                    }
-//                    gatewayWorkerMemberCount = wkGatewayWorkerMembers.size();
-//                    envParameters.put("STRATOS_GW_WORKER_MEMBER_COUNT", Integer.toString(minGatewayWorkerMemberCount));
-//                    log.info("#################### gateway worker member count: " + gatewayWorkerMemberCount);
-//
-//                    return true;
-//                }
-//
-//                envParameters.put("STRATOS_GW_WORKER_MEMBER_COUNT", Integer.toString(gatewayWorkerMemberCount));
-//                log.info("#################### gateway worker member count: " + gatewayWorkerMemberCount);
+
+                if (CartridgeAgentConfiguration.getInstance().getDeployment() != null) {
+                    // check if deployment is Manager Worker separated
+                    if (CartridgeAgentConfiguration.getInstance().getDeployment().equalsIgnoreCase("manager") || CartridgeAgentConfiguration.getInstance().getDeployment().equalsIgnoreCase("worker")) {
+
+                        log.info("Deployment pattern for the node: " + CartridgeAgentConfiguration.getInstance().getDeployment());
+                        envParameters.put("DEPLOYMENT", CartridgeAgentConfiguration.getInstance().getDeployment());
+                        // check if WKA members of Manager Worker separated deployment is ready
+                        return isManagerWorkerWKAGroupReady(envParameters);
+                    }
+                }
+
 
             } else if (CartridgeAgentConfiguration.getInstance().getServiceName().equals("keymanager")) {
                 return true;
             }
         } else {
 
-            //generic worker manager separated clustering logic
             if (CartridgeAgentConfiguration.getInstance().getDeployment() != null) {
                 // check if deployment is Manager Worker separated
-                if (CartridgeAgentConfiguration.getInstance().getDeployment().equalsIgnoreCase("manager") ||
-                        CartridgeAgentConfiguration.getInstance().getDeployment().equalsIgnoreCase("worker")) {
+                if (CartridgeAgentConfiguration.getInstance().getDeployment().equalsIgnoreCase("manager") || CartridgeAgentConfiguration.getInstance().getDeployment().equalsIgnoreCase("worker")) {
+
                     log.info("Deployment pattern for the node: " + CartridgeAgentConfiguration.getInstance().getDeployment());
                     envParameters.put("DEPLOYMENT", CartridgeAgentConfiguration.getInstance().getDeployment());
-
-                    // for this, we need both manager cluster service name and worker cluster service name
-                    String managerServiceName =  CartridgeAgentConfiguration.getInstance().getManagerServiceName();
-                    String workerServiceName =  CartridgeAgentConfiguration.getInstance().getWorkerServiceName();
-
-                    // managerServiceName and workerServiceName both should not be null /empty
-                    if (managerServiceName == null || managerServiceName.isEmpty()) {
-                        log.error("Manager service name [ "+ managerServiceName +" ] is invalid");
-                        return false;
-                    }
-                    if (workerServiceName == null || workerServiceName.isEmpty()) {
-                        log.error("Worker service name [ "+ workerServiceName +" ] is invalid");
-                        return false;
-                    }
-
-                    boolean minManagerInstancesAvailable = false;
-                    boolean minWorkerInstancesAvailable = false;
-
-                    TopologyManager.acquireReadLock();
-
-                    try {
-                        Service managerService = TopologyManager.getTopology().getService(managerServiceName);
-                        Service workerService = TopologyManager.getTopology().getService(workerServiceName);
-
-                        if (managerService == null) {
-                            log.warn("Service [ "+managerServiceName+" ] is not found");
-                            return false;
-                        }
-
-                        if (workerService == null) {
-                            log.warn("Service [ "+workerServiceName+" ] is not found");
-                            return false;
-                        }
-
-                        // manager clusters
-                        Collection<Cluster> managerClusters = managerService.getClusters();
-                        if (managerClusters == null || managerClusters.isEmpty()) {
-                            log.warn("No clusters found for service [ "+ managerServiceName + " ]");
-                            return false;
-                        }
-
-                        int managerMinInstanceCount = 1;
-                        boolean managerMinInstanceCountFound = false;
-
-                        List<Member> managerWkaMembers = new ArrayList<Member>();
-                        for (Member member : managerClusters.iterator().next().getMembers()) {
-                            if (member.getProperties() != null &&
-                                    member.getProperties().containsKey("PRIMARY") &&
-                                    member.getProperties().getProperty("PRIMARY").toLowerCase().equals("true") &&
-                                    (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated))) {
-
-                                managerWkaMembers.add(member);
-
-                                // get the min instance count
-                                if (!managerMinInstanceCountFound) {
-                                    managerMinInstanceCount = getMinInstanceCountFromMemberProperties(member);
-                                    managerMinInstanceCountFound = true;
-                                    log.info("Manager min instance count: " + managerMinInstanceCount);
-                                }
-                            }
-                        }
-
-                        if (managerWkaMembers.size() >= managerMinInstanceCount) {
-                            minManagerInstancesAvailable = true;
-                            int idx = 0;
-                            for (Member member : managerWkaMembers) {
-                                envParameters.put("STRATOS_WK_MANAGER_MEMBER_" + idx + "_IP", member.getMemberIp());
-                                if(log.isDebugEnabled()) {
-                                    log.debug("STRATOS_WK_MANAGER_MEMBER_" + idx + "_IP: " + member.getMemberIp());
-                                }
-                                idx++;
-                            }
-
-                            envParameters.put("STRATOS_WK_MANAGER_MEMBER_COUNT", Integer.toString(managerMinInstanceCount));
-                        }
-
-                        // worker cluster
-                        Collection<Cluster> workerClusters = workerService.getClusters();
-                        if (workerClusters == null || workerClusters.isEmpty()) {
-                            log.warn("No clusters found for service [ "+ workerServiceName + " ]");
-                            return false;
-                        }
-
-                        int workerMinInstanceCount = 1;
-                        boolean workerMinInstanceCountFound = false;
-
-                        List<Member> workerWkaMembers = new ArrayList<Member>();
-                        for (Member member : workerClusters.iterator().next().getMembers()) {
-                            if (member.getProperties() != null &&
-                                    member.getProperties().containsKey("PRIMARY") &&
-                                    member.getProperties().getProperty("PRIMARY").toLowerCase().equals("true") &&
-                                    (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated))) {
-
-                                workerWkaMembers.add(member);
-
-                                // get the min instance count
-                                if (!workerMinInstanceCountFound) {
-                                    workerMinInstanceCount = getMinInstanceCountFromMemberProperties(member);
-                                    workerMinInstanceCountFound = true;
-                                    if (log.isDebugEnabled()) {
-                                        log.debug("Worker min instance count: " + workerMinInstanceCount);
-                                    }
-                                }
-                            }
-                        }
-
-                        if (workerWkaMembers.size() >= workerMinInstanceCount) {
-                            minWorkerInstancesAvailable = true;
-                            int idx = 0;
-                            for (Member member : workerWkaMembers) {
-                                envParameters.put("STRATOS_WK_WORKER_MEMBER_" + idx + "_IP", member.getMemberIp());
-                                if (log.isDebugEnabled()) {
-                                    log.debug("STRATOS_WK_WORKER_MEMBER_" + idx + "_IP: " + member.getMemberIp());
-                                }
-                                idx++;
-                            }
-
-                            envParameters.put("STRATOS_WK_WORKER_MEMBER_COUNT", Integer.toString(workerMinInstanceCount));
-                        }
-
-                    } finally {
-                        TopologyManager.releaseReadLock();
-                    }
-
-                    return (minManagerInstancesAvailable && minWorkerInstancesAvailable);
+                    // check if WKA members of Manager Worker separated deployment is ready
+                    return isManagerWorkerWKAGroupReady(envParameters);
                 }
-
-                return false;
             }
 
             String serviceNameInPayload = CartridgeAgentConfiguration.getInstance().getServiceName();
@@ -797,6 +581,136 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             }
         }
         return false;
+    }
+
+    // generic worker manager separated clustering logic
+    private boolean isManagerWorkerWKAGroupReady (Map<String, String> envParameters) {
+
+        // for this, we need both manager cluster service name and worker cluster service name
+        String managerServiceName =  CartridgeAgentConfiguration.getInstance().getManagerServiceName();
+        String workerServiceName =  CartridgeAgentConfiguration.getInstance().getWorkerServiceName();
+
+        // managerServiceName and workerServiceName both should not be null /empty
+        if (managerServiceName == null || managerServiceName.isEmpty()) {
+            log.error("Manager service name [ "+ managerServiceName +" ] is invalid");
+            return false;
+        }
+        if (workerServiceName == null || workerServiceName.isEmpty()) {
+            log.error("Worker service name [ "+ workerServiceName +" ] is invalid");
+            return false;
+        }
+
+        boolean minManagerInstancesAvailable = false;
+        boolean minWorkerInstancesAvailable = false;
+
+        TopologyManager.acquireReadLock();
+
+        try {
+            Service managerService = TopologyManager.getTopology().getService(managerServiceName);
+            Service workerService = TopologyManager.getTopology().getService(workerServiceName);
+
+            if (managerService == null) {
+                log.warn("Service [ "+managerServiceName+" ] is not found");
+                return false;
+            }
+
+            if (workerService == null) {
+                log.warn("Service [ "+workerServiceName+" ] is not found");
+                return false;
+            }
+
+            // manager clusters
+            Collection<Cluster> managerClusters = managerService.getClusters();
+            if (managerClusters == null || managerClusters.isEmpty()) {
+                log.warn("No clusters found for service [ "+ managerServiceName + " ]");
+                return false;
+            }
+
+            int managerMinInstanceCount = 1;
+            boolean managerMinInstanceCountFound = false;
+
+            List<Member> managerWkaMembers = new ArrayList<Member>();
+            for (Member member : managerClusters.iterator().next().getMembers()) {
+
+                if (member.getProperties() != null && member.getProperties().containsKey("PRIMARY") &&
+                            member.getProperties().getProperty("PRIMARY").toLowerCase().equals("true") &&
+                            (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated))) {
+
+                    managerWkaMembers.add(member);
+
+                    // get the min instance count
+                    if (!managerMinInstanceCountFound) {
+                        managerMinInstanceCount = getMinInstanceCountFromMemberProperties(member);
+                        managerMinInstanceCountFound = true;
+                        log.info("Manager min instance count: " + managerMinInstanceCount);
+
+                    }
+                }
+            }
+
+            if (managerWkaMembers.size() >= managerMinInstanceCount) {
+                minManagerInstancesAvailable = true;
+                int idx = 0;
+                for (Member member : managerWkaMembers) {
+                    envParameters.put("STRATOS_WK_MANAGER_MEMBER_" + idx + "_IP", member.getMemberIp());
+                    if(log.isDebugEnabled()) {
+                        log.debug("STRATOS_WK_MANAGER_MEMBER_" + idx + "_IP: " + member.getMemberIp());
+                    }
+                    idx++;
+                }
+
+                envParameters.put("STRATOS_WK_MANAGER_MEMBER_COUNT", Integer.toString(managerMinInstanceCount));
+            }
+
+            // worker cluster
+            Collection<Cluster> workerClusters = workerService.getClusters();
+            if (workerClusters == null || workerClusters.isEmpty()) {
+                log.warn("No clusters found for service [ "+ workerServiceName + " ]");
+                return false;
+            }
+
+            int workerMinInstanceCount = 1;
+            boolean workerMinInstanceCountFound = false;
+
+            List<Member> workerWkaMembers = new ArrayList<Member>();
+            for (Member member : workerClusters.iterator().next().getMembers()) {
+                if (member.getProperties() != null &&
+                        member.getProperties().containsKey("PRIMARY") &&
+                        member.getProperties().getProperty("PRIMARY").toLowerCase().equals("true") &&
+                        (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated))) {
+
+                    workerWkaMembers.add(member);
+
+                    // get the min instance count
+                    if (!workerMinInstanceCountFound) {
+                        workerMinInstanceCount = getMinInstanceCountFromMemberProperties(member);
+                        workerMinInstanceCountFound = true;
+                        if (log.isDebugEnabled()) {
+                            log.debug("Worker min instance count: " + workerMinInstanceCount);
+                        }
+                    }
+                }
+            }
+
+            if (workerWkaMembers.size() >= workerMinInstanceCount) {
+                minWorkerInstancesAvailable = true;
+                int idx = 0;
+                for (Member member : workerWkaMembers) {
+                    envParameters.put("STRATOS_WK_WORKER_MEMBER_" + idx + "_IP", member.getMemberIp());
+                    if (log.isDebugEnabled()) {
+                        log.debug("STRATOS_WK_WORKER_MEMBER_" + idx + "_IP: " + member.getMemberIp());
+                    }
+                    idx++;
+                }
+
+                envParameters.put("STRATOS_WK_WORKER_MEMBER_COUNT", Integer.toString(workerMinInstanceCount));
+            }
+
+        } finally {
+            TopologyManager.releaseReadLock();
+        }
+
+        return (minManagerInstancesAvailable && minWorkerInstancesAvailable);
     }
 
 

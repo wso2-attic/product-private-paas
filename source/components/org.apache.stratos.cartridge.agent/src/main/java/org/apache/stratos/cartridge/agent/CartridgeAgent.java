@@ -63,7 +63,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class CartridgeAgent implements Runnable {
 
-    private static final Log log = LogFactory.getLog(CartridgeAgent.class);
+   	private static final Log log = LogFactory.getLog(CartridgeAgent.class);
     private static final ExtensionHandler extensionHandler = new DefaultExtensionHandler();
     private boolean terminated;
 
@@ -113,6 +113,16 @@ public class CartridgeAgent implements Runnable {
                 scheduler.scheduleWithFixedDelay(new RepositoryFileListener(), 0,
                         10, TimeUnit.SECONDS);
             }
+            
+            // Start super tenant artifact copy task
+            // from temp location to super tenant app path
+			ScheduledExecutorService scheduler = Executors
+					.newScheduledThreadPool(1);
+			scheduler.scheduleWithFixedDelay(new ArtifactCopyTask(
+					CartridgeAgentConstants.SUPERTENANT_TEMP_PATH,
+					CartridgeAgentConfiguration.getInstance().getAppPath()+ "/repository/deployment/server/"
+					),
+					0, 10, TimeUnit.SECONDS);
         }
 
         if ("null".equals(repoUrl) || StringUtils.isBlank(repoUrl)) {
@@ -141,7 +151,10 @@ public class CartridgeAgent implements Runnable {
 
             ScheduledExecutorService scheduler = Executors
                     .newScheduledThreadPool(1);
-            scheduler.scheduleWithFixedDelay(new ArtifactCopyTask(), 0,
+            scheduler.scheduleWithFixedDelay(
+            		new ArtifactCopyTask(CartridgeAgentConfiguration.getInstance().getAppPath()
+            		+ "/repository/deployment/server/",
+            		CartridgeAgentConstants.SUPERTENANT_TEMP_PATH), 0,
                     10, TimeUnit.SECONDS);
         }
 

@@ -53,6 +53,9 @@ class is::params {
   $userstore_password   = 'DB_PASSWORD'
   $userstore_database   = 'USERSTORE_DB'
 
+  # Datasources
+  $persistence_ds	= 'WSO2CarbonDB'
+
   # Depsync settings
   $svn_user             = 'wso2'
   $svn_password         = 'wso2123'
