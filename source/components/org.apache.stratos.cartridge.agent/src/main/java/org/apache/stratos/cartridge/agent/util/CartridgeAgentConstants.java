@@ -83,4 +83,9 @@ public class CartridgeAgentConstants implements Serializable{
     public static final String CLUSTERING_PRIMARY_KEY = "PRIMARY";
     
     public static final String SUPERTENANT_TEMP_PATH = "/tmp/-1234/";
+
+    public static final String DEPLOYMENT_MANAGER = "manager";
+    public static final String DEPLOYMENT_WORKER = "worker";
+    public static final String DEPLOYMENT_DEFAULT = "default";
+
 }

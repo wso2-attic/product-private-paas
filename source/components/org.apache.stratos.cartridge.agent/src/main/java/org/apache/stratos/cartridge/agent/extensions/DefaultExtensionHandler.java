@@ -524,7 +524,8 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
                 if (CartridgeAgentConfiguration.getInstance().getDeployment() != null) {
                     // check if deployment is Manager Worker separated
-                    if (CartridgeAgentConfiguration.getInstance().getDeployment().equalsIgnoreCase("manager") || CartridgeAgentConfiguration.getInstance().getDeployment().equalsIgnoreCase("worker")) {
+                    if (CartridgeAgentConfiguration.getInstance().getDeployment().equalsIgnoreCase(CartridgeAgentConstants.DEPLOYMENT_MANAGER) ||
+                            CartridgeAgentConfiguration.getInstance().getDeployment().equalsIgnoreCase(CartridgeAgentConstants.DEPLOYMENT_WORKER)) {
 
                         log.info("Deployment pattern for the node: " + CartridgeAgentConfiguration.getInstance().getDeployment());
                         envParameters.put("DEPLOYMENT", CartridgeAgentConfiguration.getInstance().getDeployment());
@@ -541,7 +542,8 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
             if (CartridgeAgentConfiguration.getInstance().getDeployment() != null) {
                 // check if deployment is Manager Worker separated
-                if (CartridgeAgentConfiguration.getInstance().getDeployment().equalsIgnoreCase("manager") || CartridgeAgentConfiguration.getInstance().getDeployment().equalsIgnoreCase("worker")) {
+                if (CartridgeAgentConfiguration.getInstance().getDeployment().equalsIgnoreCase(CartridgeAgentConstants.DEPLOYMENT_MANAGER) ||
+                        CartridgeAgentConfiguration.getInstance().getDeployment().equalsIgnoreCase(CartridgeAgentConstants.DEPLOYMENT_WORKER)) {
 
                     log.info("Deployment pattern for the node: " + CartridgeAgentConfiguration.getInstance().getDeployment());
                     envParameters.put("DEPLOYMENT", CartridgeAgentConfiguration.getInstance().getDeployment());

@@ -94,11 +94,8 @@ public class CartridgeAgentConfiguration {
             lbPublicIp = System.getProperty(CartridgeAgentConstants.LB_PUBLIC_IP);
 
             deployment = readDeployment();
-            log.info("******************** DEPLOYMENT: " + deployment);
             managerServiceName = readManagerServiceType();
-            log.info("******************** MANAGER_SERVICE_NAME: " + managerServiceName);
             workerServiceName = readWorkerServiceType();
-            log.info("******************** WORKER_SERVICE_NAME: " + workerServiceName);
             isPrimary = readIsPrimary();
         } catch (ParameterNotFoundException e) {
             throw new RuntimeException(e);
@@ -131,16 +128,52 @@ public class CartridgeAgentConfiguration {
     }
 
     private String readManagerServiceType(){
-        if (parameters.containsKey(CartridgeAgentConstants.MANAGER_SERVICE_TYPE)) {
-            return parameters.get(CartridgeAgentConstants.MANAGER_SERVICE_TYPE);
+
+        if (deployment == null) {
+            return null;
         }
+
+        if (getDeployment().equalsIgnoreCase(CartridgeAgentConstants.DEPLOYMENT_MANAGER)) {
+            // if this is a manager, manager service type = service name
+            return serviceName;
+
+        } else if (getDeployment().equalsIgnoreCase(CartridgeAgentConstants.DEPLOYMENT_WORKER)) {
+            // if a worker, need to read the manager service type sent by payload
+            if (parameters.containsKey(CartridgeAgentConstants.MANAGER_SERVICE_TYPE)) {
+                return parameters.get(CartridgeAgentConstants.MANAGER_SERVICE_TYPE);
+            }
+
+        } else if (getDeployment().equalsIgnoreCase(CartridgeAgentConstants.DEPLOYMENT_DEFAULT)) {
+            // for default deployment, no manager service type
+            return null;
+
+        }
+
         return null;
     }
 
     private String readWorkerServiceType(){
-        if (parameters.containsKey(CartridgeAgentConstants.WORKER_SERVICE_TYPE)) {
-            return parameters.get(CartridgeAgentConstants.WORKER_SERVICE_TYPE);
+
+        if (deployment == null) {
+            return null;
         }
+
+        if (getDeployment().equalsIgnoreCase(CartridgeAgentConstants.DEPLOYMENT_WORKER)) {
+            // if this is a worker, worker service type = service name
+            return serviceName;
+
+        } else if (getDeployment().equalsIgnoreCase(CartridgeAgentConstants.DEPLOYMENT_MANAGER)) {
+            // if a manager, need to read the worker service type sent by payload
+            if (parameters.containsKey(CartridgeAgentConstants.WORKER_SERVICE_TYPE)) {
+                return parameters.get(CartridgeAgentConstants.WORKER_SERVICE_TYPE);
+            }
+
+        } else if (getDeployment().equalsIgnoreCase(CartridgeAgentConstants.DEPLOYMENT_DEFAULT)) {
+            // for default deployment, no worker service type
+            return null;
+
+        }
+
         return null;
     }
 
