@@ -23,22 +23,33 @@
 #  Server configuration script for Apache Stratos
 # ----------------------------------------------------------------------------
 
-# Die on any error:
-set -e
+# Define error handling function
+function error_handler() {
+        MYSELF="$0"               # equals to script name
+        LASTLINE="$1"            # argument 1: last line of error occurence
+        LASTERR="$2"             # argument 2: error code of last command
+        echo "ERROR in ${MYSELF}: line ${LASTLINE}: exit status of last command: ${LASTERR}"
+	exit 1       
+}
 
-source "../tmpVariable.sh"
+# Execute error_handler function on script error
+trap 'error_handler ${LINENO} $?' ERR
 
-replace_in_file(){
+dir=`dirname $0`
+current_dir=`cd $dir;pwd`
+
+
+
+function replace_in_file(){
     #echo "Setting value $2 for property $1 as $2 in file $3"
     sed -i "s@$1@$2@g"  $3
 }
 
-current_directory=`pwd`
-replace_in_file 'MYSQL_CONNECTOR' $MYSQL_CONNECTOR $current_directory/conf/setup.conf
-replace_in_file 'ACTIVE_MQ_DISTRIBUTION' $ACTIVE_MQ_DISTRIBUTION $current_directory/conf/setup.conf
-replace_in_file 'ACTIVE_MQ_EXTRACTED' $ACTIVE_MQ_EXTRACTED $current_directory/conf/setup.conf
+replace_in_file 'MYSQL_CONNECTOR' $MYSQL_CONNECTOR $current_dir/conf/setup.conf
+replace_in_file 'ACTIVE_MQ_DISTRIBUTION' $ACTIVE_MQ_DISTRIBUTION $current_dir/conf/setup.conf
+replace_in_file 'ACTIVE_MQ_EXTRACTED' $ACTIVE_MQ_EXTRACTED $current_dir/conf/setup.conf
 
-source "./conf/setup.conf"
+source "$current_dir/conf/setup.conf"
 export LOG=$log_path/stratos-setup.log
 
 profile="default"
@@ -46,7 +57,7 @@ config_mb="true"
 mb_client_lib_path=""
 auto_start_servers="false"
 
-function help {
+function help() {
     echo ""
     echo "Usage:"
     echo "setup.sh -p \"<profile>\" [-s] [-o <port offset>]"
@@ -114,19 +125,19 @@ function general_conf_validate() {
         exit 1
     fi
 
-    if [[ $auto_start_servers != "true" ]]; then
-    	if [[ $profile = "default" ]]; then
-            read -p "Do you want to configure ActiveMQ [y/n]: " answer
-            if [[ $answer = y ]] ; then
-            	mb_ip=$host_ip
-            else
-            	echo "Provided mb_ip in conf/setup.conf will be used"
-            	config_mb="false"
-            fi
-    	fi
+# if [[ $auto_start_servers != "true" ]]; then
+# 	if [[ $profile = "default" ]]; then
+#         read -p "Do you want to configure ActiveMQ [y/n]: " answer
+#         if [[ $answer = y ]] ; then
+#        	mb_ip=$host_ip
+#        else
+#       	echo "Provided mb_ip in conf/setup.conf will be used"
+#       	config_mb="false"
+#        fi
+#	fi
 
-    	copy_mb_client_libs
-    fi
+#	copy_mb_client_libs
+# fi
 		
 }
 
@@ -223,18 +234,18 @@ function cc_setup() {
     echo "Setup CC" >> $LOG
     echo "Configuring the Cloud Controller"
 
-    cp -f ./config/all/repository/conf/cloud-controller.xml $stratos_extract_path/repository/conf/ 
+    cp -f $current_dir/config/all/repository/conf/cloud-controller.xml $stratos_extract_path/repository/conf/ 
 
     export cc_path=$stratos_extract_path
     echo "In repository/conf/cloud-controller.xml"
     if [[ $ec2_provider_enabled = true ]]; then
-        ./ec2.sh $stratos_extract_path
+        $current_dir/ec2.sh $stratos_extract_path
     fi
     if [[ $openstack_provider_enabled = true ]]; then
-        ./openstack.sh $stratos_extract_path
+        $current_dir/openstack.sh $stratos_extract_path
     fi
     if [[ $vcloud_provider_enabled = true ]]; then
-        ./vcloud.sh $stratos_extract_path
+        $current_dir/vcloud.sh $stratos_extract_path
     fi
 
     pushd $stratos_extract_path
@@ -297,7 +308,7 @@ function as_setup() {
     echo "Setup AS" >> $LOG
     echo "Configuring the Autoscaler"
 
-    cp -f ./config/all/repository/conf/autoscaler.xml $stratos_extract_path/repository/conf/
+    cp -f $current_dir/config/all/repository/conf/autoscaler.xml $stratos_extract_path/repository/conf/
 
     pushd $stratos_extract_path
 
@@ -386,8 +397,8 @@ function sm_setup() {
     echo "Setup SM" >> $LOG
     echo "Configuring Stratos Manager"
 
-    cp -f ./config/all/repository/conf/cartridge-config.properties $stratos_extract_path/repository/conf/
-    cp -f ./config/all/repository/conf/datasources/master-datasources.xml $stratos_extract_path/repository/conf/datasources/
+    cp -f $current_dir/config/all/repository/conf/cartridge-config.properties $stratos_extract_path/repository/conf/
+    cp -f $current_dir/config/all/repository/conf/datasources/master-datasources.xml $stratos_extract_path/repository/conf/datasources/
     cp -f $mysql_connector_jar $stratos_extract_path/repository/components/lib/
 
     pushd $stratos_extract_path
@@ -510,19 +521,19 @@ if [[ $host_user == "" ]]; then
 fi
 
 echo "user provided in conf/setup.conf is $host_user."
-if [[ $auto_start_servers != "true" ]]; then
-    echo "If you want to provide some other user name please specify it at the prompt."
-    echo "If you want to continue with $host_user just press enter to continue"
-    read username
-    if [[ $username != "" ]]; then
-        host_user=$username
-    fi
-    user=`id $host_user`
-    if [[ $? = 1 ]]; then
-        echo "User $host_user does not exist. The system will create it."
-        adduser --home /home/$host_user $host_user
-    fi
-fi
+#if [[ $auto_start_servers != "true" ]]; then
+#    echo "If you want to provide some other user name please specify it at the prompt."
+#    echo "If you want to continue with $host_user just press enter to continue"
+#    read username
+#    if [[ $username != "" ]]; then
+#        host_user=$username
+#    fi
+#    user=`id $host_user`
+#    if [[ $? = 1 ]]; then
+#        echo "User $host_user does not exist. The system will create it."
+#        adduser --home /home/$host_user $host_user
+#    fi
+#fi
 
 export $host_user
 
@@ -554,8 +565,8 @@ fi
 if [[ !(-d $stratos_extract_path) ]]; then
     echo "Extracting Apache Stratos"
     unzip -q $stratos_pack_zip -d $stratos_path
-    cp -rf ../patches/patch0008/ $stratos_path/apache-stratos-4.0.0-wso2v1/repository/components/patches/
-    cp -rf ../themes/theme1/* $stratos_path/apache-stratos-4.0.0-wso2v1/repository/deployment/server/jaggeryapps/console/themes/theme1/
+    cp -rf $current_dir/../patches/patch0008/ $stratos_path/apache-stratos-4.0.0-wso2v1/repository/components/patches/
+    cp -rf $current_dir/../themes/theme1/* $stratos_path/apache-stratos-4.0.0-wso2v1/repository/deployment/server/jaggeryapps/console/themes/theme1/
     mv -f $stratos_path/apache-stratos-4.0.0-wso2v1 $stratos_extract_path
 fi
 
@@ -580,37 +591,24 @@ else
     cep_setup   
 fi
 
-# Setup Gitblit Server
-if [[ $apim_needed =~ ^[Yy]$ ]]
-then
-    /bin/bash ./gitblit.sh
-    sed -i '$a internal.repo.username=admin' $stratos_extract_path/repository/conf/cartridge-config.properties
-    sed -i '$a internal.repo.password=admin' $stratos_extract_path/repository/conf/cartridge-config.properties
-    sed -i '$a internal.git.url=http://PUPPET_IP:8290' $stratos_extract_path/repository/conf/cartridge-config.properties
-    sed -i "s@PUPPET_IP@$puppet_ip@g" $stratos_extract_path/repository/conf/cartridge-config.properties
-fi
-
-# Starting BAM server
-/bin/bash ./setup_bam_logging.sh
-
 # ------------------------------------------------
 # Mapping domain/host names 
 # ------------------------------------------------
 
-cp -f /etc/hosts hosts.tmp
+cp -f /etc/hosts $current_dir/hosts.tmp
 
-echo "$host_ip $sm_hostname	# stratos domain"	>> hosts.tmp
+echo "$host_ip $sm_hostname	# stratos domain"	>> $current_dir/hosts.tmp
  
 if [[ $profile = "sm" || $profile = "as" ]]; then
-    echo "$sm_ip $sm_hostname	# stratos domain"	>> hosts.tmp
-    echo "$cc_ip $cc_hostname	# cloud controller hostname"	>> hosts.tmp
+    echo "$sm_ip $sm_hostname	# stratos domain"	>> $current_dir/hosts.tmp
+    echo "$cc_ip $cc_hostname	# cloud controller hostname"	>> $current_dir/hosts.tmp
 fi
 
 if [[ $profile = "sm" ]]; then
-    echo "$as_ip $as_hostname	# auto scaler hostname"	>> hosts.tmp
+    echo "$as_ip $as_hostname	# auto scaler hostname"	>> $current_dir/hosts.tmp
 fi
 
-mv -f ./hosts.tmp /etc/hosts
+mv -f $current_dir/hosts.tmp /etc/hosts
 
 
 # ------------------------------------------------
@@ -621,26 +619,33 @@ chown $host_user:$host_user $stratos_path -R
 
 echo "Apache Stratos configuration completed successfully"
 
-if [[ $auto_start_servers != "true" ]]; then
-    read -p "Do you want to start the servers [y/n]? " answer
-    if [[ $answer != y ]] ; then
-        exit 1
-    fi
-fi
+#if [[ $auto_start_servers != "true" ]]; then
+#    read -p "Do you want to start the servers [y/n]? " answer
+#    if [[ $answer != y ]] ; then
+#        exit 1
+#    fi
+#fi
 
-echo "Starting the servers" >> $LOG
+#echo "Starting the servers" >> $LOG
 
-echo "Starting up servers. This may take time. Look at $LOG file for server startup details"
+#echo "Starting up servers. This may take time. Look at $LOG file for server startup details"
 
-chown -R $host_user.$host_user $log_path
+chown -R $host_user:$host_user $log_path
 chmod -R 777 $log_path
 
-export setup_dir=$PWD
-su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p\"$profile\" >> $LOG"
+#export setup_dir=$PWD
+#su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p\"$profile\" >> $LOG"
 
-echo "You can access Stratos after the server is started."
-if [[ $profile == "default" || $profile == "sm" ]]; then
-    echo "**************************************************************"
-    echo "Management Console : https://$stratos_domain:$sm_https_port/console"
-    echo "**************************************************************"
-fi
+#echo "Starting Apache Stratos servers..."
+
+# Wait some time to allow Apache Stratos servers to startup
+#sleep 2m
+
+#if [[ $profile == "default" || $profile == "sm" ]]; then
+#    echo "**************************************************************"
+#    echo "Management Console : https://$stratos_domain:$sm_https_port/console"
+#    echo "**************************************************************"
+#fi
+
+echo "Apache Stratos Installer completed successfully!"
+# END

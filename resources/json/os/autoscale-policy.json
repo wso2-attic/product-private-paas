@@ -1,26 +1,20 @@
 {
-  "id": "economy",
-  "loadThresholds": {
-    "requestsInFlight": {
-      "average": 50,
-      "secondDerivative": 0.2,
-      "gradient": 10,
-      "scaleDownMarginOfGradient": 20,
-      "scaleDownMarginOfSecondDerivative": 0.5
-    },
-    "memoryConsumption": {
-      "average": 70,
-      "secondDerivative": 0.2,
-      "gradient": 10,
-      "scaleDownMarginOfGradient": 20,
-      "scaleDownMarginOfSecondDerivative": 0.5
-    },
-    "loadAverage": {
-      "average": 100,
-      "secondDerivative": 0.2,
-      "gradient": 20,
-      "scaleDownMarginOfGradient": 20,
-      "scaleDownMarginOfSecondDerivative": 0.5
-    }
-  }
+    "id": "economy",
+    "loadThresholds": {
+      "requestsInFlight": {
+        "average": "300",
+        "gradient": "10",
+        "secondDerivative": "0.2"        
+      },
+      "memoryConsumption": {
+        "average": "800",
+        "gradient": "10",
+        "secondDerivative": "0.2"        
+      },
+      "loadAverage": {
+        "average": "600",
+        "gradient": "20",
+        "secondDerivative": "0.2"       
+      }
+    }  
 }

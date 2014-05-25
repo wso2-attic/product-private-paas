@@ -27,10 +27,11 @@
 set -e
 
 SLEEP=60
+dir=`dirname $0`
+current_dir=`cd $dir;pwd`
+
+source "$current_dir/conf/setup.conf"
 export LOG=$log_path/stratos-ec2.log
-
-source "./conf/setup.conf"
-
 stratos_extract_path=$1
 
 if [[ ! -d $log_path ]]; then

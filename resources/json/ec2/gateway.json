@@ -5,7 +5,7 @@
       "host": "gateway.am.wso2.com",
       "displayName": "API Manager - Gateway",
       "description": "API Manager - Gateway Cartridge",
-      "version": "1.6.0",
+      "version": "1.7.0",
       "multiTenant": "true",
       "portMapping": [
          {
@@ -18,7 +18,7 @@
             "port": "9443",
             "proxyPort": "443"
          },
-	{
+	 {
             "protocol": "http",
             "port": "8280",
             "proxyPort": "8280"
@@ -28,52 +28,45 @@
             "port": "8243",
             "proxyPort": "8243"
          }
-
-       ],
+      ],
       "deployment": {
         },
-       "iaasProvider": [
+      "iaasProvider": [
         {
           "type": "ec2",
-          "imageId": "ap-southeast-1/ami-3c0f5d6e",
+          "imageId": "REGION/BASE_IMAGE_ID",
           "maxInstanceLimit": "4",
           "property": [
             {
              "name": "instanceType",
              "value": "m1.medium"
-            },
-            {
-             "name": "keyPair",
-             "value": "sajith_apache_stratos"
             }
           ]
         }
       ],
       "loadBalancer": {
-        "type": "lb",
-        "property": {
-            "name": "default.load.balancer",
-            "value": "true"
+         "type": "lb",
+         "property": {
+             "name": "default.load.balancer",
+             "value": "true"
+         }
+      }, 
+      "property": [
+        {
+           "name": "PRIMARY",
+           "value": "true"
+        },
+        {
+           "name": "payload_parameter.SERIVCE_GROUP",
+           "value": "apim"
+        },
+        {
+           "name": "payload_parameter.CLUSTERING",
+           "value": "true"
+        },
+        {
+           "name": "payload_parameter.COMMIT_ENABLED",
+           "value": "true"
         }
-      }  , 
-         "property": [
-     {
-     "name": "PRIMARY",
-     "value": "true"
-    },
-    {
-     "name": "payload_parameter.SERIVCE_GROUP",
-     "value": "apim"
-    },
-    {
-     "name": "payload_parameter.CLUSTERING",
-     "value": "true"
-    },
-    {
-     "name": "payload_parameter.COMMIT_ENABLED",
-     "value": "true"
-    }
-
-      ] 
-    
+      ]    
  }

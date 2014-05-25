@@ -24,15 +24,11 @@
        "iaasProvider": [
         {
           "type": "openstack",
-          "imageId": "RegionOne/38778b81-65af-4df9-99af-f3e0ed2a6519",          
+          "imageId": "REGION/BASE_IMAGE_ID",          
           "property": [
             {
              "name": "instanceType",
-             "value": "RegionOne/3"
-            },
-            {
-             "name": "keyPair",
-             "value": "ravihansa3000"
+             "value": "REGION/3"
             }
           ]
         }
@@ -44,18 +40,10 @@
             "value": "true"
         }
       },
-      "property": [
-        {
-          "name": "PRIMARY",
-          "value": "true"
-        },
+      "property": [        
         {
           "name": "payload_parameter.SERIVCE_GROUP",
           "value": "apim"
-        },
-        {
-          "name": "payload_parameter.CLUSTERING",
-          "value": "true"
-        }
+        }       
       ]    
  }
