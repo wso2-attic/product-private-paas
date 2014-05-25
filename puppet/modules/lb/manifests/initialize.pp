@@ -33,7 +33,7 @@ define lb::initialize ($repo, $version, $service, $local_dir, $target, $mode, $o
   file {
     "/${local_dir}/apache-stratos-${service}-${version}.zip":
       ensure => present,
-      source => "puppet:///modules/lb/apache-stratos-${service}-${version}.zip",
+      source => ["puppet:///modules/lb/apache-stratos-${service}-${version}.zip", "puppet:///packs/apache-stratos-${service}-${version}.zip"],
       require   => Exec["creating_local_package_repo_for_${name}", "creating_target_for_${name}"];
   }
 

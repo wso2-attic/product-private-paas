@@ -54,7 +54,6 @@ export LOG=$log_path/stratos-setup.log
 
 profile="default"
 config_mb="true"
-mb_client_lib_path=""
 auto_start_servers="false"
 
 function help() {

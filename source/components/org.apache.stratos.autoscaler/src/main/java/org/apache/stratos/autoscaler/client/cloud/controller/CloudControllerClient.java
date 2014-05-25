@@ -79,7 +79,7 @@ public class CloudControllerClient {
      * This will validate the given partitions against the given cartridge type.
      */
     
-    public boolean validateDeploymentPolicy(String cartridgeType, DeploymentPolicy deploymentPolicy) throws PartitionValidationException{
+    public synchronized boolean validateDeploymentPolicy(String cartridgeType, DeploymentPolicy deploymentPolicy) throws PartitionValidationException{
         try {
             if(log.isInfoEnabled()) {
                 log.info(String.format("Validating partitions of policy via cloud controller: [id] %s", deploymentPolicy.getId()));
@@ -107,7 +107,7 @@ public class CloudControllerClient {
     /*
      * Calls the CC to validate the partition.
      */
-    public boolean validatePartition(Partition partition) throws PartitionValidationException{
+    public synchronized boolean validatePartition(Partition partition) throws PartitionValidationException{
         
         try {
             if(log.isInfoEnabled()) {
