@@ -26,15 +26,13 @@
 # Die on any error:
 set -e
 product_list=$1
-export LOG=$log_path/stratos.log
-
 profile="default"
 
 if [[ -f ./conf/setup.conf ]]; then
     source "./conf/setup.conf"
     echo "source it"
 fi
-
+export LOG=$log_path/stratos.log
 
 function help {
     echo ""

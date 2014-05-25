@@ -1,18 +1,59 @@
-# Die on any error:
-set -e
+#!/bin/bash
+# ----------------------------------------------------------------------------
+#  Copyright 2005-2013 WSO2, Inc. http://www.wso2.org
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# ----------------------------------------------------------------------------
 
-source "./conf/setup.conf"
-export LOG=$log_path/stratos-setup.log
+# Define error handling function
+function error_handler() {
+        MYSELF="$0"               # equals to script name
+        LASTLINE="$1"            # argument 1: last line of error occurence
+        LASTERR="$2"             # argument 2: error code of last command
+        echo "ERROR in ${MYSELF}: line ${LASTLINE}: exit status of last command: ${LASTERR}"
+	exit 1       
+}
+
+# Execute error_handler function on script error
+trap 'error_handler ${LINENO} $?' ERR
+
+dir=`dirname $0`
+current_dir=`cd $dir;pwd`
+
+source "$current_dir/conf/setup.conf"
 stratos_extract_path=$stratos_extract_path"-default"
 
 #setting the public IP for bam
 export public_ip=$(curl --silent http://ipecho.net/plain; echo)
 
+function start_bam() {
+       echo "Starting Hadoop server ..."
+       $hadoop_path/bin/start-all.sh
+
+       echo "Starting WSO2 BAM server ..."
+       nohup $bam_path/bin/wso2server.sh -DportOffset=1 &
+}
+
+# In silent mode, start BAM server and do not make any configurations
+if [[ -z $silent_mode && $silent_mode = "true" ]]; then
+       start_bam
+       exit 0
+fi
 
 echo "Enabling log publishing in Stratos"
 # Enable log viewer and log puplisher in stratos
-cp -f ./config/all/repository/conf/etc/logging-config.xml $stratos_extract_path/repository/conf/etc/
-cp -f ./config/all/repository/conf/log4j.properties $stratos_extract_path/repository/conf/
+cp -f $current_dir/config/all/repository/conf/etc/logging-config.xml $stratos_extract_path/repository/conf/etc/
+cp -f $current_dir/config/all/repository/conf/log4j.properties $stratos_extract_path/repository/conf/
 
 pushd $stratos_extract_path
 
@@ -32,12 +73,12 @@ popd
 
 unzip -q $bam_pack_path -d $stratos_path
 
-cp -f ./config/bam/repository/conf/etc/summarizer-config.xml $bam_path/repository/conf/etc/
-cp -f ./config/bam/repository/conf/advanced/hive-site.xml $bam_path/repository/conf/advanced/
-cp -f ./config/bam/repository/conf/datasources/master-datasources.xml $bam_path/repository/conf/datasources/
-cp -f ./config/bam/Private_PaaS_Statistics_Monitoring.tbox $bam_path/repository/deployment/server/bam-toolbox/
-cp -f ./config/bam/repository/components/dropins/org.wso2.carbon.logging.summarizer-4.2.0.jar $bam_path/repository/components/dropins/
-cp -f ./config/bam/repository/components/dropins/org.wso2.carbon.databridge.agent.thrift-4.0.5.jar $bam_path/repository/components/dropins/
+cp -f $current_dir/config/bam/repository/conf/etc/summarizer-config.xml $bam_path/repository/conf/etc/
+cp -f $current_dir/config/bam/repository/conf/advanced/hive-site.xml $bam_path/repository/conf/advanced/
+cp -f $current_dir/config/bam/repository/conf/datasources/master-datasources.xml $bam_path/repository/conf/datasources/
+cp -f $current_dir/config/bam/Private_PaaS_Statistics_Monitoring.tbox $bam_path/repository/deployment/server/bam-toolbox/
+cp -f $current_dir/config/bam/repository/components/dropins/org.wso2.carbon.logging.summarizer-4.2.0.jar $bam_path/repository/components/dropins/
+cp -f $current_dir/config/bam/repository/components/dropins/org.wso2.carbon.databridge.agent.thrift-4.0.5.jar $bam_path/repository/components/dropins/
 cp -f $mysql_connector_jar $bam_path/repository/components/lib/
 
 pushd $bam_path
@@ -88,9 +129,9 @@ tar xzf $hadoop_pack_path -C $stratos_path
 sudo apt-get -q -y install ssh --force-yes
 sudo apt-get -q -y install rsync --force-yes
 
-cp -f ./config/hadoop/core-site.xml $hadoop_path/conf/
-cp -f ./config/hadoop/hdfs-site.xml $hadoop_path/conf/
-cp -f ./config/hadoop/mapred-site.xml $hadoop_path/conf/
+cp -f $current_dir/config/hadoop/core-site.xml $hadoop_path/conf/
+cp -f $current_dir/config/hadoop/hdfs-site.xml $hadoop_path/conf/
+cp -f $current_dir/config/hadoop/mapred-site.xml $hadoop_path/conf/
 #setting java_home in hadoop-env.sh
 echo "export JAVA_HOME=$JAVA_HOME" >> $hadoop_path/conf/hadoop-env.sh
 
@@ -99,15 +140,7 @@ cat ~/.ssh/id_dsa.pub >> ~/.ssh/authorized_keys
 
 echo 'Y' | $hadoop_path/bin/hadoop namenode -format -a
 
-# -----------------------------------------------
+# Start BAM server
+start_bam
 
-echo "Starting Hadoop server ..." >> $LOG
-$hadoop_path/bin/start-all.sh
-echo "Hadoop server started" >> $LOG
-
-echo "Starting WSO2 BAM server ..." >> $LOG
-nohup $bam_path/bin/wso2server.sh -DportOffset=1 &
-echo "BAM server started" >> $LOG
-
-
-
+# END

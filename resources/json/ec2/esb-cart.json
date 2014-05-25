@@ -34,7 +34,7 @@
        "iaasProvider": [
         {
           "type": "ec2",
-          "imageId": "ap-southeast-1/ami-3c0f5d6e",
+          "imageId": "REGION/BASE_IMAGE_ID",
           "maxInstanceLimit": "4",
           "property": [
             {
@@ -50,5 +50,15 @@
             "name": "default.load.balancer",
             "value": "true"
         }
-      },    
+      },
+      "property": [
+        {
+          "name": "PRIMARY",
+          "value": "@PRIMARY"
+        },
+        {
+          "name": "payload_parameter.CLUSTERING",
+          "value": "@CLUSTERING"
+        }
+      ]
 }

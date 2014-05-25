@@ -6,7 +6,7 @@
       "partition": [
         {
           "id": "P1",
-          "partitionMax": "4",
+          "partitionMax": "10",
           "partitionMin": "2"
         }
       ]

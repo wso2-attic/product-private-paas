@@ -35,7 +35,7 @@ node 'base' {
   $lb_private_ip 	= ''
   $lb_public_ip 	= ''
   $tomcat_version 	= '7.0.52'
-  $enable_log_publisher = 'false'
+  $enable_log_publisher = 'ENABLE_LOG_PUBLISHER'
   $server_ip            = $ipaddress
 
 

@@ -3,24 +3,18 @@
     "loadThresholds": {
       "requestsInFlight": {
         "average": "300",
-        "gradient": "0",
-        "secondDerivative": "0",
-        "scaleDownMarginOfGradient": "1.0",
-        "scaleDownMarginOfSecondDerivative": "0.2"
+        "gradient": "10",
+        "secondDerivative": "0.2"        
       },
       "memoryConsumption": {
-        "average": "6000",
-        "gradient": "0",
-        "secondDerivative": "0",
-        "scaleDownMarginOfGradient": "1.0",
-        "scaleDownMarginOfSecondDerivative": "0.2"
+        "average": "800",
+        "gradient": "10",
+        "secondDerivative": "0.2"        
       },
       "loadAverage": {
-        "average": "6000",
-        "gradient": "0",
-        "secondDerivative": "0",
-        "scaleDownMarginOfGradient": "1.0",
-        "scaleDownMarginOfSecondDerivative": "0.2"
+        "average": "600",
+        "gradient": "20",
+        "secondDerivative": "0.2"       
       }
     }  
 }

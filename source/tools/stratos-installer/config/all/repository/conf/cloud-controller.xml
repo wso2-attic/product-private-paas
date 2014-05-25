@@ -68,7 +68,7 @@
                         <property name="jclouds.endpoint" value="OPENSTACK_ENDPOINT" />
             		<property name="jclouds.openstack-nova.auto-create-floating-ips" value="false"/>
                         <property name="jclouds.api-version" value="2.0/" />
-                        <property name="X" value="x" />
+                        <property name="keyPair" value="OPENSTACK_KEYPAIR" />
                         <property name="Y" value="y" />
         	</iaasProviderOPENSTACK_PROVIDER_END>
                 <VCLOUD_PROVIDER_STARTiaasProvider type="vcloud" name="VMware vCloud specific details">
