@@ -567,7 +567,7 @@ public class RestCommandLineService {
             System.out.println("\tTenancy Model	: "	+ tenancy);
             System.out.println("\tAlias : "	+ cartridge.getCartridgeAlias());
             System.out.println("\tStatus : "	+ cartridge.getStatus());
-            String instanceCount  = cartridge.isMultiTenant() ? "N/A" : String.valueOf(cartridge.getActiveInstances());
+            String instanceCount  = String.valueOf(cartridge.getActiveInstances());
             System.out.println("\tRunning Instances	: " + instanceCount);
             System.out.println("\tAccess URL(s) : " + getAccessURLs(cartridge));
 			if (cartridge.getRepoURL() != null) {
@@ -612,7 +612,7 @@ public class RestCommandLineService {
             // Invoke  cluster/{clusterId}
             for (String clusterId : lbClusterIdSet) {
 				HttpResponse responseCluster = restClient.doGet(httpClient, restClient.getBaseURL()
-						+ listClusterRestEndpoint + "clusterId/" + clusterId);
+						+ listClusterRestEndpoint + "lb");
 
                 String responseCode = "" + responseCluster.getStatusLine().getStatusCode();
                 String resultStringCluster = getHttpResponseString(responseCluster);
@@ -626,8 +626,8 @@ public class RestCommandLineService {
                     return null;
                 }
 
-                Cluster cluster = getClusterObjectFromString(resultStringCluster);
-
+                ArrayList<Cluster> clusterList = getClusterListObjectFromString(resultStringCluster);
+                Cluster cluster = clusterList.get(0);
                 if (cluster == null) {
                     System.out.println("Subscribe cartridge list is null");
                     return null;
@@ -760,6 +760,14 @@ public class RestCommandLineService {
 
 		Cluster cluster = gson.fromJson(resultString, Cluster.class);
 		return cluster;
+	}
+	
+	private ArrayList<Cluster> getClusterListObjectFromString(String resultString) {
+		GsonBuilder gsonBuilder = new GsonBuilder();
+		Gson gson = gsonBuilder.create();
+
+		ClusterList clusterlist = gson.fromJson(resultString, ClusterList.class);
+		return clusterlist.getCluster();
 	}
 
     private void printLBs(String resultString) {
@@ -1839,6 +1847,19 @@ public class RestCommandLineService {
         CartridgeList() {
             cartridge = new ArrayList<Cartridge>();
         }
+    }
+
+    private class ClusterList{
+        private ArrayList<Cluster> cluster;
+
+        public ArrayList<Cluster> getCluster() {
+            return cluster;
+        }
+
+        public void setCluster(ArrayList<Cluster> clusters) {
+            this.cluster = clusters;
+        }
+        ClusterList(){cluster = new ArrayList<Cluster>();};
     }
 
     // This will return access url from a given cartridge
