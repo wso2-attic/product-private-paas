@@ -30,9 +30,9 @@ export log_path=/var/log/apache-stratos
 export stratos_domain=""
 export machine_ip=""
 export host_user=""
-export auto_start_servers="true"
 
-# External Puppetmaster
+# Puppet master configuration
+export skip_puppet=""
 export puppet_external=""
 export puppet_external_ip=""
 export puppet_external_host=""

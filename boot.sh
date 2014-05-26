@@ -47,7 +47,6 @@ export LOG=$log_path/stratos-setup.log
 # Usage modes
 silent_mode="false"
 puppet_only="false"
-config_mode="false"
 
 # Registry databases
 registry_db="registry"
@@ -63,6 +62,7 @@ bps_config_db="bps_config"
 as_config_path="config"
 esb_config_path="config"
 bps_config_path="config"
+is_config_path="config"
 
 # Using the same config DB for store and publisher
 apim_store_config_db="apim_store_config"
@@ -74,12 +74,9 @@ function help() {
     echo ""
     echo "This script will install WSO2 Private PaaS 4.0"
     echo "usage:"
-    echo "boot.sh [-p | -s | -c] --autostart [true|false]"
+    echo "boot.sh [ -p | -s ]"
     echo "   -p : Puppet only mode. This will only deploy and configure Puppet scripts."
-    echo "   -s : Silent mode. This will start core services without performing any configuration."
-    echo "   -c : Config mode. This will only configure core services and products. WSO2 Private PaaS services will not be deployed."
-    echo "   autostart : Set 'true' to automatically start core services. This will be set as 'true' by default."
-    echo "             : Set 'false' to if you don't need to start core services."
+    echo "   -s : Silent mode. This will start core services without performing any configuration."   
     echo ""
 }
 
@@ -179,19 +176,6 @@ function read_user_input() {
 }
 
 function setup_apache_stratos() {
-
-    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
-       # Copy files to /etc/puppet
-       cp -f $stratos_pack_path/apache-stratos-cartridge-agent-4.0.0-wso2v1-bin.zip /etc/puppet/modules/agent/files
-       cp -f $stratos_pack_path/apache-stratos-load-balancer-4.0.0-wso2v1.zip /etc/puppet/modules/lb/files
-       cp -f $stratos_pack_path/$JAVA_FILE_DISTRUBUTION /etc/puppet/modules/java/files         
-    fi    
-
-    # In puppet only mode, do not change Apache Stratos product configurations
-    if [[ $puppet_only = "true" ]]; then
-       return
-    fi
-
     # Configure IaaS properties
     iaas=$(read_user_input "Enter your IaaS. vCloud, EC2 and Openstack are the currently supported IaaSs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack " "" $iaas )
 
@@ -347,7 +331,7 @@ function get_core_services_confirmations() {
 
 function setup_as() {
     echo "Configuring Application Server..."
-    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
+    if [[ $puppet_external = "false" && $skip_puppet = "false" ]]; then
         # Copy AS patches to Puppet
         cp -rf $current_dir/patches/patch0009/ /etc/puppet/modules/appserver/files/patches/repository/components/patches
 
@@ -367,8 +351,7 @@ function setup_as() {
         replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/appserver/manifests/params.pp"
 
         # Configure SSO in appserver
-        if [[ "$config_sso_enabled" == "true" ]] ; then      
-           backup_file "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
+        if [[ "$config_sso_enabled" == "true" ]] ; then           
            replace_in_file "SSO_DISABLED" "false" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
            replace_in_file "IDP_URL" "$public_ip" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
         else       
@@ -389,13 +372,13 @@ function setup_as() {
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/appserver-cart.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/appserver-cart.json"
 
-    backup_file $current_dir/resources/json/$iaas/appserver-mgt-cart.json
-    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/appserver-mgt-cart.json"
-    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/appserver-mgt-cart.json"
+    backup_file $current_dir/resources/json/$iaas/appserver-cart-mgt.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/appserver-cart-mgt.json"
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/appserver-cart-mgt.json"
 
-    backup_file $current_dir/resources/json/$iaas/appserver-worker-cart.json
-    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/appserver-worker-cart.json"
-    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/appserver-worker-cart.json"
+    backup_file $current_dir/resources/json/$iaas/appserver-cart-worker.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/appserver-cart-worker.json"
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/appserver-cart-worker.json"
 
     if [[ $as_clustering = "true" ]]; then
        replace_in_file "@PRIMARY" "true" "$current_dir/resources/json/$iaas/appserver-cart.json"
@@ -409,7 +392,7 @@ function setup_as() {
 
 function setup_bps() {
     echo "Configuring Business Process Server..."
-    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
+    if [[ $puppet_external = "false" && $skip_puppet = "false" ]]; then
         # Copy BPS patches to Puppet
         cp -rf $current_dir/patches/patch0008/ /etc/puppet/modules/bps/files/patches/repository/components/patches
 
@@ -417,8 +400,7 @@ function setup_bps() {
         cp -f $stratos_pack_path/wso2bps-3.2.0.zip /etc/puppet/modules/bps/files
         cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/bps/files/configs/repository/components/lib
 
-        # bps node parameters
-        backup_file "/etc/puppet/manifests/nodes/bps.pp"
+        # bps node parameters        
         replace_in_file "BPS_CONFIG_DB" "$bps_db" "/etc/puppet/manifests/nodes/bps.pp"
         replace_in_file "BPS_CONFIG_PATH" "$bps_config_path" "/etc/puppet/manifests/nodes/bps.pp"
         replace_in_file "CLUSTERING" "$bps_clustering" "/etc/puppet/manifests/nodes/bps.pp"
@@ -443,13 +425,13 @@ function setup_bps() {
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/bps-cart.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/bps-cart.json"
 
-    backup_file $current_dir/resources/json/$iaas/bps-mgt-cart.json
-    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/bps-mgt-cart.json"
-    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/bps-mgt-cart.json"
+    backup_file $current_dir/resources/json/$iaas/bps-cart-mgt.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/bps-cart-mgt.json"
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/bps-cart-mgt.json"
 
-    backup_file $current_dir/resources/json/$iaas/bps-worker-cart.json
-    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/bps-worker-cart.json"
-    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/bps-worker-cart.json"
+    backup_file $current_dir/resources/json/$iaas/bps-cart-worker.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/bps-cart-worker.json"
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/bps-cart-worker.json"
 
     if [[ $bps_clustering = "true" ]]; then
        replace_in_file "@PRIMARY" "true" "$current_dir/resources/json/$iaas/bps-cart.json"
@@ -463,7 +445,7 @@ function setup_bps() {
 
 function setup_esb() {
     echo "Configuring Enterprise Service Bus..."
-    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
+    if [[ $puppet_external = "false" && $skip_puppet = "false" ]]; then
        # Copy ESB patches to Puppet
        cp -rf $current_dir/patches/patch0008/ /etc/puppet/modules/esb/files/patches/repository/components/patches
 
@@ -471,11 +453,11 @@ function setup_esb() {
        cp -f $stratos_pack_path/wso2esb-4.8.1.zip /etc/puppet/modules/esb/files
        cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/esb/files/configs/repository/components/lib
 
-       # esb node parameters
-       backup_file "/etc/puppet/manifests/nodes/esb.pp"
+       # esb node parameters       
        replace_in_file "ESB_CONFIG_DB" "$esb_config_db" "/etc/puppet/manifests/nodes/esb.pp"
        replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes/esb.pp"
        replace_in_file "CLUSTERING" "$esb_clustering" "/etc/puppet/manifests/nodes/esb.pp"
+
        backup_file "/etc/puppet/modules/esb/manifests/params.pp"
        replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
        replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
@@ -497,13 +479,13 @@ function setup_esb() {
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/esb-cart.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/esb-cart.json"
 
-    backup_file $current_dir/resources/json/$iaas/esb-mgt-cart.json
-    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/esb-mgt-cart.json"
-    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/esb-mgt-cart.json"
+    backup_file $current_dir/resources/json/$iaas/esb-cart-mgt.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/esb-cart-mgt.json"
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/esb-cart-mgt.json"
 
-    backup_file $current_dir/resources/json/$iaas/esb-worker-cart.json
-    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/esb-worker-cart.json"
-    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/esb-worker-cart.json"
+    backup_file $current_dir/resources/json/$iaas/esb-cart-worker.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/esb-cart-worker.json"
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/esb-cart-worker.json"
 
     if [[ $esb_clustering = "true" ]]; then
        replace_in_file "@PRIMARY" "true" "$current_dir/resources/json/$iaas/esb-cart.json"
@@ -516,12 +498,16 @@ function setup_esb() {
 
 function setup_is() {
     echo "Configuring Identity Server..."
-    cp -f $stratos_pack_path/wso2is-5.0.0.zip /etc/puppet/modules/is/files
-    cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/is/files/configs/repository/components/lib    
+    if [[ $puppet_external = "false" && $skip_puppet = "false" ]]; then
+       cp -f $stratos_pack_path/wso2is-5.0.0.zip /etc/puppet/modules/is/files
+       cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/is/files/configs/repository/components/lib    
+    fi
 
-    # is node parameters
-    backup_file "/etc/puppet/manifests/nodes/is.pp"
+    # is node parameters    
     replace_in_file "CLUSTERING" "$is_clustering" "/etc/puppet/manifests/nodes/is.pp"
+    replace_in_file "IS_CONFIG_DB" "$is_config_db" "/etc/puppet/manifests/nodes/is.pp"
+    replace_in_file "IS_CONFIG_PATH" "$is_config_path" "/etc/puppet/manifests/nodes/is.pp"
+
     backup_file "/etc/puppet/modules/is/manifests/params.pp"
     replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/is/manifests/params.pp"
     replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/is/manifests/params.pp"
@@ -529,6 +515,13 @@ function setup_is() {
     replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/is/manifests/params.pp"
     replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/is/manifests/params.pp"
     replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/is/manifests/params.pp"
+
+    if [[ "$puppet_only" = "true" ]]; then
+          return
+    fi
+
+    #esb config db changes 
+    create_config_database "$is_config_db"
 }
 
 function setup_is_core_service() {
@@ -570,13 +563,20 @@ function setup_is_core_service() {
 }
 
 function setup_apim() {
-    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
+    if [[ $puppet_external = "false" && $skip_puppet = "false" ]]; then
        # Copy ESB patches to Puppet
        cp -rf $current_dir/patches/patch0009/ /etc/puppet/modules/apimanager/files/patches/repository/components/patches
        cp -f $stratos_pack_path/wso2am-1.7.0.zip /etc/puppet/modules/apimanager/files
        cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/apimanager/files/configs/repository/components/lib
 
-       # apim node parameters
+       # apim node parameters       
+       replace_in_file "GATEWAY_CONFIG_DB" "$apim_gateway_config_db" "/etc/puppet/manifests/nodes/api.pp"
+       replace_in_file "STORE_CONFIG_DB" "$apim_store_config_db" "/etc/puppet/manifests/nodes/api.pp"
+       replace_in_file "KEYMANAGER_CONFIG_DB" "$apim_keymanager_config_db" "/etc/puppet/manifests/nodes/api.pp"
+       replace_in_file "GATEWAY_CONFIG_PATH" "$gateway_config_path" "/etc/puppet/manifests/nodes/api.pp"
+       replace_in_file "STORE_CONFIG_PATH" "$store_config_path" "/etc/puppet/manifests/nodes/api.pp"
+       replace_in_file "KEYMANAGER_CONFIG_PATH" "$keymanager_config_path" "/etc/puppet/manifests/nodes/api.pp"       
+
        backup_file "/etc/puppet/modules/apimanager/manifests/params.pp"
        replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/apimanager/manifests/params.pp"
        replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/apimanager/manifests/params.pp"
@@ -585,11 +585,7 @@ function setup_apim() {
        replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
        replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/apimanager/manifests/params.pp"
        replace_in_file "STATS_DB" "$apim_stats_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
-       replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
-       replace_in_file "GATEWAY_CONFIG_DB" "$apim_gateway_config_db" "/etc/puppet/manifests/nodes/api.pp"
-       replace_in_file "STORE_CONFIG_DB" "$apim_store_config_db" "/etc/puppet/manifests/nodes/api.pp"      
-       replace_in_file "KEYMANAGER_CONFIG_DB" "$apim_keymanager_config_db" "/etc/puppet/manifests/nodes/api.pp"
- 
+       replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/apimanager/manifests/params.pp"       
     fi
 
     # In puppet only mode, do not change other configurations
@@ -651,45 +647,54 @@ function deploy_puppet() {
     replace_in_file "JAVA_FILE" "$JAVA_FILE_DISTRUBUTION" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "JAVA_NAME" "$JAVA_NAME_EXTRACTED" "/etc/puppet/manifests/nodes/base.pp"
     # JAVA_NAME should match extracted directory name of Java tar.gz archive, eg. jdk-7u45-linux-x64.tar.gz -> jdk1.7.0_45
+
+    # Copy packs files to Puppet modules
+    cp -f $stratos_pack_path/apache-stratos-cartridge-agent-4.0.0-wso2v1-bin.zip /etc/puppet/modules/agent/files
+    cp -f $stratos_pack_path/apache-stratos-load-balancer-4.0.0-wso2v1.zip /etc/puppet/modules/lb/files
+    cp -f $stratos_pack_path/$JAVA_FILE_DISTRUBUTION /etc/puppet/modules/java/files
+
+    # Restart Puppetmaster after configurations
+    echo "Restarting Puppet master"
+    /etc/init.d/puppetmaster restart
     echo "Puppet scripts configuration completed."
 }
 
 function configure_products() {
 
+    if [[ $puppet_external = "false" && $skip_puppet = "false" ]]; then
+       deploy_puppet
+    fi 
     # Get confirmation on configuring SSO with WSO2 IS
     config_sso_needed=$(read_user_input "Do you need to setup WSO2 IS (Identity Server) as a core service and configure SSO feature ? [y/n] " "" $config_sso_enabled )
     if [[ $config_sso_needed =~ ^[Yy]$ ]]; then
        config_sso_enabled="true"
     fi
 
-    # Get user confirmations to deploy WSO2 PPaaS services
-    get_service_deployment_confirmations
+    if [[ $puppet_only = "false" ]]; then
+       # Get user confirmations to deploy WSO2 PPaaS services
+       get_service_deployment_confirmations
+ 
+       # Create databases for the governence registry
+       # Using the same userstore to the registry    
+       create_registry_database "$registry_db"   
 
-    # Create databases for the governence registry
-    # Using the same userstore to the registry    
-    create_registry_database "$registry_db"
+       # Configure Apache Stratos
+       setup_apache_stratos
 
-    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
-       deploy_puppet
+       # Configure LB cartridge definition json
+       backup_file $current_dir/resources/json/$iaas/lb-cart.json
+       replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/lb-cart.json"
+       replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/lb-cart.json"
     fi    
 
-    # Configure Apache Stratos
-    setup_apache_stratos
-
-    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
-
+    if [[ $puppet_external = "false" && $skip_puppet = "false" ]]; then
        # Copy activemq client jars to puppet
           for activemq_client_lib in "${activemq_client_libs[@]}" 
               do
 	          cp -f $stratos_install_path/$ACTIVE_MQ_EXTRACTED/lib/$activemq_client_lib /etc/puppet/modules/agent/files/activemq/
                   cp -f $stratos_install_path/$ACTIVE_MQ_EXTRACTED/lib/$activemq_client_lib /etc/puppet/modules/lb/files/activemq/
               done
-    fi  
-
-    # Configure LB cartridge definition json
-    backup_file $current_dir/resources/json/$iaas/lb-cart.json
-    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/lb-cart.json"
-    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/lb-cart.json"
+    fi    
 
     if [[ $as_enabled = "true" ]]; then
        setup_as
@@ -709,13 +714,8 @@ function configure_products() {
 
     if [[ $apim_enabled = "true" ]]; then
        setup_apim
-    fi    
-
-    if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
-       # Restart Puppetmaster after configurations
-       echo "Restarting Puppet master"
-       /etc/init.d/puppetmaster restart
     fi
+
     echo "WSO2 Private PaaS product configuration completed."
 }
 
@@ -725,6 +725,9 @@ function init() {
 
     # backup mysql.sql, we are going to write stuff into it
     #backup_file $setup_path/resources/mysql.sql
+    if [[ -z $skip_puppet || "$skip_puppet" = "" ]]; then
+       skip_puppet="false"
+    fi
 
     # Check whether Puppetmaster is installed and configure it
     check_for_puppet
@@ -743,14 +746,13 @@ function init() {
     if [ "$machine_ip" == "" ];then
         echo -e "Machine IP is not specified, so proceeding with the default 127.0.0.1"
         machine_ip="127.0.0.1"
-    fi
-
-    machine_ip=$(read_user_input "Above are the IP addresses assigned to your machine. Please select the preferred IP address : " "" $machine_ip )
+    fi    
 
     # Configure an external Puppetmaster
     puppet_external=$(read_user_input "Do you need to configure an external Puppetmaster? [y/n] : " "" $puppet_external )
 
     if [[ $puppet_external =~ ^[Yy]$ ]]; then
+       puppet_external="true"
        echo -e "Configuring an external Puppetmaster...\n"
        puppet_external_ip=$(read_user_input "Please enter external Puppetmaster IP : " "" $puppet_external_ip )
        puppet_external_host=$(read_user_input "Please enter external Puppetmaster hostname : " "" $puppet_external_host )
@@ -758,6 +760,7 @@ function init() {
        puppet_ip=$puppet_external_ip
        puppet_host=$puppet_external_host
     else
+       puppet_external="false"
        # Install Puppetmaster if it is not already installed
        if [[ $puppet_installed = "false" ]]; then        
           install_puppet
@@ -990,13 +993,7 @@ do
         ;;
     p)
         export puppet_only="true"
-        ;;
-    c)
-        export config_mode="true"
-        ;;
-    a|--autostart)
-        export auto_start_servers=${OPTARG}
-        ;;
+        ;;   
     h)
         help
         exit 0
@@ -1016,33 +1013,26 @@ if [[ "$silent_mode" = "true" ]]; then
      echo -e "\nboot.sh: Running in silent mode\n"
      # Start WSO2 Private PaaS core services
      start_servers
+
 elif [[ "$puppet_only" = "true" ]]; then
      echo -e "\nboot.sh: Running in puppet only mode\n"
      configure_products
      echo -e "boot.sh: Puppet configuration completed"
-elif [[ "$config_mode" = "true" ]]; then
-     echo -e "\nboot.sh: Running in config mode. All service deployments will be skipped.\n"
-     # Do the product specific configurations
-     configure_products         
 
-     # Start core services
-     if [[ "$auto_start_servers" = "true" ]]; then
-        start_servers
-     fi
 else
      # Do the product specific configurations
      configure_products         
 
-     # Start core servers
-     if [[ "$auto_start_servers" = "true" ]]; then
-        start_servers
+     # Start core servers    
+     start_servers     
+
+     if [[ "$wso2_ppaas_enabled" = "true" ]]; then
+        # Deploy cartridges to Apache Stratos
+        deploy_wso2_ppaas_services
+
+        # Update hosts file
+        update_hosts_file
      fi
-
-     # Deploy cartridges to Apache Stratos
-     deploy_wso2_ppaas_services
-
-     # Update hosts file
-     update_hosts_file
 fi
 
 echo ""
