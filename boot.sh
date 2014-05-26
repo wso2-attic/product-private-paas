@@ -339,11 +339,6 @@ function get_core_services_confirmations() {
        bam_enabled="true"
     fi
 
-    config_sso_needed=$(read_user_input "Do you need to setup WSO2 IS (Identity Server) as a core service and configure SSO feature ? [y/n] " "" $config_sso_enabled )
-    if [[ $config_sso_needed =~ ^[Yy]$ ]]; then
-       config_sso_enabled="true"
-    fi
-
     wso2_ppaas_needed=$(read_user_input "Do you need to start WSO2 Private PaaS? [y/n] " "" $wso2_ppaas_enabled )
     if [[ $wso2_ppaas_needed =~ ^[Yy]$ ]]; then
        wso2_ppaas_enabled="true"
@@ -351,7 +346,7 @@ function get_core_services_confirmations() {
 }
 
 function setup_as() {
-
+    echo "Configuring Application Server..."
     if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
         # Copy AS patches to Puppet
         cp -rf $current_dir/patches/patch0009/ /etc/puppet/modules/appserver/files/patches/repository/components/patches
@@ -405,7 +400,7 @@ function setup_as() {
 
 
 function setup_bps() {
-
+    echo "Configuring Business Process Server..."
     if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
         # Copy BPS patches to Puppet
         cp -rf $current_dir/patches/patch0008/ /etc/puppet/modules/bps/files/patches/repository/components/patches
@@ -451,7 +446,7 @@ function setup_bps() {
 
 
 function setup_esb() {
-
+    echo "Configuring Enterprise Service Bus..."
     if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
        # Copy ESB patches to Puppet
        cp -rf $current_dir/patches/patch0008/ /etc/puppet/modules/esb/files/patches/repository/components/patches
@@ -496,7 +491,7 @@ function setup_esb() {
 }
 
 function setup_is() {
-    
+    echo "Configuring Identity Server..."
     cp -f $stratos_pack_path/wso2is-5.0.0.zip /etc/puppet/modules/is/files
     cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/is/files/configs/repository/components/lib    
 
@@ -606,8 +601,11 @@ function setup_apim() {
 
 function deploy_puppet() {
     # Copy Puppet scripts from private-paas repo
+    echo "Deploying Puppet files to /etc/puppet. Please wait..."
     cp -rf puppet/* /etc/puppet/
+    echo "Puppet files successfully deployed."
 
+    echo "Configuring Puppet scripts..."
     # Set Puppet base node parameters
     replace_in_file "PACKAGE_REPO" "$package_repo" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "MB_IP" "$machine_ip" "/etc/puppet/manifests/nodes/base.pp"
@@ -627,9 +625,16 @@ function deploy_puppet() {
     replace_in_file "JAVA_FILE" "$JAVA_FILE_DISTRUBUTION" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "JAVA_NAME" "$JAVA_NAME_EXTRACTED" "/etc/puppet/manifests/nodes/base.pp"
     # JAVA_NAME should match extracted directory name of Java tar.gz archive, eg. jdk-7u45-linux-x64.tar.gz -> jdk1.7.0_45
+    echo "Puppet scripts configuration completed."
 }
 
 function configure_products() {
+
+    # Get confirmation on configuring SSO with WSO2 IS
+    config_sso_needed=$(read_user_input "Do you need to setup WSO2 IS (Identity Server) as a core service and configure SSO feature ? [y/n] " "" $config_sso_enabled )
+    if [[ $config_sso_needed =~ ^[Yy]$ ]]; then
+       config_sso_enabled="true"
+    fi
 
     # Get user confirmations to deploy WSO2 PPaaS services
     get_service_deployment_confirmations
@@ -682,8 +687,10 @@ function configure_products() {
 
     if [[ ! ($puppet_external =~ ^[Yy]$) ]]; then
        # Restart Puppetmaster after configurations
+       echo "Restarting Puppet master"
        /etc/init.d/puppetmaster restart
     fi
+    echo "WSO2 Private PaaS product configuration completed."
 }
 
 function init() {
@@ -781,18 +788,20 @@ function start_servers() {
 
     if [[ $bam_enabled = "true" ]]; then
        # Setup BAM server
+       echo "Starting BAM core service..."
        /bin/bash $setup_path/setup_bam_logging.sh
        sleep 1m
     fi
 
     if [[ $config_sso_enabled = "true" ]]; then
-       echo -e "Starting WSO2 IS server..."
+       echo -e "Starting WSO2 IS core service..."
        nohup $stratos_install_path/wso2is-5.0.0/bin/wso2server.sh -DportOffset=2 &
        sleep 1m
     fi
 
     if [[ $apim_enabled = "true" ]]; then
        # Setup Gitblit Server
+       echo "Starting Gitblit core service..."
        /bin/bash $setup_path/gitblit.sh
        sleep 1m
     fi
@@ -896,6 +905,7 @@ function deploy_wso2_ppaas_services() {
     
           echo -e "Deploying Enterprise Service Bus (ESB) service at esb-service-deployment.json"
           curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/esb-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+       fi
     fi
 
     if [[ "$bps_enabled" = "true" ]]; then
@@ -912,11 +922,12 @@ function deploy_wso2_ppaas_services() {
           echo -e "Deploying Business Process Server (BPS) Worker service"
           curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/bps-worker-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
        else
-        echo -e "Deploying Business Process Server (BPS) cartridge at $resource_path/json/$iaas/bps-cart.json"
-        curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/bps-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+          echo -e "Deploying Business Process Server (BPS) cartridge at $resource_path/json/$iaas/bps-cart.json"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/bps-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
-        echo -e "Deploying Business Process Server service"
-        curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/bps-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+          echo -e "Deploying Business Process Server service"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/bps-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+       fi
     fi
 
     # wait till services are active
