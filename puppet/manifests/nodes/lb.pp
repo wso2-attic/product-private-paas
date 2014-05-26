@@ -16,7 +16,7 @@
 # under the License.
 
 # loadbalancer cartridge node
-node /lb/ inherits base {
+node /[0-9]{1,12}.default.lb/ inherits base {
   require java
   class {'agent':}
   class {'lb': maintenance_mode   => 'norestart'}

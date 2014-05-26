@@ -16,7 +16,7 @@
 #
 
 # API - gateway cartridge node
-node /gateway/ inherits base {
+node /[0-9]{1,12}.(default|manager|worker).gateway/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
   require java
   class {'agent':}
@@ -44,7 +44,7 @@ node /gateway/ inherits base {
   Class['stratos_base'] -> Class['java'] -> Class['apimanager'] ~> Class['agent']
 }
 
-node /gatewaymgt/ inherits base {
+node /[0-9]{1,12}.(default|manager|worker).gatewaymgt/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
   require java
   class {'agent':}
@@ -74,7 +74,7 @@ node /gatewaymgt/ inherits base {
 
 
 # API - keymanager cartridge node
-node /keymanager/ inherits base {
+node /[0-9]{1,12}.(default|manager|worker).keymanager/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
   require java
   class {'agent':}
@@ -103,7 +103,7 @@ node /keymanager/ inherits base {
 }
 
 # API - apistore cartridge node
-node /apistore/ inherits base {
+node /[0-9]{1,12}.(default|manager|worker).apistore/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
   require java
   class {'agent':}
@@ -132,7 +132,7 @@ node /apistore/ inherits base {
 }
 
 # API - publisher cartridge node
-node /publisher/ inherits base {
+node /[0-9]{1,12}.(default|manager|worker).publisher/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
   require java
   class {'agent':}

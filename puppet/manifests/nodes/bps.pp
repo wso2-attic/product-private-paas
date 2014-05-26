@@ -16,7 +16,7 @@
 #
 
 # BPS cartridge node
-node /bps/ inherits base {
+node /[0-9]{1,12}.(default|manager|worker).bps/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2bps-3.2.0"
   require java
   class {'agent':}
