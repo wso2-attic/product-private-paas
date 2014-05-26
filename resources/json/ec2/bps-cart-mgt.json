@@ -65,6 +65,10 @@
          {
             "name": "payload_parameter.CLUSTERING",
             "value": "true"
+         },
+         {
+            "name": "payload_parameter.COMMIT_ENABLED",
+            "value": "true"
          }
       ]
 }
