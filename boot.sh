@@ -725,6 +725,9 @@ function init() {
 
     # backup mysql.sql, we are going to write stuff into it
     #backup_file $setup_path/resources/mysql.sql
+    if [[ -z $skip_puppet || "$skip_puppet" = "" ]]; then
+       skip_puppet="false"
+    fi
 
     # Check whether Puppetmaster is installed and configure it
     check_for_puppet
