@@ -65,10 +65,6 @@
              "value": "manager"
           },
           {
-             "name": "payload_parameter.MANAGER_SERVICE_TYPE",
-             "value": "gatewaymgt"
-          },
-          {
              "name": "payload_parameter.WORKER_SERVICE_TYPE",
              "value": "gateway"
           },

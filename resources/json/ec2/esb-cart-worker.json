@@ -66,10 +66,6 @@
             "value": "esbmgt"
          },
          {
-            "name": "payload_parameter.WORKER_SERVICE_TYPE",
-            "value": "esbworker"
-         },
-         {
             "name": "PRIMARY",
             "value": "true"
          },
