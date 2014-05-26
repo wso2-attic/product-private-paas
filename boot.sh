@@ -57,6 +57,13 @@ apim_stats_db="amstats"
 esb_config_db="esb_config"
 is_config_db="is_config"
 bps_config_db="bps_config"
+
+# GReg Mount path
+# Using the same target mount path for now
+as_config_path="config"
+esb_config_path="config"
+bps_config_path="config"
+
 # Using the same config DB for store and publisher
 apim_store_config_db="apim_store_config"
 #apim_publisher_config_db="apim_publisher_config"
@@ -352,6 +359,8 @@ function setup_as() {
         cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/appserver/files/configs/repository/components/lib
 
         # appserver node parameters
+        replace_in_file "AS_CONFIG_DB" "$as_config_db" "/etc/puppet/manifests/nodes/appserver.pp"
+        replace_in_file "AS_CONFIG_PATH" "$as_config_path" "/etc/puppet/manifests/nodes/appserver.pp"
         replace_in_file "CLUSTERING" "$as_clustering" "/etc/puppet/manifests/nodes/appserver.pp"
         replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
         replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
@@ -406,7 +415,7 @@ function setup_bps() {
         # bps node parameters
         backup_file "/etc/puppet/manifests/nodes/bps.pp"
         replace_in_file "BPS_CONFIG_DB" "$bps_db" "/etc/puppet/manifests/nodes/bps.pp"
-        replace_in_file "BPS_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes/bps.pp"
+        replace_in_file "BPS_CONFIG_PATH" "$bps_config_path" "/etc/puppet/manifests/nodes/bps.pp"
         replace_in_file "CLUSTERING" "$bps_clustering" "/etc/puppet/manifests/nodes/bps.pp"
         backup_file "/etc/puppet/modules/bps/manifests/params.pp"
         replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
