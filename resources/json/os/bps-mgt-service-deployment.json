@@ -1,0 +1,9 @@
+{
+      "serviceName": "bpsmgt",
+      "cartridgeType": "bpsmgt",
+      "deploymentPolicyName": "deployp",
+      "autoscalingPolicyName": "economy",
+      "clusterDomain": "bps.dev.domain",
+      "clusterSubDomain": "subdomain2",
+      "tenantRange": "*"
+}

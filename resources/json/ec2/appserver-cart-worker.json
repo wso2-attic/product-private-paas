@@ -3,8 +3,8 @@
       "provider": "wso2",
       "serviceGroup": "appservergroup",
       "host": "appserver.wso2.com",
-      "displayName": "AppServer",
-      "description": "AppServer Cartridge",
+      "displayName": "AppServer Worker",
+      "description": "AppServer Worker Cartridge",
       "version": "5.2.0",
       "multiTenant": "true",
       "portMapping": [
@@ -21,10 +21,10 @@
        ],
       "deployment": {
         },
-       "iaasProvider": [
+      "iaasProvider": [
         {
           "type": "ec2",
-          "imageId": "ap-southeast-1/ami-3c0f5d6e",
+          "imageId": "REGION/BASE_IMAGE_ID",
           "maxInstanceLimit": "4",
           "property": [
             {
@@ -41,22 +41,30 @@
             "value": "true"
         }
       },
-        "property": [
-    {
-     "name": "payload_parameter.SERIVCE_GROUP",
-     "value": "appservergroup"
-    },
-    {
-     "name": "payload_parameter.DEPLOYMENT",
-     "value": "worker"
-    },
-    {
-     "name": "payload_parameter.MANAGER_SERVICE_TYPE",
-     "value": "appservermgt"
-    },
-    {
-     "name": "payload_parameter.WORKER_SERVICE_TYPE",
-     "value": "appserverworker"
-    }
+      "property": [
+         {
+            "name": "payload_parameter.SERIVCE_GROUP",
+            "value": "appservergroup"
+         },
+         {
+            "name": "payload_parameter.DEPLOYMENT",
+            "value": "worker"
+         },
+         {
+            "name": "payload_parameter.MANAGER_SERVICE_TYPE",
+            "value": "appservermgt"
+         },
+         {
+            "name": "payload_parameter.WORKER_SERVICE_TYPE",
+            "value": "appserverworker"
+         },
+         {
+            "name": "PRIMARY",
+            "value": "true"
+         },
+         {
+            "name": "payload_parameter.CLUSTERING",
+            "value": "true"
+         }
    ] 
 }

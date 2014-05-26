@@ -39,19 +39,27 @@ export puppet_external_host=""
 
 # IaaS configuration
 export iaas=""
+# Region Name
+export region=""
+# Cartridge base image
+export cartridge_base_img_id=""
+
+# OpenStack
 export os_identity=""
 export os_credentials=""
 export os_jclouds_endpoint=""
-export cartridge_base_img_id=""
-export region=""
 export os_keypair_name=""
 export os_security_groups=""
+
+# EC2
 export ec2_identity=""
 export ec2_credentials=""
 export ec2_owner_id=""
 export ec2_keypair_name=""
 export ec2_security_groups=""
 export ec2_availability_zone=""
+
+# vCloud
 export vcloud_identity=""
 export vcloud_credentials=""
 export vcloud_jclouds_endpoint=""
@@ -64,19 +72,25 @@ export mysql_uname=""
 export mysql_password=""
 
 # WSO2 PPaaS services
-export as_needed=""
-export bps_needed=""
-export esb_needed=""
-export is_needed=""
-export apim_needed=""
+export as_enabled=""
+export bps_enabled=""
+export esb_enabled=""
+export is_enabled=""
+export apim_enabled=""
+
+# Worker Manager deployment
+export as_worker_mgt_enabled=""
+export bps_worker_mgt_enabled=""
+export esb_worker_mgt_enabled=""
+export is_worker_mgt_enabled=""
 
 # Clustering of services
-export as_clustering=""
-export is_clustering=""
-export esb_clustering=""
-export bps_clustering=""
+export as_clustering_enabled=""
+export is_clustering_enabled=""
+export esb_clustering_enabled=""
+export bps_clustering_enabled=""
 
 # WSO2 PPaaS core services
-export bam_needed=""
-export config_sso=""
-export wso2_ppaas_confirm=""
+export bam_enabled=""
+export config_sso_enabled=""
+export wso2_ppaas_enabled=""

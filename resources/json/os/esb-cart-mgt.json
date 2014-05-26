@@ -1,11 +1,11 @@
 {
-      "type": "appservermgt",
+      "type": "esbmgt",
       "provider": "wso2",
-      "serviceGroup": "appservergroup",      
-      "host": "mgt.appserver.wso2.com",
-      "displayName": "AppServer Manager",
-      "description": "AppServer Manager Cartridge",
-      "version": "5.2.1",
+      "serviceGroup": "esbgroup",
+      "host": "mgt.esb.wso2.com",
+      "displayName": "ESB Manager",
+      "description": "ESB Manager Cartridge",
+      "version": "4.8.1",
       "multiTenant": "true",
       "portMapping": [
          {
@@ -17,19 +17,30 @@
             "protocol": "https",
             "port": "9443",
             "proxyPort": "443"
+         },
+	  {
+            "protocol": "http",
+            "port": "8280",
+            "proxyPort": "8280"
+         },
+         {
+            "protocol": "https",
+            "port": "8243",
+            "proxyPort": "8243"
          }
+
        ],
       "deployment": {
         },
-      "iaasProvider": [
+       "iaasProvider": [
         {
-          "type": "ec2",
+          "type": "openstack",
           "imageId": "REGION/BASE_IMAGE_ID",
           "maxInstanceLimit": "4",
           "property": [
             {
              "name": "instanceType",
-             "value": "m1.medium"
+             "value": "REGION/3"
             }
           ]
         }
@@ -39,12 +50,12 @@
         "property": {
             "name": "default.load.balancer",
             "value": "true"
-         }
+        }
       },
       "property": [
          {
             "name": "payload_parameter.SERIVCE_GROUP",
-            "value": "appservergroup"
+            "value": "esbgroup"
          },
          {
             "name": "payload_parameter.DEPLOYMENT",
@@ -52,11 +63,11 @@
          },
          {
             "name": "payload_parameter.MANAGER_SERVICE_TYPE",
-            "value": "appservermgt"
+            "value": "esbmgt"
          },
          {
             "name": "payload_parameter.WORKER_SERVICE_TYPE",
-            "value": "appserverworker"
+            "value": "esbworker"
          },
          {
             "name": "PRIMARY",
@@ -66,5 +77,5 @@
             "name": "payload_parameter.CLUSTERING",
             "value": "true"
          }
-      ]    
+      ]
 }
