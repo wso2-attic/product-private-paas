@@ -87,6 +87,7 @@ class is (
       'conf/tomcat/catalina-server.xml',
       'conf/user-mgt.xml',
       'conf/log4j.properties',
+      'conf/api-manager.xml',
       ],
   }
 
