@@ -1,11 +1,11 @@
-{   
-      "type": "gatewaymgt",
-      "provider": "internal",
-      "serviceGroup": "apim",
-      "host": "mgt.gateway.am.wso2.com",
-      "displayName": "API Manager - Gateway Manager",
-      "description": "API Manager - Gateway Manager Cartridge",
-      "version": "1.7.0",
+{
+      "type": "appserverworker",
+      "provider": "wso2",
+      "serviceGroup": "appservergroup",
+      "host": "appserver.wso2.com",
+      "displayName": "AppServer Worker",
+      "description": "AppServer Worker Cartridge",
+      "version": "5.2.0",
       "multiTenant": "true",
       "portMapping": [
          {
@@ -17,22 +17,11 @@
             "protocol": "https",
             "port": "9443",
             "proxyPort": "443"
-         },
-	{
-            "protocol": "http",
-            "port": "8280",
-            "proxyPort": "8280"
-         },
-         {
-            "protocol": "https",
-            "port": "8243",
-            "proxyPort": "8243"
          }
-
        ],
       "deployment": {
         },
-       "iaasProvider": [
+      "iaasProvider": [
         {
           "type": "openstack",
           "imageId": "REGION/BASE_IMAGE_ID",
@@ -51,40 +40,31 @@
             "name": "default.load.balancer",
             "value": "true"
         }
-      }, 
+      },
       "property": [
+         {
+            "name": "payload_parameter.SERIVCE_GROUP",
+            "value": "appservergroup"
+         },
+         {
+            "name": "payload_parameter.DEPLOYMENT",
+            "value": "worker"
+         },
+         {
+            "name": "payload_parameter.MANAGER_SERVICE_TYPE",
+            "value": "appservermgt"
+         },
+         {
+            "name": "payload_parameter.WORKER_SERVICE_TYPE",
+            "value": "appserverworker"
+         },
          {
             "name": "PRIMARY",
             "value": "true"
          },
          {
-            "name": "payload_parameter.SERIVCE_GROUP",
-            "value": "apim"
-         },
-         {
-            "name": "payload_parameter.DEPLOYMENT",
-            "value": "manager"
-         },
-         {
-            "name": "payload_parameter.MANAGER_SERVICE_TYPE",
-            "value": "gatewaymgt"
-         },
-         {
-            "name": "payload_parameter.WORKER_SERVICE_TYPE",
-            "value": "gateway"
-         },
-         {
             "name": "payload_parameter.CLUSTERING",
             "value": "true"
-         },
-         {
-            "name": "payload_parameter.COMMIT_ENABLED",
-            "value": "true"
-         },
-         {
-            "name": "payload_parameter.KEYMANAGER_HOST_NAME",
-            "value": "keymanager.am.wso2.com"
          }
-      ] 
-    
- }
+   ] 
+}

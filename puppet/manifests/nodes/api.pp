@@ -88,7 +88,7 @@ node /[0-9]{1,12}.(default|manager|worker).keymanager/ inherits base {
         port_mapping       => false,
         amtype             => 'keymanager',
         offset             => 0,
-        config_database    => 'KAYMANAGER_CONFIG_DB',
+        config_database    => 'KEYMANAGER_CONFIG_DB',
         maintenance_mode   => 'refresh',
         depsync            => false,
         clustering         => 'KEYMANGER_CLUSTERING',

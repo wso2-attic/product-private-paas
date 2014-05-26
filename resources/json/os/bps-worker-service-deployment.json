@@ -1,0 +1,9 @@
+{
+      "serviceName": "bpsworker",
+      "cartridgeType": "bpsworker",
+      "deploymentPolicyName": "deployp",
+      "autoscalingPolicyName": "economy",
+      "clusterDomain": "bps.dev.domain",
+      "clusterSubDomain": "subdomain2",
+      "tenantRange": "*"
+}

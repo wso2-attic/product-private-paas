@@ -1,9 +1,10 @@
 {
-      "type": "esb",
+      "type": "esbworker",
       "provider": "wso2",
+      "serviceGroup": "esbgroup",
       "host": "esb.wso2.com",
-      "displayName": "ESB",
-      "description": "ESB Cartridge",
+      "displayName": "ESB Worker",
+      "description": "ESB Worker Cartridge",
       "version": "4.8.1",
       "multiTenant": "true",
       "portMapping": [
@@ -52,13 +53,29 @@
         }
       },
       "property": [
-        {
-          "name": "PRIMARY",
-          "value": "@PRIMARY"
-        },        
-        {
-          "name": "payload_parameter.CLUSTERING",
-          "value": "@CLUSTERING"
-        }
+         {
+            "name": "payload_parameter.SERIVCE_GROUP",
+            "value": "esbgroup"
+         },
+         {
+            "name": "payload_parameter.DEPLOYMENT",
+            "value": "worker"
+         },
+         {
+            "name": "payload_parameter.MANAGER_SERVICE_TYPE",
+            "value": "esbmgt"
+         },
+         {
+            "name": "payload_parameter.WORKER_SERVICE_TYPE",
+            "value": "esbworker"
+         },
+         {
+            "name": "PRIMARY",
+            "value": "true"
+         },
+         {
+            "name": "payload_parameter.CLUSTERING",
+            "value": "true"
+         }
       ]
 }

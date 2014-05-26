@@ -49,9 +49,10 @@ if [[ -e $gitblit_pack_path ]]; then
     tar xzf $gitblit_pack_path -C $gitblit_path
     cp -f $current_dir/config/gitblit/gitblit.properties $gitblit_path/data
 
-    sed -i '$a internal.repo.username=admin' $stratos_extract_path/repository/conf/cartridge-config.properties
-    sed -i '$a internal.repo.password=admin' $stratos_extract_path/repository/conf/cartridge-config.properties
-    sed -i '$a internal.git.url=http://PUPPET_IP:8290' $stratos_extract_path/repository/conf/cartridge-config.properties
+    sed -i '$a internal.repo.username=admin' $stratos_extract_path-default/repository/conf/cartridge-config.properties
+    sed -i '$a internal.repo.password=admin' $stratos_extract_path-default/repository/conf/cartridge-config.properties
+    sed -i '$a internal.git.url=http://HOST_IP:8290' $stratos_extract_path-default/repository/conf/cartridge-config.properties
+    sed -i "s@HOST_IP@$host_ip@g" $stratos_extract_path-default/repository/conf/cartridge-config.properties
 else
     echo "Gitblit pack [ $gitblit_pack_path ] not found!"
     exit 1

@@ -1,11 +1,11 @@
-{   
-      "type": "gatewaymgt",
-      "provider": "internal",
-      "serviceGroup": "apim",
-      "host": "mgt.gateway.am.wso2.com",
-      "displayName": "API Manager - Gateway Manager",
-      "description": "API Manager - Gateway Manager Cartridge",
-      "version": "1.7.0",
+{
+      "type": "bpsmgt",
+      "provider": "wso2",
+      "serviceGroup": "bpsgroup",
+      "host": "mgt.bps.wso2.com",
+      "displayName": "Business Process Server Manager",
+      "description": "BPS Manager Cartridge",
+      "version": "3.2.1",
       "multiTenant": "true",
       "portMapping": [
          {
@@ -17,30 +17,19 @@
             "protocol": "https",
             "port": "9443",
             "proxyPort": "443"
-         },
-	{
-            "protocol": "http",
-            "port": "8280",
-            "proxyPort": "8280"
-         },
-         {
-            "protocol": "https",
-            "port": "8243",
-            "proxyPort": "8243"
          }
-
        ],
       "deployment": {
         },
-       "iaasProvider": [
+      "iaasProvider": [
         {
-          "type": "openstack",
+          "type": "ec2",
           "imageId": "REGION/BASE_IMAGE_ID",
-          "maxInstanceLimit": "4",
+          "maxInstanceLimit": "4",    
           "property": [
             {
              "name": "instanceType",
-             "value": "REGION/3"
+             "value": "m1.medium"
             }
           ]
         }
@@ -51,15 +40,11 @@
             "name": "default.load.balancer",
             "value": "true"
         }
-      }, 
+      },
       "property": [
-         {
-            "name": "PRIMARY",
-            "value": "true"
-         },
-         {
+        {
             "name": "payload_parameter.SERIVCE_GROUP",
-            "value": "apim"
+            "value": "bpsgroup"
          },
          {
             "name": "payload_parameter.DEPLOYMENT",
@@ -67,11 +52,15 @@
          },
          {
             "name": "payload_parameter.MANAGER_SERVICE_TYPE",
-            "value": "gatewaymgt"
+            "value": "bpsmgt"
          },
          {
             "name": "payload_parameter.WORKER_SERVICE_TYPE",
-            "value": "gateway"
+            "value": "bpsworker"
+         },
+         {
+            "name": "PRIMARY",
+            "value": "true"
          },
          {
             "name": "payload_parameter.CLUSTERING",
@@ -80,11 +69,6 @@
          {
             "name": "payload_parameter.COMMIT_ENABLED",
             "value": "true"
-         },
-         {
-            "name": "payload_parameter.KEYMANAGER_HOST_NAME",
-            "value": "keymanager.am.wso2.com"
          }
-      ] 
-    
- }
+      ]
+}
