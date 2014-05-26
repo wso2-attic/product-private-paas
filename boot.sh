@@ -74,10 +74,12 @@ function help() {
     echo ""
     echo "This script will install WSO2 Private PaaS 4.0"
     echo "usage:"
-    echo "boot.sh [-p | -s]"
+    echo "boot.sh [-p | -s | -c] --autostart [true|false]"
     echo "   -p : Puppet only mode. This will only deploy and configure Puppet scripts."
     echo "   -s : Silent mode. This will start core services without performing any configuration."
     echo "   -c : Config mode. This will only configure core services and products. WSO2 Private PaaS services will not be deployed."
+    echo "   autostart : Set 'true' to automatically start core services. This will be set as 'true' by default."
+    echo "             : Set 'false' to if you don't need to start core services."
     echo ""
 }
 
