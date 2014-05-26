@@ -32,6 +32,7 @@ current_dir=`cd $dir;pwd`
 source "$current_dir/conf.sh"
 
 # Global configuration variables
+export public_ip=$(curl -s http://checkip.dyndns.org | awk '{print $6}' | awk -F'<' '{print $1}')
 setup_path="$current_dir/stratos-installer"
 stratos_pack_path="$current_dir/packs"
 stratos_install_path="$current_dir/install"
@@ -363,7 +364,7 @@ function setup_as() {
         if [[ "$config_sso_enabled" == "true" ]] ; then      
            backup_file "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
            replace_in_file "SSO_DISABLED" "false" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
-           replace_in_file "IDP_URL" "$machine_ip" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
+           replace_in_file "IDP_URL" "$public_ip" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
         else       
            backup_file "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
            replace_in_file "SSO_DISABLED" "true" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
