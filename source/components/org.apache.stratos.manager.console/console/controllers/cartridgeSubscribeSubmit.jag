@@ -95,7 +95,7 @@
 		        jsonRequest.cartridgeType = step_data[i].cartridgeType;
 
 		        // the following is a great dirty hack to share the same repo between gateway workers and gateway managers :(
-		        if (repoUrl != null) {
+		        if (repoUrl != null && repoUrl != undefined) {
 		            log.info("Setting previously created internal repo URL " + repoUrl);
 		            // if a repoUrl has been returne with previous subscription response, set it to request params
 		            jsonRequest.repoURL = repoUrl;
@@ -105,8 +105,9 @@
                 log.info("********************:" + stringify(jsonRequest) + "\n &&&&&&&&&&&\n" + stringify(re)) ;
                 // check if the repo Url returned in response is valid. If so, assign it to a variable to use in the next
                 // subscription call
-                if (re.repositoryURL != null || re.repositoryURL != undefined) {
-                    repoUrl = re.repositoryURL;
+                var responseUrl = re.subscriptionInfo.repositoryURL;
+                if (responseUrl != null || responseUrl != undefined) {
+                    repoUrl = responseUrl;
                 }
             }
         }
