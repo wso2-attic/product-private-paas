@@ -23,13 +23,13 @@
         },
       "iaasProvider": [
         {
-          "type": "ec2",
+          "type": "openstack",
           "imageId": "REGION/BASE_IMAGE_ID",
           "maxInstanceLimit": "4",
           "property": [
             {
              "name": "instanceType",
-             "value": "m1.medium"
+             "value": "REGION/3"
             }
           ]
         }

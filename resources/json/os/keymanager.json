@@ -24,7 +24,8 @@
        "iaasProvider": [
         {
           "type": "openstack",
-          "imageId": "REGION/BASE_IMAGE_ID",          
+          "imageId": "REGION/BASE_IMAGE_ID",
+          "maxInstanceLimit": "4", 
           "property": [
             {
              "name": "instanceType",

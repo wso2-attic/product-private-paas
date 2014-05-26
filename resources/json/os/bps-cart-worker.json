@@ -1,11 +1,11 @@
 {
-      "type": "appservermgt",
+      "type": "bpsworker",
       "provider": "wso2",
-      "serviceGroup": "appservergroup",      
-      "host": "mgt.appserver.wso2.com",
-      "displayName": "AppServer Manager",
-      "description": "AppServer Manager Cartridge",
-      "version": "5.2.1",
+      "serviceGroup": "bpsgroup",
+      "host": "bps.wso2.com",
+      "displayName": "Business Process Server Worker",
+      "description": "BPS Worker Cartridge",
+      "version": "3.2.1",
       "multiTenant": "true",
       "portMapping": [
          {
@@ -21,15 +21,15 @@
        ],
       "deployment": {
         },
-      "iaasProvider": [
+       "iaasProvider": [
         {
-          "type": "ec2",
+          "type": "openstack",
           "imageId": "REGION/BASE_IMAGE_ID",
-          "maxInstanceLimit": "4",
+          "maxInstanceLimit": "4",    
           "property": [
             {
              "name": "instanceType",
-             "value": "m1.medium"
+             "value": "REGION/3"
             }
           ]
         }
@@ -39,24 +39,24 @@
         "property": {
             "name": "default.load.balancer",
             "value": "true"
-         }
+        }
       },
       "property": [
-         {
+        {
             "name": "payload_parameter.SERIVCE_GROUP",
-            "value": "appservergroup"
+            "value": "bpsgroup"
          },
          {
             "name": "payload_parameter.DEPLOYMENT",
-            "value": "manager"
+            "value": "worker"
          },
          {
             "name": "payload_parameter.MANAGER_SERVICE_TYPE",
-            "value": "appservermgt"
+            "value": "bpsmgt"
          },
          {
             "name": "payload_parameter.WORKER_SERVICE_TYPE",
-            "value": "appserverworker"
+            "value": "bpsworker"
          },
          {
             "name": "PRIMARY",
@@ -66,5 +66,5 @@
             "name": "payload_parameter.CLUSTERING",
             "value": "true"
          }
-      ]    
+      ]
 }

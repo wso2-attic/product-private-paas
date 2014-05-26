@@ -56,8 +56,9 @@ apim_stats_db="amstats"
 esb_config_db="esb_config"
 is_config_db="is_config"
 bps_config_db="bps_config"
+# Using the same config DB for store and publisher
 apim_store_config_db="apim_store_config"
-apim_publisher_config_db="apim_publisher_config"
+#apim_publisher_config_db="apim_publisher_config"
 apim_gateway_config_db="apim_gateway_config"
 apim_keymanager_config_db="apim_keymanager_config"
 
@@ -68,6 +69,7 @@ function help() {
     echo "boot.sh [-p | -s]"
     echo "   -p : Puppet only mode. This will only deploy and configure Puppet scripts."
     echo "   -s : Silent mode. This will start core services without performing any configuration."
+    echo "   -c : Config mode. This will only configure core services and products. WSO2 Private PaaS services will not be deployed."
     echo ""
 }
 
@@ -261,37 +263,81 @@ function setup_apache_stratos() {
 }
 
 function get_service_deployment_confirmations() {
-    as_needed=$(read_user_input "Do you need to deploy AS (Application Server) service ? [y/n] " "" $as_needed )
+    as_needed=$(read_user_input "Do you need to deploy AS (Application Server) service ? [y/n] " "" $as_enabled )
     if [[ $as_needed =~ ^[Yy]$ ]]; then
-       clustering_appserver=$(read_user_input "Do you need to enable clustering for AS ? [y/n] " "" $as_clustering )
-       if [[ $clustering_appserver =~ ^[Yy]$ ]]; then 
+       as_enabled="true"
+
+       as_worker_mgt_needed=$(read_user_input "Do you need to deploy AS (Application Server) in worker manager setup? [y/n] " "" $as_worker_mgt_enabled )
+       if [[ $as_worker_mgt_needed =~ ^[Yy]$ ]]; then
+          as_worker_mgt_enabled="true"
           as_clustering="true"
-       fi       
+       else
+          clustering_appserver=$(read_user_input "Do you need to enable clustering for AS ? [y/n] " "" $as_clustering )
+          if [[ $clustering_appserver =~ ^[Yy]$ ]]; then 
+             as_clustering="true"
+          else
+             as_clustering="false"
+          fi
+       fi
     fi
 
-    bps_needed=$(read_user_input "Do you need to deploy BPS (Business Process Server) service ? [y/n] " "" $bps_needed )
+    bps_needed=$(read_user_input "Do you need to deploy BPS (Business Process Server) service ? [y/n] " "" $bps_enabled )
     if [[ $bps_needed =~ ^[Yy]$ ]]; then
-       clustering_bps=$(read_user_input "Do you need to enable clustering for BPS ? [y/n] " "" $bps_clustering )
-       if [[ $clustering_bps =~ ^[Yy]$ ]]; then
+       bps_enabled="true"
+     
+       bps_worker_mgt_needed=$(read_user_input "Do you need to deploy BPS (Business Process Server) in worker manager setup? [y/n] " "" $bps_worker_mgt_enabled )
+       if [[ $bps_worker_mgt_needed =~ ^[Yy]$ ]]; then
+          bps_worker_mgt_enabled="true"
           bps_clustering="true"
+       else
+          clustering_bps=$(read_user_input "Do you need to enable clustering for BPS ? [y/n] " "" $bps_clustering )
+          if [[ $clustering_bps =~ ^[Yy]$ ]]; then
+             bps_clustering="true"
+          else
+             bps_clustering="false"
+          fi
        fi      
     fi
 
-    esb_needed=$(read_user_input "Do you need to deploy ESB (Enterprise Service Bus) service ? [y/n] " "" $esb_needed )
-    if [[ $esb_needed =~ ^[Yy]$ ]];	then
-       clustering_esb=$(read_user_input "Do you need to enable clustering for ESB ? [y/n] " "" $esb_clustering )
-       if [[ $clustering_esb =~ ^[Yy]$ ]]; then
+    esb_needed=$(read_user_input "Do you need to deploy ESB (Enterprise Service Bus) service ? [y/n] " "" $esb_enabled )
+    if [[ $esb_needed =~ ^[Yy]$ ]]; then
+       esb_enabled="true"
+     
+       esb_worker_mgt_needed=$(read_user_input "Do you need to deploy ESB (Enterprise Service Bus) in worker manager setup? [y/n] " "" $esb_worker_mgt_enabled )
+       if [[ $esb_worker_mgt_needed =~ ^[Yy]$ ]]; then
+          esb_worker_mgt_enabled="true"
           esb_clustering="true"
+       else
+          clustering_esb=$(read_user_input "Do you need to enable clustering for ESB ? [y/n] " "" $esb_clustering )
+          if [[ $clustering_esb =~ ^[Yy]$ ]]; then
+             esb_clustering="true"
+          else
+             esb_clustering="false"
+          fi
        fi      
     fi   
 
-    apim_needed=$(read_user_input "Do you need to deploy APIM (API Manager) service ? [y/n] " "" $apim_needed )      
+    apim_needed=$(read_user_input "Do you need to deploy APIM (API Manager) service ? [y/n] " "" $apim_enabled )
+    if [[ $apim_needed =~ ^[Yy]$ ]]; then
+       apim_enabled="true"
+    fi
 }
 
 function get_core_services_confirmations() {
-    bam_needed=$(read_user_input "Do you need to setup WSO2 BAM (Business Activity Monitor) as a core service? [y/n] " "" $bam_needed )
-    config_sso=$(read_user_input "Do you need to setup WSO2 IS (Identity Server) as a core service and configure SSO feature ? [y/n] " "" $config_sso )
-    wso2_ppaas_confirm=$(read_user_input "Do you need to start WSO2 Private PaaS? [y/n] " "" $wso2_ppaas_confirm )
+    bam_needed=$(read_user_input "Do you need to setup WSO2 BAM (Business Activity Monitor) as a core service? [y/n] " "" $bam_enabled )
+    if [[ $bam_needed =~ ^[Yy]$ ]]; then
+       bam_enabled="true"
+    fi
+
+    config_sso_needed=$(read_user_input "Do you need to setup WSO2 IS (Identity Server) as a core service and configure SSO feature ? [y/n] " "" $config_sso_enabled )
+    if [[ $config_sso_needed =~ ^[Yy]$ ]]; then
+       config_sso_enabled="true"
+    fi
+
+    wso2_ppaas_needed=$(read_user_input "Do you need to start WSO2 Private PaaS? [y/n] " "" $wso2_ppaas_enabled )
+    if [[ $wso2_ppaas_needed =~ ^[Yy]$ ]]; then
+       wso2_ppaas_enabled="true"
+    fi
 }
 
 function setup_as() {
@@ -314,7 +360,7 @@ function setup_as() {
         replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/appserver/manifests/params.pp"
 
         # Configure SSO in appserver
-        if [[ "$config_sso" == "true" ]] ; then      
+        if [[ "$config_sso_enabled" == "true" ]] ; then      
            backup_file "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
            replace_in_file "SSO_DISABLED" "false" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
            replace_in_file "IDP_URL" "$machine_ip" "/etc/puppet/modules/appserver/templates/conf/security/authenticators.xml.erb"
@@ -438,23 +484,23 @@ function setup_esb() {
 }
 
 function setup_is() {
-    #if [[ $is_needed =~ ^[Yy]$ ]]; then
-    #    cp -f $stratos_pack_path/wso2is-5.0.0.zip /etc/puppet/modules/is/files
-    #    cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/is/files/configs/repository/components/lib
-        
-    #fi
+    
+    cp -f $stratos_pack_path/wso2is-5.0.0.zip /etc/puppet/modules/is/files
+    cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/is/files/configs/repository/components/lib    
 
     # is node parameters
-    #backup_file "/etc/puppet/manifests/nodes/is.pp"
-    #replace_in_file "CLUSTERING" "$is_clustering" "/etc/puppet/manifests/nodes/is.pp"
-    #backup_file "/etc/puppet/modules/is/manifests/params.pp"
-    #replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/is/manifests/params.pp"
-    #replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/is/manifests/params.pp"
-    #replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/is/manifests/params.pp"
-    #replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/is/manifests/params.pp"
-    #replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/is/manifests/params.pp"
-    #replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/is/manifests/params.pp"
+    backup_file "/etc/puppet/manifests/nodes/is.pp"
+    replace_in_file "CLUSTERING" "$is_clustering" "/etc/puppet/manifests/nodes/is.pp"
+    backup_file "/etc/puppet/modules/is/manifests/params.pp"
+    replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/is/manifests/params.pp"
+    replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/is/manifests/params.pp"
+    replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/is/manifests/params.pp"
+    replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/is/manifests/params.pp"
+    replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/is/manifests/params.pp"
+    replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/is/manifests/params.pp"
+}
 
+function setup_is_core_service() {
     
     if [[ -e $stratos_pack_path/wso2is-5.0.0.zip ]]; then
         unzip -o -q $stratos_pack_path/wso2is-5.0.0.zip -d $stratos_install_path
@@ -510,7 +556,7 @@ function setup_apim() {
        replace_in_file "STATS_DB" "$apim_stats_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
        replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
        replace_in_file "GATEWAY_CONFIG_DB" "$apim_gateway_config_db" "/etc/puppet/manifests/nodes/api.pp"
-       replace_in_file "STORE_CONFIG_DB" "$apim_store_publisher_config_db" "/etc/puppet/manifests/nodes/api.pp"       
+       replace_in_file "STORE_CONFIG_DB" "$apim_store_config_db" "/etc/puppet/manifests/nodes/api.pp"       
     fi
 
     # In puppet only mode, do not change other configurations
@@ -519,6 +565,7 @@ function setup_apim() {
     fi
 
     create_apim_database "$apim_db"
+    # Using the same config DB for store and publisher
     create_config_database "$apim_store_config_db"
     create_config_database "$apim_gateway_config_db" 
     create_config_database "$apim_keymanager_config_db"
@@ -558,8 +605,8 @@ function deploy_puppet() {
     replace_in_file "DB_HOST" "$mysql_host" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "DB_PORT" "$mysql_port" "/etc/puppet/manifests/nodes/base.pp"
     
-    # Enable BAM via Puppet if BAM is needed
-    if [[ $bam_needed =~ ^[Yy]$ ]]; then
+    # Enable BAM via Puppet if BAM is enabled
+    if [[ "$bam_enabled" = "true" ]]; then
        replace_in_file "BAM_IP" "$machine_ip" "/etc/puppet/manifests/nodes/base.pp"
        replace_in_file "BAM_PORT" "7612" "/etc/puppet/manifests/nodes/base.pp"
        replace_in_file "ENABLE_LOG_PUBLISHER" "true" "/etc/puppet/manifests/nodes/base.pp"
@@ -571,6 +618,9 @@ function deploy_puppet() {
 }
 
 function configure_products() {
+
+    # Get user confirmations to deploy WSO2 PPaaS services
+    get_service_deployment_confirmations
 
     # Create databases for the governence registry
     # Using the same userstore to the registry    
@@ -598,23 +648,23 @@ function configure_products() {
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/lb-cart.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/lb-cart.json"
 
-    if [[ $as_needed =~ ^[Yy]$ ]]; then
+    if [[ $as_enabled = "true" ]]; then
        setup_as
     fi
 
-    if [[ $bps_needed =~ ^[Yy]$ ]]; then
+    if [[ $bps_enabled = "true" ]]; then
        setup_bps
     fi
 
-    if [[ $esb_needed =~ ^[Yy]$ ]]; then
+    if [[ $esb_enabled = "true" ]]; then
        setup_esb
     fi
     
-    if [[ $config_sso =~ ^[Yy]$ ]]; then
-       setup_is
+    if [[ $config_sso_enabled = "true" ]]; then
+       setup_is_core_service
     fi
 
-    if [[ $apim_needed =~ ^[Yy]$ ]]; then
+    if [[ $apim_enabled = "true" ]]; then
        setup_apim
     fi    
 
@@ -713,25 +763,29 @@ function init() {
 
 # Start core services
 function start_servers() {
-    if [[ $bam_needed =~ ^[Yy]$ ]]; then
+
+    # Get user confirmations to start WSO2 PPaaS core services
+    get_core_services_confirmations
+
+    if [[ $bam_enabled = "true" ]]; then
        # Setup BAM server
        /bin/bash $setup_path/setup_bam_logging.sh
        sleep 1m
     fi
 
-    if [[ $config_sso =~ ^[Yy]$ ]]; then
+    if [[ $config_sso_enabled = "true" ]]; then
        echo -e "Starting WSO2 IS server..."
        nohup $stratos_install_path/wso2is-5.0.0/bin/wso2server.sh -DportOffset=2 &
        sleep 1m
     fi
 
-    if [[ $apim_needed =~ ^[Yy]$ ]]; then
+    if [[ $apim_enabled = "true" ]]; then
        # Setup Gitblit Server
        /bin/bash $setup_path/gitblit.sh
        sleep 1m
     fi
 
-    if [[ $wso2_ppaas_confirm =~ ^[yY]$ ]]; then
+    if [[ $wso2_ppaas_enabled = "true" ]]; then
        # Start Apache Stratos with default profile
        echo -e "Starting WSO2 Private PaaS server..."
        su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p default >> $LOG"
@@ -742,74 +796,114 @@ function start_servers() {
 }
 
 function deploy_wso2_ppaas_services() {
-    echo -e "Deploying a partition at $resource_path/json/$iaas/partition.json"
+    echo -e "Deploying partition at $resource_path/json/$iaas/partition.json"
     curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/partition.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment/partition"
 
-    echo -e "Deploying a autoscale policy at $resource_path/json/$iaas/autoscale-policy.json"
+    echo -e "Deploying autoscale policy at $resource_path/json/$iaas/autoscale-policy.json"
     curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/autoscale-policy.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/autoscale"
 
-    echo -e "Deploying a deployment policy at $resource_path/json/$iaas/deployment-policy.json"
+    echo -e "Deploying deployment policy at $resource_path/json/$iaas/deployment-policy.json"
     curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/deployment-policy.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment"
 
-    echo -e "Deploying a deployment policy at $resource_path/json/$iaas/deployment-flat.json"
+    echo -e "Deploying deployment policy at $resource_path/json/$iaas/deployment-flat.json"
     curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/deployment-flat.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment"
 
-    echo -e "Deploying a LB cartridge at $resource_path/json/$iaas/lb-cart.json"
+    echo -e "Deploying LB cartridge at $resource_path/json/$iaas/lb-cart.json"
     curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/lb-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
-    if [[ $as_needed =~ ^[Yy]$ ]]; then
-        echo -e "Deploying a Aplication Server (AS) cartridge at $resource_path/json/$iaas/appserver-cart.json"
-        curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/appserver-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+    if [[ "$as_enabled" = "true" ]]; then
+       if [[ "$as_worker_mgt_enabled" = "true" ]]; then
+          echo -e "Deploying Aplication Server (AS) Manager cartridge at $resource_path/json/$iaas/appserver-cart-mgt.json"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/appserver-cart-mgt.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
-        echo -e "Deploying a Application Service service"
-        curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/appserver-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+          echo -e "Deploying Application Service Manager service"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/appserver-mgt-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+
+          echo -e "Deploying Aplication Server (AS) Worker cartridge at $resource_path/json/$iaas/appserver-cart-worker.json"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/appserver-cart-worker.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+
+          echo -e "Deploying Application Service Worker service"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/appserver-worker-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+       else
+           echo -e "Deploying Aplication Server (AS) cartridge at $resource_path/json/$iaas/appserver-cart.json"
+           curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/appserver-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+
+           echo -e "Deploying Application Service service"
+           curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/appserver-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+       fi
     fi
 
-    if [[ $apim_needed =~ ^[Yy]$ ]]; then
-        echo -e "Deploying a API Manager (AM) - Gateway cartridge at $resource_path/json/$iaas/gateway.json"
+    if [[ "$apim_enabled" = "true" ]]; then
+        echo -e "Deploying API Manager (AM) - Gateway cartridge at $resource_path/json/$iaas/gateway.json"
         curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/gateway.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
-        echo -e "Deploying a API Manager - Gateway service"
+        echo -e "Deploying API Manager - Gateway service"
         curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/gateway-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
 
-        echo -e "Deploying a API Manager (AM) - Gateway manager cartridge at $resource_path/json/$iaas/gatewaymgt.json"
+        echo -e "Deploying API Manager (AM) - Gateway manager cartridge at $resource_path/json/$iaas/gatewaymgt.json"
         curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/gatewaymgt.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
-        echo -e "Deploying a API Manager - Gateway manager service"
+        echo -e "Deploying API Manager - Gateway manager service"
         curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/gatewaymgt-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
 
-        echo -e "Deploying a API Manager (AM) - Keymanager cartridge at $resource_path/json/$iaas/keymanager.json"
+        echo -e "Deploying API Manager (AM) - Keymanager cartridge at $resource_path/json/$iaas/keymanager.json"
         curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/keymanager.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
-        echo -e "Deploying a API Manager (AM) - Keymanager service"
+        echo -e "Deploying API Manager (AM) - Keymanager service"
         curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/keymanager-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
 
-        echo -e "Deploying a API Manager (AM) - Publisher cartridge at $resource_path/json/$iaas/publisher.json"
+        echo -e "Deploying API Manager (AM) - Publisher cartridge at $resource_path/json/$iaas/publisher.json"
         curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/publisher.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
-        echo -e "Deploying a API Manager (AM) - Publisher service"
+        echo -e "Deploying API Manager (AM) - Publisher service"
         curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/publisher-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
 
-        echo -e "Deploying a API Manager (AM) - Store cartridge at $resource_path/json/$iaas/store.json"
+        echo -e "Deploying API Manager (AM) - Store cartridge at $resource_path/json/$iaas/store.json"
         curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/store.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
-        echo -e "Deploying a API Manager (AM) - Store service"
+        echo -e "Deploying API Manager (AM) - Store service"
         curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/store-dep.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
     fi
 
-    if [[ $esb_needed =~ ^[Yy]$ ]]; then
-        echo -e "Enterprise Service Bus (ESB) cartridge at $resource_path/json/$iaas/esb-cart.json"
-        curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/esb-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
-    echo -e ""
-        echo -e "Enterprise Service Bus (ESB) service at esb-service-deployment.json"
-        curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/esb-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+    if [[ "$esb_enabled" = "true" ]]; then
+       if [[ "$esb_worker_mgt_enabled" = "true" ]]; then
+          echo -e "Deploying Enterprise Service Bus (ESB) Manager cartridge at $resource_path/json/$iaas/esb-cart-mgt.json"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/esb-cart-mgt.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+
+          echo -e "Deploying Enterprise Service Bus (ESB) Manager service"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/esb-mgt-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+
+          echo -e "Deploying Enterprise Service Bus (ESB) Worker cartridge at $resource_path/json/$iaas/esb-cart-worker.json"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/esb-cart-worker.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+
+          echo -e "Deploying Enterprise Service Bus (ESB) Worker service"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/esb-worker-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+       else
+          echo -e "Deploying Enterprise Service Bus (ESB) cartridge at $resource_path/json/$iaas/esb-cart.json"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/esb-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+    
+          echo -e "Deploying Enterprise Service Bus (ESB) service at esb-service-deployment.json"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/esb-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
     fi
 
-    if [[ $bps_needed =~ ^[Yy]$ ]]; then
-        echo -e "Deploying a Business Process Server (BPS) cartridge at $resource_path/json/$iaas/bps-cart.json"
+    if [[ "$bps_enabled" = "true" ]]; then
+       if [[ "$bps_worker_mgt_enabled" = "true" ]]; then
+          echo -e "Deploying Business Process Server (BPS) Manager cartridge at $resource_path/json/$iaas/bps-cart-mgt.json"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/bps-cart-mgt.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+
+          echo -e "Deploying Business Process Server (BPS) Manager service"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/bps-mgt-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+
+          echo -e "Deploying Business Process Server (BPS) Worker cartridge at $resource_path/json/$iaas/bps-cart-worker.json"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/bps-cart-worker.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+
+          echo -e "Deploying Business Process Server (BPS) Worker service"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/bps-worker-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+       else
+        echo -e "Deploying Business Process Server (BPS) cartridge at $resource_path/json/$iaas/bps-cart.json"
         curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/bps-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
 
-        echo -e "Deploying a Business Process Server service"
+        echo -e "Deploying Business Process Server service"
         curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/bps-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
     fi
 
@@ -839,7 +933,7 @@ if [ "$UID" -ne "0" ]; then
 fi
 
 
-while getopts ":sph --config" opts
+while getopts ":sphca: --autostart" opts
 do
   case $opts in
     s)
@@ -848,8 +942,11 @@ do
     p)
         export puppet_only="true"
         ;;
-    config)
+    c)
         export config_mode="true"
+        ;;
+    a|--autostart)
+        export auto_start_servers=${OPTARG}
         ;;
     h)
         help
@@ -865,23 +962,16 @@ done
 # Run main configuration
 init
 
-# Get user confirmations to start WSO2 PPaaS core services
-get_core_services_confirmations
-
 # On silent mode, start the servers without prompting anything from the user
 if [[ "$silent_mode" = "true" ]]; then
-
      echo -e "\nboot.sh: Running in silent mode\n"
-     start_servers    
-
+     # Start WSO2 Private PaaS core services
+     start_servers
 elif [[ "$puppet_only" = "true" ]]; then
-
      echo -e "\nboot.sh: Running in puppet only mode\n"
      configure_products
      echo -e "boot.sh: Puppet configuration completed"
-
 elif [[ "$config_mode" = "true" ]]; then
-
      echo -e "\nboot.sh: Running in config mode. All service deployments will be skipped.\n"
      # Do the product specific configurations
      configure_products         
@@ -890,11 +980,7 @@ elif [[ "$config_mode" = "true" ]]; then
      if [[ "$auto_start_servers" = "true" ]]; then
         start_servers
      fi
-
 else
-     # Get user confirmations to deploy WSO2 PPaaS services
-     get_service_deployment_confirmations 
-
      # Do the product specific configurations
      configure_products         
 
@@ -914,6 +1000,5 @@ echo ""
 echo "**************************************************************"
 echo "Management Console : https://$stratos_domain:9443/console"
 echo "**************************************************************"
-
 echo -e "\nboot.sh: WSO2 Private PaaS installation completed successfully!\n"
 # END
