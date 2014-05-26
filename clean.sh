@@ -30,7 +30,7 @@ if [ "$UID" -ne "0" ]; then
 	exit 69
 fi
 
-while getopts u:p:h: opts
+while getopts :Pku:p:h: opts
 do
   case $opts in
     u)
@@ -42,6 +42,12 @@ do
     h)
         mysql_host=${OPTARG}
         ;;
+    P)
+        clean_puppet="true"
+        ;;
+    k)
+        kill_proc="true"
+        ;;
     *)
         help
         exit 1
@@ -49,10 +55,28 @@ do
   esac
 done
 
-if [[ -z $mysql_user || -z $mysql_pass ]]; then
-   echo "Please provide MySQL username and password"
-   help
-   exit 1
+if [[ $kill_proc = "true" ]]; then
+   echo 'Stopping all Java processes'
+   killall java
+   exit 0
+fi
+
+if [[ -z $mysql_user ]]; then
+   read -p "Please enter MySQL username : " mysql_user  
+fi
+
+if [[ -z $mysql_pass ]]; then
+   read -s -p "Please enter MySQL password : " mysql_pass
+   echo ""  
+fi
+
+if [[ -z $clean_puppet ]]; then
+   read -p "Do you want to clean Puppet scripts in /etc/puppet? [y/n] " input_clean_puppet
+   if [[ $input_clean_puppet =~ ^[Yy]$ ]]; then
+      clean_puppet="true"
+   else
+      clean_puppet="false"
+   fi
 fi
 
 # Set host to localhost if user has not specified a hostname
@@ -73,11 +97,15 @@ mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS api
 mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS apim_publisher_config;"
 mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS registry;"
 
+if [[ clean_puppet = "true" ]]; then
+   echo "Cleaning Puppet scripts in /etc/puppet/"
+   sudo rm -rf /etc/puppet/modules/*
+   sudo rm -rf /etc/puppet/manifests/*
+   sudo rm -rf /var/lib/puppet/ssl/*
 
-sudo rm -rf /etc/puppet/modules/*
-sudo rm -rf /etc/puppet/manifests/*
-sudo rm -rf /var/lib/puppet/ssl/*
+   echo "Restarting Puppet master"
+   sudo /etc/init.d/puppetmaster restart
+fi
 
-sudo /etc/init.d/puppetmaster restart
 echo -e "\nSuccessfully cleaned up everything!"
 # END
