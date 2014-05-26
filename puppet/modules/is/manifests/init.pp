@@ -29,7 +29,7 @@
 # clustering         => true,
 # owner              => 'root',
 # group              => 'root',
-# target             => '/mnt/',
+# target             => '/mnt/${server_ip}/',
 # members            => {'elb2.wso2.com' => 4010, 'elb.wso2.com' => 4010 }
 #
 # Actions:
@@ -54,7 +54,7 @@ class is (
   $cloud              = true,
   $owner              = 'root',
   $group              = 'root',
-  $target             = '/mnt',
+  $target             = "/mnt/${server_ip}",
 ) inherits params {
 
   $deployment_code = 'is'

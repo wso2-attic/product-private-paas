@@ -31,7 +31,7 @@
 # cloud              => true,
 # owner              => 'wso2',
 # group              => 'wso2',
-# target             => '/mnt/',
+# target             => '/mnt/${server_ip}/',
 # members            => {'192.168.18.122' => 4010 },
 # port_mapping       => { 80 => 9763, 443 => 9443, 8280 => 8280, 8243 => 8243};
 #
@@ -58,7 +58,7 @@ class esb (
   $cloud              = true,
   $owner              = 'root',
   $group              = 'root',
-  $target             = '/mnt',
+  $target             = "/mnt/${server_ip}",
 ) inherits params {
 
   $deployment_code = 'esb'

@@ -29,8 +29,8 @@
         <cacheId><%= @registry_user %>@jdbc:mysql://<%= @mysql_server %>:<%= @mysql_port %>/<%= @config_db %></cacheId>
     </remoteInstance>
 
-     <mount path="/_system/config" overwrite="virtual">
+    <mount path="/_system/config" overwrite="virtual">
         <instanceId>config</instanceId>
-        <targetPath>/_system/config</targetPath>
+        <targetPath>/_system/<%= @config_target_path %></targetPath>
     </mount>
 
