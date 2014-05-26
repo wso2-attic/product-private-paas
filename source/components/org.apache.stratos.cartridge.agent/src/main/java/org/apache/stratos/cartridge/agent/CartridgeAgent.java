@@ -116,13 +116,13 @@ public class CartridgeAgent implements Runnable {
             
             // Start super tenant artifact copy task
             // from temp location to super tenant app path
-			ScheduledExecutorService scheduler = Executors
-					.newScheduledThreadPool(1);
-			scheduler.scheduleWithFixedDelay(new ArtifactCopyTask(
-					CartridgeAgentConstants.SUPERTENANT_TEMP_PATH,
-					CartridgeAgentConfiguration.getInstance().getAppPath()+ "/repository/deployment/server/"
-					),
-					0, 10, TimeUnit.SECONDS);
+			//ScheduledExecutorService scheduler = Executors
+			//		.newScheduledThreadPool(1);
+			//scheduler.scheduleWithFixedDelay(new ArtifactCopyTask(
+			//		CartridgeAgentConstants.SUPERTENANT_TEMP_PATH,
+			//		CartridgeAgentConfiguration.getInstance().getAppPath()+ "/repository/deployment/server/"
+			//		),
+			//		0, 10, TimeUnit.SECONDS);
         }
 
         if ("null".equals(repoUrl) || StringUtils.isBlank(repoUrl)) {
