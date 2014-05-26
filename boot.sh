@@ -389,6 +389,14 @@ function setup_as() {
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/appserver-cart.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/appserver-cart.json"
 
+    backup_file $current_dir/resources/json/$iaas/appserver-mgt-cart.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/appserver-mgt-cart.json"
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/appserver-mgt-cart.json"
+
+    backup_file $current_dir/resources/json/$iaas/appserver-worker-cart.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/appserver-worker-cart.json"
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/appserver-worker-cart.json"
+
     if [[ $as_clustering = "true" ]]; then
        replace_in_file "@PRIMARY" "true" "$current_dir/resources/json/$iaas/appserver-cart.json"
        replace_in_file "@CLUSTERING" "true" "$current_dir/resources/json/$iaas/appserver-cart.json"
@@ -435,6 +443,14 @@ function setup_bps() {
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/bps-cart.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/bps-cart.json"
 
+    backup_file $current_dir/resources/json/$iaas/bps-mgt-cart.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/bps-mgt-cart.json"
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/bps-mgt-cart.json"
+
+    backup_file $current_dir/resources/json/$iaas/bps-worker-cart.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/bps-worker-cart.json"
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/bps-worker-cart.json"
+
     if [[ $bps_clustering = "true" ]]; then
        replace_in_file "@PRIMARY" "true" "$current_dir/resources/json/$iaas/bps-cart.json"
        replace_in_file "@CLUSTERING" "true" "$current_dir/resources/json/$iaas/bps-cart.json"
@@ -480,6 +496,14 @@ function setup_esb() {
     backup_file $current_dir/resources/json/$iaas/esb-cart.json
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/esb-cart.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/esb-cart.json"
+
+    backup_file $current_dir/resources/json/$iaas/esb-mgt-cart.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/esb-mgt-cart.json"
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/esb-mgt-cart.json"
+
+    backup_file $current_dir/resources/json/$iaas/esb-worker-cart.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/esb-worker-cart.json"
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/esb-worker-cart.json"
 
     if [[ $esb_clustering = "true" ]]; then
        replace_in_file "@PRIMARY" "true" "$current_dir/resources/json/$iaas/esb-cart.json"
