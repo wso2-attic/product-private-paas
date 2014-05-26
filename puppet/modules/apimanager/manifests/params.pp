@@ -48,9 +48,6 @@ class apimanager::params {
   $gateway_https_proxy_port    = '8243'
   $gateway_http_proxy_port    = '8280'
   $keymanager_mgt_https_port= '9443'
-  $keymanager_http_port     = '8280'
-  $keymanager_https_port    = '8243'
-
   $admin_username       = 'ADMIN_USER'
   $admin_password       = 'ADMIN_PASSWORD'
 

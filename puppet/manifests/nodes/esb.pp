@@ -25,7 +25,7 @@ node /[0-9]{1,12}.(default|manager|worker).esb/ inherits base {
         version            => '4.8.1',
         sub_cluster_domain => 'test',
         members            => undef,
-	port_mapping	   => { 8280 => 9763, 8243 => 9443, 80 => 8280, 443 => 8243},
+	port_mapping       => { 8280 => 9763, 8243 => 9443, 80 => 8280, 443 => 8243},
         offset             => 0,
         hazelcast_port     => 4000,
         config_db          => 'ESB_CONFIG_DB',

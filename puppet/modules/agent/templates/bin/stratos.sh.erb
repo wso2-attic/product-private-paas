@@ -68,6 +68,6 @@ properties="-Dmb.ip=<%= @mb_ip %>
 # Uncomment below line to enable remote debugging
 #debug="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
 
-/opt/java/bin/java -cp "${class_path}" ${properties} ${debug} org.apache.stratos.cartridge.agent.Main
+<%= @java_home %>/bin/java -cp "${class_path}" ${properties} ${debug} org.apache.stratos.cartridge.agent.Main
 
 

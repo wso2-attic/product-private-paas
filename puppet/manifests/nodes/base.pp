@@ -29,6 +29,7 @@ node 'base' {
   $truststore_password  = 'wso2carbon'
   $java_distribution	= 'JAVA_FILE'
   $java_name		= 'JAVA_NAME'
+  $java_home		= '/opt/java'
   $member_type_ip       = 'private'
   $lb_httpPort 		= '80'
   $lb_httpsPort 	= '443'

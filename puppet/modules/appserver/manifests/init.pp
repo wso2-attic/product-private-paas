@@ -21,7 +21,7 @@
 # Parameters:
 # version            => '5.2.1'
 # offset             => 1,
-# tribes_port        => 4100,
+# hazelcast_port        => 4100,
 # config_db          => 'as_config',
 # maintenance_mode   => 'zero',
 # depsync            => false,
@@ -29,7 +29,7 @@
 # clustering         => true,
 # owner              => 'root',
 # group              => 'root',
-# target             => '/mnt/',
+# target             => '/mnt/${server_ip}/',
 # members            => {'elb2.wso2.com' => 4010, 'elb.wso2.com' => 4010 }
 #
 # Actions:
@@ -54,7 +54,7 @@ class appserver (
   $cloud              = true,
   $owner              = 'root',
   $group              = 'root',
-  $target             = '/mnt',
+  $target             = "/mnt/${server_ip}",
 ) inherits params {
 
   $deployment_code = 'appserver'
