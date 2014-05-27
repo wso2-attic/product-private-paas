@@ -66,6 +66,10 @@
             "value": "esbworker"
          },
          {
+            "name": "payload_parameter.WORKER_HOST_NAME",
+            "value": "esb.wso2.com"
+         },
+         {
             "name": "PRIMARY",
             "value": "true"
          },
