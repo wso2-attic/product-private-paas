@@ -421,8 +421,10 @@ public class CartridgeSubscriptionManager {
         log.info("Successful Subscription: " + cartridgeSubscription.toString());
 
         // Publish tenant subscribed event to message broker
+        Set<String> clusterIds = new HashSet<String>();
+        clusterIds.add(cartridgeSubscription.getCluster().getClusterDomain());
         CartridgeSubscriptionUtils.publishTenantSubscribedEvent(cartridgeSubscription.getSubscriber().getTenantId(),
-                cartridgeSubscription.getCartridgeInfo().getType(), new HashSet<String>(cartridgeSubscription.getCluster().getId()));
+                cartridgeSubscription.getCartridgeInfo().getType(), clusterIds);
 
         return ApplicationManagementUtil.
                 createSubscriptionResponse(cartridgeSubscriptionInfo, cartridgeSubscription.getRepository());
@@ -455,9 +457,10 @@ public class CartridgeSubscriptionManager {
                 " [domain-name] " + domainName + " [application-context] " +applicationContext);
 
         EventPublisher eventPublisher = EventPublisherPool.getPublisher(Constants.TENANT_TOPIC);
+        Set<String> clusterIds = new HashSet<String>();
+        clusterIds.add(cartridgeSubscription.getCluster().getClusterDomain());
         SubscriptionDomainAddedEvent event = new SubscriptionDomainAddedEvent(tenantId, cartridgeSubscription.getType(),
-                new HashSet<String>(cartridgeSubscription.getCluster().getId()),
-                domainName, applicationContext);
+                clusterIds, domainName, applicationContext);
         eventPublisher.publish(event);
     }
 
@@ -483,9 +486,10 @@ public class CartridgeSubscriptionManager {
                 " [domain-name] " + domainName);
 
         EventPublisher eventPublisher = EventPublisherPool.getPublisher(Constants.TENANT_TOPIC);
+        Set<String> clusterIds = new HashSet<String>();
+        clusterIds.add(cartridgeSubscription.getCluster().getClusterDomain());
         SubscriptionDomainRemovedEvent event = new SubscriptionDomainRemovedEvent(tenantId, cartridgeSubscription.getType(),
-                new HashSet<String>(cartridgeSubscription.getCluster().getId()),
-                domainName);
+                clusterIds, domainName);
         eventPublisher.publish(event);
     }
 
@@ -610,10 +614,11 @@ public class CartridgeSubscriptionManager {
             }
 
             // Publish tenant un-subscribed event to message broker
+            Set<String> clusterIds = new HashSet<String>();
+            clusterIds.add(cartridgeSubscription.getCluster().getClusterDomain());
             CartridgeSubscriptionUtils.publishTenantUnSubscribedEvent(
                     cartridgeSubscription.getSubscriber().getTenantId(),
-                    cartridgeSubscription.getCartridgeInfo().getType(),
-                    new HashSet<String>(cartridgeSubscription.getCluster().getId()));
+                    cartridgeSubscription.getCartridgeInfo().getType(), clusterIds);
             
 			// publishing to the unsubscribed event details to bam
 			CartridgeSubscriptionDataPublisher.publish(cartridgeSubscription
