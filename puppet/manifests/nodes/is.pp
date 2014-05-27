@@ -16,7 +16,7 @@
 #
 
 # IS cartridge node
-node /is/ inherits base {
+node /[0-9]{1,12}.(default|manager|worker).is/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2is-5.0.0"
   require java
   class {'agent':}

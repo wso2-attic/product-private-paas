@@ -44,6 +44,7 @@ import org.apache.stratos.messaging.message.receiver.tenant.TenantManager;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyManager;
 import org.wso2.andes.util.Serial;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -148,6 +149,14 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
             } else {
                 log.info("Artifact updating task disabled");
+            }
+            
+            // If supert tenant temp app path is available,
+            // copy the artifacts to carbon server's deployment path
+            String src = CartridgeAgentConstants.SUPERTENANT_TEMP_PATH;
+            if (new File(src).exists()) {
+                ExtensionUtils.executeCopyArtifactsExtension(src,
+    					CartridgeAgentConfiguration.getInstance().getAppPath()+ "/repository/deployment/server/");
             }
 
         }

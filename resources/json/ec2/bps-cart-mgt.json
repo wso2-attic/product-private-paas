@@ -51,10 +51,6 @@
             "value": "manager"
          },
          {
-            "name": "payload_parameter.MANAGER_SERVICE_TYPE",
-            "value": "bpsmgt"
-         },
-         {
             "name": "payload_parameter.WORKER_SERVICE_TYPE",
             "value": "bpsworker"
          },

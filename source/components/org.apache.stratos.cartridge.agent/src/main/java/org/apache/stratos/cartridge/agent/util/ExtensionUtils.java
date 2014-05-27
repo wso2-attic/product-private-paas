@@ -281,7 +281,7 @@ public class ExtensionUtils {
             if (log.isDebugEnabled()) {
                 log.debug("Executing artifacts copy extension");
             }
-            String command = prepareCommand(CartridgeAgentConstants.ARTIFACTS_COPY_SCRIPT);
+            String command = prepareCommand(System.getProperty(CartridgeAgentConstants.ARTIFACTS_COPY_SCRIPT));
             CommandUtils.executeCommand(command + " " + source + " " + destination);
         } catch (Exception e) {
             log.error("Could not execute artifacts copy extension", e);

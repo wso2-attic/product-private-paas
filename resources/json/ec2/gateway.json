@@ -69,10 +69,6 @@
            "value": "gatewaymgt"
         },
         {
-           "name": "payload_parameter.WORKER_SERVICE_TYPE",
-           "value": "gateway"
-        },
-        {
            "name": "payload_parameter.CLUSTERING",
            "value": "true"
         },
