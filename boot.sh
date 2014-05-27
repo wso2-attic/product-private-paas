@@ -47,6 +47,7 @@ export LOG=$log_path/stratos-setup.log
 # Usage modes
 silent_mode="false"
 puppet_only="false"
+deploy_services="true"
 
 # Registry databases
 registry_db="registry"
@@ -74,9 +75,10 @@ function help() {
     echo ""
     echo "This script will install WSO2 Private PaaS 4.0"
     echo "usage:"
-    echo "boot.sh [ -p | -s ]"
+    echo "boot.sh [ -p | -s | -t ]"
     echo "   -p : Puppet only mode. This will only deploy and configure Puppet scripts."
     echo "   -s : Silent mode. This will start core services without performing any configuration."   
+    echo "   -t : Without deploying services mode. This will configure and start the core services, but will not deploy any Cartridge service."   
     echo ""
 }
 
@@ -671,8 +673,11 @@ function configure_products() {
     fi
 
     if [[ $puppet_only = "false" ]]; then
-       # Get user confirmations to deploy WSO2 PPaaS services
-       get_service_deployment_confirmations
+
+       if [[ $deploy_services = "true" ]]; then
+	       # Get user confirmations to deploy WSO2 PPaaS services
+	       get_service_deployment_confirmations
+       fi
  
        # Create databases for the governence registry
        # Using the same userstore to the registry    
@@ -681,10 +686,12 @@ function configure_products() {
        # Configure Apache Stratos
        setup_apache_stratos
 
-       # Configure LB cartridge definition json
-       backup_file $current_dir/resources/json/$iaas/lb-cart.json
-       replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/lb-cart.json"
-       replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/lb-cart.json"
+       if [[ $deploy_services = "true" ]]; then
+	       # Configure LB cartridge definition json
+	       backup_file $current_dir/resources/json/$iaas/lb-cart.json
+	       replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/lb-cart.json"
+	       replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/lb-cart.json"
+       fi
     fi    
 
     if [[ $puppet_external = "false" && $skip_puppet = "false" ]]; then
@@ -985,7 +992,7 @@ if [ "$UID" -ne "0" ]; then
 fi
 
 
-while getopts ":sphca: --autostart" opts
+while getopts ":sphtca: --autostart" opts
 do
   case $opts in
     s)
@@ -993,7 +1000,10 @@ do
         ;;
     p)
         export puppet_only="true"
-        ;;   
+        ;;  
+    t)
+        export deploy_services="false"
+        ;; 
     h)
         help
         exit 0
