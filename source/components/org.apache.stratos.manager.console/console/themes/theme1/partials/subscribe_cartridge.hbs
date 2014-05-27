@@ -35,7 +35,11 @@
                 <input name="serviceGroup" type="hidden" value="{{serviceGroup}}" />
             {{/if}}
             <div class="form-group">
+            {{#if cartridge.multiTenant}}
+                <label class="required">Subscription Alias:</label>
+	    {{else}}
                 <label class="required">Public URL:</label>
+	    {{/if}}
                 <div class="form-inline">
                     <input name="cartridgeType" type="hidden" value="{{cartridgeType}}"/>
                     <input name="alias"
@@ -45,7 +49,10 @@
                            data-help-x-offset="50"
                            data-help-y-offset="10"
                            placeholder="myphp" />
+		{{#unless cartridge.multiTenant}}
                     <label>.{{cartridge.hostName}}</label>
+                {{/unless}}
+
                 </div>
             </div>
 
