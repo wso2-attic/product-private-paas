@@ -55,10 +55,6 @@
             "value": "appservermgt"
          },
          {
-            "name": "payload_parameter.WORKER_SERVICE_TYPE",
-            "value": "appserverworker"
-         },
-         {
             "name": "PRIMARY",
             "value": "true"
          },

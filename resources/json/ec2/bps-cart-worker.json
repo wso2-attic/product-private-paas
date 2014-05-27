@@ -55,10 +55,6 @@
             "value": "bpsmgt"
          },
          {
-            "name": "payload_parameter.WORKER_SERVICE_TYPE",
-            "value": "bpsworker"
-         },
-         {
             "name": "PRIMARY",
             "value": "true"
          },

@@ -15,7 +15,7 @@
 # ----------------------------------------------------------------------------
 #
 
-# API - gateway cartridge node
+# API Manager - gateway (worker) cartridge node
 node /[0-9]{1,12}.(default|manager|worker).gateway/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
   require java
@@ -31,7 +31,8 @@ node /[0-9]{1,12}.(default|manager|worker).gateway/ inherits base {
         port_mapping       => false,
         amtype             => 'gateway',
         offset             => 0,
-        config_database    => 'GATEWAY_CONFIG_DB',
+        config_db          => 'GATEWAY_CONFIG_DB',
+        config_target_path => 'GATEWAY_CONFIG_PATH',
         maintenance_mode   => 'refresh',
         depsync            => false,
         clustering         => true,
@@ -44,6 +45,7 @@ node /[0-9]{1,12}.(default|manager|worker).gateway/ inherits base {
   Class['stratos_base'] -> Class['java'] -> Class['apimanager'] ~> Class['agent']
 }
 
+# API Manager - gateway (manager) cartridge node
 node /[0-9]{1,12}.(default|manager|worker).gatewaymgt/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
   require java
@@ -59,7 +61,8 @@ node /[0-9]{1,12}.(default|manager|worker).gatewaymgt/ inherits base {
         port_mapping       => false,
         amtype             => 'gateway',
         offset             => 0,
-        config_database    => 'GATEWAY_CONFIG_DB',
+        config_db          => 'GATEWAY_CONFIG_DB',
+        config_target_path => 'GATEWAY_CONFIG_PATH',
         maintenance_mode   => 'refresh',
         depsync            => false,
         clustering         => true,
@@ -73,7 +76,7 @@ node /[0-9]{1,12}.(default|manager|worker).gatewaymgt/ inherits base {
 }
 
 
-# API - keymanager cartridge node
+# API Manager - keymanager cartridge node
 node /[0-9]{1,12}.(default|manager|worker).keymanager/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
   require java
@@ -88,7 +91,8 @@ node /[0-9]{1,12}.(default|manager|worker).keymanager/ inherits base {
         port_mapping       => false,
         amtype             => 'keymanager',
         offset             => 0,
-        config_database    => 'KEYMANAGER_CONFIG_DB',
+        config_db          => 'KEYMANAGER_CONFIG_DB',
+        config_target_path => 'KEYMANAGER_CONFIG_PATH',
         maintenance_mode   => 'refresh',
         depsync            => false,
         clustering         => 'KEYMANGER_CLUSTERING',
@@ -102,7 +106,7 @@ node /[0-9]{1,12}.(default|manager|worker).keymanager/ inherits base {
   Class['stratos_base'] -> Class['java'] -> Class['apimanager'] ~> Class['agent']
 }
 
-# API - apistore cartridge node
+# API Manager - apistore cartridge node
 node /[0-9]{1,12}.(default|manager|worker).apistore/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
   require java
@@ -117,7 +121,8 @@ node /[0-9]{1,12}.(default|manager|worker).apistore/ inherits base {
         port_mapping       => false,
         amtype             => 'apistore',
         offset             => 0,
-        config_database    => 'STORE_CONFIG_DB',
+        config_db          => 'STORE_CONFIG_DB',
+        config_target_path => 'STORE_CONFIG_PATH',
         maintenance_mode   => 'refresh',
         depsync            => false,
         clustering         => true,
@@ -131,7 +136,7 @@ node /[0-9]{1,12}.(default|manager|worker).apistore/ inherits base {
   Class['stratos_base'] -> Class['java'] -> Class['apimanager'] ~> Class['agent']
 }
 
-# API - publisher cartridge node
+# API Manager - publisher cartridge node
 node /[0-9]{1,12}.(default|manager|worker).publisher/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2am-1.7.0"
   require java
@@ -146,7 +151,8 @@ node /[0-9]{1,12}.(default|manager|worker).publisher/ inherits base {
         port_mapping       => false,
         amtype             => 'publisher',
         offset             => 0,
-        config_database    => 'STORE_CONFIG_DB',
+        config_db          => 'STORE_CONFIG_DB',
+        config_target_path => 'STORE_CONFIG_PATH',
         maintenance_mode   => 'refresh',
         depsync            => false,
         clustering         => true,

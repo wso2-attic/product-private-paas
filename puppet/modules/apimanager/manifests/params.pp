@@ -40,14 +40,13 @@ class apimanager::params {
   $management_subdomain = 'manager'
 
   # Service ports
-  $gateway_mgt_https_port= '8243'
-  $gateway_http_port     = '8280'
-  $gateway_https_port    = '8243'
-  $gateway_https_nio_proxy_port    = '8243'
+  $gateway_https_nio_proxy_port   = '8243'
   $gateway_http_nio_proxy_port    = '8280'
-  $gateway_https_proxy_port    = '8243'
-  $gateway_http_proxy_port    = '8280'
-  $keymanager_mgt_https_port= '9443'
+  $gateway_https_proxy_port    	  = '443'
+  $gateway_http_proxy_port        = '80'
+  $keymanager_https_proxy_port    = '443'
+
+  #credentials
   $admin_username       = 'ADMIN_USER'
   $admin_password       = 'ADMIN_PASSWORD'
 

@@ -53,7 +53,6 @@ source "$current_dir/conf/setup.conf"
 export LOG=$log_path/stratos-setup.log
 
 profile="default"
-config_mb="true"
 auto_start_servers="false"
 
 function help() {

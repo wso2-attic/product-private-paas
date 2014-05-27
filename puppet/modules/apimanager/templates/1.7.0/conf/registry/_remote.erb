@@ -19,7 +19,7 @@
 
 <!-- config db  -->
     <dbConfig name="config">
-        <dataSource>jdbc/<%= @config_database %></dataSource>
+        <dataSource>jdbc/<%= @config_db %></dataSource>
     </dbConfig>
 
     <remoteInstance url="https://localhost:9443/registry">
@@ -28,10 +28,10 @@
         <readOnly>false</readOnly>
         <registryRoot>/</registryRoot>
         <enableCache>true</enableCache>
-        <cacheId><%= @registry_user %>@jdbc:mysql://<%= @mysql_server %>:<%= @mysql_port %>/<%= @config_database %></cacheId>
+        <cacheId><%= @registry_user %>@jdbc:mysql://<%= @mysql_server %>:<%= @mysql_port %>/<%= @config_db %></cacheId>
     </remoteInstance>
 
     <mount path="/_system/config" overwrite="virtual">
         <instanceId>config</instanceId>
-        <targetPath>/_system/config</targetPath>
+        <targetPath>/_system/<%= @config_target_path %></targetPath>
     </mount>

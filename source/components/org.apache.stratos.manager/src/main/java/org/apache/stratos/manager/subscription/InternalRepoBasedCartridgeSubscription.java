@@ -62,7 +62,7 @@ public class InternalRepoBasedCartridgeSubscription extends CartridgeSubscriptio
 		String defaultRepoPassword = System.getProperty(CartridgeConstants.INTERNAL_GIT_PASSWORD);
 		String[] dirArray = {"test"};
 
-        if (repoURL != null) {
+        if (repoURL != null && !repoURL.equalsIgnoreCase("null") && !repoURL.isEmpty()) {
             repository = new Repository();
             repository.setUrl(repoURL);
             repository.setUserName(defaultRepoUserName);

@@ -41,7 +41,7 @@
             log.info("~~~~~~~~~~~~~~~~~~~~~~~~:" + stringify(step_data));
             for(var i=0;i<step_data.length;i++) {
                 var result = utils.consoleAppUtil.unsubscribeCartridge(step_data[i].cartridgeAlias);
-                log.info("********************:" + stringify(jsonRequest) + "\n &&&&&&&&&&&\n" + stringify(result)) ;
+                log.info("********************:" + stringify(result)) ;
             }
         }
     } else {
