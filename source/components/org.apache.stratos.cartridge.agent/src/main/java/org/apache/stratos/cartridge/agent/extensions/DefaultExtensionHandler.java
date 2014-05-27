@@ -85,17 +85,20 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             log.info(String.format("Artifact update event received: [tenant] %s [cluster] %s [status] %s",
                     artifactUpdatedEvent.getTenantId(), artifactUpdatedEvent.getClusterId(), artifactUpdatedEvent.getStatus()));
         }
-        String clusterIdInPayload = CartridgeAgentConfiguration.getInstance().getClusterId();
-        String localRepoPath = CartridgeAgentConfiguration.getInstance().getAppPath();
-        String clusterIdInMessage = artifactUpdatedEvent.getClusterId();
-        String repoURL = artifactUpdatedEvent.getRepoURL();
-        String repoPassword = CartridgeAgentUtils.decryptPassword(artifactUpdatedEvent.getRepoPassword());
-        String repoUsername = artifactUpdatedEvent.getRepoUserName();
-        String tenantId = artifactUpdatedEvent.getTenantId();
-        boolean isMultitenant = CartridgeAgentConfiguration.getInstance().isMultitenant();
 
-        if (StringUtils.isNotEmpty(repoURL) && (clusterIdInPayload != null) &&
-                clusterIdInPayload.equals(clusterIdInMessage)) {
+        String clusterIdInMessage = artifactUpdatedEvent.getClusterId();
+        String clusterIdInPayload = CartridgeAgentConfiguration.getInstance().getClusterId();
+        String repoURL = artifactUpdatedEvent.getRepoURL();
+
+        // we need to execute the logic if only the update is relevant to this cluster domain
+        if (StringUtils.isNotEmpty(repoURL) && (clusterIdInPayload != null) && clusterIdInPayload.equals(clusterIdInMessage)) {
+
+            String localRepoPath = CartridgeAgentConfiguration.getInstance().getAppPath();
+            String repoPassword = CartridgeAgentUtils.decryptPassword(artifactUpdatedEvent.getRepoPassword());
+            String repoUsername = artifactUpdatedEvent.getRepoUserName();
+            String tenantId = artifactUpdatedEvent.getTenantId();
+            boolean isMultitenant = CartridgeAgentConfiguration.getInstance().isMultitenant();
+
             if (log.isInfoEnabled()) {
                 log.info("Executing git checkout");
             }
