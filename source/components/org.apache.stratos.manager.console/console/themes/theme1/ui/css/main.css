@@ -222,13 +222,12 @@ h1{
     font-size:37px;
 }
 h2{
-    background: #fff;
+    background: #EFEFEF;
     display: inline-block;
     padding:0 10px 0 0;
     margin:10px 0 20px;
     color:#575757;
     text-transform:capitalize;
-
 }
 .h2-wrapper{
     background: transparent url(../img/gray.png) repeat-x left 30px;
