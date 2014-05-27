@@ -20,6 +20,7 @@ package org.apache.stratos.rest.endpoint.services;
 
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.ConfigurationContext;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.autoscaler.deployment.policy.DeploymentPolicy;
@@ -723,7 +724,7 @@ public class ServiceUtils {
         return availableMultitenantCartridges;
     }
 
-	static List<Cartridge> getSubscriptions (String cartridgeSearchString, ConfigurationContext configurationContext) throws RestAPIException {
+	static List<Cartridge> getSubscriptions (String cartridgeSearchString, String serviceGroup, ConfigurationContext configurationContext) throws RestAPIException {
 
         List<Cartridge> cartridges = new ArrayList<Cartridge>();
 
@@ -767,6 +768,9 @@ public class ServiceUtils {
                     // Ignoring the LB cartridges since they are not shown to the user.
                     if(cartridge.isLoadBalancer())
                         continue;
+                    if(StringUtils.isNotEmpty(serviceGroup) && !cartridge.getServiceGroup().equals(serviceGroup)){
+                        continue;
+                    }
                     cartridges.add(cartridge);
                 }
             } else {
