@@ -141,9 +141,6 @@ function install_puppet() {
     cd puppetinstall
     /bin/bash puppetinstall "${args[@]}"
     cd $cwd
-
-    # modify autosign.conf
-    echo "*."$stratos_domain > /etc/puppet/autosign.conf     
 }
 
 function list_ec2_regions() {
@@ -683,6 +680,9 @@ function deploy_puppet() {
     cp -f $stratos_pack_path/apache-stratos-cartridge-agent-4.0.0-wso2v1-bin.zip /etc/puppet/modules/agent/files
     cp -f $stratos_pack_path/apache-stratos-load-balancer-4.0.0-wso2v1.zip /etc/puppet/modules/lb/files
     cp -f $stratos_pack_path/$JAVA_FILE_DISTRUBUTION /etc/puppet/modules/java/files
+
+    # modify autosign.conf
+    echo "*."$stratos_domain > /etc/puppet/autosign.conf
 
     # Restart Puppetmaster after configurations
     echo "Restarting Puppet master"
