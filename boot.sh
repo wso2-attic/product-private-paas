@@ -534,9 +534,12 @@ function setup_is_core_service() {
         #copy mysql connector jar	
         cp -f $stratos_pack_path/$MYSQL_CONNECTOR $stratos_install_path/wso2is-5.0.0/repository/components/lib
 
+	#is config db changes 
+	create_config_database "$is_config_db"
+
         #populating IS specific databases
-        mysql -u$mysql_uname -p$mysql_password -h$mysql_host -Duserstore < $stratos_install_path/wso2is-5.0.0/dbscripts/identity/mysql.sql
-        mysql -u$mysql_uname -p$mysql_password -h$mysql_host -Duserstore < $stratos_install_path/wso2is-5.0.0/dbscripts/identity/application-mgt/mysql.sql
+        mysql -u$mysql_uname -p$mysql_password -h$mysql_host -D$is_config_db < $stratos_install_path/wso2is-5.0.0/dbscripts/identity/mysql.sql
+        mysql -u$mysql_uname -p$mysql_password -h$mysql_host -D$is_config_db < $stratos_install_path/wso2is-5.0.0/dbscripts/identity/application-mgt/mysql.sql
    
 	   
         # copy the templated master-datasource.xml and replace the relevant parameters
@@ -544,6 +547,16 @@ function setup_is_core_service() {
         replace_in_file 'MYSQL_HOST' $mysql_host $stratos_install_path/wso2is-5.0.0/repository/conf/datasources/master-datasources.xml
         replace_in_file 'MYSQL_USER' $mysql_uname $stratos_install_path/wso2is-5.0.0/repository/conf/datasources/master-datasources.xml
         replace_in_file 'MYSQL_PASSWORD' $mysql_password $stratos_install_path/wso2is-5.0.0/repository/conf/datasources/master-datasources.xml
+
+        cp $current_dir/resources/is_config/registry.xml $stratos_install_path/wso2is-5.0.0/repository/conf/registry.xml
+        replace_in_file 'MYSQL_HOST' $mysql_host $stratos_install_path/wso2is-5.0.0/repository/conf/registry.xml
+        replace_in_file 'MYSQL_USER' $mysql_uname $stratos_install_path/wso2is-5.0.0/repository/conf/registry.xml
+        replace_in_file 'MYSQL_PASSWORD' $mysql_password $stratos_install_path/wso2is-5.0.0/repository/conf/registry.xml
+
+        cp $current_dir/resources/is_config/identity.xml $stratos_install_path/wso2is-5.0.0/repository/conf/identity.xml
+ 	replace_in_file 'IDP_URL' "$public_ip" $stratos_install_path/wso2is-5.0.0/repository/conf/identity.xml
+
+        cp $current_dir/resources/is_config/user-mgt.xml $stratos_install_path/wso2is-5.0.0/repository/conf/user-mgt.xml
 
         # copy the templated sso-idp-config.xml file and repalce relevant parameters
         cp $current_dir/resources/sso-idp-config-template/sso-idp-config.xml-template $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml        
