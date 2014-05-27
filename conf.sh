@@ -16,6 +16,7 @@
 # ----------------------------------------------------------------------------
 
 # Pack files
+export CONFIG_MB="true"
 export ACTIVE_MQ_DISTRIBUTION=apache-activemq-5.9.1-bin.tar.gz # Relavent activemq distribution
 export ACTIVE_MQ_EXTRACTED=apache-activemq-5.9.1 # Extracted activemq distribution folder name
 
@@ -52,12 +53,16 @@ export os_keypair_name=""
 export os_security_groups=""
 
 # EC2
+export ec2_vpc=""
 export ec2_identity=""
 export ec2_credentials=""
 export ec2_owner_id=""
 export ec2_keypair_name=""
 export ec2_security_groups=""
 export ec2_availability_zone=""
+export ec2_security_group_ids=""
+export ec2_subnet_id=""
+export ec2_associate_public_ip_address="true"
 
 # vCloud
 export vcloud_identity=""

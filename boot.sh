@@ -78,13 +78,14 @@ function help() {
     echo "boot.sh [ -p | -s | -t ]"
     echo "   -p : Puppet only mode. This will only deploy and configure Puppet scripts."
     echo "   -s : Silent mode. This will start core services without performing any configuration."   
-    echo "   -t : Without deploying services mode. This will configure and start the core services, but will not deploy any Cartridge service."   
+    echo "   -t : Configuring and start PaaS mode. This will configure and start the core services, but will not deploy any Cartridge service."   
     echo ""
 }
 
 function backup_file() {
     if [[  -f "$1.orig" ]]; then
         echo "Restoring from the Original template file $1"
+	cp -f "$1" "$1.last"
         cp -f "$1.orig" "$1"
     else
         echo -e "Creating a back-up of the file $1"
@@ -179,7 +180,7 @@ function read_user_input() {
 
 function setup_apache_stratos() {
     # Configure IaaS properties
-    iaas=$(read_user_input "Enter your IaaS. vCloud, EC2 and Openstack are the currently supported IaaSs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack " "" $iaas )
+    iaas=$(read_user_input "Enter your IaaS. vCloud, EC2 and Openstack are the currently supported IaaSs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack: " "" $iaas )
 
     if [[ "$iaas" == "os" ]]; then
         echo -e "You selected OpenStack. "
@@ -194,15 +195,24 @@ function setup_apache_stratos() {
 
     elif [[ "$iaas" == "ec2" ]]; then
         echo -e "You selected Amazon EC2. "
+        ec2_vpc=$(read_user_input "Are you in a EC2 VPC Environment? (y/n) : " "" $ec2_vpc )
         ec2_identity=$(read_user_input "Enter EC2 identity : " "" $ec2_identity )
         ec2_credentials=$(read_user_input "Enter EC2 credentials : " "-s" $ec2_credentials )
         ec2_owner_id=$(read_user_input "Enter EC2 owner id : " "" $ec2_owner_id )
         ec2_keypair_name=$(read_user_input "Enter EC2 keypair name : " "" $ec2_keypair_name )
-        ec2_security_groups=$(read_user_input "Enter EC2 security groups : " "" $ec2_security_groups )
-        list_ec2_regions
-        region=$(read_user_input "Enter the region of the IaaS you want to spin up instances : " "" $region )
         ec2_availability_zone=$(read_user_input "Enter EC2 availability zone : " "" $ec2_availability_zone )
-        cartridge_base_img_id=$(read_user_input "Enter EC2 cartridge base image id : " "" $cartridge_base_img_id )
+
+        if [[ "$ec2_vpc" == "y" ]]; then
+        	ec2_security_group_ids=$(read_user_input "Enter EC2 security group IDs : " "" $ec2_security_group_ids )
+        	ec2_subnet_id=$(read_user_input "Enter EC2 VPC Subnet ID : " "" $ec2_subnet_id )
+        else
+        	ec2_security_groups=$(read_user_input "Enter EC2 security groups : " "" $ec2_security_groups )
+	fi
+	if [[ "$deploy_services" == "true" ]]; then
+        	list_ec2_regions
+        	region=$(read_user_input "Enter the region of the IaaS you want to spin up instances : " "" $region )
+        	cartridge_base_img_id=$(read_user_input "Enter EC2 cartridge base image id : " "" $cartridge_base_img_id )
+        fi
 
     elif [[ "$iaas" == "vcloud" ]];then
         vcloud_identity=$(read_user_input "Enter vCloud identity : " "" $vcloud_identity )
@@ -221,12 +231,16 @@ function setup_apache_stratos() {
         replace_setup_conf "OS_SECURITY_GROUPS" "$os_security_groups"
     elif [[ "$iaas" == "ec2" ]]; then
         replace_setup_conf "EC2_ENABLED" "true"
+        replace_setup_conf "EC2_VPC" "$ec2_vpc"
         replace_setup_conf "EC2_IDENTITY" "$ec2_identity"
         replace_setup_conf "EC2_CREDENTIAL" "$ec2_credentials"
         replace_setup_conf "EC2_KEYPAIR_NAME" "$ec2_keypair_name"
         replace_setup_conf "EC2_OWNER_ID" "$ec2_owner_id"
         replace_setup_conf "EC2_AVAILABILITY_ZONE" "$ec2_availability_zone"
         replace_setup_conf "EC2_SECURITY_GROUPS" "$ec2_security_groups"
+        replace_setup_conf "EC2_SECURITY_GROUP_IDS" "$ec2_security_group_ids"
+        replace_setup_conf "EC2_SUBNET_ID" "$ec2_subnet_id"
+        replace_setup_conf "EC2_ASSOCIATE_PUBLIC_IP" "$ec2_associate_public_ip_address"
     elif [[ "$iaas" == "vcloud" ]]; then
         replace_setup_conf "VCLOUD_ENABLED" "true"
         replace_setup_conf "VCLOUD_IDENTITY" "$vcloud_identity"
@@ -234,6 +248,7 @@ function setup_apache_stratos() {
         replace_setup_conf "VCLOUD_JCLOUDS_ENDPOINT" "$vcloud_jclouds_endpoint"
     fi
     
+    replace_setup_conf "LOG_PATH" "$log_path"
     replace_setup_conf "STRATOS_SETUP_PATH" "$setup_path"
     replace_setup_conf "PACK_PATH" "$stratos_pack_path"
     replace_setup_conf "INSTALLER_PATH" "$stratos_install_path"
@@ -241,6 +256,7 @@ function setup_apache_stratos() {
     replace_setup_conf "HOST_USER" "$host_user"
     replace_setup_conf "STRATOS_DOMAIN" "$stratos_domain"
     replace_setup_conf "machine_ip" "$machine_ip"
+    replace_setup_conf "CONFIG_MB" "$CONFIG_MB"
     replace_setup_conf "puppet-ip" "$puppet_ip"
     replace_setup_conf "puppet-host" "$puppet_host"
     replace_setup_conf "puppet-environment" "$puppet_env"
@@ -250,12 +266,12 @@ function setup_apache_stratos() {
     replace_setup_conf "DB_USER" "$mysql_uname"
     replace_setup_conf "DB_PASSWORD" "$mysql_password"
 
-    # Replace the region and zone of partition file
-    backup_file $current_dir/resources/json/$iaas/partition.json
-    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/partition.json"
-    replace_in_file "AVAILABILITY_ZONE" "$ec2_availability_zone" "$current_dir/resources/json/$iaas/partition.json"
+    run_setup_sh
 
-    /bin/bash $setup_path/setup.sh -p "default"
+}
+
+function  run_setup_sh() {
+	/bin/bash $setup_path/setup.sh -p "default"
 }
 
 function get_service_deployment_confirmations() {
@@ -726,6 +742,10 @@ function configure_products() {
     echo "WSO2 Private PaaS product configuration completed."
 }
 
+function get_host_user(){
+    host_user=$(read_user_input "Enter host user :" "" $host_user )
+}
+
 function init() {
     # Create a backup of setup.conf file, we are going to change it.
     backup_file $setup_path/conf/setup.conf
@@ -748,7 +768,7 @@ function init() {
 
     list_ip_addreses
     machine_ip=$(read_user_input "Above are the IP addresses assigned to your machine. Please select the preferred IP address : " "" $machine_ip )
-    host_user=$(read_user_input "Enter host user :" "" $host_user )
+    get_host_user
 
     if [ "$machine_ip" == "" ];then
         echo -e "Machine IP is not specified, so proceeding with the default 127.0.0.1"
@@ -844,15 +864,20 @@ function start_servers() {
 
     if [[ $wso2_ppaas_enabled = "true" ]]; then
        # Start Apache Stratos with default profile
-       echo -e "Starting WSO2 Private PaaS server..."
+       echo -e "Starting WSO2 Private PaaS server as $host_user user... "
        su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p default >> $LOG"
-       sleep 3m
+       sleep 1m
     else
         echo -e "Skipping WSO2 Private PaaS startup."
     fi 
 }
 
 function deploy_wso2_ppaas_services() {
+    # Replace the region and zone of partition file
+    backup_file $current_dir/resources/json/$iaas/partition.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/partition.json"
+    replace_in_file "AVAILABILITY_ZONE" "$ec2_availability_zone" "$current_dir/resources/json/$iaas/partition.json"
+
     echo -e "Deploying partition at $resource_path/json/$iaas/partition.json"
     curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/partition.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/policy/deployment/partition"
 
@@ -1015,21 +1040,34 @@ do
   esac
 done
 
-# Run main configuration
-init
-
 # On silent mode, start the servers without prompting anything from the user
 if [[ "$silent_mode" = "true" ]]; then
      echo -e "\nboot.sh: Running in silent mode\n"
+     get_host_user
+     run_setup_sh
      # Start WSO2 Private PaaS core services
      start_servers
 
 elif [[ "$puppet_only" = "true" ]]; then
+     # Run main configuration
+     init
      echo -e "\nboot.sh: Running in puppet only mode\n"
      configure_products
      echo -e "boot.sh: Puppet configuration completed"
 
+elif [[ "$deploy_services" = "false" ]]; then
+     # Run main configuration
+     init
+     echo -e "\nboot.sh: Running in configuring and start PaaS mode.\n"
+     # Do the product specific configurations
+     configure_products         
+
+     # Start core servers    
+     start_servers
+
 else
+     # Run main configuration
+     init
      # Do the product specific configurations
      configure_products         
 

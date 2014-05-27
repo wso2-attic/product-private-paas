@@ -59,6 +59,9 @@
                         <property name="securityGroups" value="EC2_SECURITY_GROUPS"/>
                         <property name="autoAssignIp" value="true" />
                         <property name="keyPair" value="EC2_KEYPAIR"/>
+                        <VPC_STARTproperty name="securityGroupIds" value="EC2_SECURITY_GROUP_IDS"/>
+                        <property name="subnetId" value="EC2_SUBNET_ID"/>
+                        <property name="associatePublicIpAddress" value="EC2_ASSOCIATE_PUBLIC_IP"/VPC_END>
                 </iaasProviderEC2_PROVIDER_END>
                 <OPENSTACK_PROVIDER_STARTiaasProvider type="openstack" name="openstack specific details">
             		<className>org.apache.stratos.cloud.controller.iaases.OpenstackNovaIaas</className>

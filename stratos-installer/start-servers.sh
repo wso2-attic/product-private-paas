@@ -77,7 +77,7 @@ done
 
 stratos_extract_path=$stratos_extract_path"-"$profile
 
-if [[ $profile = "default" ]]; then
+if [[ $profile = "default" && $config_mb = "true" ]]; then
     echo "Starting ActiveMQ server ..." >> $LOG
     $activemq_path/bin/activemq start
     echo "ActiveMQ server started" >> $LOG
