@@ -33,12 +33,19 @@ if(cartridgeInfo.Error != undefined){
     if(cartridgeInfo.cartridge == undefined){
         cartridgeInfo.cartridge = cartridgeInfo;
     }
+    /*
     if(cartridgeInfo.cartridge.lbClusterId) {
         lbCluster = utils.consoleAppUtil.getClusterInfo(cartridgeInfo.cartridge.lbClusterId);
         if(lbCluster.Error != undefined){
             error.push(lbCluster.Error);
         }
     }
+    */
+    lbCluster = utils.consoleAppUtil.getLbCluster();
+            if(lbCluster.Error != undefined){
+                error.push(lbCluster.Error);
+    }
+
     var clusterInfo = utils.consoleAppUtil.getClusterInfoWithAlias(cartridgeInfo.cartridge.cartridgeType, alias);
     if(clusterInfo.Error != undefined){
         error.push(clusterInfo.Error);

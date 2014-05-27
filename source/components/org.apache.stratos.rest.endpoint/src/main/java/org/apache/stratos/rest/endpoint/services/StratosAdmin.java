@@ -313,7 +313,18 @@ public class StratosAdmin extends AbstractAdmin {
     @Consumes("application/json")
     @AuthorizationAction("/permission/protected/manage/monitor/tenants")
     public Cartridge[] getSubscribedCartridges() throws RestAPIException {
-        List<Cartridge> cartridgeList = ServiceUtils.getSubscriptions(null, getConfigContext());
+        List<Cartridge> cartridgeList = ServiceUtils.getSubscriptions(null, null, getConfigContext());
+        // Following is very important when working with axis2
+        return cartridgeList.isEmpty() ? new Cartridge[0] : cartridgeList.toArray(new Cartridge[cartridgeList.size()]);
+    }
+
+    @GET
+    @Path("/cartridge/list/subscribed/group/{serviceGroup}")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
+    public Cartridge[] getSubscribedCartridgesForServiceGroup(@PathParam("serviceGroup") String serviceGroup) throws RestAPIException {
+        List<Cartridge> cartridgeList = ServiceUtils.getSubscriptions(null, serviceGroup, getConfigContext());
         // Following is very important when working with axis2
         return cartridgeList.isEmpty() ? new Cartridge[0] : cartridgeList.toArray(new Cartridge[cartridgeList.size()]);
     }
