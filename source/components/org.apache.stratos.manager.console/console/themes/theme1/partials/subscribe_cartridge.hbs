@@ -65,11 +65,13 @@
                                data-help-y-offset="10"
                                placeholder="https://github.com/test/mytestphp.git" />
                     </div>
+            {{#unless cartridge.multiTenant}}
 		    <div class="checkbox">
                         <label>
                             <input id="commitsEnabled" name="commitsEnabled" type="checkbox" /> Auto Commit
                         </label>
                     </div>
+                    {{/unless}}
                     <div class="checkbox">
                         <label>
                             <input name="isPublicRepo" type="checkbox" checked="checked" id="public_check" /> This is a public repository
