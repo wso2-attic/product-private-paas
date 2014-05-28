@@ -1,6 +1,6 @@
 {   
       "type": "publisher",
-      "provider": "wso2",
+      "provider": "application",
       "serviceGroup": "apim",
       "host": "publisher.am.wso2.com",
       "displayName": "API Manager - Publisher",
