@@ -106,7 +106,7 @@
                 // check if the repo Url returned in response is valid. If so, assign it to a variable to use in the next
                 // subscription call
                 var responseUrl = re.subscriptionInfo.repositoryURL;
-                if (responseUrl != null || responseUrl != undefined) {
+                if (responseUrl != null && responseUrl != undefined) {
                     repoUrl = responseUrl;
                 }
             }
