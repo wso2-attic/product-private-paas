@@ -15,7 +15,9 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 
-current_dir=$(dirname $0)
+dir=`dirname $0`
+current_dir=`cd $dir;pwd`
+stratos_install_path="$current_dir/install"
 
 function help() {
     echo ""
@@ -107,6 +109,8 @@ if [[ clean_puppet = "true" ]]; then
    echo "Restarting Puppet master"
    sudo /etc/init.d/puppetmaster restart
 fi
+
+rm -rf $stratos_install_path/*
 
 echo -e "\nSuccessfully cleaned up everything!"
 # END
