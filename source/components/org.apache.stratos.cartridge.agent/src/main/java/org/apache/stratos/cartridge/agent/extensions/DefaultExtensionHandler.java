@@ -157,7 +157,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             // If supert tenant temp app path is available,
             // copy the artifacts to carbon server's deployment path
             String src = CartridgeAgentConstants.SUPERTENANT_TEMP_PATH;
-            if (new File(src).exists()) {
+            if (new File(src).exists() && tenantId.equals("-1234")) {
                 ExtensionUtils.executeCopyArtifactsExtension(src,
     					CartridgeAgentConfiguration.getInstance().getAppPath()+ "/repository/deployment/server/");
             }
