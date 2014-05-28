@@ -195,6 +195,7 @@ function setup_apache_stratos() {
         ec2_vpc=$(read_user_input "Are you in a EC2 VPC Environment? (y/n) : " "" $ec2_vpc )
         ec2_identity=$(read_user_input "Enter EC2 identity : " "" $ec2_identity )
         ec2_credentials=$(read_user_input "Enter EC2 credentials : " "-s" $ec2_credentials )
+        echo ""
         ec2_owner_id=$(read_user_input "Enter EC2 owner id : " "" $ec2_owner_id )
         ec2_keypair_name=$(read_user_input "Enter EC2 keypair name : " "" $ec2_keypair_name )
         ec2_availability_zone=$(read_user_input "Enter EC2 availability zone : " "" $ec2_availability_zone )
@@ -684,7 +685,7 @@ function deploy_puppet() {
     # modify autosign.conf
     echo "*."$stratos_domain > /etc/puppet/autosign.conf
 
-    # Restart Puppetmaster after configurations
+    # Restart Puppet master after configurations
     echo "Restarting Puppet master"
     /etc/init.d/puppetmaster restart
     echo "Puppet scripts configuration completed."
@@ -769,7 +770,7 @@ function init() {
        skip_puppet="false"
     fi
 
-    # Check whether Puppetmaster is installed and configure it
+    # Check whether Puppet master is installed and configure it
     check_for_puppet
     if [[ $puppet_installed = "true" ]]; then
         stratos_domain=$(dnsdomainname)
@@ -788,28 +789,28 @@ function init() {
         machine_ip="127.0.0.1"
     fi    
 
-    # Configure an external Puppetmaster
-    puppet_external=$(read_user_input "Do you need to configure an external Puppetmaster? [y/n] : " "" $puppet_external )
+    # Configure an external Puppet master
+    puppet_external=$(read_user_input "Do you need to configure an external Puppet master? [y/n] : " "" $puppet_external )
 
     if [[ $puppet_external =~ ^[Yy]$ ]]; then
        puppet_external="true"
-       echo -e "Configuring an external Puppetmaster...\n"
-       puppet_external_ip=$(read_user_input "Please enter external Puppetmaster IP : " "" $puppet_external_ip )
-       puppet_external_host=$(read_user_input "Please enter external Puppetmaster hostname : " "" $puppet_external_host )
+       echo -e "Configuring an external Puppet master...\n"
+       puppet_external_ip=$(read_user_input "Please enter external Puppet master IP : " "" $puppet_external_ip )
+       puppet_external_host=$(read_user_input "Please enter external Puppet master hostname : " "" $puppet_external_host )
  
        puppet_ip=$puppet_external_ip
        puppet_host=$puppet_external_host
     else
        puppet_external="false"
-       # Install Puppetmaster if it is not already installed
+       # Install Puppet master if it is not already installed
        if [[ $puppet_installed = "false" ]]; then        
           install_puppet
        fi
 
        puppet_ip=$machine_ip
-       echo -e "Puppetmaster IP address is $puppet_ip"
+       echo -e "Puppet master IP address is $puppet_ip"
        puppet_host="puppet."$stratos_domain
-       echo -e "Puppetmaster hostname is $puppet_host"
+       echo -e "Puppet master hostname is $puppet_host"
     fi    
 
     # Configure MySQL 
@@ -859,27 +860,31 @@ function start_servers() {
        # Setup BAM server
        echo "Starting BAM core service..."
        /bin/bash $setup_path/setup_bam_logging.sh
-       sleep 1m
+       while ! echo exit | nc localhost $BAM_PORT; do sleep $SLEEPTIME; done
+       sleep $SLEEPTIME
     fi
 
     if [[ $config_sso_enabled = "true" ]]; then
        echo -e "Starting WSO2 IS core service..."
        nohup $stratos_install_path/wso2is-5.0.0/bin/wso2server.sh -DportOffset=2 &
-       sleep 1m
+       while ! echo exit | nc localhost $IS_PORT; do sleep $SLEEPTIME; done
+       sleep $SLEEPTIME
     fi
 
     if [[ $apim_enabled = "true" ]]; then
        # Setup Gitblit Server
        echo "Starting Gitblit core service..."
        /bin/bash $setup_path/gitblit.sh
-       sleep 1m
+       while ! echo exit | nc localhost $GITBLIT_PORT; do sleep $SLEEPTIME; done
+       sleep $SLEEPTIME
     fi
 
     if [[ $wso2_ppaas_enabled = "true" ]]; then
        # Start Apache Stratos with default profile
        echo -e "Starting WSO2 Private PaaS server as $host_user user... "
        su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p default >> $LOG"
-       sleep 1m
+       while ! echo exit | nc localhost $PPAAS_PORT; do sleep $SLEEPTIME; done
+       sleep $SLEEPTIME
     else
         echo -e "Skipping WSO2 Private PaaS startup."
     fi 
