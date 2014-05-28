@@ -35,6 +35,7 @@ stratos_extract_path=$stratos_extract_path"-default"
 
 #setting the public IP for bam
 export public_ip=$(curl --silent http://ipecho.net/plain; echo)
+export hadoop_hostname=$(hostname -f)
 
 function start_bam() {
        echo "Starting Hadoop server ..."
@@ -85,29 +86,16 @@ pushd $bam_path
 
 echo "Setting up BAM"
 
-cp -f repository/conf/datasources/master-datasources.xml repository/conf/datasources/master-datasources.xml.orig
-cat repository/conf/datasources/master-datasources.xml.orig | sed -e "s@MYSQL_HOSTNAME@$dashboard_db_hostname@g" > repository/conf/datasources/master-datasources.xml
-
-cp -f repository/conf/datasources/master-datasources.xml repository/conf/datasources/master-datasources.xml.orig
-cat repository/conf/datasources/master-datasources.xml.orig | sed -e "s@MYSQL_PORT@$dashboard_db_port@g" > repository/conf/datasources/master-datasources.xml
-
-cp -f repository/conf/datasources/master-datasources.xml repository/conf/datasources/master-datasources.xml.orig
-cat repository/conf/datasources/master-datasources.xml.orig | sed -e "s@MYSQL_USERNAME@$dashboard_db_user@g" > repository/conf/datasources/master-datasources.xml
-
-cp -f repository/conf/datasources/master-datasources.xml repository/conf/datasources/master-datasources.xml.orig
-cat repository/conf/datasources/master-datasources.xml.orig | sed -e "s@MYSQL_PASSWORD@$dashboard_db_pass@g" > repository/conf/datasources/master-datasources.xml
-
-cp -f repository/conf/datasources/master-datasources.xml repository/conf/datasources/master-datasources.xml.orig
-cat repository/conf/datasources/master-datasources.xml.orig | sed -e "s@CASSANDRA_HOST@$dashboard_cassendra_host@g" > repository/conf/datasources/master-datasources.xml
-
-cp -f repository/conf/datasources/master-datasources.xml repository/conf/datasources/master-datasources.xml.orig
-cat repository/conf/datasources/master-datasources.xml.orig | sed -e "s@CASSANDRA_PORT@$dashboard_cassendra_port@g" > repository/conf/datasources/master-datasources.xml
-
-cp -f repository/conf/datasources/master-datasources.xml repository/conf/datasources/master-datasources.xml.orig
-cat repository/conf/datasources/master-datasources.xml.orig | sed -e "s@CASSANDRA_USER@$dashboard_cassendra_user@g" > repository/conf/datasources/master-datasources.xml
-
-cp -f repository/conf/datasources/master-datasources.xml repository/conf/datasources/master-datasources.xml.orig
-cat repository/conf/datasources/master-datasources.xml.orig | sed -e "s@CASSANDRA_PASSWORD@$dashboard_cassendra_password@g" > repository/conf/datasources/master-datasources.xml
+sed -i "s@MYSQL_HOSTNAME@$dashboard_db_hostname@g" repository/conf/datasources/master-datasources.xml
+sed -i "s@MYSQL_PORT@$dashboard_db_port@g" repository/conf/datasources/master-datasources.xml
+sed -i "s@MYSQL_USERNAME@$dashboard_db_user@g" repository/conf/datasources/master-datasources.xml
+sed -i "s@MYSQL_PASSWORD@$dashboard_db_pass@g" repository/conf/datasources/master-datasources.xml
+sed -i "s@CASSANDRA_HOST@$dashboard_cassendra_host@g" repository/conf/datasources/master-datasources.xml
+sed -i "s@CASSANDRA_PORT@$dashboard_cassendra_port@g" repository/conf/datasources/master-datasources.xml
+sed -i "s@CASSANDRA_USER@$dashboard_cassendra_user@g" repository/conf/datasources/master-datasources.xml
+sed -i "s@CASSANDRA_PASSWORD@$dashboard_cassendra_password@g" repository/conf/datasources/master-datasources.xml
+sed -i "s@DATANODEHOST@$hadoop_hostname@g" repository/conf/advanced/hive-site.xml
+sed -i "s@JOBTRACKERSHOST@$hadoop_hostname@g" repository/conf/advanced/hive-site.xml
 
 popd
 

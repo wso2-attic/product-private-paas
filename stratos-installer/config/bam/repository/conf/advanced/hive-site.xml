@@ -1250,12 +1250,12 @@ http://hadoop.apache.org/common/docs/r0.20.2/quickstart.html#PseudoDistributed -
 
   <property>
     <name>fs.default.name</name>
-    <value>hdfs://puppet.stratos.com:9000</value>
+    <value>hdfs://DATANODEHOST:9000</value>
   </property>
 
   <property>
     <name>mapred.job.tracker</name>
-    <value>puppet.stratos.com:9001</value>
+    <value>JOBTRACKERSHOST:9001</value>
   </property>
 
   <property>
