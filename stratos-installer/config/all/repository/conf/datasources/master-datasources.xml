@@ -91,6 +91,27 @@
             </definition>
         </datasource>
 
+	 <datasource>
+            <name>WSO2_CONFIG_DB</name>
+            <description>The datasource used for config</description>
+            <jndiConfig>
+                <name>jdbc/CONFIG_DB_SCHEMA</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>jdbc:mysql://CONFIG_DB_HOSTNAME:CONFIG_DB_PORT/CONFIG_DB_SCHEMA?autoReconnect=true</url>
+                    <username>CONFIG_DB_USER</username>
+                    <password>CONFIG_DB_PASS</password>
+                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                    <maxActive>50</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                </configuration>
+            </definition>
+        </datasource>
+
         <!--datasource>
            <name>WSO2BAM_DATASOURCE</name>
            <description>The datasource used for analyzer data</description>

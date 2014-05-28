@@ -99,6 +99,7 @@ export as_clustering_enabled=""
 export is_clustering_enabled=""
 export esb_clustering_enabled=""
 export bps_clustering_enabled=""
+export keymanager_clustering_enabled=""
 
 # WSO2 PPaaS core services
 export bam_enabled=""
