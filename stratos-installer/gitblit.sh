@@ -33,8 +33,10 @@ source "$current_dir/conf/setup.conf"
 
 function start_gitblit() {
    echo "Starting Gitblit Server ..."
+   pushd $gitblit_path
    nohup $JAVA_HOME/bin/java -jar gitblit.jar --baseFolder data &
    echo "Gitblit server started"
+   popd
 }
 
 # In silent mode, start BAM server and do not make any configurations

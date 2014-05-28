@@ -77,17 +77,23 @@ function update_hosts_file(){
 
         if [[ "${STRATOS_SERVICE_NAME}" = "apistore" ||  "${STRATOS_SERVICE_NAME}" = "publisher" ]] ; then
 		gateway_host_name="<%= @stratos_instance_data_gateway_host_name %>"
+		gateway_mgt_host_name="<%= @stratos_instance_data_gateway_mgt_host_name %>"
 		keymanager_host_name="<%= @stratos_instance_data_keymanager_host_name %>"
 
 		(${GREP} -q "${gateway_host_name}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${gateway_host_name} # Stratos LB instance private IP" >> /etc/hosts \
 	  && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${gateway_host_name}")) \
 	  || print_error "Failed to update '/etc/hosts' file. "
 
-		(${GREP} -q "${keymanager_host_name}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${keymanager_host_name} # Stratos LB instance private IP" >> /etc/hosts \
-	  && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${keymanager_host_name}")) \
+		(${GREP} -q "${gateway_mgt_host_name}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${gateway_mgt_host_name} # Stratos LB instance private IP" >> /etc/hosts \
+	  && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${gateway_mgt_host_name}")) \
 	  || print_error "Failed to update '/etc/hosts' file. "
 
-	 elif [[ "${STRATOS_SERVICE_NAME}" = "gateway" ]] ; then
+
+	  (${GREP} -q "${keymanager_host_name}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${keymanager_host_name} # Stratos LB instance private IP" >> /etc/hosts \
+          && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${keymanager_host_name}")) \
+          || print_error "Failed to update '/etc/hosts' file. "
+
+	 elif [[ "${STRATOS_SERVICE_NAME}" = "gateway" || "${STRATOS_SERVICE_NAME}" = "gatewaymgt" ]] ; then
                 keymanager_hostname="<%= @stratos_instance_data_keymanager_host_name %>"
 
                 (${GREP} -q "${keymanager_hostname}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${keymanager_hostname} # Stratos LB instance private IP" >> /etc/hosts \
