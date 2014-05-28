@@ -215,6 +215,7 @@ function setup_apache_stratos() {
     elif [[ "$iaas" == "vcloud" ]];then
         vcloud_identity=$(read_user_input "Enter vCloud identity : " "" $vcloud_identity )
         vcloud_credentials=$(read_user_input "Enter vCloud credentials : " "-s" $vcloud_credentials )
+        echo ""
         vcloud_jclouds_endpoint=$(read_user_input "Enter vCloud jclouds_endpoint : " "" $vcloud_jclouds_endpoint )
         cartridge_base_img_id=$(read_user_input "Enter vCloud cartridge base image id : " "" $cartridge_base_img_id )
     fi
@@ -815,7 +816,7 @@ function init() {
 
     # Configure MySQL 
     setup_mysql=$(read_user_input "Do you need to install MySQL? [y/n] : " "" $setup_mysql )
-    mysql_host=$(read_user_input "Please provide MySQL host? " "" $mysql_host )
+    mysql_host=$(read_user_input "Please provide MySQL host : " "" $mysql_host )
     mysql_port=$(read_user_input "Please provide MySQL port. Default port is 3306 : " "" $mysql_port )
     mysql_port=${mysql_port:-3306}
     mysql_uname=$(read_user_input "Please provide MySQL username. Default username is root : " "" $mysql_uname )
