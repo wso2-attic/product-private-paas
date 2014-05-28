@@ -215,6 +215,7 @@ function setup_apache_stratos() {
     elif [[ "$iaas" == "vcloud" ]];then
         vcloud_identity=$(read_user_input "Enter vCloud identity : " "" $vcloud_identity )
         vcloud_credentials=$(read_user_input "Enter vCloud credentials : " "-s" $vcloud_credentials )
+        echo ""
         vcloud_jclouds_endpoint=$(read_user_input "Enter vCloud jclouds_endpoint : " "" $vcloud_jclouds_endpoint )
         cartridge_base_img_id=$(read_user_input "Enter vCloud cartridge base image id : " "" $cartridge_base_img_id )
     fi
