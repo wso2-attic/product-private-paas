@@ -280,63 +280,69 @@ function  run_setup_sh() {
 }
 
 function get_service_deployment_confirmations() {
-    as_needed=$(read_user_input "Do you need to deploy AS (Application Server) service ? [y/n] " "" $as_enabled )
+    as_needed=$(read_user_input "Do you need to deploy AS (Application Server) service? [y/n] " "" $as_enabled )
     if [[ $as_needed =~ ^[Yy]$ ]]; then
        as_enabled="true"
 
        as_worker_mgt_needed=$(read_user_input "Do you need to deploy AS (Application Server) in worker manager setup? [y/n] " "" $as_worker_mgt_enabled )
        if [[ $as_worker_mgt_needed =~ ^[Yy]$ ]]; then
           as_worker_mgt_enabled="true"
-          as_clustering="true"
+          as_clustering_enabled="true"
        else
-          clustering_appserver=$(read_user_input "Do you need to enable clustering for AS ? [y/n] " "" $as_clustering )
+          clustering_appserver=$(read_user_input "Do you need to enable clustering for AS? [y/n] " "" $as_clustering_enabled )
           if [[ $clustering_appserver =~ ^[Yy]$ ]]; then 
-             as_clustering="true"
+             as_clustering_enabled="true"
           else
-             as_clustering="false"
+             as_clustering_enabled="false"
           fi
        fi
     fi
 
-    bps_needed=$(read_user_input "Do you need to deploy BPS (Business Process Server) service ? [y/n] " "" $bps_enabled )
+    bps_needed=$(read_user_input "Do you need to deploy BPS (Business Process Server) service? [y/n] " "" $bps_enabled )
     if [[ $bps_needed =~ ^[Yy]$ ]]; then
        bps_enabled="true"
      
        bps_worker_mgt_needed=$(read_user_input "Do you need to deploy BPS (Business Process Server) in worker manager setup? [y/n] " "" $bps_worker_mgt_enabled )
        if [[ $bps_worker_mgt_needed =~ ^[Yy]$ ]]; then
           bps_worker_mgt_enabled="true"
-          bps_clustering="true"
+          bps_clustering_enabled="true"
        else
-          clustering_bps=$(read_user_input "Do you need to enable clustering for BPS ? [y/n] " "" $bps_clustering )
+          clustering_bps=$(read_user_input "Do you need to enable clustering for BPS? [y/n] " "" $bps_clustering_enabled )
           if [[ $clustering_bps =~ ^[Yy]$ ]]; then
-             bps_clustering="true"
+             bps_clustering_enabled="true"
           else
-             bps_clustering="false"
+             bps_clustering_enabled="false"
           fi
        fi      
     fi
 
-    esb_needed=$(read_user_input "Do you need to deploy ESB (Enterprise Service Bus) service ? [y/n] " "" $esb_enabled )
+    esb_needed=$(read_user_input "Do you need to deploy ESB (Enterprise Service Bus) service? [y/n] " "" $esb_enabled )
     if [[ $esb_needed =~ ^[Yy]$ ]]; then
        esb_enabled="true"
      
        esb_worker_mgt_needed=$(read_user_input "Do you need to deploy ESB (Enterprise Service Bus) in worker manager setup? [y/n] " "" $esb_worker_mgt_enabled )
        if [[ $esb_worker_mgt_needed =~ ^[Yy]$ ]]; then
           esb_worker_mgt_enabled="true"
-          esb_clustering="true"
+          esb_clustering_enabled="true"
        else
-          clustering_esb=$(read_user_input "Do you need to enable clustering for ESB ? [y/n] " "" $esb_clustering )
+          clustering_esb=$(read_user_input "Do you need to enable clustering for ESB? [y/n] " "" $esb_clustering_enabled )
           if [[ $clustering_esb =~ ^[Yy]$ ]]; then
-             esb_clustering="true"
+             esb_clustering_enabled="true"
           else
-             esb_clustering="false"
+             esb_clustering_enabled="false"
           fi
        fi      
     fi   
 
-    apim_needed=$(read_user_input "Do you need to deploy APIM (API Manager) service ? [y/n] " "" $apim_enabled )
+    apim_needed=$(read_user_input "Do you need to deploy APIM (API Manager) service? [y/n] " "" $apim_enabled )
     if [[ $apim_needed =~ ^[Yy]$ ]]; then
        apim_enabled="true"
+       clustering_keymanager=$(read_user_input "Do you need to enable clustering for Keymanager? [y/n] " "" $keymanager_clustering_enabled )
+       if [[ $clustering_keymanager =~ ^[Yy]$ ]]; then
+          keymanager_clustering_enabled="true"
+       else
+          keymanager_clustering_enabled="false"
+       fi
     fi
 }
 
@@ -365,7 +371,7 @@ function setup_as() {
         # appserver node parameters
         replace_in_file "AS_CONFIG_DB" "$as_config_db" "/etc/puppet/manifests/nodes/appserver.pp"
         replace_in_file "AS_CONFIG_PATH" "$as_config_path" "/etc/puppet/manifests/nodes/appserver.pp"
-        replace_in_file "CLUSTERING" "$as_clustering" "/etc/puppet/manifests/nodes/appserver.pp"
+        replace_in_file "CLUSTERING" "$as_clustering_enabled" "/etc/puppet/manifests/nodes/appserver.pp"
         replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
         replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
         replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/appserver/manifests/params.pp"
@@ -403,7 +409,7 @@ function setup_as() {
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/appserver-cart-worker.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/appserver-cart-worker.json"
 
-    if [[ $as_clustering = "true" ]]; then
+    if [[ $as_clustering_enabled = "true" ]]; then
        replace_in_file "@PRIMARY" "true" "$current_dir/resources/json/$iaas/appserver-cart.json"
        replace_in_file "@CLUSTERING" "true" "$current_dir/resources/json/$iaas/appserver-cart.json"
     else
@@ -426,7 +432,7 @@ function setup_bps() {
         # bps node parameters        
         replace_in_file "BPS_CONFIG_DB" "$bps_db" "/etc/puppet/manifests/nodes/bps.pp"
         replace_in_file "BPS_CONFIG_PATH" "$bps_config_path" "/etc/puppet/manifests/nodes/bps.pp"
-        replace_in_file "CLUSTERING" "$bps_clustering" "/etc/puppet/manifests/nodes/bps.pp"
+        replace_in_file "CLUSTERING" "$bps_clustering_enabled" "/etc/puppet/manifests/nodes/bps.pp"
         backup_file "/etc/puppet/modules/bps/manifests/params.pp"
         replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
         replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
@@ -456,7 +462,7 @@ function setup_bps() {
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/bps-cart-worker.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/bps-cart-worker.json"
 
-    if [[ $bps_clustering = "true" ]]; then
+    if [[ $bps_clustering_enabled = "true" ]]; then
        replace_in_file "@PRIMARY" "true" "$current_dir/resources/json/$iaas/bps-cart.json"
        replace_in_file "@CLUSTERING" "true" "$current_dir/resources/json/$iaas/bps-cart.json"
     else
@@ -479,7 +485,7 @@ function setup_esb() {
        # esb node parameters       
        replace_in_file "ESB_CONFIG_DB" "$esb_config_db" "/etc/puppet/manifests/nodes/esb.pp"
        replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes/esb.pp"
-       replace_in_file "CLUSTERING" "$esb_clustering" "/etc/puppet/manifests/nodes/esb.pp"
+       replace_in_file "CLUSTERING" "$esb_clustering_enabled" "/etc/puppet/manifests/nodes/esb.pp"
 
        backup_file "/etc/puppet/modules/esb/manifests/params.pp"
        replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
@@ -510,7 +516,7 @@ function setup_esb() {
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/esb-cart-worker.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/esb-cart-worker.json"
 
-    if [[ $esb_clustering = "true" ]]; then
+    if [[ $esb_clustering_enabled = "true" ]]; then
        replace_in_file "@PRIMARY" "true" "$current_dir/resources/json/$iaas/esb-cart.json"
        replace_in_file "@CLUSTERING" "true" "$current_dir/resources/json/$iaas/esb-cart.json"
     else
@@ -527,7 +533,7 @@ function setup_is() {
     fi
 
     # is node parameters    
-    replace_in_file "CLUSTERING" "$is_clustering" "/etc/puppet/manifests/nodes/is.pp"
+    replace_in_file "CLUSTERING" "$is_clustering_enabled" "/etc/puppet/manifests/nodes/is.pp"
     replace_in_file "IS_CONFIG_DB" "$is_config_db" "/etc/puppet/manifests/nodes/is.pp"
     replace_in_file "IS_CONFIG_PATH" "$is_config_path" "/etc/puppet/manifests/nodes/is.pp"
 
@@ -611,9 +617,9 @@ function setup_apim() {
        replace_in_file "KEYMANAGER_CONFIG_DB" "$apim_keymanager_config_db" "/etc/puppet/manifests/nodes/api.pp"
        replace_in_file "GATEWAY_CONFIG_PATH" "$gateway_config_path" "/etc/puppet/manifests/nodes/api.pp"
        replace_in_file "STORE_CONFIG_PATH" "$store_config_path" "/etc/puppet/manifests/nodes/api.pp"
-       replace_in_file "KEYMANAGER_CONFIG_PATH" "$keymanager_config_path" "/etc/puppet/manifests/nodes/api.pp"       
-
-       backup_file "/etc/puppet/modules/apimanager/manifests/params.pp"
+       replace_in_file "KEYMANAGER_CONFIG_PATH" "$keymanager_config_path" "/etc/puppet/manifests/nodes/api.pp"
+       replace_in_file "KEYMANGER_CLUSTERING" "$keymanager_clustering_enabled" "/etc/puppet/manifests/nodes/api.pp"
+      
        replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/apimanager/manifests/params.pp"
        replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/apimanager/manifests/params.pp"
        replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/apimanager/manifests/params.pp"
@@ -621,7 +627,7 @@ function setup_apim() {
        replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
        replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/apimanager/manifests/params.pp"
        replace_in_file "STATS_DB" "$apim_stats_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
-       replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/apimanager/manifests/params.pp"       
+       replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
     fi
 
     # In puppet only mode, do not change other configurations
@@ -647,6 +653,8 @@ function setup_apim() {
     backup_file $current_dir/resources/json/$iaas/keymanager.json
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/keymanager.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/keymanager.json"
+    replace_in_file "@PRIMARY" "$keymanager_clustering_enabled" "$current_dir/resources/json/$iaas/keymanager.json"
+    replace_in_file "@CLUSTERING" "$keymanager_clustering_enabled" "$current_dir/resources/json/$iaas/keymanager.json"
 
     backup_file $current_dir/resources/json/$iaas/publisher.json
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/publisher.json"
@@ -704,7 +712,7 @@ function configure_products() {
        deploy_puppet
     fi 
     # Get confirmation on configuring SSO with WSO2 IS
-    config_sso_needed=$(read_user_input "Do you need to setup WSO2 IS (Identity Server) as a core service and configure SSO feature ? [y/n] " "" $config_sso_enabled )
+    config_sso_needed=$(read_user_input "Do you need to setup WSO2 IS (Identity Server) as a core service and configure SSO feature? [y/n] " "" $config_sso_enabled )
     if [[ $config_sso_needed =~ ^[Yy]$ ]]; then
        config_sso_enabled="true"
     fi
@@ -874,7 +882,7 @@ function start_servers() {
     if [[ $apim_enabled = "true" ]]; then
        # Setup Gitblit Server
        echo "Starting Gitblit core service..."
-       su - $host_user -c "/bin/bash $setup_path/gitblit.sh"
+       nohup su - $host_user -c "/bin/bash $setup_path/gitblit.sh" >> gitblit.log
        while ! echo exit | nc localhost $GITBLIT_PORT; do sleep $SLEEPTIME; done
        sleep $SLEEPTIME
     fi
