@@ -15,7 +15,9 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 
-current_dir=$(dirname $0)
+dir=`dirname $0`
+current_dir=`cd $dir;pwd`
+stratos_install_path="$current_dir/install"
 
 function help() {
     echo ""
@@ -96,6 +98,7 @@ mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS api
 mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS apim_store_config;"
 mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS apim_publisher_config;"
 mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS registry;"
+mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS sm_config;"
 
 if [[ clean_puppet = "true" ]]; then
    echo "Cleaning Puppet scripts in /etc/puppet/"
@@ -106,6 +109,8 @@ if [[ clean_puppet = "true" ]]; then
    echo "Restarting Puppet master"
    sudo /etc/init.d/puppetmaster restart
 fi
+
+rm -rf $stratos_install_path/*
 
 echo -e "\nSuccessfully cleaned up everything!"
 # END

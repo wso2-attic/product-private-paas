@@ -45,6 +45,14 @@
         {
           "name": "payload_parameter.SERIVCE_GROUP",
           "value": "apim"
-        }       
+        },
+        {
+          "name": "PRIMARY",
+          "value": "@PRIMARY"
+        },
+        {
+          "name": "payload_parameter.CLUSTERING",
+          "value": "@CLUSTERING"
+        }
       ]    
  }

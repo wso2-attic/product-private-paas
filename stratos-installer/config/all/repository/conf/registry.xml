@@ -35,6 +35,10 @@
         <dataSource>jdbc/REGISTRY_DB_SCHEMA</dataSource>
     </dbConfig>
 
+    <dbConfig name="config">
+        <dataSource>jdbc/CONFIG_DB_SCHEMA</dataSource>
+    </dbConfig>
+
     <remoteInstance url="https://HOSTNAME">
         <id>governance</id>
         <dbConfig>governance</dbConfig>
@@ -47,6 +51,20 @@
     <mount path="/_system/governance" overwrite="virtual">
         <instanceId>governance</instanceId>
         <targetPath>/_system/governance</targetPath>
+    </mount>    
+
+    <remoteInstance url="https://HOSTNAME">
+        <id>config</id>
+        <dbConfig>config</dbConfig>
+        <readOnly>false</readOnly>
+        <registryRoot>/</registryRoot>
+        <enableCache>true</enableCache>
+        <cacheId>CONFIG_DB_USER@jdbc:mysql://CONFIG_DB_HOSTNAME:CONFIG_DB_PORT/CONFIG_DB_SCHEMA</cacheId>
+    </remoteInstance>
+
+    <mount path="/_system/config" overwrite="virtual">
+        <instanceId>config</instanceId>
+        <targetPath>/_system/config</targetPath>
     </mount>
 
    <!--<handler class="org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler">
