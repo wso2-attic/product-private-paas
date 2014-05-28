@@ -31,21 +31,19 @@ import org.apache.stratos.cloud.controller.stub.pojo.Property;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Is responsible for monitoring a service cluster. This runs periodically
  * and perform minimum instance check and scaling check using the underlying
  * rules engine.
- *
  */
-public class ClusterMonitor extends AbstractMonitor{
+public class ClusterMonitor extends AbstractMonitor {
 
-    private static final Log log = LogFactory.getLog(ClusterMonitor.class);    
+    private static final Log log = LogFactory.getLog(ClusterMonitor.class);
     private String lbReferenceType;
     private boolean hasPrimary;
-    
+
     public ClusterMonitor(String clusterId, String serviceId, DeploymentPolicy deploymentPolicy,
                           AutoscalePolicy autoscalePolicy) {
         this.clusterId = clusterId;
@@ -61,7 +59,6 @@ public class ClusterMonitor extends AbstractMonitor{
     }
 
 
-
     @Override
     public void run() {
 
@@ -73,12 +70,12 @@ public class ClusterMonitor extends AbstractMonitor{
         }
         while (!isDestroyed()) {
             if (log.isDebugEnabled()) {
-                log.debug("Cluster monitor is running.. "+this.toString());
+                log.debug("Cluster monitor is running.. " + this.toString());
             }
             try {
                 monitor();
             } catch (Exception e) {
-                log.error("Cluster monitor: Monitor failed."+this.toString(), e);
+                log.error("Cluster monitor: Monitor failed." + this.toString(), e);
             }
             try {
                 // TODO make this configurable
@@ -87,67 +84,67 @@ public class ClusterMonitor extends AbstractMonitor{
             }
         }
     }
-    
+
+    private boolean isPrimaryMember(MemberContext memberContext){
+        Properties props = memberContext.getProperties();
+        if (log.isDebugEnabled()) {
+            log.debug(" Properties [" + props + "] ");
+        }
+        if (props != null && props.getProperties() != null) {
+            for (Property prop : props.getProperties()) {
+                if (prop.getName().equals("PRIMARY")) {
+                    if (Boolean.parseBoolean(prop.getValue())) {
+                        log.debug("Adding member id [" + memberContext.getMemberId() + "] " +
+                                "member instance id [" + memberContext.getInstanceId() + "] as a primary member");
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+
     private void monitor() {
-//        if(clusterCtxt != null ) {
-            //TODO make this concurrent
+
+        //TODO make this concurrent
         for (NetworkPartitionContext networkPartitionContext : networkPartitionCtxts.values()) {
+            // store primary members in the network partition context
+            List<String> primaryMemberListInNetworkPartition = new ArrayList<String>();
 
             //minimum check per partition
-            for(PartitionContext partitionContext: networkPartitionContext.getPartitionCtxts().values()){
-           	
-            	
+            for (PartitionContext partitionContext : networkPartitionContext.getPartitionCtxts().values()) {
+                // store primary members in the partition context
+                List<String> primaryMemberListInPartition = new ArrayList<String>();
+                // get active primary members in this partition context
+                for (MemberContext memberContext : partitionContext.getActiveMembers()) {
+                    if (isPrimaryMember(memberContext)){
+                        primaryMemberListInPartition.add(memberContext.getMemberId());
+                    }
+                }
+                // get pending primary members in this partition context
+                for (MemberContext memberContext : partitionContext.getPendingMembers()) {
+                    if (isPrimaryMember(memberContext)){
+                        primaryMemberListInPartition.add(memberContext.getMemberId());
+                    }
+                }
+                primaryMemberListInNetworkPartition.addAll(primaryMemberListInPartition);
                 minCheckKnowledgeSession.setGlobal("clusterId", clusterId);
                 minCheckKnowledgeSession.setGlobal("lbRef", lbReferenceType);
                 minCheckKnowledgeSession.setGlobal("isPrimary", hasPrimary);
-                
+                minCheckKnowledgeSession.setGlobal("primaryMemberCount", primaryMemberListInPartition.size());
+
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Running minimum check for partition %s ", partitionContext.getPartitionId()));
                 }
-
                 minCheckFactHandle = AutoscalerRuleEvaluator.evaluateMinCheck(minCheckKnowledgeSession
                         , minCheckFactHandle, partitionContext);
-
             }
 
             boolean rifReset = networkPartitionContext.isRifReset();
             boolean memoryConsumptionReset = networkPartitionContext.isMemoryConsumptionReset();
             boolean loadAverageReset = networkPartitionContext.isLoadAverageReset();
 
-			boolean startAsPrimary = false;
-            if(rifReset || memoryConsumptionReset || loadAverageReset){
-
-            	List<String> primaryMemberList = new ArrayList<String>();            	
-				for (PartitionContext partitionContext : networkPartitionContext.getPartitionCtxts().values()) {
-					if(log.isDebugEnabled()) {
-						log.debug(" Partition context [" + partitionContext.getPartitionId() + 
-							"] Active member count [" + partitionContext.getActiveMemberCount() +
-							"] Active members [" + partitionContext.getActiveMembers() +"] ");
-					}					
-					for (MemberContext memberContext : partitionContext.getActiveMembers()) {
-						Properties props = memberContext.getProperties();
-						if (log.isDebugEnabled()) {
-							log.debug(" Properties [" + props + "] ");
-						}
-						if(props !=null && props.getProperties() !=null) {
-						for (Property prop : props.getProperties()) {
-							if (prop.getName().equals("PRIMARY")) {
-								if (Boolean.parseBoolean(prop.getValue())) {
-									// memberContext.getMemberId() -- member is primary
-									log.debug("Adding member id [" + memberContext.getMemberId() + "] " +
-											"member instance id ["+ memberContext.getInstanceId()  +"] as a primary member");
-									primaryMemberList.add(memberContext.getMemberId());
-								}
-							}
-						}
-						}
-					}					
-					// Decide whether to start the new member as a primary or non-primary
-					if(primaryMemberList.size() < partitionContext.getMinimumMemberCount()) {						
-						startAsPrimary = true;
-					}					
-				}    
-				
+            if (rifReset || memoryConsumptionReset || loadAverageReset) {
                 scaleCheckKnowledgeSession.setGlobal("clusterId", clusterId);
                 //scaleCheckKnowledgeSession.setGlobal("deploymentPolicy", deploymentPolicy);
                 scaleCheckKnowledgeSession.setGlobal("autoscalePolicy", autoscalePolicy);
@@ -155,25 +152,23 @@ public class ClusterMonitor extends AbstractMonitor{
                 scaleCheckKnowledgeSession.setGlobal("mcReset", memoryConsumptionReset);
                 scaleCheckKnowledgeSession.setGlobal("laReset", loadAverageReset);
                 scaleCheckKnowledgeSession.setGlobal("lbRef", lbReferenceType);
-                scaleCheckKnowledgeSession.setGlobal("isPrimary", startAsPrimary);
-                scaleCheckKnowledgeSession.setGlobal("primaryMembers", primaryMemberList);
-                
-              	
+                scaleCheckKnowledgeSession.setGlobal("isPrimary", false);
+                scaleCheckKnowledgeSession.setGlobal("primaryMembers", primaryMemberListInNetworkPartition);
+
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Running scale check for network partition %s ", networkPartitionContext.getId()));
-                    log.debug(" Primary members : " + primaryMemberList);
-                    log.debug(" Start as primary : " + startAsPrimary);
+                    log.debug(" Primary members : " + primaryMemberListInNetworkPartition);
                 }
-                
+
                 scaleCheckFactHandle = AutoscalerRuleEvaluator.evaluateScaleCheck(scaleCheckKnowledgeSession
                         , scaleCheckFactHandle, networkPartitionContext);
 
                 networkPartitionContext.setRifReset(false);
                 networkPartitionContext.setMemoryConsumptionReset(false);
                 networkPartitionContext.setLoadAverageReset(false);
-            } else if(log.isDebugEnabled()){
-                    log.debug(String.format("Scale rule will not run since the LB statistics have not received before this " +
-                            "cycle for network partition %s", networkPartitionContext.getId()) );
+            } else if (log.isDebugEnabled()) {
+                log.debug(String.format("Scale rule will not run since the LB statistics have not received before this " +
+                        "cycle for network partition %s", networkPartitionContext.getId()));
             }
         }
     }
@@ -181,9 +176,9 @@ public class ClusterMonitor extends AbstractMonitor{
     @Override
     public String toString() {
         return "ClusterMonitor [clusterId=" + clusterId + ", serviceId=" + serviceId +
-               ", deploymentPolicy=" + deploymentPolicy + ", autoscalePolicy=" + autoscalePolicy +
-               ", lbReferenceType=" + lbReferenceType + 
-               ", hasPrimary=" + hasPrimary +" ]";
+                ", deploymentPolicy=" + deploymentPolicy + ", autoscalePolicy=" + autoscalePolicy +
+                ", lbReferenceType=" + lbReferenceType +
+                ", hasPrimary=" + hasPrimary + " ]";
     }
 
     public String getLbReferenceType() {
@@ -193,13 +188,13 @@ public class ClusterMonitor extends AbstractMonitor{
     public void setLbReferenceType(String lbReferenceType) {
         this.lbReferenceType = lbReferenceType;
     }
-    
-	public boolean isHasPrimary() {
-		return hasPrimary;
-	}
 
-	public void setHasPrimary(boolean hasPrimary) {
-		this.hasPrimary = hasPrimary;
-	}    
-    
+    public boolean isHasPrimary() {
+        return hasPrimary;
+    }
+
+    public void setHasPrimary(boolean hasPrimary) {
+        this.hasPrimary = hasPrimary;
+    }
+
 }
