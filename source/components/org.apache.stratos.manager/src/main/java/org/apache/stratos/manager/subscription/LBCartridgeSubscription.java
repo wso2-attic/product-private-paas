@@ -82,22 +82,22 @@ public class LBCartridgeSubscription extends CartridgeSubscription {
     }
 
     
-//    @Override
-//    public CartridgeSubscriptionInfo registerSubscription(Properties properties) throws ADCException, UnregisteredCartridgeException {
-//    	if(!loadBalancerCategory.isLoadBalancedServiceMultiTenant()) {
-//    		if(log.isDebugEnabled()) {
-//    		 log.debug("Loadbalanced service is single tenant.");
-//    		}
-//    		getLoadBalancerCategory().register (getCartridgeInfo(), getCluster(), getPayloadData(), getAutoscalingPolicyName(),
-//    	                getDeploymentPolicyName(), properties);
-//    	}
-//
-//
-//        return ApplicationManagementUtil.createCartridgeSubscription(getCartridgeInfo(), getAutoscalingPolicyName(),
-//                getType(), getAlias(), getSubscriber().getTenantId(), getSubscriber().getTenantDomain(),
-//                getRepository(), getCluster().getHostName(), getCluster().getClusterDomain(), getCluster().getClusterSubDomain(),
-//                getCluster().getMgtClusterDomain(), getCluster().getMgtClusterSubDomain(), null, getSubscriptionStatus(), getSubscriptionKey());
-//    }
+    @Override
+    public CartridgeSubscriptionInfo registerSubscription(Properties properties) throws ADCException, UnregisteredCartridgeException {
+    	//if(!loadBalancerCategory.isLoadBalancedServiceMultiTenant()) {
+    		//if(log.isDebugEnabled()) {
+    		 //log.debug("Loadbalanced service is single tenant.");
+    		//}
+    		getLoadBalancerCategory().register (getCartridgeInfo(), getCluster(), getPayloadData(), getAutoscalingPolicyName(),
+    	                getDeploymentPolicyName(), properties);
+    	//}
+
+
+        return ApplicationManagementUtil.createCartridgeSubscription(getCartridgeInfo(), getAutoscalingPolicyName(),
+                getType(), getAlias(), getSubscriber().getTenantId(), getSubscriber().getTenantDomain(),
+                getRepository(), getCluster().getHostName(), getCluster().getClusterDomain(), getCluster().getClusterSubDomain(),
+                getCluster().getMgtClusterDomain(), getCluster().getMgtClusterSubDomain(), null, getSubscriptionStatus(), getSubscriptionKey());
+    }
 
     @Override
     public void removeSubscription() throws ADCException, NotSubscribedException {
