@@ -543,7 +543,7 @@ function setup_is() {
 function setup_is_core_service() {
     
     if [[ -e $stratos_pack_path/wso2is-5.0.0.zip ]]; then
-        unzip -o -q $stratos_pack_path/wso2is-5.0.0.zip -d $stratos_install_path
+        su - $host_user -c "unzip -o -q $stratos_pack_path/wso2is-5.0.0.zip -d $stratos_install_path"
 
         #copy mysql connector jar	
         cp -f $stratos_pack_path/$MYSQL_CONNECTOR $stratos_install_path/wso2is-5.0.0/repository/components/lib
@@ -859,22 +859,15 @@ function start_servers() {
     if [[ $bam_enabled = "true" ]]; then
        # Setup BAM server
        echo "Starting BAM core service..."
-       /bin/bash $setup_path/setup_bam_logging.sh
+       su - $host_user -c "source $setup_path/conf/setup.conf;/bin/bash $setup_path/setup_bam_logging.sh" >> wso2bam.log
        while ! echo exit | nc localhost $BAM_PORT; do sleep $SLEEPTIME; done
-       sleep $SLEEPTIME
-    fi
-
-    if [[ $config_sso_enabled = "true" ]]; then
-       echo -e "Starting WSO2 IS core service..."
-       nohup $stratos_install_path/wso2is-5.0.0/bin/wso2server.sh -DportOffset=2 &
-       while ! echo exit | nc localhost $IS_PORT; do sleep $SLEEPTIME; done
        sleep $SLEEPTIME
     fi
 
     if [[ $apim_enabled = "true" ]]; then
        # Setup Gitblit Server
        echo "Starting Gitblit core service..."
-       /bin/bash $setup_path/gitblit.sh
+       su - $host_user -c "/bin/bash $setup_path/gitblit.sh"
        while ! echo exit | nc localhost $GITBLIT_PORT; do sleep $SLEEPTIME; done
        sleep $SLEEPTIME
     fi
@@ -888,6 +881,13 @@ function start_servers() {
     else
         echo -e "Skipping WSO2 Private PaaS startup."
     fi 
+
+    if [[ $config_sso_enabled = "true" ]]; then
+       echo -e "Starting WSO2 IS core service..."
+       nohup su - $host_user -c "source $setup_path/conf/setup.conf;/bin/bash $stratos_install_path/wso2is-5.0.0/bin/wso2server.sh -DportOffset=2 &" >> wso2is.log
+       while ! echo exit | nc localhost $IS_PORT; do sleep $SLEEPTIME; done
+       sleep $SLEEPTIME
+    fi
 }
 
 function deploy_wso2_ppaas_services() {
