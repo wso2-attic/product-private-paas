@@ -51,6 +51,9 @@ deploy_services="true"
 
 # Registry databases
 registry_db="registry"
+
+# Config databases
+sm_config_db="sm_config"
 as_config_db="as_config"
 apim_db="apim_db"
 apim_stats_db="amstats"
@@ -177,22 +180,22 @@ function read_user_input() {
 
 function setup_apache_stratos() {
     # Configure IaaS properties
-    iaas=$(read_user_input "Enter your IaaS. vCloud, EC2 and Openstack are the currently supported IaaSs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack: " "" $iaas )
+    iaas=$(read_user_input "Enter your IaaS. vCloud, EC2 and OpenStack are the currently supported IaaSs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack: " "" $iaas )
 
     if [[ "$iaas" == "os" ]]; then
         echo -e "You selected OpenStack. "
-        os_identity=$(read_user_input "Enter OpensStack identity : " "" $os_identity )
-        os_credentials=$(read_user_input "Enter OpensStack credentials : " "-s" $os_credentials )
+        os_identity=$(read_user_input "Enter OpenStack identity : " "" $os_identity )
+        os_credentials=$(read_user_input "Enter OpenStack credentials : " "-s" $os_credentials )
         echo ""
-        os_jclouds_endpoint=$(read_user_input "Enter OpensStack jclouds_endpoint : " "" $os_jclouds_endpoint )
+        os_jclouds_endpoint=$(read_user_input "Enter OpenStack jclouds_endpoint : " "" $os_jclouds_endpoint )
         region=$(read_user_input "Enter the region of the IaaS you want to spin up instances : " "" $region )
-        os_keypair_name=$(read_user_input "Enter OpensStack keypair name : " "" $os_keypair_name )
-        os_security_groups=$(read_user_input "Enter OpensStack security groups : " "" $os_security_groups )
-        cartridge_base_img_id=$(read_user_input "Enter OpensStack cartridge base image id : " "" $cartridge_base_img_id )
+        os_keypair_name=$(read_user_input "Enter OpenStack keypair name : " "" $os_keypair_name )
+        os_security_groups=$(read_user_input "Enter OpenStack security groups : " "" $os_security_groups )
+        cartridge_base_img_id=$(read_user_input "Enter OpenStack cartridge base image id : " "" $cartridge_base_img_id )
 
     elif [[ "$iaas" == "ec2" ]]; then
         echo -e "You selected Amazon EC2. "
-        ec2_vpc=$(read_user_input "Are you in a EC2 VPC Environment? (y/n) : " "" $ec2_vpc )
+        ec2_vpc=$(read_user_input "Are you in a EC2 VPC Environment? [y/n] : " "" $ec2_vpc )
         ec2_identity=$(read_user_input "Enter EC2 identity : " "" $ec2_identity )
         ec2_credentials=$(read_user_input "Enter EC2 credentials : " "-s" $ec2_credentials )
         echo ""
@@ -260,9 +263,12 @@ function setup_apache_stratos() {
     replace_setup_conf "puppet-environment" "$puppet_env"
     replace_setup_conf "CEP_ARTIFACTS_PATH" "$cep_artifact_path"
     replace_setup_conf "DB_HOST" "$mysql_host"
+    replace_setup_conf "DB_HOST" "$mysql_host"
     replace_setup_conf "DB_PORT" "$mysql_port"
     replace_setup_conf "DB_USER" "$mysql_uname"
     replace_setup_conf "DB_PASSWORD" "$mysql_password"
+    replace_setup_conf "REGISTRY_DB" "$registry_db"
+    replace_setup_conf "CONFIG_DB" "$sm_config_db"   
 
     run_setup_sh
 
@@ -709,9 +715,9 @@ function configure_products() {
 	       get_service_deployment_confirmations
        fi
  
-       # Create databases for the governence registry
-       # Using the same userstore to the registry    
-       create_registry_database "$registry_db"   
+       # Create databases for the governence registry       
+       create_registry_database "$registry_db"
+       create_config_database "$sm_config_db"
 
        # Configure Apache Stratos
        setup_apache_stratos
