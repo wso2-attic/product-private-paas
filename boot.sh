@@ -815,7 +815,7 @@ function init() {
 
     # Configure MySQL 
     setup_mysql=$(read_user_input "Do you need to install MySQL? [y/n] : " "" $setup_mysql )
-    mysql_host=$(read_user_input "Please provide MySQL host? " "" $mysql_host )
+    mysql_host=$(read_user_input "Please provide MySQL host : " "" $mysql_host )
     mysql_port=$(read_user_input "Please provide MySQL port. Default port is 3306 : " "" $mysql_port )
     mysql_port=${mysql_port:-3306}
     mysql_uname=$(read_user_input "Please provide MySQL username. Default username is root : " "" $mysql_uname )
