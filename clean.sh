@@ -100,7 +100,7 @@ mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS api
 mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS registry;"
 mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS sm_config;"
 
-if [[ clean_puppet = "true" ]]; then
+if [[ $clean_puppet = "true" ]]; then
    echo "Cleaning Puppet scripts in /etc/puppet/"
    sudo rm -rf /etc/puppet/modules/*
    sudo rm -rf /etc/puppet/manifests/*
