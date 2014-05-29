@@ -439,7 +439,16 @@ function setup_bps() {
         replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/bps/manifests/params.pp"
         replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/bps/manifests/params.pp"
         replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/bps/manifests/params.pp"
-        replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/bps/manifests/params.pp"        
+        replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/bps/manifests/params.pp"
+
+        # Configure SSO in bps
+        if [[ "$config_sso_enabled" == "true" ]] ; then
+           replace_in_file "SSO_DISABLED" "false" "/etc/puppet/modules/bps/templates/conf/security/authenticators.xml.erb"
+           replace_in_file "IDP_URL" "$public_ip" "/etc/puppet/modules/bps/templates/conf/security/authenticators.xml.erb"
+        else
+           backup_file "/etc/puppet/modules/bps/templates/conf/security/authenticators.xml.erb"
+           replace_in_file "SSO_DISABLED" "true" "/etc/puppet/modules/bps/templates/conf/security/authenticators.xml.erb"
+        fi        
     fi
 
     if [[ "$puppet_only" = "true" ]]; then
@@ -493,7 +502,16 @@ function setup_esb() {
        replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/esb/manifests/params.pp"
        replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/esb/manifests/params.pp"
        replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/esb/manifests/params.pp"
-       replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/params.pp"       
+       replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/esb/manifests/params.pp"
+
+        # Configure SSO in esb
+        if [[ "$config_sso_enabled" == "true" ]] ; then
+           replace_in_file "SSO_DISABLED" "false" "/etc/puppet/modules/esb/templates/conf/security/authenticators.xml.erb"
+           replace_in_file "IDP_URL" "$public_ip" "/etc/puppet/modules/esb/templates/conf/security/authenticators.xml.erb"
+        else
+           backup_file "/etc/puppet/modules/esb/templates/conf/security/authenticators.xml.erb"
+           replace_in_file "SSO_DISABLED" "true" "/etc/puppet/modules/esb/templates/conf/security/authenticators.xml.erb"
+        fi       
     fi
 
     if [[ "$puppet_only" = "true" ]]; then
