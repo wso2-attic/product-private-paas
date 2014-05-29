@@ -77,7 +77,7 @@ function update_hosts_file(){
 
 	<%- if @stratos_instance_data_worker_host_name -%>
          worker_hostname="<%= @stratos_instance_data_worker_host_name %>"
- 	 (${GREP} -q "${worker_hostname}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${worker_hostname} # Stratos LB worker private IP" >> /etc/hosts \
+ 	 (${GREP} -q " ${worker_hostname}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${worker_hostname} # Stratos LB worker private IP" >> /etc/hosts \
           && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${worker_hostname}")) \
           || print_error "Failed to update '/etc/hosts' file. "
          <%- end -%>
