@@ -1,6 +1,6 @@
 {   
       "type": "apistore",
-      "provider": "wso2",
+      "provider": "application",
       "serviceGroup": "apim",
       "host": "store.am.wso2.com",
       "displayName": "API Manager - Store",

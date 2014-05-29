@@ -17,18 +17,14 @@
 <UserManager>
     <Realm>
         <Configuration>
-		        <AddAdmin>true</AddAdmin>
+		<AddAdmin>true</AddAdmin>
                 <AdminRole>admin</AdminRole>
                 <AdminUser>
-                  <UserName><%= @admin_username %></UserName>
-                  <Password><%= @admin_password %></Password>
+                     <UserName>admin</UserName>
+                     <Password>admin</Password>
                 </AdminUser>
             <EveryOneRoleName>everyone</EveryOneRoleName> <!-- By default users in this role sees the registry root -->
-            <%- if @cloud == true or @clustering == true or @amtype == 'keymanager'  -%>
-            <Property name="dataSource">jdbc/<%= @userstore_database %></Property>
-            <%- else -%>
-            <Property name="dataSource">jdbc/WSO2CarbonDB</Property>
-          <%- end -%>
+            <Property name="dataSource">jdbc/userstore</Property>
         </Configuration>
 	<!-- Following is the default user store manager. This user store manager is based on embedded-apacheds LDAP. It reads/writes users and roles into the 		     default apacheds LDAP user store. Descriptions about each of the following properties can be found in user management documentation of the 	 respective product. In case if user core cache domain is needed to identify uniquely set property <Property name="UserCoreCacheIdentifier">domain</Property>
 	     Note: Do not comment within UserStoreManager tags. Cause, specific tag names are used as tokens when building configurations for products. -->
@@ -77,37 +73,28 @@
 	     Note: Do not comment within UserStoreManager tags. Cause, specific tag names are used as tokens when building configurations for products. -->	
         <UserStoreManager class="org.wso2.carbon.user.core.jdbc.JDBCUserStoreManager">
             <Property name="TenantManager">org.wso2.carbon.user.core.tenant.JDBCTenantManager</Property>
-            <Property name="ReadOnly">false</Property>
+	    <Property name="ReadOnly">false</Property>
             <Property name="MaxUserNameListLength">100</Property>
             <Property name="IsEmailUserName">false</Property>
             <Property name="DomainCalculation">default</Property>
             <Property name="PasswordDigest">SHA-256</Property>
             <Property name="StoreSaltedPassword">true</Property>
             <Property name="ReadGroups">true</Property>
-            <Property name="WriteGroups">true</Property>
+	    <Property name="WriteGroups">true</Property>
             <Property name="UserNameUniqueAcrossTenants">false</Property>
             <Property name="PasswordJavaRegEx">^[\S]{5,30}$</Property>
             <Property name="PasswordJavaScriptRegEx">^[\S]{5,30}$</Property>
-            <Property name="UsernameJavaRegEx">^[^~!#$;%^*+={}\\|\\\\&lt;&gt;,\'\"]{3,30}$</Property>
-            <Property name="UsernameJavaScriptRegEx">^[\S]{3,30}$</Property>
-            <Property name="RolenameJavaRegEx">^[^~!#$;%^*+={}\\|\\\\&lt;&gt;,\'\"]{3,30}$</Property>
-            <Property name="RolenameJavaScriptRegEx">^[\S]{3,30}$</Property>
+	    <Property name="UsernameJavaRegEx">^[^~!#$;%^*+={}\\|\\\\&lt;&gt;,\'\"]{3,30}$</Property>
+	    <Property name="UsernameJavaScriptRegEx">^[\S]{3,30}$</Property>
+	    <Property name="RolenameJavaRegEx">^[^~!#$;%^*+={}\\|\\\\&lt;&gt;,\'\"]{3,30}$</Property>
+	    <Property name="RolenameJavaScriptRegEx">^[\S]{3,30}$</Property>
             <Property name="UserRolesCacheEnabled">true</Property>
             <Property name="MaxRoleNameListLength">100</Property>
             <Property name="MaxUserNameListLength">100</Property>
-	          <Property name="SharedGroupEnabled">false</Property>
+	    <Property name="SharedGroupEnabled">false</Property>
             <Property name="SCIMEnabled">false</Property>
-            <%- if @usermgt -%>
-            <Property name="PasswordsExternallyManaged">true</Property>
-            <%- end -%>
         </UserStoreManager>
 	
-    <%- if @usermgt == 'readonly_ldap' -%> 
-    <%= scope.function_template(['apimanager/conf/user-mgt/_roldap.erb']) -%> 
-    <%- elsif @usermgt == 'readwrite_ldap' -%> 
-    <%= scope.function_template(['apimanager/conf/user-mgt/_rwldap.erb']) -%> 
-    <%- end -%> 
-
 	<!-- If product is using an external LDAP as the user store in READ ONLY mode, use following user manager.
 		In case if user core cache domain is needed to identify uniquely set property <Property name="UserCoreCacheIdentifier">domain</Property>
  	-->

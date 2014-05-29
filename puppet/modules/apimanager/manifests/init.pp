@@ -51,7 +51,7 @@ class apimanager (
   $port_mapping       = false,
   $amtype	      = undef,
   $offset             = 0,
-  $config_db          = 'governance',
+  $config_database          = 'governance',
   $config_target_path = 'config/apim',
   $maintenance_mode   = 'refresh',
   $depsync            = false,

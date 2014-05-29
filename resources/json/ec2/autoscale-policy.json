@@ -7,7 +7,7 @@
         "secondDerivative": "0.2"        
       },
       "memoryConsumption": {
-        "average": "800",
+        "average": "80",
         "gradient": "10",
         "secondDerivative": "0.2"        
       },

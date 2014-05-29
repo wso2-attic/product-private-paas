@@ -51,6 +51,9 @@ deploy_services="true"
 
 # Registry databases
 registry_db="registry"
+
+# Config databases
+sm_config_db="sm_config"
 as_config_db="as_config"
 apim_db="apim_db"
 apim_stats_db="amstats"
@@ -177,24 +180,25 @@ function read_user_input() {
 
 function setup_apache_stratos() {
     # Configure IaaS properties
-    iaas=$(read_user_input "Enter your IaaS. vCloud, EC2 and Openstack are the currently supported IaaSs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack: " "" $iaas )
+    iaas=$(read_user_input "Enter your IaaS. vCloud, EC2 and OpenStack are the currently supported IaaSs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack: " "" $iaas )
 
     if [[ "$iaas" == "os" ]]; then
         echo -e "You selected OpenStack. "
-        os_identity=$(read_user_input "Enter OpensStack identity : " "" $os_identity )
-        os_credentials=$(read_user_input "Enter OpensStack credentials : " "-s" $os_credentials )
+        os_identity=$(read_user_input "Enter OpenStack identity : " "" $os_identity )
+        os_credentials=$(read_user_input "Enter OpenStack credentials : " "-s" $os_credentials )
         echo ""
-        os_jclouds_endpoint=$(read_user_input "Enter OpensStack jclouds_endpoint : " "" $os_jclouds_endpoint )
+        os_jclouds_endpoint=$(read_user_input "Enter OpenStack jclouds_endpoint : " "" $os_jclouds_endpoint )
         region=$(read_user_input "Enter the region of the IaaS you want to spin up instances : " "" $region )
-        os_keypair_name=$(read_user_input "Enter OpensStack keypair name : " "" $os_keypair_name )
-        os_security_groups=$(read_user_input "Enter OpensStack security groups : " "" $os_security_groups )
-        cartridge_base_img_id=$(read_user_input "Enter OpensStack cartridge base image id : " "" $cartridge_base_img_id )
+        os_keypair_name=$(read_user_input "Enter OpenStack keypair name : " "" $os_keypair_name )
+        os_security_groups=$(read_user_input "Enter OpenStack security groups : " "" $os_security_groups )
+        cartridge_base_img_id=$(read_user_input "Enter OpenStack cartridge base image id : " "" $cartridge_base_img_id )
 
     elif [[ "$iaas" == "ec2" ]]; then
         echo -e "You selected Amazon EC2. "
-        ec2_vpc=$(read_user_input "Are you in a EC2 VPC Environment? (y/n) : " "" $ec2_vpc )
+        ec2_vpc=$(read_user_input "Are you in a EC2 VPC Environment? [y/n] : " "" $ec2_vpc )
         ec2_identity=$(read_user_input "Enter EC2 identity : " "" $ec2_identity )
         ec2_credentials=$(read_user_input "Enter EC2 credentials : " "-s" $ec2_credentials )
+        echo ""
         ec2_owner_id=$(read_user_input "Enter EC2 owner id : " "" $ec2_owner_id )
         ec2_keypair_name=$(read_user_input "Enter EC2 keypair name : " "" $ec2_keypair_name )
         ec2_availability_zone=$(read_user_input "Enter EC2 availability zone : " "" $ec2_availability_zone )
@@ -214,6 +218,7 @@ function setup_apache_stratos() {
     elif [[ "$iaas" == "vcloud" ]];then
         vcloud_identity=$(read_user_input "Enter vCloud identity : " "" $vcloud_identity )
         vcloud_credentials=$(read_user_input "Enter vCloud credentials : " "-s" $vcloud_credentials )
+        echo ""
         vcloud_jclouds_endpoint=$(read_user_input "Enter vCloud jclouds_endpoint : " "" $vcloud_jclouds_endpoint )
         cartridge_base_img_id=$(read_user_input "Enter vCloud cartridge base image id : " "" $cartridge_base_img_id )
     fi
@@ -259,9 +264,12 @@ function setup_apache_stratos() {
     replace_setup_conf "puppet-environment" "$puppet_env"
     replace_setup_conf "CEP_ARTIFACTS_PATH" "$cep_artifact_path"
     replace_setup_conf "DB_HOST" "$mysql_host"
+    replace_setup_conf "DB_HOST" "$mysql_host"
     replace_setup_conf "DB_PORT" "$mysql_port"
     replace_setup_conf "DB_USER" "$mysql_uname"
     replace_setup_conf "DB_PASSWORD" "$mysql_password"
+    replace_setup_conf "REGISTRY_DB" "$registry_db"
+    replace_setup_conf "CONFIG_DB" "$sm_config_db"   
 
     run_setup_sh
 
@@ -272,63 +280,69 @@ function  run_setup_sh() {
 }
 
 function get_service_deployment_confirmations() {
-    as_needed=$(read_user_input "Do you need to deploy AS (Application Server) service ? [y/n] " "" $as_enabled )
+    as_needed=$(read_user_input "Do you need to deploy AS (Application Server) service? [y/n] " "" $as_enabled )
     if [[ $as_needed =~ ^[Yy]$ ]]; then
        as_enabled="true"
 
        as_worker_mgt_needed=$(read_user_input "Do you need to deploy AS (Application Server) in worker manager setup? [y/n] " "" $as_worker_mgt_enabled )
        if [[ $as_worker_mgt_needed =~ ^[Yy]$ ]]; then
           as_worker_mgt_enabled="true"
-          as_clustering="true"
+          as_clustering_enabled="true"
        else
-          clustering_appserver=$(read_user_input "Do you need to enable clustering for AS ? [y/n] " "" $as_clustering )
+          clustering_appserver=$(read_user_input "Do you need to enable clustering for AS? [y/n] " "" $as_clustering_enabled )
           if [[ $clustering_appserver =~ ^[Yy]$ ]]; then 
-             as_clustering="true"
+             as_clustering_enabled="true"
           else
-             as_clustering="false"
+             as_clustering_enabled="false"
           fi
        fi
     fi
 
-    bps_needed=$(read_user_input "Do you need to deploy BPS (Business Process Server) service ? [y/n] " "" $bps_enabled )
+    bps_needed=$(read_user_input "Do you need to deploy BPS (Business Process Server) service? [y/n] " "" $bps_enabled )
     if [[ $bps_needed =~ ^[Yy]$ ]]; then
        bps_enabled="true"
      
        bps_worker_mgt_needed=$(read_user_input "Do you need to deploy BPS (Business Process Server) in worker manager setup? [y/n] " "" $bps_worker_mgt_enabled )
        if [[ $bps_worker_mgt_needed =~ ^[Yy]$ ]]; then
           bps_worker_mgt_enabled="true"
-          bps_clustering="true"
+          bps_clustering_enabled="true"
        else
-          clustering_bps=$(read_user_input "Do you need to enable clustering for BPS ? [y/n] " "" $bps_clustering )
+          clustering_bps=$(read_user_input "Do you need to enable clustering for BPS? [y/n] " "" $bps_clustering_enabled )
           if [[ $clustering_bps =~ ^[Yy]$ ]]; then
-             bps_clustering="true"
+             bps_clustering_enabled="true"
           else
-             bps_clustering="false"
+             bps_clustering_enabled="false"
           fi
        fi      
     fi
 
-    esb_needed=$(read_user_input "Do you need to deploy ESB (Enterprise Service Bus) service ? [y/n] " "" $esb_enabled )
+    esb_needed=$(read_user_input "Do you need to deploy ESB (Enterprise Service Bus) service? [y/n] " "" $esb_enabled )
     if [[ $esb_needed =~ ^[Yy]$ ]]; then
        esb_enabled="true"
      
        esb_worker_mgt_needed=$(read_user_input "Do you need to deploy ESB (Enterprise Service Bus) in worker manager setup? [y/n] " "" $esb_worker_mgt_enabled )
        if [[ $esb_worker_mgt_needed =~ ^[Yy]$ ]]; then
           esb_worker_mgt_enabled="true"
-          esb_clustering="true"
+          esb_clustering_enabled="true"
        else
-          clustering_esb=$(read_user_input "Do you need to enable clustering for ESB ? [y/n] " "" $esb_clustering )
+          clustering_esb=$(read_user_input "Do you need to enable clustering for ESB? [y/n] " "" $esb_clustering_enabled )
           if [[ $clustering_esb =~ ^[Yy]$ ]]; then
-             esb_clustering="true"
+             esb_clustering_enabled="true"
           else
-             esb_clustering="false"
+             esb_clustering_enabled="false"
           fi
        fi      
     fi   
 
-    apim_needed=$(read_user_input "Do you need to deploy APIM (API Manager) service ? [y/n] " "" $apim_enabled )
+    apim_needed=$(read_user_input "Do you need to deploy APIM (API Manager) service? [y/n] " "" $apim_enabled )
     if [[ $apim_needed =~ ^[Yy]$ ]]; then
        apim_enabled="true"
+       clustering_keymanager=$(read_user_input "Do you need to enable clustering for Keymanager? [y/n] " "" $keymanager_clustering_enabled )
+       if [[ $clustering_keymanager =~ ^[Yy]$ ]]; then
+          keymanager_clustering_enabled="true"
+       else
+          keymanager_clustering_enabled="false"
+       fi
     fi
 }
 
@@ -357,7 +371,7 @@ function setup_as() {
         # appserver node parameters
         replace_in_file "AS_CONFIG_DB" "$as_config_db" "/etc/puppet/manifests/nodes/appserver.pp"
         replace_in_file "AS_CONFIG_PATH" "$as_config_path" "/etc/puppet/manifests/nodes/appserver.pp"
-        replace_in_file "CLUSTERING" "$as_clustering" "/etc/puppet/manifests/nodes/appserver.pp"
+        replace_in_file "CLUSTERING" "$as_clustering_enabled" "/etc/puppet/manifests/nodes/appserver.pp"
         replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
         replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/appserver/manifests/params.pp"
         replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/appserver/manifests/params.pp"
@@ -395,7 +409,7 @@ function setup_as() {
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/appserver-cart-worker.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/appserver-cart-worker.json"
 
-    if [[ $as_clustering = "true" ]]; then
+    if [[ $as_clustering_enabled = "true" ]]; then
        replace_in_file "@PRIMARY" "true" "$current_dir/resources/json/$iaas/appserver-cart.json"
        replace_in_file "@CLUSTERING" "true" "$current_dir/resources/json/$iaas/appserver-cart.json"
     else
@@ -418,7 +432,7 @@ function setup_bps() {
         # bps node parameters        
         replace_in_file "BPS_CONFIG_DB" "$bps_db" "/etc/puppet/manifests/nodes/bps.pp"
         replace_in_file "BPS_CONFIG_PATH" "$bps_config_path" "/etc/puppet/manifests/nodes/bps.pp"
-        replace_in_file "CLUSTERING" "$bps_clustering" "/etc/puppet/manifests/nodes/bps.pp"
+        replace_in_file "CLUSTERING" "$bps_clustering_enabled" "/etc/puppet/manifests/nodes/bps.pp"
         backup_file "/etc/puppet/modules/bps/manifests/params.pp"
         replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
         replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/bps/manifests/params.pp"
@@ -448,7 +462,7 @@ function setup_bps() {
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/bps-cart-worker.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/bps-cart-worker.json"
 
-    if [[ $bps_clustering = "true" ]]; then
+    if [[ $bps_clustering_enabled = "true" ]]; then
        replace_in_file "@PRIMARY" "true" "$current_dir/resources/json/$iaas/bps-cart.json"
        replace_in_file "@CLUSTERING" "true" "$current_dir/resources/json/$iaas/bps-cart.json"
     else
@@ -471,7 +485,7 @@ function setup_esb() {
        # esb node parameters       
        replace_in_file "ESB_CONFIG_DB" "$esb_config_db" "/etc/puppet/manifests/nodes/esb.pp"
        replace_in_file "ESB_CONFIG_PATH" "$esb_config_path" "/etc/puppet/manifests/nodes/esb.pp"
-       replace_in_file "CLUSTERING" "$esb_clustering" "/etc/puppet/manifests/nodes/esb.pp"
+       replace_in_file "CLUSTERING" "$esb_clustering_enabled" "/etc/puppet/manifests/nodes/esb.pp"
 
        backup_file "/etc/puppet/modules/esb/manifests/params.pp"
        replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/esb/manifests/params.pp"
@@ -502,7 +516,7 @@ function setup_esb() {
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/esb-cart-worker.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/esb-cart-worker.json"
 
-    if [[ $esb_clustering = "true" ]]; then
+    if [[ $esb_clustering_enabled = "true" ]]; then
        replace_in_file "@PRIMARY" "true" "$current_dir/resources/json/$iaas/esb-cart.json"
        replace_in_file "@CLUSTERING" "true" "$current_dir/resources/json/$iaas/esb-cart.json"
     else
@@ -519,7 +533,7 @@ function setup_is() {
     fi
 
     # is node parameters    
-    replace_in_file "CLUSTERING" "$is_clustering" "/etc/puppet/manifests/nodes/is.pp"
+    replace_in_file "CLUSTERING" "$is_clustering_enabled" "/etc/puppet/manifests/nodes/is.pp"
     replace_in_file "IS_CONFIG_DB" "$is_config_db" "/etc/puppet/manifests/nodes/is.pp"
     replace_in_file "IS_CONFIG_PATH" "$is_config_path" "/etc/puppet/manifests/nodes/is.pp"
 
@@ -542,7 +556,7 @@ function setup_is() {
 function setup_is_core_service() {
     
     if [[ -e $stratos_pack_path/wso2is-5.0.0.zip ]]; then
-        unzip -o -q $stratos_pack_path/wso2is-5.0.0.zip -d $stratos_install_path
+        su - $host_user -c "unzip -o -q $stratos_pack_path/wso2is-5.0.0.zip -d $stratos_install_path"
 
         #copy mysql connector jar	
         cp -f $stratos_pack_path/$MYSQL_CONNECTOR $stratos_install_path/wso2is-5.0.0/repository/components/lib
@@ -603,9 +617,9 @@ function setup_apim() {
        replace_in_file "KEYMANAGER_CONFIG_DB" "$apim_keymanager_config_db" "/etc/puppet/manifests/nodes/api.pp"
        replace_in_file "GATEWAY_CONFIG_PATH" "$gateway_config_path" "/etc/puppet/manifests/nodes/api.pp"
        replace_in_file "STORE_CONFIG_PATH" "$store_config_path" "/etc/puppet/manifests/nodes/api.pp"
-       replace_in_file "KEYMANAGER_CONFIG_PATH" "$keymanager_config_path" "/etc/puppet/manifests/nodes/api.pp"       
-
-       backup_file "/etc/puppet/modules/apimanager/manifests/params.pp"
+       replace_in_file "KEYMANAGER_CONFIG_PATH" "$keymanager_config_path" "/etc/puppet/manifests/nodes/api.pp"
+       replace_in_file "KEYMANGER_CLUSTERING" "$keymanager_clustering_enabled" "/etc/puppet/manifests/nodes/api.pp"
+      
        replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/apimanager/manifests/params.pp"
        replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/apimanager/manifests/params.pp"
        replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/apimanager/manifests/params.pp"
@@ -613,7 +627,7 @@ function setup_apim() {
        replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
        replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/apimanager/manifests/params.pp"
        replace_in_file "STATS_DB" "$apim_stats_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
-       replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/apimanager/manifests/params.pp"       
+       replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/apimanager/manifests/params.pp"
     fi
 
     # In puppet only mode, do not change other configurations
@@ -639,6 +653,8 @@ function setup_apim() {
     backup_file $current_dir/resources/json/$iaas/keymanager.json
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/keymanager.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/keymanager.json"
+    replace_in_file "@PRIMARY" "$keymanager_clustering_enabled" "$current_dir/resources/json/$iaas/keymanager.json"
+    replace_in_file "@CLUSTERING" "$keymanager_clustering_enabled" "$current_dir/resources/json/$iaas/keymanager.json"
 
     backup_file $current_dir/resources/json/$iaas/publisher.json
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/publisher.json"
@@ -684,7 +700,7 @@ function deploy_puppet() {
     # modify autosign.conf
     echo "*."$stratos_domain > /etc/puppet/autosign.conf
 
-    # Restart Puppetmaster after configurations
+    # Restart Puppet master after configurations
     echo "Restarting Puppet master"
     /etc/init.d/puppetmaster restart
     echo "Puppet scripts configuration completed."
@@ -696,7 +712,7 @@ function configure_products() {
        deploy_puppet
     fi 
     # Get confirmation on configuring SSO with WSO2 IS
-    config_sso_needed=$(read_user_input "Do you need to setup WSO2 IS (Identity Server) as a core service and configure SSO feature ? [y/n] " "" $config_sso_enabled )
+    config_sso_needed=$(read_user_input "Do you need to setup WSO2 IS (Identity Server) as a core service and configure SSO feature? [y/n] " "" $config_sso_enabled )
     if [[ $config_sso_needed =~ ^[Yy]$ ]]; then
        config_sso_enabled="true"
     fi
@@ -708,9 +724,9 @@ function configure_products() {
 	       get_service_deployment_confirmations
        fi
  
-       # Create databases for the governence registry
-       # Using the same userstore to the registry    
-       create_registry_database "$registry_db"   
+       # Create databases for the governence registry       
+       create_registry_database "$registry_db"
+       create_config_database "$sm_config_db"
 
        # Configure Apache Stratos
        setup_apache_stratos
@@ -769,7 +785,7 @@ function init() {
        skip_puppet="false"
     fi
 
-    # Check whether Puppetmaster is installed and configure it
+    # Check whether Puppet master is installed and configure it
     check_for_puppet
     if [[ $puppet_installed = "true" ]]; then
         stratos_domain=$(dnsdomainname)
@@ -788,33 +804,33 @@ function init() {
         machine_ip="127.0.0.1"
     fi    
 
-    # Configure an external Puppetmaster
-    puppet_external=$(read_user_input "Do you need to configure an external Puppetmaster? [y/n] : " "" $puppet_external )
+    # Configure an external Puppet master
+    puppet_external=$(read_user_input "Do you need to configure an external Puppet master? [y/n] : " "" $puppet_external )
 
     if [[ $puppet_external =~ ^[Yy]$ ]]; then
        puppet_external="true"
-       echo -e "Configuring an external Puppetmaster...\n"
-       puppet_external_ip=$(read_user_input "Please enter external Puppetmaster IP : " "" $puppet_external_ip )
-       puppet_external_host=$(read_user_input "Please enter external Puppetmaster hostname : " "" $puppet_external_host )
+       echo -e "Configuring an external Puppet master...\n"
+       puppet_external_ip=$(read_user_input "Please enter external Puppet master IP : " "" $puppet_external_ip )
+       puppet_external_host=$(read_user_input "Please enter external Puppet master hostname : " "" $puppet_external_host )
  
        puppet_ip=$puppet_external_ip
        puppet_host=$puppet_external_host
     else
        puppet_external="false"
-       # Install Puppetmaster if it is not already installed
+       # Install Puppet master if it is not already installed
        if [[ $puppet_installed = "false" ]]; then        
           install_puppet
        fi
 
        puppet_ip=$machine_ip
-       echo -e "Puppetmaster IP address is $puppet_ip"
+       echo -e "Puppet master IP address is $puppet_ip"
        puppet_host="puppet."$stratos_domain
-       echo -e "Puppetmaster hostname is $puppet_host"
+       echo -e "Puppet master hostname is $puppet_host"
     fi    
 
     # Configure MySQL 
     setup_mysql=$(read_user_input "Do you need to install MySQL? [y/n] : " "" $setup_mysql )
-    mysql_host=$(read_user_input "Please provide MySQL host? " "" $mysql_host )
+    mysql_host=$(read_user_input "Please provide MySQL host : " "" $mysql_host )
     mysql_port=$(read_user_input "Please provide MySQL port. Default port is 3306 : " "" $mysql_port )
     mysql_port=${mysql_port:-3306}
     mysql_uname=$(read_user_input "Please provide MySQL username. Default username is root : " "" $mysql_uname )
@@ -858,31 +874,35 @@ function start_servers() {
     if [[ $bam_enabled = "true" ]]; then
        # Setup BAM server
        echo "Starting BAM core service..."
-       /bin/bash $setup_path/setup_bam_logging.sh
-       sleep 1m
-    fi
-
-    if [[ $config_sso_enabled = "true" ]]; then
-       echo -e "Starting WSO2 IS core service..."
-       nohup $stratos_install_path/wso2is-5.0.0/bin/wso2server.sh -DportOffset=2 &
-       sleep 1m
+       /bin/bash $setup_path/setup_bam_logging.sh >> wso2bam.log
+       while ! echo exit | nc localhost $BAM_PORT; do sleep $SLEEPTIME; done
+       sleep $SLEEPTIME
     fi
 
     if [[ $apim_enabled = "true" ]]; then
        # Setup Gitblit Server
        echo "Starting Gitblit core service..."
-       /bin/bash $setup_path/gitblit.sh
-       sleep 1m
+       nohup su - $host_user -c "/bin/bash $setup_path/gitblit.sh" >> gitblit.log
+       while ! echo exit | nc localhost $GITBLIT_PORT; do sleep $SLEEPTIME; done
+       sleep $SLEEPTIME
     fi
 
     if [[ $wso2_ppaas_enabled = "true" ]]; then
        # Start Apache Stratos with default profile
        echo -e "Starting WSO2 Private PaaS server as $host_user user... "
        su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p default >> $LOG"
-       sleep 1m
+       while ! echo exit | nc localhost $PPAAS_PORT; do sleep $SLEEPTIME; done
+       sleep $SLEEPTIME
     else
         echo -e "Skipping WSO2 Private PaaS startup."
     fi 
+
+    if [[ $config_sso_enabled = "true" ]]; then
+       echo -e "Starting WSO2 IS core service..."
+       nohup su - $host_user -c "source $setup_path/conf/setup.conf;/bin/bash $stratos_install_path/wso2is-5.0.0/bin/wso2server.sh -DportOffset=2 &" >> wso2is.log
+       while ! echo exit | nc localhost $IS_PORT; do sleep $SLEEPTIME; done
+       sleep $SLEEPTIME
+    fi
 }
 
 function deploy_wso2_ppaas_services() {

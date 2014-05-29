@@ -31,6 +31,11 @@ export log_path=/var/log/apache-stratos
 export stratos_domain=""
 export machine_ip=""
 export host_user=""
+export SLEEPTIME=30
+export PPAAS_PORT=9443
+export BAM_PORT=9444
+export IS_PORT=9445
+export GITBLIT_PORT=9418
 
 # Puppet master configuration
 export skip_puppet=""
@@ -94,6 +99,7 @@ export as_clustering_enabled=""
 export is_clustering_enabled=""
 export esb_clustering_enabled=""
 export bps_clustering_enabled=""
+export keymanager_clustering_enabled=""
 
 # WSO2 PPaaS core services
 export bam_enabled=""

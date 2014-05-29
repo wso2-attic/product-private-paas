@@ -396,6 +396,8 @@ function sm_setup() {
     echo "Configuring Stratos Manager"
 
     cp -f $current_dir/config/all/repository/conf/cartridge-config.properties $stratos_extract_path/repository/conf/
+    cp -f $current_dir/config/all/repository/conf/user-mgt.xml $stratos_extract_path/repository/conf/
+    cp -f $current_dir/config/all/repository/conf/registry.xml $stratos_extract_path/repository/conf/
     cp -f $current_dir/config/all/repository/conf/datasources/master-datasources.xml $stratos_extract_path/repository/conf/datasources/
     cp -f $mysql_connector_jar $stratos_extract_path/repository/components/lib/
 
@@ -421,12 +423,23 @@ function sm_setup() {
     sed -i "s@REGISTRY_DB_USER@$registry_db_user@g" repository/conf/datasources/master-datasources.xml
     sed -i "s@REGISTRY_DB_PASS@$registry_db_pass@g" repository/conf/datasources/master-datasources.xml
 
+    sed -i "s@CONFIG_DB_HOSTNAME@$config_db_hostname@g" repository/conf/datasources/master-datasources.xml
+    sed -i "s@CONFIG_DB_PORT@$config_db_port@g" repository/conf/datasources/master-datasources.xml
+    sed -i "s@CONFIG_DB_SCHEMA@$config_db_schema@g" repository/conf/datasources/master-datasources.xml
+    sed -i "s@CONFIG_DB_USER@$config_db_user@g" repository/conf/datasources/master-datasources.xml
+    sed -i "s@CONFIG_DB_PASS@$config_db_pass@g" repository/conf/datasources/master-datasources.xml
+
     echo "In repository/conf/registry.xml"
+
     sed -i "s@REGISTRY_DB_HOSTNAME@$registry_db_hostname@g" repository/conf/registry.xml
     sed -i "s@REGISTRY_DB_PORT@$registry_db_port@g" repository/conf/registry.xml
     sed -i "s@REGISTRY_DB_SCHEMA@$registry_db_schema@g" repository/conf/registry.xml
-    sed -i "s@REGISTRY_DB_USER@$registry_db_user@g" repository/conf/registry.xml
-    
+    sed -i "s@REGISTRY_DB_USER@$registry_db_user@g" repository/conf/registry.xml 
+
+    sed -i "s@CONFIG_DB_HOSTNAME@$config_db_hostname@g" repository/conf/registry.xml
+    sed -i "s@CONFIG_DB_PORT@$config_db_port@g" repository/conf/registry.xml
+    sed -i "s@CONFIG_DB_SCHEMA@$config_db_schema@g" repository/conf/registry.xml
+    sed -i "s@CONFIG_DB_USER@$config_db_user@g" repository/conf/registry.xml    
 
     popd
 

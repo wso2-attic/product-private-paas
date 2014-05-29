@@ -96,7 +96,7 @@ node /[0-9]{1,12}.(default|manager|worker).keymanager/ inherits base {
         maintenance_mode   => 'refresh',
         depsync            => false,
         clustering         => 'KEYMANGER_CLUSTERING',
-        cloud              => 'KEYMANGER_CLOUD',
+        cloud              => 'true',
         owner              => 'root',
         group              => 'root',
         target             => "/mnt/${server_ip}"

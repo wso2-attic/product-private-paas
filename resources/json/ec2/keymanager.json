@@ -1,6 +1,6 @@
 {   
       "type": "keymanager",
-      "provider": "wso2",
+      "provider": "application",
       "serviceGroup": "apim",
       "host": "keymanager.am.wso2.com",
       "displayName": "API Manager - Keymanager",
@@ -45,6 +45,14 @@
         {
           "name": "payload_parameter.SERIVCE_GROUP",
           "value": "apim"
-        }       
+        },
+        {
+          "name": "PRIMARY",
+          "value": "@PRIMARY"
+        },
+        {
+          "name": "payload_parameter.CLUSTERING",
+          "value": "@CLUSTERING"
+        }
       ]
  }
