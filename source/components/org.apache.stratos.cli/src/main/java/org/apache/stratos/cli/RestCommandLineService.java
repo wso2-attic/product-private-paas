@@ -804,6 +804,88 @@ public class RestCommandLineService {
 		}
 	}
 
+    private String getAsPolicyFromServiceDefinition(String cartridgeType) throws CommandException{
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        try {
+            HttpResponse response = restClient.doGet(httpClient, restClient.getBaseURL()
+                    + listDeployServicesRestEndPoint + "/" + cartridgeType);
+
+            String responseCode = "" + response.getStatusLine().getStatusCode();
+
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+
+            if ( ! responseCode.equals(CliConstants.RESPONSE_OK)) {
+                String resultString = getHttpResponseString(response);
+                ExceptionMapper exception = gson.fromJson(resultString, ExceptionMapper.class);
+                System.out.println(exception);
+                return null;
+            }
+
+            String resultString = getHttpResponseString(response);
+            if (resultString == null) {
+                System.out.println("Response content is empty");
+                return null;
+            }
+
+            String  serviceDefinitionString =  resultString.substring(25, resultString.length() -1);
+            ServiceDefinitionBean serviceDefinition= gson.fromJson(serviceDefinitionString, ServiceDefinitionBean.class);
+            if (serviceDefinition == null) {
+                System.out.println("Deploy service list is empty");
+                return null;
+            }
+
+            return serviceDefinition.getAutoscalingPolicyName();
+
+        } catch (Exception e) {
+            handleException("Exception in listing deploy services", e);
+            return null;
+        } finally {
+            httpClient.getConnectionManager().shutdown();
+        }
+    }
+
+    private String getDeploymentPolicyFromServiceDefinition(String cartridgeType) throws CommandException{
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        try {
+            HttpResponse response = restClient.doGet(httpClient, restClient.getBaseURL()
+                    + listDeployServicesRestEndPoint + "/" + cartridgeType);
+
+            String responseCode = "" + response.getStatusLine().getStatusCode();
+
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+
+            if ( ! responseCode.equals(CliConstants.RESPONSE_OK)) {
+                String resultString = getHttpResponseString(response);
+                ExceptionMapper exception = gson.fromJson(resultString, ExceptionMapper.class);
+                System.out.println(exception);
+                return null;
+            }
+
+            String resultString = getHttpResponseString(response);
+            if (resultString == null) {
+                System.out.println("Response content is empty");
+                return null;
+            }
+
+            String  serviceDefinitionString =  resultString.substring(25, resultString.length() -1);
+            ServiceDefinitionBean serviceDefinition= gson.fromJson(serviceDefinitionString, ServiceDefinitionBean.class);
+            if (serviceDefinition == null) {
+                System.out.println("Deploy service list is empty");
+                return null;
+            }
+
+            return serviceDefinition.getDeploymentPolicyName();
+
+        } catch (Exception e) {
+            handleException("Exception in listing deploy services", e);
+            return null;
+        } finally {
+            httpClient.getConnectionManager().shutdown();
+        }
+    }
+
 	// This method does the cartridge subscription
     public void subscribe(String cartridgeType, String alias, String externalRepoURL, boolean privateRepo, String username,
                           String password,String asPolicy,
@@ -817,6 +899,15 @@ public class RestCommandLineService {
         Gson gson = gsonBuilder.create();
 
         try {
+
+            if (asPolicy == null) {
+                asPolicy = getAsPolicyFromServiceDefinition(cartridgeType);
+            }
+
+            if (depPolicy == null) {
+                depPolicy = getDeploymentPolicyFromServiceDefinition(cartridgeType);
+            }
+
             cartridgeInfoBean.setCartridgeType(cartridgeType);
             cartridgeInfoBean.setAlias(alias);
             cartridgeInfoBean.setRepoURL(externalRepoURL);
