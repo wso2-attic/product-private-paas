@@ -149,9 +149,7 @@ public class CartridgeSubscriptionUtils {
     }
 
     public static String generateSubscriptionKey() {
-        String key = RandomStringUtils.randomAlphanumeric(16);
-        log.info("Generated key  : " + key); // TODO -- remove the log
-        return key;
+        return RandomStringUtils.randomAlphanumeric(16);
     }
 
     static class TenantSubscribedEventPublisher implements Runnable {

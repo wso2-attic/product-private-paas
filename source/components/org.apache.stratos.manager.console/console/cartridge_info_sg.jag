@@ -47,14 +47,14 @@ if(cartridges.Error != undefined){
             }else{
                 //cartridges[i].lbClusterinfo = {member:[{memberIp:"foo"},{}]};//lbCluster.cluster;
                 //cartridges[i].lbClusterinfo = lbCluster.cluster[0];
-                cartridges[i].clusterinfo = lbCluster.cluster[0];
+                cartridges[i].lbclusterinfo = lbCluster.cluster[0];
             }
         //Getting the clusterInfo and putting it to the relevant cartridge json
         var clusterInfo = utils.consoleAppUtil.getClusterInfoWithAlias(cartridgeInfo.cartridgeType, alias);
         if(clusterInfo.Error != undefined){
             error.push(clusterInfo.Error);
         }else{
-            clusterInfo.clusterInfo = clusterInfo;
+            cartridges[i].clusterInfo = clusterInfo.cluster[0];
         }
 
     }
