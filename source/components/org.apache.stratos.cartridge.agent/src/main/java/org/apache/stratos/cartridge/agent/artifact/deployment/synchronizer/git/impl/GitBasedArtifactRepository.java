@@ -27,10 +27,12 @@ import org.apache.stratos.cartridge.agent.artifact.deployment.synchronizer.git.i
 import org.apache.stratos.cartridge.agent.artifact.deployment.synchronizer.git.internal.GitDeploymentSynchronizerConstants;
 import org.apache.stratos.cartridge.agent.artifact.deployment.synchronizer.git.internal.RepositoryContext;
 import org.apache.stratos.cartridge.agent.artifact.deployment.synchronizer.git.util.Utilities;
+import org.apache.stratos.cartridge.agent.config.CartridgeAgentConfiguration;
 import org.apache.stratos.cartridge.agent.extensions.ExtensionHandler;
 import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.*;
 import org.eclipse.jgit.lib.Ref;
+import org.eclipse.jgit.lib.Repository;
 import org.eclipse.jgit.lib.StoredConfig;
 import org.eclipse.jgit.storage.file.FileRepository;
 import org.eclipse.jgit.transport.SshSessionFactory;
@@ -39,6 +41,7 @@ import org.eclipse.jgit.transport.UsernamePasswordCredentialsProvider;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.*;
@@ -142,10 +145,11 @@ public class GitBasedArtifactRepository {
         if (isMultitenant) {
             if (tenantId == SUPER_TENANT_ID) {
                 // create temp directory for super tenant apps
-                String dirPath = "/tmp/" + SUPER_TENANT_ID;
-                boolean dirStatus = new File(dirPath).mkdir();
-                log.info("super tenant temp directory created status : " + dirStatus);
-                repoPathBuilder.append(dirPath);
+                //String dirPath = "/tmp/" + SUPER_TENANT_ID;
+                //String dirPath = gitLocalRepoPath.endsWith("/") ? gitLocalRepoPathSUPER_TENANT_APP_PATH : ;
+                //boolean dirStatus = new File(dirPath).mkdir();
+                //log.info("super tenant temp directory created status : " + dirStatus);
+                repoPathBuilder.append(gitLocalRepoPath).append(SUPER_TENANT_APP_PATH);
             } else {
                 // create folder with tenant id
                 createTenantDir(tenantId, gitLocalRepoPath);
@@ -215,9 +219,9 @@ public class GitBasedArtifactRepository {
     private void cacheGitRepoContext(int tenantId, RepositoryContext gitRepoCtx) {
 
         log.info("caching repo context");
-        tenantToRepoContextMap.put(tenantId, gitRepoCtx);
-    }
 
+    tenantToRepoContextMap.put(tenantId, gitRepoCtx);
+}
     /**
      * Retrieve cached RepositoryContext relevant to the tenant's local repo path
      *
@@ -235,24 +239,16 @@ public class GitBasedArtifactRepository {
      *
      * @return
      */
-    public boolean commit() {
+    public void commit(RepositoryInformation repoInfo) {
         // TODO implement later, this is applicable for management node.
 
-        for (Entry<Integer, RepositoryContext> tenantMap : tenantToRepoContextMap
-                .entrySet()) {
+       // for (Entry<Integer, RepositoryContext> tenantMap : tenantToRepoContextMap
+       //         .entrySet()) {
 
-            int tenantId = tenantMap.getKey();
+            int tenantId = Integer.parseInt(repoInfo.getTenantId());
             //log.info("map count has values..tenant Id : " + tenantId);
 
             RepositoryContext gitRepoCtx = retrieveCachedGitContext(tenantId);
-            if (gitRepoCtx == null) {
-
-                log.info("No git repository context information found for tenant "
-                        + tenantId);
-
-                return false;
-            }
-
             Git git = gitRepoCtx.getGit();
             StatusCommand statusCmd = git.status();
             Status status = null;
@@ -262,16 +258,16 @@ public class GitBasedArtifactRepository {
             } catch (GitAPIException e) {
                 log.error(
                         "Git status operation for tenant "
-                                + gitRepoCtx.getTenantId() + " failed, ", e
-                );
-                return false;
+                                + gitRepoCtx.getTenantId() + " failed, ", e);
+
             }
             //log.info("status : " + status.toString());
             if (status.isClean()) {// no changes, nothing to commit
+                if (log.isDebugEnabled()) {
+                    log.debug("No changes detected in the local repository for tenant " + tenantId);
+                }
 
-                log.debug("No changes detected in the local repository for tenant "
-                        + tenantId);
-                return false;
+                return;
             }
 
             addArtifacts(gitRepoCtx, getNewArtifacts(status));
@@ -280,10 +276,8 @@ public class GitBasedArtifactRepository {
             commitToLocalRepo(gitRepoCtx);
             pushToRemoteRepo(gitRepoCtx);
 
-            return false;
-
-        }
-        return false;
+        //}
+        //return false;
     }
 
     /**
@@ -337,11 +331,15 @@ public class GitBasedArtifactRepository {
 
         try {
             addCmd.call();
+            if (log.isDebugEnabled()) {
+                log.debug("Added artifacts for tenant : " + gitRepoCtx.getTenantId());
+            }
 
         } catch (GitAPIException e) {
             log.error("Adding artifact to the local repository at " + gitRepoCtx.getGitLocalRepoPath() + "failed", e);
-            e.printStackTrace();
+            log.error(e);
         }
+
     }
 
     /**
@@ -363,10 +361,13 @@ public class GitBasedArtifactRepository {
 
         try {
             rmCmd.call();
+            if (log.isDebugEnabled()) {
+                log.debug("Removed artifacts for tenant : " + gitRepoCtx.getTenantId());
+            }
 
         } catch (GitAPIException e) {
             log.error("Removing artifact from the local repository at " + gitRepoCtx.getGitLocalRepoPath() + "failed", e);
-            e.printStackTrace();
+            log.error(e);
         }
     }
 
@@ -383,10 +384,12 @@ public class GitBasedArtifactRepository {
 
         try {
             commitCmd.call();
+            if (log.isDebugEnabled()) {
+                log.debug("Committed artifacts for tenant : " + gitRepoCtx.getTenantId());
+            }
 
         } catch (GitAPIException e) {
             log.error("Committing artifacts to local repository failed for tenant " + gitRepoCtx.getTenantId(), e);
-            e.printStackTrace();
         }
     }
 
@@ -406,17 +409,18 @@ public class GitBasedArtifactRepository {
 
         try {
             pushCmd.call();
+            if (log.isDebugEnabled()) {
+                log.debug("Pushed artifacts for tenant : " + gitRepoCtx.getTenantId());
+            }
 
         } catch (GitAPIException e) {
             log.error("Pushing artifacts to remote repository failed for tenant " + gitRepoCtx.getTenantId(), e);
-            e.printStackTrace();
+
         }
     }
 
-    public boolean checkout(RepositoryInformation repositoryInformation) {
-        /*if(log.isInfoEnabled()) {
-            log.info("Executing checkout");
-        }*/
+   /* public boolean checkout(RepositoryInformation repositoryInformation) {
+
 
         if (log.isDebugEnabled()) {
             log.debug("Artifact checkout done by thread " + Thread.currentThread().getName() + " - " +
@@ -444,6 +448,106 @@ public class GitBasedArtifactRepository {
 
             return pullArtifacts(gitRepoCtx);
         }
+    } */
+   public boolean checkout (RepositoryInformation repositoryInformation) throws Exception {
+
+       int tenantId = Integer.parseInt(repositoryInformation.getTenantId());
+
+       // if context for tenant is not initialized
+       if (tenantToRepoContextMap.get(tenantId) == null) {
+           initGitContext(repositoryInformation);
+       }
+
+       RepositoryContext gitRepoCtx = retrieveCachedGitContext(tenantId);
+
+       File gitRepoDir = new File(gitRepoCtx.getGitLocalRepoPath());
+       if (!gitRepoDir.exists()) {
+           return cloneRepository(gitRepoCtx);
+       }
+       else {
+           if (isValidGitRepo(gitRepoCtx)) {
+               if (log.isDebugEnabled()) {
+                   log.debug("Existing git repository detected for tenant " + gitRepoCtx.getTenantId() + ", no clone required");
+               }
+
+               return pullAndHandleErrors(gitRepoCtx);
+
+           } else {
+               // not a valid git repo, check if the directory is non-empty
+               if (gitRepoDir.list().length > 0) {
+                   // directory is non empty. sync existing artifacts with the remote repository
+                   if (syncInitialLocalArtifacts(gitRepoCtx)) {
+                       log.info("Existing local artifacts for tenant [" + gitRepoCtx.getTenantId() + "] synchronized with remote repository successfully");
+                       // pull any changes from the remote repo
+                       return pullAndHandleErrors(gitRepoCtx);
+                   }
+                   return false;
+
+               } else {
+                   // directory is empty, clone
+                   return cloneRepository(gitRepoCtx);
+               }
+           }
+       }
+   }
+
+    private boolean pullAndHandleErrors (RepositoryContext gitRepoCtx) {
+
+        try {
+            return pullArtifacts(gitRepoCtx);
+
+        } catch (CheckoutConflictException e) {
+            // checkout from remote HEAD
+            checkoutFromRemoteHead(gitRepoCtx, e.getConflictingPaths());
+
+            // pull again
+            try {
+                return pullArtifacts(gitRepoCtx);
+
+            } catch (GitAPIException e1) {
+                //cannot happen here
+                log.error("Git pull failed for tenant " + gitRepoCtx.getTenantId(), e1);
+                return false;
+            }
+        }
+    }
+
+    private boolean checkoutFromRemoteHead(RepositoryContext gitRepoCtx, List<String> paths) {
+
+        boolean checkoutSuccess = false;
+
+        CheckoutCommand checkoutCmd = gitRepoCtx.getGit().checkout();
+        for(String path : paths) {
+            checkoutCmd.addPath(path);
+            if(log.isDebugEnabled()) {
+                log.debug("Added the file path " + path + " to checkout from the remote repository");
+            }
+        }
+        // specify the start point as the HEAD of remote repository
+        checkoutCmd.setStartPoint(GitDeploymentSynchronizerConstants.REMOTES_ORIGIN_MASTER);
+
+        try {
+            checkoutCmd.call();
+            checkoutSuccess = true;
+            log.info("Checked out the conflicting files from the remote repository successfully");
+
+        } catch (GitAPIException e) {
+            log.error("Checking out artifacts from index failed", e);
+        }
+
+        return checkoutSuccess;
+    }
+
+    private boolean syncInitialLocalArtifacts(RepositoryContext gitRepoCtx) throws Exception {
+
+        boolean syncedLocalArtifacts;
+
+        //initialize repository
+        InitGitRepository(new File(gitRepoCtx.getGitLocalRepoPath()));
+        //add the remote repository (origin)
+        syncedLocalArtifacts = addRemote(gitRepoCtx.getLocalRepo(), gitRepoCtx.getGitRemoteRepoUrl());
+
+        return syncedLocalArtifacts;
     }
 
     public void scheduleSyncTask(RepositoryInformation repoInformation, long delay) {
@@ -482,8 +586,9 @@ public class GitBasedArtifactRepository {
         int tenantId = Integer.parseInt(repositoryInformation.getTenantId());
 
         // if context for tenant is not initialized
-        if (tenantToRepoContextMap.get(tenantId) == null)
+        if (tenantToRepoContextMap.get(tenantId) == null) {
             initGitContext(repositoryInformation);
+        }
 
 
         RepositoryContext gitRepoCtx = retrieveCachedGitContext(tenantId);
@@ -503,7 +608,7 @@ public class GitBasedArtifactRepository {
      * @param gitRepoCtx RepositoryContext instance for tenant
      * @return true if success, else false
      */
-    private boolean pullArtifacts(RepositoryContext gitRepoCtx) {
+    /*private boolean pullArtifacts(RepositoryContext gitRepoCtx) {
         if (log.isDebugEnabled()) {
             log.debug("Pulling artifacts");
         }
@@ -561,6 +666,58 @@ public class GitBasedArtifactRepository {
             return false;
         }
         return true;
+    }*/
+
+    private boolean pullArtifacts (RepositoryContext gitRepoCtx) throws CheckoutConflictException {
+
+        PullCommand pullCmd = gitRepoCtx.getGit().pull();
+
+        UsernamePasswordCredentialsProvider credentialsProvider = createCredentialsProvider(gitRepoCtx);
+
+        if (credentialsProvider == null) {
+            log.warn ("Remote repository credentials not available for tenant " + gitRepoCtx.getTenantId() +
+                    ", aborting pull");
+            return false;
+        }
+        pullCmd.setCredentialsProvider(credentialsProvider);
+
+        try {
+            PullResult pullResult = pullCmd.call();
+            // check if we have received any updates
+            if (!pullResult.getFetchResult().getTrackingRefUpdates().isEmpty()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Artifacts were updated as a result of the pull operation, thread: " + Thread.currentThread().getName() + " - " +
+                            Thread.currentThread().getId());
+                }
+
+                // execute artifact update extension
+                extensionHandler.onArtifactUpdateSchedulerEvent(String.valueOf(gitRepoCtx.getTenantId()));
+            }
+
+        } catch (InvalidConfigurationException e) {
+            log.warn("Git pull unsuccessful for tenant " + gitRepoCtx.getTenantId() + ", invalid configuration. " + e.getMessage());
+            // FileUtilities.deleteFolderStructure(new File(gitRepoCtx.getLocalRepoPath()));
+            //cloneRepository(gitRepoCtx);
+            return false;
+
+        } catch (JGitInternalException e) {
+            log.warn("Git pull unsuccessful for tenant " + gitRepoCtx.getTenantId() + ", " + e.getMessage());
+            return false;
+
+        } catch (TransportException e) {
+            log.error("Accessing remote git repository " + gitRepoCtx.getGitRemoteRepoUrl() + " failed for tenant " + gitRepoCtx.getTenantId(), e);
+            return false;
+
+        } catch (CheckoutConflictException e) {
+            log.warn("Git pull unsuccessful for tenant " + gitRepoCtx.getTenantId() + ", conflicts detected");
+            throw e;
+
+        } catch (GitAPIException e) {
+            log.error("Git pull operation for tenant " + gitRepoCtx.getTenantId() + " failed", e);
+            return false;
+        }
+
+        return true;
     }
 
     /**
@@ -608,7 +765,7 @@ public class GitBasedArtifactRepository {
      *
      * @param gitRepoCtx RepositoryContext for the tenant
      */
-    private static void cloneRepository(RepositoryContext gitRepoCtx) { //should happen only at the beginning
+    /*private static void cloneRepository(RepositoryContext gitRepoCtx) { //should happen only at the beginning
 
         File gitRepoDir = new File(gitRepoCtx.getGitLocalRepoPath());
         if (gitRepoDir.exists()) {
@@ -646,6 +803,42 @@ public class GitBasedArtifactRepository {
             log.error("Git clone operation for tenant " + gitRepoCtx.getTenantId() + " failed", e);
             e.printStackTrace();
         }
+    }*/
+
+    private boolean cloneRepository (RepositoryContext gitRepoCtx) { //should happen only at the beginning
+
+        boolean cloneSuccess = false;
+
+        File gitRepoDir = new File(gitRepoCtx.getGitLocalRepoPath());
+
+        CloneCommand cloneCmd =  Git.cloneRepository().
+                setURI(gitRepoCtx.getGitRemoteRepoUrl()).
+                setDirectory(gitRepoDir).
+                setBranch(GitDeploymentSynchronizerConstants.GIT_REFS_HEADS_MASTER);
+
+        UsernamePasswordCredentialsProvider credentialsProvider = createCredentialsProvider(gitRepoCtx);
+
+        if (credentialsProvider == null) {
+            log.warn ("Remote repository credentials not available for tenant " + gitRepoCtx.getTenantId() +
+                    ", aborting clone");
+            return false;
+        }
+        cloneCmd.setCredentialsProvider(credentialsProvider);
+
+        try {
+            cloneCmd.call();
+            log.info("Git clone operation for tenant " + gitRepoCtx.getTenantId() + " successful");
+            gitRepoCtx.setCloneExists(true);
+            cloneSuccess = true;
+
+        } catch (TransportException e) {
+            log.error("Accessing remote git repository failed for tenant " + gitRepoCtx.getTenantId(), e);
+
+        } catch (GitAPIException e) {
+            log.error("Git clone operation for tenant " + gitRepoCtx.getTenantId() + " failed", e);
+        }
+
+        return cloneSuccess;
     }
 
     /**
@@ -668,6 +861,12 @@ public class GitBasedArtifactRepository {
      */
     private static boolean isValidGitRepo(RepositoryContext gitRepoCtx) {
 
+        // check if has been marked as cloned before
+        if(gitRepoCtx.cloneExists()) {
+            // repo is valid
+            return true;
+        }
+
         for (Ref ref : gitRepoCtx.getLocalRepo().getAllRefs().values()) { //check if has been previously cloned successfully, not empty
             if (ref.getObjectId() == null)
                 continue;
@@ -675,6 +874,55 @@ public class GitBasedArtifactRepository {
         }
 
         return false;
+    }
+
+    public static void InitGitRepository (File gitRepoDir) throws Exception {
+
+        try {
+            Git.init().setDirectory(gitRepoDir).setBare(false).call();
+
+        } catch (GitAPIException e) {
+            String errorMsg = "Initializing local repo at " + gitRepoDir.getPath() + " failed";
+            log.error(errorMsg, e);
+            throw new Exception(errorMsg, e);
+        }
+    }
+
+    public static boolean addRemote (Repository repository, String remoteUrl) {
+
+        boolean remoteAdded = false;
+
+        StoredConfig config = repository.getConfig();
+        config.setString(GitDeploymentSynchronizerConstants.REMOTE,
+                GitDeploymentSynchronizerConstants.ORIGIN,
+                GitDeploymentSynchronizerConstants.URL,
+                remoteUrl);
+
+        config.setString(GitDeploymentSynchronizerConstants.REMOTE,
+                GitDeploymentSynchronizerConstants.ORIGIN,
+                GitDeploymentSynchronizerConstants.FETCH,
+                GitDeploymentSynchronizerConstants.FETCH_LOCATION);
+
+        config.setString(GitDeploymentSynchronizerConstants.BRANCH,
+                GitDeploymentSynchronizerConstants.MASTER,
+                GitDeploymentSynchronizerConstants.REMOTE,
+                GitDeploymentSynchronizerConstants.ORIGIN);
+
+        config.setString(GitDeploymentSynchronizerConstants.BRANCH,
+                GitDeploymentSynchronizerConstants.MASTER,
+                GitDeploymentSynchronizerConstants.MERGE,
+                GitDeploymentSynchronizerConstants.GIT_REFS_HEADS_MASTER);
+
+        try {
+            config.save();
+            remoteAdded = true;
+
+        } catch (IOException e) {
+            log.error("Error in adding remote origin " + remoteUrl + " for local repository " +
+                    repository.toString(), e);
+        }
+
+        return remoteAdded;
     }
 
 
@@ -697,7 +945,14 @@ public class GitBasedArtifactRepository {
 
         @Override
         public void run() {
-            checkout(repositoryInformation);
+            try {
+                checkout(repositoryInformation);
+            } catch (Exception e) {
+                log.error(e);
+            }
+            if (CartridgeAgentConfiguration.getInstance().isCommitsEnabled()) {
+                commit(repositoryInformation);
+            }
         }
     }
 
