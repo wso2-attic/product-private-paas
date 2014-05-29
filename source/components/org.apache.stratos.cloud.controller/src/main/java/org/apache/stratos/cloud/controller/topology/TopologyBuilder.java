@@ -377,9 +377,6 @@ public class TopologyBuilder {
                                             instanceReadyToShutdownEvent.getServiceName(),
                                             MemberStatus.ReadyToShutDown.toString(),
                                             null);
-        //calling the actual termination of the instance
-        new CloudControllerServiceImpl().terminateInstance(memberId);
-
     }
 
      public static void handleMemberMaintenance(InstanceMaintenanceModeEvent instanceMaintenanceModeEvent)

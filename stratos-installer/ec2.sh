@@ -47,16 +47,17 @@ sed -i "s@EC2_IDENTITY@$ec2_identity@g" repository/conf/cloud-controller.xml
 sed -i "s@EC2_CREDENTIAL@$ec2_credential@g" repository/conf/cloud-controller.xml
 sed -i "s@EC2_OWNER_ID@$ec2_owner_id@g" repository/conf/cloud-controller.xml
 sed -i "s@EC2_AVAILABILITY_ZONE@$ec2_availability_zone@g" repository/conf/cloud-controller.xml
-sed -i "s@EC2_SECURITY_GROUPS@$ec2_security_groups@g" repository/conf/cloud-controller.xml
 sed -i "s@EC2_KEYPAIR@$ec2_keypair_name@g" repository/conf/cloud-controller.xml
 
 if [[ "$ec2_vpc" == "y" ]]; then
+sed -i "s@EC2_SECURITY_GROUPS@$ec2_security_group_ids@g" repository/conf/cloud-controller.xml
 sed -i "s@VPC_START@@g"  repository/conf/cloud-controller.xml
 sed -i "s@EC2_SECURITY_GROUP_IDS@$ec2_security_group_ids@g" repository/conf/cloud-controller.xml
 sed -i "s@EC2_SUBNET_ID@$ec2_subnet_id@g" repository/conf/cloud-controller.xml
 sed -i "s@EC2_ASSOCIATE_PUBLIC_IP@$ec2_associate_public_ip_address@g" repository/conf/cloud-controller.xml
 sed -i "s@VPC_END@@g"  repository/conf/cloud-controller.xml
 else
+sed -i "s@EC2_SECURITY_GROUPS@$ec2_security_groups@g" repository/conf/cloud-controller.xml
 sed -i "s@VPC_START@!--@g"  repository/conf/cloud-controller.xml
 sed -i "s@VPC_END@--@g"  repository/conf/cloud-controller.xml
 fi
