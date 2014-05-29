@@ -105,7 +105,7 @@ public class CartridgeAgent implements Runnable {
 
         // Check repo url
         String repoUrl = CartridgeAgentConfiguration.getInstance().getRepoUrl();
-        if(CartridgeAgentConfiguration.getInstance().isMultitenant()) {
+        /*if(CartridgeAgentConfiguration.getInstance().isMultitenant()) {
             if (CartridgeAgentConfiguration.getInstance().isCommitsEnabled()) {
                 log.info(" Commits enabled. Starting File listener ");
                 ScheduledExecutorService scheduler = Executors
@@ -123,7 +123,7 @@ public class CartridgeAgent implements Runnable {
 			//		CartridgeAgentConfiguration.getInstance().getAppPath()+ "/repository/deployment/server/"
 			//		),
 			//		0, 10, TimeUnit.SECONDS);
-        }
+        } */
 
         if ("null".equals(repoUrl) || StringUtils.isBlank(repoUrl)) {
             if (log.isInfoEnabled()) {
@@ -136,27 +136,27 @@ public class CartridgeAgent implements Runnable {
             CartridgeAgentEventPublisher.publishInstanceActivatedEvent();
         } else {
             //Start periodical file checker task
-            if (CartridgeAgentConfiguration.getInstance().isCommitsEnabled()) {
+            /*if (CartridgeAgentConfiguration.getInstance().isCommitsEnabled()) {
                 log.info(" Commits enabled. Starting File listener ");
                 ScheduledExecutorService scheduler = Executors
                         .newScheduledThreadPool(1);
                 scheduler.scheduleWithFixedDelay(new RepositoryFileListener(), 0,
                         10, TimeUnit.SECONDS);
-            }
+            } */
         }
 
-        if (CartridgeAgentConfiguration.getInstance().isInternalRepo()) {
-            // Start periodic file copy for super tenant
-            // From repo/deployment/server to /tmp/-1234
-
-            ScheduledExecutorService scheduler = Executors
-                    .newScheduledThreadPool(1);
-            scheduler.scheduleWithFixedDelay(
-            		new ArtifactCopyTask(CartridgeAgentConfiguration.getInstance().getAppPath()
-            		+ "/repository/deployment/server/",
-            		CartridgeAgentConstants.SUPERTENANT_TEMP_PATH), 0,
-                    10, TimeUnit.SECONDS);
-        }
+//        if (CartridgeAgentConfiguration.getInstance().isInternalRepo()) {
+//            // Start periodic file copy for super tenant
+//            // From repo/deployment/server to /tmp/-1234
+//
+//            ScheduledExecutorService scheduler = Executors
+//                    .newScheduledThreadPool(1);
+//            scheduler.scheduleWithFixedDelay(
+//            		new ArtifactCopyTask(CartridgeAgentConfiguration.getInstance().getAppPath()
+//            		+ "/repository/deployment/server/",
+//            		CartridgeAgentConstants.SUPERTENANT_TEMP_PATH), 0,
+//                    10, TimeUnit.SECONDS);
+//        }
 
         String persistenceMappingsPayload = CartridgeAgentConfiguration.getInstance().getPersistenceMappings();
         if (persistenceMappingsPayload != null) {
