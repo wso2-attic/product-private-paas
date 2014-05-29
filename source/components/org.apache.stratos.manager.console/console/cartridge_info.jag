@@ -41,7 +41,7 @@ if(cartridgeInfo.Error != undefined){
         }
     }
     */
-    lbCluster = utils.consoleAppUtil.getLbCluster();
+    lbCluster = utils.consoleAppUtil.getLBClusterInfo();
             if(lbCluster.Error != undefined){
                 error.push(lbCluster.Error);
     }
