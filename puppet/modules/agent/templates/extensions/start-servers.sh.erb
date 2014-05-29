@@ -75,6 +75,13 @@ function update_hosts_file(){
 	  && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${instance_hostname}")) \
 	  || print_error "Failed to update '/etc/hosts' file. "
 
+	<%- if @stratos_instance_data_worker_host_name -%>
+         worker_hostname="<%= @stratos_instance_data_worker_host_name %>"
+ 	 (${GREP} -q " ${worker_hostname}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${worker_hostname} # Stratos LB worker private IP" >> /etc/hosts \
+          && print_message "Updated /etc/hosts file with: ${STRATOS_LB_IP}  ${worker_hostname}")) \
+          || print_error "Failed to update '/etc/hosts' file. "
+         <%- end -%>
+
         if [[ "${STRATOS_SERVICE_NAME}" = "apistore" ||  "${STRATOS_SERVICE_NAME}" = "publisher" ]] ; then
 		gateway_host_name="<%= @stratos_instance_data_gateway_host_name %>"
 		gateway_mgt_host_name="<%= @stratos_instance_data_gateway_mgt_host_name %>"
