@@ -698,7 +698,11 @@ public class GitBasedArtifactRepository {
             log.warn("Git pull unsuccessful for tenant " + gitRepoCtx.getTenantId() + ", invalid configuration. " + e.getMessage());
             // FileUtilities.deleteFolderStructure(new File(gitRepoCtx.getLocalRepoPath()));
             //cloneRepository(gitRepoCtx);
-            return false;
+            Utilities.deleteFolderStructure(new File(gitRepoCtx.getGitLocalRepoPath()));
+            cloneRepository(gitRepoCtx);
+            // execute artifact update extension
+            extensionHandler.onArtifactUpdateSchedulerEvent(String.valueOf(gitRepoCtx.getTenantId()));
+            return true;
 
         } catch (JGitInternalException e) {
             log.warn("Git pull unsuccessful for tenant " + gitRepoCtx.getTenantId() + ", " + e.getMessage());
