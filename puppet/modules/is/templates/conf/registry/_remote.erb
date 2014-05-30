@@ -20,7 +20,7 @@
         <dataSource>jdbc/<%= @config_db %></dataSource>
     </dbConfig>
 
-    <remoteInstance url="https://<%= @esb_subdomain %>.<%= @domain %>">
+    <remoteInstance url="https://<%= @is_subdomain %>.<%= @domain %>">
         <id>config</id>
         <dbConfig>config</dbConfig>
         <readOnly>false</readOnly>
@@ -33,3 +33,4 @@
         <instanceId>config</instanceId>
         <targetPath>/_system/<%= @config_target_path %></targetPath>
     </mount>
+
