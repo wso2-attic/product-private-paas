@@ -114,7 +114,7 @@ fi
 if [[ -z $clean_install ]]; then
    read -p "Do you want to clean Private PaaS Install Directory in $stratos_install_path? [y/n] " input_clean_install
    if [[ $input_clean_install =~ ^[Yy]$ ]]; then
-      rm -rf $stratos_install_path/*
+      rm -rf -i $stratos_install_path/*
       echo "Private PaaS install directory cleaned up !"
    else
       echo "Private PaaS install directory didn't clear"
