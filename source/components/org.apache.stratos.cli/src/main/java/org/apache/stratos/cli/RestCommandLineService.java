@@ -94,6 +94,7 @@ public class RestCommandLineService {
     private final String deactivateTenantRestEndPoint = "/stratos/admin/tenant/deactivate";
     private final String activateTenantRestEndPoint = "/stratos/admin/tenant/activate";
     private final String listAllTenantRestEndPoint = "/stratos/admin/tenant/list";
+    private final String getListAvailableCartridgeInfoRestEndPoint = "/stratos/admin/cartridge/available/info";
 
 
     private static class SingletonHolder {
@@ -211,21 +212,16 @@ public class RestCommandLineService {
         this.restClient = restClient;
     }
 
-    public Cartridge listCartridge(String cartridgeType) {
+    public Cartridge listCartridge(String cartridgeType) throws CommandException{
         DefaultHttpClient httpClient = new DefaultHttpClient();
-
         HttpResponse response = null;
-        try {
-            String endpoint = restClient.getBaseURL() + "/stratos/admin/cartridge/available/info/"+cartridgeType;
-            //System.out.println("***** Sending to " + endpoint);
-            response = restClient.doGet(httpClient, endpoint);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        String responseCode = "" + response.getStatusLine().getStatusCode();
+        try {
+            String endpoint = restClient.getBaseURL() + getListAvailableCartridgeInfoRestEndPoint + "/" + cartridgeType;
+            response = restClient.doGet(httpClient, endpoint);
+
+            String responseCode = "" + response.getStatusLine().getStatusCode();
             String resultString = getHttpResponseString(response);
-            //System.out.println("**************** " + resultString);
             if (resultString == null) {
                 return null;
             }
@@ -233,53 +229,65 @@ public class RestCommandLineService {
             GsonBuilder gsonBuilder = new GsonBuilder();
             Gson gson = gsonBuilder.create();
 
-            if ( ! responseCode.equals(CliConstants.RESPONSE_OK)) {
+            if (!responseCode.equals(CliConstants.RESPONSE_OK)) {
                 ExceptionMapper exception = gson.fromJson(resultString, ExceptionMapper.class);
                 System.out.println(exception);
                 return null;
             }
-        Cartridge cartridge = gson.fromJson(resultString, Cartridge.class);
-        return cartridge;
 
+            String cartridgeString = resultString.substring(13, resultString.length() -1);
+            Cartridge cartridge = gson.fromJson(cartridgeString, Cartridge.class);
+            return cartridge;
+
+        } catch (Exception e) {
+            handleException("Exception in listing cartridge info", e);
+            return null;
+        } finally {
+            httpClient.getConnectionManager().shutdown();
+        }
     }
 
-    public ArrayList<Cartridge> listCartridges(String serviceGroup) {
+    public ArrayList<Cartridge> listCartridges(String serviceGroup) throws CommandException{
         DefaultHttpClient httpClient = new DefaultHttpClient();
-
         HttpResponse response = null;
+
         try {
             response = restClient.doGet(httpClient, restClient.getBaseURL() + listAvailableCartridgesRestEndpoint);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
 
-        String responseCode = "" + response.getStatusLine().getStatusCode();
-        String resultString = getHttpResponseString(response);
+            String responseCode = "" + response.getStatusLine().getStatusCode();
+            String resultString = getHttpResponseString(response);
 
-        if (resultString == null) {
-            return null;
-        }
-
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        Gson gson = gsonBuilder.create();
-
-        if ( ! responseCode.equals(CliConstants.RESPONSE_OK)) {
-            ExceptionMapper exception = gson.fromJson(resultString, ExceptionMapper.class);
-            System.out.println(exception);
-            return null;
-        }
-
-        CartridgeList cartridgeList = gson.fromJson(resultString, CartridgeList.class);
-
-        ArrayList<Cartridge> cartridgesInServiceGroup = new ArrayList<Cartridge>();
-
-        for(int i = 0; i < cartridgeList.getCartridge().size(); i++){
-            if(serviceGroup.equals(cartridgeList.getCartridge().get(i).getServiceGroup())){
-                cartridgesInServiceGroup.add(cartridgeList.getCartridge().get(i));
+            if (resultString == null) {
+                return null;
             }
-        }
 
-        return cartridgesInServiceGroup;
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+
+            if (!responseCode.equals(CliConstants.RESPONSE_OK)) {
+                ExceptionMapper exception = gson.fromJson(resultString, ExceptionMapper.class);
+                System.out.println(exception);
+                return null;
+            }
+
+            CartridgeList cartridgeList = gson.fromJson(resultString, CartridgeList.class);
+
+            ArrayList<Cartridge> cartridgesInServiceGroup = new ArrayList<Cartridge>();
+
+            for (int i = 0; i < cartridgeList.getCartridge().size(); i++) {
+                if (serviceGroup.equals(cartridgeList.getCartridge().get(i).getServiceGroup())) {
+                    cartridgesInServiceGroup.add(cartridgeList.getCartridge().get(i));
+                }
+            }
+
+            return cartridgesInServiceGroup;
+
+        } catch (Exception e) {
+            handleException("Exception in listing cartridge info", e);
+            return null;
+        } finally {
+            httpClient.getConnectionManager().shutdown();
+        }
     }
 
     // List currently available multi tenant and single tenant cartridges
@@ -805,6 +813,88 @@ public class RestCommandLineService {
 		}
 	}
 
+    private String getAsPolicyFromServiceDefinition(String cartridgeType) throws CommandException{
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        try {
+            HttpResponse response = restClient.doGet(httpClient, restClient.getBaseURL()
+                    + listDeployServicesRestEndPoint + "/" + cartridgeType);
+
+            String responseCode = "" + response.getStatusLine().getStatusCode();
+
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+
+            if ( ! responseCode.equals(CliConstants.RESPONSE_OK)) {
+                String resultString = getHttpResponseString(response);
+                ExceptionMapper exception = gson.fromJson(resultString, ExceptionMapper.class);
+                System.out.println(exception);
+                return null;
+            }
+
+            String resultString = getHttpResponseString(response);
+            if (resultString == null) {
+                System.out.println("Response content is empty");
+                return null;
+            }
+
+            String  serviceDefinitionString =  resultString.substring(25, resultString.length() -1);
+            ServiceDefinitionBean serviceDefinition= gson.fromJson(serviceDefinitionString, ServiceDefinitionBean.class);
+            if (serviceDefinition == null) {
+                System.out.println("Deploy service list is empty");
+                return null;
+            }
+
+            return serviceDefinition.getAutoscalingPolicyName();
+
+        } catch (Exception e) {
+            handleException("Exception in listing deploy services", e);
+            return null;
+        } finally {
+            httpClient.getConnectionManager().shutdown();
+        }
+    }
+
+    private String getDeploymentPolicyFromServiceDefinition(String cartridgeType) throws CommandException{
+        DefaultHttpClient httpClient = new DefaultHttpClient();
+        try {
+            HttpResponse response = restClient.doGet(httpClient, restClient.getBaseURL()
+                    + listDeployServicesRestEndPoint + "/" + cartridgeType);
+
+            String responseCode = "" + response.getStatusLine().getStatusCode();
+
+            GsonBuilder gsonBuilder = new GsonBuilder();
+            Gson gson = gsonBuilder.create();
+
+            if ( ! responseCode.equals(CliConstants.RESPONSE_OK)) {
+                String resultString = getHttpResponseString(response);
+                ExceptionMapper exception = gson.fromJson(resultString, ExceptionMapper.class);
+                System.out.println(exception);
+                return null;
+            }
+
+            String resultString = getHttpResponseString(response);
+            if (resultString == null) {
+                System.out.println("Response content is empty");
+                return null;
+            }
+
+            String  serviceDefinitionString =  resultString.substring(25, resultString.length() -1);
+            ServiceDefinitionBean serviceDefinition= gson.fromJson(serviceDefinitionString, ServiceDefinitionBean.class);
+            if (serviceDefinition == null) {
+                System.out.println("Deploy service list is empty");
+                return null;
+            }
+
+            return serviceDefinition.getDeploymentPolicyName();
+
+        } catch (Exception e) {
+            handleException("Exception in listing deploy services", e);
+            return null;
+        } finally {
+            httpClient.getConnectionManager().shutdown();
+        }
+    }
+
 	// This method does the cartridge subscription
     public void subscribe(String cartridgeType, String alias, String externalRepoURL, boolean privateRepo, String username,
                           String password,String asPolicy,
@@ -818,6 +908,12 @@ public class RestCommandLineService {
         Gson gson = gsonBuilder.create();
 
         try {
+            Cartridge cartridge = listCartridge(cartridgeType);
+            if (cartridge.isMultiTenant()) {
+                asPolicy = getAsPolicyFromServiceDefinition(cartridgeType);
+                depPolicy = getDeploymentPolicyFromServiceDefinition(cartridgeType);
+            }
+
             cartridgeInfoBean.setCartridgeType(cartridgeType);
             cartridgeInfoBean.setAlias(alias);
             cartridgeInfoBean.setRepoURL(externalRepoURL);
@@ -1300,14 +1396,12 @@ public class RestCommandLineService {
             }
 
             String resultString = getHttpResponseString(response);
-
             if (resultString == null) {
                 System.out.println("Response content is empty");
                 return;
             }
 
             ServiceDefinitionList definitionList = gson.fromJson(resultString, ServiceDefinitionList.class);
-
             if (definitionList == null) {
                 System.out.println("Deploy service list is empty");
                 return;
@@ -1316,14 +1410,12 @@ public class RestCommandLineService {
             RowMapper<ServiceDefinitionBean> deployServiceMapper = new RowMapper<ServiceDefinitionBean>() {
 
                 public String[] getData(ServiceDefinitionBean definition) {
-                    String[] data = new String[7];
-                    data[0] = definition.getServiceName();
-                    data[1] = definition.getCartridgeType();
-                    data[2] = definition.getDeploymentPolicyName();
-                    data[3] = definition.getAutoscalingPolicyName();
-                    data[4] = definition.getClusterDomain();
-                    data[5] = definition.getClusterSubDomain();
-                    data[6] = definition.getTenantRange();
+                    String[] data = new String[5];
+                    data[0] = definition.getCartridgeType();
+                    data[1] = definition.getDeploymentPolicyName();
+                    data[2] = definition.getAutoscalingPolicyName();
+                    data[3] = definition.getClusterDomain();
+                    data[4] = definition.getTenantRange();
                     return data;
                 }
             };
@@ -1339,17 +1431,10 @@ public class RestCommandLineService {
                 return;
             }
 
-            List<String> headers = new ArrayList<String>();
-            headers.add("Service Name");
-            headers.add("Cartridge Type");
-            headers.add("Deployment Policy Name");
-            headers.add("Autoscaling Policy Name");
-            headers.add("Cluster Domain");
-            headers.add("Cluster Sub Domain");
-            headers.add("Tenant Range");
-
             System.out.println("Available Deploy Services :");
-            CommandLineUtils.printTable(definitionArry, deployServiceMapper, headers.toArray(new String[headers.size()]));
+            CommandLineUtils.printTable(definitionArry, deployServiceMapper, "Cartridge Type", "Deployment Policy Name",
+                    "Autoscaling Policy Name", "Cluster Domain", "Tenant Range");
+            System.out.println();
 
         } catch (Exception e) {
             handleException("Exception in listing deploy services", e);
@@ -1783,18 +1868,18 @@ public class RestCommandLineService {
 
     // This class convert JSON string to servicedefinitionbean object
     private class ServiceDefinitionList {
-        private ArrayList<ServiceDefinitionBean> serviceDefinition;
+        private ArrayList<ServiceDefinitionBean> serviceDefinitionBean;
 
         public ArrayList<ServiceDefinitionBean> getServiceDefinition() {
-            return serviceDefinition;
+            return serviceDefinitionBean;
         }
 
-        public void setServiceDefinition(ArrayList<ServiceDefinitionBean> serviceDefinition) {
-            this.serviceDefinition = serviceDefinition;
+        public void setServiceDefinition(ArrayList<ServiceDefinitionBean> serviceDefinitionBean) {
+            this.serviceDefinitionBean = serviceDefinitionBean;
         }
 
         ServiceDefinitionList() {
-            serviceDefinition = new ArrayList<ServiceDefinitionBean>();
+            serviceDefinitionBean = new ArrayList<ServiceDefinitionBean>();
         }
     }
 

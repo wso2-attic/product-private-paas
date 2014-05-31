@@ -102,10 +102,6 @@ if [[ -d $stratos_path/scripts ]]; then
    rm -rf $stratos_path/scripts
 fi
 
-if [[ -d $stratos_path ]]; then
-   echo 'Removing Stratos'
-   rm -rf $stratos_path/*
-fi
 
 echo 'Removing logs'
 rm -rf $log_path/*

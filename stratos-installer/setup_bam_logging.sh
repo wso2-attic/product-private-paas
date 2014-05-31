@@ -132,7 +132,7 @@ if [[ -e $hadoop_pack_path ]]; then
    # Start BAM server
    start_bam
 else
-   echo "Gitblit pack [ $gitblit_pack_path ] not found!"
+   echo "Hadoop pack [ $hadoop_pack_path ] not found!"
    exit 1
 fi
 
