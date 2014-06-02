@@ -86,7 +86,7 @@
                     i = i - 1;
                 }
             }
-            log.info("~~~~~~~~~~~~~~~~~~~~~~~~:" + stringify(step_data));
+            log.info("Service group data : " + stringify(step_data));
 
             var repoUrl = null;
             for(var i=0;i<step_data.length;i++) {
@@ -102,7 +102,7 @@
                 }
 
                 var re = utils.consoleAppUtil.subscribeToCartridge(jsonRequest);
-                log.info("********************:" + stringify(jsonRequest) + "\n &&&&&&&&&&&\n" + stringify(re)) ;
+                log.debug("Request :" + stringify(jsonRequest) + ",  \n Response : " + stringify(re)) ;
                 // check if the repo Url returned in response is valid. If so, assign it to a variable to use in the next
                 // subscription call
                 var responseUrl = re.subscriptionInfo.repositoryURL;
