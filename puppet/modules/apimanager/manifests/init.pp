@@ -75,8 +75,12 @@ class apimanager (
     'conf/datasources/master-datasources.xml',
     'conf/registry.xml',
     'conf/user-mgt.xml',
+    'conf/security/authenticators.xml',
     'deployment/server/jaggeryapps/publisher/site/conf/site.json',
     'deployment/server/jaggeryapps/store/site/conf/site.json',
+    'deployment/server/synapse-configs/default/api/_AuthorizeAPI_.xml',
+    'deployment/server/synapse-configs/default/api/_RevokeAPI_.xml',
+    'deployment/server/synapse-configs/default/api/_TokenAPI_.xml',
 #    'conf/tomcat/catalina-server.xml',
     ]
 
