@@ -27,7 +27,12 @@
             </definition>
         </datasource>
 
+	<%- if @enable_key_manager -%>
+        <%= scope.function_template(['is/conf/datasources/master-datasources/_is_as_keymanager.erb']) -%>
+    <%- else -%>
         <%= scope.function_template(['is/conf/datasources/master-datasources/_remote.erb']) -%>
+    <%- end -%>
+
 
         <!-- For an explanation of the properties, see: http://people.apache.org/~fhanik/jdbc-pool/jdbc-pool.html -->
         <!--datasource>

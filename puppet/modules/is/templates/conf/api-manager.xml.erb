@@ -4,7 +4,7 @@
         key manager. This data source should be defined in the master-datasources.xml file
         in conf/datasources directory.
     -->
-    <DataSourceName>jdbc/WSO2AM_DB</DataSourceName>
+    <DataSourceName>jdbc/<%= @persistence_ds -%></DataSourceName>
 
     <!-- This parameter is used when adding api management capability to other products like GReg, AS, DSS etc.-->
     <GatewayType>None</GatewayType>
@@ -302,7 +302,7 @@
 	     In distributed deployment we should configure this property in key manager node by pointing 
 	     gateway https url. Also please note that we should point gateway revoke service to key manager
 	-->
-	<RevokeAPIURL>https://<%= @gateway_hostname %>:<%= @gateway_https_port %>/revoke</RevokeAPIURL>
+	<RevokeAPIURL>https://<%= @stratos_instance_data_gateway_host_name %>:<%= @stratos_instance_data_gateway_nio_https_port %>/revoke</RevokeAPIURL>
 	
 	<!-- Whether to encrypt tokens when storing in the Database
 	Note: If changing this value to true, change the value of <TokenPersistenceProcessor> to
