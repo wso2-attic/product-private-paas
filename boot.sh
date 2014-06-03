@@ -833,9 +833,6 @@ function init() {
     # Configure an external Puppet master
     puppet_external=$(read_user_input "Do you need to configure an external Puppet master? [y/n] : " "" $puppet_external )
 
-    # get whether using Dns
-    using_dns=$(read_user_input "Do you need to configure an external Puppet master? [y/n] : " "" $using_dns )
-
     if [[ $puppet_external =~ ^[Yy]$ ]]; then
        puppet_external="true"
        echo -e "Configuring an external Puppet master...\n"
