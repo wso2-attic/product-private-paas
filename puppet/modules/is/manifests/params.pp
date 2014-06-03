@@ -53,6 +53,12 @@ class is::params {
   $userstore_password   = 'DB_PASSWORD'
   $userstore_database   = 'USERSTORE_DB'
 
+   # IS as a Key Manager
+  $enable_key_manager  	= false
+  $apim_db		= 'aesp_apim_db'
+  $apim_user		= 'root'
+  $apim_password	= 'root'
+
   # Datasources
   $persistence_ds	= 'WSO2CarbonDB'
 

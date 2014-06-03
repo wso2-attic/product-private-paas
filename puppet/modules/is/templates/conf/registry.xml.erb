@@ -31,6 +31,10 @@
         <dataSource>jdbc/WSO2CarbonDB</dataSource>
     </dbConfig>
 
+    <%- if @enable_key_manager -%>
+        <%= scope.function_template(['is/conf/registry/_is_as_keymanager.erb']) -%>
+    <%- else -%>
+
     <%- if @cloud == true or @clustering == true -%>
     <%= scope.function_template(['is/conf/registry/_remote.erb']) -%>
     <%- end -%>
@@ -101,5 +105,6 @@
         <versioningTags>true</versioningTags>
         <versioningRatings>true</versioningRatings>
     </staticConfiguration>
-</wso2registry>
+    <%- end -%>
 
+</wso2registry>

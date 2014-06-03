@@ -82,12 +82,16 @@ class is (
     default => [
       'conf/axis2/axis2.xml',
       'conf/carbon.xml',
+      'conf/identity.xml',
       'conf/datasources/master-datasources.xml',
       'conf/registry.xml',
       'conf/tomcat/catalina-server.xml',
       'conf/user-mgt.xml',
       'conf/log4j.properties',
       'conf/api-manager.xml',
+      'conf/security/application-authenticators.xml',
+      'conf/identity.xml',
+      'conf/security/sso-idp-config.xml',
       ],
   }
 

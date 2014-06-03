@@ -35,6 +35,9 @@ node 'base' {
   $lb_httpsPort 	= '443'
   $lb_private_ip 	= ''
   $lb_public_ip 	= ''
+  $disable_sso		= 'true'
+  $idp_hostname		= 'identity.stratos.com'
+  $idp_port		= '443'
   $tomcat_version 	= '7.0.52'
   $enable_log_publisher = 'ENABLE_LOG_PUBLISHER'
   $server_ip            = $ipaddress

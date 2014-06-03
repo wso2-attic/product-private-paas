@@ -498,17 +498,16 @@ public class GitBasedArtifactRepository {
 
         } catch (CheckoutConflictException e) {
             // checkout from remote HEAD
-            checkoutFromRemoteHead(gitRepoCtx, e.getConflictingPaths());
-
+            return checkoutFromRemoteHead(gitRepoCtx, e.getConflictingPaths());
             // pull again
-            try {
+            /*try {
                 return pullArtifacts(gitRepoCtx);
 
             } catch (GitAPIException e1) {
                 //cannot happen here
                 log.error("Git pull failed for tenant " + gitRepoCtx.getTenantId(), e1);
                 return false;
-            }
+            }*/
         }
     }
 
@@ -536,6 +535,32 @@ public class GitBasedArtifactRepository {
         }
 
         return checkoutSuccess;
+    }
+
+    private void resetToRemoteHead (RepositoryContext gitRepoCtx, List<String> paths) {
+
+        ResetCommand resetCmd = gitRepoCtx.getGit().reset();
+
+        // reset type is HARD, to remote master branch
+        resetCmd.setMode(ResetCommand.ResetType.HARD).
+                setRef(GitDeploymentSynchronizerConstants.ORIGIN + "/" + GitDeploymentSynchronizerConstants.MASTER);
+
+        // add paths
+        for(String path : paths) {
+            resetCmd.addPath(path);
+            if(log.isDebugEnabled()) {
+                log.debug("Added the file path " + path + " to reset");
+            }
+        }
+
+        try {
+            resetCmd.call();
+            log.info("Reset the local branch to origin master successfully");
+
+        } catch (GitAPIException e) {
+            log.error("Reset to origin master failed", e);
+        }
+
     }
 
     private boolean syncInitialLocalArtifacts(RepositoryContext gitRepoCtx) throws Exception {
