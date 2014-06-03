@@ -1098,7 +1098,7 @@ public class StratosAdmin extends AbstractAdmin {
     @Consumes("application/json")
     @AuthorizationAction("/permission/protected/manage/monitor/tenants")
     public Response getLoadBalancerCluster(@PathParam("cartridgeType") String cartridgeType,
-                                           +@PathParam("subscriptionAlias") String subscriptionAlias) throws RestAPIException {
+                                           @PathParam("subscriptionAlias") String subscriptionAlias) throws RestAPIException {
         if (log.isDebugEnabled()) {
             log.debug(String.format("GET /cartridge/%s/subscription/%s/load-balancer-cluster", cartridgeType, subscriptionAlias));
         }
