@@ -688,11 +688,19 @@ function deploy_puppet() {
     echo "Deploying Puppet files to /etc/puppet. Please wait..."
     cp -rf puppet/* /etc/puppet/
     echo "Puppet files successfully deployed."
+   
+    using_dns=$(read_user_input "Do you need to /etc/hosts hostname mapping? [y/n] : " "" $using_dns )
+    if [[ $using_dns =~ ^[Yy]$ ]]; then
+       using_dns="false"
+    else
+       using_dns="true"
+    fi
 
     echo "Configuring Puppet scripts..."
     # Set Puppet base node parameters
     replace_in_file "PACKAGE_REPO" "$package_repo" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "MB_IP" "$machine_ip" "/etc/puppet/manifests/nodes/base.pp"
+    replace_in_file "USING_DNS" "$using_dns" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "MB_PORT" "61616" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "CEP_IP" "$machine_ip" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "CEP_PORT" "$cep_port" "/etc/puppet/manifests/nodes/base.pp"
@@ -824,6 +832,9 @@ function init() {
 
     # Configure an external Puppet master
     puppet_external=$(read_user_input "Do you need to configure an external Puppet master? [y/n] : " "" $puppet_external )
+
+    # get whether using Dns
+    using_dns=$(read_user_input "Do you need to configure an external Puppet master? [y/n] : " "" $using_dns )
 
     if [[ $puppet_external =~ ^[Yy]$ ]]; then
        puppet_external="true"
