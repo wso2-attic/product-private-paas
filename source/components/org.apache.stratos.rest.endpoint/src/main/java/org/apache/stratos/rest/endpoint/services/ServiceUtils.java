@@ -1221,9 +1221,9 @@ public class ServiceUtils {
                                                             		 throws RestAPIException {
         try {
             int tenantId = ApplicationManagementUtil.getTenantId(configurationContext);
+
             for (org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean subscriptionDomain : request.domains) {
-				
-            	cartridgeSubsciptionManager.addSubscriptionDomain(tenantId, subscriptionAlias, 
+                cartridgeSubsciptionManager.addSubscriptionDomain(tenantId, subscriptionAlias,
             			subscriptionDomain.domainName, subscriptionDomain.applicationContext);
 			}
         } catch (Exception e) {

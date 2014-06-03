@@ -705,6 +705,32 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
                 envParameters.put("STRATOS_WK_MANAGER_MEMBER_COUNT", Integer.toString(managerMinInstanceCount));
             }
+            
+            // If all the manager members are non primary and is greate than or equal to mincount, 
+            // minManagerInstancesAvailable should be true
+            boolean allManagersNonPrimary = true;
+            for (Member member : managerClusters.iterator().next().getMembers()) {
+            	
+            	// get the min instance count
+                if (!managerMinInstanceCountFound) {
+                    managerMinInstanceCount = getMinInstanceCountFromMemberProperties(member);
+                    managerMinInstanceCountFound = true;
+                    log.info("Manager min instance count when allManagersNonPrimary true : " + managerMinInstanceCount);
+                }
+                
+                if (member.getProperties() != null && member.getProperties().containsKey("PRIMARY") &&
+                            member.getProperties().getProperty("PRIMARY").toLowerCase().equals("true") ) {
+                	allManagersNonPrimary = false;
+                	break;
+                }
+            }
+            if(log.isDebugEnabled()){
+            	log.debug(" allManagerNonPrimary & managerMinInstanceCount [" 
+            		 + allManagersNonPrimary + "], [" + managerMinInstanceCount+"] ");
+            }
+			if (allManagersNonPrimary &&  managerClusters.size() >= managerMinInstanceCount) {
+				minManagerInstancesAvailable = true;
+			}
 
             // worker cluster
             Collection<Cluster> workerClusters = workerService.getClusters();
@@ -718,11 +744,16 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
             List<Member> workerWkaMembers = new ArrayList<Member>();
             for (Member member : workerClusters.iterator().next().getMembers()) {
+            	if (log.isDebugEnabled()) {
+            		log.debug("Checking member : " + member.getMemberId());
+            	}
                 if (member.getProperties() != null &&
                         member.getProperties().containsKey("PRIMARY") &&
                         member.getProperties().getProperty("PRIMARY").toLowerCase().equals("true") &&
                         (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated))) {
-
+                	if (log.isDebugEnabled()) {
+                		log.debug("Added worker member " + member.getMemberId());
+                	}
                     workerWkaMembers.add(member);
                     this.wkMembers.add(member);
 
@@ -755,6 +786,10 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             TopologyManager.releaseReadLock();
         }
 
+        if (log.isDebugEnabled()) {
+        	log.debug(" Returnning values minManagerInstancesAvailable && minWorkerInstancesAvailable [" +
+        		minManagerInstancesAvailable + "],  ["+ minWorkerInstancesAvailable+"] ");
+        }
         return (minManagerInstancesAvailable && minWorkerInstancesAvailable);
     }
 
