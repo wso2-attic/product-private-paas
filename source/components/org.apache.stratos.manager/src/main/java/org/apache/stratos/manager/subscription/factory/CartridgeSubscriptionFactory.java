@@ -51,6 +51,8 @@ public class CartridgeSubscriptionFactory {
         if(cartridgeInfo.getMultiTenant()) {
             if (cartridgeInfo.getProvider().equals(CartridgeConstants.INTERNAL_REPO_BASED_CARTRIDGE_PROVIDER)) {
                 cartridgeSubscription = new InternalRepoBasedCartridgeSubscription(cartridgeInfo, subscriptionTenancyBehaviour);
+            } else if (cartridgeInfo.getProvider().equals("application")) {
+                cartridgeSubscription = new ApplicationCartridgeSubscription(cartridgeInfo, subscriptionTenancyBehaviour);
             } else {
                 cartridgeSubscription = new FrameworkCartridgeSubscription(cartridgeInfo, subscriptionTenancyBehaviour);
             }
