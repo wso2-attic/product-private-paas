@@ -45,6 +45,14 @@ function start_bam() {
        nohup $bam_path/bin/wso2server.sh -DportOffset=1 &
 }
 
+function get_mysql_connector_jar() {
+	IFS='/'
+	arr=($mysql_connector_jar)
+	for x in ${!arr[*]} ; do
+	   connector_jar=${arr[x]}
+	done
+}
+
 # In silent mode, start BAM server and do not make any configurations
 if [[ -z $silent_mode && $silent_mode = "true" ]]; then
        start_bam
@@ -84,6 +92,8 @@ cp -f $mysql_connector_jar $bam_path/repository/components/lib/
 
 pushd $bam_path
 
+get_mysql_connector_jar
+
 echo "Setting up BAM"
 
 sed -i "s@MYSQL_HOSTNAME@$dashboard_db_hostname@g" repository/conf/datasources/master-datasources.xml
@@ -96,6 +106,7 @@ sed -i "s@CASSANDRA_USER@$dashboard_cassendra_user@g" repository/conf/datasource
 sed -i "s@CASSANDRA_PASSWORD@$dashboard_cassendra_password@g" repository/conf/datasources/master-datasources.xml
 sed -i "s@DATANODEHOST@$hadoop_hostname@g" repository/conf/advanced/hive-site.xml
 sed -i "s@JOBTRACKERSHOST@$hadoop_hostname@g" repository/conf/advanced/hive-site.xml
+sed -i "s@CONNECTOR_JAR@$connector_jar@g" repository/conf/advanced/hive-site.xml
 
 popd
 
