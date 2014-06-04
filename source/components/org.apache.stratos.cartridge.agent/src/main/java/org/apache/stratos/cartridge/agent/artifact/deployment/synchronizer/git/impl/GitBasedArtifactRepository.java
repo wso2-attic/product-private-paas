@@ -587,7 +587,7 @@ public class GitBasedArtifactRepository {
         return syncedLocalArtifacts;
     }
 
-    public void scheduleSyncTask(RepositoryInformation repoInformation, long delay) {
+    public void scheduleSyncTask(RepositoryInformation repoInformation, boolean autoCheckout, boolean autoCommit, long delay) {
 
         int tenantId = Integer.parseInt(repoInformation.getTenantId());
 
@@ -605,7 +605,7 @@ public class GitBasedArtifactRepository {
                             new ArtifactSyncTaskThreadFactory(repoCtxt.getGitLocalRepoPath()));
 
                     // schedule at the given interval
-                    artifactSyncScheduler.scheduleAtFixedRate(new ArtifactSyncTask(repoInformation), delay, delay, TimeUnit.SECONDS);
+                    artifactSyncScheduler.scheduleAtFixedRate(new ArtifactSyncTask(repoInformation, autoCheckout, autoCommit), delay, delay, TimeUnit.SECONDS);
                     // cache
                     repoCtxt.setArtifactSyncSchedular(artifactSyncScheduler);
 
@@ -979,19 +979,25 @@ public class GitBasedArtifactRepository {
     private class ArtifactSyncTask implements Runnable {
 
         private RepositoryInformation repositoryInformation;
+        private boolean autoCheckout;
+        private boolean autoCommit;
 
-        public ArtifactSyncTask(RepositoryInformation repositoryInformation) {
+        public ArtifactSyncTask(RepositoryInformation repositoryInformation, boolean autoCheckout, boolean autoCommit) {
             this.repositoryInformation = repositoryInformation;
+            this.autoCheckout = autoCheckout;
+            this.autoCommit = autoCommit;
         }
 
         @Override
         public void run() {
             try {
-                checkout(repositoryInformation);
+                if (autoCheckout) {
+                    checkout(repositoryInformation);
+                }
             } catch (Exception e) {
                 log.error(e);
             }
-            if (CartridgeAgentConfiguration.getInstance().isCommitsEnabled()) {
+            if (autoCommit) {
                 commit(repositoryInformation);
             }
         }

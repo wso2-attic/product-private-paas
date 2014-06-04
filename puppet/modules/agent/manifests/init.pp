@@ -16,11 +16,14 @@
 # under the License.
 
 class agent(
-  $version = '4.0.0-wso2v1',
-  $owner   = 'root',
-  $group   = 'root',
-  $target  = "/mnt/${server_ip}",
-  $type    = 'default',
+  $version                = '4.0.0-wso2v1',
+  $owner                  = 'root',
+  $group                  = 'root',
+  $target                 = "/mnt/${server_ip}",
+  $type                   = 'default',
+  $enable_artifact_update = true,
+  $auto_commit            = false,
+  $auto_checkout          = true,
 ){
 
   $deployment_code = 'cartridge-agent'
