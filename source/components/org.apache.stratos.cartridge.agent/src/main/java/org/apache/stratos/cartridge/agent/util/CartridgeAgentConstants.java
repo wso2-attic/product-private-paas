@@ -87,5 +87,6 @@ public class CartridgeAgentConstants implements Serializable{
     public static final String DEPLOYMENT_MANAGER = "manager";
     public static final String DEPLOYMENT_WORKER = "worker";
     public static final String DEPLOYMENT_DEFAULT = "default";
-
+    public static final String SUPER_TENANT_REPO_PATH = "super.tenant.repository.path";
+    public static final String TENANT_REPO_PATH = "tenant.repository.path";
 }
