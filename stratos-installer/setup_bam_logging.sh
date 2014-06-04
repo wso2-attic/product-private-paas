@@ -68,7 +68,7 @@ sed -i '$a bam.admin.password=admin' repository/conf/cartridge-config.properties
 
 #Setting the BAM link in Stratos Console
 sed -i "s@BAM_HOST@${public_ip}@g" repository/deployment/server/jaggeryapps/console/themes/theme1/partials/header.hbs
-sed -i "s@BAM_PORT@$9444@g" repository/conf/carbon.xml
+sed -i "s@BAM_PORT@$9444@g" repository/deployment/server/jaggeryapps/console/themes/theme1/partials/header.hbs
 
 popd
 
