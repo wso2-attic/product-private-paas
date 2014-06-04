@@ -51,6 +51,7 @@ function get_mysql_connector_jar() {
 	for x in ${!arr[*]} ; do
 	   connector_jar=${arr[x]}
 	done
+	IFS=$' \t\n'
 }
 
 # In silent mode, start BAM server and do not make any configurations
