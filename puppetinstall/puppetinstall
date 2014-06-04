@@ -240,7 +240,7 @@ print_message "Installing puppet repository ... "
 if [ ${MASTER} -eq 1 ]; then
 # Install puppet master
         print_message "Installing puppet master ... "
-        ${APT} install puppetmaster -y && print_ok || print_error "Failed to install puppet master."
+        ${APT} install puppetmaster=3.6.0-1puppetlabs1 puppet-common=3.6.0-1puppetlabs1 puppetmaster-common=3.6.0-1puppetlabs1 -y && print_ok || print_error "Failed to install puppet master."
 #configure puppet master
         print_message "Configuring puppet master ... "
         ${SED} -i 's/START=no/START=yes/' /etc/default/puppetmaster && : || print_error "Failed to configure puppet master's '/etc/default/puppetmaster'."

@@ -42,7 +42,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.*;
 
@@ -60,8 +59,8 @@ public class GitBasedArtifactRepository {
     private static ConcurrentHashMap<Integer, RepositoryContext>
             tenantToRepoContextMap = new ConcurrentHashMap<Integer, RepositoryContext>();
     private static volatile GitBasedArtifactRepository gitBasedArtifactRepository;
-    private static String SUPER_TENANT_APP_PATH = "/repository/deployment/server/";
-    private static String TENANT_PATH = "/repository/tenants/";
+    private static String SUPER_TENANT_REPO_PATH = "/repository/deployment/server/";
+    private static String TENANT_REPO_PATH = "/repository/tenants/";
 
     private GitBasedArtifactRepository() {
         extensionHandler = CartridgeAgent.getExtensionHandler();
@@ -144,17 +143,30 @@ public class GitBasedArtifactRepository {
 
         if (isMultitenant) {
             if (tenantId == SUPER_TENANT_ID) {
-                // create temp directory for super tenant apps
-                //String dirPath = "/tmp/" + SUPER_TENANT_ID;
-                //String dirPath = gitLocalRepoPath.endsWith("/") ? gitLocalRepoPathSUPER_TENANT_APP_PATH : ;
-                //boolean dirStatus = new File(dirPath).mkdir();
-                //log.info("super tenant temp directory created status : " + dirStatus);
-                repoPathBuilder.append(gitLocalRepoPath).append(SUPER_TENANT_APP_PATH);
+                //check if the relevant path is set as a startup param
+                String superTenantRepoPath = CartridgeAgentConfiguration.getInstance().getSuperTenantRepositoryPath();
+
+                if (superTenantRepoPath != null && !superTenantRepoPath.isEmpty()) {
+                    superTenantRepoPath = superTenantRepoPath.startsWith("/") ? superTenantRepoPath : "/".concat(superTenantRepoPath);
+                    repoPathBuilder.append(gitLocalRepoPath).append(superTenantRepoPath);
+
+                } else {
+                    repoPathBuilder.append(gitLocalRepoPath).append(SUPER_TENANT_REPO_PATH);
+                }
             } else {
                 // create folder with tenant id
                 createTenantDir(tenantId, gitLocalRepoPath);
-                repoPathBuilder.append(gitLocalRepoPath).append(TENANT_PATH)
-                        .append(tenantId);
+                //check if the relevant path is set as a startup param
+                String tenantRepoPath = CartridgeAgentConfiguration.getInstance().getTenantRepositoryPath();
+
+                if (tenantRepoPath != null && !tenantRepoPath.isEmpty()) {
+                    tenantRepoPath = tenantRepoPath.startsWith("/") ? tenantRepoPath : "/".concat(tenantRepoPath);
+                    tenantRepoPath = tenantRepoPath.endsWith("/") ? tenantRepoPath : tenantRepoPath.concat("/");
+
+                    repoPathBuilder.append(gitLocalRepoPath).append(tenantRepoPath).append(tenantId);
+                } else {
+                    repoPathBuilder.append(gitLocalRepoPath).append(TENANT_REPO_PATH).append(tenantId);
+                }
             }
 
             repoPath = repoPathBuilder.toString();
@@ -166,7 +178,7 @@ public class GitBasedArtifactRepository {
     }
 
     private static void createTenantDir(int tenantId, String path) {
-        String dirPathName = path + TENANT_PATH + tenantId;
+        String dirPathName = path + TENANT_REPO_PATH + tenantId;
         boolean dirStatus = new File(dirPathName).mkdir();
         if (dirStatus) {
             log.info("Successfully created directory [" + dirPathName + "] ");

@@ -48,6 +48,8 @@ properties="-Dmb.ip=<%= @mb_ip %>
             -Dmonitoring.server.admin.username=<%= @bam_username %>
             -Dmonitoring.server.admin.password=<%= @bam_password %>
 	    -DAPP_PATH=<%= @docroot %>
+	    -Dsuper.tenant.repository.path=<%= @super_tenant_repository_path %>
+            -Dtenant.repository.path=<%= @tenant_repository_path %>
 	    -Dlog.file.paths=<%= @log_file_paths %>
             -Dextension.instance.started=<%= @extension_instance_started %>
             -Dextension.start.servers=<%= @extension_start_servers %>
