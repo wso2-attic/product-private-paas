@@ -104,4 +104,5 @@ export keymanager_clustering_enabled=""
 # WSO2 PPaaS core services
 export bam_enabled=""
 export config_sso_enabled=""
+export using_dns=""
 export wso2_ppaas_enabled=""
