@@ -64,6 +64,8 @@ public class CartridgeAgentConfiguration {
     private String deployment;
     private String managerServiceName;
     private String workerServiceName;
+    private String superTenantRepositoryPath;
+    private String tenantRepositoryPath;
 
     private CartridgeAgentConfiguration() {
         parameters = loadParametersFile();
@@ -92,6 +94,8 @@ public class CartridgeAgentConfiguration {
             // not mandatory
             lbPrivateIp = System.getProperty(CartridgeAgentConstants.LB_PRIVATE_IP);
             lbPublicIp = System.getProperty(CartridgeAgentConstants.LB_PUBLIC_IP);
+            tenantRepositoryPath =  System.getProperty(CartridgeAgentConstants.TENANT_REPO_PATH);
+            superTenantRepositoryPath = System.getProperty(CartridgeAgentConstants.SUPER_TENANT_REPO_PATH);
 
             deployment = readDeployment();
             managerServiceName = readManagerServiceType();
@@ -458,5 +462,13 @@ public class CartridgeAgentConfiguration {
 
     public void setWorkerServiceName(String workerServiceName) {
         this.workerServiceName = workerServiceName;
+    }
+
+    public String getSuperTenantRepositoryPath() {
+        return superTenantRepositoryPath;
+    }
+
+    public String getTenantRepositoryPath() {
+        return tenantRepositoryPath;
     }
 }

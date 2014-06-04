@@ -93,5 +93,8 @@ node 'base' {
   $agent_log_level = "INFO"
   $extensions_dir = '${script_path}/../extensions'
 
+  $super_tenant_repository_path           = '/repository/deployment/server/'
+  $tenant_repository_path                 = '/repository/tenants/'
+
   require stratos_base 
 }
