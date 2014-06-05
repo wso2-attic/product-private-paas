@@ -38,9 +38,9 @@ import org.apache.stratos.autoscaler.policy.PolicyManager;
 import org.apache.stratos.autoscaler.policy.model.AutoscalePolicy;
 import org.apache.stratos.cloud.controller.stub.deployment.partition.Partition;
 import org.apache.stratos.cloud.controller.stub.pojo.MemberContext;
-import org.apache.stratos.cloud.controller.stub.pojo.Properties;
 import org.apache.stratos.cloud.controller.stub.pojo.Property;
 import org.apache.stratos.messaging.domain.topology.Cluster;
+import org.apache.stratos.messaging.domain.topology.ClusterStatus;
 import org.apache.stratos.messaging.domain.topology.Member;
 import org.apache.stratos.messaging.domain.topology.MemberStatus;
 import org.apache.stratos.messaging.util.Constants;
@@ -111,6 +111,7 @@ public class AutoscalerUtil {
                                         new ClusterMonitor(cluster.getClusterId(),
                                                            cluster.getServiceName(),
                                                            deploymentPolicy, policy);
+        clusterMonitor.setStatus(ClusterStatus.Created);
         
         for (PartitionGroup partitionGroup: deploymentPolicy.getPartitionGroups()){
 
@@ -231,6 +232,7 @@ public class AutoscalerUtil {
                                         new LbClusterMonitor(clusterId,
                                                            cluster.getServiceName(),
                                                            deploymentPolicy, policy);
+        clusterMonitor.setStatus(ClusterStatus.Created);
         // partition group = network partition context
         for (PartitionGroup partitionGroup : deploymentPolicy.getPartitionGroups()) {
 

@@ -26,10 +26,7 @@ import org.apache.stratos.cloud.controller.pojo.PortMapping;
 import org.apache.stratos.cloud.controller.util.CloudControllerUtil;
 import org.apache.stratos.messaging.broker.publish.EventPublisher;
 import org.apache.stratos.messaging.broker.publish.EventPublisherPool;
-import org.apache.stratos.messaging.domain.topology.Cluster;
-import org.apache.stratos.messaging.domain.topology.Port;
-import org.apache.stratos.messaging.domain.topology.ServiceType;
-import org.apache.stratos.messaging.domain.topology.Topology;
+import org.apache.stratos.messaging.domain.topology.*;
 import org.apache.stratos.messaging.event.Event;
 import org.apache.stratos.messaging.event.instance.status.InstanceStartedEvent;
 import org.apache.stratos.messaging.event.topology.*;
@@ -96,6 +93,18 @@ public class TopologyEventPublisher {
             log.info(String.format("Publishing cluster removed event: [service] %s [cluster] %s", ctxt.getCartridgeType(), ctxt.getClusterId()));
         }
         publishEvent(clusterRemovedEvent);
+
+    }
+
+    public static void sendClusterMaintenanceModeEvent(ClusterContext ctxt) {
+
+        ClusterMaintenanceModeEvent clusterMaintenanceModeEvent = new ClusterMaintenanceModeEvent(ctxt.getCartridgeType(), ctxt.getClusterId());
+        clusterMaintenanceModeEvent.setStatus(ClusterStatus.In_Maintenance);
+        if(log.isInfoEnabled()) {
+            log.info(String.format("Publishing cluster maintenance mode event: [service] %s [cluster] %s",
+                    clusterMaintenanceModeEvent.getServiceName(), clusterMaintenanceModeEvent.getClusterId()));
+        }
+        publishEvent(clusterMaintenanceModeEvent);
 
     }
 

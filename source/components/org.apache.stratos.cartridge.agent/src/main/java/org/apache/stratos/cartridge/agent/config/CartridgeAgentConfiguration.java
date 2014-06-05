@@ -331,9 +331,8 @@ public class CartridgeAgentConfiguration {
         if (System.getProperty(CartridgeAgentConstants.AUTO_COMMIT) != null) {
             return Boolean.parseBoolean(System.getProperty(CartridgeAgentConstants.AUTO_COMMIT));
         }
-
-        String message = "Cannot find the value of required parameter: " + CartridgeAgentConstants.COMMIT_ENABLED;
-        throw new ParameterNotFoundException(message);
+        log.info(CartridgeAgentConstants.COMMIT_ENABLED + " is not found and setting it to false");
+        return false;
     }
 
     private List<Integer> readPorts() throws ParameterNotFoundException {
