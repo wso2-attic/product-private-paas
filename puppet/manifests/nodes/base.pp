@@ -41,7 +41,7 @@ node 'base' {
   $tomcat_version 	= '7.0.52'
   $enable_log_publisher = 'ENABLE_LOG_PUBLISHER'
   $server_ip            = $ipaddress
-
+  $using_dns		= 'USING_DNS'
 
   #following variables required only if you want to install stratos using puppet.
   #not supported in alpha version
@@ -92,6 +92,9 @@ node 'base' {
   $extension_artifacts_copy               = 'artifacts-copy.sh'
   $agent_log_level = "INFO"
   $extensions_dir = '${script_path}/../extensions'
+
+  $super_tenant_repository_path           = '/repository/deployment/server/'
+  $tenant_repository_path                 = '/repository/tenants/'
 
   require stratos_base 
 }

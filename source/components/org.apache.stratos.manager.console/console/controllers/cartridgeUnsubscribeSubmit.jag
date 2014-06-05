@@ -25,7 +25,7 @@
     var alias = request.getParameter('alias');
     var serviceGroup = request.getParameter('serviceGroup');
 
-    if(serviceGroup != undefined) {
+    if(serviceGroup != undefined && serviceGroup != null && serviceGroup != "") {
         var step_data = {};
         step_data =  utils.consoleAppUtil.getSubscribedCartridges();
         if(step_data.Error != undefined){
@@ -38,10 +38,9 @@
                     i = i - 1;
                 }
             }
-            log.info("~~~~~~~~~~~~~~~~~~~~~~~~:" + stringify(step_data));
+            
             for(var i=0;i<step_data.length;i++) {
                 var result = utils.consoleAppUtil.unsubscribeCartridge(step_data[i].cartridgeAlias);
-                log.info("********************:" + stringify(result)) ;
             }
         }
     } else {

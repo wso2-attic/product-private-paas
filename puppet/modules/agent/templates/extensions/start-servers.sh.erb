@@ -268,8 +268,13 @@ else
    configure_wk_members
 fi
 
-# Update the /etc/hosts file with LB instance IP
-update_hosts_file
+<%- if @using_dns == true -%>
+     #Update the DNS mapping
+<%- else -%>
+    # Update the /etc/hosts file with LB instance IP
+    update_hosts_file
+<%- end -%>
+
 
 # Run start server command
 verify_file_exists $STRATOS_APP_PATH/bin/wso2server.sh
