@@ -58,6 +58,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
     }.getType();
     private static final Type serviceType = new TypeToken<Collection<Service>>() {
     }.getType();
+    private final ArrayList<Member> wkMembers = new ArrayList<Member>();
 
     @Override
     public void onInstanceStartedEvent() {
@@ -262,6 +263,43 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             ExtensionUtils.addProperties(service.getProperties(), env, "MEMBER_ACTIVATED_SERVICE_PROPERTY");
             ExtensionUtils.addProperties(cluster.getProperties(), env, "MEMBER_ACTIVATED_CLUSTER_PROPERTY");
             ExtensionUtils.addProperties(member.getProperties(), env, "MEMBER_ACTIVATED_MEMBER_PROPERTY");
+            
+            // if clustering is enabled check activated member is WK member
+            String flagClustering = CartridgeAgentConfiguration.getInstance().getIsClustered();
+
+            // if WK member is re-spawned, update axis2.xml
+            if (member.getProperties() != null && "true".equals(member.getProperties().getProperty(CartridgeAgentConstants.CLUSTERING_PRIMARY_KEY)) &&
+                    flagClustering != null && "true".equals(flagClustering.toLowerCase())){
+            	if(log.isDebugEnabled()) {
+            		log.debug(" If WK member is re-spawned, update axis2.xml ");
+            	}
+                boolean hasWKIpChanged = true;
+                for (Member m : this.wkMembers){
+                    if (m.getMemberIp().equals(memberActivatedEvent.getMemberIp())){
+                        hasWKIpChanged = false;
+                    }
+                }
+                if(log.isDebugEnabled()) {
+                	log.debug(" hasWKIpChanged " + hasWKIpChanged);
+                }
+                int minCount = Integer.parseInt(CartridgeAgentConfiguration.getInstance().getMinCount());                
+                boolean isWKMemberGroupReady = isWKMemberGroupReady(env, minCount);
+                if(log.isDebugEnabled()) {
+                	log.debug("minCount " + minCount);
+                	log.debug("isWKMemberGroupReady " + isWKMemberGroupReady);
+                }
+                if (hasWKIpChanged && isWKMemberGroupReady){
+                	if(log.isDebugEnabled()) {
+                		log.debug("Setting env var STRATOS_UPDATE_WK_IP to true");
+                	}
+                    env.put("STRATOS_UPDATE_WK_IP", "true");
+                }
+            }      
+            if(log.isDebugEnabled()) {
+            	log.debug("Setting env var STRATOS_CLUSTERING to " + flagClustering);
+            }
+            env.put("STRATOS_CLUSTERING", flagClustering);
+            env.put("STRATOS_WK_MEMBER_COUNT", CartridgeAgentConfiguration.getInstance().getMinCount());
             ExtensionUtils.executeMemberActivatedExtension(env);
         } else {
             if (log.isDebugEnabled()) {
@@ -501,6 +539,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 for (Member member : apistoreClusterCollection.iterator().next().getMembers()) {
                     if (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated)) {
                         apistoreMemberList.add(member);
+                        this.wkMembers.add(member);
                     }
                 }
                 if (apistoreMemberList.isEmpty()) {
@@ -519,6 +558,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 for (Member member : publisherClusterCollection.iterator().next().getMembers()) {
                     if (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated)) {
                         publisherMemberList.add(member);
+                        this.wkMembers.add(member);
                     }
                 }
                 if (publisherMemberList.isEmpty()) {
@@ -581,6 +621,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                         (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated))
                         ) {
                     wkMembers.add(member);
+                    this.wkMembers.add(member);
                     if (log.isDebugEnabled()) {
                         log.debug("Found WKA: STRATOS_WK_MEMBER_IP: " + member.getMemberIp());
                     }
@@ -655,7 +696,8 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                             (member.getStatus().equals(MemberStatus.Starting) || member.getStatus().equals(MemberStatus.Activated))) {
 
                     managerWkaMembers.add(member);
-
+                    this.wkMembers.add(member);
+                    
                     // get the min instance count
                     if (!managerMinInstanceCountFound) {
                         managerMinInstanceCount = getMinInstanceCountFromMemberProperties(member);
@@ -729,6 +771,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 		log.debug("Added worker member " + member.getMemberId());
                 	}
                     workerWkaMembers.add(member);
+                    this.wkMembers.add(member);
 
                     // get the min instance count
                     if (!workerMinInstanceCountFound) {
