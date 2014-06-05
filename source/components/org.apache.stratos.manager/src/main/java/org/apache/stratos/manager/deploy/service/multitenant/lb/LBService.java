@@ -25,27 +25,45 @@ import org.apache.stratos.cloud.controller.stub.pojo.CartridgeInfo;
 import org.apache.stratos.cloud.controller.stub.pojo.Properties;
 import org.apache.stratos.manager.deploy.service.Service;
 import org.apache.stratos.manager.exception.ADCException;
+import org.apache.stratos.manager.exception.AlreadySubscribedException;
 import org.apache.stratos.manager.exception.UnregisteredCartridgeException;
 import org.apache.stratos.manager.lb.category.LoadBalancerCategory;
 
-public class MultiTenantLBService extends Service {
+public class LBService extends Service {
 
-    private static Log log = LogFactory.getLog(MultiTenantLBService.class);
+    private static Log log = LogFactory.getLog(LBService.class);
 
-    private LoadBalancerCategory loadBalancerCategory;
+    private String loadBalancedServiceType;
 
-    public MultiTenantLBService(String type, String autoscalingPolicyName, String deploymentPolicyName, int tenantId,
-                                CartridgeInfo cartridgeInfo, String tenantRange, LoadBalancerCategory loadBalancerCategory) {
+    public LBService(String type, String autoscalingPolicyName, String deploymentPolicyName, int tenantId,
+                     CartridgeInfo cartridgeInfo, String tenantRange) {
 
         super(type, autoscalingPolicyName, deploymentPolicyName, tenantId, cartridgeInfo, tenantRange);
-        this.loadBalancerCategory = loadBalancerCategory;
+    }
+
+    public void create () throws ADCException {
+
+        try {
+            setPayloadData(create(null, getCluster(), null, null, getCartridgeInfo(), getSubscriptionKey(), null));
+
+        } catch (AlreadySubscribedException e) {
+            throw new ADCException(e);
+        }
     }
 
     @Override
     public void deploy(Properties properties) throws ADCException, UnregisteredCartridgeException {
 
         //register the service
-        loadBalancerCategory.register(getCartridgeInfo(), getCluster(), getPayloadData(), getAutoscalingPolicyName(), getDeploymentPolicyName(),
+        register(getCartridgeInfo(), getCluster(), getPayloadData(), getAutoscalingPolicyName(), getDeploymentPolicyName(),
                 properties);
+    }
+
+    public String getLoadBalancedServiceType() {
+        return loadBalancedServiceType;
+    }
+
+    public void setLoadBalancedServiceType(String loadBalancedServiceType) {
+        this.loadBalancedServiceType = loadBalancedServiceType;
     }
 }
