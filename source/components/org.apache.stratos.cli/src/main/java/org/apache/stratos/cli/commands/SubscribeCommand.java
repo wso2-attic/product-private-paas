@@ -283,11 +283,12 @@ public class SubscribeCommand implements Command<StratosCommandContext> {
                 } else {
                     ArrayList<Cartridge> cartridgesInSeriviceGroup = RestCommandLineService.getInstance().listCartridges(serviceGroup);
                     Cartridge cart = null;
-                    for (int i = 0; i < cartridgesInSeriviceGroup.size(); i++) {
+                    int aliasCount = 1;
+                    for (int i = 0; i < cartridgesInSeriviceGroup.size(); i++, aliasCount++) {
 
                         cart = cartridgesInSeriviceGroup.get(i);
                         System.out.println("Subscribing to " + cart.getCartridgeType());
-                        RestCommandLineService.getInstance().subscribe(cart.getCartridgeType(), alias, repoURL, privateRepo, username,
+                        RestCommandLineService.getInstance().subscribe(cart.getCartridgeType(), alias + aliasCount, repoURL, privateRepo, username,
                                 password, asPolicy, depPolicy, size, removeOnTermination,
                                 persistanceMapping, commitsEnabled);
                     }

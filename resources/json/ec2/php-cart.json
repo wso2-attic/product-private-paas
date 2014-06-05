@@ -1,7 +1,7 @@
 {
       "type": "php",
       "provider": "apache",
-      "host": "isuruh.lk",
+      "host": "stratos.org",
       "displayName": "PHP",
       "description": "PHP Cartridge",
       "version": "7",

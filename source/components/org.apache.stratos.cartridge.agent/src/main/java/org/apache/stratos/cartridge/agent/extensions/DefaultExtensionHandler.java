@@ -138,6 +138,9 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             boolean artifactUpdateEnabled = Boolean.parseBoolean(System.getProperty(CartridgeAgentConstants.ENABLE_ARTIFACT_UPDATE));
             if (artifactUpdateEnabled) {
 
+                boolean autoCommit = CartridgeAgentConfiguration.getInstance().isCommitsEnabled();
+                boolean autoCheckout = CartridgeAgentConfiguration.getInstance().isCheckoutEnabled();
+
                 long artifactUpdateInterval = 10;
                 // get update interval
                 String artifactUpdateIntervalStr = System.getProperty(CartridgeAgentConstants.ARTIFACT_UPDATE_INTERVAL);
@@ -153,7 +156,19 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 }
 
                 log.info("Artifact updating task enabled, update interval: " + artifactUpdateInterval + "s");
-                GitBasedArtifactRepository.getInstance().scheduleSyncTask(repoInformation, artifactUpdateInterval);
+                if (autoCommit) {
+                    log.info("Auto Commit is turned on ");
+                }  else {
+                    log.info("Auto Commit is turned off ");
+                }
+
+                if (autoCheckout) {
+                    log.info("Auto Checkout is turned on ");
+                } else {
+                    log.info("Auto Checkout is turned off ");
+                }
+
+                GitBasedArtifactRepository.getInstance().scheduleSyncTask(repoInformation, autoCheckout, autoCommit, artifactUpdateInterval);
 
             } else {
                 log.info("Artifact updating task disabled");

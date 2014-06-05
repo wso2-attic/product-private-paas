@@ -25,7 +25,7 @@
     var alias = request.getParameter('alias');
     var serviceGroup = request.getParameter('serviceGroup');
 
-    if(serviceGroup != undefined && serviceGroup != null) {
+    if(serviceGroup != undefined && serviceGroup != null && serviceGroup != "") {
         var step_data = {};
         step_data =  utils.consoleAppUtil.getSubscribedCartridges();
         if(step_data.Error != undefined){

@@ -1,7 +1,7 @@
 {
       "type": "lb",
       "provider": "lb",
-      "host": "isuruh.lk",
+      "host": "stratos.org",
       "displayName": "load balancer",
       "description": "LB Cartridge",
       "version": "4",

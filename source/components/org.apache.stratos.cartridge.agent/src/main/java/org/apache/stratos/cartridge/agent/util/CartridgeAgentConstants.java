@@ -55,6 +55,8 @@ public class CartridgeAgentConstants implements Serializable{
     public static final String ENABLE_ARTIFACT_UPDATE = "enable.artifact.update";
     public static final String ARTIFACT_UPDATE_INTERVAL = "artifact.update.interval";
     public static final String COMMIT_ENABLED = "COMMIT_ENABLED";
+    public static final String AUTO_COMMIT = "auto.commit";
+    public static final String AUTO_CHECKOUT = "auto.checkout";
     public static final String LISTEN_ADDRESS = "listen.address";
     public static final String PROVIDER = "PROVIDER";
     public static final String INTERNAL = "internal";
@@ -87,5 +89,6 @@ public class CartridgeAgentConstants implements Serializable{
     public static final String DEPLOYMENT_MANAGER = "manager";
     public static final String DEPLOYMENT_WORKER = "worker";
     public static final String DEPLOYMENT_DEFAULT = "default";
-
+    public static final String SUPER_TENANT_REPO_PATH = "super.tenant.repository.path";
+    public static final String TENANT_REPO_PATH = "tenant.repository.path";
 }
