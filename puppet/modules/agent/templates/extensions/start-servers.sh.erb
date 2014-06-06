@@ -85,6 +85,22 @@ function update_hosts_file(){
           || print_error "Failed to update '/etc/hosts' file. "
 	done
 
+	map_to_ip="<%= @stratos_instance_data_map_to_ip %>"
+        arr=$(${ECHO} ${map_to_ip} | tr "," "\n")
+
+        for mapping in $arr
+        do
+
+	  arrr=$(${ECHO} ${mapping} | tr "#" "\n")
+	  map_hostname=${arrr[1]}
+	  ip_to_map=${arrr[0]}
+
+                (${GREP} -q "${map_hostname}" /etc/hosts || (${ECHO} "${ip_to_map}  ${map_hostname} # Additional Mappings" >> /etc/hosts \
+          && print_message "Updated /etc/hosts file with: ${ip_to_map}  ${map_hostname}")) \
+          || print_error "Failed to update '/etc/hosts' file. "
+     done
+
+
 	<%- if @stratos_instance_data_worker_host_name -%>
          worker_hostname="<%= @stratos_instance_data_worker_host_name %>"
  	 (${GREP} -q " ${worker_hostname}" /etc/hosts || (${ECHO} "${STRATOS_LB_IP}  ${worker_hostname} # Stratos LB worker private IP" >> /etc/hosts \
