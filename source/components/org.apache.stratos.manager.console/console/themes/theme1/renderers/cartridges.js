@@ -39,7 +39,7 @@ var render = function (theme, data, meta, require) {
                     newObj.cartridgeType = cartridges[i].cartridgeType;
                     newObj.items = [];
                     newObj.items.push(parse(stringify(cartridges[i])));
-
+                    newObj.version = cartridges[i].version;
                     for (var j = 0; j < cartridges.length; j++) {
                         if(cartridges[j].serviceGroup == serviceGroup && !cartridges[j].done){
                             cartridges[j].done =true;

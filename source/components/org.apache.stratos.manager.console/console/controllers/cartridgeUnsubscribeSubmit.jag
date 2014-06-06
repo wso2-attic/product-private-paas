@@ -24,6 +24,7 @@
     var utils = require('/util/utility.jag');
     var alias = request.getParameter('alias');
     var serviceGroup = request.getParameter('serviceGroup');
+    var error = [];
 
     if(serviceGroup != undefined && serviceGroup != null && serviceGroup != "") {
         var step_data = {};

@@ -24,6 +24,7 @@
     var log = new Log("controller.cartridgeSubscribeSubmit");
     var utils = require('/util/utility.jag');
     var jsonRequest = {};
+    var error = [];
     jsonRequest = {};
     var cartridgeType = request.getParameter('cartridgeType');
     var alias = request.getParameter('alias');
