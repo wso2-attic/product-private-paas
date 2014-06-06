@@ -5,7 +5,7 @@
       "host": "appserver.wso2.com",
       "displayName": "AppServer Worker",
       "description": "AppServer Worker Cartridge",
-      "version": "5.2.0",
+      "version": "5.2.1",
       "multiTenant": "true",
       "portMapping": [
          {
