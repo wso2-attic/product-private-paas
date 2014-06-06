@@ -18,6 +18,7 @@
  -->
 <TenantManagers>
     <TenantManager class="org.wso2.carbon.user.core.tenant.JDBCTenantManager">
+        <Property name="MultiTenantRealmConfigBuilder">org.wso2.carbon.user.core.config.multitenancy.SimpleRealmConfigBuilder</Property>
     </TenantManager>
 </TenantManagers>
 
