@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.stratos.manager.lb.category;
+package org.apache.stratos.manager.deploy.service.multitenant.lb;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -33,39 +33,41 @@ import org.apache.stratos.manager.exception.UnregisteredCartridgeException;
 import org.apache.stratos.manager.payload.PayloadData;
 import org.apache.stratos.manager.repository.Repository;
 import org.apache.stratos.manager.subscriber.Subscriber;
-import org.apache.stratos.manager.utils.CartridgeConstants;
 
 import java.rmi.RemoteException;
 import java.util.Map;
 
-public class ServiceLevelLoadBalancerCategory extends LoadBalancerCategory {
+public class DefaultLBService extends LBService {
 
-    private static Log log = LogFactory.getLog(ServiceLevelLoadBalancerCategory.class);
+    private static Log log = LogFactory.getLog(DefaultLBService.class);
+    private boolean defaultLBServiceExists = false;
 
-    private boolean serviceLbExists;
+    public DefaultLBService (String type, String autoscalingPolicyName, String deploymentPolicyName, int tenantId,
+                            CartridgeInfo cartridgeInfo, String tenantRange) {
 
-    public PayloadData create (String alias, Cluster cluster, Subscriber subscriber, Repository repository, CartridgeInfo cartridgeInfo,
-                               String subscriptionKey, Map<String, String> customPayloadEntries) throws ADCException, AlreadySubscribedException {
+        super(type, autoscalingPolicyName, deploymentPolicyName, tenantId, cartridgeInfo, tenantRange);
+    }
 
-        // call the relevant method to get the cluster id, using deployment policy and type
+    public PayloadData create(String alias, Cluster cluster, Subscriber subscriber, Repository repository, CartridgeInfo cartridgeInfo,
+                              String subscriptionKey, Map<String, String> customPayloadEntries)
+            throws ADCException, AlreadySubscribedException {
+
+        // call the relevant method to get the cluster id, using deployment policy
         String clusterId = null;
-
         try {
-            clusterId = AutoscalerServiceClient.getServiceClient().getServiceLBClusterId(getLoadBalancedServiceType(), getDeploymentPolicyName());
-
+            clusterId = AutoscalerServiceClient.getServiceClient().getDefaultLBClusterId(getDeploymentPolicyName());
         } catch (Exception e) {
-            log.error("Error occurred in retrieving Service LB cluster id" + e.getMessage());
+            log.error("Error occurred in retrieving default LB cluster id" + e.getMessage());
             throw new ADCException(e);
         }
 
         if (clusterId != null) {
-
             //set the cluster id to Cluster object
             cluster.setClusterDomain(clusterId);
             if (log.isDebugEnabled()) {
-                log.debug("Set existing Service LB cluster id " + clusterId);
+                log.debug("Set existing default LB cluster id " + clusterId);
             }
-            serviceLbExists = true;
+            defaultLBServiceExists = true;
 
             //get the hostname for this cluster and set it
             ClusterContext clusterContext;
@@ -73,46 +75,36 @@ public class ServiceLevelLoadBalancerCategory extends LoadBalancerCategory {
                 clusterContext = CloudControllerServiceClient.getServiceClient().getClusterContext(clusterId);
 
             } catch (RemoteException e) {
-                log.error("Error occurred in retrieving Cluster Context for Service LB ", e);
+                log.error("Error occurred in retrieving Cluster Context for default LB ", e);
                 throw new ADCException(e);
             }
 
             if (clusterContext != null) {
                 cluster.setHostName(clusterContext.getHostName());
                 if (log.isDebugEnabled()) {
-                    log.debug("Set existing Service LB hostname " + clusterContext.getHostName());
+                    log.debug("Set existing default LB hostname " + clusterContext.getHostName());
                 }
             }
 
             return null;
 
         } else {
-
             // set cluster domain
-            cluster.setClusterDomain(generateClusterId(alias, cartridgeInfo.getType()));
+            cluster.setClusterDomain(generateClusterId(null, cartridgeInfo.getType()));
             // set hostname
-            cluster.setHostName(generateHostName(alias, cartridgeInfo.getHostName()));
+            cluster.setHostName(generateHostName(null, cartridgeInfo.getHostName()));
 
-            PayloadData serviceLevelLbPayloadData = createPayload(cartridgeInfo, subscriptionKey, subscriber, cluster,
-                    repository, alias, customPayloadEntries);
-
-            // add payload entry for load balanced service type
-            serviceLevelLbPayloadData.add(CartridgeConstants.LOAD_BALANCED_SERVICE_TYPE, getLoadBalancedServiceType());
-            return serviceLevelLbPayloadData;
+            return createPayload(cartridgeInfo, subscriptionKey, subscriber, cluster, repository, alias, customPayloadEntries);
         }
     }
 
     public void register(CartridgeInfo cartridgeInfo, Cluster cluster, PayloadData payloadData, String autoscalePolicyName, String deploymentPolicyName, Properties properties) throws ADCException, UnregisteredCartridgeException {
 
-        if (!serviceLbExists) {
-
-           // if(payloadData != null) {
-              //  log.info("Payload: " + payloadData.getCompletePayloadData().toString());
-           // }
-
+        //log.info("Register service with payload data ["+payloadData+"] ");
+        if (!defaultLBServiceExists) {
             super.register(cartridgeInfo, cluster, payloadData, autoscalePolicyName, deploymentPolicyName, properties);
         }else {
-            log.info("Service LB already exists for cartridge type: " + getLoadBalancedServiceType() + ", deployment policy: " + getDeploymentPolicyName());
+            log.info("Default LB already exists for deployment policy: " + getDeploymentPolicyName());
         }
     }
 }

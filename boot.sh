@@ -900,7 +900,7 @@ function start_servers() {
     if [[ $bam_enabled = "true" ]]; then
        # Setup BAM server
        echo "Starting BAM core service..."
-       /bin/bash $setup_path/setup_bam_logging.sh >> wso2bam.log
+       nohup su - $host_user -c "/bin/bash $setup_path/setup_bam_logging.sh" >> wso2bam.log
        while ! echo exit | nc localhost $BAM_PORT; do sleep $SLEEPTIME; done
        sleep $SLEEPTIME
     fi

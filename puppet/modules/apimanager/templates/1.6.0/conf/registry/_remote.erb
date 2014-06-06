@@ -3,7 +3,7 @@
         <dataSource>jdbc/<%= @registry_database %></dataSource>
     </dbConfig>
 
-    <remoteInstance url="https://localhost:9443/registry">
+    <remoteInstance url="<%= @greg_url %>">
         <id>governance</id>
         <dbConfig>governance</dbConfig>
         <readOnly>false</readOnly>
@@ -22,7 +22,7 @@
         <dataSource>jdbc/<%= @config_database %></dataSource>
     </dbConfig>
 
-    <remoteInstance url="https://localhost:9443/registry">
+    <remoteInstance url="<%= @greg_url %>">
         <id>config</id>
         <dbConfig>config</dbConfig>
         <readOnly>false</readOnly>

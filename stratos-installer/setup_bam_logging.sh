@@ -77,7 +77,7 @@ sed -i '$a bam.admin.password=admin' repository/conf/cartridge-config.properties
 
 #Setting the BAM link in Stratos Console
 sed -i "s@BAM_HOST@${public_ip}@g" repository/deployment/server/jaggeryapps/console/themes/theme1/partials/header.hbs
-sed -i "s@BAM_PORT@$9444@g" repository/deployment/server/jaggeryapps/console/themes/theme1/partials/header.hbs
+sed -i "s@BAM_PORT@9444@g" repository/deployment/server/jaggeryapps/console/themes/theme1/partials/header.hbs
 
 popd
 
@@ -131,8 +131,12 @@ if [[ -e $hadoop_pack_path ]]; then
    sudo apt-get -q -y install rsync --force-yes
 
    cp -f $current_dir/config/hadoop/core-site.xml $hadoop_path/conf/
+   sed -i "s@PATH@$stratos_path@g" $hadoop_path/conf/core-site.xml
    cp -f $current_dir/config/hadoop/hdfs-site.xml $hadoop_path/conf/
+   sed -i "s@PATH@$stratos_path@g" $hadoop_path/conf/hdfs-site.xml
    cp -f $current_dir/config/hadoop/mapred-site.xml $hadoop_path/conf/
+   sed -i "s@PATH@$stratos_path@g" $hadoop_path/conf/mapred-site.xml
+
    #setting java_home in hadoop-env.sh
    echo "export JAVA_HOME=$JAVA_HOME" >> $hadoop_path/conf/hadoop-env.sh
 

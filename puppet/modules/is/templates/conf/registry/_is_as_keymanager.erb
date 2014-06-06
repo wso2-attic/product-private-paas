@@ -1,25 +1,3 @@
-    <dbConfig name="govregistry">
-           <dataSource>jdbc/<%= @registry_database %></dataSource>
-        </dbConfig>
-
-        <remoteInstance url="https://localhost">    
-           <id>gov</id>
-           <dbConfig>govregistry</dbConfig>
-           <readOnly>false</readOnly>
-           <enableCache>true</enableCache>
-          <registryRoot>/</registryRoot>
-        </remoteInstance>
-
-        <mount path="/_system/governance" overwrite="true">
-           <instanceId>gov</instanceId>
-           <targetPath>/_system/governance</targetPath>
-        </mount>
-
-        <mount path="/_system/config" overwrite="true">
-          <instanceId>gov</instanceId>
-          <targetPath>/_system/config</targetPath>
-        </mount>
-
     <!-- This handler provides the feature to add a simlink to a given resource -->
 
     <handler class="org.wso2.carbon.registry.extensions.handlers.ExtensionsSymLinkHandler">

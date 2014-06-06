@@ -177,6 +177,31 @@ public class AutoscalerTopologyEventReceiver implements Runnable {
 
                 });
 
+        topologyEventReceiver.addEventListener(new ClusterMaintenanceModeEventListener() {
+            @Override
+            protected void onEvent(Event event) {
+                try {
+                    log.info("Event received: " + event);
+                    ClusterMaintenanceModeEvent e = (ClusterMaintenanceModeEvent) event;
+                    TopologyManager.acquireReadLock();
+                    Service service = TopologyManager.getTopology().getService(e.getServiceName());
+                    Cluster cluster = service.getCluster(e.getClusterId());
+                    if(AutoscalerContext.getInstance().monitorExist((cluster.getClusterId()))) {
+                        AutoscalerContext.getInstance().getMonitor(e.getClusterId()).setStatus(e.getStatus());
+                    } else if (AutoscalerContext.getInstance().lbMonitorExist((cluster.getClusterId()))) {
+                        AutoscalerContext.getInstance().getLBMonitor(e.getClusterId()).setStatus(e.getStatus());
+                    } else {
+                        log.error("cluster monitor not exists for the cluster: " + cluster.toString());
+                    }
+                } catch (Exception e) {
+                    log.error("Error processing event", e);
+                } finally {
+                    TopologyManager.releaseReadLock();
+                }
+            }
+
+                });
+
         topologyEventReceiver.addEventListener(new ClusterRemovedEventListener() {
             @Override
             protected void onEvent(Event event) {

@@ -258,19 +258,19 @@
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
         <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.transport.nhttp.api.PassThroughNHttpGetProcessor</parameter>
         <!--<parameter name="priorityConfigFile" locked="false">location of priority configuration file</parameter>-->
-	<%- if @stratos_instance_data_deployment -%>
-	  <%- if @stratos_instance_data_deployment = 'manager' -%>
-	    <%- if @stratos_instance_data_worker_host_name -%>
-               <parameter name="WSDLEPRPrefix" locked="false">http://<%= @stratos_instance_data_worker_host_name %>:8280</parameter>
+        <%- if @stratos_instance_data_deployment -%>
+          <%- if @stratos_instance_data_deployment = 'manager' -%>
+            <%- if @stratos_instance_data_worker_host_name -%>
+               <parameter name="WSDLEPRPrefix" locked="false">http://<%= @stratos_instance_data_worker_host_name %>:<%= @port_mapping.index('8280') %></parameter>
             <%- else -%>
-               <parameter name="WSDLEPRPrefix" locked="false">http://<%= @stratos_instance_data_host_name %>:8280</parameter>
+               <parameter name="WSDLEPRPrefix" locked="false">http://<%= @stratos_instance_data_host_name %>:<%= @port_mapping.index('8280') %></parameter>
             <%- end -%>
-	  <%- else -%>
-            <parameter name="WSDLEPRPrefix" locked="false">http://<%= @stratos_instance_data_host_name %>:8280</parameter>
-	  <%- end -%>
-	<%- else -%>	
-          <parameter name="WSDLEPRPrefix" locked="false">http://<%= @stratos_instance_data_host_name %>:8280</parameter>	
-	<%- end -%>		
+          <%- else -%>
+            <parameter name="WSDLEPRPrefix" locked="false">http://<%= @stratos_instance_data_host_name %>:<%= @port_mapping.index('8280') %></parameter>
+          <%- end -%>
+        <%- else -%>
+          <parameter name="WSDLEPRPrefix" locked="false">http://<%= @stratos_instance_data_host_name %>:<%= @port_mapping.index('8280') %></parameter>
+        <%- end -%>
         <!--parameter name="proxyPort">8280</parameter-->
     </transportReceiver>
 
@@ -278,19 +278,19 @@
         <parameter name="port" locked="false">8243</parameter>
         <parameter name="non-blocking" locked="false">true</parameter>
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
- 	 <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.transport.nhttp.api.PassThroughNHttpGetProcessor</parameter>
+         <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.transport.nhttp.api.PassThroughNHttpGetProcessor</parameter>
          <%- if @stratos_instance_data_deployment -%>
           <%- if @stratos_instance_data_deployment = 'manager' -%>
-	    <%- if @stratos_instance_data_worker_host_name -%>
-               <parameter name="WSDLEPRPrefix" locked="false">http://<%= @stratos_instance_data_worker_host_name %>:8280</parameter>
-	    <%- else -%>
-               <parameter name="WSDLEPRPrefix" locked="false">http://<%= @stratos_instance_data_host_name %>:8280</parameter>
+            <%- if @stratos_instance_data_worker_host_name -%>
+               <parameter name="WSDLEPRPrefix" locked="false">https://<%= @stratos_instance_data_worker_host_name %>:<%= @port_mapping.index('8243') %></parameter>
+            <%- else -%>
+               <parameter name="WSDLEPRPrefix" locked="false">https://<%= @stratos_instance_data_host_name %>:<%= @port_mapping.index('8243') %></parameter>
             <%- end -%>
           <%- else -%>
-            <parameter name="WSDLEPRPrefix" locked="false">http://<%= @stratos_instance_data_host_name %>:8280</parameter>
+            <parameter name="WSDLEPRPrefix" locked="false">https://<%= @stratos_instance_data_host_name %>:<%= @port_mapping.index('8243') %></parameter>
           <%- end -%>
          <%- else -%>
-          <parameter name="WSDLEPRPrefix" locked="false">http://<%= @stratos_instance_data_host_name %>:8280</parameter>
+          <parameter name="WSDLEPRPrefix" locked="false">https://<%= @stratos_instance_data_host_name %>:<%= @port_mapping.index('8243') %></parameter>
          <%- end -%>
 	 <parameter name="keystore" locked="false">
             <KeyStore>

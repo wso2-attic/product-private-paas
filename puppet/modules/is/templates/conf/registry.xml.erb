@@ -31,13 +31,13 @@
         <dataSource>jdbc/WSO2CarbonDB</dataSource>
     </dbConfig>
 
+     <%- if @cloud == true or @clustering == true -%>
+    <%= scope.function_template(['is/conf/registry/_remote.erb']) -%>
+    <%- end -%>
+
     <%- if @enable_key_manager -%>
         <%= scope.function_template(['is/conf/registry/_is_as_keymanager.erb']) -%>
     <%- else -%>
-
-    <%- if @cloud == true or @clustering == true -%>
-    <%= scope.function_template(['is/conf/registry/_remote.erb']) -%>
-    <%- end -%>
 
    <!--<handler class="org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler">
         <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">

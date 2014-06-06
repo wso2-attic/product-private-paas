@@ -39,9 +39,11 @@ properties="-Dmb.ip=<%= @mb_ip %>
 	    -Dlb.public.ip=<%= @lb_public_ip %>
             -Djavax.net.ssl.trustStore=<%= @carbon_home %>/security/client-truststore.jks
             -Djavax.net.ssl.trustStorePassword=<%= @truststore_password %>
-	    -Denable.artifact.update=true
-	    -Dartifact.update.interval=15
-	    -Denable.data.publisher=<%= @enable_log_publisher %>
+	     -Denable.artifact.update=<%= @enable_artifact_update %>
+            -Dauto.commit=<%= @auto_commit %>
+            -Dauto.checkout=<%= @auto_checkout %>
+            -Dartifact.update.interval=15
+            -Denable.data.publisher=<%= @enable_log_publisher %>
             -Dmonitoring.server.ip=<%= @bam_ip %>
             -Dmonitoring.server.port=<%= @bam_port %>
             -Dmonitoring.server.secure.port=<%= @bam_secure_port %>

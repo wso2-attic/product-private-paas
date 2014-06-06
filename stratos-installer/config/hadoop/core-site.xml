@@ -15,7 +15,7 @@
 </property>
 <property>
 <name>hadoop.tmp.dir</name>
-<value>/mnt/hadoop_tmp</value>
+<value>PATH/hadoop_tmp</value>
 </property>
 
 </configuration>

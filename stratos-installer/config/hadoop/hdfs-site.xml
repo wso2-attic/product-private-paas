@@ -11,11 +11,11 @@
 </property>
 <property>
 <name>dfs.name.dir</name>
-<value>/mnt/hadoop_data/dfs/name</value>
+<value>PATH/hadoop_data/dfs/name</value>
 </property>
 <property>
 <name>dfs.data.dir</name>
-<value>/mnt/hadoop_data/dfs/data</value>
+<value>PATH/hadoop_data/dfs/data</value>
 </property>
 
 </configuration>
