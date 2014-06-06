@@ -71,9 +71,11 @@ pushd $stratos_extract_path
 sed -i "s@<!--<BamServerURL>https://bamhost:bamport/services/</BamServerURL>-->@<BamServerURL>${host_ip}:${bam_thrift_port}</BamServerURL>@g" repository/conf/carbon.xml
 
 sed -i 's@<dataPublisher enable="false">@<dataPublisher enable="true">@g' repository/conf/cloud-controller.xml
-sed -i '$a bam.publisher.enabled=true' repository/conf/cartridge-config.properties
-sed -i '$a bam.admin.username=admin' repository/conf/cartridge-config.properties
-sed -i '$a bam.admin.password=admin' repository/conf/cartridge-config.properties
+sed -i "s@ENABLE@true@g" repository/conf/cartridge-config.properties
+sed -i "s@BAM_IP@${public_ip}@g" repository/conf/cartridge-config.properties
+sed -i "s@BAM_PORT@9444@g" repository/conf/cartridge-config.properties
+sed -i "s@BAM_UNAME@admin@g" repository/conf/cartridge-config.properties
+sed -i "s@BAM_PASS@admin@g" repository/conf/cartridge-config.properties
 
 #Setting the BAM link in Stratos Console
 sed -i "s@BAM_HOST@${public_ip}@g" repository/deployment/server/jaggeryapps/console/themes/theme1/partials/header.hbs
