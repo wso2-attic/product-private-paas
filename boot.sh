@@ -607,10 +607,26 @@ function setup_is_core_service() {
         cp $current_dir/resources/sso-idp-config-template/sso-idp-config.xml-template $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml        
 
         # replace the sso-idp-config.xml file
-        replace_in_file 'AS_ASSERTION_CONSUMER_HOST' appserver.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         replace_in_file 'IS_ASSERTION_CONSUMER_HOST' is.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
-        replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
-        replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+
+        if [[ $as_worker_mgt_enabled = "true" ]]; then
+	    replace_in_file 'AS_ASSERTION_CONSUMER_HOST' mgt.appserver.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+        else
+	    replace_in_file 'AS_ASSERTION_CONSUMER_HOST' appserver.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+        fi
+
+        if [[ $esb_worker_mgt_enabled = "true" ]]; then
+	    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' mgt.esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+        else
+	    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+        fi
+
+        if [[ $bps_worker_mgt_enabled = "true" ]]; then
+	    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' mgt.bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+        else
+	    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+        fi
+
         replace_in_file 'IDP_URL' "$public_ip" $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         replace_in_file '<HostName>.*</HostName>' "<HostName>$public_ip</HostName>" $stratos_install_path/wso2is-5.0.0/repository/conf/carbon.xml
         replace_in_file '<MgtHostName>.*</MgtHostName>' "<MgtHostName>$public_ip</MgtHostName>" $stratos_install_path/wso2is-5.0.0/repository/conf/carbon.xml
@@ -1060,9 +1076,22 @@ function update_hosts_file() {
     lb_ip=$(python -c 'import agent; print agent.getLBIp()')
 
     # update the /etc/hosts file
+    echo " " >> /etc/hosts
     echo $lb_ip  appserver.wso2.com >> /etc/hosts
     echo $lb_ip  esb.wso2.com >> /etc/hosts
     echo $lb_ip  bps.wso2.com >> /etc/hosts
+
+    if [[ $as_worker_mgt_enabled = "true" ]]; then
+	echo $lb_ip  mgt.appserver.wso2.com >> /etc/hosts
+    fi
+
+    if [[ $esb_worker_mgt_enabled = "true" ]]; then
+	echo $lb_ip  mgt.esb.wso2.com >> /etc/hosts
+    fi
+
+    if [[ $bps_worker_mgt_enabled = "true" ]]; then
+	echo $lb_ip  mgt.bps.wso2.com >> /etc/hosts
+    fi
 }
 
 # -----------------------
