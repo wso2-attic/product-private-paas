@@ -194,7 +194,7 @@
         </filter>
     </handler>
 
-    <!--remoteInstance url="https://localhost:9443/registry">
+    <!--remoteInstance url="<%= @greg_url %>">
 	<id>instanceid</id>
 	    <username>username</username>
 	    <password>password</password>
@@ -203,7 +203,7 @@
 
     <!-- This defines the Atom based remote registry instance configuration -->
 
-    <!--remoteInstance url="https://localhost:9443/registry">
+    <!--remoteInstance url="<%= @greg_url %>">
         <id>instanceid</id>
         <username>username</username>
         <password>password</password>
@@ -213,7 +213,7 @@
 
     <!-- This defines the JDBC based remote registry instance configuration  -->
 
-    <!--remoteInstance url="https://localhost:9443/registry">
+    <!--remoteInstance url="<%= @greg_url %>">
         <id>instanceid</id>
         <dbConfig>wso2registry</dbConfig>
         <readOnly>false</readOnly>

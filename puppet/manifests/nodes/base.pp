@@ -42,6 +42,7 @@ node 'base' {
   $enable_log_publisher = 'ENABLE_LOG_PUBLISHER'
   $server_ip            = $ipaddress
   $using_dns		= 'USING_DNS'
+  $greg_url		= 'https://localhost/registry'
 
   #following variables required only if you want to install stratos using puppet.
   #not supported in alpha version
