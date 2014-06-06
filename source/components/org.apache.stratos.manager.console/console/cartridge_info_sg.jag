@@ -34,7 +34,6 @@ if(cartridges.Error != undefined){
     var i;
     for(i=0;i<cartridges.length;i++){
         var cartridgeInfo = cartridges[i];
-	log.info("cart info " + stringify(cartridgeInfo));
         if(cartridgeInfo.cartridge != undefined){
             cartridgeInfo = cartridgeInfo.cartridge;
         }
