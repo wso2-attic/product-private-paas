@@ -53,6 +53,10 @@
         {
           "name": "payload_parameter.CLUSTERING",
           "value": "@CLUSTERING"
-        }
+        },
+	 {
+	     "name": "payload_parameter.GATEWAY_HOST_NAME",
+	     "value": "gateway.am.wso2.com"
+	 }
       ]
  }

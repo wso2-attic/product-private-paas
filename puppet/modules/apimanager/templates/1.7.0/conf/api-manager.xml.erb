@@ -314,7 +314,9 @@
 	     In distributed deployment we should configure this property in key manager node by pointing 
 	     gateway https url. Also please note that we should point gateway revoke service to key manager
 	-->
-	<RevokeAPIURL>https://${carbon.local.ip}:${https.nio.port}/revoke</RevokeAPIURL>
+	<%- if @amtype == 'keymanager' -%>
+	    <RevokeAPIURL>https://<%= @stratos_instance_data_gateway_host_name %>:<%= @gateway_https_nio_proxy_port %>/revoke</RevokeAPIURL>
+	 <%- end -%>
 	
 	<!-- Whether to encrypt tokens when storing in the Database
 	Note: If changing this value to true, change the value of <TokenPersistenceProcessor> to
