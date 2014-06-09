@@ -81,6 +81,9 @@ export mysql_port=""
 export mysql_uname=""
 export mysql_password=""
 
+#/etc/hosts mapping
+export using_etc_host_mapping=""
+
 # WSO2 PPaaS services
 export as_enabled=""
 export bps_enabled=""

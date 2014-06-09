@@ -49,6 +49,9 @@ silent_mode="false"
 puppet_only="false"
 deploy_services="true"
 
+#/etc/hosts mapping
+using_dns="false"
+
 # Registry databases
 registry_db="registry"
 
@@ -705,11 +708,12 @@ function deploy_puppet() {
     cp -rf puppet/* /etc/puppet/
     echo "Puppet files successfully deployed."
    
-    using_dns=$(read_user_input "Do you need to /etc/hosts hostname mapping? [y/n] : " "" $using_dns )
-    if [[ $using_dns =~ ^[Yy]$ ]]; then
+    using_etc_host_mapping=$(read_user_input "Do you need to /etc/hosts hostname mapping? [y/n] : " "" $using_etc_host_mapping )
+    if [[ $using_etc_host_mapping =~ ^[Yy]$ ]]; then
        using_dns="false"
     else
        using_dns="true"
+
     fi
 
     echo "Configuring Puppet scripts..."
