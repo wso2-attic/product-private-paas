@@ -279,7 +279,7 @@ function setup_apache_stratos() {
 }
 
 function  run_setup_sh() {
-    separate_cep=$(read_user_input "Do you need separate cep profile? [y/n] " "" $cep_as_separate )
+    separate_cep=$(read_user_input "Do you need to setup WSO2 CEP as a separate service? [y/n] " "" $cep_as_separate )
     if [[ $separate_cep =~ ^[Yy]$ ]]; then
        	separate_cep="true"
         cep_port=7614 
@@ -952,9 +952,6 @@ function start_servers() {
        if [[ $separate_cep = "true" ]]; then
            su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p stratos >> $LOG"
            while ! echo exit | nc localhost $PPAAS_PORT; do sleep $SLEEPTIME; done
-           sleep $SLEEPTIME
-           su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p cep >> $LOG"
-           while ! echo exit | nc localhost $CEP_PORT; do sleep $SLEEPTIME; done
            sleep $SLEEPTIME
        else
            su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p default >> $LOG"

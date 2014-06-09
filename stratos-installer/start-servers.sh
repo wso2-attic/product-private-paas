@@ -69,8 +69,6 @@ do
         profile="as"
     elif [[ $x = "sm" ]]; then
         profile="sm"
-    elif [[ $x = "cep" ]]; then
-        profile="cep"
     elif [[ $x = "stratos" ]]; then
         profile="stratos"
     else
