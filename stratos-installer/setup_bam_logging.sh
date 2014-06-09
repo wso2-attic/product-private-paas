@@ -31,11 +31,43 @@ dir=`dirname $0`
 current_dir=`cd $dir;pwd`
 
 source "$current_dir/conf/setup.conf"
-stratos_extract_path=$stratos_extract_path"-default"
 
 #setting the public IP for bam
 export public_ip=$(curl --silent http://ipecho.net/plain; echo)
 export hadoop_hostname=$(hostname -f)
+
+while getopts ":p:" opts
+do
+  case $opts in
+    p)
+        profile_list=${OPTARG}
+        ;;
+    \?)
+        exit 1
+        ;;
+  esac
+done
+
+profile_list=`echo $profile_list | sed 's/^ *//g' | sed 's/ *$//g'`
+if [[ !(-z $profile_list || $profile_list = "") ]]; then
+    arr=$(echo $profile_list | tr " " "\n")
+
+    for x in $arr
+    do
+    	if [[ $x = "default" ]]; then
+            profile="default"
+    	elif [[ $x = "stratos" ]]; then
+            profile="stratos"
+        else
+            echo "Invalid profile."
+            exit 1
+    	fi
+    done
+else 
+    profile="default"
+fi
+
+stratos_extract_path=$stratos_extract_path"-"$profile
 
 function start_bam() {
        echo "Starting Hadoop server ..."

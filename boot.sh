@@ -279,7 +279,14 @@ function setup_apache_stratos() {
 }
 
 function  run_setup_sh() {
-	/bin/bash $setup_path/setup.sh -p "default"
+    separate_cep=$(read_user_input "Do you need separate cep profile? [y/n] " "" $cep_as_separate )
+    if [[ $separate_cep =~ ^[Yy]$ ]]; then
+       	separate_cep="true"
+        cep_port=7614 
+        /bin/bash $setup_path/setup.sh -p "stratos" 
+    else
+    	/bin/bash $setup_path/setup.sh -p "default" 
+    fi
 }
 
 function get_service_deployment_confirmations() {
@@ -920,7 +927,12 @@ function start_servers() {
     if [[ $bam_enabled = "true" ]]; then
        # Setup BAM server
        echo "Starting BAM core service..."
-       nohup su - $host_user -c "/bin/bash $setup_path/setup_bam_logging.sh" >> wso2bam.log
+       if [[ $separate_cep = "true" ]]; then
+           profile="stratos"
+       else 
+           profile="default"
+       fi
+       nohup su - $host_user -c "/bin/bash $setup_path/setup_bam_logging.sh -p $profile" >> wso2bam.log
        while ! echo exit | nc localhost $BAM_PORT; do sleep $SLEEPTIME; done
        sleep $SLEEPTIME
     fi
@@ -936,9 +948,19 @@ function start_servers() {
     if [[ $wso2_ppaas_enabled = "true" ]]; then
        # Start Apache Stratos with default profile
        echo -e "Starting WSO2 Private PaaS server as $host_user user... "
-       su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p default >> $LOG"
-       while ! echo exit | nc localhost $PPAAS_PORT; do sleep $SLEEPTIME; done
-       sleep $SLEEPTIME
+
+       if [[ $separate_cep = "true" ]]; then
+           su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p stratos >> $LOG"
+           while ! echo exit | nc localhost $PPAAS_PORT; do sleep $SLEEPTIME; done
+           sleep $SLEEPTIME
+           su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p cep >> $LOG"
+           while ! echo exit | nc localhost $CEP_PORT; do sleep $SLEEPTIME; done
+           sleep $SLEEPTIME
+       else
+           su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p default >> $LOG"
+           while ! echo exit | nc localhost $PPAAS_PORT; do sleep $SLEEPTIME; done
+           sleep $SLEEPTIME
+       fi
     else
         echo -e "Skipping WSO2 Private PaaS startup."
     fi 

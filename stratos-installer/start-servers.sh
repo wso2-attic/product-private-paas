@@ -69,6 +69,10 @@ do
         profile="as"
     elif [[ $x = "sm" ]]; then
         profile="sm"
+    elif [[ $x = "cep" ]]; then
+        profile="cep"
+    elif [[ $x = "stratos" ]]; then
+        profile="stratos"
     else
         echo "'default' profile selected."
         profile="default"
@@ -77,7 +81,7 @@ done
 
 stratos_extract_path=$stratos_extract_path"-"$profile
 
-if [[ $profile = "default" && $config_mb = "true" ]]; then
+if [[ ($profile = "default" || $profile = "stratos") && $config_mb = "true" ]]; then
     echo "Starting ActiveMQ server ..." >> $LOG
     $activemq_path/bin/activemq start
     echo "ActiveMQ server started" >> $LOG

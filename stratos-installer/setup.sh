@@ -466,7 +466,6 @@ function cep_setup() {
     pushd $stratos_extract_path
 
     echo "In outputeventadaptors"
-
     sed -i "s@CEP_HOME@$stratos_extract_path@g" repository/deployment/server/outputeventadaptors/JMSOutputAdaptor.xml
     sed -i "s@MB_HOSTNAME:MB_LISTEN_PORT@$mb_ip:$mb_port@g" repository/deployment/server/outputeventadaptors/JMSOutputAdaptor.xml
 
@@ -513,6 +512,8 @@ if [[ !(-z $profile_list || $profile_list = "") ]]; then
             profile="as"
         elif [[ $x = "sm" ]]; then
             profile="sm"
+    	elif [[ $x = "stratos" ]]; then
+            profile="stratos"
         else
             echo "Invalid profile."
             exit 1
@@ -561,6 +562,10 @@ elif [[ $profile = "as" ]]; then
     as_conf_validate
 elif [[ $profile = "sm" ]]; then
     sm_conf_validate
+elif [[ $profile = "stratos" ]]; then
+    cc_conf_validate
+    as_conf_validate
+    sm_conf_validate
 else
     echo "In default profile CEP will be configured."
     cc_conf_validate
@@ -581,7 +586,7 @@ if [[ !(-d $stratos_extract_path) ]]; then
     mv -f $stratos_path/apache-stratos-4.0.0-wso2v1 $stratos_extract_path
 fi
 
-if [[ ($profile = "default" && $config_mb = "true") ]]; then
+if [[ ( ($profile = "default" || $profile = "stratos") && $config_mb = "true") ]]; then
     echo "Extracting ActiveMQ"
     tar -xzf $activemq_pack -C $stratos_path
     # disable amqp connector to prevent conflicts with openstack
@@ -594,6 +599,10 @@ if [[ $profile = "cc" ]]; then
 elif [[ $profile = "as" ]]; then
     as_setup
 elif [[ $profile = "sm" ]]; then
+    sm_setup
+elif [[ $profile = "stratos" ]]; then
+    cc_setup
+    as_setup
     sm_setup
 else
     cc_setup
