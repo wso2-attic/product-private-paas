@@ -22,12 +22,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.cloud.controller.exception.InvalidCartridgeTypeException;
 import org.apache.stratos.cloud.controller.exception.InvalidMemberException;
-import org.apache.stratos.cloud.controller.impl.CloudControllerServiceImpl;
-import org.apache.stratos.cloud.controller.pojo.Cartridge;
-import org.apache.stratos.cloud.controller.pojo.ClusterContext;
-import org.apache.stratos.cloud.controller.pojo.MemberContext;
-import org.apache.stratos.cloud.controller.pojo.PortMapping;
-import org.apache.stratos.cloud.controller.pojo.Registrant;
+import org.apache.stratos.cloud.controller.pojo.*;
 import org.apache.stratos.cloud.controller.publisher.CartridgeInstanceDataPublisher;
 import org.apache.stratos.cloud.controller.runtime.FasterLookUpDataHolder;
 import org.apache.stratos.cloud.controller.util.CloudControllerUtil;
@@ -150,6 +145,7 @@ public class TopologyBuilder {
                 }
                 cluster.setProperties(props);
                 cluster.setLbCluster(isLb);
+                cluster.setStatus(ClusterStatus.Created);
                 service.addCluster(cluster);
             }
             TopologyManager.updateTopology(topology);
@@ -187,6 +183,35 @@ public class TopologyBuilder {
         }
         TopologyEventPublisher.sendClusterRemovedEvent(ctxt, deploymentPolicy);
     }
+
+    public static void handleClusterMaintenanceMode(ClusterContext ctxt) {
+
+        Topology topology = TopologyManager.getTopology();
+        Service service = topology.getService(ctxt.getCartridgeType());
+        if (service == null) {
+            log.warn(String.format("Service %s does not exist",
+                    ctxt.getCartridgeType()));
+            return;
+        }
+
+        if (!service.clusterExists(ctxt.getClusterId())) {
+            log.warn(String.format("Cluster %s does not exist for service %s",
+                    ctxt.getClusterId(),
+                    ctxt.getCartridgeType()));
+            return;
+        }
+
+        try {
+            TopologyManager.acquireWriteLock();
+            Cluster cluster = service.getCluster(ctxt.getClusterId());
+            cluster.setStatus(ClusterStatus.In_Maintenance);
+            TopologyManager.updateTopology(topology);
+        } finally {
+            TopologyManager.releaseWriteLock();
+        }
+        TopologyEventPublisher.sendClusterMaintenanceModeEvent(ctxt);
+    }
+
 
 	public static void handleMemberSpawned(String serviceName,
 			String clusterId, String partitionId,

@@ -42,7 +42,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.*;
 
@@ -60,8 +59,8 @@ public class GitBasedArtifactRepository {
     private static ConcurrentHashMap<Integer, RepositoryContext>
             tenantToRepoContextMap = new ConcurrentHashMap<Integer, RepositoryContext>();
     private static volatile GitBasedArtifactRepository gitBasedArtifactRepository;
-    private static String SUPER_TENANT_APP_PATH = "/repository/deployment/server/";
-    private static String TENANT_PATH = "/repository/tenants/";
+    private static String SUPER_TENANT_REPO_PATH = "/repository/deployment/server/";
+    private static String TENANT_REPO_PATH = "/repository/tenants/";
 
     private GitBasedArtifactRepository() {
         extensionHandler = CartridgeAgent.getExtensionHandler();
@@ -144,17 +143,30 @@ public class GitBasedArtifactRepository {
 
         if (isMultitenant) {
             if (tenantId == SUPER_TENANT_ID) {
-                // create temp directory for super tenant apps
-                //String dirPath = "/tmp/" + SUPER_TENANT_ID;
-                //String dirPath = gitLocalRepoPath.endsWith("/") ? gitLocalRepoPathSUPER_TENANT_APP_PATH : ;
-                //boolean dirStatus = new File(dirPath).mkdir();
-                //log.info("super tenant temp directory created status : " + dirStatus);
-                repoPathBuilder.append(gitLocalRepoPath).append(SUPER_TENANT_APP_PATH);
+                //check if the relevant path is set as a startup param
+                String superTenantRepoPath = CartridgeAgentConfiguration.getInstance().getSuperTenantRepositoryPath();
+
+                if (superTenantRepoPath != null && !superTenantRepoPath.isEmpty()) {
+                    superTenantRepoPath = superTenantRepoPath.startsWith("/") ? superTenantRepoPath : "/".concat(superTenantRepoPath);
+                    repoPathBuilder.append(gitLocalRepoPath).append(superTenantRepoPath);
+
+                } else {
+                    repoPathBuilder.append(gitLocalRepoPath).append(SUPER_TENANT_REPO_PATH);
+                }
             } else {
                 // create folder with tenant id
                 createTenantDir(tenantId, gitLocalRepoPath);
-                repoPathBuilder.append(gitLocalRepoPath).append(TENANT_PATH)
-                        .append(tenantId);
+                //check if the relevant path is set as a startup param
+                String tenantRepoPath = CartridgeAgentConfiguration.getInstance().getTenantRepositoryPath();
+
+                if (tenantRepoPath != null && !tenantRepoPath.isEmpty()) {
+                    tenantRepoPath = tenantRepoPath.startsWith("/") ? tenantRepoPath : "/".concat(tenantRepoPath);
+                    tenantRepoPath = tenantRepoPath.endsWith("/") ? tenantRepoPath : tenantRepoPath.concat("/");
+
+                    repoPathBuilder.append(gitLocalRepoPath).append(tenantRepoPath).append(tenantId);
+                } else {
+                    repoPathBuilder.append(gitLocalRepoPath).append(TENANT_REPO_PATH).append(tenantId);
+                }
             }
 
             repoPath = repoPathBuilder.toString();
@@ -166,7 +178,7 @@ public class GitBasedArtifactRepository {
     }
 
     private static void createTenantDir(int tenantId, String path) {
-        String dirPathName = path + TENANT_PATH + tenantId;
+        String dirPathName = path + TENANT_REPO_PATH + tenantId;
         boolean dirStatus = new File(dirPathName).mkdir();
         if (dirStatus) {
             log.info("Successfully created directory [" + dirPathName + "] ");
@@ -498,17 +510,16 @@ public class GitBasedArtifactRepository {
 
         } catch (CheckoutConflictException e) {
             // checkout from remote HEAD
-            checkoutFromRemoteHead(gitRepoCtx, e.getConflictingPaths());
-
+            return checkoutFromRemoteHead(gitRepoCtx, e.getConflictingPaths());
             // pull again
-            try {
+            /*try {
                 return pullArtifacts(gitRepoCtx);
 
             } catch (GitAPIException e1) {
                 //cannot happen here
                 log.error("Git pull failed for tenant " + gitRepoCtx.getTenantId(), e1);
                 return false;
-            }
+            }*/
         }
     }
 
@@ -538,6 +549,32 @@ public class GitBasedArtifactRepository {
         return checkoutSuccess;
     }
 
+    private void resetToRemoteHead (RepositoryContext gitRepoCtx, List<String> paths) {
+
+        ResetCommand resetCmd = gitRepoCtx.getGit().reset();
+
+        // reset type is HARD, to remote master branch
+        resetCmd.setMode(ResetCommand.ResetType.HARD).
+                setRef(GitDeploymentSynchronizerConstants.ORIGIN + "/" + GitDeploymentSynchronizerConstants.MASTER);
+
+        // add paths
+        for(String path : paths) {
+            resetCmd.addPath(path);
+            if(log.isDebugEnabled()) {
+                log.debug("Added the file path " + path + " to reset");
+            }
+        }
+
+        try {
+            resetCmd.call();
+            log.info("Reset the local branch to origin master successfully");
+
+        } catch (GitAPIException e) {
+            log.error("Reset to origin master failed", e);
+        }
+
+    }
+
     private boolean syncInitialLocalArtifacts(RepositoryContext gitRepoCtx) throws Exception {
 
         boolean syncedLocalArtifacts;
@@ -550,7 +587,7 @@ public class GitBasedArtifactRepository {
         return syncedLocalArtifacts;
     }
 
-    public void scheduleSyncTask(RepositoryInformation repoInformation, long delay) {
+    public void scheduleSyncTask(RepositoryInformation repoInformation, boolean autoCheckout, boolean autoCommit, long delay) {
 
         int tenantId = Integer.parseInt(repoInformation.getTenantId());
 
@@ -568,7 +605,7 @@ public class GitBasedArtifactRepository {
                             new ArtifactSyncTaskThreadFactory(repoCtxt.getGitLocalRepoPath()));
 
                     // schedule at the given interval
-                    artifactSyncScheduler.scheduleAtFixedRate(new ArtifactSyncTask(repoInformation), delay, delay, TimeUnit.SECONDS);
+                    artifactSyncScheduler.scheduleAtFixedRate(new ArtifactSyncTask(repoInformation, autoCheckout, autoCommit), delay, delay, TimeUnit.SECONDS);
                     // cache
                     repoCtxt.setArtifactSyncSchedular(artifactSyncScheduler);
 
@@ -942,19 +979,25 @@ public class GitBasedArtifactRepository {
     private class ArtifactSyncTask implements Runnable {
 
         private RepositoryInformation repositoryInformation;
+        private boolean autoCheckout;
+        private boolean autoCommit;
 
-        public ArtifactSyncTask(RepositoryInformation repositoryInformation) {
+        public ArtifactSyncTask(RepositoryInformation repositoryInformation, boolean autoCheckout, boolean autoCommit) {
             this.repositoryInformation = repositoryInformation;
+            this.autoCheckout = autoCheckout;
+            this.autoCommit = autoCommit;
         }
 
         @Override
         public void run() {
             try {
-                checkout(repositoryInformation);
+                if (autoCheckout) {
+                    checkout(repositoryInformation);
+                }
             } catch (Exception e) {
                 log.error(e);
             }
-            if (CartridgeAgentConfiguration.getInstance().isCommitsEnabled()) {
+            if (autoCommit) {
                 commit(repositoryInformation);
             }
         }

@@ -90,7 +90,6 @@ class is (
       'conf/log4j.properties',
       'conf/api-manager.xml',
       'conf/security/application-authenticators.xml',
-      'conf/identity.xml',
       'conf/security/sso-idp-config.xml',
       ],
   }

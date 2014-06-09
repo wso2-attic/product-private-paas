@@ -45,6 +45,15 @@ function start_bam() {
        nohup $bam_path/bin/wso2server.sh -DportOffset=1 &
 }
 
+function get_mysql_connector_jar() {
+	IFS='/'
+	arr=($mysql_connector_jar)
+	for x in ${!arr[*]} ; do
+	   connector_jar=${arr[x]}
+	done
+	IFS=$' \t\n'
+}
+
 # In silent mode, start BAM server and do not make any configurations
 if [[ -z $silent_mode && $silent_mode = "true" ]]; then
        start_bam
@@ -62,13 +71,11 @@ pushd $stratos_extract_path
 sed -i "s@<!--<BamServerURL>https://bamhost:bamport/services/</BamServerURL>-->@<BamServerURL>${host_ip}:${bam_thrift_port}</BamServerURL>@g" repository/conf/carbon.xml
 
 sed -i 's@<dataPublisher enable="false">@<dataPublisher enable="true">@g' repository/conf/cloud-controller.xml
-sed -i '$a bam.publisher.enabled=true' repository/conf/cartridge-config.properties
-sed -i '$a bam.admin.username=admin' repository/conf/cartridge-config.properties
-sed -i '$a bam.admin.password=admin' repository/conf/cartridge-config.properties
-
-#Setting the BAM link in Stratos Console
-sed -i "s@BAM_HOST@${public_ip}@g" repository/deployment/server/jaggeryapps/console/themes/theme1/partials/header.hbs
-sed -i "s@BAM_PORT@$9444@g" repository/conf/carbon.xml
+sed -i "s@ENABLE@true@g" repository/conf/cartridge-config.properties
+sed -i "s@BAM_IP@${public_ip}@g" repository/conf/cartridge-config.properties
+sed -i "s@BAM_PORT@9444@g" repository/conf/cartridge-config.properties
+sed -i "s@BAM_UNAME@admin@g" repository/conf/cartridge-config.properties
+sed -i "s@BAM_PASS@admin@g" repository/conf/cartridge-config.properties
 
 popd
 
@@ -84,6 +91,8 @@ cp -f $mysql_connector_jar $bam_path/repository/components/lib/
 
 pushd $bam_path
 
+get_mysql_connector_jar
+
 echo "Setting up BAM"
 
 sed -i "s@MYSQL_HOSTNAME@$dashboard_db_hostname@g" repository/conf/datasources/master-datasources.xml
@@ -96,6 +105,7 @@ sed -i "s@CASSANDRA_USER@$dashboard_cassendra_user@g" repository/conf/datasource
 sed -i "s@CASSANDRA_PASSWORD@$dashboard_cassendra_password@g" repository/conf/datasources/master-datasources.xml
 sed -i "s@DATANODEHOST@$hadoop_hostname@g" repository/conf/advanced/hive-site.xml
 sed -i "s@JOBTRACKERSHOST@$hadoop_hostname@g" repository/conf/advanced/hive-site.xml
+sed -i "s@CONNECTOR_JAR@$connector_jar@g" repository/conf/advanced/hive-site.xml
 
 popd
 
@@ -119,8 +129,12 @@ if [[ -e $hadoop_pack_path ]]; then
    sudo apt-get -q -y install rsync --force-yes
 
    cp -f $current_dir/config/hadoop/core-site.xml $hadoop_path/conf/
+   sed -i "s@PATH@$stratos_path@g" $hadoop_path/conf/core-site.xml
    cp -f $current_dir/config/hadoop/hdfs-site.xml $hadoop_path/conf/
+   sed -i "s@PATH@$stratos_path@g" $hadoop_path/conf/hdfs-site.xml
    cp -f $current_dir/config/hadoop/mapred-site.xml $hadoop_path/conf/
+   sed -i "s@PATH@$stratos_path@g" $hadoop_path/conf/mapred-site.xml
+
    #setting java_home in hadoop-env.sh
    echo "export JAVA_HOME=$JAVA_HOME" >> $hadoop_path/conf/hadoop-env.sh
 

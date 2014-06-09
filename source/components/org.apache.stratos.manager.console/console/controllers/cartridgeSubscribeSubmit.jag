@@ -24,6 +24,7 @@
     var log = new Log("controller.cartridgeSubscribeSubmit");
     var utils = require('/util/utility.jag');
     var jsonRequest = {};
+    var error = [];
     jsonRequest = {};
     var cartridgeType = request.getParameter('cartridgeType');
     var alias = request.getParameter('alias');
@@ -79,38 +80,50 @@
         if(step_data.Error != undefined){
                 error.push(step_data.Error);
         } else {
-            step_data = step_data.cartridge;
-            for(var i=0;i<step_data.length;i++) {
-                if(step_data[i].serviceGroup == undefined && step_data[i].serviceGroup != serviceGroup) {
-                    step_data.splice(i,1);
-                    i = i - 1;
+            if(step_data.Error != undefined){
+                error.push(step_data.Error);
+            } else {
+                step_data = step_data.cartridge;
+                for(var i=0;i<step_data.length;i++) {
+                    if(step_data[i].serviceGroup == undefined ||
+                            step_data[i].serviceGroup == null ||
+                            step_data[i].serviceGroup != serviceGroup) {
+                        step_data.splice(i,1);
+                        i = i - 1;
+                    }
                 }
-            }
-            log.info("Service group data : " + stringify(step_data));
+                log.debug("Service group data : " + stringify(step_data));
 
-            var repoUrl = null;
-            for(var i=0;i<step_data.length;i++) {
-                //subscribe to cartridges separately which falls in the same service group
-                jsonRequest.alias = alias + Math.floor((Math.random() * 10000) + 1);
-		        jsonRequest.cartridgeType = step_data[i].cartridgeType;
+                var repoUrl = null;
+                for(var i=0;i<step_data.length;i++) {
+                    //subscribe to cartridges separately which falls in the same service group
+                    jsonRequest.alias = alias + i;
+                    jsonRequest.cartridgeType = step_data[i].cartridgeType;
 
-		        // the following is a great dirty hack to share the same repo between gateway workers and gateway managers :(
-		        if (repoUrl != null && repoUrl != undefined) {
-		            log.info("Setting previously created internal repo URL " + repoUrl);
-		            // if a repoUrl has been returne with previous subscription response, set it to request params
-		            jsonRequest.repoURL = repoUrl;
-                }
+                    // the following is a great dirty hack to share the same repo between gateway workers and gateway managers :(
+                    if (repoUrl != null && repoUrl != undefined) {
+                        log.debug("Setting previously created internal repo URL " + repoUrl);
+                        // if a repoUrl has been returne with previous subscription response, set it to request params
+                        jsonRequest.repoURL = repoUrl;
+                    }
 
-                var re = utils.consoleAppUtil.subscribeToCartridge(jsonRequest);
-                log.debug("Request :" + stringify(jsonRequest) + ",  \n Response : " + stringify(re)) ;
-                // check if the repo Url returned in response is valid. If so, assign it to a variable to use in the next
-                // subscription call
-                var responseUrl = re.subscriptionInfo.repositoryURL;
-                if (responseUrl != null && responseUrl != undefined) {
-                    repoUrl = responseUrl;
+                    var re = utils.consoleAppUtil.subscribeToCartridge(jsonRequest);
+                    if(re.Error != undefined){
+                            error.push(step_data.Error);
+                    } else {
+                        log.debug("Request :" + stringify(jsonRequest) + ",  \n Response : " + stringify(re)) ;
+                        // check if the repo Url returned in response is valid. If so, assign it to a variable to use in the next
+                        // subscription call
+                        if(re.subscriptionInfo != undefined && re.subscriptionInfo.repositoryURL != undefined &&
+                                re.subscriptionInfo.repositoryURL != null) {
+                            repoUrl = re.subscriptionInfo.repositoryURL;
+                        }
+                    }
+
                 }
             }
         }
+
     } else {
 	 jsonRequest.cartridgeType = cartridgeType;
         var result = utils.consoleAppUtil.subscribeToCartridge(jsonRequest);

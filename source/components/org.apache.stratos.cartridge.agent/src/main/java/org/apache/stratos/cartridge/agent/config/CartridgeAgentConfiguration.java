@@ -49,6 +49,7 @@ public class CartridgeAgentConfiguration {
     private final List<Integer> ports;
     private final List<String> logFilePaths;
     private final boolean isCommitsEnabled;
+    private final boolean isCheckoutEnabled;
     private final String listenAddress;
     private final String lbClusterId;
     private final String tenantId;
@@ -64,6 +65,8 @@ public class CartridgeAgentConfiguration {
     private String deployment;
     private String managerServiceName;
     private String workerServiceName;
+    private String superTenantRepositoryPath;
+    private String tenantRepositoryPath;
 
     private CartridgeAgentConfiguration() {
         parameters = loadParametersFile();
@@ -83,7 +86,9 @@ public class CartridgeAgentConfiguration {
             logFilePaths = readLogFilePaths();
             isMultitenant = readMultitenant(CartridgeAgentConstants.MULTITENANT);
             persistenceMappings = readPersistenceMapping();
-            isCommitsEnabled = readCommitsEnabled(CartridgeAgentConstants.COMMIT_ENABLED);
+            isCommitsEnabled = readCommitParameterValue();
+            isCheckoutEnabled = Boolean.parseBoolean(System.getProperty(CartridgeAgentConstants.AUTO_CHECKOUT));
+
             listenAddress = System.getProperty(CartridgeAgentConstants.LISTEN_ADDRESS);
             isInternalRepo = readInternalRepo(CartridgeAgentConstants.PROVIDER);
             tenantId = readParameterValue(CartridgeAgentConstants.TENANT_ID);
@@ -92,6 +97,8 @@ public class CartridgeAgentConfiguration {
             // not mandatory
             lbPrivateIp = System.getProperty(CartridgeAgentConstants.LB_PRIVATE_IP);
             lbPublicIp = System.getProperty(CartridgeAgentConstants.LB_PUBLIC_IP);
+            tenantRepositoryPath =  System.getProperty(CartridgeAgentConstants.TENANT_REPO_PATH);
+            superTenantRepositoryPath = System.getProperty(CartridgeAgentConstants.SUPER_TENANT_REPO_PATH);
 
             deployment = readDeployment();
             managerServiceName = readManagerServiceType();
@@ -204,6 +211,7 @@ public class CartridgeAgentConfiguration {
         boolean isCommitEnabled = false;
         try {
             isCommitEnabled = Boolean.parseBoolean(readParameterValue(commitEnabled));
+
         } catch (ParameterNotFoundException e) {
             // Missing commits enabled flag is not an exception
             log.error(" Commits enabled payload parameter is not found");
@@ -308,6 +316,23 @@ public class CartridgeAgentConfiguration {
 
         String message = "Cannot find the value of required parameter: " + parameterName;
         throw new ParameterNotFoundException(message);
+    }
+
+    private boolean readCommitParameterValue() throws ParameterNotFoundException {
+
+        if (parameters.containsKey(CartridgeAgentConstants.COMMIT_ENABLED)) {
+            return Boolean.parseBoolean(parameters.get(CartridgeAgentConstants.COMMIT_ENABLED));
+        }
+
+        if (System.getProperty(CartridgeAgentConstants.COMMIT_ENABLED) != null) {
+            return Boolean.parseBoolean(System.getProperty(CartridgeAgentConstants.COMMIT_ENABLED));
+        }
+
+        if (System.getProperty(CartridgeAgentConstants.AUTO_COMMIT) != null) {
+            return Boolean.parseBoolean(System.getProperty(CartridgeAgentConstants.AUTO_COMMIT));
+        }
+        log.info(CartridgeAgentConstants.COMMIT_ENABLED + " is not found and setting it to false");
+        return false;
     }
 
     private List<Integer> readPorts() throws ParameterNotFoundException {
@@ -458,5 +483,17 @@ public class CartridgeAgentConfiguration {
 
     public void setWorkerServiceName(String workerServiceName) {
         this.workerServiceName = workerServiceName;
+    }
+
+    public String getSuperTenantRepositoryPath() {
+        return superTenantRepositoryPath;
+    }
+
+    public String getTenantRepositoryPath() {
+        return tenantRepositoryPath;
+    }
+
+    public boolean isCheckoutEnabled() {
+        return isCheckoutEnabled;
     }
 }

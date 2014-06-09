@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.stratos.manager.lb.category;
+package org.apache.stratos.manager.deploy.service.multitenant.lb;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,11 +38,17 @@ import org.apache.stratos.manager.utils.CartridgeConstants;
 import java.rmi.RemoteException;
 import java.util.Map;
 
-public class ServiceLevelLoadBalancerCategory extends LoadBalancerCategory {
+public class ServiceAwareLBService extends LBService {
 
-    private static Log log = LogFactory.getLog(ServiceLevelLoadBalancerCategory.class);
+    public ServiceAwareLBService(String type, String autoscalingPolicyName, String deploymentPolicyName, int tenantId,
+                                 CartridgeInfo cartridgeInfo, String tenantRange) {
 
-    private boolean serviceLbExists;
+        super(type, autoscalingPolicyName, deploymentPolicyName, tenantId, cartridgeInfo, tenantRange);
+    }
+
+    private static Log log = LogFactory.getLog(ServiceAwareLBService.class);
+
+    private boolean serviceAwareLBExists;
 
     public PayloadData create (String alias, Cluster cluster, Subscriber subscriber, Repository repository, CartridgeInfo cartridgeInfo,
                                String subscriptionKey, Map<String, String> customPayloadEntries) throws ADCException, AlreadySubscribedException {
@@ -65,7 +71,7 @@ public class ServiceLevelLoadBalancerCategory extends LoadBalancerCategory {
             if (log.isDebugEnabled()) {
                 log.debug("Set existing Service LB cluster id " + clusterId);
             }
-            serviceLbExists = true;
+            serviceAwareLBExists = true;
 
             //get the hostname for this cluster and set it
             ClusterContext clusterContext;
@@ -89,9 +95,9 @@ public class ServiceLevelLoadBalancerCategory extends LoadBalancerCategory {
         } else {
 
             // set cluster domain
-            cluster.setClusterDomain(generateClusterId(alias, cartridgeInfo.getType()));
+            cluster.setClusterDomain(generateClusterId(null, cartridgeInfo.getType()));
             // set hostname
-            cluster.setHostName(generateHostName(alias, cartridgeInfo.getHostName()));
+            cluster.setHostName(generateHostName(null, cartridgeInfo.getHostName()));
 
             PayloadData serviceLevelLbPayloadData = createPayload(cartridgeInfo, subscriptionKey, subscriber, cluster,
                     repository, alias, customPayloadEntries);
@@ -104,15 +110,11 @@ public class ServiceLevelLoadBalancerCategory extends LoadBalancerCategory {
 
     public void register(CartridgeInfo cartridgeInfo, Cluster cluster, PayloadData payloadData, String autoscalePolicyName, String deploymentPolicyName, Properties properties) throws ADCException, UnregisteredCartridgeException {
 
-        if (!serviceLbExists) {
-
-           // if(payloadData != null) {
-              //  log.info("Payload: " + payloadData.getCompletePayloadData().toString());
-           // }
-
+        if (!serviceAwareLBExists) {
             super.register(cartridgeInfo, cluster, payloadData, autoscalePolicyName, deploymentPolicyName, properties);
+
         }else {
-            log.info("Service LB already exists for cartridge type: " + getLoadBalancedServiceType() + ", deployment policy: " + getDeploymentPolicyName());
+            log.info("Service Aware LB already exists for cartridge type: " + getLoadBalancedServiceType() + ", deployment policy: " + getDeploymentPolicyName());
         }
     }
 }

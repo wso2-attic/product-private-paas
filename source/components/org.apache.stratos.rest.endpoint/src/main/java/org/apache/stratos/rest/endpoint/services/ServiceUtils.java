@@ -768,7 +768,8 @@ public class ServiceUtils {
                     // Ignoring the LB cartridges since they are not shown to the user.
                     if(cartridge.isLoadBalancer())
                         continue;
-                    if(StringUtils.isNotEmpty(serviceGroup) && !cartridge.getServiceGroup().equals(serviceGroup)){
+                    if(StringUtils.isNotEmpty(serviceGroup) && cartridge.getServiceGroup() != null &&
+                    		!cartridge.getServiceGroup().equals(serviceGroup)){
                         continue;
                     }
                     cartridges.add(cartridge);

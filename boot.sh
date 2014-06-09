@@ -607,10 +607,26 @@ function setup_is_core_service() {
         cp $current_dir/resources/sso-idp-config-template/sso-idp-config.xml-template $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml        
 
         # replace the sso-idp-config.xml file
-        replace_in_file 'AS_ASSERTION_CONSUMER_HOST' appserver.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         replace_in_file 'IS_ASSERTION_CONSUMER_HOST' is.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
-        replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
-        replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+
+        if [[ $as_worker_mgt_enabled = "true" ]]; then
+	    replace_in_file 'AS_ASSERTION_CONSUMER_HOST' mgt.appserver.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+        else
+	    replace_in_file 'AS_ASSERTION_CONSUMER_HOST' appserver.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+        fi
+
+        if [[ $esb_worker_mgt_enabled = "true" ]]; then
+	    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' mgt.esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+        else
+	    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+        fi
+
+        if [[ $bps_worker_mgt_enabled = "true" ]]; then
+	    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' mgt.bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+        else
+	    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+        fi
+
         replace_in_file 'IDP_URL' "$public_ip" $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         replace_in_file '<HostName>.*</HostName>' "<HostName>$public_ip</HostName>" $stratos_install_path/wso2is-5.0.0/repository/conf/carbon.xml
         replace_in_file '<MgtHostName>.*</MgtHostName>' "<MgtHostName>$public_ip</MgtHostName>" $stratos_install_path/wso2is-5.0.0/repository/conf/carbon.xml
@@ -688,11 +704,19 @@ function deploy_puppet() {
     echo "Deploying Puppet files to /etc/puppet. Please wait..."
     cp -rf puppet/* /etc/puppet/
     echo "Puppet files successfully deployed."
+   
+    using_dns=$(read_user_input "Do you need to /etc/hosts hostname mapping? [y/n] : " "" $using_dns )
+    if [[ $using_dns =~ ^[Yy]$ ]]; then
+       using_dns="false"
+    else
+       using_dns="true"
+    fi
 
     echo "Configuring Puppet scripts..."
     # Set Puppet base node parameters
     replace_in_file "PACKAGE_REPO" "$package_repo" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "MB_IP" "$machine_ip" "/etc/puppet/manifests/nodes/base.pp"
+    replace_in_file "USING_DNS" "$using_dns" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "MB_PORT" "61616" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "CEP_IP" "$machine_ip" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "CEP_PORT" "$cep_port" "/etc/puppet/manifests/nodes/base.pp"
@@ -892,7 +916,7 @@ function start_servers() {
     if [[ $bam_enabled = "true" ]]; then
        # Setup BAM server
        echo "Starting BAM core service..."
-       /bin/bash $setup_path/setup_bam_logging.sh >> wso2bam.log
+       nohup su - $host_user -c "/bin/bash $setup_path/setup_bam_logging.sh" >> wso2bam.log
        while ! echo exit | nc localhost $BAM_PORT; do sleep $SLEEPTIME; done
        sleep $SLEEPTIME
     fi
@@ -1052,9 +1076,22 @@ function update_hosts_file() {
     lb_ip=$(python -c 'import agent; print agent.getLBIp()')
 
     # update the /etc/hosts file
+    echo " " >> /etc/hosts
     echo $lb_ip  appserver.wso2.com >> /etc/hosts
     echo $lb_ip  esb.wso2.com >> /etc/hosts
     echo $lb_ip  bps.wso2.com >> /etc/hosts
+
+    if [[ $as_worker_mgt_enabled = "true" ]]; then
+	echo $lb_ip  mgt.appserver.wso2.com >> /etc/hosts
+    fi
+
+    if [[ $esb_worker_mgt_enabled = "true" ]]; then
+	echo $lb_ip  mgt.esb.wso2.com >> /etc/hosts
+    fi
+
+    if [[ $bps_worker_mgt_enabled = "true" ]]; then
+	echo $lb_ip  mgt.bps.wso2.com >> /etc/hosts
+    fi
 }
 
 # -----------------------

@@ -39,7 +39,7 @@ var render = function (theme, data, meta, require) {
                     newObj.cartridgeType = cartridges[i].cartridgeType;
                     newObj.items = [];
                     newObj.items.push(parse(stringify(cartridges[i])));
-
+                    newObj.version = cartridges[i].version;
                     for (var j = 0; j < cartridges.length; j++) {
                         if(cartridges[j].serviceGroup == serviceGroup && !cartridges[j].done){
                             cartridges[j].done =true;
@@ -106,6 +106,7 @@ var render = function (theme, data, meta, require) {
                             class_name:"btn-default",
                             class_icon: 'icons-arrow-left'
                         },
+                        bamInfo:data.bamInfo,
                         has_help:false,
                         help:'Create cartridges like PHP, Python, Ruby etc.. Or create data cartridges with mySql, PostgreSQL. Directly install applications like Drupal, Wordpress etc..'
                     }

@@ -138,6 +138,9 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             boolean artifactUpdateEnabled = Boolean.parseBoolean(System.getProperty(CartridgeAgentConstants.ENABLE_ARTIFACT_UPDATE));
             if (artifactUpdateEnabled) {
 
+                boolean autoCommit = CartridgeAgentConfiguration.getInstance().isCommitsEnabled();
+                boolean autoCheckout = CartridgeAgentConfiguration.getInstance().isCheckoutEnabled();
+
                 long artifactUpdateInterval = 10;
                 // get update interval
                 String artifactUpdateIntervalStr = System.getProperty(CartridgeAgentConstants.ARTIFACT_UPDATE_INTERVAL);
@@ -153,7 +156,19 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 }
 
                 log.info("Artifact updating task enabled, update interval: " + artifactUpdateInterval + "s");
-                GitBasedArtifactRepository.getInstance().scheduleSyncTask(repoInformation, artifactUpdateInterval);
+                if (autoCommit) {
+                    log.info("Auto Commit is turned on ");
+                }  else {
+                    log.info("Auto Commit is turned off ");
+                }
+
+                if (autoCheckout) {
+                    log.info("Auto Checkout is turned on ");
+                } else {
+                    log.info("Auto Checkout is turned off ");
+                }
+
+                GitBasedArtifactRepository.getInstance().scheduleSyncTask(repoInformation, autoCheckout, autoCommit, artifactUpdateInterval);
 
             } else {
                 log.info("Artifact updating task disabled");
@@ -263,27 +278,43 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             ExtensionUtils.addProperties(service.getProperties(), env, "MEMBER_ACTIVATED_SERVICE_PROPERTY");
             ExtensionUtils.addProperties(cluster.getProperties(), env, "MEMBER_ACTIVATED_CLUSTER_PROPERTY");
             ExtensionUtils.addProperties(member.getProperties(), env, "MEMBER_ACTIVATED_MEMBER_PROPERTY");
-
+            
             // if clustering is enabled check activated member is WK member
             String flagClustering = CartridgeAgentConfiguration.getInstance().getIsClustered();
 
             // if WK member is re-spawned, update axis2.xml
-            if (member.getProperties() != null && member.getProperties().getProperty(CartridgeAgentConstants.CLUSTERING_PRIMARY_KEY).equals("true") &&
-                    flagClustering != null && flagClustering.toLowerCase().equals("true")){
+            if (member.getProperties() != null && "true".equals(member.getProperties().getProperty(CartridgeAgentConstants.CLUSTERING_PRIMARY_KEY)) &&
+                    flagClustering != null && "true".equals(flagClustering.toLowerCase())){
+            	if(log.isDebugEnabled()) {
+            		log.debug(" If WK member is re-spawned, update axis2.xml ");
+            	}
                 boolean hasWKIpChanged = true;
                 for (Member m : this.wkMembers){
                     if (m.getMemberIp().equals(memberActivatedEvent.getMemberIp())){
                         hasWKIpChanged = false;
                     }
                 }
-                int minCount = Integer.parseInt(CartridgeAgentConfiguration.getInstance().getMinCount());
+                if(log.isDebugEnabled()) {
+                	log.debug(" hasWKIpChanged " + hasWKIpChanged);
+                }
+                int minCount = Integer.parseInt(CartridgeAgentConfiguration.getInstance().getMinCount());                
                 boolean isWKMemberGroupReady = isWKMemberGroupReady(env, minCount);
-
+                if(log.isDebugEnabled()) {
+                	log.debug("minCount " + minCount);
+                	log.debug("isWKMemberGroupReady " + isWKMemberGroupReady);
+                }
                 if (hasWKIpChanged && isWKMemberGroupReady){
+                	if(log.isDebugEnabled()) {
+                		log.debug("Setting env var STRATOS_UPDATE_WK_IP to true");
+                	}
                     env.put("STRATOS_UPDATE_WK_IP", "true");
                 }
+            }      
+            if(log.isDebugEnabled()) {
+            	log.debug("Setting env var STRATOS_CLUSTERING to " + flagClustering);
             }
-
+            env.put("STRATOS_CLUSTERING", flagClustering);
+            env.put("STRATOS_WK_MEMBER_COUNT", CartridgeAgentConfiguration.getInstance().getMinCount());
             ExtensionUtils.executeMemberActivatedExtension(env);
         } else {
             if (log.isDebugEnabled()) {
@@ -681,7 +712,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
                     managerWkaMembers.add(member);
                     this.wkMembers.add(member);
-
+                    
                     // get the min instance count
                     if (!managerMinInstanceCountFound) {
                         managerMinInstanceCount = getMinInstanceCountFromMemberProperties(member);

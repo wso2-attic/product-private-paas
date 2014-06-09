@@ -10,6 +10,6 @@
 </property>
 <property>
 <name>mapred.system.dir</name>
-<value>/mnt/hadoop_data/mapred/system</value>
+<value>PATH/hadoop_data/mapred/system</value>
 </property>
 </configuration>
