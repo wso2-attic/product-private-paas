@@ -56,6 +56,7 @@ sed -i "s@MB_HOSTNAME:MB_LISTEN_PORT@$mb_ip:$mb_port@g" repository/deployment/se
 sed -i '$a org.apache.stratos.cep.extension.GradientFinderWindowProcessor' repository/conf/siddhi/siddhi.extension
 sed -i '$a org.apache.stratos.cep.extension.SecondDerivativeFinderWindowProcessor' repository/conf/siddhi/siddhi.extension
 sed -i '$a org.apache.stratos.cep.extension.FaultHandlingWindowProcessor' repository/conf/siddhi/siddhi.extension
+sed -i '$a org.apache.stratos.cep.extension.ConcatWindowProcessor' repository/conf/siddhi/siddhi.extension
 
 popd
 
