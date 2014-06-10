@@ -41,6 +41,7 @@ cep_artifact_path="$resource_path/cep/artifacts/"
 puppet_env="stratos"
 puppet_installed="false"
 cep_port=7611
+cep_port_offset=0
 activemq_client_libs=(activemq-broker-5.9.1.jar  activemq-client-5.9.1.jar  geronimo-j2ee-management_1.1_spec-1.0.1.jar  geronimo-jms_1.1_spec-1.1.1.jar  hawtbuf-1.9.jar)
 export LOG=$log_path/stratos-setup.log
 
@@ -279,7 +280,16 @@ function setup_apache_stratos() {
 }
 
 function  run_setup_sh() {
-	/bin/bash $setup_path/setup.sh -p "default"
+    separate_cep=$(read_user_input "Do you need to setup WSO2 CEP as a separate service? [y/n] " "" $separate_cep )
+    if [[ $separate_cep =~ ^[Yy]$ ]]; then
+       	separate_cep="true"
+        cep_port=7614
+        cep_port_offset=3 
+        /bin/bash $setup_path/setup.sh -p "stratos"
+        su - $host_user -c "/bin/bash $setup_path/setup_cep.sh"
+    else
+    	/bin/bash $setup_path/setup.sh -p "default" 
+    fi
 }
 
 function get_service_deployment_confirmations() {
@@ -916,11 +926,15 @@ function start_servers() {
 
     # Get user confirmations to start WSO2 PPaaS core services
     get_core_services_confirmations
+    profile="default"
+    if [[ $separate_cep = "true" ]]; then
+	profile="stratos"
+    fi
 
     if [[ $bam_enabled = "true" ]]; then
        # Setup BAM server
        echo "Starting BAM core service..."
-       nohup su - $host_user -c "/bin/bash $setup_path/setup_bam_logging.sh" >> wso2bam.log
+       nohup su - $host_user -c "/bin/bash $setup_path/setup_bam_logging.sh -p $profile" >> wso2bam.log
        while ! echo exit | nc localhost $BAM_PORT; do sleep $SLEEPTIME; done
        sleep $SLEEPTIME
     fi
@@ -936,9 +950,21 @@ function start_servers() {
     if [[ $wso2_ppaas_enabled = "true" ]]; then
        # Start Apache Stratos with default profile
        echo -e "Starting WSO2 Private PaaS server as $host_user user... "
-       su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p default >> $LOG"
-       while ! echo exit | nc localhost $PPAAS_PORT; do sleep $SLEEPTIME; done
-       sleep $SLEEPTIME
+
+       if [[ $separate_cep = "true" ]]; then
+           su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p stratos >> $LOG"
+           while ! echo exit | nc localhost $PPAAS_PORT; do sleep $SLEEPTIME; done
+           sleep $SLEEPTIME
+
+       	   echo -e "Starting WSO2 CEP service..."
+           nohup su - $host_user -c "source $setup_path/conf/setup.conf;/bin/bash $stratos_install_path/wso2cep-3.0.0/bin/wso2server.sh &" >> wso2cep.log
+           while ! echo exit | nc localhost $CEP_PORT; do sleep $SLEEPTIME; done
+           sleep $SLEEPTIME
+       else
+           su - $host_user -c "source $setup_path/conf/setup.conf;$setup_path/start-servers.sh -p default >> $LOG"
+           while ! echo exit | nc localhost $PPAAS_PORT; do sleep $SLEEPTIME; done
+           sleep $SLEEPTIME
+       fi
     else
         echo -e "Skipping WSO2 Private PaaS startup."
     fi 

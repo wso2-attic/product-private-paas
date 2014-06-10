@@ -35,6 +35,7 @@ export SLEEPTIME=30
 export PPAAS_PORT=9443
 export BAM_PORT=9444
 export IS_PORT=9445
+export CEP_PORT=9446
 export GITBLIT_PORT=9418
 
 # Puppet master configuration
@@ -42,6 +43,9 @@ export skip_puppet=""
 export puppet_external=""
 export puppet_external_ip=""
 export puppet_external_host=""
+
+# cep as a separate profile
+export separate_cep=""
 
 # IaaS configuration
 export iaas=""
