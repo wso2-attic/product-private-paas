@@ -1,7 +1,7 @@
 {
       "serviceName": "appservermgt",
       "cartridgeType": "appservermgt",
-      "deploymentPolicyName": "deployp",
+      "deploymentPolicyName": "deployf",
       "autoscalingPolicyName": "economy",
       "clusterDomain": "appserverdev.dev.domain",
       "clusterSubDomain": "subdomain2",
