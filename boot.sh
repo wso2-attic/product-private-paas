@@ -280,7 +280,7 @@ function setup_apache_stratos() {
 }
 
 function  run_setup_sh() {
-    separate_cep=$(read_user_input "Do you need to setup WSO2 CEP as a separate service? [y/n] " "" $cep_as_separate )
+    separate_cep=$(read_user_input "Do you need to setup WSO2 CEP as a separate service? [y/n] " "" $separate_cep )
     if [[ $separate_cep =~ ^[Yy]$ ]]; then
        	separate_cep="true"
         cep_port=7614
