@@ -96,6 +96,7 @@ echo "Enabling log publishing in Stratos"
 # Enable log viewer and log puplisher in stratos
 cp -f $current_dir/config/all/repository/conf/etc/logging-config.xml $stratos_extract_path/repository/conf/etc/
 cp -f $current_dir/config/all/repository/conf/log4j.properties $stratos_extract_path/repository/conf/
+cp -rf $current_dir/config/all/repository/components/patches/patch0900 $stratos_extract_path/repository/components/patches/
 
 pushd $stratos_extract_path
 
