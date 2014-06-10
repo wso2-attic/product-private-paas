@@ -88,8 +88,7 @@ public class ClusterMonitor extends AbstractMonitor {
                 log.error("Cluster monitor: Monitor failed." + this.toString(), e);
             }
             try {
-                // TODO make this configurable
-                Thread.sleep(30000);
+                Thread.sleep(monitorInterval);
             } catch (InterruptedException ignore) {
             }
         }
