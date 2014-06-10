@@ -31,11 +31,43 @@ dir=`dirname $0`
 current_dir=`cd $dir;pwd`
 
 source "$current_dir/conf/setup.conf"
-stratos_extract_path=$stratos_extract_path"-default"
 
 #setting the public IP for bam
 export public_ip=$(curl --silent http://ipecho.net/plain; echo)
 export hadoop_hostname=$(hostname -f)
+
+while getopts ":p:" opts
+do
+  case $opts in
+    p)
+        profile_list=${OPTARG}
+        ;;
+    \?)
+        exit 1
+        ;;
+  esac
+done
+
+profile_list=`echo $profile_list | sed 's/^ *//g' | sed 's/ *$//g'`
+if [[ !(-z $profile_list || $profile_list = "") ]]; then
+    arr=$(echo $profile_list | tr " " "\n")
+
+    for x in $arr
+    do
+    	if [[ $x = "default" ]]; then
+            profile="default"
+    	elif [[ $x = "stratos" ]]; then
+            profile="stratos"
+        else
+            echo "Invalid profile."
+            exit 1
+    	fi
+    done
+else 
+    profile="default"
+fi
+
+stratos_extract_path=$stratos_extract_path"-"$profile
 
 function start_bam() {
        echo "Starting Hadoop server ..."
@@ -64,6 +96,7 @@ echo "Enabling log publishing in Stratos"
 # Enable log viewer and log puplisher in stratos
 cp -f $current_dir/config/all/repository/conf/etc/logging-config.xml $stratos_extract_path/repository/conf/etc/
 cp -f $current_dir/config/all/repository/conf/log4j.properties $stratos_extract_path/repository/conf/
+cp -rf $current_dir/config/all/repository/components/patches/patch0900 $stratos_extract_path/repository/components/patches/
 
 pushd $stratos_extract_path
 
@@ -76,10 +109,6 @@ sed -i "s@BAM_IP@${public_ip}@g" repository/conf/cartridge-config.properties
 sed -i "s@BAM_PORT@9444@g" repository/conf/cartridge-config.properties
 sed -i "s@BAM_UNAME@admin@g" repository/conf/cartridge-config.properties
 sed -i "s@BAM_PASS@admin@g" repository/conf/cartridge-config.properties
-
-#Setting the BAM link in Stratos Console
-sed -i "s@BAM_HOST@${public_ip}@g" repository/deployment/server/jaggeryapps/console/themes/theme1/partials/header.hbs
-sed -i "s@BAM_PORT@9444@g" repository/deployment/server/jaggeryapps/console/themes/theme1/partials/header.hbs
 
 popd
 

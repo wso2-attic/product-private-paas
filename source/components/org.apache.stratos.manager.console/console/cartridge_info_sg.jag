@@ -22,7 +22,8 @@
 var caramel = require('caramel');
 var error = [];
 var utils = require('/util/utility.jag');
- var log = new Log('utility.cartridgeInfo');
+var log = new Log('utility.cartridgeInfo');
+var process = require('process');
 var serviceGroup = request.getParameter("serviceGroup");
 //Get all alias for a service group
 var cartridges = utils.consoleAppUtil.getCartridgeServiceGroup(serviceGroup);
@@ -34,7 +35,6 @@ if(cartridges.Error != undefined){
     var i;
     for(i=0;i<cartridges.length;i++){
         var cartridgeInfo = cartridges[i];
-	log.info("cart info " + stringify(cartridgeInfo));
         if(cartridgeInfo.cartridge != undefined){
             cartridgeInfo = cartridgeInfo.cartridge;
         }
@@ -59,10 +59,11 @@ if(cartridges.Error != undefined){
 
     }
 }
-
+var bamInfo ={bamip:process.getProperty('bam.ip'),bamport:process.getProperty('bam.port')};
 caramel.render({
     cartridges:cartridges,
     serviceGroup:serviceGroup,
+    bamInfo:bamInfo,
     error:error
 });
 %>
