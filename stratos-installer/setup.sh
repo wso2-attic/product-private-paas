@@ -288,7 +288,7 @@ function as_related_popup() {
 }
 
 function as_conf_validate() {
-    if [[ !($profile = "default") ]]; then
+    if [[ !($profile = "default" || $profile = "stratos") ]]; then
 	cc_related_popup
 	sm_related_popup
 	export as_cc_https_port=$((9443 + $cc_port_offset))
@@ -376,7 +376,7 @@ function sm_conf_validate() {
         exit 1
     fi
 
-    if [[ !($profile = "default") ]]; then
+    if [[ !($profile = "default"  || $profile = "stratos") ]]; then
 	cc_related_popup
 	as_related_popup
 	export sm_cc_https_port=$((9443 + $cc_port_offset))
