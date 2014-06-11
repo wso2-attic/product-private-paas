@@ -160,12 +160,38 @@ public class ExtensionUtils {
                 return false;
             }
             String memberServiceGroup = serviceProperties.getProperty(CartridgeAgentConstants.SERVICE_GROUP_TOPOLOGY_KEY);
-            if (memberServiceGroup != null && memberServiceGroup.equals(serviceGroupInPayload)) {
-                return true;
+            if (memberServiceGroup != null && memberServiceGroup.equals(serviceGroupInPayload)) {            	
+            	if(serviceName.equals(CartridgeAgentConfiguration.getInstance().getServiceName())) {
+            		if (log.isDebugEnabled()) {
+            			log.debug("Service names are same");
+            		}
+            		return true;
+            	}else if(CartridgeAgentConfiguration.getInstance().getServiceName().equals("store") && "publisher".equals(serviceName)) {
+            		if (log.isDebugEnabled()) {
+            			log.debug("Service name in payload is [store]. Serivce name in event is ["+serviceName+"] ");
+            		}
+            		return true;
+            	}else if(CartridgeAgentConfiguration.getInstance().getServiceName().equals("publisher") && "store".equals(serviceName)) {
+            		if (log.isDebugEnabled()) {
+            			log.debug("Service name in payload is [publisher]. Serivce name in event is ["+serviceName+"] ");
+            		}
+            		return true;
+            	}else if(CartridgeAgentConstants.DEPLOYMENT_WORKER.equals(CartridgeAgentConfiguration.getInstance().getDeployment()) &&
+            			serviceName.equals(CartridgeAgentConfiguration.getInstance().getManagerServiceName())) {
+            		if (log.isDebugEnabled()) {
+            			log.debug("Deployment is worker. Worker's manager service name & service name in event are same");
+            		}
+            		return true;
+            	}else if (CartridgeAgentConstants.DEPLOYMENT_MANAGER.equals(CartridgeAgentConfiguration.getInstance().getDeployment()) &&
+            			serviceName.equals(CartridgeAgentConfiguration.getInstance().getWorkerServiceName())) {
+            		if (log.isDebugEnabled()) {
+            			log.debug("Deployment is manager. Manager's worker service name & service name in event are same");
+            		}
+            		return true;
+            	}
             }
-
         }
-
+                
         return false;
     }
 
