@@ -88,8 +88,7 @@ public class ClusterMonitor extends AbstractMonitor {
                 log.error("Cluster monitor: Monitor failed." + this.toString(), e);
             }
             try {
-                // TODO make this configurable
-                Thread.sleep(30000);
+                Thread.sleep(monitorInterval);
             } catch (InterruptedException ignore) {
             }
         }
@@ -153,7 +152,10 @@ public class ClusterMonitor extends AbstractMonitor {
             boolean rifReset = networkPartitionContext.isRifReset();
             boolean memoryConsumptionReset = networkPartitionContext.isMemoryConsumptionReset();
             boolean loadAverageReset = networkPartitionContext.isLoadAverageReset();
-
+            if (log.isDebugEnabled()) {
+                log.debug("flag of rifReset: "  + rifReset + " flag of memoryConsumptionReset" + memoryConsumptionReset
+                        + " flag of loadAverageReset" + loadAverageReset);
+            }
             if (rifReset || memoryConsumptionReset || loadAverageReset) {
                 scaleCheckKnowledgeSession.setGlobal("clusterId", clusterId);
                 //scaleCheckKnowledgeSession.setGlobal("deploymentPolicy", deploymentPolicy);

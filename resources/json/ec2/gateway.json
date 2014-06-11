@@ -10,16 +10,6 @@
       "portMapping": [
          {
             "protocol": "http",
-            "port": "9763",
-            "proxyPort": "80"
-         },
-         {
-            "protocol": "https",
-            "port": "9443",
-            "proxyPort": "443"
-         },
-	 {
-            "protocol": "http",
             "port": "8280",
             "proxyPort": "8280"
          },

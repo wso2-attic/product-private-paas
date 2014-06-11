@@ -1,7 +1,7 @@
 {
       "serviceName": "esbmgt",
       "cartridgeType": "esbmgt",
-      "deploymentPolicyName": "deployp",
+      "deploymentPolicyName": "deployf",
       "autoscalingPolicyName": "economy",
       "clusterDomain": "esb.dev.domain",
       "clusterSubDomain": "subdomain2",
