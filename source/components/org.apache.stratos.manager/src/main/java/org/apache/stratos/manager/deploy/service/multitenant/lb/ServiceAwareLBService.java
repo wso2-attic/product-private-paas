@@ -33,6 +33,7 @@ import org.apache.stratos.manager.exception.UnregisteredCartridgeException;
 import org.apache.stratos.manager.payload.PayloadData;
 import org.apache.stratos.manager.repository.Repository;
 import org.apache.stratos.manager.subscriber.Subscriber;
+import org.apache.stratos.manager.subscription.utils.CartridgeSubscriptionUtils;
 import org.apache.stratos.manager.utils.CartridgeConstants;
 
 import java.rmi.RemoteException;
@@ -95,9 +96,9 @@ public class ServiceAwareLBService extends LBService {
         } else {
 
             // set cluster domain
-            cluster.setClusterDomain(generateClusterId(null, cartridgeInfo.getType()));
+            cluster.setClusterDomain(generateClusterId(getLoadBalancedServiceType(), cartridgeInfo.getType()));
             // set hostname
-            cluster.setHostName(generateHostName(null, cartridgeInfo.getHostName()));
+            cluster.setHostName(generateHostName(getLoadBalancedServiceType(), cartridgeInfo.getHostName()));
 
             PayloadData serviceLevelLbPayloadData = createPayload(cartridgeInfo, subscriptionKey, subscriber, cluster,
                     repository, alias, customPayloadEntries);
@@ -106,6 +107,22 @@ public class ServiceAwareLBService extends LBService {
             serviceLevelLbPayloadData.add(CartridgeConstants.LOAD_BALANCED_SERVICE_TYPE, getLoadBalancedServiceType());
             return serviceLevelLbPayloadData;
         }
+    }
+
+    protected String generateClusterId (String loadBalancedServiceType, String cartridgeType) {
+
+        String clusterId = cartridgeType + "." + loadBalancedServiceType + "." + getCartridgeInfo().getHostName() + ".domain";
+        // limit the cartridge alias to 30 characters in length
+        if (clusterId.length() > 30) {
+            clusterId = CartridgeSubscriptionUtils.limitLengthOfString(clusterId, 30);
+        }
+
+        return clusterId;
+    }
+
+    protected String generateHostName (String loadBalancedServiceType, String cartridgeDefinitionHostName) {
+
+        return getCartridgeInfo().getType() + "." + loadBalancedServiceType + "." + cartridgeDefinitionHostName;
     }
 
     public void register(CartridgeInfo cartridgeInfo, Cluster cluster, PayloadData payloadData, String autoscalePolicyName, String deploymentPolicyName, Properties properties) throws ADCException, UnregisteredCartridgeException {
