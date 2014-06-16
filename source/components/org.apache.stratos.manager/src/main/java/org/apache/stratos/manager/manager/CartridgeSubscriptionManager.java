@@ -544,6 +544,9 @@ public class CartridgeSubscriptionManager {
                                 tenant.getId(), tenant.getDomain()));
                     }
                     Collection<CartridgeSubscription> subscriptions = manager.getCartridgeSubscriptions(tenant.getId());
+                    if (subscriptions == null) {
+                        continue;
+                    }
                     for (CartridgeSubscription subscription : subscriptions) {
                         if (log.isDebugEnabled()) {
                             log.debug(String.format("Reading domain names in subscription: [alias] %s [domain-names] %s",
