@@ -768,11 +768,13 @@ public class ServiceUtils {
                     // Ignoring the LB cartridges since they are not shown to the user.
                     if(cartridge.isLoadBalancer())
                         continue;
-                    if(StringUtils.isNotEmpty(serviceGroup) && cartridge.getServiceGroup() != null &&
-                    		!cartridge.getServiceGroup().equals(serviceGroup)){
-                        continue;
+                    if(StringUtils.isNotEmpty(serviceGroup)) {
+                        if(cartridge.getServiceGroup() != null && serviceGroup.equals(cartridge.getServiceGroup())) {
+                            cartridges.add(cartridge);
+                        }
+                    } else {
+                        cartridges.add(cartridge);
                     }
-                    cartridges.add(cartridge);
                 }
             } else {
                 if (log.isDebugEnabled()) {
@@ -1224,6 +1226,14 @@ public class ServiceUtils {
             int tenantId = ApplicationManagementUtil.getTenantId(configurationContext);
 
             for (org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean subscriptionDomain : request.domains) {
+                boolean isDomainExists = isSubscriptionDomainExists(configurationContext, cartridgeType, subscriptionAlias, subscriptionDomain.domainName);
+                if (isDomainExists) {
+                    String message = "Subscription domain " + subscriptionDomain.domainName + " exists";
+                    throw new RestAPIException(Status.INTERNAL_SERVER_ERROR, message);
+                }
+            }
+
+            for (org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean subscriptionDomain : request.domains) {
                 cartridgeSubsciptionManager.addSubscriptionDomain(tenantId, subscriptionAlias,
             			subscriptionDomain.domainName, subscriptionDomain.applicationContext);
 			}
@@ -1235,6 +1245,25 @@ public class ServiceUtils {
         StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
         stratosAdminResponse.setMessage("Successfully added domains to cartridge subscription");
         return stratosAdminResponse;
+    }
+
+    public static boolean isSubscriptionDomainExists(ConfigurationContext configurationContext, String cartridgeType,
+                                                     String subscriptionAlias, String domain) throws RestAPIException {
+        try {
+            int tenantId = ApplicationManagementUtil.getTenantId(configurationContext);
+            SubscriptionDomainBean subscriptionDomain = PojoConverter.populateSubscriptionDomainPojo(cartridgeSubsciptionManager.getSubscriptionDomain(tenantId,
+                    subscriptionAlias, domain));
+
+            if (subscriptionDomain.domainName != null) {
+                return true;
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new RestAPIException(e.getMessage(), e);
+        }
+
     }
 
     public static List<SubscriptionDomainBean> getSubscriptionDomains(ConfigurationContext configurationContext, String cartridgeType,

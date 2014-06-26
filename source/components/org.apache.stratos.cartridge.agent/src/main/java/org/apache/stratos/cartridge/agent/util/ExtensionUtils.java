@@ -166,12 +166,12 @@ public class ExtensionUtils {
             			log.debug("Service names are same");
             		}
             		return true;
-            	}else if(CartridgeAgentConfiguration.getInstance().getServiceName().equals("store") && "publisher".equals(serviceName)) {
+            	}else if(CartridgeAgentConfiguration.getInstance().getServiceName().equals("apistore") && "publisher".equals(serviceName)) {
             		if (log.isDebugEnabled()) {
             			log.debug("Service name in payload is [store]. Serivce name in event is ["+serviceName+"] ");
             		}
             		return true;
-            	}else if(CartridgeAgentConfiguration.getInstance().getServiceName().equals("publisher") && "store".equals(serviceName)) {
+            	}else if(CartridgeAgentConfiguration.getInstance().getServiceName().equals("publisher") && "apistore".equals(serviceName)) {
             		if (log.isDebugEnabled()) {
             			log.debug("Service name in payload is [publisher]. Serivce name in event is ["+serviceName+"] ");
             		}
