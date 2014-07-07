@@ -39,6 +39,8 @@ import org.apache.stratos.messaging.event.instance.notifier.InstanceCleanupMembe
 import org.apache.stratos.messaging.event.tenant.CompleteTenantEvent;
 import org.apache.stratos.messaging.event.tenant.SubscriptionDomainAddedEvent;
 import org.apache.stratos.messaging.event.tenant.SubscriptionDomainRemovedEvent;
+import org.apache.stratos.messaging.event.tenant.TenantSubscribedEvent;
+import org.apache.stratos.messaging.event.tenant.TenantUnSubscribedEvent;
 import org.apache.stratos.messaging.event.topology.*;
 import org.apache.stratos.messaging.listener.instance.notifier.ArtifactUpdateEventListener;
 import org.apache.stratos.messaging.listener.instance.notifier.InstanceCleanupClusterEventListener;
@@ -46,6 +48,8 @@ import org.apache.stratos.messaging.listener.instance.notifier.InstanceCleanupMe
 import org.apache.stratos.messaging.listener.tenant.CompleteTenantEventListener;
 import org.apache.stratos.messaging.listener.tenant.SubscriptionDomainsAddedEventListener;
 import org.apache.stratos.messaging.listener.tenant.SubscriptionDomainsRemovedEventListener;
+import org.apache.stratos.messaging.listener.tenant.TenantSubscribedEventListener;
+import org.apache.stratos.messaging.listener.tenant.TenantUnSubscribedEventListener;
 import org.apache.stratos.messaging.listener.topology.*;
 import org.apache.stratos.messaging.message.receiver.instance.notifier.InstanceNotifierEventReceiver;
 import org.apache.stratos.messaging.message.receiver.tenant.TenantEventReceiver;
@@ -435,6 +439,46 @@ public class CartridgeAgent implements Runnable {
                     if (log.isInfoEnabled()) {
                         log.info("Complete tenant event updating task disabled");
                     }
+                }
+            }
+        });
+
+        tenantEventReceiver.addEventListener(new TenantSubscribedEventListener() {
+            @Override
+            protected void onEvent(Event event) {
+                try {
+                    TenantManager.acquireReadLock();
+                    if (log.isDebugEnabled()) {
+                        log.debug("Tenant subscribed event received");
+                    }
+                    TenantSubscribedEvent tenantSubscribedEvent = (TenantSubscribedEvent) event;
+                    extensionHandler.onTenantSubscribedEvent(tenantSubscribedEvent);
+                } catch (Exception e) {
+                    if (log.isErrorEnabled()) {
+                        log.error("Error processing tenant subscribed event", e);
+                    }
+                } finally {
+                    TenantManager.releaseReadLock();
+                }
+            }
+        });
+
+        tenantEventReceiver.addEventListener(new TenantUnSubscribedEventListener() {
+            @Override
+            protected void onEvent(Event event) {
+                try {
+                    TenantManager.acquireReadLock();
+                    if (log.isDebugEnabled()) {
+                        log.debug("Tenant unSubscribed event received");
+                    }
+                    TenantUnSubscribedEvent tenantUnSubscribedEvent = (TenantUnSubscribedEvent) event;
+                    extensionHandler.onTenantUnSubscribedEvent(tenantUnSubscribedEvent);
+                } catch (Exception e) {
+                    if (log.isErrorEnabled()) {
+                        log.error("Error processing tenant unSubscribed event", e);
+                    }
+                } finally {
+                    TenantManager.releaseReadLock();
                 }
             }
         });
