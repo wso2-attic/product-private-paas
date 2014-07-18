@@ -51,8 +51,6 @@ class agent(
     'extensions/mount-volumes.sh',
     'extensions/subscription-domain-added.sh',
     'extensions/subscription-domain-removed.sh',
-    'extensions/tenant-subscribed.sh',
-    'extensions/tenant-unsubscribed.sh',
     ]
 
   agent::initialize { $deployment_code:

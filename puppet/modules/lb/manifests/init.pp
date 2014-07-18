@@ -85,6 +85,17 @@ class lb (
       require   => Lb::Deploy[$deployment_code];
   }
 
+  lb::importssl  { $deployment_code:
+    owner                 => $owner,
+    target                => $carbon_home,
+    ssl_certificate_file => $ssl_certificate_file,
+    require               => [
+       Lb::Initialize[$deployment_code],
+       Lb::Deploy[$deployment_code],
+       Lb::Push_templates[$service_templates]
+     ]
+  }
+
   lb::start { $deployment_code:
     owner   => $owner,
     target  => $carbon_home,

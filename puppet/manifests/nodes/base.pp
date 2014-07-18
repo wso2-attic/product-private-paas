@@ -43,6 +43,8 @@ node 'base' {
   $server_ip            = $ipaddress
   $using_dns		= 'USING_DNS'
   $greg_url		= 'https://localhost/registry'
+  $ssl_certificate_file = 'CERT_FILE_PATH'
+  $ssl_key_file         = 'KEY_FILE_PATH'
 
   #following variables required only if you want to install stratos using puppet.
   #not supported in alpha version
@@ -91,8 +93,6 @@ node 'base' {
   $extension_subscription_domain_added    = 'subscription-domain-added.sh'
   $extension_subscription_domain_removed  = 'subscription-domain-removed.sh'
   $extension_artifacts_copy               = 'artifacts-copy.sh'
-  $extension_tenant_subscribed            = 'tenant-subscribed.sh'
-  $extension_tenant_unsubscribed          = 'tenant-unsubscribed.sh'
   $agent_log_level = "INFO"
   $extensions_dir = '${script_path}/../extensions'
 
