@@ -17,8 +17,11 @@
 
 # tomcat cartridge node
 node /tomcat/ inherits base {
-  $docroot = "/mnt/${server_ip}/apache-tomcat-${tomcat_version}/webapps/"
-  $samlalias="/mnt/${server_ip}/${server_ip}apache-tomcat-${tomcat_version}/webapps/"
+  #$docroot = "/mnt/${server_ip}/apache-tomcat-${tomcat_version}/webapps/"
+  #$samlalias="/mnt/${server_ip}/${server_ip}apache-tomcat-${tomcat_version}/webapps/"
+
+  $docroot = "/mnt/apache-tomcat-${tomcat_version}/webapps/"
+  $samlalias="/mnt/apache-tomcat-${tomcat_version}/webapps/"
 
   require java
   class {'agent':}
