@@ -1,0 +1,81 @@
+{
+      "type": "gregmgt",
+      "provider": "wso2",
+      "serviceGroup": "greggroup",
+      "host": "mgt.greg.wso2.com",
+      "displayName": "GREG Manager",
+      "description": "GREG Manager Cartridge",
+      "version": "4.6.0",
+      "multiTenant": "true",
+      "portMapping": [
+         {
+            "protocol": "http",
+            "port": "9763",
+            "proxyPort": "80"
+         },
+         {
+            "protocol": "https",
+            "port": "9443",
+            "proxyPort": "443"
+         },
+	  {
+            "protocol": "http",
+            "port": "8280",
+            "proxyPort": "8280"
+         },
+         {
+            "protocol": "https",
+            "port": "8243",
+            "proxyPort": "8243"
+         }
+
+       ],
+      "deployment": {
+        },
+       "iaasProvider": [
+        {
+          "type": "openstack",
+          "imageId": "REGION/BASE_IMAGE_ID",
+          "maxInstanceLimit": "4",
+          "property": [
+            {
+             "name": "instanceType",
+             "value": "REGION/3"
+            }
+          ]
+        }
+      ],
+      "loadBalancer": {
+        "type": "lb",
+        "property": {
+            "name": "default.load.balancer",
+            "value": "true"
+        }
+      },
+      "property": [
+         {
+            "name": "payload_parameter.SERIVCE_GROUP",
+            "value": "greggroup"
+         },
+         {
+            "name": "payload_parameter.DEPLOYMENT",
+            "value": "manager"
+         },
+         {
+            "name": "payload_parameter.MANAGER_SERVICE_TYPE",
+            "value": "gregmgt"
+         },
+         {
+            "name": "payload_parameter.WORKER_SERVICE_TYPE",
+            "value": "gregworker"
+         },
+         {
+            "name": "PRIMARY",
+            "value": "true"
+         },
+         {
+            "name": "payload_parameter.CLUSTERING",
+            "value": "true"
+         }
+      ]
+}

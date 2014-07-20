@@ -88,6 +88,7 @@ mysql_host=${mysql_host:-localhost}
 mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS config;"
 mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS StratosStats;"
 mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS esb_config;"
+mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS greg_config;"
 mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS apim_db;"
 mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS as_config;"
 mysql -u $mysql_user -p$mysql_pass -h$mysql_host -e "DROP DATABASE IF EXISTS bps_config;"

@@ -92,6 +92,7 @@ export using_etc_host_mapping=""
 export as_enabled=""
 export bps_enabled=""
 export esb_enabled=""
+export greg_enabled=""
 export is_enabled=""
 export apim_enabled=""
 
@@ -99,12 +100,14 @@ export apim_enabled=""
 export as_worker_mgt_enabled=""
 export bps_worker_mgt_enabled=""
 export esb_worker_mgt_enabled=""
+export greg_worker_mgt_enabled=""
 export is_worker_mgt_enabled=""
 
 # Clustering of services
 export as_clustering_enabled=""
 export is_clustering_enabled=""
 export esb_clustering_enabled=""
+export greg_clustering_enabled=""
 export bps_clustering_enabled=""
 export keymanager_clustering_enabled=""
 
