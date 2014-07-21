@@ -353,7 +353,7 @@ function get_service_deployment_confirmations() {
     if [[ $greg_needed =~ ^[Yy]$ ]]; then
        greg_enabled="true"
      
-       greg_worker_mgt_needed=$(read_user_input "Do you need to deploy GREG (Enterprise Service Bus) in worker manager setup? [y/n] " "" $greg_worker_mgt_enabled )
+       greg_worker_mgt_needed=$(read_user_input "Do you need to deploy GREG (Governance Registry) in worker manager setup? [y/n] " "" $greg_worker_mgt_enabled )
        if [[ $greg_worker_mgt_needed =~ ^[Yy]$ ]]; then
           greg_worker_mgt_enabled="true"
           greg_clustering_enabled="true"
