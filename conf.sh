@@ -100,8 +100,6 @@ export apim_enabled=""
 export as_worker_mgt_enabled=""
 export bps_worker_mgt_enabled=""
 export esb_worker_mgt_enabled=""
-export greg_worker_mgt_enabled=""
-export is_worker_mgt_enabled=""
 
 # Clustering of services
 export as_clustering_enabled=""

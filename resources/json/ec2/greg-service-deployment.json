@@ -1,9 +1,9 @@
 {
-      "serviceName": "gregmgt",
-      "cartridgeType": "gregmgt",
+      "serviceName": "greg",
+      "cartridgeType": "greg",
       "deploymentPolicyName": "deployp",
       "autoscalingPolicyName": "economy",
       "clusterDomain": "greg.dev.domain",
       "clusterSubDomain": "subdomain2",
-      "tenantRange": "*"
+      "tenantRange": "*"    
 }

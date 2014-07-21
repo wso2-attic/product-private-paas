@@ -353,19 +353,13 @@ function get_service_deployment_confirmations() {
     if [[ $greg_needed =~ ^[Yy]$ ]]; then
        greg_enabled="true"
      
-       greg_worker_mgt_needed=$(read_user_input "Do you need to deploy GREG (Governance Registry) in worker manager setup? [y/n] " "" $greg_worker_mgt_enabled )
-       if [[ $greg_worker_mgt_needed =~ ^[Yy]$ ]]; then
-          greg_worker_mgt_enabled="true"
-          greg_clustering_enabled="true"
-       else
           clustering_greg=$(read_user_input "Do you need to enable clustering for GREG? [y/n] " "" $greg_clustering_enabled )
           if [[ $clustering_greg =~ ^[Yy]$ ]]; then
              greg_clustering_enabled="true"
           else
              greg_clustering_enabled="false"
           fi
-       fi      
-    fi  
+       fi       
 
     apim_needed=$(read_user_input "Do you need to deploy APIM (API Manager) service? [y/n] " "" $apim_enabled )
     if [[ $apim_needed =~ ^[Yy]$ ]]; then
@@ -624,14 +618,6 @@ function setup_greg() {
     replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/greg-cart.json"
     replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/greg-cart.json"
 
-    backup_file $current_dir/resources/json/$iaas/greg-cart-mgt.json
-    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/greg-cart-mgt.json"
-    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/greg-cart-mgt.json"
-
-    backup_file $current_dir/resources/json/$iaas/greg-cart-worker.json
-    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/greg-cart-worker.json"
-    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/greg-cart-worker.json"
-
     if [[ $greg_clustering_enabled = "true" ]]; then
        replace_in_file "@PRIMARY" "true" "$current_dir/resources/json/$iaas/greg-cart.json"
        replace_in_file "@CLUSTERING" "true" "$current_dir/resources/json/$iaas/greg-cart.json"
@@ -719,12 +705,6 @@ function setup_is_core_service() {
 	    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         fi
 	
- 	if [[ $greg_worker_mgt_enabled = "true" ]]; then
-	    replace_in_file 'GREG_ASSERTION_CONSUMER_HOST' mgt.greg.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
-        else
-	    replace_in_file 'GREG_ASSERTION_CONSUMER_HOST' greg.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
-        fi
-
         if [[ $bps_worker_mgt_enabled = "true" ]]; then
 	    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' mgt.bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         else
@@ -1168,27 +1148,14 @@ function deploy_wso2_ppaas_services() {
           curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/esb-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
        fi
     fi
+
 	 if [[ "$greg_enabled" = "true" ]]; then
-       if [[ "$greg_worker_mgt_enabled" = "true" ]]; then
-          echo -e "Deploying Governance Registry (GREG) Manager cartridge at $resource_path/json/$iaas/greg-cart-mgt.json"
-          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/greg-cart-mgt.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
-
-          echo -e "Deploying Governance Registry (GREG) Manager service"
-          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/greg-mgt-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
-
-          echo -e "Deploying Governance Registry (GREG) Worker cartridge at $resource_path/json/$iaas/greg-cart-worker.json"
-          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/greg-cart-worker.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
-
-          echo -e "Deploying Governance Registry (GREG) Worker service"
-          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/greg-worker-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
-       else
           echo -e "Deploying Governance Registry (GREG) cartridge at $resource_path/json/$iaas/greg-cart.json"
           curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/greg-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
     
           echo -e "Deploying Governance Registry (GREG) service at greg-service-deployment.json"
           curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/greg-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
        fi
-    fi
 
 
     if [[ "$bps_enabled" = "true" ]]; then
@@ -1235,10 +1202,6 @@ function update_hosts_file() {
 
     if [[ $esb_worker_mgt_enabled = "true" ]]; then
 	echo $lb_ip  mgt.esb.wso2.com >> /etc/hosts
-    fi
-
-    if [[ $greg_worker_mgt_enabled = "true" ]]; then
-	echo $lb_ip  mgt.greg.wso2.com >> /etc/hosts
     fi
 
     if [[ $bps_worker_mgt_enabled = "true" ]]; then

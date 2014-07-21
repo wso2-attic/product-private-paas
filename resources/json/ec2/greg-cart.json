@@ -22,13 +22,13 @@
         },
        "iaasProvider": [
         {
-          "type": "openstack",
+          "type": "ec2",
           "imageId": "REGION/BASE_IMAGE_ID",
           "maxInstanceLimit": "4",
           "property": [
             {
              "name": "instanceType",
-             "value": "REGION/3"
+             "value": "m1.medium"
             }
           ]
         }
@@ -44,7 +44,7 @@
         {
           "name": "PRIMARY",
           "value": "@PRIMARY"
-        },        
+        },
         {
           "name": "payload_parameter.CLUSTERING",
           "value": "@CLUSTERING"
