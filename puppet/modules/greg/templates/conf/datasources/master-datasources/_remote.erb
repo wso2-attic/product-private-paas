@@ -53,8 +53,8 @@
             <definition type="RDBMS">
                 <configuration>
                   <url>jdbc:mysql://<%= @mysql_server %>:<%= @mysql_port %>/<%= @config_db %>?autoReconnect=true</url>
-                    <username><%= @config_user %></username>
-                    <password><%= @config_password %></password>
+                    <username><%= @registry_user %></username>
+                    <password><%= @registry_password %></password>
                     <driverClassName>com.mysql.jdbc.Driver</driverClassName>
                     <maxActive><%= @max_active %></maxActive>
                     <maxWait><%= @max_wait %></maxWait>
@@ -62,6 +62,29 @@
                     <testOnBorrow>true</testOnBorrow>
                     <validationQuery>SELECT 1</validationQuery>
                     <validationInterval>30000</validationInterval>
+                </configuration>
+            </definition>
+        </datasource>
+
+<!-- apimanager database -->
+        <datasource>
+            <name>WSO2AM_DB</name>
+            <description>The datasource used for API Manager database</description>
+            <jndiConfig>
+                <name>jdbc/WSO2AM_DB</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>jdbc:mysql://<%= @mysql_server %>:<%= @mysql_port %>/<%= @apim_database %>?autoReconnect=true</url>
+                    <username><%= @apim_user %></username>
+                    <password><%= @apim_password %></password>
+                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                    <maxActive><%= @max_active %></maxActive>
+                    <maxWait><%= @max_wait %></maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                    <defaultAutoCommit>false</defaultAutoCommit>
                 </configuration>
             </definition>
         </datasource>

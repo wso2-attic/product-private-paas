@@ -598,6 +598,9 @@ function setup_greg() {
        replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/greg/manifests/params.pp"
        replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/greg/manifests/params.pp"
        replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/greg/manifests/params.pp"
+       replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/greg/manifests/params.pp"
+
+       create_apim_database "$apim_db"
 
         # Configure SSO in greg
         if [[ "$config_sso_enabled" == "true" ]] ; then

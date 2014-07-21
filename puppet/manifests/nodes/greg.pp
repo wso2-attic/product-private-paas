@@ -25,7 +25,6 @@ node /[0-9]{1,12}.(default|manager|worker).greg/ inherits base {
         version            => '4.6.0',
         sub_cluster_domain => 'test',
         members            => undef,
-	port_mapping       => 0,
         offset             => 0,
         hazelcast_port     => 4000,
         config_db          => 'GREG_CONFIG_DB',

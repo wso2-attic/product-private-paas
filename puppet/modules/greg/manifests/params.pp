@@ -34,6 +34,9 @@ class greg::params {
   $as_subdomain         = 'greg'
   $management_subdomain = 'management'
 
+  $admin_username       = 'ADMIN_USER'
+  $admin_password       = 'ADMIN_PASSWORD'
+
   # MySQL server configuration details
   #$mysql_server         = 'ec2-54-254-43-232.ap-southeast-1.compute.amazonaws.com'
   #$mysql_port           = '3306'
@@ -41,8 +44,19 @@ class greg::params {
   #$max_active           = '150'
   #$max_wait             = '360000'
 
-  $config_user		= 'aesp_as'
-  $config_password	= 'Bz9TFL1D'
+  # Database details
+  $registry_user        = 'DB_USER'
+  $registry_password    = 'DB_PASSWORD'
+  $registry_database    = 'REGISTRY_DB'
+
+  $userstore_user       = 'DB_USER'
+  $userstore_password   = 'DB_PASSWORD'
+  $userstore_database   = 'USERSTORE_DB'
+
+  # apimanager database 
+  $apim_database        = 'APIM_DB'
+  $apim_user            = 'DB_USER'
+  $apim_password        = 'DB_PASSWORD'
 
   # Depsync settings
   $svn_user             = 'wso2'
