@@ -63,10 +63,12 @@ class greg (
   $carbon_home     = "${target}/wso2${service_code}-${carbon_version}"
 
   $service_templates = [
+      'conf/axis2/axis2.xml',
       'conf/carbon.xml',
       'conf/datasources/master-datasources.xml',
       'conf/registry.xml',
       'conf/user-mgt.xml',
+      'conf/tomcat/catalina-server.xml',
   ]
 
   tag($service_code)
