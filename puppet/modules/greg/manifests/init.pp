@@ -69,6 +69,7 @@ class greg (
       'conf/registry.xml',
       'conf/user-mgt.xml',
       'conf/tomcat/catalina-server.xml',
+      'conf/security/authenticators.xml',
   ]
 
   tag($service_code)
