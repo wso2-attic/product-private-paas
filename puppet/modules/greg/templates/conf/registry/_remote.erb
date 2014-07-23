@@ -13,7 +13,7 @@
 
     <mount path="/_system/governance" overwrite="true">
         <instanceId>governance</instanceId>
-        <targetPath><%= @registry_path %></targetPath>
+        <targetPath>/_system/governance</targetPath>
     </mount>
 
     <dbConfig name="config">
@@ -26,10 +26,10 @@
         <readOnly>false</readOnly>
         <registryRoot>/</registryRoot>
         <enableCache>true</enableCache>
-        <cacheId><%= @config_user %>@jdbc:mysql://<%= @mysql_server %>:<%= @mysql_port %>/<%= @config_db %></cacheId>
+        <cacheId><%= @registry_user %>@jdbc:mysql://<%= @mysql_server %>:<%= @mysql_port %>/<%= @config_db %></cacheId>
     </remoteInstance>
 
     <mount path="/_system/config" overwrite="true">
         <instanceId>config</instanceId>
-        <targetPath><%= @config_path %>/<%= @config_target_path %></targetPath>
+        <targetPath>/_system/<%= @config_target_path %></targetPath>
     </mount>
