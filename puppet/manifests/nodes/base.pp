@@ -26,6 +26,8 @@ node 'base' {
   $mb_type		= 'activemq' #in wso2 mb case, value should be 'wso2mb'
   $cep_ip               = 'CEP_IP'
   $cep_port             = 'CEP_PORT'
+  $cep_username         = 'admin'
+  $cep_password         = 'admin'
   $truststore_password  = 'wso2carbon'
   $java_distribution	= 'JAVA_FILE'
   $java_name		= 'JAVA_NAME'

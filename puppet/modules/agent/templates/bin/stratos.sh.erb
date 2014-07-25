@@ -29,6 +29,8 @@ properties="-Dmb.ip=<%= @mb_ip %>
             -Dlisten.address=localhost
             -Dthrift.receiver.ip=<%= @cep_ip %>
             -Dthrift.receiver.port=<%= @cep_port %>
+            -Dthrift.receiver.username=<%= @cep_username %>
+            -Dthrift.receiver.password=<%= @cep_password %>
             -Djndi.properties.template.file.path=<%= @carbon_home %>/conf/templates/jndi.properties.template
             -Djndi.properties.dir=<%= @carbon_home %>/conf
             -Dlog4j.configuration=file://<%= @carbon_home %>/conf/log4j.properties

@@ -49,8 +49,8 @@ public class WSO2CEPStatisticsPublisher implements StatisticsPublisher {
         this.streamDefinition = streamDefinition;
         this.ip = System.getProperty("thrift.receiver.ip");
         this.port = System.getProperty("thrift.receiver.port");
-        this.username = "admin";
-        this.password = "admin";
+        this.username = System.getProperty("thrift.receiver.username");
+        this.password = System.getProperty("thrift.receiver.password");
 
         enabled = Boolean.getBoolean("cep.stats.publisher.enabled");
         if (enabled) {
