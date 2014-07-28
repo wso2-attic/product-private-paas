@@ -23,5 +23,7 @@ node /mysql/ inherits base {
   }
   class {'mysql':}
 
-  Class['stratos_base'] -> Class['java'] -> Class['mysql'] ~> Class['agent']
+#  Class['stratos_base'] -> Class['java'] -> Class['mysql'] ~> Class['agent']
+  Class['stratos_base'] ~> Class['agent']
 }
+

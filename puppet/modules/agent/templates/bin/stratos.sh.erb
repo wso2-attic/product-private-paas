@@ -29,6 +29,8 @@ properties="-Dmb.ip=<%= @mb_ip %>
             -Dlisten.address=localhost
             -Dthrift.receiver.ip=<%= @cep_ip %>
             -Dthrift.receiver.port=<%= @cep_port %>
+            -Dthrift.receiver.username=<%= @cep_username %>
+            -Dthrift.receiver.password=<%= @cep_password %>
             -Djndi.properties.template.file.path=<%= @carbon_home %>/conf/templates/jndi.properties.template
             -Djndi.properties.dir=<%= @carbon_home %>/conf
             -Dlog4j.configuration=file://<%= @carbon_home %>/conf/log4j.properties
@@ -67,9 +69,7 @@ properties="-Dmb.ip=<%= @mb_ip %>
             -Dextension.complete.tenant=<%= @extension_complete_tenant %>
             -Dextension.subscription.domain.added=<%= @extension_subscription_domain_added %>
             -Dextension.subscription.domain.removed=<%= @extension_subscription_domain_removed %>
-            -Dextension.artifacts.copy=<%= @extension_artifacts_copy %>
-	    -Dextension.tenant.subscribed=<%= @extension_tenant_subscribed %>
-            -Dextension.tenant.unsubscribed=<%= @extension_tenant_unsubscribed %>"
+            -Dextension.artifacts.copy=<%= @extension_artifacts_copy %>"
 
 # Uncomment below line to enable remote debugging
 #debug="-agentlib:jdwp=transport=dt_socket,server=y,suspend=y,address=5005"
