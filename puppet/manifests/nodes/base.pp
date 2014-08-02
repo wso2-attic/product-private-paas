@@ -23,6 +23,7 @@ node 'base' {
   $local_package_dir    = '/mnt/packs'
   $mb_ip                = 'MB_IP'
   $mb_port              = 'MB_PORT'
+  $mb_url               = 'tcp://MB_IP:MB_PORT'
   $mb_type		= 'activemq' #in wso2 mb case, value should be 'wso2mb'
   $cep_ip               = 'CEP_IP'
   $cep_port             = 'CEP_PORT'
