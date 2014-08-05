@@ -2,13 +2,16 @@
     "id": "economy",
     "loadThresholds": {
       "requestsInFlight": {
-        "average": "300"    
+         "upperLimit": 30, 
+         "lowerLimit": 5
       },
       "memoryConsumption": {
-        "average": "800"      
+         "upperLimit": 40, 
+         "lowerLimit": 15
       },
       "loadAverage": {
-        "average": "600"    
+         "upperLimit": 150, 
+         "lowerLimit": 100
       }
     }  
 }
