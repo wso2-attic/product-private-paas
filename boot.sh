@@ -365,6 +365,13 @@ function get_core_services_confirmations() {
        bam_enabled="true"
     fi
 
+    # Enable BAM via Puppet if BAM is enabled
+    if [[ $bam_enabled = "true" ]]; then
+       replace_in_file "BAM_IP" "$machine_ip" "/etc/puppet/manifests/nodes/base.pp"
+       replace_in_file "BAM_PORT" "7612" "/etc/puppet/manifests/nodes/base.pp"
+       replace_in_file "ENABLE_LOG_PUBLISHER" "true" "/etc/puppet/manifests/nodes/base.pp"
+    fi
+
     wso2_ppaas_needed=$(read_user_input "Do you need to start WSO2 Private PaaS? [y/n] " "" $wso2_ppaas_enabled )
     if [[ $wso2_ppaas_needed =~ ^[Yy]$ ]]; then
        wso2_ppaas_enabled="true"
@@ -736,13 +743,6 @@ function deploy_puppet() {
     replace_in_file "CEP_PORT" "$cep_port" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "DB_HOST" "$mysql_host" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "DB_PORT" "$mysql_port" "/etc/puppet/manifests/nodes/base.pp"
-    
-    # Enable BAM via Puppet if BAM is enabled
-    if [[ "$bam_enabled" = "true" ]]; then
-       replace_in_file "BAM_IP" "$machine_ip" "/etc/puppet/manifests/nodes/base.pp"
-       replace_in_file "BAM_PORT" "7612" "/etc/puppet/manifests/nodes/base.pp"
-       replace_in_file "ENABLE_LOG_PUBLISHER" "true" "/etc/puppet/manifests/nodes/base.pp"
-    fi
     
     replace_in_file "JAVA_FILE" "$JAVA_FILE_DISTRUBUTION" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "JAVA_NAME" "$JAVA_NAME_EXTRACTED" "/etc/puppet/manifests/nodes/base.pp"
