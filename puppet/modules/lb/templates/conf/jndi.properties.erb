@@ -22,12 +22,13 @@
 #
 <% if @mb_type == 'wso2mb' %>
     connectionfactoryName=topicConnectionfactory
-    connectionfactory.topicConnectionfactory=amqp://admin:admin@carbon/carbon?brokerlist='tcp://$mb_ip:$mb_port'
+    connectionfactory.topicConnectionfactory=amqp://admin:admin@carbon/carbon?brokerlist='<%= @mb_url %>'
     java.naming.factory.initial=org.wso2.andes.jndi.PropertiesFileInitialContextFactory
+    java.naming.provider.url=<%= @carbon_home %>/conf/jndi.properties
 <% end %>
 <% if @mb_type == 'activemq' %>
     connectionfactoryName=TopicConnectionFactory
-    java.naming.provider.url=tcp://$mb_ip:$mb_port
+    java.naming.provider.url=<%= @mb_url %>
     java.naming.factory.initial=org.apache.activemq.jndi.ActiveMQInitialContextFactory
 <% end %>
 

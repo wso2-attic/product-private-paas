@@ -48,7 +48,7 @@ class lb (
   $service_templates = [
     'conf/axis2/axis2.xml',
     'conf/loadbalancer.conf',
-    'conf/templates/jndi.properties.template',
+    'conf/jndi.properties',
     ]
 
   tag($service_code)

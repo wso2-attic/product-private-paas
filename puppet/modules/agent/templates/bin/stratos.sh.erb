@@ -24,9 +24,7 @@ echo "Starting cartridge agent..."
 script_path="$( cd -P "$( dirname "$SOURCE" )" && pwd )/`dirname $0`"
 lib_path=${script_path}/../lib/
 class_path=`echo ${lib_path}/*.jar | tr ' ' ':'`
-properties="-Dmb.ip=<%= @mb_ip %>
-            -Dmb.port=<%= @mb_port %>
-            -Dlisten.address=localhost
+properties="-Dlisten.address=localhost
             -Dthrift.receiver.ip=<%= @cep_ip %>
             -Dthrift.receiver.port=<%= @cep_port %>
             -Dthrift.receiver.username=<%= @cep_username %>
@@ -41,7 +39,7 @@ properties="-Dmb.ip=<%= @mb_ip %>
 	    -Dlb.public.ip=<%= @lb_public_ip %>
             -Djavax.net.ssl.trustStore=<%= @carbon_home %>/security/client-truststore.jks
             -Djavax.net.ssl.trustStorePassword=<%= @truststore_password %>
-	     -Denable.artifact.update=<%= @enable_artifact_update %>
+	    -Denable.artifact.update=<%= @enable_artifact_update %>
             -Dauto.commit=<%= @auto_commit %>
             -Dauto.checkout=<%= @auto_checkout %>
             -Dartifact.update.interval=15
