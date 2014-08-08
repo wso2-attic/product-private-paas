@@ -627,24 +627,24 @@ function setup_is_core_service() {
         cp $current_dir/resources/sso-idp-config-template/sso-idp-config.xml-template $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml        
 
         # replace the sso-idp-config.xml file
-        replace_in_file 'IS_ASSERTION_CONSUMER_HOST' is.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+        replace_in_file 'IS_ASSERTION_CONSUMER_HOST' is.$stratos_domain $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
 
         if [[ $as_worker_mgt_enabled = "true" ]]; then
-	    replace_in_file 'AS_ASSERTION_CONSUMER_HOST' mgt.appserver.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+	    replace_in_file 'AS_ASSERTION_CONSUMER_HOST' mgt.appserver.$stratos_domain $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         else
-	    replace_in_file 'AS_ASSERTION_CONSUMER_HOST' appserver.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+	    replace_in_file 'AS_ASSERTION_CONSUMER_HOST' appserver.$stratos_domain $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         fi
 
         if [[ $esb_worker_mgt_enabled = "true" ]]; then
-	    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' mgt.esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+	    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' mgt.esb.$stratos_domain $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         else
-	    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+	    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.$stratos_domain $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         fi
 
         if [[ $bps_worker_mgt_enabled = "true" ]]; then
-	    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' mgt.bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+	    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' mgt.bps.$stratos_domain $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         else
-	    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+	    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.$stratos_domain $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         fi
 
         replace_in_file 'IDP_URL' "$public_ip" $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
@@ -1194,6 +1194,7 @@ else
 
      if [[ "$wso2_ppaas_enabled" = "true" ]]; then
         # Deploy cartridges to Apache Stratos
+        find ./resources/json/ec2/*.json -print0 | xargs -0 sed -i s/wso2.com/$stratos_domain/g
         deploy_wso2_ppaas_services
 
         # Update hosts file
