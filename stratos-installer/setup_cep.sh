@@ -38,6 +38,7 @@ unzip -q $cep_pack_path -d $stratos_path
 cp -f $current_dir/../resources/cep/artifacts/streamdefinitions/stream-manager-config.xml $cep_path/repository/conf/
 cp -f $jndi_template_path $cep_path/repository/conf/
 cp -f $current_dir/../resources/cep/lib/* $cep_path/repository/components/lib/
+cp -f $current_dir/../resources/cep/dropins/* $cep_path/repository/components/dropins/
 cp -rf $current_dir/../resources/cep/artifacts/* $cep_path/repository/deployment/server
 
 for activemq_client_lib in "${activemq_client_libs[@]}" 
