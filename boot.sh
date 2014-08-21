@@ -100,6 +100,15 @@ function backup_file() {
     fi
 }
 
+function generate_originfile() {
+    if [[  -f "$1.orig" ]]; then
+         echo -e "Original file already exists $1"
+    else
+        echo -e "Creating a back-up of the file $1"
+        cp -f "$1" "$1.orig"
+    fi
+}
+
 function replace_setup_conf() {
     #echo "Setting value $2 for property $1 as $2"
     setp_conf_file=$setup_path/conf/setup.conf
@@ -833,6 +842,9 @@ function get_host_user(){
 
 function init() {
     # Create a backup of setup.conf file, we are going to change it.
+    
+    generate_originfile $current_dir/conf.sh
+
     backup_file $setup_path/conf/setup.conf
 
     # backup mysql.sql, we are going to write stuff into it
