@@ -81,6 +81,16 @@ if [[ -z $clean_puppet ]]; then
    fi
 fi
 
+
+read -p "Do you want to clean conf.sh? [y/n] " input_clean_conf
+if [[ $input_clean_conf =~ ^[Yy]$ ]]; then
+    if [[  -f "conf.sh.orig" ]]; then
+         cp -f "conf.sh.orig" "conf.sh"
+
+    fi
+fi
+
+ 
 # Set host to localhost if user has not specified a hostname
 mysql_host=${mysql_host:-localhost}
 /bin/bash $current_dir/stratos-installer/clean.sh -u$mysql_user -p$mysql_pass -h$mysql_host
