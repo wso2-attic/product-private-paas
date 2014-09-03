@@ -59,6 +59,7 @@ import org.wso2.carbon.user.core.UserStoreException;
 import org.wso2.carbon.user.core.tenant.Tenant;
 import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.carbon.utils.multitenancy.MultitenantUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -380,6 +381,18 @@ public class StratosAdmin extends AbstractAdmin {
                 getConfigContext(),
                 getUsername(),
                 getTenantDomain());
+    }
+
+    @POST
+    @Path("/cartridge/subscribe/tenant")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
+    @SuperTenantService(true)
+    // allow super tenant to subscribe a tenant to a cartridge forcefully
+    public SubscriptionInfo subscribeTenantToCartridge (CartridgeInfoBean cartridgeInfoBean) throws RestAPIException {
+
+        return ServiceUtils.subscribeTenantToCartridge(cartridgeInfoBean);
     }
 
     @GET

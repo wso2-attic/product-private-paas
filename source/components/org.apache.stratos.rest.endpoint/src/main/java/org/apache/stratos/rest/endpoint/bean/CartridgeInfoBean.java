@@ -42,6 +42,11 @@ public class CartridgeInfoBean {
     private String serviceGroup;
     private List<String> domains;
 
+    // this parameter is used when super tenant forcefully subscribes
+    // a particular tenant to a cartridge. This is used to denote the
+    // subscribing tenant's domain
+    private String subscribingTenantDomain;
+
     public CartridgeInfoBean() {
         this.domains = new ArrayList<String>();
     }
@@ -170,4 +175,11 @@ public class CartridgeInfoBean {
 
     public void setDomains(List<String> domains) { this.domains = domains; }
 
+    public String getSubscribingTenantDomain() {
+        return subscribingTenantDomain;
+    }
+
+    public void setSubscribingTenantDomain(String subscribingTenantDomain) {
+        this.subscribingTenantDomain = subscribingTenantDomain;
+    }
 }
