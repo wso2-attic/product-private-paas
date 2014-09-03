@@ -29,6 +29,8 @@ properties="-Dmb.ip=MB-IP
             -Dlisten.address=localhost
             -Dthrift.receiver.ip=CEP-IP
             -Dthrift.receiver.port=CEP-PORT
+            -Dthrift.receiver.username=CEP-USERNAME
+	    -Dthrift.receiver.password=CEP-PASSWORD
             -Djndi.properties.template.file.path=${script_path}/../conf/templates/jndi.properties.template
             -Djndi.properties.dir=${script_path}/../conf
             -Dlog4j.configuration=file://${script_path}/../conf/log4j.properties

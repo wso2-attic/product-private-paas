@@ -35,7 +35,7 @@ class agent(
 
   $service_templates = [
     'bin/stratos.sh',
-    'conf/templates/jndi.properties.template',
+    'conf/jndi.properties',
     'conf/log4j.properties',   
     'extensions/clean.sh',
     'extensions/instance-activated.sh',
@@ -51,8 +51,6 @@ class agent(
     'extensions/mount-volumes.sh',
     'extensions/subscription-domain-added.sh',
     'extensions/subscription-domain-removed.sh',
-    'extensions/tenant-subscribed.sh',
-    'extensions/tenant-unsubscribed.sh',
     ]
 
   agent::initialize { $deployment_code:

@@ -16,6 +16,7 @@
 # ----------------------------------------------------------------------------
 
 # Define error handling function
+
 function error_handler() {
         MYSELF="$0"               # equals to script name
         LASTLINE="$1"            # argument 1: last line of error occurence
@@ -94,6 +95,15 @@ function backup_file() {
         echo "Restoring from the Original template file $1"
 	cp -f "$1" "$1.last"
         cp -f "$1.orig" "$1"
+    else
+        echo -e "Creating a back-up of the file $1"
+        cp -f "$1" "$1.orig"
+    fi
+}
+
+function generate_originfile() {
+    if [[  -f "$1.orig" ]]; then
+         echo -e "Original file already exists $1"
     else
         echo -e "Creating a back-up of the file $1"
         cp -f "$1" "$1.orig"
@@ -365,6 +375,13 @@ function get_core_services_confirmations() {
        bam_enabled="true"
     fi
 
+    # Enable BAM via Puppet if BAM is enabled
+    if [[ $bam_enabled = "true" ]]; then
+       replace_in_file "BAM_IP" "$machine_ip" "/etc/puppet/manifests/nodes/base.pp"
+       replace_in_file "BAM_PORT" "7612" "/etc/puppet/manifests/nodes/base.pp"
+       replace_in_file "ENABLE_LOG_PUBLISHER" "true" "/etc/puppet/manifests/nodes/base.pp"
+    fi
+
     wso2_ppaas_needed=$(read_user_input "Do you need to start WSO2 Private PaaS? [y/n] " "" $wso2_ppaas_enabled )
     if [[ $wso2_ppaas_needed =~ ^[Yy]$ ]]; then
        wso2_ppaas_enabled="true"
@@ -620,24 +637,24 @@ function setup_is_core_service() {
         cp $current_dir/resources/sso-idp-config-template/sso-idp-config.xml-template $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml        
 
         # replace the sso-idp-config.xml file
-        replace_in_file 'IS_ASSERTION_CONSUMER_HOST' is.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+        replace_in_file 'IS_ASSERTION_CONSUMER_HOST' is.$stratos_domain $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
 
         if [[ $as_worker_mgt_enabled = "true" ]]; then
-	    replace_in_file 'AS_ASSERTION_CONSUMER_HOST' mgt.appserver.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+	    replace_in_file 'AS_ASSERTION_CONSUMER_HOST' mgt.appserver.$stratos_domain $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         else
-	    replace_in_file 'AS_ASSERTION_CONSUMER_HOST' appserver.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+	    replace_in_file 'AS_ASSERTION_CONSUMER_HOST' appserver.$stratos_domain $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         fi
 
         if [[ $esb_worker_mgt_enabled = "true" ]]; then
-	    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' mgt.esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+	    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' mgt.esb.$stratos_domain $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         else
-	    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+	    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.$stratos_domain $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         fi
 
         if [[ $bps_worker_mgt_enabled = "true" ]]; then
-	    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' mgt.bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+	    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' mgt.bps.$stratos_domain $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         else
-	    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
+	    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' bps.$stratos_domain $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         fi
 
         replace_in_file 'IDP_URL' "$public_ip" $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
@@ -737,13 +754,6 @@ function deploy_puppet() {
     replace_in_file "DB_HOST" "$mysql_host" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "DB_PORT" "$mysql_port" "/etc/puppet/manifests/nodes/base.pp"
     
-    # Enable BAM via Puppet if BAM is enabled
-    if [[ "$bam_enabled" = "true" ]]; then
-       replace_in_file "BAM_IP" "$machine_ip" "/etc/puppet/manifests/nodes/base.pp"
-       replace_in_file "BAM_PORT" "7612" "/etc/puppet/manifests/nodes/base.pp"
-       replace_in_file "ENABLE_LOG_PUBLISHER" "true" "/etc/puppet/manifests/nodes/base.pp"
-    fi
-    
     replace_in_file "JAVA_FILE" "$JAVA_FILE_DISTRUBUTION" "/etc/puppet/manifests/nodes/base.pp"
     replace_in_file "JAVA_NAME" "$JAVA_NAME_EXTRACTED" "/etc/puppet/manifests/nodes/base.pp"
     # JAVA_NAME should match extracted directory name of Java tar.gz archive, eg. jdk-7u45-linux-x64.tar.gz -> jdk1.7.0_45
@@ -833,6 +843,9 @@ function get_host_user(){
 
 function init() {
     # Create a backup of setup.conf file, we are going to change it.
+    
+    generate_originfile $current_dir/conf.sh
+
     backup_file $setup_path/conf/setup.conf
 
     # backup mysql.sql, we are going to write stuff into it
@@ -1194,6 +1207,7 @@ else
 
      if [[ "$wso2_ppaas_enabled" = "true" ]]; then
         # Deploy cartridges to Apache Stratos
+        find ./resources/json/ec2/*.json -print0 | xargs -0 sed -i s/wso2.com/$stratos_domain/g
         deploy_wso2_ppaas_services
 
         # Update hosts file

@@ -2,19 +2,16 @@
     "id": "economy",
     "loadThresholds": {
       "requestsInFlight": {
-        "average": "300",
-        "gradient": "10",
-        "secondDerivative": "0.2"        
+         "upperLimit": 30, 
+         "lowerLimit": 5
       },
       "memoryConsumption": {
-        "average": "80",
-        "gradient": "10",
-        "secondDerivative": "0.2"        
+         "upperLimit": 40, 
+         "lowerLimit": 15
       },
       "loadAverage": {
-        "average": "600",
-        "gradient": "20",
-        "secondDerivative": "0.2"       
+         "upperLimit": 150, 
+         "lowerLimit": 100
       }
     }  
 }

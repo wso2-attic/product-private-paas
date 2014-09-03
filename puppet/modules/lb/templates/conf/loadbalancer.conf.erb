@@ -38,12 +38,7 @@ loadbalancer {
     # If this property is set to true, load balancer will listen to topology events and build
     # the topology configuration accordingly. If not static configuration given in the services
     # section will be used.
-    topology-event-listener: true;
-
-    # Message broker endpoint
-    # Provide message broker ip address and port if topology-event-listener or multi-tenancy is set to true.
-    mb-ip: <%= @mb_ip %>;
-    mb-port: <%= @mb_port %>;
+    topology-event-listener: true;    
 
     # Topology service filter
     # Provide service names in a comma separated list to filter incoming topology events if
@@ -104,12 +99,6 @@ loadbalancer {
             class-name: org.apache.stratos.load.balancer.algorithm.RoundRobin;
         }
     }
-
-    # Rewrite location header
-    # If this property is set to true, load balancer will rewrite HTTP Location header values found in response
-    # messages if the host is set to an ip address of a known member. The resulting Location header host will be
-    # set to corresponding cluster hostname and the port will be set to corresponding transport proxy port.
-    rewrite-location-header: true;
 
     # Static topology configuration
     # Define a static topology configuration if topology-event-listener is set to false.

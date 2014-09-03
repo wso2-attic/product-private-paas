@@ -90,7 +90,7 @@ public class TopologyBuilder {
         Topology topology = TopologyManager.getTopology();
 
         for (Cartridge cartridge : cartridgeList) {
-            if (topology.getService(cartridge.getType()).getClusters().size() == 0) {
+//            if (topology.getService(cartridge.getType()).getClusters().size() == 0) {
                 if (topology.serviceExists(cartridge.getType())) {
                     try {
                         TopologyManager.acquireWriteLock();
@@ -103,10 +103,10 @@ public class TopologyBuilder {
                 } else {
                 	log.warn(String.format("Service %s does not exist..", cartridge.getType()));
                 }
-            } else {
-                log.warn("Subscription already exists. Hence not removing the service:" + cartridge.getType()
-                        + " from the topology");
-            }
+//            } else {
+//                log.warn("Subscription already exists. Hence not removing the service:" + cartridge.getType()
+//                        + " from the topology");
+//            }
         }
     }
 
@@ -121,19 +121,20 @@ public class TopologyBuilder {
             
             Cluster cluster;
             String clusterId = registrant.getClusterId();
-            if (service.clusterExists(clusterId)) {
-                // update the cluster
-                cluster = service.getCluster(clusterId);
-                cluster.addHostName(registrant.getHostName());
-                if(service.getServiceType() == ServiceType.MultiTenant) {
-                    cluster.setTenantRange(registrant.getTenantRange());
-                }
-                if(service.getProperties().getProperty(Constants.IS_PRIMARY) != null) {
-                    props.setProperty(Constants.IS_PRIMARY, service.getProperties().getProperty(Constants.IS_PRIMARY));
-                }
-                cluster.setProperties(props);
-                cluster.setLbCluster(isLb);
-            } else {
+//            if (service.clusterExists(clusterId)) {
+//                // update the cluster
+//                cluster = service.getCluster(clusterId);
+//                cluster.addHostName(registrant.getHostName());
+//                if(service.getServiceType() == ServiceType.MultiTenant) {
+//                    cluster.setTenantRange(registrant.getTenantRange());
+//                }
+//                if(service.getProperties().getProperty(Constants.IS_PRIMARY) != null) {
+//                    props.setProperty(Constants.IS_PRIMARY, service.getProperties().getProperty(Constants.IS_PRIMARY));
+//                }
+//                cluster.setProperties(props);
+//                cluster.setLbCluster(isLb);
+//            } else {
+                log.info("************** service : "+service.toString());
                 cluster = new Cluster(cartridgeType, clusterId,
                                       registrant.getDeploymentPolicyName(), registrant.getAutoScalerPolicyName());
                 cluster.addHostName(registrant.getHostName());
@@ -146,8 +147,12 @@ public class TopologyBuilder {
                 cluster.setProperties(props);
                 cluster.setLbCluster(isLb);
                 cluster.setStatus(ClusterStatus.Created);
+                
+                if (service.clusterExists(clusterId)) {
+                	service.removeCluster(clusterId);
+                }
                 service.addCluster(cluster);
-            }
+//            }
             TopologyManager.updateTopology(topology);
             TopologyEventPublisher.sendClusterCreatedEvent(cartridgeType, clusterId, cluster);
 

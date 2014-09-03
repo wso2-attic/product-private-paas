@@ -281,11 +281,11 @@
             <destName>datasources.properties</destName>
             <filtered>true</filtered>
         </file>
-        <file>
+        <!--<file>
             <source>src/main/conf/templates/jndi.properties.template</source>
             <outputDirectory>apache-stratos-load-balancer-${pom.version}/repository/conf/templates</outputDirectory>
             <destName>jndi.properties.template</destName>
-        </file>
+        </file>-->
         <file>
             <source>src/main/license/LICENSE</source>
             <outputDirectory>apache-stratos-load-balancer-${pom.version}</outputDirectory>
