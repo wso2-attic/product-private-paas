@@ -62,6 +62,7 @@ as_config_db="as_config"
 apim_db="apim_db"
 apim_stats_db="amstats"
 esb_config_db="esb_config"
+greg_config_db="greg_config"
 is_config_db="is_config"
 bps_config_db="bps_config"
 
@@ -69,6 +70,7 @@ bps_config_db="bps_config"
 # Using the same target mount path for now
 as_config_path="config"
 esb_config_path="config"
+greg_config_path="config"
 bps_config_path="config"
 is_config_path="config"
 
@@ -347,6 +349,18 @@ function get_service_deployment_confirmations() {
        fi      
     fi   
 
+ greg_needed=$(read_user_input "Do you need to deploy GREG (Governance Registry) service? [y/n] " "" $greg_enabled )
+    if [[ $greg_needed =~ ^[Yy]$ ]]; then
+       greg_enabled="true"
+     
+          clustering_greg=$(read_user_input "Do you need to enable clustering for GREG? [y/n] " "" $greg_clustering_enabled )
+          if [[ $clustering_greg =~ ^[Yy]$ ]]; then
+             greg_clustering_enabled="true"
+          else
+             greg_clustering_enabled="false"
+          fi
+       fi       
+
     apim_needed=$(read_user_input "Do you need to deploy APIM (API Manager) service? [y/n] " "" $apim_enabled )
     if [[ $apim_needed =~ ^[Yy]$ ]]; then
        apim_enabled="true"
@@ -556,6 +570,63 @@ function setup_esb() {
     fi
 }
 
+function setup_greg() {
+    echo "Configuring Governance Registry..."
+    if [[ $puppet_external = "false" && $skip_puppet = "false" ]]; then
+       # Copy GREG patches to Puppet
+       cp -rf $current_dir/patches/patch0008/ /etc/puppet/modules/greg/files/patches/repository/components/patches
+
+       # Copy packs files to Puppet
+       cp -f $stratos_pack_path/wso2greg-4.6.0.zip /etc/puppet/modules/greg/files
+       cp -f $stratos_pack_path/$MYSQL_CONNECTOR /etc/puppet/modules/greg/files/configs/repository/components/lib
+
+       # greg node parameters       
+       replace_in_file "GREG_CONFIG_DB" "$greg_config_db" "/etc/puppet/manifests/nodes/greg.pp"
+       replace_in_file "GREG_CONFIG_PATH" "$greg_config_path" "/etc/puppet/manifests/nodes/greg.pp"
+       replace_in_file "CLUSTERING" "$greg_clustering_enabled" "/etc/puppet/manifests/nodes/greg.pp"
+
+       backup_file "/etc/puppet/modules/greg/manifests/params.pp"
+       replace_in_file "ADMIN_USER" "admin" "/etc/puppet/modules/greg/manifests/params.pp"
+       replace_in_file "ADMIN_PASSWORD" "admin" "/etc/puppet/modules/greg/manifests/params.pp"
+       replace_in_file "DB_USER" "$mysql_uname" "/etc/puppet/modules/greg/manifests/params.pp"
+       replace_in_file "DB_PASSWORD" "$mysql_password" "/etc/puppet/modules/greg/manifests/params.pp"
+       replace_in_file "REGISTRY_DB" "$registry_db" "/etc/puppet/modules/greg/manifests/params.pp"
+       replace_in_file "USERSTORE_DB" "userstore" "/etc/puppet/modules/greg/manifests/params.pp"
+       replace_in_file "APIM_DB" "$apim_db" "/etc/puppet/modules/greg/manifests/params.pp"
+
+       create_apim_database "$apim_db"
+
+        # Configure SSO in greg
+        if [[ "$config_sso_enabled" == "true" ]] ; then
+           replace_in_file "SSO_DISABLED" "false" "/etc/puppet/modules/greg/templates/conf/security/authenticators.xml.erb"
+           replace_in_file "IDP_URL" "$public_ip" "/etc/puppet/modules/greg/templates/conf/security/authenticators.xml.erb"
+        else
+           backup_file "/etc/puppet/modules/greg/templates/conf/security/authenticators.xml.erb"
+           replace_in_file "SSO_DISABLED" "true" "/etc/puppet/modules/greg/templates/conf/security/authenticators.xml.erb"
+        fi       
+    fi
+
+    if [[ "$puppet_only" = "true" ]]; then
+          return
+    fi
+
+    #greg config db changes 
+    create_config_database "$greg_config_db"
+
+    # Configure cartridge definition json
+    backup_file $current_dir/resources/json/$iaas/greg-cart.json
+    replace_in_file "REGION" "$region" "$current_dir/resources/json/$iaas/greg-cart.json"
+    replace_in_file "BASE_IMAGE_ID" "$cartridge_base_img_id" "$current_dir/resources/json/$iaas/greg-cart.json"
+
+    if [[ $greg_clustering_enabled = "true" ]]; then
+       replace_in_file "@PRIMARY" "true" "$current_dir/resources/json/$iaas/greg-cart.json"
+       replace_in_file "@CLUSTERING" "true" "$current_dir/resources/json/$iaas/greg-cart.json"
+    else
+       replace_in_file "@PRIMARY" "false" "$current_dir/resources/json/$iaas/greg-cart.json"
+       replace_in_file "@CLUSTERING" "false" "$current_dir/resources/json/$iaas/greg-cart.json"
+    fi
+}
+
 function setup_is() {
     echo "Configuring Identity Server..."
     if [[ $puppet_external = "false" && $skip_puppet = "false" ]]; then
@@ -633,7 +704,7 @@ function setup_is_core_service() {
         else
 	    replace_in_file 'ESB_ASSERTION_CONSUMER_HOST' esb.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         fi
-
+	
         if [[ $bps_worker_mgt_enabled = "true" ]]; then
 	    replace_in_file 'BPS_ASSERTION_CONSUMER_HOST' mgt.bps.wso2.com $stratos_install_path/wso2is-5.0.0/repository/conf/security/sso-idp-config.xml
         else
@@ -815,7 +886,11 @@ function configure_products() {
     if [[ $esb_enabled = "true" ]]; then
        setup_esb
     fi
-    
+
+    if [[ $greg_enabled = "true" ]]; then
+       setup_greg
+    fi
+
     if [[ $config_sso_enabled = "true" ]]; then
        setup_is_core_service
     fi
@@ -1074,6 +1149,15 @@ function deploy_wso2_ppaas_services() {
        fi
     fi
 
+	 if [[ "$greg_enabled" = "true" ]]; then
+          echo -e "Deploying Governance Registry (GREG) cartridge at $resource_path/json/$iaas/greg-cart.json"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/greg-cart.json" -k  -u admin:admin "https://$machine_ip:9443/stratos/admin/cartridge/definition"
+    
+          echo -e "Deploying Governance Registry (GREG) service at greg-service-deployment.json"
+          curl -X POST -H "Content-Type: application/json" -d @"$resource_path/json/$iaas/greg-service-deployment.json" -k -u admin:admin https://$machine_ip:9443/stratos/admin/service/definition
+       fi
+
+
     if [[ "$bps_enabled" = "true" ]]; then
        if [[ "$bps_worker_mgt_enabled" = "true" ]]; then
           echo -e "Deploying Business Process Server (BPS) Manager cartridge at $resource_path/json/$iaas/bps-cart-mgt.json"
@@ -1109,6 +1193,7 @@ function update_hosts_file() {
     echo " " >> /etc/hosts
     echo $lb_ip  appserver.wso2.com >> /etc/hosts
     echo $lb_ip  esb.wso2.com >> /etc/hosts
+    echo $lb_ip  greg.wso2.com >> /etc/hosts
     echo $lb_ip  bps.wso2.com >> /etc/hosts
 
     if [[ $as_worker_mgt_enabled = "true" ]]; then

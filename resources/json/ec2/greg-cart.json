@@ -1,0 +1,53 @@
+{
+      "type": "greg",
+      "provider": "wso2",
+      "host": "greg.wso2.com",
+      "displayName": "GREG",
+      "description": "GREG Cartridge",
+      "version": "4.6.0",
+      "multiTenant": "true",
+      "portMapping": [
+         {
+            "protocol": "http",
+            "port": "9763",
+            "proxyPort": "80"
+         },
+         {
+            "protocol": "https",
+            "port": "9443",
+            "proxyPort": "443"
+         }
+       ],
+      "deployment": {
+        },
+       "iaasProvider": [
+        {
+          "type": "ec2",
+          "imageId": "REGION/BASE_IMAGE_ID",
+          "maxInstanceLimit": "4",
+          "property": [
+            {
+             "name": "instanceType",
+             "value": "m1.medium"
+            }
+          ]
+        }
+      ],
+      "loadBalancer": {
+        "type": "lb",
+        "property": {
+            "name": "default.load.balancer",
+            "value": "true"
+        }
+      },
+      "property": [
+        {
+          "name": "PRIMARY",
+          "value": "@PRIMARY"
+        },
+        {
+          "name": "payload_parameter.CLUSTERING",
+          "value": "@CLUSTERING"
+        }
+      ]
+}

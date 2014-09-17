@@ -14,24 +14,15 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 #
-# import private paas nodes definitions
-import 'nodes/api.pp'
-import 'nodes/appserver.pp'
-import 'nodes/base.pp'
-import 'nodes/bps.pp'
-import 'nodes/esb.pp'
-import 'nodes/greg.pp'
-import 'nodes/haproxy.pp'
-import 'nodes/is.pp'
-import 'nodes/lb.pp'
-import 'nodes/mysql.pp'
-import 'nodes/nodejs.pp'
-import 'nodes/php.pp'
-import 'nodes/ruby.pp'
-import 'nodes/tomcat.pp'
-import 'nodes/wordpress.pp'
+# Starts the service once the deployment is successful.
 
-# import a single manifest file with node definitions
-import 'nodes.pp'
-
-import 'nodes/default.pp'
+define greg::start ($target, $owner) {
+  exec { "strating_${name}":
+    user   	=> $owner,
+    environment => "JAVA_HOME=$java_home",
+    path        => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
+    unless	=> "test -f ${target}/wso2carbon.lck",
+    command	=> "touch ${target}/wso2carbon.lck; ${target}/bin/wso2server.sh > /dev/null 2>&1 &",
+    creates	=> "${target}/repository/wso2carbon.log",
+  }
+}
