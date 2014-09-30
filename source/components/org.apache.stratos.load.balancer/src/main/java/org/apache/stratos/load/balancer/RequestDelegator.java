@@ -43,7 +43,7 @@ public class RequestDelegator {
         this.algorithm = algorithm;
     }
 
-    public Member findNextMemberFromHostName(String hostName) {
+    public Member findNextMemberFromHostName(String hostName, String messageId) {
         if (hostName == null)
             return null;
 
@@ -51,11 +51,15 @@ public class RequestDelegator {
 
         Cluster cluster = LoadBalancerContext.getInstance().getHostNameClusterMap().getCluster(hostName);
         if (cluster != null) {
+        	if (log.isDebugEnabled()) {
+        		log.debug(String.format("Cluster %s identified for request %s", cluster.getClusterId(), messageId));
+        	}
             Member member = findNextMemberInCluster(cluster);
             if (member != null) {
                 if (log.isDebugEnabled()) {
                     long endTime = System.currentTimeMillis();
-                    log.debug(String.format("Next member identified in %dms: [service] %s [cluster] %s [member] %s", (endTime - startTime), member.getServiceName(), member.getClusterId(), member.getMemberId()));
+                    log.debug(String.format("Next member identified in %dms: [service] %s [cluster] %s [member] %s [request-id] %s", 
+                    		(endTime - startTime), member.getServiceName(), member.getClusterId(), member.getMemberId(), messageId));
                 }
             }
             return member;
@@ -82,7 +86,10 @@ public class RequestDelegator {
         return null;
     }
 
-    private Member findNextMemberInCluster(Cluster cluster) {
+    /**
+     * This operation should be synchronized in order to find a member correctly.
+     */
+    private synchronized Member findNextMemberInCluster(Cluster cluster) {
         // Find algorithm context of the cluster
         ClusterContext clusterContext = LoadBalancerContext.getInstance().getClusterIdClusterContextMap().getClusterContext(cluster.getClusterId());
         if (clusterContext == null) {
@@ -95,8 +102,10 @@ public class RequestDelegator {
             algorithmContext = new AlgorithmContext(cluster.getServiceName(), cluster.getClusterId());
             clusterContext.setAlgorithmContext(algorithmContext);
         }
-        algorithm.setMembers(new ArrayList<Member>(cluster.getMembers()));
-        Member member = algorithm.getNextMember(algorithmContext);
+        
+		algorithm.setMembers(new ArrayList<Member>(cluster.getMembers()));
+		Member member = algorithm.getNextMember(algorithmContext);
+		
         if (member == null) {
             if (log.isWarnEnabled()) {
                 log.warn(String.format("Could not find a member in cluster: [service] %s [cluster] %s", cluster.getServiceName(), cluster.getClusterId()));
