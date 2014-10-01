@@ -259,6 +259,10 @@ function updateWKMembers() {
    $STRATOS_APP_PATH/bin/wso2server.sh stop > /dev/null 2>&1 &
    sleep 10
 
+   #forcefully kills the instance if it is still running
+   pid=`ps ax | grep 'org.wso2.carbon.bootstrap.Bootstrap' | grep 'grep' -v | awk '{print $1}'`
+   kill -9 $pid > /dev/null 2>&1 &
+
    # Check if clustering is enabled for this product
    if [[ -z $STRATOS_CLUSTERING ]] ; then
       ${ECHO} -e  `date`": starting servers in stand-alone mode..." | tee -a $log
