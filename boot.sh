@@ -1120,20 +1120,20 @@ function update_hosts_file() {
 
     # update the /etc/hosts file
     echo " " >> /etc/hosts
-    echo $lb_ip  appserver.wso2.com >> /etc/hosts
-    echo $lb_ip  esb.wso2.com >> /etc/hosts
-    echo $lb_ip  bps.wso2.com >> /etc/hosts
+    echo $lb_ip  appserver.$stratos_domain >> /etc/hosts
+    echo $lb_ip  esb.$stratos_domain >> /etc/hosts
+    echo $lb_ip  bps.$stratos_domain >> /etc/hosts
 
     if [[ $as_worker_mgt_enabled = "true" ]]; then
-	echo $lb_ip  mgt.appserver.wso2.com >> /etc/hosts
+	echo $lb_ip  mgt.appserver.$stratos_domain >> /etc/hosts
     fi
 
     if [[ $esb_worker_mgt_enabled = "true" ]]; then
-	echo $lb_ip  mgt.esb.wso2.com >> /etc/hosts
+	echo $lb_ip  mgt.esb.$stratos_domain >> /etc/hosts
     fi
 
     if [[ $bps_worker_mgt_enabled = "true" ]]; then
-	echo $lb_ip  mgt.bps.wso2.com >> /etc/hosts
+	echo $lb_ip  mgt.bps.$stratos_domain >> /etc/hosts
     fi
 }
 
