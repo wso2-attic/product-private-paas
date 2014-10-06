@@ -1136,6 +1136,18 @@ function update_hosts_file() {
     fi
 }
 
+function update_ubuntu_patches() {
+    # update ubuntu patches and security
+    ubuntu_update=$(read_user_input "Do you need to update the latest ubuntu patches? [y/n] : " "" $ubuntu_update )
+    if [[ $ubuntu_update =~ ^[Yy]$ ]]; then
+         sudo apt-get update && sudo apt-get upgrade
+    else
+        echo -e "\nSkipping MySQL installation... \n";
+    fi
+
+  
+}
+
 # -----------------------
 # Execution Start Point
 # -----------------------
@@ -1211,6 +1223,7 @@ else
 
         # Update hosts file
         update_hosts_file
+        update_ubuntu_patches
      fi
 fi
 
