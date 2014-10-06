@@ -1142,7 +1142,7 @@ function update_ubuntu_patches() {
     if [[ $ubuntu_update =~ ^[Yy]$ ]]; then
          sudo apt-get update && sudo apt-get upgrade
     else
-        echo -e "\nSkipping MySQL installation... \n";
+        echo -e "\nSkipping latest ubuntu updates installation... \n";
     fi
 
   
