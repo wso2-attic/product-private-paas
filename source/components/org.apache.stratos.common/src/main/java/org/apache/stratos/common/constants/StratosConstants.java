@@ -139,5 +139,9 @@ public class StratosConstants {
     public static final String MULTITENANCY_LARGE_PLAN = "Enterprise";
     public static final String EMAIL_CONFIG= "email";
     public static final String MULTITENANCY_CONFIG_FOLDER = "multitenancy";
+    
+    // Autoscaler member timeout constants
+    public static final String PENDING_MEMBER_EXPIRY_TIMEOUT = "autoscaler.member.pendingMemberExpiryTimeout";
+    public static final String OBSOLETED_MEMBER_EXPIRY_TIMEOUT = "autoscaler.member.obsoltedMemberExpiryTimeout";
 
 }
