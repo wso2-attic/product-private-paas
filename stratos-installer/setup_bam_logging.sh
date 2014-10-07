@@ -33,7 +33,7 @@ current_dir=`cd $dir;pwd`
 source "$current_dir/conf/setup.conf"
 
 #setting the public IP for bam
-export public_ip=$(curl --silent http://ipecho.net/plain; echo)
+export public_ip=$(curl -s http://ifconfig.me; echo)
 export hadoop_hostname=$(hostname -f)
 
 while getopts ":p:" opts
