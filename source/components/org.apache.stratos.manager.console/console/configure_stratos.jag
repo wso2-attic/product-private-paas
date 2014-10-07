@@ -20,6 +20,7 @@
  *
  */
 var caramel = require('caramel');
+var process = require('process');
 var error = [];
 var step = request.getParameter('step');
     var log = new Log("config.stratos");
@@ -88,9 +89,12 @@ if(wizard.step == 1){
         step_data = step_data.serviceDefinitionBean;
     }
 }
+var bamInfo ={bamip:process.getProperty('bam.ip'),bamport:process.getProperty('bam.port')};
+
 caramel.render({
     step_data:step_data,
     wizard:wizard,
+    bamInfo:bamInfo,
     config_status:config_status,
     error:error
 });
