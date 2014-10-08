@@ -131,4 +131,22 @@ if [[ -z $clean_install ]]; then
    fi
 fi
 
+
+read -p "Do you want to clean and restore from json backup files? [y/n] " input_clean_json_backup
+if [[ $input_clean_json_backup =~ ^[Yy]$ ]]; then
+
+    iaas=$(read_user_input "Enter your IaaS. vCloud, EC2 and OpenStack are the currently supported IaaSs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack: " "" $iaas )
+
+        if [ -f resources/json/$iaas/*.orig ]; then
+                for file in resources/json/$iaas/*.orig
+                do
+                        current_file=${file%.*}
+                        sudo rm -rf $current_file
+                        sudo rm -rf $current_file.last
+                        sudo mv $file $current_file
+                done
+        fi
+fi
+
+
 # END
