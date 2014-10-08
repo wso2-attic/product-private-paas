@@ -139,7 +139,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             env.put("STRATOS_ARTIFACT_UPDATED_STATUS", artifactUpdatedEvent.getStatus());
             ExtensionUtils.executeArtifactsUpdatedExtension(env);
 
-            if (!cloneExists) {
+            if (!cloneExists && !isMultitenant) {
                 // Executed git clone, publish instance activated event
                 CartridgeAgentEventPublisher.publishInstanceActivatedEvent();
             }
