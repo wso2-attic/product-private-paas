@@ -500,6 +500,9 @@ public class CloudControllerServiceImpl implements CloudControllerService {
                     String msg =
                                  "Termination failed. Cannot find a node id for Member Id: " +
                                          memberId;
+                                         
+                    // log information
+                    logTermination(ctxt);
                     log.error(msg);
                     throw new InvalidMemberException(msg);
                 }
