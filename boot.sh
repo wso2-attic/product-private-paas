@@ -16,6 +16,7 @@
 # ----------------------------------------------------------------------------
 
 # Define error handling function
+
 function error_handler() {
         MYSELF="$0"               # equals to script name
         LASTLINE="$1"            # argument 1: last line of error occurence

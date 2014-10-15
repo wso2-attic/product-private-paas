@@ -23,6 +23,7 @@ package org.apache.stratos.autoscaler.rule;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.stratos.autoscaler.AutoscalerContext;
 import org.apache.stratos.autoscaler.Constants;
 import org.apache.stratos.autoscaler.NetworkPartitionLbHolder;
 import org.apache.stratos.autoscaler.PartitionContext;
@@ -84,13 +85,23 @@ public class RuleTasksDelegator {
                                           PartitionManager.getInstance()
                                                           .getNetworkPartitionLbHolder(nwPartitionId);
             String lbClusterId = getLbClusterId(lbRefType, partitionContext, lbHolder);
+
+
+            //Calculate accumulation of minimum counts of all the partition of current network partition
+            int minimumCountOfNetworkPartition = 0;
+            for(PartitionContext partitionContextOfCurrentNetworkPartition: AutoscalerContext.getInstance().getMonitor(clusterId)
+                    .getNetworkPartitionCtxt(nwPartitionId).getPartitionCtxts().values()){
+
+                minimumCountOfNetworkPartition += partitionContextOfCurrentNetworkPartition.getMinimumMemberCount();
+                }
+
             MemberContext memberContext =
                                          CloudControllerClient.getInstance()
                                                               .spawnAnInstance(partitionContext.getPartition(),
                                                                       clusterId,
                                                                       lbClusterId, partitionContext.getNetworkPartitionId(),
                                                                       isPrimary,
-                                                                      partitionContext.getMinimumMemberCount());
+                                                                      minimumCountOfNetworkPartition);
             if (memberContext != null) {
                 partitionContext.addPendingMember(memberContext);
                 if(log.isDebugEnabled()){

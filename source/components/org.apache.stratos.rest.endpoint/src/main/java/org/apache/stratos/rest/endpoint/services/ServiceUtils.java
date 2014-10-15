@@ -45,7 +45,6 @@ import org.apache.stratos.manager.subscription.CartridgeSubscription;
 import org.apache.stratos.manager.subscription.DataCartridgeSubscription;
 import org.apache.stratos.manager.subscription.PersistenceContext;
 import org.apache.stratos.manager.subscription.SubscriptionData;
-import org.apache.stratos.manager.subscription.SubscriptionDomain;
 import org.apache.stratos.manager.topology.model.TopologyClusterInformationModel;
 import org.apache.stratos.manager.utils.ApplicationManagementUtil;
 import org.apache.stratos.manager.utils.CartridgeConstants;
@@ -54,6 +53,7 @@ import org.apache.stratos.messaging.domain.topology.Member;
 import org.apache.stratos.messaging.domain.topology.MemberStatus;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyManager;
 import org.apache.stratos.messaging.util.Constants;
+import org.apache.stratos.rest.endpoint.ServiceHolder;
 import org.apache.stratos.rest.endpoint.bean.CartridgeInfoBean;
 import org.apache.stratos.rest.endpoint.bean.StratosAdminResponse;
 import org.apache.stratos.rest.endpoint.bean.SubscriptionDomainRequest;
@@ -66,6 +66,8 @@ import org.apache.stratos.rest.endpoint.bean.repositoryNotificationInfoBean.Payl
 import org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean;
 import org.apache.stratos.rest.endpoint.bean.util.converter.PojoConverter;
 import org.apache.stratos.rest.endpoint.exception.RestAPIException;
+import org.wso2.carbon.context.PrivilegedCarbonContext;
+import org.wso2.carbon.user.api.UserStoreException;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -975,18 +977,78 @@ public class ServiceUtils {
     	return cartridgeSubsciptionManager.getCartridgeSubscription(ApplicationManagementUtil.getTenantId(configurationContext), alias);
     }
 
+    static SubscriptionInfo subscribeTenantToCartridge (CartridgeInfoBean cartridgeInfoBean) throws RestAPIException {
+
+        // The subscribing tenant domain must be specified, else can't continue
+        if (cartridgeInfoBean.getSubscribingTenantDomain() == null || cartridgeInfoBean.getSubscribingTenantDomain().isEmpty()) {
+            throw new RestAPIException("Subscribing tenant domain [ " + cartridgeInfoBean.getSubscribingTenantDomain() + " ] is invalid");
+        }
+
+        // get the tenant id
+        int tenantId;
+        try {
+            tenantId = getTenantId(cartridgeInfoBean.getSubscribingTenantDomain());
+
+        } catch (UserStoreException e) {
+            throw new RestAPIException(e);
+        }
+
+        // check if there is a valid tenant with this tenantId
+        try {
+            if (!isTenantValid(tenantId)) {
+                throw new RestAPIException("Unable to find tenant " + cartridgeInfoBean.getSubscribingTenantDomain());
+            }
+
+        } catch (UserStoreException e) {
+            throw new RestAPIException(e);
+        }
+
+        // get tenant admin username
+        String tenantAdminUsername;
+        try {
+            tenantAdminUsername = getTenantAdminUsername(tenantId);
+
+        } catch (UserStoreException e) {
+            throw new RestAPIException(e);
+        }
+
+        if (tenantAdminUsername == null) {
+            throw new RestAPIException("Unable to get admin username for tenant id: " + tenantId);
+        }
+
+        // start tenant flow
+        if (log.isDebugEnabled()) {
+            log.debug("Starting tenant flow for tenant: " + cartridgeInfoBean.getSubscribingTenantDomain() + ", id: " + tenantId);
+        }
+
+        try {
+            PrivilegedCarbonContext.startTenantFlow();
+            setTenantInfomationToPrivilegedCC(cartridgeInfoBean.getSubscribingTenantDomain(), tenantId, tenantAdminUsername);
+            return subscribe(cartridgeInfoBean, tenantId, tenantAdminUsername, cartridgeInfoBean.getSubscribingTenantDomain());
+
+        } catch (Exception e) {
+            throw new RestAPIException(e.getMessage(), e);
+
+        } finally {
+            PrivilegedCarbonContext.endTenantFlow();
+            if (log.isDebugEnabled()) {
+                log.debug("Ended tenant flow for tenant: " + cartridgeInfoBean.getSubscribingTenantDomain() + ", id: " + tenantId);
+            }
+        }
+    }
+
     static SubscriptionInfo subscribeToCartridge (CartridgeInfoBean cartridgeInfoBean, ConfigurationContext configurationContext, String tenantUsername,
                                                   String tenantDomain) throws RestAPIException {
 
         try {
-            return subscribe(cartridgeInfoBean, configurationContext, tenantUsername, tenantDomain);
+            return subscribe(cartridgeInfoBean, ApplicationManagementUtil.getTenantId(configurationContext), tenantUsername, tenantDomain);
 
         } catch (Exception e) {
             throw new RestAPIException(e.getMessage(), e);
         }
     }
 
-    private static SubscriptionInfo subscribe (CartridgeInfoBean cartridgeInfoBean, ConfigurationContext configurationContext, String tenantUsername, String tenantDomain)
+    private static SubscriptionInfo subscribe (CartridgeInfoBean cartridgeInfoBean, int tenantId, String tenantUsername, String tenantDomain)
                                        throws ADCException, PolicyException, UnregisteredCartridgeException,
             InvalidCartridgeAliasException, DuplicateCartridgeAliasException, RepositoryRequiredException,
             AlreadySubscribedException, RepositoryCredentialsRequiredException, InvalidRepositoryException,
@@ -998,7 +1060,7 @@ public class ServiceUtils {
         subscriptionData.setAutoscalingPolicyName(cartridgeInfoBean.getAutoscalePolicy());
         subscriptionData.setDeploymentPolicyName(cartridgeInfoBean.getDeploymentPolicy());
         subscriptionData.setTenantDomain(tenantDomain);
-        subscriptionData.setTenantId(ApplicationManagementUtil.getTenantId(configurationContext));
+        subscriptionData.setTenantId(tenantId);
         subscriptionData.setTenantAdminUsername(tenantUsername);
         subscriptionData.setRepositoryType("git");
         subscriptionData.setRepositoryURL(cartridgeInfoBean.getRepoURL());
@@ -1313,6 +1375,32 @@ public class ServiceUtils {
         StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
         stratosAdminResponse.setMessage("Successfully removed domains from cartridge subscription");
         return stratosAdminResponse;
+    }
+
+    private static int getTenantId (String tenantDomain) throws UserStoreException {
+
+        return ServiceHolder.getRealmService().getTenantManager().getTenantId(tenantDomain);
+    }
+
+    private static boolean isTenantValid(int tenantId) throws UserStoreException {
+
+        return ServiceHolder.getRealmService().getTenantManager().getTenant(tenantId) != null;
+    }
+
+    private static String getTenantAdminUsername (int tenantId) throws UserStoreException {
+
+        return ServiceHolder.getRealmService().getTenantManager().getTenant(tenantId).getRealmConfig().getAdminUserName();
+    }
+
+    private static PrivilegedCarbonContext setTenantInfomationToPrivilegedCC (String tenantDomain, int tenantId, String username) {
+
+        // setting the correct tenant info for downstream code..
+        PrivilegedCarbonContext privilegedCC = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+        privilegedCC.setTenantDomain(tenantDomain);
+        privilegedCC.setTenantId(tenantId);
+        privilegedCC.setUsername(username);
+
+        return privilegedCC;
     }
 
 }
