@@ -149,7 +149,7 @@ public class MemberContext implements Serializable{
 
     @Override
     public String toString() {
-        return "MemberContext [memberId=" + memberId + ", nodeId=" + nodeId + ", clusterId=" +
+    	return "MemberContext [memberId=" + memberId + ", nodeId=" + nodeId + ", instanceId=" + instanceId + ", clusterId=" +
                clusterId + ", cartridgeType=" + cartridgeType + ", privateIpAddress=" +
                privateIpAddress + ", publicIpAddress=" + publicIpAddress + ", allocatedIpAddress=" +
                allocatedIpAddress + ", initTime=" + initTime + ", lbClusterId=" + lbClusterId +

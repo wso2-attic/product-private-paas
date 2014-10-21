@@ -28,6 +28,7 @@ import org.apache.stratos.cloud.controller.runtime.FasterLookUpDataHolder;
 import org.apache.stratos.cloud.controller.util.CloudControllerUtil;
 import org.apache.stratos.messaging.domain.topology.*;
 import org.apache.stratos.messaging.event.instance.status.InstanceActivatedEvent;
+import org.apache.stratos.messaging.event.instance.status.InstanceInitiatedEvent;
 import org.apache.stratos.messaging.event.instance.status.InstanceMaintenanceModeEvent;
 import org.apache.stratos.messaging.event.instance.status.InstanceReadyToShutdownEvent;
 import org.apache.stratos.messaging.event.instance.status.InstanceStartedEvent;
@@ -217,6 +218,56 @@ public class TopologyBuilder {
         TopologyEventPublisher.sendClusterMaintenanceModeEvent(ctxt);
     }
 
+    public static void handleMemberInitiated(InstanceInitiatedEvent instanceInitiatedEvent) {
+    		
+    	String memberId = instanceInitiatedEvent.getMemberId();
+    	String instanceId = instanceInitiatedEvent.getInstanceId();
+    	String publicIpv4 = instanceInitiatedEvent.getPublicIpv4();
+    	String localIpv4 = instanceInitiatedEvent.getLocalIpv4();
+    	
+    	MemberContext memberCtxt = FasterLookUpDataHolder.getInstance().getMemberContextOfMemberId(memberId);
+    	
+    	if (null == memberCtxt) {
+    		if (log.isWarnEnabled()) {
+    				String msg = String.format("Member [%s] not found in cloud controller data holder", memberId);
+    				log.error(msg);
+    		}
+    		// so this member is either not created by CC, or removed from CC's data holder
+    		// later can happen only if the member is terminated by CC
+    		// so most probably this member is not created by CC
+    		return;
+    	}
+    	
+    	// setting the instance-id if it is not set already
+    	if (null == memberCtxt.getInstanceId() || memberCtxt.getInstanceId().isEmpty()) {
+    		if (log.isDebugEnabled()) {
+    				String msg = String.format("Setting instance id [%s] from instance initiated event for the member [%s]", 
+    						instanceId, memberId);
+    				log.debug(msg);
+    		}
+    		memberCtxt.setInstanceId(instanceId);
+    	}
+    			
+    	// setting the private-ip if it is not set already
+    	if (null == memberCtxt.getPrivateIpAddress() || memberCtxt.getPrivateIpAddress().isEmpty()) {
+    		if (log.isDebugEnabled()) {
+    				String msg = String.format("Setting private ip [%s] from instance initiated event for the member [%s]", 
+    						localIpv4, memberId);
+    				log.debug(msg);
+    		}
+    		memberCtxt.setPrivateIpAddress(localIpv4);
+    	}
+    		
+    	// setting the public-ip if it is not set already
+    	if (null == memberCtxt.getPublicIpAddress() || memberCtxt.getPublicIpAddress().isEmpty()) {
+    		if (log.isDebugEnabled()) {
+    				String msg = String.format("Setting public ip [%s] from instance initiated event for the member [%s]", 
+    						publicIpv4, memberId);
+    				log.debug(msg);
+    		}
+    		memberCtxt.setPublicIpAddress(publicIpv4);
+    	}
+    }
 
 	public static void handleMemberSpawned(String serviceName,
 			String clusterId, String partitionId,
