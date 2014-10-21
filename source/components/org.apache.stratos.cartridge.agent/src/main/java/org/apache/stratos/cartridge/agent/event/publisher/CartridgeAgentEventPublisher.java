@@ -28,6 +28,7 @@ import org.apache.stratos.cartridge.agent.statistics.publisher.HealthStatisticsN
 import org.apache.stratos.messaging.broker.publish.EventPublisher;
 import org.apache.stratos.messaging.broker.publish.EventPublisherPool;
 import org.apache.stratos.messaging.event.instance.status.InstanceActivatedEvent;
+import org.apache.stratos.messaging.event.instance.status.InstanceInitiatedEvent;
 import org.apache.stratos.messaging.event.instance.status.InstanceMaintenanceModeEvent;
 import org.apache.stratos.messaging.event.instance.status.InstanceReadyToShutdownEvent;
 import org.apache.stratos.messaging.event.instance.status.InstanceStartedEvent;
@@ -42,6 +43,30 @@ public class CartridgeAgentEventPublisher {
     private static boolean activated;
     private static boolean readyToShutdown;
     private static boolean maintenance;
+    
+    public static void publishInstanceInitiatedEvent() {
+    
+    log.info("Publishing instance initiated event");
+    CartridgeAgentConfiguration cartridgeAgentConfig = CartridgeAgentConfiguration.getInstance();
+    InstanceInitiatedEvent instanceInitiatedEvent = new InstanceInitiatedEvent(
+    		cartridgeAgentConfig.getMemberId(), 
+    		cartridgeAgentConfig.getServiceName(), 
+    		cartridgeAgentConfig.getClusterId(), 
+    		cartridgeAgentConfig.getInstanceId());
+    instanceInitiatedEvent.setAmiId(cartridgeAgentConfig.getAmiId());
+    instanceInitiatedEvent.setHostName(cartridgeAgentConfig.getHostName());
+    instanceInitiatedEvent.setInstanceType(cartridgeAgentConfig.getInstanceType());
+    instanceInitiatedEvent.setLocalHostname(cartridgeAgentConfig.getLocalHostname());
+    instanceInitiatedEvent.setLocalIpv4(cartridgeAgentConfig.getLocalIpv4());
+    instanceInitiatedEvent.setPublicHostname(cartridgeAgentConfig.getPublicHostname());
+    instanceInitiatedEvent.setPublicIpv4(cartridgeAgentConfig.getPublicIpv4());
+    instanceInitiatedEvent.setNetworkPartitionId(cartridgeAgentConfig.getNetworkPartitionId());
+    instanceInitiatedEvent.setPartitionId(cartridgeAgentConfig.getPartitionId());
+    
+    EventPublisher eventPublisher = EventPublisherPool.getPublisher(Constants.INSTANCE_STATUS_TOPIC);
+    eventPublisher.publish(instanceInitiatedEvent);
+    log.info("Instance initiated event published");
+    }
 
     public static void publishInstanceStartedEvent() {
         if (!isStarted()) {

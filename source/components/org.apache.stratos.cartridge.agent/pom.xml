@@ -89,5 +89,10 @@
             <artifactId>org.wso2.carbon.databridge.agent.thrift</artifactId>
             <version>4.2.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.apache.stratos</groupId>
+            <artifactId>org.apache.stratos.iaas.metadata.client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 	</dependencies>
 </project>
