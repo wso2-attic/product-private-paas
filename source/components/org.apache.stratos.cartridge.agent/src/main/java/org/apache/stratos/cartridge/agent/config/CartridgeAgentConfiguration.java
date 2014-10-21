@@ -26,6 +26,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.cartridge.agent.exception.ParameterNotFoundException;
 import org.apache.stratos.cartridge.agent.util.CartridgeAgentConstants;
 import org.apache.stratos.cartridge.agent.util.CartridgeAgentUtils;
+import org.apache.stratos.iaas.metadata.client.impl.IaaSMetadataServiceClient;
+import org.apache.stratos.iaas.metadata.client.model.InstanceMetadata;
 
 import java.io.File;
 import java.util.*;
@@ -68,9 +70,11 @@ public class CartridgeAgentConfiguration {
     private String workerServiceName;
     private String superTenantRepositoryPath;
     private String tenantRepositoryPath;
+    private InstanceMetadata instanceMetadata;
 
     private CartridgeAgentConfiguration() {
         parameters = loadParametersFile();
+        instanceMetadata = getMetadata();
 
         try {
             serviceGroup = readServiceGroup();
@@ -126,6 +130,27 @@ public class CartridgeAgentConfiguration {
             log.debug(String.format("lb-private-ip: %s", lbPrivateIp));
             log.debug(String.format("lb-public-ip: %s", lbPublicIp));
         }
+    }
+    
+    /**
+    * Get instance metadata
+    * @return {@link InstanceMetadata}
+    */
+    private InstanceMetadata getMetadata() {
+    
+    IaaSMetadataServiceClient client = new IaaSMetadataServiceClient();
+    InstanceMetadata metadata = null;
+    try {
+    	log.info("Retrieving metadata from Instance Metadata Service Client");
+    	metadata = client.getInstanceMetadata();
+    	String msg = String.format("Successfully retreived metadata from Instance Metadata Service Client : ", 
+    			metadata.toString());
+    	log.info(msg);
+    } catch (Exception e) {
+    	String msg = "Error while retrieving metadata";
+    	log.error(msg, e);
+    }
+    return metadata;
     }
 
     private String readDeployment(){
@@ -504,5 +529,37 @@ public class CartridgeAgentConfiguration {
 
 	public void setInitialized(boolean initialized) {
 		this.initialized = initialized;
+	}
+	
+	public String getInstanceId() {
+		return instanceMetadata.getInstanceId();
+	}
+	
+	public String getAmiId() {
+		return instanceMetadata.getAmiId();
+	}
+	
+	public String getHostName() {
+		return instanceMetadata.getHostName();
+	}
+	
+	public String getInstanceType() {
+		return instanceMetadata.getInstanceType();
+	}
+	
+	public String getLocalHostname() {
+		return instanceMetadata.getLocalHostname();
+	}
+	
+	public String getLocalIpv4() {
+		return instanceMetadata.getLocalIpv4();
+	}
+	
+	public String getPublicHostname() {
+		return instanceMetadata.getPublicHostname();
+	}
+	
+	public String getPublicIpv4() {
+		return instanceMetadata.getPublicIpv4();
 	}
 }

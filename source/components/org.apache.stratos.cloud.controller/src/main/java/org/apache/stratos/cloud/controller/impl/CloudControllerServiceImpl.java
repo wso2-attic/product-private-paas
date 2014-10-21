@@ -18,6 +18,7 @@
  */
 package org.apache.stratos.cloud.controller.impl;
 
+import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.net.InetAddresses;
 
@@ -39,8 +40,11 @@ import org.apache.stratos.cloud.controller.topology.TopologyManager;
 import org.apache.stratos.cloud.controller.util.CloudControllerConstants;
 import org.apache.stratos.cloud.controller.util.CloudControllerUtil;
 import org.apache.stratos.cloud.controller.validate.interfaces.PartitionValidator;
+import org.apache.stratos.messaging.domain.topology.Cluster;
 import org.apache.stratos.messaging.domain.topology.Member;
 import org.apache.stratos.messaging.domain.topology.MemberStatus;
+import org.apache.stratos.messaging.domain.topology.Service;
+import org.apache.stratos.messaging.domain.topology.Topology;
 import org.apache.stratos.messaging.util.Constants;
 import org.jclouds.compute.ComputeService;
 import org.jclouds.compute.domain.NodeMetadata;
@@ -476,6 +480,9 @@ public class CloudControllerServiceImpl implements CloudControllerService {
             String partitionId = ctxt.getPartition().getId();
             String cartridgeType = ctxt.getCartridgeType();
             String nodeId = ctxt.getNodeId();
+            String instanceId = ctxt.getInstanceId();
+            String privateIp = ctxt.getPrivateIpAddress();
+            String publicIp = ctxt.getPublicIpAddress();
 
             try {
                 // these will never be null, since we do not add null values for these.
@@ -494,12 +501,11 @@ public class CloudControllerServiceImpl implements CloudControllerService {
                     throw new InvalidCartridgeTypeException(msg);
                 }
 
-                // if no matching node id can be found.
-                if (nodeId == null) {
+                // if no matching nodeId/instanceId can be found.
+                if (nodeId == null && instanceId == null) {
 
-                    String msg =
-                                 "Termination failed. Cannot find a node id for Member Id: " +
-                                         memberId;
+                	String msg = String.format("Termination failed. Cannot find at least one of "
+                					+ "nodeId/instanceId for Member Id: %s. Removing member from stratos. Terminate it manually.", memberId);
                                          
                     // log information
                     logTermination(ctxt);
@@ -510,7 +516,29 @@ public class CloudControllerServiceImpl implements CloudControllerService {
                 IaasProvider iaasProvider = cartridge.getIaasProviderOfPartition(partitionId);
 
                 // terminate it!
-                terminate(iaasProvider, nodeId, ctxt);
+                terminate(iaasProvider, ctxt);
+                
+                // if member not in the topology, add the member to the topology
+                // we are sending the member terminated event soon after this event
+                Topology topology = TopologyManager.getTopology();
+                Service service = topology.getService(cartridgeType);
+                if (service == null) {
+                	log.warn(String.format("Service %s does not exist", cartridgeType));
+                	return;
+                }
+                Cluster cluster = service.getCluster(clusterId);
+                if (cluster == null) {
+                	log.warn(String.format("Cluster %s does not exist", clusterId));
+                	return;
+                }
+                
+                Member member = cluster.getMember(memberId);
+                
+                if (member == null) {
+                	log.warn(String.format("Member with nodeID %s does not exist in the topology. "
+                			+ "Hence adding to the topology and will be terminated soon after this", memberId));
+                	TopologyBuilder.handleMemberSpawned(cartridgeType, clusterId, partitionId, privateIp, publicIp, ctxt);
+                }
 
                 // log information
                 logTermination(ctxt);
@@ -562,6 +590,14 @@ public class CloudControllerServiceImpl implements CloudControllerService {
             		log.debug("Cloud Controller is delegating request to start an instance for "           
             				+ memberContext + " to Jclouds layer.");
             	}
+            	
+            	// adding the member context to the data holder before calling jclouds api
+            	// then if something wrong, member context will be populated by instance initiated event
+            	// then AS can ask CC to kill it
+            	// earlier, we added member context to data holder, only if node creation is successful, but we returned member context to AS
+            	// the problem with this approach is AS have a member context, CC might not have this
+            	// that is why this part is moved here, before calling jclouds api
+            	dataHolder.addMemberContext(memberContext);
           
             	// create and start a node
             	Set<? extends NodeMetadata> nodes = computeService
@@ -584,28 +620,33 @@ public class CloudControllerServiceImpl implements CloudControllerService {
             	if (log.isDebugEnabled()) {
             		log.debug("Node id was set. " + memberContext.toString());
             	}
-
-            	// attach volumes
-            	if (ctxt.isVolumeRequired()) {
-            		// remove region prefix
-            		String instanceId = nodeId.indexOf('/') != -1 ? nodeId
-            				.substring(nodeId.indexOf('/') + 1, nodeId.length())
-            				: nodeId;
-            				memberContext.setInstanceId(instanceId);
-            				if (ctxt.getVolumes() != null) {
-            					for (Volume volume : ctxt.getVolumes()) {
-            						try {
-            							iaas.attachVolume(instanceId, volume.getId(),
-            									volume.getDevice());
-            						} catch (Exception e) {
-            							// continue without throwing an exception, since
-            							// there is an instance already running
-            							log.error("Attaching Volume to Instance [ "
-            									+ instanceId + " ] failed!", e);
-            						}
-            					}
-            				}
+            	
+            	// assigning instance id
+            	// remove region prefix
+            	String instanceId = nodeId.indexOf('/') != -1 ? nodeId
+            			.substring(nodeId.indexOf('/') + 1, nodeId.length())
+            			: nodeId;
+            	memberContext.setInstanceId(instanceId);
+            	if (log.isDebugEnabled()) {
+            		log.debug("Instance id was set. " + memberContext.toString());
             	}
+
+				// attach volumes
+				if (ctxt.isVolumeRequired()) {
+					if (ctxt.getVolumes() != null) {
+						for (Volume volume : ctxt.getVolumes()) {
+							try {
+								iaas.attachVolume(instanceId, volume.getId(),
+										volume.getDevice());
+							} catch (Exception e) {
+								// continue without throwing an exception, since
+								// there is an instance already running
+								log.error("Attaching Volume to Instance [ "
+										+ instanceId + " ] failed!", e);
+							}
+						}
+					}
+				}
             } catch (Exception e) {
             	String msg = "Failed to start an instance. " + memberContext.toString()+" Cause: "+e.getMessage();
             	log.error(msg, e);
@@ -644,8 +685,8 @@ public class CloudControllerServiceImpl implements CloudControllerService {
 	       	                				     " - terminating node:"  + memberContext.toString();
 	    	                        log.error(msg);
 	    	                		// terminate instance
-	    	                        terminate(iaasProvider, 
-	    	                    			node.getId(), memberContext);
+	    	                        terminate(iaasProvider, memberContext);
+	    	                        logTermination(memberContext);
 	    	                        throw new CloudControllerException(msg);
 	    	                	}
                     		} else {
@@ -653,8 +694,8 @@ public class CloudControllerServiceImpl implements CloudControllerService {
   	                				     " - terminating node:"  + memberContext.toString();
                     			log.error(msg);
                     			// terminate instance
-                    			terminate(iaasProvider, 
-	                    			node.getId(), memberContext);
+                    			terminate(iaasProvider, memberContext);
+                    			logTermination(memberContext);
                     			throw new CloudControllerException(msg);
                     		}
 	    	                	
@@ -695,8 +736,6 @@ public class CloudControllerServiceImpl implements CloudControllerService {
                         memberContext.setPrivateIpAddress(ip);
                         log.info("Retrieving Private IP Address. " + memberContext.toString());
                     }
-
-                    dataHolder.addMemberContext(memberContext);
 
                     // persist in registry
                     persist();
@@ -775,8 +814,9 @@ public class CloudControllerServiceImpl implements CloudControllerService {
      * @param nodeId
      * @return will return the IaaSProvider
      */
-	private IaasProvider terminate(IaasProvider iaasProvider, 
-			String nodeId, MemberContext ctxt) {
+	private IaasProvider terminate(IaasProvider iaasProvider, MemberContext ctxt) {
+		final String nodeId = ctxt.getNodeId();
+		final String instanceId = ctxt.getInstanceId();
 	    Iaas iaas = iaasProvider.getIaas();
 	    if (iaas == null) {
 	        
@@ -794,9 +834,49 @@ public class CloudControllerServiceImpl implements CloudControllerService {
 	    
 	    //detach volumes if any
 	    detachVolume(iaasProvider, ctxt);
-	    
-		// destroy the node
-		iaasProvider.getComputeService().destroyNode(nodeId);
+
+	    // destroy node
+		// if node id is available
+		if (nodeId != null && !nodeId.isEmpty()) {
+			if (log.isDebugEnabled()) {
+				String msg = String.format("Node id [%s] is not null. Hence using node id to terminate", nodeId);
+				log.debug(msg);
+			}
+			iaasProvider.getComputeService().destroyNode(nodeId);
+		} else if (instanceId != null && !instanceId.isEmpty()) {
+			if (log.isDebugEnabled()) {
+				String msg = String.format("Node id is null. Instance id [%s] is not null. "
+								+ "Hence checking whether it can be terminated using instance id", instanceId);
+				log.debug(msg);
+			}
+			// destroy the node with matching instance id
+			iaasProvider.getComputeService().destroyNodesMatching(
+					new Predicate<NodeMetadata>() {
+						@Override
+						public boolean apply(NodeMetadata input) {
+							// if node id contains instance id
+							if (input.getId() != null && !input.getId().isEmpty()
+									&& instanceId != null && !instanceId.isEmpty()
+									&& input.getId().contains(instanceId)) {
+
+								if (log.isDebugEnabled()) {
+									String msg = String.format("nodeId contains instanceId [%s]. "
+													+ "Decided to use instanceId to terminate", instanceId);
+									log.info(msg);
+								}
+								return true;
+							}
+							return false;
+						}
+					});
+		} else {
+			String msg = String.format(
+					"Cannot terminate the member. Node id and Instance id are null"
+							+ " for the member : %s. Terminate it manually.",
+					ctxt.getMemberId());
+			log.error(msg);
+			return null;
+		}
 
 		// release allocated IP address
 		if (ctxt.getAllocatedIpAddress() != null) {

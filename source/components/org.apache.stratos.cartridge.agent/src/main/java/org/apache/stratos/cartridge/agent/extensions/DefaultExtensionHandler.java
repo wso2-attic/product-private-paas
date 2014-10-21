@@ -339,6 +339,9 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 				serviceNameInPayload, clusterIdInPayload, memberIdInPayload);
 		if (!isConsistent) {
 			// if this member isn't there in the complete topology
+			// publish instance initiated event if the member not in the topology
+			// it will send useful metadata to terminate the instance by CC, in case CC doesn't have enough information
+			CartridgeAgentEventPublisher.publishInstanceInitiatedEvent();
 			return;
 		} else {
 			CartridgeAgentConfiguration.getInstance().setInitialized(true);

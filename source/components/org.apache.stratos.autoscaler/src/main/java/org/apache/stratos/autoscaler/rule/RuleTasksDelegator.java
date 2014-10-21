@@ -32,6 +32,7 @@ import org.apache.stratos.autoscaler.algorithm.OneAfterAnother;
 import org.apache.stratos.autoscaler.algorithm.RoundRobin;
 import org.apache.stratos.autoscaler.client.cloud.controller.CloudControllerClient;
 import org.apache.stratos.autoscaler.client.cloud.controller.InstanceNotificationClient;
+import org.apache.stratos.autoscaler.monitor.AbstractMonitor;
 import org.apache.stratos.autoscaler.partition.PartitionManager;
 import org.apache.stratos.cloud.controller.stub.pojo.MemberContext;
 
@@ -85,11 +86,23 @@ public class RuleTasksDelegator {
                                           PartitionManager.getInstance()
                                                           .getNetworkPartitionLbHolder(nwPartitionId);
             String lbClusterId = getLbClusterId(lbRefType, partitionContext, lbHolder);
+            
+            AbstractMonitor monitor = null;
+            if (AutoscalerContext.getInstance().monitorExist(clusterId)) {
+            	monitor = AutoscalerContext.getInstance().getMonitor(clusterId);
+            } else if (AutoscalerContext.getInstance().lbMonitorExist(clusterId)) {
+            	monitor = AutoscalerContext.getInstance().getLBMonitor(clusterId);
+            }
+            
+            if (null == monitor) {
+            	log.error("A cluster monitor is not found for cluster id : " + clusterId);
+            	return;
+            }
 
 
             //Calculate accumulation of minimum counts of all the partition of current network partition
             int minimumCountOfNetworkPartition = 0;
-            for(PartitionContext partitionContextOfCurrentNetworkPartition: AutoscalerContext.getInstance().getMonitor(clusterId)
+            for(PartitionContext partitionContextOfCurrentNetworkPartition: monitor
                     .getNetworkPartitionCtxt(nwPartitionId).getPartitionCtxts().values()){
 
                 minimumCountOfNetworkPartition += partitionContextOfCurrentNetworkPartition.getMinimumMemberCount();
