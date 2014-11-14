@@ -196,24 +196,28 @@ public class SecondDerivativeFinderWindowProcessor extends WindowProcessor imple
 			firstVal = (Float) firstInEvent.getData()[subjectedAttrIndex];
 			lastVal = (Float) lastInEvent.getData()[subjectedAttrIndex];
 		}
-		
-		long t1 = firstInEvent.getTimeStamp();
-		long t2 = lastInEvent.getTimeStamp();
-		long tGap = t2 - t1;
-		double gradient = 0.0;
-		if (tGap > 0) {
-			gradient = ((lastVal - firstVal) * 1000) / tGap;
-		}
-		log.debug("Gradient: " + gradient + " Last val: " + lastVal +
-		          " First val: " + firstVal + " Time Gap: " + tGap );
-		Object[] data = firstInEvent.getData().clone();
-		data[subjectedAttrIndex] = gradient;
-		InEvent gradientEvent =
-		                        new InEvent(firstInEvent.getStreamId(), t1+((t2-t1)/2),
-		                                    data);
-		InEvent[] output = new InEvent[1];
-		output[0] = gradientEvent;
-		return output;
+
+        long t1 = firstInEvent.getTimeStamp();
+        long t2 = lastInEvent.getTimeStamp();
+        long millisecondsForASecond = 1000;
+        long tGap = t2 - t1 > millisecondsForASecond ? t2 - t1 : millisecondsForASecond;
+        double gradient = 0.0;
+        if (tGap > 0) {
+            gradient = ((lastVal - firstVal) * millisecondsForASecond) / tGap;
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Gradient: " + gradient + " Last val: " + lastVal +
+                    " First val: " + firstVal + " Time Gap: " + tGap + " t1: " + t1 + " t2: " +
+                    t2 + " hash: " + this.hashCode());
+        }
+        Object[] data = firstInEvent.getData().clone();
+        data[subjectedAttrIndex] = gradient;
+        InEvent gradientEvent =
+                new InEvent(firstInEvent.getStreamId(), t1+((t2-t1)/2),
+                        data);
+        InEvent[] output = new InEvent[1];
+        output[0] = gradientEvent;
+        return output;
 	}
 
 	@Override
