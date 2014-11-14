@@ -16,15 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.stratos.messaging.event.instance.notifier;
+package org.apache.stratos.messaging.event.instance.status;
+
+import org.apache.stratos.messaging.event.instance.notifier.*;
 
 import java.io.Serializable;
 
 /**
- * This event is fired by instance upon git pull.
+ * This event is published by the instance before git pull.
  */
 
-public class ArtifactDeploymentFinishedEvent extends InstanceNotifierEvent implements Serializable {
+public class ArtifactDeploymentStartedEvent extends InstanceNotifierEvent implements Serializable {
+
     private String serviceName;
     private String clusterId;
     private String networkPartitionId;
@@ -33,8 +36,8 @@ public class ArtifactDeploymentFinishedEvent extends InstanceNotifierEvent imple
     private String status;
     private String tenantId;
 
-    public ArtifactDeploymentFinishedEvent(String serviceName, String clusterId,
-                                          String networkPartitionId, String partitionId, String memberId) {
+    public ArtifactDeploymentStartedEvent(String serviceName, String clusterId, String networkPartitionId,
+                                          String partitionId, String memberId) {
         this.serviceName = serviceName;
         this.clusterId = clusterId;
         this.networkPartitionId = networkPartitionId;
@@ -65,11 +68,5 @@ public class ArtifactDeploymentFinishedEvent extends InstanceNotifierEvent imple
 	public void setTenantId(String tenantId) {
 		this.tenantId = tenantId;
 	}
-
-    @Override
-    public String toString() {
-        return String.format("[cluster] %s [repo-url] %s [repo-username] %s [tenant] %s",
-                getClusterId(), getTenantId());
-    }
 
 }

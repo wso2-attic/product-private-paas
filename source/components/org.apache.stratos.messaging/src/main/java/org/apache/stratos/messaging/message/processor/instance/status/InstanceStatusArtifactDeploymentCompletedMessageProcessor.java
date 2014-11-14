@@ -17,20 +17,20 @@
  * under the License.
  */
 
-package org.apache.stratos.messaging.message.processor.instance.notifier;
+package org.apache.stratos.messaging.message.processor.instance.status;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.stratos.messaging.event.instance.notifier.ArtifactDeploymentStartedEvent;
+import org.apache.stratos.messaging.event.instance.status.ArtifactDeploymentCompletedEvent;
 import org.apache.stratos.messaging.message.processor.MessageProcessor;
 import org.apache.stratos.messaging.util.Util;
 
 /**
- * Artifact deployment started message processor.
+ * Artifact deployment finished message processor.
  */
-public class ArtifactDeploymentStartedMessageProcessor extends MessageProcessor {
+public class InstanceStatusArtifactDeploymentCompletedMessageProcessor extends MessageProcessor {
 
-    private static final Log log = LogFactory.getLog(ArtifactDeploymentStartedMessageProcessor.class);
+    private static final Log log = LogFactory.getLog(InstanceStatusArtifactDeploymentCompletedMessageProcessor.class);
 
     private MessageProcessor nextProcessor;
 
@@ -41,10 +41,10 @@ public class ArtifactDeploymentStartedMessageProcessor extends MessageProcessor 
 
     @Override
     public boolean process(String type, String message, Object object) {
-        if (ArtifactDeploymentStartedEvent.class.getName().equals(type)) {
+        if (ArtifactDeploymentCompletedEvent.class.getName().equals(type)) {
             // Parse complete message and build event
-            ArtifactDeploymentStartedEvent event = (ArtifactDeploymentStartedEvent) Util.jsonToObject(
-                    message, ArtifactDeploymentStartedEvent.class);
+            ArtifactDeploymentCompletedEvent event = (ArtifactDeploymentCompletedEvent)
+                    Util.jsonToObject(message, ArtifactDeploymentCompletedEvent.class);
 
             // Notify event listeners
             notifyEventListeners(event);
@@ -53,10 +53,9 @@ public class ArtifactDeploymentStartedMessageProcessor extends MessageProcessor 
             if(nextProcessor != null) {
                 return nextProcessor.process(type, message, object);
             } else {
-                throw new RuntimeException(String.format("Failed to process artifact deployment started message " +
+                throw new RuntimeException(String.format("Failed to process artifact deployment finished message " +
                         "using available message processors: [type] %s [body] %s", type, message));
             }
         }
     }
-
 }

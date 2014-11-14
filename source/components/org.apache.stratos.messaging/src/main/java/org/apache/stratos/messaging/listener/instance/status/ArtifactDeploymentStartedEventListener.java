@@ -17,12 +17,12 @@
  * under the License.
  */
 
-package org.apache.stratos.messaging.listener.instance.notifier;
+package org.apache.stratos.messaging.listener.instance.status;
 
 import org.apache.stratos.messaging.listener.EventListener;
 
 /**
- * Artifact deployment finished event listener.
+ * Artifact deployment started event listener.
  */
-public abstract class ArtifactDeploymentCompletedEventListener extends EventListener {
+public abstract class ArtifactDeploymentStartedEventListener extends EventListener {
 }
