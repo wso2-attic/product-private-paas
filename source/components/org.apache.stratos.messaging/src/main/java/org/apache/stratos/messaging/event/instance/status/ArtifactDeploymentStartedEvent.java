@@ -18,8 +18,6 @@
  */
 package org.apache.stratos.messaging.event.instance.status;
 
-import org.apache.stratos.messaging.event.instance.notifier.*;
-
 import java.io.Serializable;
 
 /**
@@ -61,12 +59,12 @@ public class ArtifactDeploymentStartedEvent extends InstanceStatusEvent implemen
         this.status = status;
     }
 
-	public String getTenantId() {
-		return tenantId;
-	}
+    public String getTenantId() {
+        return tenantId;
+    }
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
 }

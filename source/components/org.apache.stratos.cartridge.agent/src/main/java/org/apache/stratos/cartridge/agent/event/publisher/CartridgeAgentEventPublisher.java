@@ -37,7 +37,6 @@ import org.apache.stratos.messaging.event.instance.status.InstanceStartedEvent;
 import org.apache.stratos.messaging.util.Constants;
 
 import java.util.Map;
-
 /**
  * Cartridge agent event publisher.
  */
@@ -47,15 +46,15 @@ public class CartridgeAgentEventPublisher {
     private static boolean activated;
     private static boolean readyToShutdown;
     private static boolean maintenance;
-    
+
     public static void publishInstanceInitiatedEvent() {
-    
+
     log.info("Publishing instance initiated event");
     CartridgeAgentConfiguration cartridgeAgentConfig = CartridgeAgentConfiguration.getInstance();
     InstanceInitiatedEvent instanceInitiatedEvent = new InstanceInitiatedEvent(
-    		cartridgeAgentConfig.getMemberId(), 
-    		cartridgeAgentConfig.getServiceName(), 
-    		cartridgeAgentConfig.getClusterId(), 
+    		cartridgeAgentConfig.getMemberId(),
+    		cartridgeAgentConfig.getServiceName(),
+    		cartridgeAgentConfig.getClusterId(),
     		cartridgeAgentConfig.getInstanceId());
     instanceInitiatedEvent.setAmiId(cartridgeAgentConfig.getAmiId());
     instanceInitiatedEvent.setHostName(cartridgeAgentConfig.getHostName());
@@ -66,7 +65,7 @@ public class CartridgeAgentEventPublisher {
     instanceInitiatedEvent.setPublicIpv4(cartridgeAgentConfig.getPublicIpv4());
     instanceInitiatedEvent.setNetworkPartitionId(cartridgeAgentConfig.getNetworkPartitionId());
     instanceInitiatedEvent.setPartitionId(cartridgeAgentConfig.getPartitionId());
-    
+
     EventPublisher eventPublisher = EventPublisherPool.getPublisher(Constants.INSTANCE_STATUS_TOPIC);
     eventPublisher.publish(instanceInitiatedEvent);
     log.info("Instance initiated event published");

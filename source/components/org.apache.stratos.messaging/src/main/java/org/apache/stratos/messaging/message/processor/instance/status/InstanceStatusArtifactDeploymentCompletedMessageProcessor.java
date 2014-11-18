@@ -26,7 +26,7 @@ import org.apache.stratos.messaging.message.processor.MessageProcessor;
 import org.apache.stratos.messaging.util.Util;
 
 /**
- * Artifact deployment finished message processor.
+ * Artifact deployment completed message processor.
  */
 public class InstanceStatusArtifactDeploymentCompletedMessageProcessor extends MessageProcessor {
 
@@ -53,9 +53,11 @@ public class InstanceStatusArtifactDeploymentCompletedMessageProcessor extends M
             if(nextProcessor != null) {
                 return nextProcessor.process(type, message, object);
             } else {
-                throw new RuntimeException(String.format("Failed to process artifact deployment finished message " +
-                        "using available message processors: [type] %s [body] %s", type, message));
+                String msg = "Failed to process artifact deployment completed message using available message " +
+                    "processors: " + type + "," + message;
+                log.error(msg);
             }
         }
+        return false;
     }
 }

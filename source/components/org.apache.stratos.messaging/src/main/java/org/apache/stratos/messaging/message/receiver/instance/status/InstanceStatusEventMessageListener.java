@@ -19,9 +19,13 @@
 
 package org.apache.stratos.messaging.message.receiver.instance.status;
 
-import org.apache.commons.logging.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 
-import javax.jms.*;
+import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
 
 /**
  * Implements functionality for receiving text based event messages from the instance status

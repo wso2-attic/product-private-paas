@@ -19,10 +19,12 @@
 
 package org.apache.stratos.messaging.message.processor.instance.status;
 
-import org.apache.commons.logging.*;
-import org.apache.stratos.messaging.listener.*;
-import org.apache.stratos.messaging.listener.instance.status.*;
-import org.apache.stratos.messaging.message.processor.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.stratos.messaging.listener.EventListener;
+import org.apache.stratos.messaging.listener.instance.status.ArtifactDeploymentCompletedEventListener;
+import org.apache.stratos.messaging.listener.instance.status.ArtifactDeploymentStartedEventListener;
+import org.apache.stratos.messaging.message.processor.MessageProcessorChain;
 
 /**
  * Defines default instance status message processor chain.
@@ -30,15 +32,15 @@ import org.apache.stratos.messaging.message.processor.*;
 public class InstanceStatusMessageProcessorChain extends MessageProcessorChain {
     private static final Log log = LogFactory.getLog(InstanceStatusMessageProcessorChain.class);
 
-    private InstanceStatusArtifactDeploymentStartedMessageProcessor instanceStatusArtifactDeploymentStartedMessageProcessor;;
-    private InstanceStatusArtifactDeploymentCompletedMessageProcessor instanceStatusArtifactDeploymentCompletedMessageProcessor;;
+    private InstanceStatusArtifactDeploymentStartedMessageProcessor artifactDeploymentStartedMessageProcessor;
+    private InstanceStatusArtifactDeploymentCompletedMessageProcessor artifactDeploymentCompletedMessageProcessor;
 
     public void initialize() {
         // Add instance status event processors
-        instanceStatusArtifactDeploymentStartedMessageProcessor = new InstanceStatusArtifactDeploymentStartedMessageProcessor();
-        add(instanceStatusArtifactDeploymentStartedMessageProcessor);
-        instanceStatusArtifactDeploymentCompletedMessageProcessor = new InstanceStatusArtifactDeploymentCompletedMessageProcessor();
-        add(instanceStatusArtifactDeploymentCompletedMessageProcessor);
+        artifactDeploymentStartedMessageProcessor = new InstanceStatusArtifactDeploymentStartedMessageProcessor();
+        add(artifactDeploymentStartedMessageProcessor);
+        artifactDeploymentCompletedMessageProcessor = new InstanceStatusArtifactDeploymentCompletedMessageProcessor();
+        add(artifactDeploymentCompletedMessageProcessor);
 
         if (log.isDebugEnabled()) {
             log.debug("Instance notifier message processor chain initialized");
@@ -47,9 +49,9 @@ public class InstanceStatusMessageProcessorChain extends MessageProcessorChain {
 
     public void addEventListener(EventListener eventListener) {
         if (eventListener instanceof ArtifactDeploymentStartedEventListener) {
-            instanceStatusArtifactDeploymentStartedMessageProcessor.addEventListener(eventListener);
+            artifactDeploymentStartedMessageProcessor.addEventListener(eventListener);
         } else if (eventListener instanceof ArtifactDeploymentCompletedEventListener) {
-            instanceStatusArtifactDeploymentCompletedMessageProcessor.addEventListener(eventListener);
+            artifactDeploymentCompletedMessageProcessor.addEventListener(eventListener);
         } else {
             throw new RuntimeException("Unknown event listener");
         }

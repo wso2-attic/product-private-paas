@@ -18,8 +18,6 @@
  */
 package org.apache.stratos.messaging.event.instance.status;
 
-import org.apache.stratos.messaging.event.instance.notifier.*;
-
 import java.io.Serializable;
 import java.util.Map;
 

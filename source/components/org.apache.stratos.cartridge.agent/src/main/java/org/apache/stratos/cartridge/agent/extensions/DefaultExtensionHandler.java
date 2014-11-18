@@ -45,7 +45,10 @@ import org.apache.stratos.messaging.event.tenant.TenantUnSubscribedEvent;
 import org.apache.stratos.messaging.event.topology.*;
 import org.apache.stratos.messaging.message.receiver.tenant.TenantManager;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyManager;
+import org.wso2.andes.util.Serial;
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -283,7 +286,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             ExtensionUtils.addProperties(service.getProperties(), env, "MEMBER_ACTIVATED_SERVICE_PROPERTY");
             ExtensionUtils.addProperties(cluster.getProperties(), env, "MEMBER_ACTIVATED_CLUSTER_PROPERTY");
             ExtensionUtils.addProperties(member.getProperties(), env, "MEMBER_ACTIVATED_MEMBER_PROPERTY");
-            
+
             // if clustering is enabled check activated member is WK member
             String flagClustering = CartridgeAgentConfiguration.getInstance().getIsClustered();
 
@@ -302,7 +305,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 if(log.isDebugEnabled()) {
                 	log.debug(" hasWKIpChanged " + hasWKIpChanged);
                 }
-                int minCount = Integer.parseInt(CartridgeAgentConfiguration.getInstance().getMinCount());                
+                int minCount = Integer.parseInt(CartridgeAgentConfiguration.getInstance().getMinCount());
                 boolean isWKMemberGroupReady = isWKMemberGroupReady(env, minCount);
                 if(log.isDebugEnabled()) {
                 	log.debug("minCount " + minCount);
@@ -314,7 +317,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 	}
                     env.put("STRATOS_UPDATE_WK_IP", "true");
                 }
-            }      
+            }
             if(log.isDebugEnabled()) {
             	log.debug("Setting env var STRATOS_CLUSTERING to " + flagClustering);
             }
@@ -350,7 +353,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 		} else {
 			CartridgeAgentConfiguration.getInstance().setInitialized(true);
 		}
-        
+
         Topology topology = completeTopologyEvent.getTopology();
         Service service = topology.getService(serviceNameInPayload);
         Cluster cluster = service.getCluster(clusterIdInPayload);
@@ -360,7 +363,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         env.put("STRATOS_MEMBER_LIST_JSON", gson.toJson(cluster.getMembers(), memberType));
         ExtensionUtils.executeCompleteTopologyExtension(env);
     }
-    
+
 
     @Override
     public void onInstanceSpawnedEvent(InstanceSpawnedEvent instanceSpawnedEvent) {
@@ -379,7 +382,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
     	CartridgeAgentConfiguration.getInstance().setInitialized(true);
     }
     }
-     
+
 
     @Override
     public void onCompleteTenantEvent(CompleteTenantEvent completeTenantEvent) {
@@ -748,7 +751,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
                     managerWkaMembers.add(member);
                     this.wkMembers.add(member);
-                    
+
                     // get the min instance count
                     if (!managerMinInstanceCountFound) {
                         managerMinInstanceCount = getMinInstanceCountFromMemberProperties(member);
@@ -772,19 +775,19 @@ public class DefaultExtensionHandler implements ExtensionHandler {
 
                 envParameters.put("STRATOS_WK_MANAGER_MEMBER_COUNT", Integer.toString(managerMinInstanceCount));
             }
-            
+
             // If all the manager members are non primary and is greate than or equal to mincount, 
             // minManagerInstancesAvailable should be true
             boolean allManagersNonPrimary = true;
             for (Member member : managerClusters.iterator().next().getMembers()) {
-            	
+
             	// get the min instance count
                 if (!managerMinInstanceCountFound) {
                     managerMinInstanceCount = getMinInstanceCountFromMemberProperties(member);
                     managerMinInstanceCountFound = true;
                     log.info("Manager min instance count when allManagersNonPrimary true : " + managerMinInstanceCount);
                 }
-                
+
                 if (member.getProperties() != null && member.getProperties().containsKey("PRIMARY") &&
                             member.getProperties().getProperty("PRIMARY").toLowerCase().equals("true") ) {
                 	allManagersNonPrimary = false;
@@ -792,7 +795,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 }
             }
             if(log.isDebugEnabled()){
-            	log.debug(" allManagerNonPrimary & managerMinInstanceCount [" 
+            	log.debug(" allManagerNonPrimary & managerMinInstanceCount ["
             		 + allManagersNonPrimary + "], [" + managerMinInstanceCount+"] ");
             }
 			if (allManagersNonPrimary &&  managerClusters.size() >= managerMinInstanceCount) {

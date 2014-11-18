@@ -19,13 +19,14 @@
 
 package org.apache.stratos.messaging.message.receiver.instance.status;
 
-import org.apache.commons.logging.*;
-import org.apache.stratos.messaging.listener.*;
-import org.apache.stratos.messaging.message.processor.*;
-import org.apache.stratos.messaging.message.processor.instance.status.*;
-import org.apache.stratos.messaging.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.stratos.messaging.listener.EventListener;
+import org.apache.stratos.messaging.message.processor.MessageProcessorChain;
+import org.apache.stratos.messaging.message.processor.instance.status.InstanceStatusMessageProcessorChain;
+import org.apache.stratos.messaging.util.Constants;
 
-import javax.jms.*;
+import javax.jms.TextMessage;
 
 
 /**
@@ -51,7 +52,7 @@ class InstanceStatusEventMessageDelegator implements Runnable {
     @Override
     public void run() {
         try {
-            log.info("Instance notifier event message delegator started");
+            log.info("Instance status event message delegator started");
 
             while (!terminated) {
                 try {

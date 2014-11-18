@@ -50,13 +50,15 @@ public class InstanceStatusArtifactDeploymentStartedMessageProcessor extends Mes
             notifyEventListeners(event);
             return true;
         } else {
-            if(nextProcessor != null) {
+            if (nextProcessor != null) {
                 return nextProcessor.process(type, message, object);
             } else {
-                throw new RuntimeException(String.format("Failed to process artifact deployment started message " +
-                        "using available message processors: [type] %s [body] %s", type, message));
+                String msg = "Failed to process artifact deployment started message using available message processors: " +
+                        type + "," + message;
+                log.error(msg);
             }
         }
+        return false;
     }
 
 }

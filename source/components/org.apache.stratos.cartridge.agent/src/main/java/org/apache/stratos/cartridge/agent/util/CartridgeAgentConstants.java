@@ -86,7 +86,7 @@ public class CartridgeAgentConstants implements Serializable{
     public static final String SERVICE_GROUP_TOPOLOGY_KEY = "payload_parameter.SERIVCE_GROUP";
     public static final String CLUSTERING_TOPOLOGY_KEY = "payload_parameter.CLUSTERING";
     public static final String CLUSTERING_PRIMARY_KEY = "PRIMARY";
-    
+
     public static final String SUPERTENANT_TEMP_PATH = "/tmp/-1234/";
 
     public static final String DEPLOYMENT_MANAGER = "manager";

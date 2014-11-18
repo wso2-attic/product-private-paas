@@ -19,10 +19,11 @@
 
 package org.apache.stratos.messaging.message.receiver.instance.status;
 
-import org.apache.commons.logging.*;
-import org.apache.stratos.messaging.broker.subscribe.*;
-import org.apache.stratos.messaging.listener.*;
-import org.apache.stratos.messaging.util.*;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.apache.stratos.messaging.broker.subscribe.TopicSubscriber;
+import org.apache.stratos.messaging.listener.EventListener;
+import org.apache.stratos.messaging.util.Constants;
 
 /**
  * A thread for receiving instance status information from message broker.
@@ -86,5 +87,4 @@ public class InstanceStatusEventReceiver implements Runnable {
         messageDelegator.terminate();
         terminated = true;
     }
-
 }

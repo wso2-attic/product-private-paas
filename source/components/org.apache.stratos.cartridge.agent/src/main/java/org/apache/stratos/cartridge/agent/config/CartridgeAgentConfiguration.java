@@ -131,19 +131,19 @@ public class CartridgeAgentConfiguration {
             log.debug(String.format("lb-public-ip: %s", lbPublicIp));
         }
     }
-    
+
     /**
     * Get instance metadata
     * @return {@link InstanceMetadata}
     */
     private InstanceMetadata getMetadata() {
-    
+
     IaaSMetadataServiceClient client = new IaaSMetadataServiceClient();
     InstanceMetadata metadata = null;
     try {
     	log.info("Retrieving metadata from Instance Metadata Service Client");
     	metadata = client.getInstanceMetadata();
-    	String msg = String.format("Successfully retreived metadata from Instance Metadata Service Client : ", 
+    	String msg = String.format("Successfully retreived metadata from Instance Metadata Service Client : ",
     			metadata.toString());
     	log.info(msg);
     } catch (Exception e) {
@@ -530,35 +530,35 @@ public class CartridgeAgentConfiguration {
 	public void setInitialized(boolean initialized) {
 		this.initialized = initialized;
 	}
-	
+
 	public String getInstanceId() {
 		return instanceMetadata.getInstanceId();
 	}
-	
+
 	public String getAmiId() {
 		return instanceMetadata.getAmiId();
 	}
-	
+
 	public String getHostName() {
 		return instanceMetadata.getHostName();
 	}
-	
+
 	public String getInstanceType() {
 		return instanceMetadata.getInstanceType();
 	}
-	
+
 	public String getLocalHostname() {
 		return instanceMetadata.getLocalHostname();
 	}
-	
+
 	public String getLocalIpv4() {
 		return instanceMetadata.getLocalIpv4();
 	}
-	
+
 	public String getPublicHostname() {
 		return instanceMetadata.getPublicHostname();
 	}
-	
+
 	public String getPublicIpv4() {
 		return instanceMetadata.getPublicIpv4();
 	}
