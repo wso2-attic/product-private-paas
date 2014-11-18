@@ -25,6 +25,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.cartridge.agent.artifact.deployment.synchronizer.RepositoryInformation;
+import org.apache.stratos.cartridge.agent.artifact.deployment.synchronizer.git.GitOperationResult;
 import org.apache.stratos.cartridge.agent.artifact.deployment.synchronizer.git.impl.GitBasedArtifactRepository;
 import org.apache.stratos.cartridge.agent.config.CartridgeAgentConfiguration;
 import org.apache.stratos.cartridge.agent.event.publisher.CartridgeAgentEventPublisher;
@@ -44,10 +45,7 @@ import org.apache.stratos.messaging.event.tenant.TenantUnSubscribedEvent;
 import org.apache.stratos.messaging.event.topology.*;
 import org.apache.stratos.messaging.message.receiver.tenant.TenantManager;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyManager;
-import org.wso2.andes.util.Serial;
 
-import java.io.File;
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.*;
 
@@ -125,8 +123,9 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             repoInformation.setTenantId(tenantId);
             repoInformation.setMultitenant(isMultitenant);
             boolean cloneExists = GitBasedArtifactRepository.getInstance().cloneExists(repoInformation);
+            GitOperationResult gitOperationResult = null;
             try {
-                GitBasedArtifactRepository.getInstance().checkout(repoInformation);
+                gitOperationResult = GitBasedArtifactRepository.getInstance().checkout(repoInformation);
             } catch (Exception e) {
                 log.error(e);
             }
@@ -142,6 +141,11 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             if (!cloneExists && !isMultitenant) {
                 // Executed git clone, publish instance activated event
                 CartridgeAgentEventPublisher.publishInstanceActivatedEvent();
+            }
+            // notify that artifact deployment has finished
+            if (gitOperationResult != null && gitOperationResult.isSuccess()) {
+                CartridgeAgentEventPublisher.publishArtifactDeploymentCompletedEvent(
+                        gitOperationResult.getModifiedArtifacts());
             }
 
             // Start the artifact update task

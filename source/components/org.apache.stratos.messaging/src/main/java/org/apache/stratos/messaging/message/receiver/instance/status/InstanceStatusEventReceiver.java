@@ -19,14 +19,13 @@
 
 package org.apache.stratos.messaging.message.receiver.instance.status;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.stratos.messaging.broker.subscribe.TopicSubscriber;
-import org.apache.stratos.messaging.listener.EventListener;
-import org.apache.stratos.messaging.util.Constants;
+import org.apache.commons.logging.*;
+import org.apache.stratos.messaging.broker.subscribe.*;
+import org.apache.stratos.messaging.listener.*;
+import org.apache.stratos.messaging.util.*;
 
 /**
- * A thread for receiving instance notifier information from message broker.
+ * A thread for receiving instance status information from message broker.
  */
 public class InstanceStatusEventReceiver implements Runnable {
     private static final Log log = LogFactory.getLog(InstanceStatusEventReceiver.class);
@@ -54,14 +53,14 @@ public class InstanceStatusEventReceiver implements Runnable {
             Thread subscriberThread = new Thread(topicSubscriber);
             subscriberThread.start();
             if (log.isDebugEnabled()) {
-                log.debug("InstanceNotifier event message receiver thread started");
+                log.debug("InstanceStatus event message receiver thread started");
             }
 
-            // Start instance notifier event message delegator thread
+            // Start instance status event message delegator thread
             Thread receiverThread = new Thread(messageDelegator);
             receiverThread.start();
             if (log.isDebugEnabled()) {
-                log.debug("InstanceNotifier event message delegator thread started");
+                log.debug("InstanceStatus event message delegator thread started");
             }
 
             // Keep the thread live until terminated
@@ -87,4 +86,5 @@ public class InstanceStatusEventReceiver implements Runnable {
         messageDelegator.terminate();
         terminated = true;
     }
+
 }

@@ -27,7 +27,7 @@ import java.util.Map;
  * This event is fired by instance upon git pull.
  */
 
-public class ArtifactDeploymentCompletedEvent extends InstanceNotifierEvent implements Serializable {
+public class ArtifactDeploymentCompletedEvent extends InstanceStatusEvent implements Serializable {
     private String serviceName;
     private String clusterId;
     private String networkPartitionId;

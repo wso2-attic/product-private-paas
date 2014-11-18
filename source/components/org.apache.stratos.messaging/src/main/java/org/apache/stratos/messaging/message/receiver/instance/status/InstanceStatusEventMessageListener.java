@@ -19,24 +19,15 @@
 
 package org.apache.stratos.messaging.message.receiver.instance.status;
 
-import org.apache.activemq.command.ActiveMQTextMessage;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.stratos.messaging.util.Constants;
-import org.apache.stratos.messaging.util.Util;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.apache.commons.logging.*;
 
-import javax.jms.JMSException;
-import javax.jms.TextMessage;
+import javax.jms.*;
 
 /**
- * Implements functionality for receiving text based event messages from the
- * instance notifier
+ * Implements functionality for receiving text based event messages from the instance status
  * message broker topic and add them to the event queue.
  */
-class InstanceStatusEventMessageListener implements MqttCallback {
+class InstanceStatusEventMessageListener implements MessageListener {
 
     private static final Log log = LogFactory.getLog(InstanceStatusEventMessageListener.class);
 
@@ -47,41 +38,19 @@ class InstanceStatusEventMessageListener implements MqttCallback {
     }
 
     @Override
-    public void connectionLost(Throwable err) {
-        log.warn("MQTT Connection is lost", err);
-    }
-
-    @Override
-    public void deliveryComplete(IMqttDeliveryToken err) {
-        log.debug("Message delivery completed");
-    }
-
-    @Override
-    public void messageArrived(String topicName, MqttMessage message)
-            throws Exception {
-
-        TextMessage receivedMessage = new ActiveMQTextMessage();
-        if (log.isDebugEnabled()) {
-            log.debug(String.format("instance notifier messege received...."));
-
-        }
-
-        receivedMessage.setText(new String(message.getPayload()));
-        receivedMessage.setStringProperty(Constants.EVENT_CLASS_NAME,
-                Util.getEventNameForTopic(topicName));
-
-        try {
-            if (log.isDebugEnabled()) {
-                log.debug(String.format(
-                        "Instance notifier message received: %s",
-                        receivedMessage.getText()));
+    public void onMessage(Message message) {
+        if (message instanceof TextMessage) {
+            TextMessage receivedMessage = (TextMessage) message;
+            try {
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format("Instance status message received: %s", ((TextMessage) message).getText()));
+                }
+                // Add received message to the queue
+                messageQueue.add(receivedMessage);
+            } catch (JMSException e) {
+                log.error(e.getMessage(), e);
             }
-            // Add received message to the queue
-            messageQueue.add(receivedMessage);
-
-        } catch (JMSException e) {
-            log.error(e.getMessage(), e);
         }
-
     }
+
 }

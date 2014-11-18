@@ -562,4 +562,8 @@ public class CartridgeAgentConfiguration {
 	public String getPublicIpv4() {
 		return instanceMetadata.getPublicIpv4();
 	}
+
+    public String getEnviornment() {
+        return parameters.get(CartridgeAgentConstants.ENVIRONMENT);
+    }
 }

@@ -19,18 +19,17 @@
 
 package org.apache.stratos.messaging.message.receiver.instance.status;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.stratos.messaging.listener.EventListener;
-import org.apache.stratos.messaging.message.processor.MessageProcessorChain;
-import org.apache.stratos.messaging.message.processor.instance.status.InstanceStatusMessageProcessorChain;
-import org.apache.stratos.messaging.util.Constants;
+import org.apache.commons.logging.*;
+import org.apache.stratos.messaging.listener.*;
+import org.apache.stratos.messaging.message.processor.*;
+import org.apache.stratos.messaging.message.processor.instance.status.*;
+import org.apache.stratos.messaging.util.*;
 
-import javax.jms.TextMessage;
+import javax.jms.*;
 
 
 /**
- * Implements logic for processing instance notifier event messages based on a given
+ * Implements logic for processing instance status event messages based on a given
  * topology process chain.
  */
 class InstanceStatusEventMessageDelegator implements Runnable {
@@ -52,9 +51,7 @@ class InstanceStatusEventMessageDelegator implements Runnable {
     @Override
     public void run() {
         try {
-            if (log.isInfoEnabled()) {
-                log.info("Instance notifier event message delegator started");
-            }
+            log.info("Instance notifier event message delegator started");
 
             while (!terminated) {
                 try {
@@ -66,22 +63,20 @@ class InstanceStatusEventMessageDelegator implements Runnable {
                     // Retrieve the actual message
                     String json = message.getText();
                     if (log.isDebugEnabled()) {
-                        log.debug(String.format("Instance notifier event message received from queue: %s", type));
+                        log.debug(String.format("Instance status event message received from queue: %s", type));
                     }
 
                     // Delegate message to message processor chain
                     if (log.isDebugEnabled()) {
-                        log.debug(String.format("Delegating instance notifier event message: %s", type));
+                        log.debug(String.format("Delegating instance status event message: %s", type));
                     }
                     processorChain.process(type, json, null);
                 } catch (Exception e) {
-                    log.error("Failed to retrieve instance notifier event message", e);
+                    log.error("Failed to retrieve instance status event message", e);
                 }
             }
         } catch (Exception e) {
-            if (log.isErrorEnabled()) {
-                log.error("Instance notifier event message delegator failed", e);
-            }
+            log.error("Instance status event message delegator failed", e);
         }
     }
 

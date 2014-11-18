@@ -43,6 +43,7 @@ public class CartridgeAgentConstants implements Serializable{
     public static final String DEPLOYMENT = "DEPLOYMENT";
     public static final String MANAGER_SERVICE_TYPE = "MANAGER_SERVICE_TYPE";
     public static final String WORKER_SERVICE_TYPE = "WORKER_SERVICE_TYPE";
+    public static final String ENVIRONMENT = "ENVIRONMENT";
 
     // stratos.sh environment variables keys
     public static final String LOG_FILE_PATHS = "LOG_FILE_PATHS";

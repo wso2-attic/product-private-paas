@@ -26,7 +26,7 @@ import java.io.Serializable;
  * This event is published by the instance before git pull.
  */
 
-public class ArtifactDeploymentStartedEvent extends InstanceNotifierEvent implements Serializable {
+public class ArtifactDeploymentStartedEvent extends InstanceStatusEvent implements Serializable {
 
     private String serviceName;
     private String clusterId;

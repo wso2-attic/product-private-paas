@@ -19,34 +19,26 @@
 
 package org.apache.stratos.messaging.message.processor.instance.status;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.apache.stratos.messaging.listener.EventListener;
-import org.apache.stratos.messaging.listener.instance.notifier.ArtifactUpdateEventListener;
-import org.apache.stratos.messaging.listener.instance.notifier.InstanceCleanupClusterEventListener;
-import org.apache.stratos.messaging.listener.instance.notifier.InstanceCleanupMemberEventListener;
-import org.apache.stratos.messaging.message.processor.MessageProcessorChain;
-import org.apache.stratos.messaging.message.processor.instance.notifier.*;
+import org.apache.commons.logging.*;
+import org.apache.stratos.messaging.listener.*;
+import org.apache.stratos.messaging.listener.instance.status.*;
+import org.apache.stratos.messaging.message.processor.*;
 
 /**
- * Defines default instance notifier message processor chain.
+ * Defines default instance status message processor chain.
  */
 public class InstanceStatusMessageProcessorChain extends MessageProcessorChain {
     private static final Log log = LogFactory.getLog(InstanceStatusMessageProcessorChain.class);
 
-    private ArtifactUpdateMessageProcessor artifactUpdateMessageProcessor;
-    private InstanceCleanupMemberNotifierMessageProcessor instanceCleanupMemberNotifierMessageProcessor;
-    private InstanceCleanupClusterNotifierMessageProcessor instanceCleanupClusterNotifierMessageProcessor;
+    private InstanceStatusArtifactDeploymentStartedMessageProcessor instanceStatusArtifactDeploymentStartedMessageProcessor;;
+    private InstanceStatusArtifactDeploymentCompletedMessageProcessor instanceStatusArtifactDeploymentCompletedMessageProcessor;;
 
     public void initialize() {
-        // Add instance notifier event processors
-        artifactUpdateMessageProcessor = new ArtifactUpdateMessageProcessor();
-        add(artifactUpdateMessageProcessor);
-        instanceCleanupMemberNotifierMessageProcessor = new InstanceCleanupMemberNotifierMessageProcessor();
-        add(instanceCleanupMemberNotifierMessageProcessor);
-        instanceCleanupClusterNotifierMessageProcessor = new InstanceCleanupClusterNotifierMessageProcessor();
-        add(instanceCleanupClusterNotifierMessageProcessor);
-
+        // Add instance status event processors
+        instanceStatusArtifactDeploymentStartedMessageProcessor = new InstanceStatusArtifactDeploymentStartedMessageProcessor();
+        add(instanceStatusArtifactDeploymentStartedMessageProcessor);
+        instanceStatusArtifactDeploymentCompletedMessageProcessor = new InstanceStatusArtifactDeploymentCompletedMessageProcessor();
+        add(instanceStatusArtifactDeploymentCompletedMessageProcessor);
 
         if (log.isDebugEnabled()) {
             log.debug("Instance notifier message processor chain initialized");
@@ -54,14 +46,13 @@ public class InstanceStatusMessageProcessorChain extends MessageProcessorChain {
     }
 
     public void addEventListener(EventListener eventListener) {
-        if (eventListener instanceof ArtifactUpdateEventListener) {
-            artifactUpdateMessageProcessor.addEventListener(eventListener);
-        } else if (eventListener instanceof InstanceCleanupMemberEventListener) {
-            instanceCleanupMemberNotifierMessageProcessor.addEventListener(eventListener);
-        }  else if (eventListener instanceof InstanceCleanupClusterEventListener) {
-            instanceCleanupClusterNotifierMessageProcessor.addEventListener(eventListener);
+        if (eventListener instanceof ArtifactDeploymentStartedEventListener) {
+            instanceStatusArtifactDeploymentStartedMessageProcessor.addEventListener(eventListener);
+        } else if (eventListener instanceof ArtifactDeploymentCompletedEventListener) {
+            instanceStatusArtifactDeploymentCompletedMessageProcessor.addEventListener(eventListener);
         } else {
             throw new RuntimeException("Unknown event listener");
         }
     }
+
 }
