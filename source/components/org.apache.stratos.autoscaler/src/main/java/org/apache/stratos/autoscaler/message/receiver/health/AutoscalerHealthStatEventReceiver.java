@@ -693,6 +693,8 @@ public class AutoscalerHealthStatEventReceiver implements Runnable {
 
     private void handleMemberFaultEvent(String clusterId, String memberId) {
         try {
+
+            log.info("A faulty event has received for [member] " + memberId );
         	AutoscalerContext asCtx = AutoscalerContext.getInstance();
         	AbstractMonitor monitor;
         	
@@ -739,6 +741,7 @@ public class AutoscalerHealthStatEventReceiver implements Runnable {
                 }
                 return;
             }
+            log.info("A faulty event has received for [member] " + memberId + " , now terminating it through cloud controller");
             // terminate the faulty member
             CloudControllerClient ccClient = CloudControllerClient.getInstance();
             ccClient.terminate(memberId);
