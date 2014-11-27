@@ -139,20 +139,25 @@ public class AutoscalerTopologyEventReceiver implements Runnable {
                     Partition partition = monitor.getDeploymentPolicy().getPartitionById(partitionId);
                     PartitionContext partitionCtxt = nwPartitionCtxt.getPartitionCtxt(partitionId);
 
+                    //move member to pending termination list
+                    if (partitionCtxt.getPendingTerminationMember(memberId) != null){
 
-                    // terminate the shutdown ready member
-                    CloudControllerClient ccClient = CloudControllerClient.getInstance();
-                    ccClient.terminate(memberId);
+                        partitionCtxt.movePendingTerminationMemberToObsoleteMembers(memberId);
+                    } else if (partitionCtxt.getPendingTerminationMember(memberId) != null){
 
-                    // remove from active member list
-                    partitionCtxt.removeActiveMemberById(memberId);
+                        // add member to obsolete list since the member is shutdown ready member
+                        partitionCtxt.movePendingTerminationMemberToObsoleteMembers(memberId);
+                    }
 
                     if (log.isInfoEnabled()) {
                         log.info(String.format("Member is terminated and removed from the active members list: [member] %s [partition] %s [cluster] %s ",
                                                memberId, partitionId, clusterId));
                     }
-                } catch (TerminationException e) {
-                    log.error(e);
+
+                } catch (Exception e) {
+                    log.error("Error processing event", e);
+                } finally {
+                    TopologyManager.releaseReadLock();
                 }
             }
 
@@ -489,6 +494,8 @@ public class AutoscalerTopologyEventReceiver implements Runnable {
                 }
 
                 try {
+                    log.info("Trying to create a cluster monitor for [cluster] " + cluster.getClusterId());
+
                     monitor = AutoscalerUtil.getClusterMonitor(cluster);
                     success = true;
 
