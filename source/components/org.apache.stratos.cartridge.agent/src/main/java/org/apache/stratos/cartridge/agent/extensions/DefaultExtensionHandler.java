@@ -144,11 +144,11 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             if (!cloneExists && !isMultitenant) {
                 // Executed git clone, publish instance activated event
                 CartridgeAgentEventPublisher.publishInstanceActivatedEvent();
-            }
-            // notify that artifact deployment has finished
-            if (gitOperationResult != null && gitOperationResult.isSuccess()) {
-                CartridgeAgentEventPublisher.publishArtifactDeploymentCompletedEvent(
-                        gitOperationResult.getModifiedArtifacts());
+                // notify that artifact deployment has finished
+                if (gitOperationResult != null && gitOperationResult.isSuccess()) {
+                    CartridgeAgentEventPublisher.publishArtifactDeploymentCompletedEvent(
+                            gitOperationResult.getModifiedArtifacts());
+                }
             }
 
             // Start the artifact update task

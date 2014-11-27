@@ -471,9 +471,9 @@ public class GitBasedArtifactRepository {
             return pullArtifacts(gitRepoCtx);
         }
     } */
-    public GitOperationResult checkout(RepositoryInformation repositoryInformation) throws Exception {
-        // notify that artifact deployment has started
-        CartridgeAgentEventPublisher.publishArtifactDeploymentStartedEvent();
+   public GitOperationResult checkout(RepositoryInformation repositoryInformation) throws Exception {
+       // notify that artifact deployment has started
+       CartridgeAgentEventPublisher.publishArtifactDeploymentStartedEvent();
        int tenantId = Integer.parseInt(repositoryInformation.getTenantId());
 
        // if context for tenant is not initialized
@@ -486,8 +486,7 @@ public class GitBasedArtifactRepository {
        File gitRepoDir = new File(gitRepoCtx.getGitLocalRepoPath());
        if (!gitRepoDir.exists()) {
            return cloneRepository(gitRepoCtx);
-       }
-       else {
+       } else {
            if (isValidGitRepo(gitRepoCtx)) {
                if (log.isDebugEnabled()) {
                    log.debug("Existing git repository detected for tenant " + gitRepoCtx.getTenantId() + ", no clone required");
@@ -504,7 +503,7 @@ public class GitBasedArtifactRepository {
                        // pull any changes from the remote repo
                        return pullAndHandleErrors(gitRepoCtx);
                    }
-                    return new GitOperationResult();
+                   return new GitOperationResult();
 
                } else {
                    // directory is empty, clone
@@ -574,6 +573,7 @@ public class GitBasedArtifactRepository {
 
         try {
             checkoutCmd.call();
+            // get updated artifacts
             ObjectId currentRepoHead = gitRepoCtx.getLocalRepo().resolve(LOCAL_REPO_HEAD_TREE);
             Map<String, Long> modifiedArtifactMap = getModifiedArtifactMap(gitRepoCtx, null, currentRepoHead);
             gitOperationResult.setModifiedArtifacts(modifiedArtifactMap);
@@ -759,6 +759,7 @@ public class GitBasedArtifactRepository {
                             Thread.currentThread().getId());
                 }
 
+                // get updated artifacts
                 ObjectId currentRepoHead = gitRepoCtx.getLocalRepo().resolve(LOCAL_REPO_HEAD_TREE);
                 Map<String, Long> modifiedArtifactMap = getModifiedArtifactMap(gitRepoCtx, oldRepoHead, currentRepoHead);
                 gitOperationResult.setModifiedArtifacts(modifiedArtifactMap);
@@ -867,7 +868,7 @@ public class GitBasedArtifactRepository {
                 }
                 if (StringUtils.isNotEmpty(path)) {
                     String[] pathComponents = path.split(Pattern.quote(File.separator));
-                    if (pathComponents != null && pathComponents.length > 1) {
+                    if (pathComponents.length > 1) {
                         String parent = pathComponents[1];
                         if (!modifiedPaths.containsKey(parent)) {
                             modifiedPaths.put(parent, lastModifiedTime);

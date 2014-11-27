@@ -18,7 +18,7 @@
  */
 package org.apache.stratos.messaging.event.instance.status;
 
-import java.io.Serializable;
+import java.io.*;
 
 /**
  * This event is published by the instance before git pull.
@@ -31,8 +31,6 @@ public class ArtifactDeploymentStartedEvent extends InstanceStatusEvent implemen
     private String networkPartitionId;
     private String partitionId;
     private String memberId;
-    private String status;
-    private String tenantId;
 
     public ArtifactDeploymentStartedEvent(String serviceName, String clusterId, String networkPartitionId,
                                           String partitionId, String memberId) {
@@ -43,6 +41,14 @@ public class ArtifactDeploymentStartedEvent extends InstanceStatusEvent implemen
         this.memberId = memberId;
     }
 
+    public String getServiceName() {
+        return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
     public String getClusterId() {
         return clusterId;
     }
@@ -51,20 +57,28 @@ public class ArtifactDeploymentStartedEvent extends InstanceStatusEvent implemen
         this.clusterId = clusterId;
     }
 
-    public String getStatus() {
-        return status;
+    public String getNetworkPartitionId() {
+        return networkPartitionId;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
+    public void setNetworkPartitionId(String networkPartitionId) {
+        this.networkPartitionId = networkPartitionId;
     }
 
-    public String getTenantId() {
-        return tenantId;
+    public String getPartitionId() {
+        return partitionId;
     }
 
-    public void setTenantId(String tenantId) {
-        this.tenantId = tenantId;
+    public void setPartitionId(String partitionId) {
+        this.partitionId = partitionId;
+    }
+
+    public String getMemberId() {
+        return memberId;
+    }
+
+    public void setMemberId(String memberId) {
+        this.memberId = memberId;
     }
 
 }

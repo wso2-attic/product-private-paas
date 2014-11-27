@@ -68,12 +68,13 @@ public class InstanceStatusEventReceiver implements Runnable {
             while (!terminated) {
                 try {
                     Thread.sleep(1000);
-                } catch (InterruptedException ignore) {
+                } catch (InterruptedException e) {
+                    log.warn("Thread was interrupted : ", e);
                 }
             }
-        } catch (Exception e) {
+        } catch (Exception e1) {
             if (log.isErrorEnabled()) {
-                log.error("InstanceNotifier receiver failed", e);
+                log.error("InstanceNotifier receiver failed", e1);
             }
         }
     }
