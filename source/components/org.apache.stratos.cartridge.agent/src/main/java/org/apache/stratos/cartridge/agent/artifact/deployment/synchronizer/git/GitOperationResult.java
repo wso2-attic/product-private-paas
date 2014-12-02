@@ -21,11 +21,19 @@ package org.apache.stratos.cartridge.agent.artifact.deployment.synchronizer.git;
 
 import java.util.Map;
 
+/**
+ * GitOperationResult represents the result of git client operations performed by cartridge agent
+ */
 public class GitOperationResult {
 
     private boolean success;
     private Map<String, Long> modifiedArtifacts;
 
+    /**
+     * Represent the status of the git operation
+     *
+     * @return true if the git operation is success, false otherwise
+     */
     public boolean isSuccess() {
         return success;
     }
@@ -34,6 +42,11 @@ public class GitOperationResult {
         this.success = success;
     }
 
+    /**
+     * Represents the modified artifacts related to this git operation
+     *
+     * @return Modified artifacts and their associated last modified time
+     */
     public Map<String, Long> getModifiedArtifacts() {
         return modifiedArtifacts;
     }

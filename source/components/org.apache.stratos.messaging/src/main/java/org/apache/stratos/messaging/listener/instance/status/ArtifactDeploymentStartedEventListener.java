@@ -22,7 +22,7 @@ package org.apache.stratos.messaging.listener.instance.status;
 import org.apache.stratos.messaging.listener.EventListener;
 
 /**
- * Artifact deployment started event listener.
+ * Artifact deployment started event listener. This needs to be extended by clients.
  */
 public abstract class ArtifactDeploymentStartedEventListener extends EventListener {
 }

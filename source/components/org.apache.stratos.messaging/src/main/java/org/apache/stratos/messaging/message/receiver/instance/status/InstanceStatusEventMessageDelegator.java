@@ -30,8 +30,7 @@ import javax.jms.TextMessage;
 
 
 /**
- * Implements logic for processing instance status event messages based on a given
- * topology process chain.
+ * Implements logic for processing instance status event messages based on a given topology process chain.
  */
 class InstanceStatusEventMessageDelegator implements Runnable {
 
@@ -51,33 +50,29 @@ class InstanceStatusEventMessageDelegator implements Runnable {
 
     @Override
     public void run() {
-        try {
-            log.info("Instance status event message delegator started");
+        log.info("Instance status event message delegator started!");
 
-            while (!terminated) {
-                try {
-                    TextMessage message = messageQueue.take();
+        while (!terminated) {
+            try {
+                TextMessage message = messageQueue.take();
 
-                    // Retrieve the header
-                    String type = message.getStringProperty(Constants.EVENT_CLASS_NAME);
+                // Retrieve the header
+                String type = message.getStringProperty(Constants.EVENT_CLASS_NAME);
 
-                    // Retrieve the actual message
-                    String json = message.getText();
-                    if (log.isDebugEnabled()) {
-                        log.debug(String.format("Instance status event message received from queue: %s", type));
-                    }
-
-                    // Delegate message to message processor chain
-                    if (log.isDebugEnabled()) {
-                        log.debug(String.format("Delegating instance status event message: %s", type));
-                    }
-                    processorChain.process(type, json, null);
-                } catch (Exception e) {
-                    log.error("Failed to retrieve instance status event message", e);
+                // Retrieve the actual message
+                String json = message.getText();
+                if (log.isDebugEnabled()) {
+                    log.debug("Instance status event message received from queue: " + type);
                 }
+
+                // Delegate message to message processor chain
+                if (log.isDebugEnabled()) {
+                    log.debug("Delegating instance status event message: " + type);
+                }
+                processorChain.process(type, json, null);
+            } catch (Exception e) {
+                log.error("Failed to retrieve instance status event message!", e);
             }
-        } catch (Exception e) {
-            log.error("Instance status event message delegator failed", e);
         }
     }
 

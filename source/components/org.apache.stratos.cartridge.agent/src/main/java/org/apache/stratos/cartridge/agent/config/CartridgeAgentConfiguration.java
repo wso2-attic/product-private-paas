@@ -133,24 +133,24 @@ public class CartridgeAgentConfiguration {
     }
 
     /**
-    * Get instance metadata
-    * @return {@link InstanceMetadata}
-    */
+     * Get instance metadata
+     *
+     * @return {@link InstanceMetadata}
+     */
     private InstanceMetadata getMetadata() {
-
-    IaaSMetadataServiceClient client = new IaaSMetadataServiceClient();
-    InstanceMetadata metadata = null;
-    try {
-    	log.info("Retrieving metadata from Instance Metadata Service Client");
-    	metadata = client.getInstanceMetadata();
-    	String msg = String.format("Successfully retreived metadata from Instance Metadata Service Client : ",
-    			metadata.toString());
-    	log.info(msg);
-    } catch (Exception e) {
-    	String msg = "Error while retrieving metadata";
-    	log.error(msg, e);
-    }
-    return metadata;
+        IaaSMetadataServiceClient client = new IaaSMetadataServiceClient();
+        InstanceMetadata metadata = null;
+        try {
+            log.info("Retrieving metadata from Instance Metadata Service Client");
+            metadata = client.getInstanceMetadata();
+            String msg = "Successfully retrieved metadata : " + metadata.toString() +
+                    " from Instance Metadata Service Client";
+            log.info(msg);
+        } catch (Exception e) {
+            String msg = "Error while retrieving metadata";
+            log.error(msg, e);
+        }
+        return metadata;
     }
 
     private String readDeployment(){

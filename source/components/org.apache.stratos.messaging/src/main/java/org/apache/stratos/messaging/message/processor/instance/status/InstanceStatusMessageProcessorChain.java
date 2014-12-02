@@ -35,25 +35,31 @@ public class InstanceStatusMessageProcessorChain extends MessageProcessorChain {
     private InstanceStatusArtifactDeploymentStartedMessageProcessor artifactDeploymentStartedMessageProcessor;
     private InstanceStatusArtifactDeploymentCompletedMessageProcessor artifactDeploymentCompletedMessageProcessor;
 
+    /**
+     * Initialize the processor chain with relevant message processors
+     */
     public void initialize() {
-        // Add instance status event processors
         artifactDeploymentStartedMessageProcessor = new InstanceStatusArtifactDeploymentStartedMessageProcessor();
         add(artifactDeploymentStartedMessageProcessor);
         artifactDeploymentCompletedMessageProcessor = new InstanceStatusArtifactDeploymentCompletedMessageProcessor();
         add(artifactDeploymentCompletedMessageProcessor);
 
         if (log.isDebugEnabled()) {
-            log.debug("Instance notifier message processor chain initialized");
+            log.debug("Instance notifier message processor chain initialized!");
         }
     }
 
+    /**
+     * Add event listeners to the processors
+     * @param eventListener {@link EventListener}
+     */
     public void addEventListener(EventListener eventListener) {
         if (eventListener instanceof ArtifactDeploymentStartedEventListener) {
             artifactDeploymentStartedMessageProcessor.addEventListener(eventListener);
         } else if (eventListener instanceof ArtifactDeploymentCompletedEventListener) {
             artifactDeploymentCompletedMessageProcessor.addEventListener(eventListener);
         } else {
-            throw new RuntimeException("Unknown event listener");
+            throw new IllegalArgumentException("Unknown event listener!");
         }
     }
 

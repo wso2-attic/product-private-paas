@@ -51,17 +51,17 @@ public class InstanceStatusEventReceiver implements Runnable {
             // Start topic subscriber thread
             topicSubscriber = new TopicSubscriber(Constants.INSTANCE_STATUS_TOPIC);
             topicSubscriber.setMessageListener(messageListener);
-            Thread subscriberThread = new Thread(topicSubscriber);
+            Thread subscriberThread = new Thread(topicSubscriber, "Instance status topic subscriber thread");
             subscriberThread.start();
             if (log.isDebugEnabled()) {
-                log.debug("InstanceStatus event message receiver thread started");
+                log.debug("InstanceStatus event message receiver thread started!");
             }
 
             // Start instance status event message delegator thread
-            Thread receiverThread = new Thread(messageDelegator);
+            Thread receiverThread = new Thread(messageDelegator, "Instance status event message delegator thread");
             receiverThread.start();
             if (log.isDebugEnabled()) {
-                log.debug("InstanceStatus event message delegator thread started");
+                log.debug("InstanceStatus event message delegator thread started!");
             }
 
             // Keep the thread live until terminated
@@ -69,13 +69,11 @@ public class InstanceStatusEventReceiver implements Runnable {
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    log.warn("Thread was interrupted : ", e);
+                    log.warn("Thread was interrupted !", e);
                 }
             }
-        } catch (Exception e1) {
-            if (log.isErrorEnabled()) {
-                log.error("InstanceNotifier receiver failed", e1);
-            }
+        } catch (Exception e) {
+            log.error("InstanceNotifier receiver failed!", e);
         }
     }
 

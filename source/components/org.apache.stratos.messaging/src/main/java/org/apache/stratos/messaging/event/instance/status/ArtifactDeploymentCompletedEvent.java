@@ -34,6 +34,7 @@ public class ArtifactDeploymentCompletedEvent extends InstanceStatusEvent implem
     private String tenantId;
     private String environment;
     private boolean multitenant;
+    // keep the modified artifacts of the remote repository with their respective last modified time.
     private Map<String, Long> modifiedArtifacts;
 
     public ArtifactDeploymentCompletedEvent(String serviceName, String clusterId, String networkPartitionId,
@@ -58,13 +59,13 @@ public class ArtifactDeploymentCompletedEvent extends InstanceStatusEvent implem
         this.clusterId = clusterId;
     }
 
-	public String getTenantId() {
-		return tenantId;
-	}
+    public String getTenantId() {
+        return tenantId;
+    }
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
     public String getServiceName() {
         return serviceName;

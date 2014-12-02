@@ -18,7 +18,7 @@
  */
 package org.apache.stratos.messaging.event.instance.status;
 
-import java.io.*;
+import java.io.Serializable;
 
 /**
  * This event is published by the instance before git pull.

@@ -130,7 +130,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
             try {
                 gitOperationResult = GitBasedArtifactRepository.getInstance().checkout(repoInformation);
             } catch (Exception e) {
-                log.error(e);
+                log.error("Error while checking out from remote repository!", e);
             }
             Map<String, String> env = new HashMap<String, String>();
             env.put("STRATOS_ARTIFACT_UPDATED_CLUSTER_ID", artifactUpdatedEvent.getClusterId());

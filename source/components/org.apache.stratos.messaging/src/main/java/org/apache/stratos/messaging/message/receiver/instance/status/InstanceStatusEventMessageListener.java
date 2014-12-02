@@ -47,13 +47,15 @@ class InstanceStatusEventMessageListener implements MessageListener {
             TextMessage receivedMessage = (TextMessage) message;
             try {
                 if (log.isDebugEnabled()) {
-                    log.debug(String.format("Instance status message received: %s", ((TextMessage) message).getText()));
+                    log.debug("Instance status message received: " + ((TextMessage) message).getText());
                 }
                 // Add received message to the queue
                 messageQueue.add(receivedMessage);
             } catch (JMSException e) {
-                log.error(e.getMessage(), e);
+                log.error("Error while adding the message to the queue!", e);
             }
+        } else {
+            log.warn("Getting a non-text message which can't be processed!");
         }
     }
 

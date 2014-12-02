@@ -22,5 +22,8 @@ package org.apache.stratos.messaging.message.receiver.instance.status;
 import javax.jms.TextMessage;
 import java.util.concurrent.LinkedBlockingQueue;
 
+/**
+ * Message queue which keeps the instance status events. This is a "Tagged" class which has no members.
+ */
 class InstanceStatusEventMessageQueue extends LinkedBlockingQueue<TextMessage> {
 }
