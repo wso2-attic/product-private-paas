@@ -21,6 +21,13 @@ package org.apache.stratos.cartridge.agent.config;
 */
 
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.cartridge.agent.exception.ParameterNotFoundException;
@@ -28,9 +35,7 @@ import org.apache.stratos.cartridge.agent.util.CartridgeAgentConstants;
 import org.apache.stratos.cartridge.agent.util.CartridgeAgentUtils;
 import org.apache.stratos.iaas.metadata.client.impl.IaaSMetadataServiceClient;
 import org.apache.stratos.iaas.metadata.client.model.InstanceMetadata;
-
-import java.io.File;
-import java.util.*;
+import org.wso2.securevault.SecretResolver;
 
 /**
  * Cartridge agent configuration.
@@ -71,6 +76,7 @@ public class CartridgeAgentConfiguration {
     private String superTenantRepositoryPath;
     private String tenantRepositoryPath;
     private InstanceMetadata instanceMetadata;
+    private SecretResolver secretResolver;
 
     private CartridgeAgentConfiguration() {
         parameters = loadParametersFile();
@@ -102,7 +108,7 @@ public class CartridgeAgentConfiguration {
             // not mandatory
             lbPrivateIp = System.getProperty(CartridgeAgentConstants.LB_PRIVATE_IP);
             lbPublicIp = System.getProperty(CartridgeAgentConstants.LB_PUBLIC_IP);
-            tenantRepositoryPath =  System.getProperty(CartridgeAgentConstants.TENANT_REPO_PATH);
+            tenantRepositoryPath = System.getProperty(CartridgeAgentConstants.TENANT_REPO_PATH);
             superTenantRepositoryPath = System.getProperty(CartridgeAgentConstants.SUPER_TENANT_REPO_PATH);
 
             deployment = readDeployment();
@@ -153,14 +159,14 @@ public class CartridgeAgentConfiguration {
         return metadata;
     }
 
-    private String readDeployment(){
+    private String readDeployment() {
         if (parameters.containsKey(CartridgeAgentConstants.DEPLOYMENT)) {
             return parameters.get(CartridgeAgentConstants.DEPLOYMENT);
         }
         return null;
     }
 
-    private String readManagerServiceType(){
+    private String readManagerServiceType() {
 
         if (deployment == null) {
             return null;
@@ -185,7 +191,7 @@ public class CartridgeAgentConfiguration {
         return null;
     }
 
-    private String readWorkerServiceType(){
+    private String readWorkerServiceType() {
 
         if (deployment == null) {
             return null;
@@ -210,7 +216,7 @@ public class CartridgeAgentConfiguration {
         return null;
     }
 
-    private String readIsPrimary(){
+    private String readIsPrimary() {
         if (parameters.containsKey(CartridgeAgentConstants.CLUSTERING_PRIMARY_KEY)) {
             return parameters.get(CartridgeAgentConstants.CLUSTERING_PRIMARY_KEY);
         }
@@ -259,9 +265,9 @@ public class CartridgeAgentConfiguration {
             log.info(" INTERNAL payload parameter is not found");
         }
 
-        if(internalRepoStringValue.equals(CartridgeAgentConstants.INTERNAL)) {
+        if (internalRepoStringValue.equals(CartridgeAgentConstants.INTERNAL)) {
             return true;
-        } else{
+        } else {
             return false;
         }
     }
@@ -471,21 +477,21 @@ public class CartridgeAgentConfiguration {
         return isPrimary;
     }
 
-	public String getLbPublicIp() {
-		return lbPublicIp;
-	}
+    public String getLbPublicIp() {
+        return lbPublicIp;
+    }
 
-	public void setLbPublicIp(String lbPublicIp) {
-		this.lbPublicIp = lbPublicIp;
-	}
+    public void setLbPublicIp(String lbPublicIp) {
+        this.lbPublicIp = lbPublicIp;
+    }
 
-	public String getLbPrivateIp() {
-		return lbPrivateIp;
-	}
+    public String getLbPrivateIp() {
+        return lbPrivateIp;
+    }
 
-	public void setLbPrivateIp(String lbPrivateIp) {
-		this.lbPrivateIp = lbPrivateIp;
-	}
+    public void setLbPrivateIp(String lbPrivateIp) {
+        this.lbPrivateIp = lbPrivateIp;
+    }
 
     public String getDeployment() {
         return deployment;
@@ -523,47 +529,56 @@ public class CartridgeAgentConfiguration {
         return isCheckoutEnabled;
     }
 
-	public boolean isInitialized() {
-		return initialized;
-	}
+    public boolean isInitialized() {
+        return initialized;
+    }
 
-	public void setInitialized(boolean initialized) {
-		this.initialized = initialized;
-	}
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
+    }
 
-	public String getInstanceId() {
-		return instanceMetadata.getInstanceId();
-	}
+    public String getInstanceId() {
+        return instanceMetadata.getInstanceId();
+    }
 
-	public String getAmiId() {
-		return instanceMetadata.getAmiId();
-	}
+    public String getAmiId() {
+        return instanceMetadata.getAmiId();
+    }
 
-	public String getHostName() {
-		return instanceMetadata.getHostName();
-	}
+    public String getHostName() {
+        return instanceMetadata.getHostName();
+    }
 
-	public String getInstanceType() {
-		return instanceMetadata.getInstanceType();
-	}
+    public String getInstanceType() {
+        return instanceMetadata.getInstanceType();
+    }
 
-	public String getLocalHostname() {
-		return instanceMetadata.getLocalHostname();
-	}
+    public String getLocalHostname() {
+        return instanceMetadata.getLocalHostname();
+    }
 
-	public String getLocalIpv4() {
-		return instanceMetadata.getLocalIpv4();
-	}
+    public String getLocalIpv4() {
+        return instanceMetadata.getLocalIpv4();
+    }
 
-	public String getPublicHostname() {
-		return instanceMetadata.getPublicHostname();
-	}
+    public String getPublicHostname() {
+        return instanceMetadata.getPublicHostname();
+    }
 
-	public String getPublicIpv4() {
-		return instanceMetadata.getPublicIpv4();
-	}
+    public String getPublicIpv4() {
+        return instanceMetadata.getPublicIpv4();
+    }
+
+    public SecretResolver getSecretResolver() {
+        return secretResolver;
+    }
+
+    public void setSecretResolver(SecretResolver secretResolver) {
+        this.secretResolver = secretResolver;
+    }
 
     public String getEnviornment() {
         return parameters.get(CartridgeAgentConstants.ENVIRONMENT);
     }
+
 }

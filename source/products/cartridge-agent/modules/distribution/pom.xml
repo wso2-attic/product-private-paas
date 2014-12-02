@@ -55,6 +55,11 @@
           <artifactId>org.apache.stratos.iaas.metadata.client</artifactId>
           <version>${project.version}</version>
       </dependency>
+      <dependency>
+          <groupId>org.wso2.ciphertool</groupId>
+          <artifactId>org.wso2.ciphertool</artifactId>
+          <version>1.0.0-wso2v2</version>
+      </dependency>
     </dependencies>
 
     <build>
