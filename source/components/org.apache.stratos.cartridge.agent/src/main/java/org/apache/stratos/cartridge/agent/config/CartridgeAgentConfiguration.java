@@ -21,6 +21,13 @@ package org.apache.stratos.cartridge.agent.config;
 */
 
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.cartridge.agent.exception.ParameterNotFoundException;
@@ -28,9 +35,7 @@ import org.apache.stratos.cartridge.agent.util.CartridgeAgentConstants;
 import org.apache.stratos.cartridge.agent.util.CartridgeAgentUtils;
 import org.apache.stratos.iaas.metadata.client.impl.IaaSMetadataServiceClient;
 import org.apache.stratos.iaas.metadata.client.model.InstanceMetadata;
-
-import java.io.File;
-import java.util.*;
+import org.wso2.securevault.SecretResolver;
 
 /**
  * Cartridge agent configuration.
@@ -71,6 +76,7 @@ public class CartridgeAgentConfiguration {
     private String superTenantRepositoryPath;
     private String tenantRepositoryPath;
     private InstanceMetadata instanceMetadata;
+    private SecretResolver secretResolver;
 
     private CartridgeAgentConfiguration() {
         parameters = loadParametersFile();
@@ -562,4 +568,12 @@ public class CartridgeAgentConfiguration {
 	public String getPublicIpv4() {
 		return instanceMetadata.getPublicIpv4();
 	}
+
+    public SecretResolver getSecretResolver() {
+        return secretResolver;
+    }
+
+    public void setSecretResolver(SecretResolver secretResolver) {
+        this.secretResolver = secretResolver;
+    }
 }

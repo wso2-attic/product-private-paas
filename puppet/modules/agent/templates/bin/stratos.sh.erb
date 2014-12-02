@@ -34,11 +34,12 @@ properties="-Dlisten.address=localhost
             -Dlog4j.configuration=file://<%= @carbon_home %>/conf/log4j.properties
             -Dparam.file.path=<%= @carbon_home %>/payload/launch-params
             -Dextensions.dir=<%= @carbon_home %>/extensions
+	    -Dcarbon.home=<%= @carbon_home %>
             -Dcep.stats.publisher.enabled=true
 	    -Dlb.private.ip=<%= @lb_private_ip %>
 	    -Dlb.public.ip=<%= @lb_public_ip %>
             -Djavax.net.ssl.trustStore=<%= @carbon_home %>/security/client-truststore.jks
-            -Djavax.net.ssl.trustStorePassword=<%= @truststore_password %>
+            -Dtruststore.password=<%= @truststore_password %>
 	    -Denable.artifact.update=<%= @enable_artifact_update %>
             -Dauto.commit=<%= @auto_commit %>
             -Dauto.checkout=<%= @auto_checkout %>

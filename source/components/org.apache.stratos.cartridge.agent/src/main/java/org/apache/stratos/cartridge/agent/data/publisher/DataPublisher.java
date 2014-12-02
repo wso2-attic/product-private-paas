@@ -21,13 +21,14 @@ package org.apache.stratos.cartridge.agent.data.publisher;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.stratos.cartridge.agent.config.CartridgeAgentConfiguration;
 import org.wso2.carbon.databridge.agent.thrift.Agent;
 import org.wso2.carbon.databridge.agent.thrift.AsyncDataPublisher;
 import org.wso2.carbon.databridge.agent.thrift.conf.AgentConfiguration;
 import org.wso2.carbon.databridge.agent.thrift.exception.AgentException;
 import org.wso2.carbon.databridge.commons.Event;
 import org.wso2.carbon.databridge.commons.StreamDefinition;
-
+import org.wso2.securevault.SecretResolver;
 import java.util.Date;
 
 public abstract class DataPublisher implements GenericDataPublisher {
@@ -48,9 +49,35 @@ public abstract class DataPublisher implements GenericDataPublisher {
 
     public void initialize () {
 
+        String trustStorePasswordProperty = "truststore.password";
+        String trustStorePasswordValue = System.getProperty(trustStorePasswordProperty);
+        SecretResolver secretResolver = CartridgeAgentConfiguration.getInstance().getSecretResolver();
+        String alias = trustStorePasswordProperty;
+
+        // Resolve the secret password.
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Trying to decrypt property: %s", trustStorePasswordProperty));
+        }
+        if (trustStorePasswordValue.equalsIgnoreCase("secretAlias:" + alias)) {
+            if (secretResolver != null && secretResolver.isInitialized()) {
+                if (log.isDebugEnabled()) {
+                    log.debug("SecretResolver is initialized.");
+                }
+                if (secretResolver.isTokenProtected(alias)) {
+                    if (log.isDebugEnabled()) {
+                        log.debug("SecretResolver [" + alias + "] is token protected");
+                    }
+                    trustStorePasswordValue = secretResolver.resolve(alias);
+                    if (log.isDebugEnabled()) {
+                        log.debug("SecretResolver [" + alias + "] is decrypted properly");
+                    }
+                }
+            }
+        }
+        System.setProperty("javax.net.ssl.trustStorePassword", trustStorePasswordValue);
+    	
         AgentConfiguration agentConfiguration = new AgentConfiguration();
-        //System.setProperty("javax.net.ssl.trustStore", "/home/isuru/wso2/S2/apache/stratos/alpha/wso2bam-2.4.0/repository/resources/security/client-truststore.jks");
-        //System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
+        
         Agent agent = new Agent(agentConfiguration);
 
         dataPublisher = new AsyncDataPublisher(dataPublisherConfig.getMonitoringServerUrl(), dataPublisherConfig.getAdminUsername(),

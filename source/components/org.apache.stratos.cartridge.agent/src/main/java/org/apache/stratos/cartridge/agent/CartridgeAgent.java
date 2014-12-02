@@ -56,8 +56,15 @@ import org.apache.stratos.messaging.message.receiver.tenant.TenantEventReceiver;
 import org.apache.stratos.messaging.message.receiver.tenant.TenantManager;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyEventReceiver;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyManager;
+import org.wso2.securevault.SecretResolver;
+import org.wso2.securevault.SecretResolverFactory;
+import org.wso2.securevault.secret.SecretManager;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -78,6 +85,9 @@ public class CartridgeAgent implements Runnable {
         }
 
         validateRequiredSystemProperties();
+        
+        // initialize secure vault
+        initializeSecretResolver();
 
         // Start instance notifier listener thread
         subscribeToTopicsAndRegisterListeners();
@@ -562,6 +572,26 @@ public class CartridgeAgent implements Runnable {
                 log.warn(String.format("System property not found: %s", CartridgeAgentConstants.EXTENSIONS_DIR));
             }
         }
+    }
+    
+    protected void initializeSecretResolver() {
+        Properties properties = System.getProperties();
+
+        String path = System.getProperty("carbon.home") + File.separator + "conf" + File.separator
+                + "secret-conf.properties";
+
+        try {
+            FileInputStream stream = new FileInputStream(path);
+            properties.load(stream);
+        } catch (IOException e) {
+            log.warn("Failed to load properties from file: " + path, e);
+        }
+
+        SecretManager secretManager = SecretManager.getInstance();
+        secretManager.init(properties);
+
+        SecretResolver secretResolver = SecretResolverFactory.create(properties);
+        CartridgeAgentConfiguration.getInstance().setSecretResolver(secretResolver);
     }
 
     private static void publishLogs(LogPublisherManager logPublisherManager) {

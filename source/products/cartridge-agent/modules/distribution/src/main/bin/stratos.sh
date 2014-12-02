@@ -33,6 +33,7 @@ properties="-Dmb.ip=MB-IP
 	    -Dthrift.receiver.password=CEP-PASSWORD
             -Djndi.properties.template.file.path=${script_path}/../conf/templates/jndi.properties.template
             -Djndi.properties.dir=${script_path}/../conf
+            -Dcarbon.home=${script_path}/..
             -Dlog4j.configuration=file://${script_path}/../conf/log4j.properties
             -Dparam.file.path=${script_path}/../payload/launch-params
             -Dextensions.dir=${script_path}/../extensions
@@ -40,7 +41,7 @@ properties="-Dmb.ip=MB-IP
             -Dlb.private.ip=
             -Dlb.public.ip=
             -Djavax.net.ssl.trustStore=CERT-TRUSTSTORE
-            -Djavax.net.ssl.trustStorePassword=TRUSTSTORE-PASSWORD
+            -Dtruststore.password=TRUSTSTORE-PASSWORD
 	    -Denable.artifact.update=true
             -Dauto.commit=false
             -Dauto.checkout=true

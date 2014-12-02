@@ -35,8 +35,11 @@ class agent(
 
   $service_templates = [
     'bin/stratos.sh',
+    'bin/ciphertool.sh',
     'conf/jndi.properties',
     'conf/log4j.properties',   
+    'conf/cipher-text.properties',   
+    'conf/secret-conf.properties',   
     'extensions/clean.sh',
     'extensions/instance-activated.sh',
     'extensions/instance-started.sh',

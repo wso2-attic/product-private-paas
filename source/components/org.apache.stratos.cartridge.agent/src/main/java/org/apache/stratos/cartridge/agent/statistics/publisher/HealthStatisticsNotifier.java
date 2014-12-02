@@ -25,6 +25,7 @@ import org.apache.stratos.cartridge.agent.config.CartridgeAgentConfiguration;
 import org.apache.stratos.cartridge.agent.event.publisher.CartridgeAgentEventPublisher;
 import org.apache.stratos.cartridge.agent.util.CartridgeAgentConstants;
 import org.apache.stratos.cartridge.agent.util.CartridgeAgentUtils;
+import org.wso2.securevault.SecretResolver;
 
 /**
  * Health statistics notifier thread for publishing statistics periodically to CEP.
@@ -37,6 +38,34 @@ public class HealthStatisticsNotifier implements Runnable {
     private boolean terminated;
 
     public HealthStatisticsNotifier() {
+    	
+        SecretResolver secretResolver = CartridgeAgentConfiguration.getInstance().getSecretResolver();
+        String trustStorePasswordProperty = "truststore.password";
+        String trustStorePasswordValue = System.getProperty(trustStorePasswordProperty);
+        String alias = trustStorePasswordProperty;
+
+        // Resolve the secret password.
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Trying to decrypt property: %s", trustStorePasswordProperty));
+        }
+        if (trustStorePasswordValue.equalsIgnoreCase("secretAlias:" + alias)) {
+            if (secretResolver != null && secretResolver.isInitialized()) {
+                if (log.isDebugEnabled()) {
+                    log.info("SecretResolver is initialized.");
+                }
+                if (secretResolver.isTokenProtected(alias)) {
+                    if (log.isDebugEnabled()) {
+                        log.info("SecretResolver [" + alias + "] is token protected");
+                    }
+                    trustStorePasswordValue = secretResolver.resolve(alias);
+                    if (log.isDebugEnabled()) {
+                        log.debug("SecretResolver [" + alias + "] is decrypted properly");
+                    }
+                }
+            }
+        }
+        System.setProperty("javax.net.ssl.trustStorePassword", trustStorePasswordValue);
+    	
         this.statsPublisher = new HealthStatisticsPublisher();
 
         String interval = System.getProperty("stats.notifier.interval");

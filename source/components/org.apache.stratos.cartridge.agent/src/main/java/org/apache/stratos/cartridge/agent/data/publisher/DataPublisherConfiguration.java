@@ -22,6 +22,8 @@ package org.apache.stratos.cartridge.agent.data.publisher;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.stratos.cartridge.agent.config.CartridgeAgentConfiguration;
+import org.wso2.securevault.SecretResolver;
 
 public class DataPublisherConfiguration {
 
@@ -40,7 +42,7 @@ public class DataPublisherConfiguration {
     private String monitoringServerPort;
     private String monitoringServerSecurePort;
     private String adminUsername;
-    private String adminPassword;
+    private char[] adminPassword;
     private static volatile DataPublisherConfiguration dataPublisherConfiguration;
 
     private DataPublisherConfiguration () {
@@ -82,11 +84,42 @@ public class DataPublisherConfiguration {
             throw new RuntimeException("System property not found: " + MONITORING_SERVER_ADMIN_USERNAME);
         }
 
-        adminPassword = System.getProperty(MONITORING_SERVER_ADMIN_PASSWORD);
-        if(StringUtils.isBlank(adminPassword)) {
+        String trustStorePasswordProperty = MONITORING_SERVER_ADMIN_PASSWORD;
+        String trustStorePasswordValue = System.getProperty(trustStorePasswordProperty);
+
+        if (StringUtils.isBlank(trustStorePasswordValue)) {
             throw new RuntimeException("System property not found: " + MONITORING_SERVER_ADMIN_PASSWORD);
         }
 
+        SecretResolver secretResolver = CartridgeAgentConfiguration.getInstance().getSecretResolver();
+        String alias = trustStorePasswordProperty;
+
+        // Resolve the secret password.
+        if (log.isDebugEnabled()) {
+            log.debug(String.format("Trying to decrypt property: %s", trustStorePasswordProperty));
+        }
+        if (trustStorePasswordValue.equalsIgnoreCase("secretAlias:" + alias)) {
+            if (secretResolver != null && secretResolver.isInitialized()) {
+                if (log.isDebugEnabled()) {
+                    log.info("SecretResolver is initialized.");
+                }
+                if (secretResolver.isTokenProtected(alias)) {
+                    if (log.isDebugEnabled()) {
+                        log.info("SecretResolver [" + alias + "] is token protected");
+                    }
+                    trustStorePasswordValue = secretResolver.resolve(alias);
+                    if (log.isDebugEnabled()) {
+                        log.debug("SecretResolver [" + alias + "] is decrypted properly");
+                    }
+                }
+            }
+
+        }
+
+        if (trustStorePasswordValue != null) {
+            adminPassword = trustStorePasswordValue.toCharArray();
+        }
+    	
         log.info("Data Publisher configuration initialized");
     }
 
@@ -120,10 +153,10 @@ public class DataPublisherConfiguration {
     }
 
     public String getAdminPassword() {
-        return adminPassword;
+        return new String(adminPassword);
     }
 
-    public void setAdminPassword(String adminPassword) {
+    public void setAdminPassword(char[] adminPassword) {
         this.adminPassword = adminPassword;
     }
 
