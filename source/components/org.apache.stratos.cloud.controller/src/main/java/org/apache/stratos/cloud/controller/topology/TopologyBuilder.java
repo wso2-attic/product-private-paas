@@ -278,6 +278,7 @@ public class TopologyBuilder {
 		Service service = topology.getService(serviceName);
 		Cluster cluster = service.getCluster(clusterId);
 		String memberId = context.getMemberId();
+		long initTime = context.getInitTime();
 		String networkPartitionId = context.getNetworkPartitionId();
 		String lbClusterId = context.getLbClusterId();
 
@@ -289,7 +290,7 @@ public class TopologyBuilder {
 		try {
 			TopologyManager.acquireWriteLock();
 			Member member = new Member(serviceName, clusterId,
-					networkPartitionId, partitionId, memberId);
+					networkPartitionId, partitionId, memberId, initTime);
 			member.setStatus(MemberStatus.Created);
 			member.setMemberIp(privateIp);
 			member.setLbClusterId(lbClusterId);

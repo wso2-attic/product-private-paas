@@ -110,9 +110,11 @@ public class PartitionContext implements Serializable{
         XMLConfiguration conf = ConfUtil.getInstance(null).getConfiguration();
         pendingMemberExpiryTime = conf.getLong(StratosConstants.PENDING_MEMBER_EXPIRY_TIMEOUT, 900000);
         obsoltedMemberExpiryTime = conf.getLong(StratosConstants.OBSOLETED_MEMBER_EXPIRY_TIMEOUT, 86400000);
+        terminationPendingMemberExpiryTime = conf.getLong(StratosConstants.TERMINATION_PENDING_MEMBER_EXPIRY_TIMEOUT, 1800000);
         if (log.isDebugEnabled()) {
             log.debug("Member expiry time is set to: " + pendingMemberExpiryTime);
             log.debug("Member obsoleted expiry time is set to: " + obsoltedMemberExpiryTime);
+            log.debug("Termination pending member expiry time is set to: " + terminationPendingMemberExpiryTime);
         }
 
         Thread th = new Thread(new PendingMemberWatcher(this));
@@ -261,6 +263,8 @@ public class PartitionContext implements Serializable{
                 iterator.remove();
                 // add to the activated list
                 this.terminationPendingMembers.add(activeMember);
+                // track the time of adding it as termination pending member
+                terminationPendingStartedTime.put(memberId, System.currentTimeMillis());
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Active member is removed and added to the " +
                             "termination pending member list. [Member Id] %s", memberId));
@@ -458,8 +462,6 @@ public class PartitionContext implements Serializable{
                 // add to the obsolete list
                 this.obsoletedMembers.put(memberId, terminationPendingMember);
 
-                terminationPendingStartedTime.put(memberId, System.currentTimeMillis());
-
                 if (log.isDebugEnabled()) {
                     log.debug(String.format("Termination pending member is removed and added to the " +
                             "obsolete member list. [Member Id] %s", memberId));
@@ -582,6 +584,8 @@ public class PartitionContext implements Serializable{
                         long obsoleteTime = System.currentTimeMillis() - obsoleteMember.getInitTime();
                         if (obsoleteTime >= obsoltedMemberExpiryTime) {
                         	iterator.remove();
+                        	log.info(String.format("Obsolete member timeout exceeds. "
+                        			+ "Hence removing from obsolete member list. Member id : ", obsoleteMember.getMemberId()));
                         }
                     }
                 try {
@@ -620,9 +624,12 @@ public class PartitionContext implements Serializable{
                     long terminationPendingTime = System.currentTimeMillis()
                             - ctxt.getTerminationPendingStartedTimeOfMember(terminationPendingMember.getMemberId());
                     if (terminationPendingTime >= terminationPendingMemberExpiryTime) {
-                        log.info("Moving [member] " + terminationPendingMember.getMemberId() + partitionId);
                         iterator.remove();
-                        obsoletedMembers.put(terminationPendingMember.getMemberId(), terminationPendingMember);
+                        log.info(String.format("Termination pending member timeout exceeds. "
+                        		+ "Hence removing from termination pending member lists and "
+                        		+ "adding to the obsolete member list. Member id : ", terminationPendingMember.getMemberId()));
+                        ctxt.addObsoleteMember(terminationPendingMember);
+
                     }
                 }
                 try {

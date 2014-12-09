@@ -131,21 +131,34 @@ public class AutoscalerUtil {
                         MemberContext memberContext = new MemberContext();
                         memberContext.setClusterId(member.getClusterId());
                         memberContext.setMemberId(memberId);
+                        memberContext.setInitTime(member.getInitTime());
                         memberContext.setPartition(partition);
                         memberContext.setProperties(convertMemberPropsToMemberContextProps(member.getProperties()));
                         
                         if(MemberStatus.Activated.equals(member.getStatus())){
                             partitionContext.addActiveMember(memberContext);
+                            if (log.isDebugEnabled()) {
+                            		String msg = String.format("Active member loaded from topology and added to active member list, %s", member.toString());
+                            		log.debug(msg);
+                            	}
 //                            networkPartitionContext.increaseMemberCountOfPartition(partition.getNetworkPartitionId(), 1);
 //                            partitionContext.incrementCurrentActiveMemberCount(1);
 
                         } else if(MemberStatus.Created.equals(member.getStatus()) || MemberStatus.Starting.equals(member.getStatus())){
                             partitionContext.addPendingMember(memberContext);
+                            if (log.isDebugEnabled()) {
+                            		String msg = String.format("Pending member loaded from topology and added to pending member list, %s", member.toString());
+                            		log.debug(msg);
+                            	}
 
 //                            networkPartitionContext.increaseMemberCountOfPartition(partition.getNetworkPartitionId(), 1);
                         } else if(MemberStatus.ReadyToShutDown.equals((member.getStatus()))){
 
                             partitionContext.addObsoleteMember(memberContext);
+                            if (log.isDebugEnabled()) {
+                            		String msg = String.format("Obsolete member loaded from topology and added to obsolete member list, %s", member.toString());
+                            		log.debug(msg);
+                            	}
                         } else if(MemberStatus.Suspended.equals(member.getStatus())){
 //                            partitionContext.addFaultyMember(memberId);
                         }
@@ -262,15 +275,24 @@ public class AutoscalerUtil {
                     MemberContext memberContext = new MemberContext();
                     memberContext.setClusterId(member.getClusterId());
                     memberContext.setMemberId(memberId);
+                    memberContext.setInitTime(member.getInitTime());
                     memberContext.setPartition(partition);
 
                     if (MemberStatus.Activated.equals(member.getStatus())) {
                         partitionContext.addActiveMember(memberContext);
+                        if (log.isDebugEnabled()) {
+                        		String msg = String.format("Active member loaded from topology and added to active member list, %s", member.toString());
+                        		log.debug(msg);
+                        	}
 //                        networkPartitionContext.increaseMemberCountOfPartition(partition.getNetworkPartitionId(), 1);
 //                        partitionContext.incrementCurrentActiveMemberCount(1);
                     } else if (MemberStatus.Created.equals(member.getStatus()) ||
                                MemberStatus.Starting.equals(member.getStatus())) {
                         partitionContext.addPendingMember(memberContext);
+                        if (log.isDebugEnabled()) {
+                        		String msg = String.format("Pending member loaded from topology and added to pending member list, %s", member.toString());
+                        		log.debug(msg);
+                        	}
 //                        networkPartitionContext.increaseMemberCountOfPartition(partition.getNetworkPartitionId(), 1);
                     } else if (MemberStatus.Suspended.equals(member.getStatus())) {
 //                        partitionContext.addFaultyMember(memberId);
