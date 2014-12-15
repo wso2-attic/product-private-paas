@@ -593,9 +593,15 @@ public class GitBasedArtifactRepository {
             log.info("Checked out the conflicting files from the remote repository : " +
                     gitRepoCtx.getGitRemoteRepoUrl() + " successfully!");
         } catch (GitAPIException e) {
-            log.error("Checking out artifacts from index failed", e);
+            // Since there is no recovery mechanism when exception is thrown,
+            // log the error and return the status as false to the client.
+            log.error("Checking out the conflicting files from remote repository : " +
+                    gitRepoCtx.getGitRemoteRepoUrl() + " failed!", e);
         } catch (IOException e) {
-            log.error("Checking out artifacts from index failed", e);
+            // Since there is no recovery mechanism when exception is thrown,
+            // log the error and return the status as false to the client.
+            log.error("Checking out the conflicting files from remote repository : " +
+                    gitRepoCtx.getGitRemoteRepoUrl() + " failed!", e);
         }
 
         return gitOperationResult;

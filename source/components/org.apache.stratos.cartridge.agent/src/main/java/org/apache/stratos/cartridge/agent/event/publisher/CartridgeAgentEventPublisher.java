@@ -187,7 +187,9 @@ public class CartridgeAgentEventPublisher {
      * Publish an event indicating that artifact deployment has started.
      */
     public static void publishArtifactDeploymentStartedEvent() {
-        log.debug("Publishing artifact deployment started event!");
+        if (log.isDebugEnabled()) {
+            log.debug("Publishing artifact deployment started event!");
+        }
         ArtifactDeploymentStartedEvent event = new ArtifactDeploymentStartedEvent(
                 CartridgeAgentConfiguration.getInstance().getServiceName(),
                 CartridgeAgentConfiguration.getInstance().getClusterId(),
@@ -197,8 +199,9 @@ public class CartridgeAgentEventPublisher {
         );
 
         EventPublisherPool.getPublisher(Constants.INSTANCE_STATUS_TOPIC).publish(event);
-        log.debug("Artifact deployment started event published!");
-        
+        if (log.isDebugEnabled()) {
+            log.debug("Artifact deployment started event published!");
+        }
     }
 
     /**
@@ -208,7 +211,9 @@ public class CartridgeAgentEventPublisher {
      */
     public static void publishArtifactDeploymentCompletedEvent(Map<String, Long> modifiedArtifacts) {
         if (modifiedArtifacts != null) {
-            log.debug("Publishing artifact deployment finished event!");
+            if (log.isDebugEnabled()) {
+                log.debug("Publishing artifact deployment finished event!");
+            }
             ArtifactDeploymentCompletedEvent event = new ArtifactDeploymentCompletedEvent(
                     CartridgeAgentConfiguration.getInstance().getServiceName(),
                     CartridgeAgentConfiguration.getInstance().getClusterId(),
@@ -221,7 +226,9 @@ public class CartridgeAgentEventPublisher {
                     modifiedArtifacts
             );
             EventPublisherPool.getPublisher(Constants.INSTANCE_STATUS_TOPIC).publish(event);
-            log.debug("Artifact deployment finished event published!");
+            if (log.isDebugEnabled()) {
+                log.debug("Artifact deployment finished event published!");
+            }
         }
     }
 
