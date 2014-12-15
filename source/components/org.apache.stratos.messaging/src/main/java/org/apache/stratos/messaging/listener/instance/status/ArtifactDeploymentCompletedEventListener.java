@@ -26,3 +26,4 @@ import org.apache.stratos.messaging.listener.EventListener;
  */
 public abstract class ArtifactDeploymentCompletedEventListener extends EventListener {
 }
+
