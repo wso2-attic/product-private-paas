@@ -147,11 +147,9 @@ public class AutoscalerTopologyEventReceiver implements Runnable {
 
                         // add member to obsolete list since the member is shutdown ready member
                         partitionCtxt.movePendingTerminationMemberToObsoleteMembers(memberId);
-                    }
-
-                    if (log.isInfoEnabled()) {
-                        log.info(String.format("Member is terminated and removed from the active members list: [member] %s [partition] %s [cluster] %s ",
-                                               memberId, partitionId, clusterId));
+                        log.info(String.format("MemberReadyToShutdown event received. "
+                        		+ "Moved the member from termination pending member list to the obsolete list: "
+                        		+ "[member] %s [partition] %s [cluster] %s ", memberId, partitionId, clusterId));
                     }
 
                 } catch (Exception e) {

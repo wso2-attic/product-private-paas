@@ -40,8 +40,10 @@
 	    <member>
 	        <!-- this is the maximum time(ms) a member can be in pending member state -->
                 <pendingMemberExpiryTimeout>900000</pendingMemberExpiryTimeout>
-                <!-- this is the maximum time(ms) a member can bee in obsoleted member state -->
+                <!-- this is the maximum time(ms) a member can be in obsoleted member state -->
                 <obsoletedMemberExpiryTimeout>86400000</obsoletedMemberExpiryTimeout>
+		<!-- this is the maximum time(ms) a member can be in pending termination member state -->
+                <terminationPendingMemberExpiryTimeout>1800000</terminationPendingMemberExpiryTimeout>
 	    </member>
 	    <!-- monitor task interval -->
 	    <monitorInterval>90000</monitorInterval>

@@ -110,7 +110,8 @@ public class TopologyEventPublisher {
 
     public static void sendInstanceSpawnedEvent(String serviceName, String clusterId, String networkPartitionId, String partitionId, String memberId,
     		String lbClusterId, String publicIp, String privateIp, MemberContext context) {
-        InstanceSpawnedEvent instanceSpawnedEvent = new InstanceSpawnedEvent(serviceName, clusterId, networkPartitionId, partitionId, memberId);
+    	long initTime = context.getInitTime();
+        InstanceSpawnedEvent instanceSpawnedEvent = new InstanceSpawnedEvent(serviceName, clusterId, networkPartitionId, partitionId, memberId, initTime);
         instanceSpawnedEvent.setLbClusterId(lbClusterId);
         instanceSpawnedEvent.setMemberIp(privateIp);
         instanceSpawnedEvent.setMemberPublicIp(publicIp);
