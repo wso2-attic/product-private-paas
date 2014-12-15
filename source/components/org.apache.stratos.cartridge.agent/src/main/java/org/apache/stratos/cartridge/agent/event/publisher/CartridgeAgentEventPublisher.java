@@ -198,6 +198,7 @@ public class CartridgeAgentEventPublisher {
 
         EventPublisherPool.getPublisher(Constants.INSTANCE_STATUS_TOPIC).publish(event);
         log.debug("Artifact deployment started event published!");
+        
     }
 
     /**
