@@ -416,7 +416,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         Service service = topology.getService(memberTerminatedEvent.getServiceName());
         Cluster cluster = service.getCluster(memberTerminatedEvent.getClusterId());
         Member terminatedMember = cluster.getMember(memberTerminatedEvent.getMemberId());
-        String lbClusterId = cluster.getMember(memberTerminatedEvent.getClusterId()).getLbClusterId();
+        String lbClusterId = terminatedMember.getLbClusterId();
 
         // check whether terminated member is within the same cluster, LB cluster or service group
         if (ExtensionUtils.isRelevantMemberEvent(memberTerminatedEvent.getServiceName(),
@@ -475,7 +475,7 @@ public class DefaultExtensionHandler implements ExtensionHandler {
         Service service = topology.getService(memberSuspendedEvent.getServiceName());
         Cluster cluster = service.getCluster(memberSuspendedEvent.getClusterId());
         Member suspendedMember = cluster.getMember(memberSuspendedEvent.getMemberId());
-        String lbClusterId = cluster.getMember(memberSuspendedEvent.getClusterId()).getLbClusterId();
+        String lbClusterId = suspendedMember.getLbClusterId();
 
         // check whether new member is in the same member cluster or LB cluster of this instance
         if (ExtensionUtils.isRelevantMemberEvent(memberSuspendedEvent.getServiceName(),
