@@ -50,6 +50,7 @@ import org.wso2.siddhi.query.api.extension.annotation.SiddhiExtension;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 @SiddhiExtension(namespace = "stratos", function = "faultHandling")
@@ -58,6 +59,7 @@ public class FaultHandlingWindowProcessor extends WindowProcessor implements Run
     private static final int TIME_OUT = 60 * 1000;
     static final Logger log = Logger.getLogger(FaultHandlingWindowProcessor.class);
     private ScheduledExecutorService eventRemoverScheduler;
+    private ScheduledFuture<?> lastSchedule;
     private int subjectedAttrIndex;
     private ThreadBarrier threadBarrier;
     private long timeToKeep;
@@ -85,11 +87,10 @@ public class FaultHandlingWindowProcessor extends WindowProcessor implements Run
 
     protected void addDataToMap(InEvent event) {
         if (memberID != null) {
-            String id = (String)event.getData()[subjectedAttrIndex];
+            String id = (String) event.getData()[subjectedAttrIndex];
             memberTimeStampMap.put(id, event.getTimeStamp());
             log.debug("Event received from [member-id] " + id);
-        }
-        else {
+        } else {
             log.error("NULL member ID in the event received");
         }
     }
@@ -113,21 +114,21 @@ public class FaultHandlingWindowProcessor extends WindowProcessor implements Run
     *  memberTimeStampMap if not already exists. This will allow the system to recover
     *  from any inconsistent state caused by MB/CEP failures.
     */
-    private void loadFromTopology(){
-        if (TopologyManager.getTopology().isInitialized()){
+    private void loadFromTopology() {
+        if (TopologyManager.getTopology().isInitialized()) {
             TopologyManager.acquireReadLock();
             memberIdMap.clear();
             long currentTimeStamp = System.currentTimeMillis();
             Iterator<Service> servicesItr = TopologyManager.getTopology().getServices().iterator();
-            while(servicesItr.hasNext()){
+            while (servicesItr.hasNext()) {
                 Service service = servicesItr.next();
                 Iterator<Cluster> clusterItr = service.getClusters().iterator();
-                while(clusterItr.hasNext()){
+                while (clusterItr.hasNext()) {
                     Cluster cluster = clusterItr.next();
                     Iterator<Member> memberItr = cluster.getMembers().iterator();
-                    while(memberItr.hasNext()){
+                    while (memberItr.hasNext()) {
                         Member member = memberItr.next();
-                        if (member.getStatus().equals(MemberStatus.Activated)){
+                        if (member.getStatus().equals(MemberStatus.Activated)) {
                             memberTimeStampMap.putIfAbsent(member.getMemberId(), currentTimeStamp);
                             memberIdMap.put(member.getMemberId(), member);
                         }
@@ -136,15 +137,15 @@ public class FaultHandlingWindowProcessor extends WindowProcessor implements Run
             }
             TopologyManager.releaseReadLock();
         }
-        if (log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Member TimeStamp Map: " + memberTimeStampMap);
             log.debug("Member ID Map: " + memberIdMap);
         }
     }
 
-    private void publishMemberFault(String memberID){
+    private void publishMemberFault(String memberID) {
         Member member = memberIdMap.get(memberID);
-        if (member == null){
+        if (member == null) {
             log.error("Failed to publish MemberFault event. Member having [member-id] " + memberID + " does not exist in topology");
             return;
         }
@@ -154,7 +155,7 @@ public class FaultHandlingWindowProcessor extends WindowProcessor implements Run
         headers.put(Constants.EVENT_CLASS_NAME, memberFaultEvent.getClass().getName());
         healthStatPublisher.publish(MemberFaultEventMap, headers, true);
 
-        if (log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Published MemberFault event for [member-id] " + memberID);
         }
     }
@@ -167,8 +168,8 @@ public class FaultHandlingWindowProcessor extends WindowProcessor implements Run
             loadFromTopology();
             Iterator it = memberTimeStampMap.entrySet().iterator();
 
-            while ( it.hasNext() ) {
-                Map.Entry pair = (Map.Entry)it.next();
+            while (it.hasNext()) {
+                Map.Entry pair = (Map.Entry) it.next();
                 long currentTime = System.currentTimeMillis();
                 Long eventTimeStamp = (Long) pair.getValue();
 
@@ -178,12 +179,16 @@ public class FaultHandlingWindowProcessor extends WindowProcessor implements Run
                     publishMemberFault((String) pair.getKey());
                 }
             }
-            if (log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug("Fault handling processor iteration completed with [time-stamp map length] " + memberTimeStampMap.size() + " [activated member-count] " + memberIdMap.size());
             }
-            eventRemoverScheduler.schedule(this, timeToKeep, TimeUnit.MILLISECONDS);
         } catch (Throwable t) {
             log.error(t.getMessage(), t);
+        } finally {
+            if (lastSchedule != null) {
+                lastSchedule.cancel(false);
+            }
+            lastSchedule = eventRemoverScheduler.schedule(this, timeToKeep, TimeUnit.MILLISECONDS);
         }
     }
 
@@ -207,9 +212,9 @@ public class FaultHandlingWindowProcessor extends WindowProcessor implements Run
             timeToKeep = ((LongConstant) parameters[0]).getValue();
         }
 
-        memberID = ((Variable)parameters[1]).getAttributeName();
+        memberID = ((Variable) parameters[1]).getAttributeName();
 
-        String subjectedAttr = ((Variable)parameters[1]).getAttributeName();
+        String subjectedAttr = ((Variable) parameters[1]).getAttributeName();
         subjectedAttrIndex = streamDefinition.getAttributePosition(subjectedAttr);
 
         if (this.siddhiContext.isDistributedProcessingEnabled()) {
@@ -230,12 +235,18 @@ public class FaultHandlingWindowProcessor extends WindowProcessor implements Run
 
     @Override
     public void schedule() {
-        eventRemoverScheduler.schedule(this, timeToKeep, TimeUnit.MILLISECONDS);
+        if (lastSchedule != null) {
+            lastSchedule.cancel(false);
+        }
+        lastSchedule = eventRemoverScheduler.schedule(this, timeToKeep, TimeUnit.MILLISECONDS);
     }
 
     @Override
     public void scheduleNow() {
-        eventRemoverScheduler.schedule(this, 0, TimeUnit.MILLISECONDS);
+        if (lastSchedule != null) {
+            lastSchedule.cancel(false);
+        }
+        lastSchedule = eventRemoverScheduler.schedule(this, 0, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -249,7 +260,7 @@ public class FaultHandlingWindowProcessor extends WindowProcessor implements Run
     }
 
     @Override
-    public void destroy(){
+    public void destroy() {
         this.topologyEventReceiver.terminate();
         window = null;
     }

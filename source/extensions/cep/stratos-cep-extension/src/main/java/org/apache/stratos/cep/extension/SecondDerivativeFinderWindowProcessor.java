@@ -46,6 +46,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
 
 @SiddhiExtension(namespace = "stratos", function = "secondDerivative")
@@ -53,6 +54,7 @@ public class SecondDerivativeFinderWindowProcessor extends WindowProcessor imple
 
     static final Logger log = Logger.getLogger(SecondDerivativeFinderWindowProcessor.class);
     private ScheduledExecutorService eventRemoverScheduler;
+    private ScheduledFuture<?> lastSchedule;
     private long timeToKeep;
     private int subjectedAttrIndex;
     private Attribute.Type subjectedAttrType;
@@ -100,102 +102,101 @@ public class SecondDerivativeFinderWindowProcessor extends WindowProcessor imple
 
 
     @Override
-	public void run() {
-		acquireLock();
-		try {
-			long scheduledTime = System.currentTimeMillis();
-			try {
-				oldEventList.clear();
-				while (true) {
-					threadBarrier.pass();
-					RemoveEvent removeEvent = (RemoveEvent) window.poll();
-					if (removeEvent == null) {
-						if (oldEventList.size() > 0) {
-							nextProcessor.process(new RemoveListEvent(
-							                                          oldEventList.toArray(new RemoveEvent[oldEventList.size()])));
-							oldEventList.clear();
-						}
+    public void run() {
+        acquireLock();
+        try {
+            long scheduledTime = System.currentTimeMillis();
+            try {
+                oldEventList.clear();
+                while (true) {
+                    threadBarrier.pass();
+                    RemoveEvent removeEvent = (RemoveEvent) window.poll();
+                    if (removeEvent == null) {
+                        if (oldEventList.size() > 0) {
+                            nextProcessor.process(new RemoveListEvent(
+                                    oldEventList.toArray(new RemoveEvent[oldEventList.size()])));
+                            oldEventList.clear();
+                        }
 
-						if (newEventList.size() > 0) {
-							InEvent[] inEvents =
-							                     newEventList.toArray(new InEvent[newEventList.size()]);
-							for (InEvent inEvent : inEvents) {
-								window.put(new RemoveEvent(inEvent, -1));
-							}
-							
-							// in order to find second derivative, we need at least 3 events.
-							if (newEventList.size() > 2) {
+                        if (newEventList.size() > 0) {
+                            InEvent[] inEvents = newEventList.toArray(new InEvent[newEventList.size()]);
 
-								InEvent firstDerivative1 =
-								                           gradient(inEvents[0],
-								                                    inEvents[(newEventList.size() / 2) - 1],
-								                                    null)[0];
-								InEvent firstDerivative2 =
-								                           gradient(inEvents[newEventList.size() / 2],
-								                                    inEvents[newEventList.size() - 1],
-								                                    null)[0];
-								InEvent[] secondDerivative =
-								                             gradient(firstDerivative1,
-								                                      firstDerivative2, Type.DOUBLE);
+                            // in order to find second derivative, we need at least 3 events.
+                            if (newEventList.size() > 2) {
 
-								for (InEvent inEvent : secondDerivative) {
-									window.put(new RemoveEvent(inEvent, -1));
-								}
-								nextProcessor.process(new InListEvent(secondDerivative));
-							} else {
-								log.debug("Insufficient events to calculate second derivative. We need at least 3 events. Current event count: " +
-								          newEventList.size());
-							}
+                                InEvent firstDerivative1 =
+                                        gradient(inEvents[0],
+                                                inEvents[(newEventList.size() / 2) - 1],
+                                                null)[0];
+                                InEvent firstDerivative2 =
+                                        gradient(inEvents[newEventList.size() / 2],
+                                                inEvents[newEventList.size() - 1],
+                                                null)[0];
+                                InEvent[] secondDerivative =
+                                        gradient(firstDerivative1,
+                                                firstDerivative2, Type.DOUBLE);
 
-							newEventList.clear();
-						}
+                                for (InEvent inEvent : secondDerivative) {
+                                    window.put(new RemoveEvent(inEvent, -1));
+                                }
+                                nextProcessor.process(new InListEvent(secondDerivative));
+                            } else {
+                                log.debug("Insufficient events to calculate second derivative. We need at least 3 events. Current event count: " +
+                                        newEventList.size());
+                            }
 
-						long diff = timeToKeep - (System.currentTimeMillis() - scheduledTime);
-						if (diff > 0) {
-							try {
-								eventRemoverScheduler.schedule(this, diff, TimeUnit.MILLISECONDS);
-							} catch (RejectedExecutionException ex) {
-								log.warn("scheduling cannot be accepted for execution: elementID " +
-								         elementId);
-							}
-							break;
-						}
-						scheduledTime = System.currentTimeMillis();
-					} else {
-						oldEventList.add(new RemoveEvent(removeEvent, System.currentTimeMillis()));
-					}
-				}
-			} catch (Throwable t) {
-				log.error(t.getMessage(), t);
-			}
-		} finally {
-			releaseLock();
-		}
-	}
+                            newEventList.clear();
+                        }
+
+                        long diff = timeToKeep - (System.currentTimeMillis() - scheduledTime);
+                        if (diff > 0) {
+                            try {
+                                if (lastSchedule != null) {
+                                    lastSchedule.cancel(false);
+                                }
+                                lastSchedule = eventRemoverScheduler.schedule(this, diff, TimeUnit.MILLISECONDS);
+                            } catch (RejectedExecutionException ex) {
+                                log.warn("scheduling cannot be accepted for execution: elementID " +
+                                        elementId);
+                            }
+                            break;
+                        }
+                        scheduledTime = System.currentTimeMillis();
+                    } else {
+                        oldEventList.add(new RemoveEvent(removeEvent, System.currentTimeMillis()));
+                    }
+                }
+            } catch (Throwable t) {
+                log.error(t.getMessage(), t);
+            }
+        } finally {
+            releaseLock();
+        }
+    }
 
 
     /**
      * This function will calculate the linear gradient (per second) of the events received during
      * a specified time period.
      */
-	private InEvent[] gradient(InEvent firstInEvent, InEvent lastInEvent, Type type) {
-		Type attrType = type == null ? subjectedAttrType : type;
-		double firstVal = 0.0, lastVal = 0.0;
-		// FIXME I'm not sure whether there's some other good way to do correct casting,
-		// based on the type.
-		if (Type.DOUBLE.equals(attrType)) {
-			firstVal = (Double) firstInEvent.getData()[subjectedAttrIndex];
-			lastVal = (Double) lastInEvent.getData()[subjectedAttrIndex];
-		} else if (Type.INT.equals(attrType)) {
-			firstVal = (Integer) firstInEvent.getData()[subjectedAttrIndex];
-			lastVal = (Integer) lastInEvent.getData()[subjectedAttrIndex];
-		} else if (Type.LONG.equals(attrType)) {
-			firstVal = (Long) firstInEvent.getData()[subjectedAttrIndex];
-			lastVal = (Long) lastInEvent.getData()[subjectedAttrIndex];
-		} else if (Type.FLOAT.equals(attrType)) {
-			firstVal = (Float) firstInEvent.getData()[subjectedAttrIndex];
-			lastVal = (Float) lastInEvent.getData()[subjectedAttrIndex];
-		}
+    private InEvent[] gradient(InEvent firstInEvent, InEvent lastInEvent, Type type) {
+        Type attrType = type == null ? subjectedAttrType : type;
+        double firstVal = 0.0, lastVal = 0.0;
+        // FIXME I'm not sure whether there's some other good way to do correct casting,
+        // based on the type.
+        if (Type.DOUBLE.equals(attrType)) {
+            firstVal = (Double) firstInEvent.getData()[subjectedAttrIndex];
+            lastVal = (Double) lastInEvent.getData()[subjectedAttrIndex];
+        } else if (Type.INT.equals(attrType)) {
+            firstVal = (Integer) firstInEvent.getData()[subjectedAttrIndex];
+            lastVal = (Integer) lastInEvent.getData()[subjectedAttrIndex];
+        } else if (Type.LONG.equals(attrType)) {
+            firstVal = (Long) firstInEvent.getData()[subjectedAttrIndex];
+            lastVal = (Long) lastInEvent.getData()[subjectedAttrIndex];
+        } else if (Type.FLOAT.equals(attrType)) {
+            firstVal = (Float) firstInEvent.getData()[subjectedAttrIndex];
+            lastVal = (Float) lastInEvent.getData()[subjectedAttrIndex];
+        }
 
         long t1 = firstInEvent.getTimeStamp();
         long t2 = lastInEvent.getTimeStamp();
@@ -213,14 +214,14 @@ public class SecondDerivativeFinderWindowProcessor extends WindowProcessor imple
         Object[] data = firstInEvent.getData().clone();
         data[subjectedAttrIndex] = gradient;
         InEvent gradientEvent =
-                new InEvent(firstInEvent.getStreamId(), t1+((t2-t1)/2),
+                new InEvent(firstInEvent.getStreamId(), t1 + ((t2 - t1) / 2),
                         data);
         InEvent[] output = new InEvent[1];
         output[0] = gradientEvent;
         return output;
-	}
+    }
 
-	@Override
+    @Override
     protected Object[] currentState() {
         return new Object[]{window.currentState(), oldEventList, newEventList};
     }
@@ -241,8 +242,8 @@ public class SecondDerivativeFinderWindowProcessor extends WindowProcessor imple
         } else {
             timeToKeep = ((LongConstant) parameters[0]).getValue();
         }
-        
-        String subjectedAttr = ((Variable)parameters[1]).getAttributeName();
+
+        String subjectedAttr = ((Variable) parameters[1]).getAttributeName();
         subjectedAttrIndex = streamDefinition.getAttributePosition(subjectedAttr);
         subjectedAttrType = streamDefinition.getAttributeType(subjectedAttr);
 
@@ -265,11 +266,17 @@ public class SecondDerivativeFinderWindowProcessor extends WindowProcessor imple
 
     @Override
     public void schedule() {
-        eventRemoverScheduler.schedule(this, timeToKeep, TimeUnit.MILLISECONDS);
+        if (lastSchedule != null) {
+            lastSchedule.cancel(false);
+        }
+        lastSchedule = eventRemoverScheduler.schedule(this, timeToKeep, TimeUnit.MILLISECONDS);
     }
 
     public void scheduleNow() {
-        eventRemoverScheduler.schedule(this, 0, TimeUnit.MILLISECONDS);
+        if (lastSchedule != null) {
+            lastSchedule.cancel(false);
+        }
+        lastSchedule = eventRemoverScheduler.schedule(this, 0, TimeUnit.MILLISECONDS);
     }
 
     @Override
@@ -282,9 +289,9 @@ public class SecondDerivativeFinderWindowProcessor extends WindowProcessor imple
     }
 
     @Override
-    public void destroy(){
-    	oldEventList = null;
-    	newEventList = null;
-    	window = null;
+    public void destroy() {
+        oldEventList = null;
+        newEventList = null;
+        window = null;
     }
 }
