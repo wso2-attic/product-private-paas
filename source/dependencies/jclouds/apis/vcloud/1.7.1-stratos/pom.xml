@@ -139,8 +139,4 @@
       </build>
     </profile>
   </profiles>
-
-  <scm>
-    <tag>4.0.0-incubating-rc1</tag>
-  </scm>
 </project>
