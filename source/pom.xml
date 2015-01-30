@@ -22,9 +22,9 @@
 
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.apache</groupId>
-        <artifactId>apache</artifactId>
-        <version>13</version>
+        <groupId>org.wso2</groupId>
+        <artifactId>wso2</artifactId>
+        <version>1</version>
     </parent>
 
     <groupId>org.apache.stratos</groupId>
@@ -43,7 +43,7 @@
             <distribution>repo</distribution>
         </license>
     </licenses>
-    
+
     <organization>
         <name>The Apache Software Foundation</name>
         <url>http://www.apache.org/</url>
@@ -71,10 +71,10 @@
     </mailingLists>
 
     <scm>
-        <connection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-stratos.git</connection>
-        <developerConnection>scm:git:https://git-wip-us.apache.org/repos/asf/incubator-stratos.git</developerConnection>
-        <url>https://git-wip-us.apache.org/repos/asf?p=incubator-stratos.git</url>
-        <tag>4.0.0-incubating-rc1</tag>
+        <url>https://github.com/wso2/product-private-paas.git</url>
+        <developerConnection>scm:git:https://github.com/wso2/product-private-paas.git</developerConnection>
+        <connection>scm:git:https://github.com/wso2/product-private-paas.git</connection>
+        <tag>HEAD</tag>
     </scm>
 
     <modules>
@@ -98,6 +98,14 @@
             </releases>
         </repository>
     </repositories>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>WSO2 Release Distribution Repository</name>
+            <url>http://maven.wso2.org/nexus/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <profiles>
         <profile>
@@ -144,14 +152,14 @@
                                 <exclude>**/templates/*.cfg.template</exclude>
                                 <exclude>**/instrumentation.txt</exclude>
                                 <exclude>**/*json</exclude>
-				<exclude>**/.idea/**/*</exclude>
-				<exclude>**/tlds/**/*</exclude>
-				<exclude>**/highlighter/**/*</exclude>
-				<exclude>**/yui/**/*</exclude>
-				<exclude>**/jqueryui/**/*</exclude>
-				<exclude>**/scriptaculous/**/*</exclude>
-				<exclude>**/prototype-1.6.js</exclude>
-				<exclude>**/prototype.js</exclude>
+                                <exclude>**/.idea/**/*</exclude>
+                                <exclude>**/tlds/**/*</exclude>
+                                <exclude>**/highlighter/**/*</exclude>
+                                <exclude>**/yui/**/*</exclude>
+                                <exclude>**/jqueryui/**/*</exclude>
+                                <exclude>**/scriptaculous/**/*</exclude>
+                                <exclude>**/prototype-1.6.js</exclude>
+                                <exclude>**/prototype.js</exclude>
 
                                 <!-- Added following based on jclouds -->
                                 <exclude>**/src/test/resources/**/*.xml</exclude>
@@ -159,9 +167,9 @@
                                 <exclude>**/services/*LoggingModule</exclude>
                                 <exclude>**/services/*ApiMetadata</exclude>
                                 <exclude>**/services/*ProviderMetadata</exclude>
-				<exclude>**/dhtmlHistory.js</exclude>
+                                <exclude>**/dhtmlHistory.js</exclude>
                             </excludes>
-			    <excludeSubProjects>false</excludeSubProjects>
+                            <excludeSubProjects>false</excludeSubProjects>
                         </configuration>
                         <executions>
                             <execution>
@@ -176,7 +184,7 @@
             </build>
         </profile>
 
-	<profile>
+        <profile>
             <id>addLicense</id>
             <build>
                 <plugins>
@@ -191,7 +199,7 @@
                     <plugin>
                         <groupId>org.apache.rat</groupId>
                         <artifactId>apache-rat-plugin</artifactId>
-			<version>0.10</version>
+                        <version>0.10</version>
                         <configuration>
                             <excludes>
                                 <exclude>**/target/**/*</exclude>
@@ -230,113 +238,113 @@
                                 <exclude>**/services/*ApiMetadata</exclude>
                                 <exclude>**/services/*ProviderMetadata</exclude>
                             </excludes>
-			    <licenses>
-            			<license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-              			<licenseFamilyCategory>BSD</licenseFamilyCategory>
-              			<licenseFamilyName>The BSD License</licenseFamilyName>
-              			<patterns>
-                			<pattern>The BSD License</pattern>
-              			</patterns>
-            			</license>
-				<license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                <licenseFamilyCategory>CDDL</licenseFamilyCategory>
-                                <licenseFamilyName>COMMON DEVELOPMENT AND DISTRIBUTION LICENSE Version 1.0</licenseFamilyName>
-                                <patterns>
+                            <licenses>
+                                <license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
+                                    <licenseFamilyCategory>BSD</licenseFamilyCategory>
+                                    <licenseFamilyName>The BSD License</licenseFamilyName>
+                                    <patterns>
+                                        <pattern>The BSD License</pattern>
+                                    </patterns>
+                                </license>
+                                <license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
+                                    <licenseFamilyCategory>CDDL</licenseFamilyCategory>
+                                    <licenseFamilyName>COMMON DEVELOPMENT AND DISTRIBUTION LICENSE Version 1.0</licenseFamilyName>
+                                    <patterns>
                                         <pattern>COMMON DEVELOPMENT AND DISTRIBUTION LICENSE</pattern>
-                                </patterns>
+                                    </patterns>
                                 </license>
-				<license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                <licenseFamilyCategory>EPL</licenseFamilyCategory>
-                                <licenseFamilyName>Eclipse Public License - v 1.0</licenseFamilyName>
-                                <patterns>
+                                <license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
+                                    <licenseFamilyCategory>EPL</licenseFamilyCategory>
+                                    <licenseFamilyName>Eclipse Public License - v 1.0</licenseFamilyName>
+                                    <patterns>
                                         <pattern>Eclipse Public License</pattern>
-                                </patterns>
+                                    </patterns>
                                 </license>
-				<license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                <licenseFamilyCategory>MIT</licenseFamilyCategory>
-                                <licenseFamilyName>The MIT License (MIT)</licenseFamilyName>
-                                <patterns>
+                                <license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
+                                    <licenseFamilyCategory>MIT</licenseFamilyCategory>
+                                    <licenseFamilyName>The MIT License (MIT)</licenseFamilyName>
+                                    <patterns>
                                         <pattern>MIT License</pattern>
-                                </patterns>
+                                    </patterns>
                                 </license>
-				<license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                <licenseFamilyCategory>JSMON</licenseFamilyCategory>
-                                <licenseFamilyName>JSMON</licenseFamilyName>
-                                <patterns>
+                                <license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
+                                    <licenseFamilyCategory>JSMON</licenseFamilyCategory>
+                                    <licenseFamilyName>JSMON</licenseFamilyName>
+                                    <patterns>
                                         <pattern>JSMON</pattern>
-                                </patterns>
+                                    </patterns>
                                 </license>
-				<license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                <licenseFamilyCategory>JDOM</licenseFamilyCategory>
-                                <licenseFamilyName>JDOM</licenseFamilyName>
-                                <patterns>
+                                <license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
+                                    <licenseFamilyCategory>JDOM</licenseFamilyCategory>
+                                    <licenseFamilyName>JDOM</licenseFamilyName>
+                                    <patterns>
                                         <pattern>JDOM</pattern>
-                                </patterns>
+                                    </patterns>
                                 </license>
-				<license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                <licenseFamilyCategory>JSON</licenseFamilyCategory>
-                                <licenseFamilyName>The JSON License</licenseFamilyName>
-                                <patterns>
+                                <license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
+                                    <licenseFamilyCategory>JSON</licenseFamilyCategory>
+                                    <licenseFamilyName>The JSON License</licenseFamilyName>
+                                    <patterns>
                                         <pattern>JSON License</pattern>
-                                </patterns>
+                                    </patterns>
                                 </license>
-				<license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                <licenseFamilyCategory>MPL10</licenseFamilyCategory>
-                                <licenseFamilyName>MOZILLA PUBLIC LICENSE Version 1.0</licenseFamilyName>
-                                <patterns>
+                                <license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
+                                    <licenseFamilyCategory>MPL10</licenseFamilyCategory>
+                                    <licenseFamilyName>MOZILLA PUBLIC LICENSE Version 1.0</licenseFamilyName>
+                                    <patterns>
                                         <pattern>MOZILLA PUBLIC LICENSE</pattern>
-                                </patterns>
+                                    </patterns>
                                 </license>
-				<license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                <licenseFamilyCategory>SNAPTREE</licenseFamilyCategory>
-                                <licenseFamilyName>SNAPTREE LICENSE</licenseFamilyName>
-                                <patterns>
+                                <license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
+                                    <licenseFamilyCategory>SNAPTREE</licenseFamilyCategory>
+                                    <licenseFamilyName>SNAPTREE LICENSE</licenseFamilyName>
+                                    <patterns>
                                         <pattern>SNAPTREE LICENSE</pattern>
-                                </patterns>
+                                    </patterns>
                                 </license>
-				<license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                <licenseFamilyCategory>CPL1</licenseFamilyCategory>
-                                <licenseFamilyName>Common Public License 1.0</licenseFamilyName>
-                                <patterns>
+                                <license implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
+                                    <licenseFamilyCategory>CPL1</licenseFamilyCategory>
+                                    <licenseFamilyName>Common Public License 1.0</licenseFamilyName>
+                                    <patterns>
                                         <pattern>CPL</pattern>
-                                </patterns>
+                                    </patterns>
                                 </license>
-          		    </licenses>
-			    <licenseFamilies>
-            			<licenseFamily implementation="org.apache.rat.license.SimpleLicenseFamily">
-              			<familyName>The BSD LicenseThe BSD License</familyName>
-            			</licenseFamily>
+                            </licenses>
+                            <licenseFamilies>
                                 <licenseFamily implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                <familyName>COMMON DEVELOPMENT AND DISTRIBUTION LICENSE Version 1.0</familyName>
-                                </licenseFamily>				
-                                <licenseFamily implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                <familyName>Eclipse Public License - v 1.0</familyName>
+                                    <familyName>The BSD LicenseThe BSD License</familyName>
                                 </licenseFamily>
                                 <licenseFamily implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                <familyName>The MIT License (MIT)</familyName>
+                                    <familyName>COMMON DEVELOPMENT AND DISTRIBUTION LICENSE Version 1.0</familyName>
                                 </licenseFamily>
                                 <licenseFamily implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                <familyName>JSMON</familyName>
+                                    <familyName>Eclipse Public License - v 1.0</familyName>
                                 </licenseFamily>
                                 <licenseFamily implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                <familyName>JDOM</familyName>
+                                    <familyName>The MIT License (MIT)</familyName>
                                 </licenseFamily>
                                 <licenseFamily implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                <familyName>The JSON License</familyName>
+                                    <familyName>JSMON</familyName>
                                 </licenseFamily>
                                 <licenseFamily implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                <familyName>MOZILLA PUBLIC LICENSE Version 1.0</familyName>
+                                    <familyName>JDOM</familyName>
                                 </licenseFamily>
                                 <licenseFamily implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                <familyName>SNAPTREE LICENSE</familyName>
+                                    <familyName>The JSON License</familyName>
                                 </licenseFamily>
                                 <licenseFamily implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                <familyName>Common Public License 1.0</familyName>
+                                    <familyName>MOZILLA PUBLIC LICENSE Version 1.0</familyName>
                                 </licenseFamily>
-          		    </licenseFamilies>
-			    <addLicenseHeaders>forced</addLicenseHeaders>
+                                <licenseFamily implementation="org.apache.rat.license.SimpleLicenseFamily">
+                                    <familyName>SNAPTREE LICENSE</familyName>
+                                </licenseFamily>
+                                <licenseFamily implementation="org.apache.rat.license.SimpleLicenseFamily">
+                                    <familyName>Common Public License 1.0</familyName>
+                                </licenseFamily>
+                            </licenseFamilies>
+                            <addLicenseHeaders>forced</addLicenseHeaders>
                             <ignoreErrors>false</ignoreErrors>
-			    <excludeSubProjects>false</excludeSubProjects>
+                            <excludeSubProjects>false</excludeSubProjects>
                         </configuration>
                         <executions>
                             <execution>
