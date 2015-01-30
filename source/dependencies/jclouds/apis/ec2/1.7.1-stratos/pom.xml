@@ -31,6 +31,21 @@
   <description>jclouds components to access an implementation of EC2</description>
   <packaging>bundle</packaging>
 
+    <scm>
+        <url>https://github.com/wso2/product-private-paas.git</url>
+        <developerConnection>scm:git:https://github.com/wso2/product-private-paas.git</developerConnection>
+        <connection>scm:git:https://github.com/wso2/product-private-paas.git</connection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <distributionManagement>
+        <repository>
+            <id>nexus-releases</id>
+            <name>WSO2 Release Distribution Repository</name>
+            <url>http://maven.wso2.org/nexus/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
+
   <properties>
     <jclouds.version>1.7.1</jclouds.version>
     <test.ec2.endpoint>https://ec2.us-east-1.amazonaws.com</test.ec2.endpoint>
