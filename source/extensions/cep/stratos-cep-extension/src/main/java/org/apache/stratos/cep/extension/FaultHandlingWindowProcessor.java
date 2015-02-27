@@ -18,6 +18,31 @@
  */
 package org.apache.stratos.cep.extension;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.net.SocketAddress;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Properties;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
+
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamReader;
+
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.stratos.messaging.broker.publish.EventPublisher;
 import org.apache.stratos.messaging.broker.publish.EventPublisherPool;
@@ -29,6 +54,7 @@ import org.apache.stratos.messaging.event.health.stat.MemberFaultEvent;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyEventReceiver;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyManager;
 import org.apache.stratos.messaging.util.Constants;
+import org.wso2.carbon.utils.CarbonUtils;
 import org.wso2.siddhi.core.config.SiddhiContext;
 import org.wso2.siddhi.core.event.StreamEvent;
 import org.wso2.siddhi.core.event.in.InEvent;
@@ -46,12 +72,6 @@ import org.wso2.siddhi.query.api.expression.Variable;
 import org.wso2.siddhi.query.api.expression.constant.IntConstant;
 import org.wso2.siddhi.query.api.expression.constant.LongConstant;
 import org.wso2.siddhi.query.api.extension.annotation.SiddhiExtension;
-
-import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledFuture;
-import java.util.concurrent.TimeUnit;
 
 @SiddhiExtension(namespace = "stratos", function = "faultHandling")
 public class FaultHandlingWindowProcessor extends WindowProcessor implements RunnableWindowProcessor {
@@ -71,6 +91,9 @@ public class FaultHandlingWindowProcessor extends WindowProcessor implements Run
     Map<String, Object> memberFaultEventMessageMap = new HashMap<String, Object>();
     private TopologyEventReceiver topologyEventReceiver;
     private String memberID;
+    
+    private static final String DATA_BRIDGE_CONFIG_XML = "data-bridge-config.xml";
+    private static final String DATA_BRIDGE_DIR = "data-bridge";
 
     @Override
     protected void processEvent(InEvent event) {
@@ -79,7 +102,6 @@ public class FaultHandlingWindowProcessor extends WindowProcessor implements Run
 
     @Override
     protected void processEvent(InListEvent listEvent) {
-        System.out.println(listEvent);
         for (int i = 0, size = listEvent.getActiveEvents(); i < size; i++) {
             addDataToMap((InEvent) listEvent.getEvent(i));
         }
@@ -223,17 +245,33 @@ public class FaultHandlingWindowProcessor extends WindowProcessor implements Run
             window = new SchedulerSiddhiQueue<StreamEvent>(this);
         }
         MemberFaultEventMap.put("org.apache.stratos.messaging.event.health.stat.MemberFaultEvent", memberFaultEventMessageMap);
-        this.topologyEventReceiver = new TopologyEventReceiver();
-        Thread thread = new Thread(topologyEventReceiver);
-        thread.start();
-        log.info("WSO2 CEP topology receiver thread started");
+        
+        // Wait until 
+        startTopologyEventReceiver();       
 
         //Ordinary scheduling
         window.schedule();
 
     }
 
-    @Override
+    private void startTopologyEventReceiver() {
+    	
+    	new Thread(new Runnable() {
+			
+			@Override
+			public void run() {
+				
+				waitUntilPortsActive(loadThriftConfig());
+		    	topologyEventReceiver = new TopologyEventReceiver();
+		    	Thread thread = new Thread(topologyEventReceiver);
+		        thread.start();               
+		        log.info("WSO2 CEP topology receiver thread started");
+			}
+		}).start();   	
+		
+	}
+
+	@Override
     public void schedule() {
         if (lastSchedule != null) {
             lastSchedule.cancel(false);
@@ -264,4 +302,154 @@ public class FaultHandlingWindowProcessor extends WindowProcessor implements Run
         this.topologyEventReceiver.terminate();
         window = null;
     }
+        
+    private DataReceiverConfig loadThriftConfig() {
+    	
+    	DataReceiverConfig dataReceiverConfig = new DataReceiverConfig();
+    	OMElement hostName = null;
+    	OMElement securePort = null;
+    	OMElement nsPort = null;
+    	
+            OMElement config = this.loadDataBridgeConfig();
+            OMElement thriftDR = (OMElement) config.getChildrenWithLocalName("thriftDataReceiver").next();
+            try {
+            securePort = (OMElement) thriftDR.getChildrenWithLocalName("securePort").next();
+            nsPort = (OMElement) thriftDR.getChildrenWithLocalName("port").next();
+            } catch (NoSuchElementException ex) {
+            	// ignore
+            }
+            
+            try {
+                hostName = (OMElement) thriftDR.getChildrenWithLocalName("hostName").next();
+            } catch(NoSuchElementException ex) {
+            	String msg = "Thrift Data Receiver hostName must be defined in data-bridge-config.xml ";
+            	log.error(msg);
+            	throw new RuntimeException(msg, ex);
+            }
+            
+            setHostValue(dataReceiverConfig, hostName);
+            dataReceiverConfig.setHost(hostName.getText());
+            
+            if(securePort != null) {
+            	dataReceiverConfig.setSecurePort(Integer.parseInt(securePort.getText())+getPortOffset());
+            }
+            if(nsPort != null) {
+            	dataReceiverConfig.setPort(Integer.parseInt(nsPort.getText())+getPortOffset());
+            }
+        
+    	
+		return dataReceiverConfig;
+    }
+        
+    private void setHostValue(DataReceiverConfig dataReceiverConfig,
+    		OMElement hostName) {				
+    	if(hostName != null) {
+    		dataReceiverConfig.setHost(hostName.getText());
+    	}
+	}
+
+	private int getPortOffset() {
+		return Integer.parseInt(System.getProperty("portOffset"));
+	}
+
+	private OMElement loadDataBridgeConfig() {
+    	
+        String path = CarbonUtils.getCarbonConfigDirPath() + File.separator + DATA_BRIDGE_DIR + File.separator + DATA_BRIDGE_CONFIG_XML;
+        try {
+            BufferedInputStream inputStream = new BufferedInputStream(new FileInputStream(new File(path)));
+            XMLStreamReader parser = XMLInputFactory.newInstance().createXMLStreamReader(inputStream);
+            StAXOMBuilder builder = new StAXOMBuilder(parser);
+            OMElement omElement = builder.getDocumentElement();
+            omElement.build();
+            return omElement;
+        } catch (Exception e) {
+        	String msg = "Error in reading data bridge configuration: " ;
+            log.error(msg+ e.getMessage(), e);
+            throw new RuntimeException(msg, e);
+        }
+    }
+	
+    private void waitUntilPortsActive(DataReceiverConfig dataReceiverConfig) {
+        long portCheckTimeOut = 1000 * 60 * 10;
+        String portCheckTimeOutStr = System.getProperty("port.check.timeout");
+        if (StringUtils.isNotBlank(portCheckTimeOutStr)) {
+            portCheckTimeOut = Integer.parseInt(portCheckTimeOutStr);
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Port check timeout: " + portCheckTimeOut);
+        }
+
+        long startTime = System.currentTimeMillis();
+        boolean active = false;
+        while (!active) {
+            if(log.isInfoEnabled()) {
+                log.info("Waiting for Thrift Data Receiver ports to be active: [ip] "+dataReceiverConfig.getHost()
+                		+" [ports] "+ printPorts(dataReceiverConfig));
+                		
+            }
+            List<Integer> portList = new ArrayList<Integer>();
+            if(dataReceiverConfig.getPort() != null ) {
+            	portList.add(dataReceiverConfig.getPort());	
+            }
+            if(dataReceiverConfig.getSecurePort() != null) {
+            	portList.add(dataReceiverConfig.getSecurePort());
+            }
+            active = checkPortsActive(dataReceiverConfig.getHost(), portList);
+            long endTime = System.currentTimeMillis();
+            long duration = endTime - startTime;
+            if (duration > portCheckTimeOut) {
+                return;
+            }
+            try {
+                Thread.sleep(5000);
+            } catch (InterruptedException e) {
+            }
+        }
+        if(log.isInfoEnabled()) {
+            log.info("Thrift Data Receiver ports activated: [ip] " + dataReceiverConfig.getHost() + " [ports] " +printPorts(dataReceiverConfig));
+        }
+    }
+
+    private String printPorts(DataReceiverConfig dataReceiverConfig) {
+        StringBuilder sb = new StringBuilder();
+        if(dataReceiverConfig.getPort() != null) {
+        	sb.append(dataReceiverConfig.getPort()).append(",");
+        }
+        if(dataReceiverConfig.getSecurePort() != null) {
+        	sb.append(dataReceiverConfig.getSecurePort());
+        }		
+		return sb.toString();
+	}
+
+	public static boolean checkPortsActive(String ipAddress, List<Integer> ports) {
+        if (ports.size() == 0) {
+            throw new RuntimeException("No ports found");
+        }
+        for (int port : ports) {
+            Socket socket = null;
+            try {
+                SocketAddress httpSockaddr = new InetSocketAddress(ipAddress, port);
+                socket = new Socket();
+                socket.connect(httpSockaddr, 5000);
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format("Thrift Data Receiver Port %s is active", port));
+                }
+            } catch (Exception e) {
+                if (log.isDebugEnabled()) {
+                    log.debug(String.format("Thrift Data Receiver Port %s is not active", port));
+                }
+                return false;
+            } finally {
+                if (socket != null) {
+                    try {
+                        socket.close();
+                    } catch (IOException e) {
+                    }
+                }
+            }
+        }
+        return true;
+    }
+    
+
 }
