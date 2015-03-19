@@ -95,7 +95,7 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
         SessionInformation sessionInformation = null;
         org.apache.axis2.clustering.Member currentMember = null;
         if (isSessionAffinityBasedLB()) {
-            // Check existing session information
+            // Check existing session information in message context
             sessionInformation = (SessionInformation) synCtx.getProperty(
                     SynapseConstants.PROP_SAL_CURRENT_SESSION_INFORMATION);
 
@@ -103,6 +103,8 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
                     SynapseConstants.PROP_SAL_ENDPOINT_CURRENT_MEMBER);
 
             if (sessionInformation == null && currentMember == null) {
+                // Session information and current member not found in message context
+                // try http session dispatcher
                 sessionInformation = dispatcher.getSession(synCtx);
                 if (sessionInformation != null) {
                     if (log.isDebugEnabled()) {
@@ -119,6 +121,17 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
                 }
             }
 
+        }
+
+        // Check current member availability in the topology
+        if ((sessionInformation != null) && (currentMember != null)) {
+            if(!currentMemberFoundInTopology(currentMember)) {
+                String memberId = currentMember.getProperties().getProperty(Constants.MEMBER_ID);
+                log.debug(String.format("Member with sticky session not found in topology: [member] %s", memberId));
+                currentMember = null;
+                // Remove session from http session dispatcher
+                dispatcher.unbind(synCtx);
+            }
         }
 
         TenantAwareLoadBalanceFaultHandler faultHandler = new TenantAwareLoadBalanceFaultHandler();
@@ -139,6 +152,21 @@ public class TenantAwareLoadBalanceEndpoint extends org.apache.synapse.endpoints
                 throwSynapseException(synCtx, 404, "Active application instances not found");
             }
         }
+    }
+
+    private boolean currentMemberFoundInTopology(org.apache.axis2.clustering.Member currentMember) {
+        String clusterId = currentMember.getProperties().getProperty(Constants.CLUSTER_ID);
+        String memberId = currentMember.getProperties().getProperty(Constants.MEMBER_ID);
+        if ((StringUtils.isNotBlank(clusterId)) && (StringUtils.isNotBlank(memberId))) {
+            Cluster cluster = LoadBalancerContext.getInstance().getClusterIdClusterMap().getCluster(clusterId);
+            if (cluster != null) {
+                Member member = cluster.getMember(memberId);
+                if (member != null) {
+                   return true;
+                }
+            }
+        }
+        return false;
     }
 
     private void throwSynapseException(MessageContext synCtx, int errorCode, String errorMessage) {
