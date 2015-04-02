@@ -33,7 +33,7 @@ current_dir=`cd $dir;pwd`
 source "$current_dir/conf/setup.conf"
 
 #setting the public IP for bam
-export public_ip=$(curl --silent http://ipecho.net/plain; echo)
+export public_ip=$(curl -s http://ifconfig.me; echo)
 export hadoop_hostname=$(hostname -f)
 
 while getopts ":p:" opts
@@ -112,7 +112,7 @@ sed -i "s@BAM_PASS@admin@g" repository/conf/cartridge-config.properties
 
 popd
 
-unzip -q $bam_pack_path -d $stratos_path
+unzip -o -q $bam_pack_path -d $stratos_path
 
 cp -f $current_dir/config/bam/repository/conf/etc/summarizer-config.xml $bam_path/repository/conf/etc/
 cp -f $current_dir/config/bam/repository/conf/advanced/hive-site.xml $bam_path/repository/conf/advanced/
