@@ -45,6 +45,7 @@ import org.apache.stratos.messaging.event.topology.*;
 import org.apache.stratos.messaging.message.receiver.tenant.TenantManager;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyManager;
 import org.wso2.andes.util.Serial;
+import org.apache.stratos.cartridge.agent.statistics.publisher.HealthStatisticsNotifier;
 
 import java.io.File;
 import java.io.IOException;
@@ -309,6 +310,9 @@ public class DefaultExtensionHandler implements ExtensionHandler {
                 		log.debug("Setting env var STRATOS_UPDATE_WK_IP to true");
                 	}
                     env.put("STRATOS_UPDATE_WK_IP", "true");
+
+                    //Switching restarting mode on
+                    HealthStatisticsNotifier.setRestarting(true);
                 }
             }      
             if(log.isDebugEnabled()) {
