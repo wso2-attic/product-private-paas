@@ -27,6 +27,8 @@ import org.apache.stratos.cartridge.agent.config.CartridgeAgentConfiguration;
 import org.apache.stratos.cartridge.agent.statistics.publisher.HealthStatisticsNotifier;
 import org.apache.stratos.messaging.broker.publish.EventPublisher;
 import org.apache.stratos.messaging.broker.publish.EventPublisherPool;
+import org.apache.stratos.messaging.event.instance.status.ArtifactDeploymentCompletedEvent;
+import org.apache.stratos.messaging.event.instance.status.ArtifactDeploymentStartedEvent;
 import org.apache.stratos.messaging.event.instance.status.InstanceActivatedEvent;
 import org.apache.stratos.messaging.event.instance.status.InstanceInitiatedEvent;
 import org.apache.stratos.messaging.event.instance.status.InstanceMaintenanceModeEvent;
@@ -34,6 +36,7 @@ import org.apache.stratos.messaging.event.instance.status.InstanceReadyToShutdow
 import org.apache.stratos.messaging.event.instance.status.InstanceStartedEvent;
 import org.apache.stratos.messaging.util.Constants;
 
+import java.util.Map;
 /**
  * Cartridge agent event publisher.
  */
@@ -43,15 +46,15 @@ public class CartridgeAgentEventPublisher {
     private static boolean activated;
     private static boolean readyToShutdown;
     private static boolean maintenance;
-    
+
     public static void publishInstanceInitiatedEvent() {
-    
+
     log.info("Publishing instance initiated event");
     CartridgeAgentConfiguration cartridgeAgentConfig = CartridgeAgentConfiguration.getInstance();
     InstanceInitiatedEvent instanceInitiatedEvent = new InstanceInitiatedEvent(
-    		cartridgeAgentConfig.getMemberId(), 
-    		cartridgeAgentConfig.getServiceName(), 
-    		cartridgeAgentConfig.getClusterId(), 
+    		cartridgeAgentConfig.getMemberId(),
+    		cartridgeAgentConfig.getServiceName(),
+    		cartridgeAgentConfig.getClusterId(),
     		cartridgeAgentConfig.getInstanceId());
     instanceInitiatedEvent.setAmiId(cartridgeAgentConfig.getAmiId());
     instanceInitiatedEvent.setHostName(cartridgeAgentConfig.getHostName());
@@ -62,7 +65,7 @@ public class CartridgeAgentEventPublisher {
     instanceInitiatedEvent.setPublicIpv4(cartridgeAgentConfig.getPublicIpv4());
     instanceInitiatedEvent.setNetworkPartitionId(cartridgeAgentConfig.getNetworkPartitionId());
     instanceInitiatedEvent.setPartitionId(cartridgeAgentConfig.getPartitionId());
-    
+
     EventPublisher eventPublisher = EventPublisherPool.getPublisher(Constants.INSTANCE_STATUS_TOPIC);
     eventPublisher.publish(instanceInitiatedEvent);
     log.info("Instance initiated event published");
@@ -176,6 +179,55 @@ public class CartridgeAgentEventPublisher {
         } else {
             if (log.isWarnEnabled()) {
                 log.warn("Instance already in a Maintenance mode....");
+            }
+        }
+    }
+
+    /**
+     * Publish an event indicating that artifact deployment has started.
+     */
+    public static void publishArtifactDeploymentStartedEvent() {
+        if (log.isDebugEnabled()) {
+            log.debug("Publishing artifact deployment started event!");
+        }
+        ArtifactDeploymentStartedEvent event = new ArtifactDeploymentStartedEvent(
+                CartridgeAgentConfiguration.getInstance().getServiceName(),
+                CartridgeAgentConfiguration.getInstance().getClusterId(),
+                CartridgeAgentConfiguration.getInstance().getNetworkPartitionId(),
+                CartridgeAgentConfiguration.getInstance().getPartitionId(),
+                CartridgeAgentConfiguration.getInstance().getMemberId()
+        );
+
+        EventPublisherPool.getPublisher(Constants.INSTANCE_STATUS_TOPIC).publish(event);
+        if (log.isDebugEnabled()) {
+            log.debug("Artifact deployment started event published!");
+        }
+    }
+
+    /**
+     * Publish an event indicating that artifact deployment has completed.
+     *
+     * @param modifiedArtifacts Modified artifacts and their associated last modified time.
+     */
+    public static void publishArtifactDeploymentCompletedEvent(Map<String, Long> modifiedArtifacts) {
+        if (modifiedArtifacts != null) {
+            if (log.isDebugEnabled()) {
+                log.debug("Publishing artifact deployment finished event!");
+            }
+            ArtifactDeploymentCompletedEvent event = new ArtifactDeploymentCompletedEvent(
+                    CartridgeAgentConfiguration.getInstance().getServiceName(),
+                    CartridgeAgentConfiguration.getInstance().getClusterId(),
+                    CartridgeAgentConfiguration.getInstance().getNetworkPartitionId(),
+                    CartridgeAgentConfiguration.getInstance().getPartitionId(),
+                    CartridgeAgentConfiguration.getInstance().getMemberId(),
+                    CartridgeAgentConfiguration.getInstance().getTenantId(),
+                    CartridgeAgentConfiguration.getInstance().getEnviornment(),
+                    CartridgeAgentConfiguration.getInstance().isMultitenant(),
+                    modifiedArtifacts
+            );
+            EventPublisherPool.getPublisher(Constants.INSTANCE_STATUS_TOPIC).publish(event);
+            if (log.isDebugEnabled()) {
+                log.debug("Artifact deployment finished event published!");
             }
         }
     }

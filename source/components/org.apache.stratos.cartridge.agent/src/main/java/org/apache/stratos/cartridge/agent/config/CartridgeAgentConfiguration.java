@@ -108,7 +108,7 @@ public class CartridgeAgentConfiguration {
             // not mandatory
             lbPrivateIp = System.getProperty(CartridgeAgentConstants.LB_PRIVATE_IP);
             lbPublicIp = System.getProperty(CartridgeAgentConstants.LB_PUBLIC_IP);
-            tenantRepositoryPath =  System.getProperty(CartridgeAgentConstants.TENANT_REPO_PATH);
+            tenantRepositoryPath = System.getProperty(CartridgeAgentConstants.TENANT_REPO_PATH);
             superTenantRepositoryPath = System.getProperty(CartridgeAgentConstants.SUPER_TENANT_REPO_PATH);
 
             deployment = readDeployment();
@@ -137,36 +137,36 @@ public class CartridgeAgentConfiguration {
             log.debug(String.format("lb-public-ip: %s", lbPublicIp));
         }
     }
-    
+
     /**
-    * Get instance metadata
-    * @return {@link InstanceMetadata}
-    */
+     * Get instance metadata
+     *
+     * @return {@link InstanceMetadata}
+     */
     private InstanceMetadata getMetadata() {
-    
-    IaaSMetadataServiceClient client = new IaaSMetadataServiceClient();
-    InstanceMetadata metadata = null;
-    try {
-    	log.info("Retrieving metadata from Instance Metadata Service Client");
-    	metadata = client.getInstanceMetadata();
-    	String msg = String.format("Successfully retreived metadata from Instance Metadata Service Client : ", 
-    			metadata.toString());
-    	log.info(msg);
-    } catch (Exception e) {
-    	String msg = "Error while retrieving metadata";
-    	log.error(msg, e);
-    }
-    return metadata;
+        IaaSMetadataServiceClient client = new IaaSMetadataServiceClient();
+        InstanceMetadata metadata = null;
+        try {
+            log.info("Retrieving metadata from Instance Metadata Service Client");
+            metadata = client.getInstanceMetadata();
+            String msg = "Successfully retrieved metadata : " + metadata.toString() +
+                    " from Instance Metadata Service Client";
+            log.info(msg);
+        } catch (Exception e) {
+            String msg = "Error while retrieving metadata";
+            log.error(msg, e);
+        }
+        return metadata;
     }
 
-    private String readDeployment(){
+    private String readDeployment() {
         if (parameters.containsKey(CartridgeAgentConstants.DEPLOYMENT)) {
             return parameters.get(CartridgeAgentConstants.DEPLOYMENT);
         }
         return null;
     }
 
-    private String readManagerServiceType(){
+    private String readManagerServiceType() {
 
         if (deployment == null) {
             return null;
@@ -191,7 +191,7 @@ public class CartridgeAgentConfiguration {
         return null;
     }
 
-    private String readWorkerServiceType(){
+    private String readWorkerServiceType() {
 
         if (deployment == null) {
             return null;
@@ -216,7 +216,7 @@ public class CartridgeAgentConfiguration {
         return null;
     }
 
-    private String readIsPrimary(){
+    private String readIsPrimary() {
         if (parameters.containsKey(CartridgeAgentConstants.CLUSTERING_PRIMARY_KEY)) {
             return parameters.get(CartridgeAgentConstants.CLUSTERING_PRIMARY_KEY);
         }
@@ -265,9 +265,9 @@ public class CartridgeAgentConfiguration {
             log.info(" INTERNAL payload parameter is not found");
         }
 
-        if(internalRepoStringValue.equals(CartridgeAgentConstants.INTERNAL)) {
+        if (internalRepoStringValue.equals(CartridgeAgentConstants.INTERNAL)) {
             return true;
-        } else{
+        } else {
             return false;
         }
     }
@@ -477,21 +477,21 @@ public class CartridgeAgentConfiguration {
         return isPrimary;
     }
 
-	public String getLbPublicIp() {
-		return lbPublicIp;
-	}
+    public String getLbPublicIp() {
+        return lbPublicIp;
+    }
 
-	public void setLbPublicIp(String lbPublicIp) {
-		this.lbPublicIp = lbPublicIp;
-	}
+    public void setLbPublicIp(String lbPublicIp) {
+        this.lbPublicIp = lbPublicIp;
+    }
 
-	public String getLbPrivateIp() {
-		return lbPrivateIp;
-	}
+    public String getLbPrivateIp() {
+        return lbPrivateIp;
+    }
 
-	public void setLbPrivateIp(String lbPrivateIp) {
-		this.lbPrivateIp = lbPrivateIp;
-	}
+    public void setLbPrivateIp(String lbPrivateIp) {
+        this.lbPrivateIp = lbPrivateIp;
+    }
 
     public String getDeployment() {
         return deployment;
@@ -529,45 +529,45 @@ public class CartridgeAgentConfiguration {
         return isCheckoutEnabled;
     }
 
-	public boolean isInitialized() {
-		return initialized;
-	}
+    public boolean isInitialized() {
+        return initialized;
+    }
 
-	public void setInitialized(boolean initialized) {
-		this.initialized = initialized;
-	}
-	
-	public String getInstanceId() {
-		return instanceMetadata.getInstanceId();
-	}
-	
-	public String getAmiId() {
-		return instanceMetadata.getAmiId();
-	}
-	
-	public String getHostName() {
-		return instanceMetadata.getHostName();
-	}
-	
-	public String getInstanceType() {
-		return instanceMetadata.getInstanceType();
-	}
-	
-	public String getLocalHostname() {
-		return instanceMetadata.getLocalHostname();
-	}
-	
-	public String getLocalIpv4() {
-		return instanceMetadata.getLocalIpv4();
-	}
-	
-	public String getPublicHostname() {
-		return instanceMetadata.getPublicHostname();
-	}
-	
-	public String getPublicIpv4() {
-		return instanceMetadata.getPublicIpv4();
-	}
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    public String getInstanceId() {
+        return instanceMetadata.getInstanceId();
+    }
+
+    public String getAmiId() {
+        return instanceMetadata.getAmiId();
+    }
+
+    public String getHostName() {
+        return instanceMetadata.getHostName();
+    }
+
+    public String getInstanceType() {
+        return instanceMetadata.getInstanceType();
+    }
+
+    public String getLocalHostname() {
+        return instanceMetadata.getLocalHostname();
+    }
+
+    public String getLocalIpv4() {
+        return instanceMetadata.getLocalIpv4();
+    }
+
+    public String getPublicHostname() {
+        return instanceMetadata.getPublicHostname();
+    }
+
+    public String getPublicIpv4() {
+        return instanceMetadata.getPublicIpv4();
+    }
 
     public SecretResolver getSecretResolver() {
         return secretResolver;
@@ -576,4 +576,9 @@ public class CartridgeAgentConfiguration {
     public void setSecretResolver(SecretResolver secretResolver) {
         this.secretResolver = secretResolver;
     }
+
+    public String getEnviornment() {
+        return parameters.get(CartridgeAgentConstants.ENVIRONMENT);
+    }
+
 }
