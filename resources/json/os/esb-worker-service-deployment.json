@@ -1,9 +1,0 @@
-{
-      "serviceName": "esbworker",
-      "cartridgeType": "esbworker",
-      "deploymentPolicyName": "deployp",
-      "autoscalingPolicyName": "economy",
-      "clusterDomain": "esb.dev.domain",
-      "clusterSubDomain": "subdomain2",
-      "tenantRange": "*"
-}

@@ -1,9 +1,0 @@
-{
-      "serviceName": "gatewaymgt",
-      "cartridgeType": "gatewaymgt",
-      "deploymentPolicyName": "deployf",
-      "autoscalingPolicyName": "economy",
-      "clusterDomain": "gateway.dev.domain",
-      "clusterSubDomain": "subdomain2",
-      "tenantRange": "*"    
-}

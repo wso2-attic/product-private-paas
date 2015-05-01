@@ -1,9 +1,0 @@
-{
-      "serviceName": "publisher",
-      "cartridgeType": "publisher",
-      "deploymentPolicyName": "deployf",
-      "autoscalingPolicyName": "economy",
-      "clusterDomain": "publisher.dev.domain",
-      "clusterSubDomain": "subdomain2",
-      "tenantRange": "*"    
-}
