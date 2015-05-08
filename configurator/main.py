@@ -18,12 +18,18 @@
 # !/usr/bin/env python
 import ast
 from distutils import dir_util
+import logging
 import shutil
 from configparserutil import ConfigParserUtil
 import os
 import constants
 from jinja2 import Environment, FileSystemLoader
 
+logging.basicConfig(level=logging.DEBUG,
+                    format='%(asctime)s %(levelname)-8s %(message)s',
+                    datefmt='%a, %d %b %Y %H:%M:%S',
+                    filename='./configurator.log',
+                    filemode='w')
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE_ENVIRONMENT = Environment(
@@ -66,12 +72,12 @@ def generate_context(config_file_path):
     global PACK_LOCATION
     PACK_LOCATION = settings["pack_location"]
     if settings["read_env_variables"] == "true":
-        print "Reading Environment Variables"
+        logging.info("Reading from environment variables")
         for key, value in context.iteritems():
             context[key] = os.environ.get(key, context[key])
 
     else:
-        print "Reading Values from config.ini"
+        logging.info("Reading Values from config.ini")
         param_context = configurations["PARAMS"]
         for key, value in context.iteritems():
             if key in param_context:
@@ -80,7 +86,8 @@ def generate_context(config_file_path):
     # check whether members are available in context before conversion
     if 'members' in context:
         context['members'] = ast.literal_eval(context['members'])
-    print context
+
+    logging.info("Context generated %s", context)
     return context
 
 
@@ -95,12 +102,12 @@ def traverse(root_dir, context):
             config_file_name = \
                 os.path.splitext(os.path.relpath(os.path.join(dirName, file_name), root_dir))[0] \
                 + ".xml"
-            print config_file_name
             config_file_name = os.path.join("./output", config_file_name)
             create_output_xml(template_file_name1, config_file_name, context)
 
 
 def main():
+    logging.info("Configurator Started")
     for dirName in os.listdir(constants.TEMPLATE_PATH):
         config_file_path = os.path.join(constants.TEMPLATE_PATH, dirName,
                                         constants.CONFIG_FILE_NAME)
