@@ -8,3 +8,6 @@ target/
 # IntelliJ IDEA Project Files
 .idea/
 *.iml
+
+#python bytecode
+*.pyc
