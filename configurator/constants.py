@@ -18,23 +18,10 @@
 #Template Paths
 TEMPLATE_PATH="./templates"
 CONFIG_FILE_NAME="configs.ini"
-#Output Paths
-CARBON_OUTPUT_PATH="./output/carbon.xml"
-AXIS2_OUTPUT_PATH="./output/axis2/axis2.xml"
-CATALINA_SERVER_OUTPUT_PATH="./output/tomcat/catalina-server.xml"
 
-#Pack Locations
-APP_SERVER_LOCATION="/Users/anuruddha/Downloads/wso2as-5.2.1/repository/conf"
+LOG_FILE_LOCATION="./configurator.log"
 
-#APP_SERVER_CONFIGS
-STRATOS_CLUSTERING="clustering"
-STRATOS_MEMBERS="members"
-STRATOS_localMemberHost= "localMemberHost"
-STRATOS_localMemberPort= "localMemberPort"
-STRATOS_subDomain= "subDomain"
-STRATOS__instance_data_worker_host_name= "instance_data_worker_host_name"
-STRATOS__instance_data_mgt_host_name= "instance_data_mgt_host_name"
-STRATOS_portOffset="portOffset"
-STRATOS_http_proxy_port="http_proxy_port"
-STRATOS_https_proxy_port="https_proxy_port"
-STRATOS_server="server"
+#Configurations
+CONFIG_DEFAULTS="DEFAULTS"
+CONFIG_SETTINGS="SETTINGS"
+CONFIG_PARAMS="PARAMS"

@@ -28,7 +28,7 @@ from jinja2 import Environment, FileSystemLoader
 logging.basicConfig(level=logging.DEBUG,
                     format='%(asctime)s %(levelname)-8s %(message)s',
                     datefmt='%a, %d %b %Y %H:%M:%S',
-                    filename='./configurator.log',
+                    filename=constants.LOG_FILE_LOCATION,
                     filemode='w')
 
 PATH = os.path.dirname(os.path.abspath(__file__))
@@ -67,8 +67,8 @@ def generate_context(config_file_path):
     configurations = config_parser.as_dict()
 
     # Reading the default values
-    context = configurations["DEFAULTS"]
-    settings = configurations["SETTINGS"]
+    context = configurations[constants.CONFIG_DEFAULTS]
+    settings = configurations[constants.CONFIG_SETTINGS]
     global PACK_LOCATION
     PACK_LOCATION = settings["pack_location"]
     if settings["read_env_variables"] == "true":
@@ -104,6 +104,7 @@ def traverse(root_dir, context):
                 + ".xml"
             config_file_name = os.path.join("./output", config_file_name)
             create_output_xml(template_file_name1, config_file_name, context)
+            logging.info("%s file created",config_file_name)
 
 
 def main():
@@ -114,7 +115,7 @@ def main():
         template_dir = os.path.join(constants.TEMPLATE_PATH, dirName, "conf")
         context = generate_context(config_file_path)
         traverse(template_dir, context)
-
+    logging.info("Copying files to %s",PACK_LOCATION)
     dir_util.copy_tree("./output", PACK_LOCATION)
     shutil.rmtree('./output/')
 
