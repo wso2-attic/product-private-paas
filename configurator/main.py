@@ -19,17 +19,15 @@
 import ast
 from distutils import dir_util
 import logging
+import logging.config
 import shutil
 from configparserutil import ConfigParserUtil
 import os
 import constants
 from jinja2 import Environment, FileSystemLoader
 
-logging.basicConfig(level=logging.DEBUG,
-                    format='%(asctime)s %(levelname)-8s %(message)s',
-                    datefmt='%a, %d %b %Y %H:%M:%S',
-                    filename=constants.LOG_FILE_LOCATION,
-                    filemode='w')
+logging.config.fileConfig('conf/logging_config.ini')
+log = logging.getLogger(__name__)
 
 PATH = os.path.dirname(os.path.abspath(__file__))
 TEMPLATE_ENVIRONMENT = Environment(
@@ -38,17 +36,27 @@ TEMPLATE_ENVIRONMENT = Environment(
     trim_blocks=False)
 PACK_LOCATION = None
 
-# parse the xml file and return the content as a text
+
 def render_template(template_filename, context):
+    """
+    parse the xml file and return the content as a text
+
+    :param template_filename: template filename path
+    :param context: dictionary containing configurations
+    :return: xml as a string
+    """
     return TEMPLATE_ENVIRONMENT.get_template(template_filename).render(context)
 
 
-# This method write the output generated from jinja file to xml file
-# template_path : Path to the template file
-# output_path : Path to the output xml file
-# context : dictionary containing values to be used by jinja engine
 def create_output_xml(template_path, output_path, context):
-    # check output path exists
+    """
+    This method write the output generated from jinja file to xml file
+
+    :param template_path: Path to the template file
+    :param output_path: Path to the output xml file
+    :param context: Dictionary containing values to be used by jinja engine
+    :return: None
+    """
     directory = os.path.dirname(output_path)
     if not os.path.exists(directory):
         os.makedirs(directory)
@@ -57,27 +65,33 @@ def create_output_xml(template_path, output_path, context):
         xml_file.write(content)
 
 
-# Read the config.ini and generate context based on settings
-# if read_env_variables is true context will be generated from environment variables
-# if read_env_variables is not true context will be read from config.ini
 def generate_context(config_file_path):
+    """
+    Read the config.ini and generate context based on settings
+
+    :param config_file_path: location of the config.ini file
+    :return: dictionary containing configurations for jinja engine
+    """
     # Read configuration file
     config_parser = ConfigParserUtil()
     config_parser.read(config_file_path)
-    configurations = config_parser.as_dict()
+    configurations = config_parser.as_dictionary()
 
     # Reading the default values
     context = configurations[constants.CONFIG_DEFAULTS]
     settings = configurations[constants.CONFIG_SETTINGS]
     global PACK_LOCATION
     PACK_LOCATION = settings["pack_location"]
+
+    # if read_env_variables is true context will be generated from environment variables
+    # if read_env_variables is not true context will be read from config.ini
     if settings["read_env_variables"] == "true":
-        logging.info("Reading from environment variables")
+        log.info("Reading from environment variables")
         for key, value in context.iteritems():
             context[key] = os.environ.get(key, context[key])
 
     else:
-        logging.info("Reading Values from config.ini")
+        log.info("Reading Values from config.ini")
         param_context = configurations["PARAMS"]
         for key, value in context.iteritems():
             if key in param_context:
@@ -87,14 +101,18 @@ def generate_context(config_file_path):
     if 'members' in context:
         context['members'] = ast.literal_eval(context['members'])
 
-    logging.info("Context generated %s", context)
+    log.info("Context generated %s", context)
     return context
 
 
-# traverse through the folder structure and generate xml files
-# root_dir : path to the template/{wso2_server}/conf folder
-# context : dictionary containing values to be used by jinja engine
 def traverse(root_dir, context):
+    """
+    traverse through the folder structure and generate xml files
+
+    :param root_dir: path to the template/{wso2_server}/conf folder
+    :param context: dictionary containing values to be used by jinja engine
+    :return:None
+    """
     for dirName, subdirList, fileList in os.walk(root_dir):
         for file_name in fileList:
             # generating the relative path of the template
@@ -104,20 +122,28 @@ def traverse(root_dir, context):
                 + ".xml"
             config_file_name = os.path.join("./output", config_file_name)
             create_output_xml(template_file_name1, config_file_name, context)
-            logging.info("%s file created",config_file_name)
+            log.debug("%s file created", config_file_name)
 
 
 def main():
-    logging.info("Configurator Started")
+    """
+    Main method
+    :return: None
+    """
+    log.info("Configurator started.")
+
     for dirName in os.listdir(constants.TEMPLATE_PATH):
         config_file_path = os.path.join(constants.TEMPLATE_PATH, dirName,
                                         constants.CONFIG_FILE_NAME)
         template_dir = os.path.join(constants.TEMPLATE_PATH, dirName, "conf")
         context = generate_context(config_file_path)
         traverse(template_dir, context)
-    logging.info("Copying files to %s",PACK_LOCATION)
-    dir_util.copy_tree("./output", PACK_LOCATION)
-    shutil.rmtree('./output/')
+        log.info("Copying files to %s", PACK_LOCATION)
+        dir_util.copy_tree(constants.OUTPUT_DIRECTORY, PACK_LOCATION)
+        shutil.rmtree(constants.OUTPUT_DIRECTORY)
+
+    log.info("Configuration completed")
+
 
 if __name__ == "__main__":
     main()

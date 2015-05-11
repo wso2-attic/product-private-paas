@@ -15,13 +15,16 @@
 # specific language governing permissions and limitations
 # under the License.
 
-#Template Paths
-TEMPLATE_PATH="./templates"
-CONFIG_FILE_NAME="configs.ini"
+# Template Paths
+TEMPLATE_PATH = "./templates"
+CONFIG_FILE_NAME = "configs.ini"
 
-LOG_FILE_LOCATION="./configurator.log"
+LOG_FILE_LOCATION = "./configurator.log"
 
-#Configurations
-CONFIG_DEFAULTS="DEFAULTS"
-CONFIG_SETTINGS="SETTINGS"
-CONFIG_PARAMS="PARAMS"
+# Configurations
+CONFIG_DEFAULTS = "DEFAULTS"
+CONFIG_SETTINGS = "SETTINGS"
+CONFIG_PARAMS = "PARAMS"
+
+# Output Location
+OUTPUT_DIRECTORY="./output"

@@ -17,10 +17,14 @@
 
 import ConfigParser
 
+
 class ConfigParserUtil(ConfigParser.ConfigParser):
 
-    # returns configurations as a dictionary
-    def as_dict(self):
+    def as_dictionary(self):
+        """
+        read configuration file and create a dictionary
+        :return: configurations as a dictionary
+        """
         d = dict(self._sections)
         for k in d:
             d[k] = dict(self._defaults, **d[k])
