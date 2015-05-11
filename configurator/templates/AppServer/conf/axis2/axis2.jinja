@@ -619,11 +619,8 @@
          The clustering domain/group. Nodes in the same group will belong to the same multicast
          domain. There will not be interference between nodes in different groups.
         -->
-        {% if domain is defined: %}
-            <parameter name="domain">{{domain}}</parameter>
-        {% else: %}
-             <parameter name="domain">wso2.carbon.domain</parameter>
-        {% endif %}
+        <parameter name="domain">{{domain}}</parameter>
+
         <!-- The multicast address to be used -->
         <!--<parameter name="mcastAddress">228.0.0.4</parameter>-->
 
@@ -643,11 +640,8 @@
         -->
         <!-- The host name or IP address of this member -->
 
-        {% if localMemberHost is defined: %}
-            <parameter name="localMemberHost">{{ localMemberHost }}</parameter>
-        {% else: %}
-            <parameter name="localMemberHost">127.0.0.1</parameter>
-        {% endif %}
+        <parameter name="localMemberHost">{{ local_member_host }}</parameter>
+
         <!--
             The bind adress of this member. The difference between localMemberHost & localMemberBindAddress
             is that localMemberHost is the one that is advertised by this member, while localMemberBindAddress
@@ -661,11 +655,7 @@
         The TCP port used by this member. This is the port through which other nodes will
         contact this member
          -->
-        {% if localMemberPort is defined: %}
-            <parameter name="localMemberPort">{{localMemberPort}}</parameter>
-        {% else: %}
-            <parameter name="localMemberPort">4000</parameter>
-        {% endif %}
+            <parameter name="localMemberPort">{{local_member_port}}</parameter>
         <!--
             The bind port of this member. The difference between localMemberPort & localMemberBindPort
             is that localMemberPort is the one that is advertised by this member, while localMemberBindPort
@@ -681,11 +671,7 @@
         <parameter name="properties">
             <property name="backendServerURL" value="https://${hostName}:${httpsPort}/services/"/>
             <property name="mgtConsoleURL" value="https://${hostName}:${httpsPort}/"/>
-            {% if subDomain is defined: %}
-                <property name="subDomain" value="{{subDomain}}"/>
-            {% else : %}
-                 <property name="subDomain" value="worker"/>
-            {% endif %}
+            <property name="subDomain" value="{{sub_domain}}"/>
         </parameter>
 
         <!--
@@ -693,19 +679,12 @@
            "membershipScheme" above is set to "wka"
         -->
         <members>
-          {% if members is defined: -%}
                {% for key, value in members.iteritems() -%}
                 <member>
                     <hostName>{{ key }}</hostName>
                     <port>{{ value }}</port>
                 </member>
                {% endfor -%}
-          {% else: -%}
-            <member>
-                <hostName>127.0.0.1</hostName>
-                <port>4000</port>
-            </member>
-          {% endif -%}
         </members>
 
         <!--

@@ -78,24 +78,18 @@ def generate_context(config_file_path):
     configurations = config_parser.as_dictionary()
 
     # Reading the default values
-    context = configurations[constants.CONFIG_DEFAULTS]
+    context = configurations[constants.CONFIG_PARAMS]
     settings = configurations[constants.CONFIG_SETTINGS]
     global PACK_LOCATION
-    PACK_LOCATION = settings["pack_location"]
+    PACK_LOCATION = settings["distribution_file_path"]
 
     # if read_env_variables is true context will be generated from environment variables
     # if read_env_variables is not true context will be read from config.ini
     if settings["read_env_variables"] == "true":
         log.info("Reading from environment variables")
         for key, value in context.iteritems():
+            # check if value exists for given key; use default if not exists
             context[key] = os.environ.get(key, context[key])
-
-    else:
-        log.info("Reading Values from config.ini")
-        param_context = configurations["PARAMS"]
-        for key, value in context.iteritems():
-            if key in param_context:
-                context[key] = param_context[key]
 
     # check whether members are available in context before conversion
     if 'members' in context:
@@ -113,14 +107,14 @@ def traverse(root_dir, context):
     :param context: dictionary containing values to be used by jinja engine
     :return:None
     """
-    for dirName, subdirList, fileList in os.walk(root_dir):
+    for dir_name, subdirList, fileList in os.walk(root_dir):
         for file_name in fileList:
             # generating the relative path of the template
-            template_file_name1 = os.path.join(dirName, file_name)
+            template_file_name1 = os.path.join(dir_name, file_name)
             config_file_name = \
-                os.path.splitext(os.path.relpath(os.path.join(dirName, file_name), root_dir))[0] \
+                os.path.splitext(os.path.relpath(os.path.join(dir_name, file_name), root_dir))[0] \
                 + ".xml"
-            config_file_name = os.path.join("./output", config_file_name)
+            config_file_name = os.path.join(constants.OUTPUT_DIRECTORY, config_file_name)
             create_output_xml(template_file_name1, config_file_name, context)
             log.debug("%s file created", config_file_name)
 
