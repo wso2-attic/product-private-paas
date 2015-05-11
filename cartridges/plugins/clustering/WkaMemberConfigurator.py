@@ -28,10 +28,8 @@ class WkaMemberConfigurator(ICartridgeAgentPlugin):
     def remove_me_from_queue(self):
         self.log.info("Removing me %s from restart queue" % self.my_member_id);
         mdsclient.delete_property_value("restart", self.my_member_id)
-        pass
-        # DELETE application/{app_id}/property/restart/value/{my_member_id}
 
-    def get_all_members(self, service_name, cluster_id):
+    def publish_wka_members(self, service_name, cluster_id):
         topology = TopologyContext.get_topology()
         service = topology.get_service(service_name)
         cluster = service.get_cluster(cluster_id)
@@ -39,10 +37,10 @@ class WkaMemberConfigurator(ICartridgeAgentPlugin):
         members = cluster.get_members()
         for member in members:
             if(member.member_id == self.my_member_id):
-                self.log.info("**** My Ips %s , %s" % (member.member_default_private_ip, member.member_default_public_ip))
+                self.log.info("My Ips %s , %s" % (member.member_default_private_ip, member.member_default_public_ip))
                 self.publish_as_wka_member(member.member_default_private_ip)
             else:
-                self.log.info("Other WKA members memberid=%s privateip=%s, publicip=%s " % (member.member_id, member.member_default_private_ip, member.member_default_public_ip))
+                self.log.info("Other WKA members memberid=%s privateip=%s, public ip=%s " % (member.member_id, member.member_default_private_ip, member.member_default_public_ip))
                 self.add_to_restart_queue(member.member_id)
 
         #configure me with other wka members
@@ -50,8 +48,10 @@ class WkaMemberConfigurator(ICartridgeAgentPlugin):
 
         return None, None
 
-    def is_wka(self, clustering_type):
-        return clustering_type.lower() == "WKA".lower()
+    @staticmethod
+    def isTrue(self, str):
+        #should be an utility method
+        return str.lower() in ("true", "True", "1" , "yes", "Yes")
 
     def fetch_wka_members(self):
         mds_response = mdsclient.get(app=True)
@@ -64,10 +64,7 @@ class WkaMemberConfigurator(ICartridgeAgentPlugin):
 
     def run_plugin(self, values):
         self.log = LogFactory().get_log(__name__)
-        self.log.info("************************** starting wka_member_configurator")
-
-        #self.app_id = values['APPLICATION_ID']
-        #self.log.info("APPLICATION_ID %s" % self.app_id)
+        self.log.info("Starting Clustering Configuration")
 
         clusterId = values['CLUSTER_ID']
         self.log.info("CLUSTER_ID %s" % clusterId)
@@ -75,17 +72,20 @@ class WkaMemberConfigurator(ICartridgeAgentPlugin):
         service_name = values['SERVICE_NAME']
         self.log.info("SERVICE_NAME %s" % service_name)
 
-        #cluering_type = values['CLUSTERING_TYPE']
-        cluering_type = "WKA"
+        cluering_type = values['CLUSTERING_TYPE']
         self.log.info("CLUSTERING_TYPE %s" % cluering_type)
+
+
+        is_wka_member = values['WKA_MEMBER']
+        self.log.info("WKA_MEMBER %s" % is_wka_member)
 
         self.my_member_id = values['MEMBER_ID']
         self.log.info("MEMBER_ID %s" % self.my_member_id)
 
-        if self.is_wka(cluering_type):
-            self.log.info("a WKA member **************")
+        if self.is_wka(WkaMemberConfigurator.isTrue(is_wka_member)):
+            self.log.info("This is a WKA member")
             self.remove_me_from_queue()
             self.get_all_members(service_name, clusterId)
         else:
-            self.log.info("NOT a WKA member **************")
+            self.log.info("This is not a WKA member")
             self.fetch_wka_members()

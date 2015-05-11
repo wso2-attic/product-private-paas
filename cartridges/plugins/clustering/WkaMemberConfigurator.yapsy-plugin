@@ -3,7 +3,7 @@ Name = wka_member_configurator to configure wka members for WSO2 Carbon products
 Module = WkaMemberConfigurator
 
 [Documentation]
-Description = CompleteTopologyEvent
+Description = InstanceStartedEvent
 Author = Op1
 Version = 0.1
 Website = stratos.apache.org
