@@ -17,10 +17,8 @@
 
 # !/usr/bin/env python
 import ast
-from distutils import dir_util
 import logging
 import logging.config
-import shutil
 from configparserutil import ConfigParserUtil
 import os
 import constants
@@ -74,6 +72,7 @@ def generate_context(config_file_path):
     """
     # Read configuration file
     config_parser = ConfigParserUtil()
+    config_parser.optionxform = str
     config_parser.read(config_file_path)
     configurations = config_parser.as_dictionary()
 
@@ -81,20 +80,18 @@ def generate_context(config_file_path):
     context = configurations[constants.CONFIG_PARAMS]
     settings = configurations[constants.CONFIG_SETTINGS]
     global PACK_LOCATION
-    PACK_LOCATION = settings["distribution_file_path"]
+    PACK_LOCATION = settings["DISTRIBUTION_FILE_PATH"]
 
     # if read_env_variables is true context will be generated from environment variables
     # if read_env_variables is not true context will be read from config.ini
-    if settings["read_env_variables"] == "true":
+    if settings["READ_ENV_VARIABLES"] == "true":
         log.info("Reading from environment variables")
         for key, value in context.iteritems():
             # check if value exists for given key; use default if not exists
             context[key] = os.environ.get(key, context[key])
-
-    # check whether members are available in context before conversion
-    if 'members' in context:
-        context['members'] = ast.literal_eval(context['members'])
-
+    # Converting Members to dictionary
+    members = ast.literal_eval(context['STRATOS_MEMBERS']).split(",")
+    context["STRATOS_MEMBERS"] = dict(s.split(':') for s in members)
     log.info("Context generated %s", context)
     return context
 
@@ -114,7 +111,8 @@ def traverse(root_dir, context):
             config_file_name = \
                 os.path.splitext(os.path.relpath(os.path.join(dir_name, file_name), root_dir))[0] \
                 + ".xml"
-            config_file_name = os.path.join(constants.OUTPUT_DIRECTORY, config_file_name)
+            config_file_name = os.path.join(PACK_LOCATION, config_file_name)
+            print config_file_name
             create_output_xml(template_file_name1, config_file_name, context)
             log.debug("%s file created", config_file_name)
 
@@ -125,7 +123,7 @@ def main():
     :return: None
     """
     log.info("Configurator started.")
-
+    # traverse through the template directory
     for dirName in os.listdir(constants.TEMPLATE_PATH):
         config_file_path = os.path.join(constants.TEMPLATE_PATH, dirName,
                                         constants.CONFIG_FILE_NAME)
@@ -133,8 +131,6 @@ def main():
         context = generate_context(config_file_path)
         traverse(template_dir, context)
         log.info("Copying files to %s", PACK_LOCATION)
-        dir_util.copy_tree(constants.OUTPUT_DIRECTORY, PACK_LOCATION)
-        shutil.rmtree(constants.OUTPUT_DIRECTORY)
 
     log.info("Configuration completed")
 
