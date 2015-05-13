@@ -1,7 +1,9 @@
+import os
 from plugins.contracts import ICartridgeAgentPlugin
 from modules.util.log import LogFactory
 from modules.topology.topologycontext import *
 import mdsclient
+import plugins.configurator.configurator
 
 class WkaMemberConfigurator(ICartridgeAgentPlugin):
 
@@ -35,31 +37,46 @@ class WkaMemberConfigurator(ICartridgeAgentPlugin):
         cluster = service.get_cluster(cluster_id)
 
         members = cluster.get_members()
+        wka_members=[]
+        local_member_port=4000
         for member in members:
             if(member.member_id == self.my_member_id):
                 self.log.info("My Ips %s , %s" % (member.member_default_private_ip, member.member_default_public_ip))
                 self.publish_as_wka_member(member.member_default_private_ip)
             else:
                 self.log.info("Other WKA members memberid=%s privateip=%s, public ip=%s " % (member.member_id, member.member_default_private_ip, member.member_default_public_ip))
+                wka_members.append(member.member_default_private_ip+':'+str(local_member_port))
                 self.add_to_restart_queue(member.member_id)
 
         #configure me with other wka members
         # remove me from queue if i am there
+        local_members = ','.join(map(str, wka_members))
+        local_members= "'{}'".format(local_members)
+        self.log.info("*** local_members=%s " % (local_members))
+
+        os.environ['STRATOS_MEMBERS'] = str(local_members)
+        self.log.info("env local members=%s" % (os.environ.get('STRATOS_MEMBERS')))
 
         return None, None
 
     @staticmethod
-    def isTrue(self, str):
+    def isTrue(str):
         #should be an utility method
         return str.lower() in ("true", "True", "1" , "yes", "Yes")
 
     def fetch_wka_members(self):
+        wka_members=[]
+        local_member_port=4000
         mds_response = mdsclient.get(app=True)
         wka_members= None
         if mds_response is not None:
             wka_members = mds_response.properties.get("wka")
 
         self.log.info("WKA members %s " % wka_members);
+
+    def execute_clustring_configurater(self):
+        #invoke clustering confugurater
+        configurator.configure()
 
 
     def run_plugin(self, values):
@@ -75,17 +92,27 @@ class WkaMemberConfigurator(ICartridgeAgentPlugin):
         cluering_type = values['CLUSTERING_TYPE']
         self.log.info("CLUSTERING_TYPE %s" % cluering_type)
 
-
         is_wka_member = values['WKA_MEMBER']
         self.log.info("WKA_MEMBER %s" % is_wka_member)
 
         self.my_member_id = values['MEMBER_ID']
         self.log.info("MEMBER_ID %s" % self.my_member_id)
 
-        if self.is_wka(WkaMemberConfigurator.isTrue(is_wka_member)):
+        sub_domain = values['SUB_DOMAIN']
+        sub_domain= "'{}'".format(sub_domain)
+        self.log.info("SUB_DOMAIN %s" % (sub_domain))
+
+        os.environ['STRATOS_SUB_DOMAIN'] = str(sub_domain)
+        self.log.info("env clustering  SUB_DOMAIN=%s" % (os.environ.get('SUB_DOMAIN','worker')))
+
+        if WkaMemberConfigurator.isTrue(is_wka_member):
             self.log.info("This is a WKA member")
             self.remove_me_from_queue()
-            self.get_all_members(service_name, clusterId)
+            self.publish_wka_members(service_name, clusterId)
         else:
             self.log.info("This is not a WKA member")
             self.fetch_wka_members()
+
+        self.execute_clustring_configurater()
+
+
