@@ -75,7 +75,14 @@ class WkaMemberConfigurator(ICartridgeAgentPlugin):
             self.log.info("WKA members %s=" % wka_member_ip)
             wka_members_ips.append(wka_member_ip +':'+str(local_member_port))
 
-        self.log.info("WKA members %s " % wka_members_ips);
+        self.log.info("WKA members %s " % wka_members_ips)
+
+        wka_members_ips = ','.join(map(str, wka_members_ips))
+        wka_members_ips= "'{}'".format(wka_members_ips)
+        self.log.info("local_members=%s " % (wka_members_ips))
+
+        os.environ['STRATOS_MEMBERS'] = str(wka_members_ips)
+        self.log.info("env local members=%s" % (os.environ.get('STRATOS_MEMBERS')))
 
     def execute_clustring_configurater(self):
         configurator.configure()
