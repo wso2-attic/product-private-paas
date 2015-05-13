@@ -45,15 +45,12 @@
        This is will become part of the End Point Reference of the
        services deployed on this server instance.
     -->
-    {% if worker_host_name is defined and subDomain == "mgt" : %}
-        <HostName>{{worker_host_name}}</HostName>
-    {% endif %}
-
+        <HostName>{{STRATOS_WORKER_HOST_NAME}}</HostName>
 
     <!--
     Host name to be used for the Carbon management console
     -->
-        <MgtHostName>{{mgt_host_name}}</MgtHostName>
+        <MgtHostName>{{STRATOS_MGT_HOST_NAME}}</MgtHostName>
     <!--
         The URL of the back end server. This is where the admin services are hosted and
         will be used by the clients in the front end server.
@@ -113,7 +110,7 @@
          the define value + Offset.
          e.g. Offset=2 and HTTPS port=9443 will set the effective HTTPS port to 9445
          -->
-            <Offset>{{port_offset}}</Offset>
+            <Offset>{{STRATOS_PORT_OFFSET}}</Offset>
         <!-- The JMX Ports -->
         <JMX>
             <!--The port RMI registry is exposed-->

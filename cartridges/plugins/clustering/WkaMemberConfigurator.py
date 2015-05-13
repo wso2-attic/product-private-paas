@@ -3,6 +3,7 @@ from plugins.contracts import ICartridgeAgentPlugin
 from modules.util.log import LogFactory
 from modules.topology.topologycontext import *
 import mdsclient
+import plugins.configurator.configurator
 
 class WkaMemberConfigurator(ICartridgeAgentPlugin):
 
@@ -64,19 +65,20 @@ class WkaMemberConfigurator(ICartridgeAgentPlugin):
         return str.lower() in ("true", "True", "1" , "yes", "Yes")
 
     def fetch_wka_members(self):
-        wka_members=[]
-        local_member_port=4000
+	local_member_port=4000
         mds_response = mdsclient.get(app=True)
-        wka_members= None
+        wka_members_ips=[]
         if mds_response is not None:
-            wka_members = mds_response.properties.get("wka")
+            wka_members_ips = mds_response.properties.get("wka")
 
-        self.log.info("WKA members %s " % wka_members);
+        for wka_member_ip in wka_members_ips:
+            self.log.info("WKA members %s=" % wka_member_ip)
+            wka_members_ips.append(wka_member_ip +':'+str(local_member_port))
+
+        self.log.info("WKA members %s " % wka_members_ips);
 
     def execute_clustring_configurater(self):
-        #invoke clustering confugurater
-        pass
-
+        configurator.configure()
 
     def run_plugin(self, values):
         self.log = LogFactory().get_log(__name__)
