@@ -79,6 +79,7 @@ class WkaMemberConfigurator(ICartridgeAgentPlugin):
         configurator.configure()
 
 
+
     def run_plugin(self, values):
         self.log = LogFactory().get_log(__name__)
         self.log.info("Starting Clustering Configuration")
@@ -114,5 +115,4 @@ class WkaMemberConfigurator(ICartridgeAgentPlugin):
             self.fetch_wka_members()
 
         self.execute_clustring_configurater()
-
 

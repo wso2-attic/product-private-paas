@@ -1,0 +1,62 @@
+{
+    "type": "appserver-manager",
+    "provider": "wso2",
+    "category": "application",
+    "host": "as.wso2.com",
+    "displayName": "WSO2 Application Server",
+    "description": "AS Manager Cartridge",
+    "version": "7",
+    "multiTenant": "true",
+    "portMapping": [
+	 {
+           "protocol": "http",
+           "port": "9763"
+        },
+        {
+           "protocol": "https",
+           "port": "9443"
+        }
+    ],
+    "deployment": {
+    },
+    "property": [
+                {
+                    "name": "payload_parameter.CLUSTERING_TYPE",
+                    "value": "wka"
+                },
+                {
+                    "name": "payload_parameter.SUB_DOMAIN",
+                    "value": "manager"
+                },
+                {
+                    "name": "payload_parameter.WKA_MEMBER",
+                    "value": "true"
+                }
+            ],
+    "iaasProvider": [
+        {
+            "type": "openstack",
+            "imageId": "RegionOne/a5996c8d-a708-4114-bacd-4fda7e97c032",
+            "networkInterfaces": [
+                {
+                    "name": "network-non-routable",
+                    "networkUuid": "512e1f54-1e85-4dac-b2e6-f0b30fc552cf"
+                }
+            ],
+            "property": [
+                {
+                    "name": "instanceType",
+                    "value": "RegionOne/2"
+                },
+                {
+                    "name": "keyPair",
+                    "value": "udara"
+                },
+                {
+                    "name": "securityGroups",
+                    "value": "default"
+                }
+            ]
+        }
+    ]
+}
