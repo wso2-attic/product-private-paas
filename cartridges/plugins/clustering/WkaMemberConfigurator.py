@@ -3,7 +3,7 @@ from plugins.contracts import ICartridgeAgentPlugin
 from modules.util.log import LogFactory
 from modules.topology.topologycontext import *
 import mdsclient
-import plugins.configurator.configurator
+import configurator.configurator
 
 class WkaMemberConfigurator(ICartridgeAgentPlugin):
 
@@ -78,7 +78,6 @@ class WkaMemberConfigurator(ICartridgeAgentPlugin):
         self.log.info("WKA members %s " % wka_members_ips);
 
     def execute_clustring_configurater(self):
-
         configurator.configure()
 
 
@@ -117,7 +116,4 @@ class WkaMemberConfigurator(ICartridgeAgentPlugin):
             self.fetch_wka_members()
 
         self.execute_clustring_configurater()
-<<<<<<< HEAD
 
-=======
->>>>>>> upstream/master
