@@ -3,7 +3,7 @@ from plugins.contracts import ICartridgeAgentPlugin
 from modules.util.log import LogFactory
 from modules.topology.topologycontext import *
 import mdsclient
-import configurator.configurator
+import plugins.configurator.configurator
 
 class WkaMemberConfigurator(ICartridgeAgentPlugin):
 
