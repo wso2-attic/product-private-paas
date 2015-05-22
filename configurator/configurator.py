@@ -24,10 +24,12 @@ import os
 import constants
 from jinja2 import Environment, FileSystemLoader
 
-logging.config.fileConfig('conf/logging_config.ini')
-log = logging.getLogger(__name__)
 
 PATH = os.path.dirname(os.path.abspath(__file__))
+
+logging.config.fileConfig(os.path.join(PATH, './conf/logging_config.ini'))
+log = logging.getLogger(__name__)
+
 TEMPLATE_ENVIRONMENT = Environment(
     autoescape=False,
     loader=FileSystemLoader(os.path.join(PATH)),
@@ -61,6 +63,8 @@ def create_output_xml(template_path, output_path, context):
     with open(output_path, 'w') as xml_file:
         content = render_template(template_path, context)
         xml_file.write(content)
+        log.info("Creating output file :"+directory)
+        log.info("Creating content "+content)
 
 
 def generate_context(config_file_path):
@@ -73,7 +77,7 @@ def generate_context(config_file_path):
     # Read configuration file
     config_parser = ConfigParserUtil()
     config_parser.optionxform = str
-    config_parser.read(config_file_path)
+    config_parser.read(os.path.join(PATH,config_file_path))
     configurations = config_parser.as_dictionary()
 
     # Reading the default values
@@ -104,30 +108,40 @@ def traverse(root_dir, context):
     :param context: dictionary containing values to be used by jinja engine
     :return:None
     """
+    log.info("Starting to traverse "+root_dir)
     for dir_name, subdirList, fileList in os.walk(root_dir):
         for file_name in fileList:
+            log.info("** file name %s" % file_name)
+            log.info("dir name %s" % dir_name)
             # generating the relative path of the template
             template_file_name1 = os.path.join(dir_name, file_name)
+            # template_file_name1 = file_name
+            # template_file_name1 = os.path.relpath(dir_name, root_dir)
+            log.info("***template file name %s " % template_file_name1)
             config_file_name = \
                 os.path.splitext(os.path.relpath(os.path.join(dir_name, file_name), root_dir))[0] \
                 + ".xml"
+            log.info("** configfilename %s" % config_file_name)
             config_file_name = os.path.join(PACK_LOCATION, config_file_name)
-            print config_file_name
+            log.info("** configfilename %s" % config_file_name)
+            template_file_name1= template_file_name1.split("configurator/")[1]
             create_output_xml(template_file_name1, config_file_name, context)
-            log.debug("%s file created", config_file_name)
+            log.info("** templatefilename %s" % template_file_name1)
+            log.info("%s file created", config_file_name)
 
 
-def main():
+def configure():
     """
     Main method
     :return: None
     """
-    log.info("Configurator started.")
+    var= os.path.abspath(__file__)
+    log.info("Configurator started. %s" % var )
     # traverse through the template directory
-    for dirName in os.listdir(constants.TEMPLATE_PATH):
+    for dirName in os.listdir(os.path.join(PATH,constants.TEMPLATE_PATH)):
         config_file_path = os.path.join(constants.TEMPLATE_PATH, dirName,
                                         constants.CONFIG_FILE_NAME)
-        template_dir = os.path.join(constants.TEMPLATE_PATH, dirName, "conf")
+        template_dir = os.path.join(PATH,constants.TEMPLATE_PATH, dirName, "conf")
         context = generate_context(config_file_path)
         traverse(template_dir, context)
         log.info("Copying files to %s", PACK_LOCATION)
@@ -136,4 +150,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    configure()
