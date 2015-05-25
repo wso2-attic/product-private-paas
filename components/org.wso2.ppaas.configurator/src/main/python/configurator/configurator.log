@@ -1,0 +1,12 @@
+2015-05-25 12:21:29,072 __main__     INFO     Configurator started.
+2015-05-25 12:21:29,073 __main__     INFO     Reading from environment variables
+2015-05-25 12:21:29,073 __main__     INFO     Context generated: {'STRATOS_WORKER_HOST_NAME': 'as.cloud-test.wso2.com', 'STRATOS_HTTP_PROXY_PORT': '80', 'STRATOS_CLUSTERING': 'true', 'STRATOS_LOCAL_MEMBER_HOST': 'as.cloud-test.wso2.com_env', 'STRATOS_LOCAL_MEMBER_PORT': '4300', 'STRATOS_DOMAIN': 'wso2.as.domain_evn', 'STRATOS_MEMBERS': {'192.168.30.158': '4000', '192.168.30.159': '4000'}, 'STRATOS_PORT_OFFSET': '2', 'STRATOS_SUB_DOMAIN': 'mgt', 'STRATOS_HTTPS_PROXY_PORT': '443', 'STRATOS_MEMBERSHIP_SCHEME': 'wka', 'STRATOS_MGT_HOST_NAME': 'mgt.as.cloud-test.wso2.com'}
+2015-05-25 12:21:29,073 __main__     INFO     Starting to traverse /Users/anuruddha/Repos/product-private-paas/configurator/./templates/wso2-as/conf
+2015-05-25 12:21:29,073 __main__     INFO     Rendering template: ./templates/wso2-as/conf/carbon.jinja
+2015-05-25 12:21:29,087 __main__     INFO     Creating output file :/Users/anuruddha/Downloads/wso2as-5.2.1/repository/conf/carbon.xml
+2015-05-25 12:21:29,088 __main__     INFO     Rendering template: ./templates/wso2-as/conf/axis2/axis2.jinja
+2015-05-25 12:21:29,102 __main__     INFO     Creating output file :/Users/anuruddha/Downloads/wso2as-5.2.1/repository/conf/axis2/axis2.xml
+2015-05-25 12:21:29,103 __main__     INFO     Rendering template: ./templates/wso2-as/conf/tomcat/catalina-server.jinja
+2015-05-25 12:21:29,107 __main__     INFO     Creating output file :/Users/anuruddha/Downloads/wso2as-5.2.1/repository/conf/tomcat/catalina-server.xml
+2015-05-25 12:21:29,107 __main__     INFO     Copying files to /Users/anuruddha/Downloads/wso2as-5.2.1/repository/conf
+2015-05-25 12:21:29,107 __main__     INFO     Configuration completed

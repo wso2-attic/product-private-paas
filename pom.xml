@@ -80,6 +80,8 @@
     </distributionManagement>
 
     <modules>
+        <module>components</module>
+        <module>products</module>
     </modules>
 
     <repositories>
