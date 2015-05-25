@@ -33,9 +33,7 @@ Please follow below steps to proceed with the installation:
 3. Copy template files to <configurator_home>/templates.
 
 4. Change <configurator_home>/templates/<wso2_product_name>/config.ini as required.
-   ```
-   java.naming.provider.url=tcp://localhost:61616
-   ```
+  
 5. Run <confiugrator_home>/configurator.py.
    ```
    python configurator.py
