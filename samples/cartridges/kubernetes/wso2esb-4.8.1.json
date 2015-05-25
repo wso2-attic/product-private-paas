@@ -1,0 +1,46 @@
+{
+    "type": "wso2esb",
+    "provider": "wso2",
+    "category": "framework",
+    "host": "esb.wso2.org",
+    "displayName": "WSO2 ESB",
+    "description": "WSO2 ESB Cartridge",
+    "version": "4.8.1",
+    "multiTenant": "true",
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "protocol": "http",
+            "port": "9763",
+            "proxyPort": "8763"
+        },
+        {
+            "protocol": "https",
+            "port": "9443",
+            "proxyPort": "8443"
+        }
+    ],
+    "deployment": {
+        "baseDir": "/opt/wso2esb-4.8.1/repository/deployment/server"
+    },
+    "iaasProvider": [
+        {
+            "type": "kubernetes",
+            "imageId": "wso2/esb:4.8.1",
+            "networkInterfaces": [
+            ],
+            "property": [
+            ]
+        }
+    ],
+    "property": [
+        {
+            "name": "KUBERNETES_CONTAINER_CPU",
+            "value": "0"
+        },
+        {
+            "name": "KUBERNETES_CONTAINER_MEMORY",
+            "value": "0"
+        }
+    ]
+}
