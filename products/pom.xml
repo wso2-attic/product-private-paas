@@ -17,9 +17,7 @@
     specific language governing permissions and limitations
     under the License.
  -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <parent>
         <groupId>org.wso2</groupId>
@@ -28,14 +26,14 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>ppaas-products-parent</artifactId>
+    <artifactId>private-paas-products-parent</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 PPaaS - Products</name>
-    <description>WSO2 Private PaaS</description>
+    <name>WSO2 Private PaaS - Products</name>
+    <description>WSO2 Private PaasS  based products</description>
     <url>http://wso2.org</url>
 
     <modules>
-        <module>configurator</module>
+        <module>stratos</module>
     </modules>
 </project>
 
