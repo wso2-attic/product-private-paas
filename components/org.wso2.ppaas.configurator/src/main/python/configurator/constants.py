@@ -15,30 +15,16 @@
 # specific language governing permissions and limitations
 # under the License.
 
-[loggers]
-keys=root
+# Template Paths
+TEMPLATE_PATH = "./templates"
+CONFIG_FILE_NAME = "configs.ini"
 
-[handlers]
-keys=stream_handler,FileHandler
+LOG_FILE_LOCATION = "./configurator.log"
 
-[formatters]
-keys=formatter
+# Configurations
+CONFIG_DEFAULTS = "DEFAULTS"
+CONFIG_SETTINGS = "SETTINGS"
+CONFIG_PARAMS = "PARAMS"
 
-[logger_root]
-level=INFO
-handlers=stream_handler,FileHandler
-
-[handler_stream_handler]
-class=StreamHandler
-level=INFO
-formatter=formatter
-args=(sys.stderr,)
-
-[handler_FileHandler]
-class=FileHandler
-level=INFO
-formatter=formatter
-args=('./configurator.log','w')
-
-[formatter_formatter]
-format=%(asctime)s %(name)-12s %(levelname)-8s %(message)s
+# Output Location
+OUTPUT_DIRECTORY = "./output"

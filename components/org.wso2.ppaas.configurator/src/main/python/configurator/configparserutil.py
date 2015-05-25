@@ -6,7 +6,7 @@
 # "License"); you may not use this file except in compliance
 # with the License.  You may obtain a copy of the License at
 #
-#   http://www.apache.org/licenses/LICENSE-2.0
+# http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing,
 # software distributed under the License is distributed on an
@@ -15,16 +15,17 @@
 # specific language governing permissions and limitations
 # under the License.
 
-# Template Paths
-TEMPLATE_PATH = "./templates"
-CONFIG_FILE_NAME = "configs.ini"
+import ConfigParser
 
-LOG_FILE_LOCATION = "./configurator.log"
 
-# Configurations
-CONFIG_DEFAULTS = "DEFAULTS"
-CONFIG_SETTINGS = "SETTINGS"
-CONFIG_PARAMS = "PARAMS"
-
-# Output Location
-OUTPUT_DIRECTORY = "./output"
+class ConfigParserUtil(ConfigParser.ConfigParser):
+    def as_dictionary(self):
+        """
+        read configuration file and create a dictionary
+        :return: configurations as a dictionary
+        """
+        d = dict(self._sections)
+        for k in d:
+            d[k] = dict(self._defaults, **d[k])
+            d[k].pop('__name__', None)
+        return d
