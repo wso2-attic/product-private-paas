@@ -84,6 +84,7 @@
 
     <modules>
         <module>components</module>
+        <module>features</module>
         <module>products</module>
     </modules>
 
