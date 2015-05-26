@@ -59,4 +59,6 @@ EXPOSE 9443
 # -----------------------
 # Define entry point
 # -----------------------
+# The following run script is included in the base image to start the cartridge agent at the boot time.
+
 ENTRYPOINT /usr/local/bin/run | /usr/sbin/sshd -D
