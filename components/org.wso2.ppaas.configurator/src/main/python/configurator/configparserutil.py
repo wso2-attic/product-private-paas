@@ -34,7 +34,7 @@ class ConfigParserUtil(ConfigParser.ConfigParser):
     @staticmethod
     def convert_properties_to_dictionary(variable):
         """
-        convert and return mulit valued properties as a dictionary e.g :- Members,port mappings
+        convert and return multi valued properties as a dictionary e.g :- Members,port mappings
         :param property:
         :return: dictionary of well known members
         """
