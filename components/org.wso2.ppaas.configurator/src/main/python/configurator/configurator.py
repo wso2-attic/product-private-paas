@@ -98,9 +98,9 @@ def generate_context(config_file_path):
             context[key] = os.environ.get(key, context[key])
 
     # Converting Members to dictionary
-    if "STRATOS_MEMBERS" in context:
-        context["STRATOS_MEMBERS"] = ConfigParserUtil.convert_properties_to_dictionary(
-            context['STRATOS_MEMBERS'])
+    if "STRATOS_WELL_KNOWN_MEMBERS" in context:
+        context["STRATOS_WELL_KNOWN_MEMBERS"] = ConfigParserUtil.convert_properties_to_dictionary(
+            context['STRATOS_WELL_KNOWN_MEMBERS'])
 
     if "STRATOS_PORT_MAPPING" in context:
         context["STRATOS_PORT_MAPPING"] = ConfigParserUtil.convert_properties_to_dictionary(
