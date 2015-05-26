@@ -16,6 +16,7 @@
 # under the License.
 
 import ConfigParser
+import ast
 
 
 class ConfigParserUtil(ConfigParser.ConfigParser):
@@ -29,3 +30,15 @@ class ConfigParserUtil(ConfigParser.ConfigParser):
             d[k] = dict(self._defaults, **d[k])
             d[k].pop('__name__', None)
         return d
+
+    @staticmethod
+    def convert_properties_to_dictionary(variable):
+        """
+        convert and return multi valued properties as a dictionary e.g :- Members,port mappings
+        :param property:
+        :return: dictionary of well known members
+        """
+
+        properties = ast.literal_eval(variable).split(",")
+        return dict(s.split(':') for s in properties)
+
