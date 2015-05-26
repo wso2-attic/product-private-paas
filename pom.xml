@@ -83,8 +83,9 @@
     </distributionManagement>
 
     <modules>
-        <module>components</module>
 	<module>extensions</module>
+        <module>components</module>
+        <module>features</module>
         <module>products</module>
     </modules>
 
