@@ -98,8 +98,14 @@ def generate_context(config_file_path):
             context[key] = os.environ.get(key, context[key])
 
     # Converting Members to dictionary
-    members = ast.literal_eval(context['STRATOS_MEMBERS']).split(",")
-    context["STRATOS_MEMBERS"] = dict(s.split(':') for s in members)
+    if "STRATOS_MEMBERS" in context:
+        context["STRATOS_MEMBERS"] = ConfigParserUtil.convert_properties_to_dictionary(
+            context['STRATOS_MEMBERS'])
+
+    if "STRATOS_PORT_MAPPING" in context:
+        context["STRATOS_PORT_MAPPING"] = ConfigParserUtil.convert_properties_to_dictionary(
+            context["STRATOS_PORT_MAPPING"])
+
     log.info("Context generated: %s", context)
     return context
 
@@ -124,7 +130,7 @@ def traverse(root_dir, context):
                 + ".xml"
             config_file_name = os.path.join(PACK_LOCATION, config_file_name)
             template_file_name = template_file_name.split("/./")[1]
-            log.info("Template file : %s ", template_file_name)
+            log.debug("Template file : %s ", template_file_name)
             log.debug("Output configuration file : %s ", config_file_name)
             create_output_xml(template_file_name, config_file_name, context)
 
