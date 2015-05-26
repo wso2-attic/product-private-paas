@@ -1,0 +1,95 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one 
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY 
+ * KIND, either express or implied.  See the License for the 
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.apache.stratos.autoscaler.rule;
+
+import org.apache.stratos.messaging.domain.topology.Service;
+import org.apache.stratos.messaging.domain.topology.Cluster;
+import org.apache.stratos.autoscaler.context.AutoscalerContext;
+import org.apache.stratos.autoscaler.util.AutoscalerConstants;
+import org.apache.stratos.autoscaler.pojo.policy.PolicyManager;
+import org.apache.stratos.autoscaler.pojo.policy.autoscale.AutoscalePolicy;
+import org.apache.stratos.autoscaler.pojo.policy.autoscale.RequestsInFlight;
+import org.apache.stratos.autoscaler.pojo.policy.autoscale.LoadThresholds;
+import org.apache.stratos.autoscaler.algorithms.PartitionAlgorithm;
+import org.apache.stratos.autoscaler.algorithms.partition.OneAfterAnother;
+import org.apache.stratos.autoscaler.algorithms.partition.RoundRobin;
+import org.apache.stratos.autoscaler.context.partition.ClusterLevelPartitionContext;
+import org.apache.stratos.messaging.message.receiver.topology.TopologyManager;
+import org.apache.stratos.autoscaler.rule.AutoscalerRuleEvaluator;
+import org.apache.commons.logging.Log;
+import org.apache.stratos.cloud.controller.stub.domain.Partition;
+import org.apache.stratos.cloud.controller.stub.domain.MemberContext;
+import org.apache.stratos.autoscaler.context.cluster.ClusterInstanceContext;
+
+global org.apache.stratos.autoscaler.rule.RuleLog log;
+global org.apache.stratos.autoscaler.pojo.policy.PolicyManager manager;
+global org.apache.stratos.autoscaler.context.AutoscalerContext context;
+global org.apache.stratos.autoscaler.rule.RuleTasksDelegator delegator;
+global java.util.Map partitionCtxts;
+global java.lang.String clusterId;
+global java.lang.Boolean isPrimary;
+global Integer primaryMemberCount;
+global java.lang.String algorithmName;
+
+rule "Minimum Rule"
+dialect "mvel"
+    when
+        clusterInstanceContext : ClusterInstanceContext ()
+
+        partitionAlgorithm : PartitionAlgorithm() from  delegator.getPartitionAlgorithm(algorithmName)
+
+        eval(log.debug("Running minimum rule: [network-partition] " + clusterInstanceContext.getNetworkPartitionId() + " [cluster-instance] " + clusterInstanceContext.getId()))
+        eval(log.debug("[min-check] [network-partition] " + clusterInstanceContext.getNetworkPartitionId() + " [cluster-instance] " + clusterInstanceContext.getId() + " [cluster] " + clusterId + " Non terminated member count: " + clusterInstanceContext.getNonTerminatedMemberCount()))
+        eval(log.debug("[min-check] [network-partition] " + clusterInstanceContext.getNetworkPartitionId() + " [cluster-instance] " + clusterInstanceContext.getId() + " [cluster] " + clusterId + " Minimum member count: " + clusterInstanceContext.getMinInstanceCount()))
+
+        eval ( (isPrimary && (primaryMemberCount < clusterInstanceContext.getMinInstanceCount())) || ( !isPrimary && (clusterInstanceContext.getNonTerminatedMemberCount() < clusterInstanceContext.getMinInstanceCount())) )
+
+    then
+
+        int additionalInstances = 0;
+        if(isPrimary){
+
+            additionalInstances = clusterInstanceContext.getMinInstanceCount() - primaryMemberCount;
+            log.debug("[min-check] true [primary] true [primary member count] " + primaryMemberCount + " [cluster] " + clusterId);
+        } else {
+
+            additionalInstances = clusterInstanceContext.getMinInstanceCount() - clusterInstanceContext.getNonTerminatedMemberCount();
+            log.debug("[min-check] true [primary] false [non terminated member count] " + clusterInstanceContext.getNonTerminatedMemberCount()+ " [cluster] " + clusterId);
+        }
+
+        int count = 0;
+        boolean partitionsAvailable = true;
+        while(count != additionalInstances && partitionsAvailable){
+
+            ClusterLevelPartitionContext partitionContext =  (ClusterLevelPartitionContext)partitionAlgorithm.getNextScaleUpPartitionContext(clusterInstanceContext.getPartitionCtxtsAsAnArray());
+
+            if(partitionContext != null){
+
+                log.info("[min-check] Partition available, hence trying to spawn an instance to fulfil minimum count!" + " [cluster] " + clusterId);
+                log.debug("[min-check] " + " [partition] " + partitionContext.getPartitionId() + " [cluster] " + clusterId);
+                delegator.delegateSpawn(partitionContext, clusterId, clusterInstanceContext.getId(), isPrimary);
+
+                count++;
+            } else {
+
+                partitionsAvailable = false;
+            }
+        }
+end

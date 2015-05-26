@@ -1,0 +1,185 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *  http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+package org.apache.stratos.autoscaler.rule;
+
+import org.apache.stratos.autoscaler.context.cluster.ClusterInstanceContext;
+import org.apache.stratos.autoscaler.algorithms.PartitionAlgorithm;
+import org.apache.stratos.autoscaler.context.partition.ClusterLevelPartitionContext;
+import org.apache.stratos.autoscaler.context.member.MemberStatsContext;
+import org.apache.stratos.autoscaler.pojo.policy.autoscale.RequestsInFlight;
+import org.apache.stratos.autoscaler.pojo.policy.autoscale.LoadThresholds;
+import org.apache.stratos.autoscaler.pojo.policy.autoscale.MemoryConsumption;
+import org.apache.stratos.autoscaler.pojo.policy.autoscale.LoadAverage;
+
+global org.apache.stratos.autoscaler.rule.RuleLog log;
+global java.lang.String clusterId;
+global Integer roundedRequiredInstanceCount;
+global org.apache.stratos.autoscaler.rule.RuleTasksDelegator delegator;
+global java.lang.String algorithmName;
+global java.lang.Boolean isPrimary;
+global java.util.List primaryMembers;
+
+rule "Dependent Scaling Rule"
+dialect "mvel"
+	when
+
+        clusterInstanceContext : ClusterInstanceContext ()
+        partitionAlgorithm : PartitionAlgorithm() from  delegator.getPartitionAlgorithm(algorithmName)
+
+        nonTerminatedMembers : Integer() from clusterInstanceContext.getNonTerminatedMemberCount()
+
+        eval(log.debug("Running dependent scaling rule: [network-partition] " + clusterInstanceContext.getNetworkPartitionId() + " [cluster-instance] " + clusterInstanceContext.getId()))
+        scaleUp : Boolean() from (nonTerminatedMembers < roundedRequiredInstanceCount )
+        scaleDown : Boolean() from (nonTerminatedMembers > roundedRequiredInstanceCount )
+
+	then
+
+        if(scaleUp) {
+
+            int clusterMaxMembers = clusterInstanceContext.getMaxInstanceCount();
+            if (nonTerminatedMembers < clusterInstanceContext.getMaxInstanceCount()) {
+
+                int additionalInstances = 0;
+                if(clusterInstanceContext.getMaxInstanceCount() < roundedRequiredInstanceCount){
+
+                    additionalInstances = clusterInstanceContext.getMaxInstanceCount() - nonTerminatedMembers;
+                } else {
+
+                    additionalInstances = roundedRequiredInstanceCount - nonTerminatedMembers;
+                    log.info("[dependency-scaling] [scale-up] Required member count based on dependecy scaling is higher than max, hence
+                            notifying to parent for possible group scaling or app bursting.
+                            [cluster] " + clusterId + " [instance id]" + clusterInstanceContext.getId() +
+                            " [max] " + clusterMaxMembers);
+                    delegator.delegateScalingOverMaxNotification(clusterId, clusterInstanceContext.getNetworkPartitionId(), clusterInstanceContext.getId());
+                }
+
+                int count = 0;
+                boolean partitionsAvailable = true;
+
+                log.debug("[dependent-scale] is running for [cluster] " + clusterId +
+                " [cluster-instance] " + clusterInstanceContext.getId() + " max member count is: " +
+                    clusterMaxMembers + " current member count is: " + nonTerminatedMembers);
+
+                while(count != additionalInstances  && partitionsAvailable) {
+
+                    ClusterLevelPartitionContext partitionContext =  (ClusterLevelPartitionContext)partitionAlgorithm.getNextScaleUpPartitionContext(clusterInstanceContext.getPartitionCtxtsAsAnArray());
+                    if(partitionContext != null) {
+
+                        log.info("[dependency-scale] [scale-up] Partition available, hence trying to spawn an instance to scale up!" );
+                        log.debug("[dependency-scale] [scale-up] " + " [partition] " + partitionContext.getPartitionId() + " [cluster] " + clusterId );
+                        delegator.delegateSpawn(partitionContext, clusterId, clusterInstanceContext.getId(), isPrimary);
+                        count++;
+                    } else {
+                        partitionsAvailable = false;
+                    }
+                }
+
+                if(!partitionsAvailable) {
+                    if(clusterInstanceContext.isInGroupScalingEnabledSubtree()){
+                        delegator.delegateScalingOverMaxNotification(clusterId,
+                                                        clusterInstanceContext.getNetworkPartitionId(),
+                                                        clusterInstanceContext.getId());
+                        log.info("[dependency-scale] [dependent-max-notification] partition is not
+                        available for [scale-up]. Hence notifying the parent for group scaling" );
+                    } else {
+                        log.warn("[dependency-scale] [dependent-max-notification] partition is not
+                                        available for [scale-up]. All resources are exhausted.
+                                        Please enable group-scaling for further scaleup" );
+                    }
+
+                }
+            } else {
+
+                 log.info("[dependency-scale] [scale-up] Trying to scale up over max, hence not scaling up cluster itself and
+                         notifying to parent for possible group scaling or app bursting.
+                         [cluster] " + clusterId + " [instance id]" + clusterInstanceContext.getId() +
+                         " [max] " + clusterMaxMembers);
+                 delegator.delegateScalingOverMaxNotification(clusterId, clusterInstanceContext.getNetworkPartitionId(), clusterInstanceContext.getId());
+            }
+        } else if (scaleDown) {
+
+            int redundantInstances = nonTerminatedMembers - roundedRequiredInstanceCount;
+
+            int count = 0;
+
+            while(count != redundantInstances){
+                MemberStatsContext selectedMemberStatsContext = null;
+                double lowestOverallLoad = 0.0;
+                boolean foundAValue = false;
+                ClusterLevelPartitionContext partitionContext =  (ClusterLevelPartitionContext)partitionAlgorithm.getNextScaleDownPartitionContext(clusterInstanceContext.getPartitionCtxtsAsAnArray());
+                if(partitionContext != null){
+                    log.info("[dependency-scale] [scale-down] Partition available to scale down, hence trying to terminate an instance to scale down!" );
+                    log.debug("[dependency-scale] [scale-down] " + " [partition] " + partitionContext.getPartitionId() + " [cluster] " + clusterId );
+
+                    for(MemberStatsContext memberStatsContext: partitionContext.getMemberStatsContexts().values()){
+
+						if( !primaryMembers.contains(memberStatsContext.getMemberId()) ) {
+
+                            LoadAverage loadAverage = memberStatsContext.getLoadAverage();
+                            log.debug("[dependency-scale] [scale-down] " + " [cluster] "
+                                + clusterId + " [member] " + memberStatsContext.getMemberId() + " Load average: " + loadAverage);
+
+                            MemoryConsumption memoryConsumption = memberStatsContext.getMemoryConsumption();
+                            log.debug("[dependency-scale] [scale-down] " + " [partition] " + partitionContext.getPartitionId() + " [cluster] "
+                                + clusterId + " [member] " + memberStatsContext.getMemberId() + " Memory consumption: " + memoryConsumption);
+
+                            double predictedCpu = delegator.getPredictedValueForNextMinute(loadAverage.getAverage(),loadAverage.getGradient(),loadAverage.getSecondDerivative(), 1);
+                            log.debug("[dependency-scale] [scale-down] " + " [partition] " + partitionContext.getPartitionId() + " [cluster] "
+                                + clusterId + " [member] " + memberStatsContext.getMemberId() + " Predicted CPU: " + predictedCpu);
+
+                            double predictedMemoryConsumption = delegator.getPredictedValueForNextMinute(memoryConsumption.getAverage(),memoryConsumption.getGradient(),memoryConsumption.getSecondDerivative(), 1);
+                            log.debug("[dependency-scale] [scale-down] " + " [partition] " + partitionContext.getPartitionId() + " [cluster] "
+                                + clusterId + " [member] " + memberStatsContext.getMemberId() + " Predicted memory consumption: " + predictedMemoryConsumption);
+
+                            double overallLoad = (predictedCpu + predictedMemoryConsumption) / 2;
+                            log.debug("[dependency-scale] [scale-down] " + " [partition] " + partitionContext.getPartitionId() + " [cluster] "
+                                + clusterId + " [member] " + memberStatsContext.getMemberId() + " Overall load: " + overallLoad);
+
+                            if(!foundAValue){
+                                foundAValue = true;
+                                selectedMemberStatsContext = memberStatsContext;
+                                lowestOverallLoad = overallLoad;
+                            } else if(overallLoad < lowestOverallLoad){
+                                selectedMemberStatsContext = memberStatsContext;
+                                lowestOverallLoad = overallLoad;
+                            }
+
+
+					    }
+
+                    }
+                    if(selectedMemberStatsContext != null) {
+                        log.info("[dependency-scale] [scale-down] Trying to terminating an instace to scale down!" );
+                        log.debug("[dependency-scale] [scale-down] " + " [partition] " + partitionContext.getPartitionId() + " [cluster] "
+                            + clusterId + " Member with lowest overall load: " + selectedMemberStatsContext.getMemberId());
+
+                        delegator.delegateTerminate(partitionContext, selectedMemberStatsContext.getMemberId());
+                    }
+
+                    count++;
+                }
+            }
+        }
+
+end
+
+
+
+
