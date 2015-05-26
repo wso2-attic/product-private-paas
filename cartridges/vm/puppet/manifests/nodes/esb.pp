@@ -19,7 +19,7 @@
 node /[0-9]{1,12}.(default|manager|worker).esb/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2esb-4.8.1"
   require java
-  class { 'agent': }
+  class { 'python_agent': }
   class { 'esb':
 
     version            => '4.8.1',
@@ -40,5 +40,5 @@ node /[0-9]{1,12}.(default|manager|worker).esb/ inherits base {
 
   }
 
-  Class['stratos_base'] -> Class['java'] -> Class['esb'] ~> Class['agent']
+  Class['stratos_base'] -> Class['java'] -> Class['esb'] ~> Class['python_agent']
 }

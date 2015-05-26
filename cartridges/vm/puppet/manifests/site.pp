@@ -15,20 +15,8 @@
 # ----------------------------------------------------------------------------
 #
 # import private paas nodes definitions
-import 'nodes/api.pp'
-import 'nodes/appserver.pp'
 import 'nodes/base.pp'
-import 'nodes/bps.pp'
 import 'nodes/esb.pp'
-import 'nodes/haproxy.pp'
-import 'nodes/is.pp'
-import 'nodes/lb.pp'
-import 'nodes/mysql.pp'
-import 'nodes/nodejs.pp'
-import 'nodes/php.pp'
-import 'nodes/ruby.pp'
-import 'nodes/tomcat.pp'
-import 'nodes/wordpress.pp'
 
 # import a single manifest file with node definitions
 import 'nodes.pp'

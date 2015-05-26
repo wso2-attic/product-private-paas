@@ -25,11 +25,11 @@
 #
 
 class esb::params {
-  #$package_repo         = 'http://ec2-54-251-18-7.ap-southeast-1.compute.amazonaws.com'
+#$package_repo         = 'http://ec2-54-251-18-7.ap-southeast-1.compute.amazonaws.com'
   $depsync_svn_repo     = 'https://svn.appfactory.domain.com/wso2/repo/'
   $local_package_dir    = '/mnt/packs'
 
-  # Service subdomains
+# Service subdomains
   $domain               = 'wso2.com'
   $esb_subdomain        = 'esb'
   $management_subdomain = 'management'
@@ -37,14 +37,14 @@ class esb::params {
   $admin_username       = 'ADMIN_USER'
   $admin_password       = 'ADMIN_PASSWORD'
 
-  # MySQL server configuration details
-  #$mysql_server         = 'mysql.wso2.com'
-  #$mysql_port           = '3306'
-  #$max_connections      = '100000'
-  #$max_active           = '150'
-  #$max_wait             = '360000'
+# MySQL server configuration details
+#$mysql_server         = 'mysql.wso2.com'
+#$mysql_port           = '3306'
+#$max_connections      = '100000'
+#$max_active           = '150'
+#$max_wait             = '360000'
 
-  # Database details
+# Database details
   $registry_user        = 'DB_USER'
   $registry_password    = 'DB_PASSWORD'
   $registry_database    = 'REGISTRY_DB'
@@ -53,14 +53,14 @@ class esb::params {
   $userstore_password   = 'DB_PASSWORD'
   $userstore_database   = 'USERSTORE_DB'
 
-  # Depsync settings
+# Depsync settings
   $svn_user             = 'wso2'
   $svn_password         = 'wso2123'
 
-  # Auto-scaler
+# Auto-scaler
   $auto_scaler_epr      = 'http://xxx:9863/services/AutoscalerService/'
 
-  #LDAP settings 
+#LDAP settings
   $ldap_connection_uri      = 'ldap://localhost:10389'
   $bind_dn                  = 'uid=admin,ou=system'
   $bind_dn_password         = 'adminpassword'

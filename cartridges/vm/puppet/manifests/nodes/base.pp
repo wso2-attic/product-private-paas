@@ -18,55 +18,55 @@
 # base node
 node 'base' {
 
-  #essential variables
+#essential variables
   $package_repo         = 'PACKAGE_REPO'
   $local_package_dir    = '/mnt/packs'
   $mb_ip                = 'MB_IP'
   $mb_port              = 'MB_PORT'
   $mb_url               = 'tcp://MB_IP:MB_PORT'
-  $mb_type		= 'activemq' #in wso2 mb case, value should be 'wso2mb'
+  $mb_type    = 'activemq' #in wso2 mb case, value should be 'wso2mb'
   $cep_ip               = 'CEP_IP'
   $cep_port             = 'CEP_PORT'
   $cep_username         = 'admin'
   $cep_password         = 'admin'
   $truststore_password  = 'wso2carbon'
-  $java_distribution	= 'JAVA_FILE'
-  $java_name		= 'JAVA_NAME'
-  $java_home		= '/opt/java'
+  $java_distribution  = 'JAVA_FILE'
+  $java_name    = 'JAVA_NAME'
+  $java_home    = '/opt/java'
   $member_type_ip       = 'private'
-  $lb_httpPort 		= '80'
-  $lb_httpsPort 	= '443'
-  $lb_private_ip 	= ''
-  $lb_public_ip 	= ''
-  $disable_sso		= 'true'
-  $idp_hostname		= 'identity.stratos.com'
-  $idp_port		= '443'
-  $tomcat_version 	= '7.0.52'
+  $lb_httpPort    = '80'
+  $lb_httpsPort  = '443'
+  $lb_private_ip  = ''
+  $lb_public_ip  = ''
+  $disable_sso    = 'true'
+  $idp_hostname    = 'identity.stratos.com'
+  $idp_port    = '443'
+  $tomcat_version  = '7.0.52'
   $enable_log_publisher = 'ENABLE_LOG_PUBLISHER'
   $server_ip            = $ipaddress
-  $using_dns		= 'USING_DNS'
-  $greg_url		= 'https://localhost/registry'
+  $using_dns    = 'USING_DNS'
+  $greg_url    = 'https://localhost/registry'
   $ssl_certificate_file = 'CERT_FILE_PATH'
   $ssl_key_file         = 'KEY_FILE_PATH'
 
-  #following variables required only if you want to install stratos using puppet.
-  #not supported in alpha version
-  # Service subdomains
-  #$domain               = 'stratos.com'
-  #$as_subdomain         = 'autoscaler'
-  #$management_subdomain = 'management'
+#following variables required only if you want to install stratos using puppet.
+#not supported in alpha version
+# Service subdomains
+#$domain               = 'stratos.com'
+#$as_subdomain         = 'autoscaler'
+#$management_subdomain = 'management'
 
-  #$admin_username       = 'admin'
-  #$admin_password       = 'admin123'
-  #$puppet_ip            = '10.4.128.7'
-  #$cc_ip                = '10.4.128.9'
-  #$cc_port              = '9443'
-  #$sc_ip                = '10.4.128.13'
-  #$sc_port              = '9443'
-  #$as_ip                = '10.4.128.8'
-  #$as_port              = '9443'
-  #$git_hostname        = 'git.stratos.com'
-  #$git_ip              = '10.4.128.13'
+#$admin_username       = 'admin'
+#$admin_password       = 'admin123'
+#$puppet_ip            = '10.4.128.7'
+#$cc_ip                = '10.4.128.9'
+#$cc_port              = '9443'
+#$sc_ip                = '10.4.128.13'
+#$sc_port              = '9443'
+#$as_ip                = '10.4.128.8'
+#$as_port              = '9443'
+#$git_hostname        = 'git.stratos.com'
+#$git_ip              = '10.4.128.13'
 
   $mysql_server         = 'DB_HOST'
   $mysql_port           = 'DB_PORT'
@@ -75,12 +75,12 @@ node 'base' {
   $max_wait             = '360000'
   $bam_ip              = 'BAM_IP'
   $bam_port            = 'BAM_PORT'
-  
-  #$internal_repo_user     = 'admin'
-  #$internal_repo_password = 'admin'
 
-  #cartridge agent extension scripts
-  # These values should be overriden as required by specific nodes
+#$internal_repo_user     = 'admin'
+#$internal_repo_password = 'admin'
+
+#cartridge agent extension scripts
+# These values should be overriden as required by specific nodes
   $extension_instance_started             = 'instance-started.sh'
   $extension_start_servers                = 'start-servers.sh'
   $extension_instance_activated           = 'instance-activated.sh'
@@ -102,5 +102,5 @@ node 'base' {
   $super_tenant_repository_path           = '/repository/deployment/server/'
   $tenant_repository_path                 = '/repository/tenants/'
 
-  require stratos_base 
+  require stratos_base
 }

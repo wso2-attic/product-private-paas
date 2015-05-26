@@ -32,14 +32,14 @@ define esb::clean ($mode, $target) {
   }
   elsif $mode == 'new' {
     exec { "Stop_process_and_remove_CARBON_HOME_${name}":
-        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
-        command => "kill -9 `cat ${target}/wso2carbon.pid` ; rm -rf ${target}";
+      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
+      command => "kill -9 `cat ${target}/wso2carbon.pid` ; rm -rf ${target}";
     }
   }
   elsif $mode == 'zero' {
     exec { "Stop_process_remove_CARBON_HOME_and_pack_${name}":
-        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
-        command => "kill -9 `cat ${target}/wso2carbon.pid` ; rm -rf ${target} ; rm -f ${::local_package_dir}/wso2${esb::service_code}-${esb::version}.zip";
+      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
+      command => "kill -9 `cat ${target}/wso2carbon.pid` ; rm -rf ${target} ; rm -f ${::local_package_dir}/wso2${esb::service_code}-${esb::version}.zip";
     }
   }
 }
