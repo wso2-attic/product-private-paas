@@ -574,7 +574,7 @@
            "membershipScheme" above is set to "wka"
         -->
         <members>
-            {% for key, value in STRATOS_WELL_KNOWN_MEMBERS.iteritems() -%}
+            {% for key, value in STRATOS_WKA_MEMBERS.iteritems() -%}
             <member>
                 <hostName>{{ key }}</hostName>
                 <port>{{ value }}</port>
