@@ -26,8 +26,8 @@ var render = function (theme, data, meta, require) {
                 {
                     partial:'index_title',
                     context:{
-                        page_title:'Apache Stratos - Configure',
-                        page_description:'Apache Stratos - Configure'
+                        page_title:'WSO2 Private PaaS - Configure',
+                        page_description:'WSO2 Private PaaS - Configure'
                     }
                 }
             ],
@@ -68,7 +68,7 @@ var render = function (theme, data, meta, require) {
                     partial: 'metro_menu',
                     context:{
                         content_menu:'links',
-                        content_title:'Configure Apache Stratos',
+                        content_title:'Configure WSO2 Private PaaS',
                         content_body:{sections:data.metro_menu}
 
                     }
@@ -82,8 +82,8 @@ var render = function (theme, data, meta, require) {
                 {
                     partial:'index_title',
                     context:{
-                        page_title:'Apache Stratos Home - Error',
-                        page_description:'Apache Stratos Home - Error'
+                        page_title:'WSO2 Private PaaS Home - Error',
+                        page_description:'WSO2 Private PaaS Home - Error'
                     }
                 }
             ],

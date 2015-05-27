@@ -26,8 +26,8 @@ var render = function (theme, data, meta, require) {
                 {
                     partial:'index_title',
                     context:{
-                        page_title:'Apache Stratos Wizard',
-                        page_description:'Apache Stratos Wizard'
+                        page_title:'WSO2 Private PaaS Wizard',
+                        page_description:'WSO2 Private PaaS Wizard'
                     }
                 }
             ],
@@ -91,8 +91,8 @@ var render = function (theme, data, meta, require) {
                 {
                     partial:'index_title',
                     context:{
-                        page_title:'Apache Stratos Home - Error',
-                        page_description:'Apache Stratos Home - Error'
+                        page_title:'WSO2 Private PaaS Home - Error',
+                        page_description:'WSO2 Private PaaS Home - Error'
                     }
                 }
             ],

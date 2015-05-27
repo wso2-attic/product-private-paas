@@ -117,14 +117,15 @@ h1{font-family: 'Open Sans', san-serif; color: rgb(255,255,255); text-shadow: 0 
     margin-top: 3em;
 }
 .content{
-    background-color: #fff;box-shadow: 0 0 5px -1px rgb(100,100,100);
 
 }
 
-.content-menu-block{
-    padding: 1em;
-    min-height: 21.429em;
+.content-menu-block {
+    padding: 2em;
+    min-height: 24.429em;
     cursor: pointer;
+    background-color: #fff;
+    margin: 1em;
 }
 
 .content-menu-block i{
@@ -142,23 +143,6 @@ h1{font-family: 'Open Sans', san-serif; color: rgb(255,255,255); text-shadow: 0 
 }
 .content a:hover > .content-menu-block i{
     color: #7b828c;
-}
-
-
-.border-right{
-    border-right: 1px solid #e4e7ea;
-    margin: 1.429em 0em;
-
-}
-
-.content-menu-block:after {
-    content: '';
-    position: absolute;
-    width:90%;
-    min-height: 21.429em;
-    border-bottom: 1px solid #e4e7ea;
-    left: 1.429em;
-    top: 1.429em;
 }
 
 .form-toolbar{
@@ -231,4 +215,8 @@ div#textform>div>h3 {
 
 h3.panel-title {
     color: #999;
+}
+
+.col-md-4 {
+    width: 30.333333%;
 }

@@ -26,8 +26,8 @@ var render = function (theme, data, meta, require) {
                 {
                     partial:'index_title',
                     context:{
-                        page_title:'Apache Stratos Login',
-                        page_description:'Apache Stratos Login'
+                        page_title:'WSO2 Private PaaS Login',
+                        page_description:'WSO2 Private PaaS Login'
                     }
                 }
             ],
@@ -57,8 +57,8 @@ var render = function (theme, data, meta, require) {
                 {
                     partial:'index_title',
                     context:{
-                        page_title:'Apache Stratos Home - Error',
-                        page_description:'Apache Stratos Home - Error'
+                        page_title:'WSO2 Private PaaS Home - Error',
+                        page_description:'WSO2 Private PaaS Home - Error'
                     }
                 }
             ],
