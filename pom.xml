@@ -38,69 +38,12 @@
     <url>http://wso2.com/cloud/private-paas</url>
     <inceptionYear>2012</inceptionYear>
 
-    <licenses>
-        <license>
-            <name>The Apache Software License, Version 2.0</name>
-            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
-
-    <organization>
-        <name>WSO2</name>
-        <url>https://www.wso2.org</url>
-    </organization>
-
-    <issueManagement>
-        <system>JIRA</system>
-        <url>https://wso2.org/jira</url>
-    </issueManagement>
-
-    <mailingLists>
-        <mailingList>
-            <name>Developer List</name>
-            <subscribe>dev-request@wso2.org?subject=subscribe</subscribe>
-            <unsubscribe>dev-request@wso2.org?subject=unsubscribe</unsubscribe>
-            <post>dev@wso2.org</post>
-            <archive>http://wso2.markmail.org/search/list:org.wso2.dev</archive>
-        </mailingList>
-    </mailingLists>
-
-    <scm>
-        <url>https://github.com/wso2/product-private-paas.git</url>
-        <developerConnection>scm:git:https://github.com/wso2/product-private-paas.git
-        </developerConnection>
-        <connection>scm:git:https://github.com/wso2/product-private-paas.git</connection>
-        <tag>HEAD</tag>
-    </scm>
-
-    <distributionManagement>
-        <repository>
-            <id>nexus-releases</id>
-            <name>WSO2 Release Distribution Repository</name>
-            <url>http://maven.wso2.org/nexus/service/local/staging/deploy/maven2/</url>
-        </repository>
-    </distributionManagement>
-
     <modules>
 	<module>extensions</module>
         <module>components</module>
         <module>features</module>
         <module>products</module>
     </modules>
-
-    <repositories>
-        <repository>
-            <id>wso2-nexus</id>
-            <name>WSO2 internal Repository</name>
-            <url>http://maven.wso2.org/nexus/content/groups/wso2-public/</url>
-            <releases>
-                <enabled>true</enabled>
-                <updatePolicy>daily</updatePolicy>
-                <checksumPolicy>ignore</checksumPolicy>
-            </releases>
-        </repository>
-    </repositories>
 
     <profiles>
         <profile>
