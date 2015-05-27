@@ -25,7 +25,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>apache-stratos</artifactId>
+    <artifactId>wso2ppaas</artifactId>
     <packaging>jar</packaging>
     <name>Apache Stratos - Distribution</name>
     <description>Apache Stratos Manager Distribution</description>

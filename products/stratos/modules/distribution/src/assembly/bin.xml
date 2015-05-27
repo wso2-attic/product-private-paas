@@ -664,12 +664,14 @@
             <filtered>false</filtered>
             <fileMode>600</fileMode>
         </file>
+<!--
         <file>
             <source>src/main/conf/axis2/tenant-axis2.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/axis2/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>600</fileMode>
         </file>
+-->
         <file>
             <source>src/main/conf/drools/mincheck.drl</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/drools</outputDirectory>
@@ -828,7 +830,7 @@
         </file>
         <file>
             <source>src/bin/stratos.sh</source>
-            <outputDirectory>apache-stratos-${pom.version}/bin/</outputDirectory>
+            <outputDirectory>wso2ppaas-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>755</fileMode>
         </file>
@@ -947,11 +949,13 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/data-bridge/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+<!--
         <file>
             <source>../../conf/thrift-client-config.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
+-->
         <!--Copying config files from kernel patches -->
         <!--
         <file>

@@ -38,7 +38,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.wso2.ppaas</groupId>
+            <groupId>org.wso2</groupId>
             <artifactId>org.wso2.ppaas.configurator</artifactId>
             <version>${project.version}</version>
         </dependency>
@@ -69,7 +69,7 @@
                             </adviceFile>
                             <bundles>
                                 <bundleDef>
-                                    org.wso2.ppaas:org.wso2.ppaas.configurator:${project.version}
+                                    org.wso2:org.wso2.ppaas.configurator:${project.version}
                                 </bundleDef>
                             </bundles>
                         </configuration>

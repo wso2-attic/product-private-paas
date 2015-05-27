@@ -33,7 +33,7 @@
     <url>http://apache.org</url>
 
     <modules>
-        <module>cep/stratos-cep-extension</module>
+       <!-- <module>cep/stratos-cep-extension</module>-->
     </modules>
 </project>
 
