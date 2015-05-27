@@ -830,7 +830,7 @@
         </file>
         <file>
             <source>src/bin/stratos.sh</source>
-            <outputDirectory>apache-stratos-${pom.version}/bin/</outputDirectory>
+            <outputDirectory>wso2ppaas-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>755</fileMode>
         </file>
