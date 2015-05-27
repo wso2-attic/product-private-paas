@@ -17,7 +17,7 @@
 
 # Template Paths
 TEMPLATE_PATH = "./templates"
-CONFIG_FILE_NAME = "configs.ini"
+CONFIG_FILE_NAME = "module.ini"
 
 LOG_FILE_LOCATION = "./configurator.log"
 

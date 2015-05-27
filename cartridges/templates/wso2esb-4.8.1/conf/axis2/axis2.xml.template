@@ -257,12 +257,12 @@
         <parameter name="non-blocking" locked="false">true</parameter>
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
          {% if STRATOS_SUB_DOMAIN == 'mgt' -%}
-            {% for key, value in STRATOS_PORT_MAPPING.iteritems() -%}
-                {% if STRATOS_PORT_MAPPING[key]=='8280' -%}
+            {% for key, value in STRATOS_HTTP_PORT_MAPPING.iteritems() -%}
                 <parameter name="WSDLEPRPrefix" locked="false">http//:{{ STRATOS_WORKER_HOST_NAME }}:{{ key }}</parameter>
-                {% endif -%}
             {% endfor -%}
-         {% endif -%}
+         {% else -%}
+                <!--parameter name="WSDLEPRPrefix" locked="false">http//:{{ STRATOS_WORKER_HOST_NAME }}:{{ key }}</parameter-->
+         {$ endif -%}
         <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.transport.nhttp.api.PassThroughNHttpGetProcessor</parameter>
          <!--<parameter name="priorityConfigFile" locked="false">location of priority configuration file</parameter>-->
     </transportReceiver>
@@ -272,10 +272,8 @@
         <parameter name="non-blocking" locked="false">true</parameter>
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
          {% if STRATOS_SUB_DOMAIN == 'mgt' -%}
-            {% for key, value in STRATOS_PORT_MAPPING.iteritems() -%}
-                {% if STRATOS_PORT_MAPPING[key]=='8243' -%}
+            {% for key, value in STRATOS_HTTPS_PORT_MAPPING.iteritems() -%}
                     <parameter name="WSDLEPRPrefix" locked="false">https//:{{ STRATOS_WORKER_HOST_NAME }}:{{ key }}</parameter>
-                {% endif -%}
             {% endfor -%}
          {% endif -%}
  	 <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.transport.nhttp.api.PassThroughNHttpGetProcessor</parameter>
@@ -557,7 +555,10 @@
  	    <!-- Manger Setup with Port Mapping-->
             {% if STRATOS_SUB_DOMAIN == 'mgt' %}
 
-                {% for key, value in STRATOS_PORT_MAPPING.iteritems() -%}
+                {% for key, value in STRATOS_HTTP_PORT_MAPPING.iteritems() -%}
+                    <property name="port.mapping.{{key}}" value="{{value}}"/>
+                {% endfor -%}
+                {% for key, value in STRATOS_HTTPS_PORT_MAPPING.iteritems() -%}
                     <property name="port.mapping.{{key}}" value="{{value}}"/>
                 {% endfor -%}
             <property name="subDomain" value="mgt"/>

@@ -45,13 +45,20 @@
        This is will become part of the End Point Reference of the
        services deployed on this server instance.
     -->
-    <HostName>{{STRATOS_WORKER_HOST_NAME}}</HostName>
-
+    {% if STRATOS_WORKER_HOST_NAME is defined -%}
+            <HostName>{{STRATOS_WORKER_HOST_NAME}}</HostName>
+    {% else -%}
+            <!--HostName>www.wso2.org</HostName-->
+    {% endif -%}
     <!--
     Host name to be used for the Carbon management console
     -->
-    {% if STRATOS_SUB_DOMAIN == 'mgt' %}
-        <MgtHostName>{{STRATOS_MGT_HOST_NAME}}</MgtHostName>
+    {% if STRATOS_MGT_HOST_NAME is defined -%}
+            {% if STRATOS_SUB_DOMAIN == 'mgt' -%}
+             <MgtHostName>{{STRATOS_MGT_HOST_NAME}}</MgtHostName>
+            {% endif -%}
+    {% else -%}
+            <!--MgtHostName>mgt.wso2.org</MgtHostName-->
     {% endif -%}
     <!--
         The URL of the back end server. This is where the admin services are hosted and
