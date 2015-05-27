@@ -28,6 +28,10 @@ if [ ${START_CMD} = 'PCA' ]; then
 	/usr/local/bin/start-agent.sh
 	echo "Python cartridge agent started successfully"
 else
+    echo "Configuring WSO2 ESB..."
+    ${CONFIGURATOR_HOME}/configurator.py
+    echo "WSO2 ESB configured successfully"
+
     echo "Starting WSO2 ESB..."
     ${CARBON_HOME}/bin/wso2server.sh
     echo "WSO2 ESB started successfully"
