@@ -1,0 +1,68 @@
+{
+    "type":"object",
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "id": "root",
+    "title": "Tenant",
+    "name": "Tenant",
+    "options": {
+        "disable_properties": true,
+        "disable_collapse": true
+    },
+    "required":["admin","adminPassword","email", "firstName", "lastName", "tenantDomain"],
+    "properties":{
+        "tenantDomain": {
+            "type":"string",
+            "id": "root/tenantDomain",
+            "default": "frank.com",
+            "title": "Tenant Domain",
+            "name": "Tenant Domain"
+        },
+        "firstName": {
+            "type":"string",
+            "id": "root/firstName",
+            "default": "Frank",
+            "title": "First Name",
+            "name": "First Name"
+        },
+        "lastName": {
+            "type":"string",
+            "id": "root/lastName",
+            "default": "Myers",
+            "title": "Last Name",
+            "name": "Last Name"
+        },
+        "admin": {
+            "type":"string",
+            "id": "root/admin",
+            "default": "admin",
+            "title": "Admin User Name",
+            "name": "Admin User Name"
+        },
+        "adminPassword": {
+            "type":"string",
+            "id": "root/adminPassword",
+            "format":"password",
+            "default": "admin123",
+            "minLength":6,
+            "title": "Admin User Password",
+            "description":"You need to add least 6 characters including number",
+            "name": "Admin User Password"
+        },
+        "email": {
+            "type":"string",
+            "id": "root/email",
+            "default": "foo@bar.com",
+            "format": "email",
+            "title": "Admin Email",
+            "name": "Admin Email"
+        },
+        "active": {
+            "type":"boolean",
+            "id": "root/active",
+            "default": "true",
+            "title": "Active",
+            "name": "Active",
+            "required":false
+        }
+    }
+}

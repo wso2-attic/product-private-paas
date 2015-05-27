@@ -1,0 +1,124 @@
+{
+    "type":"object",
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "id": "root",
+    "title":"Auto-scaling Policy Definition",
+    "name": "Auto-scaling Policy",
+    "options": {
+        "disable_properties": true,
+        "disable_collapse": true
+    },
+    "required" : ["id", "loadThresholds"],
+    "properties":{
+        "id": {
+            "type":"string",
+            "id": "root/id",
+            "title":"Auto Scale policy ID",
+            "minLength":4,
+            "default":"Policy name",
+            "maxItems":1
+        },
+        "description": {
+            "type":"string",
+            "id": "root/description",
+            "title": "Description",
+            "name": "Description",
+            "maxItems":1,
+            "format": "textarea"
+        },
+/*        "instanceRoundingFactor": {
+            "type":"number",
+            "id": "root/instanceRoundingFactor",
+            "title": "Instance Rounding Factor",
+            "name": "Instance Rounding Factor",
+            "default": false,
+            "maxItems":1
+        },*/
+        "loadThresholds": {
+            "type":"object",
+            "title":"Load Thresholds",
+            "id": "root/loadThresholds",
+            "required":["loadAverage","memoryConsumption","requestsInFlight"],
+            "options": {
+                "disable_properties": true
+            },
+            "format":"grid",
+            "properties":{
+                "requestsInFlight": {
+                    "type":"object",
+                    "id": "root/loadThresholds/requestsInFlight",
+                    "title": "Requests In Flight",
+                    "name": "Requests In Flight",
+                    "format": "grid",
+                    "options": {
+                        "disable_properties": true,
+                        "collapsed": false
+                    },
+                    "properties":{
+                        "threshold": {
+                            "type":"string",
+                            "id": "root/loadThresholds/requestsInFlight/threshold",
+                            "title": "Threshold",
+                            "name": "Threshold",
+                            "description" : "You need to enter number for the Requests In Flight Threshold",
+                            "format" : "number",
+                            "default":30,
+                            "pattern": "^[0-9]+$",
+                            "required":false
+                        }
+                    }
+                },
+                "memoryConsumption": {
+                    "type":"object",
+                    "id": "root/loadThresholds/memoryConsumption",
+                    "title": "Memory Consumption",
+                    "name": "Memory Consumption",
+                    "format": "grid",
+                    "options": {
+                        "disable_properties": true,
+                        "collapsed": false
+                    },
+                    "properties":{
+                        "threshold": {
+                            "type":"string",
+                            "id": "root/loadThresholds/memoryConsumption/threshold",
+                            "title": "Threshold",
+                            "description" : "You need to enter number for the Memory Consumption Threshold",
+                            "format" : "number",
+                            "pattern": "^[0-9]+$",
+                            "name": "Threshold",
+                            "default":80,
+                            "required":false
+                        }
+                    }
+                },
+                "loadAverage": {
+                    "type":"object",
+                    "id": "root/loadThresholds/loadAverage",
+                    "title": "Load Average",
+                    "name": "Load Average",
+                    "format": "grid",
+                    "options": {
+                        "disable_properties": true,
+                        "collapsed": false
+                    },
+                    "properties":{
+                        "threshold": {
+                            "type":"string",
+                            "id": "root/loadThresholds/loadAverage/threshold",
+                            "title": "Threshold",
+                            "format" : "number",
+                            "description" : "You need to enter number for the Load Average Threshold",
+                            "pattern": "^[0-9]+$",
+                            "name": "Threshold",
+                            "default":100,
+                            "required":false
+                        }
+                    }
+                }
+
+
+            }
+        }
+    }
+}

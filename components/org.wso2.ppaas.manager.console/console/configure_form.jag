@@ -1,0 +1,257 @@
+<%
+/*
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ *
+ */
+include('/controllers/login/validator.jag');
+include('/controllers/menu/menu_generator.jag');
+
+var log = new Log("apachestratos.configure_form"),
+        error = [],
+        list_data,
+        caramel = require('caramel'),
+        context = caramel.configs().context,
+        menuJson = require('/controllers/menu/menu.json'),
+        userPermissions = session.get('PERMISSIONS'),
+        util = require('/controllers/rest/rest_calls.jag'),
+        uriMatcher = new URIMatcher(request.getRequestURI()),
+        elements = uriMatcher.match('/{context}/configure/{formtype}/'),
+        breadcrumbPathLevelOne = 'configure',
+        formDataEdit = formDataUpdate = editorCartridges = applicationHbs = '',
+        isEdit = false,
+        dependancy = '',
+        isForm = isUpdate = false;
+
+//create left menu
+var leftMenu = menuGenerator(context, menuJson.menu, userPermissions);
+
+
+if (!elements) {
+    elements = uriMatcher.match('/{context}/configure/{formtype}/{action}/');
+
+    if(elements) {
+        isForm = true;
+
+        if (elements.action != 'new') {
+            isEdit = true;
+        }
+
+    }else{
+        elements = uriMatcher.match('/{context}/configure/{formtype}/{action}/{edit}');
+        if(elements.edit== 'edit'){
+            isUpdate = true;
+            isForm = true;
+        }
+    }
+
+    //load schema files to JSON editor
+    try {
+        var formData = require('controllers/forms/schema/configure/' + elements.formtype + '.json'),
+                formDataRaw = require('controllers/forms/default/configure/' + elements.formtype + '.json'),
+                formTitle = formData.title,
+                buttonText = formData.name;
+    } catch (e) {
+        log.error(e.message);
+        error.push({"errorMessage": e.message});
+    }
+
+    if (elements.formtype == 'cartridge-groups' && elements.action == 'new') {
+        applicationHbs = 'applicationsGroupEditor';
+        editorCartridges = util.RESTCalls.getCartridges();
+    }
+
+}
+
+//get data for listing pages
+if(isEdit == false && elements.action != 'new') {
+    var formtype = elements.formtype;
+
+    switch (formtype) {
+
+        case "network-partitions":
+            formTitle = "Network Partition",
+                    buttonText = "Network Partition";
+            list_data = util.RESTCalls.getPartitions();
+            if (list_data.status == 'error') {
+                list_data = null;
+            }
+            break;
+
+        case "autoscaling-policies":
+            formTitle = "Auto-scaling Policie",
+                    buttonText = "Auto-scaling Policy";
+            list_data = util.RESTCalls.getPolicyAutoScales();
+            if(list_data.status == 'error'){
+                list_data = null;
+            }
+            break;
+
+        case "deployment-policies":
+            formTitle = "Deployment Policie",
+                    buttonText = "Deployment Policy";
+            list_data = util.RESTCalls.getPolicyDeployments();
+            if (list_data.status == 'error') {
+                list_data = null;
+            }
+            break;
+
+        case "cartridges":
+            formTitle = "Cartridge",
+                    buttonText = "Cartridge";
+            list_data = util.RESTCalls.getCartridges();
+            if (list_data.status == 'error') {
+                list_data = null;
+            }
+            break;
+
+        case "cartridge-groups":
+            formTitle = "Cartridge Group",
+                    buttonText = "Cartridge Group";
+            list_data = util.RESTCalls.getGroups();
+            if (list_data.status == 'error') {
+                list_data = null;
+            }
+            break;
+
+        case "kubernetes-clusters":
+            formTitle = "Kubernetes Cluster",
+                    buttonText = "Kubernetes Cluster";
+            list_data = util.RESTCalls.getKubernetesClusters();
+            if (list_data.status == 'error') {
+                list_data = null; //TODO endpoint doesn't return correct info
+            }
+            break;
+
+        case "application-policies":
+            formTitle = "Application Policy",
+                    buttonText = "Application Policy";
+            list_data = util.RESTCalls.getApplicationPolicies();
+            if (list_data.status == 'error') {
+                list_data = null;
+            }
+            break;
+
+        default:
+            error.push({"errorMessage": "Incorrect resource path found"});
+
+    }
+
+//check user has permission to access endpoints
+    if (list_data != null && list_data.hasOwnProperty('Error')) {
+        error.push(list_data.Error);
+    }
+
+}
+
+//get the detail view for each listing
+if (elements.action != 'new' && isEdit) {
+    formTitle = formData.title + ' Details: ' + elements.action;
+
+    var formtype = elements.formtype,
+            id = escape(elements.action);
+
+    switch (formtype) {
+        case "autoscaling-policies":
+            formDataEdit = util.RESTCalls.getPolicyAutoScale(id);
+            break;
+        case "deployment-policies":
+            formDataEdit = util.RESTCalls.getPolicyDeployment(id);
+            break;
+
+        case "network-partitions":
+            formDataEdit = util.RESTCalls.getPartition(id);
+            break;
+
+        case "cartridges":
+            formDataEdit = util.RESTCalls.getCartridge(id);
+            break;
+
+        case "cartridge-groups":
+            formDataEdit = util.RESTCalls.getPolicyCartridgeGroup(id);
+            break;
+
+        case "kubernetes-clusters":
+            formDataEdit = util.RESTCalls.getKubernetesCluster(id);
+            break;
+
+        case "application-policies":
+            formDataEdit = util.RESTCalls.getPolicyApplication(id);
+            break;
+    }
+}
+
+//get the details for update view
+if(elements.action != 'new' && isUpdate){
+
+    formTitle = formData.title + ': ' + elements.action;
+
+    var formtype = elements.formtype,
+            id = escape(elements.action);
+
+    switch (formtype) {
+        case "network-partitions":
+            formDataUpdate = util.RESTCalls.getPartition(id);
+            break;
+        case "autoscaling-policies":
+            formDataUpdate = util.RESTCalls.getPolicyAutoScale(id);
+            break;
+        case "deployment-policies":
+            formDataUpdate = util.RESTCalls.getPolicyDeployment(id);
+            break;
+        case "application-policies":
+            formDataUpdate = util.RESTCalls.getPolicyApplication(id);
+            break;
+        case "kubernetes-clusters":
+            formDataUpdate = util.RESTCalls.getKubernetesCluster(id);
+            break;
+        case "cartridges":
+            formDataUpdate = util.RESTCalls.getCartridge(id);
+            break;
+        case "cartridge-groups":
+            formDataUpdate = util.RESTCalls.getPolicyCartridgeGroup(id);
+            break;
+    }
+}
+
+
+var caramelData = {
+    breadcrumbPathLevelOne: breadcrumbPathLevelOne,
+    breadcrumbPathLevelTwo: elements.formtype,
+    left_menu: leftMenu,
+    isForm: isForm,
+    isEdit: isEdit,
+    isUpdate: isUpdate,
+    dependancy:dependancy,
+    editorCartridges: JSON.stringify(editorCartridges),
+    applicationHbs: applicationHbs,
+    formDataEdit: JSON.stringify(formDataEdit),
+    formDataUpdate: JSON.stringify(formDataUpdate),
+    formTitle: formTitle,
+    formDataRaw: JSON.stringify(formDataRaw),
+    formData: JSON.stringify(formData),
+    formtype:elements.formtype,
+    buttonText: buttonText,
+    list_data: list_data,
+    error: error
+}
+
+
+caramel.render(caramelData);
+
+%>
