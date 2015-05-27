@@ -47,18 +47,17 @@ echo "Adding autoscale policy..."
 curl -X POST -H "Content-Type: application/json" -d "@${autoscaling_policies_path}/autoscaling-policy-1.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/autoscalingPolicies
 
 echo "Adding network partitions..."
-curl -X POST -H "Content-Type: application/json" -d "@${network_partitions_path}/network-partition-1.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/networkPartitions
-curl -X POST -H "Content-Type: application/json" -d "@${network_partitions_path}/network-partition-2.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/networkPartitions
+curl -X POST -H "Content-Type: application/json" -d "@${network_partitions_path}/network-partition-ec2.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/networkPartitions
 
 echo "Adding deployment policy..."
-curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/deployment-policy-1.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/deploymentPolicies
+curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/deployment-policy-ec2.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/deploymentPolicies
 
 echo "Adding wso2esb-481 cartridge..."
 curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/wso2esb-481.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
 
 sleep 1
 echo "Adding application policy..."
-curl -X POST -H "Content-Type: application/json" -d "@${application_policies_path}/application-policy-1.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applicationPolicies
+curl -X POST -H "Content-Type: application/json" -d "@${application_policies_path}/application-policy-ec2.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applicationPolicies
 
 sleep 1
 echo "Adding application..."
@@ -66,4 +65,4 @@ curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/applicat
 
 sleep 1
 echo "Deploying application..."
-curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/wso2esb-481-app/deploy/application-policy-1
+curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/wso2esb-481-app/deploy/application-policy-ec2

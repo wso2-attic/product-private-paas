@@ -1,0 +1,9 @@
+{
+    "id": "application-policy-ec2",
+    "algorithm": "one-after-another",
+    "networkPartitions": [
+        "network-partition-ec2"
+    ],
+    "properties": [
+    ]
+}
