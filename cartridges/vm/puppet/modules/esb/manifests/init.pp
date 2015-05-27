@@ -101,8 +101,6 @@ class esb (
     require => [
       Esb::Initialize[$deployment_code],
       Esb::Deploy[$deployment_code],
-      Push_templates[$service_templates],
-      Push_templates[$common_templates],
     ],
   }
 
