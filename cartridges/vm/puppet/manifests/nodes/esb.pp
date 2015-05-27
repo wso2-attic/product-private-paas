@@ -16,7 +16,7 @@
 #
 
 # ESB cartridge node
-node /[0-9]{1,12}.(default|manager|worker).esb/ inherits base {
+node /esb/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2esb-4.8.1"
   require java
   class { 'python_agent': }
@@ -32,7 +32,7 @@ node /[0-9]{1,12}.(default|manager|worker).esb/ inherits base {
     config_target_path => 'ESB_CONFIG_PATH',
     maintenance_mode   => 'zero',
     depsync            => false,
-    clustering         => CLUSTERING,
+    clustering         => false,
     cloud              => true,
     owner              => 'root',
     group              => 'root',
@@ -40,5 +40,5 @@ node /[0-9]{1,12}.(default|manager|worker).esb/ inherits base {
 
   }
 
-  Class['stratos_base'] -> Class['java'] -> Class['esb'] ~> Class['python_agent']
+  Class['stratos_base'] -> Class['java'] -> Class['esb']
 }

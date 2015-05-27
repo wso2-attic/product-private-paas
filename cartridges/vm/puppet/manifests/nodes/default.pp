@@ -18,7 +18,7 @@
 # default (base) cartridge node
 node /default/ inherits base {
   require java
-  class {'agent':}
+  class {'python_agent':}
 
-  Class['stratos_base'] -> Class['java'] ~> Class['agent']
+  Class['stratos_base'] ~> Class['python_agent']
 }
