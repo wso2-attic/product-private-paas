@@ -19,46 +19,46 @@
 #
 # --------------------------------------------------------------
 
-FROM stratos/base-image:4.1.0
+FROM wso2/base-image:4.1.0
 MAINTAINER dev@wso2.org
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV JDK_VERSION 1.7.0_60
 ENV JDK_TAR_FILENAME jdk-7u60-linux-x64.tar.gz
+ENV CONFIGURATOR_VERSION 4.1.0
 ENV WSO2_ESB_VERSION 4.8.1
-
-# ----------------------
-# Install prerequisites
-# ----------------------
-WORKDIR /opt
-ADD packs/${JDK_TAR_FILENAME} /mnt/${JDK_TAR_FILENAME}
-RUN mv /mnt/${JDK_TAR_FILENAME}/jdk${JDK_VERSION} /opt/jdk${JDK_VERSION}
-
 ENV JAVA_HOME /opt/jdk${JDK_VERSION}
-
-# -----------------------------------
-# Install WSO2 Enterprise Service Bus
-# -----------------------------------
-ADD packs/wso2esb-${WSO2_ESB_VERSION}.zip /opt/wso2esb-${WSO2_ESB_VERSION}.zip
-RUN unzip /opt/wso2esb-${WSO2_ESB_VERSION}.zip -d /opt/ && \
-    rm /opt/wso2esb-${WSO2_ESB_VERSION}.zip
 ENV CARBON_HOME /opt/wso2esb-${WSO2_ESB_VERSION}
+ENV PCA_FILENAME apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT
+ENV PCA_HOME /opt/${PCA_FILENAME}
 
-ADD files/env.sh /tmp/env.sh
-RUN chmod +x /tmp/env.sh && \
+# -------------------------------
+# Add scripts, packages & plugins
+# -------------------------------
+ADD scripts/init.sh /usr/local/bin/init.sh
+ADD scripts/export-envs.sh /tmp/export-envs.sh
+ADD packages/${JDK_TAR_FILENAME} /opt/
+ADD packages/wso2configurator-${CONFIGURATOR_VERSION}.zip /opt/
+ADD packages/wso2esb-${WSO2_ESB_VERSION}.zip /opt/
+ADD plugins /${PCA_HOME}/plugins
+
+# -----------------------------
+# Install prerequisites and ESB
+# -----------------------------
+WORKDIR /opt
+
+RUN unzip /opt/wso2esb-${WSO2_ESB_VERSION}.zip -d /opt/ && \
+    rm /opt/wso2esb-${WSO2_ESB_VERSION}.zip && \
+    unzip /opt/wso2configurator-${CONFIGURATOR_VERSION}.zip -d /opt/ && \
+    rm /opt/wso2configurator-${CONFIGURATOR_VERSION}.zip && \
+    chmod +x /tmp/export-envs.sh && \
     sleep 1 && \
-    /tmp/env.sh ${JAVA_HOME} ${CARBON_HOME}
-
-#---------------------------------
-# Copy PCA plugins
-#---------------------------------
-# ADD packs/plugins /mnt/plugins
+    /tmp/export-envs.sh ${JAVA_HOME} ${CARBON_HOME}
 
 EXPOSE 9443
 
-# -----------------------
-# Define entry point
-# -----------------------
-# The following run script is included in the base image to start the cartridge agent at the boot time.
+# -------------------------------
+# Define entry point & start sshd
+# -------------------------------
 
-ENTRYPOINT /usr/local/bin/run | /usr/sbin/sshd -D
+ENTRYPOINT /usr/local/bin/init.sh >> /tmp/init.sh.log | /usr/sbin/sshd -D
