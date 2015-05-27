@@ -22,35 +22,40 @@ define python_agent::initialize ($repo, $version, $agent_name, $local_dir, $targ
   $packages = ['python-dev', 'python-pip', 'gcc']
 
   package { $packages:
-    ensure => installed,
+    ensure   => installed,
     provider => 'apt',
   }
 
   exec {
     "pip installs-paho":
-        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        command => "pip install paho-mqtt",
-        require => Package[$packages];
+      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+      command => "pip install paho-mqtt",
+      require => Package[$packages];
 
     "pip installs-GitPython==0.3.1-beta2":
-        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        command => "pip install GitPython==0.3.1-beta2",
-        require => Exec["pip installs-paho"];
+      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+      command => "pip install GitPython==0.3.1-beta2",
+      require => Exec["pip installs-paho"];
 
     "pip installs-psutil":
-        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        command => "pip install psutil",
-        require => Exec["pip installs-GitPython==0.3.1-beta2"];
+      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+      command => "pip install psutil",
+      require => Exec["pip installs-GitPython==0.3.1-beta2"];
 
     "pip installs-gittle":
-        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        command => "pip install gittle",
-        require => Exec["pip installs-psutil"];
+      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+      command => "pip install gittle",
+      require => Exec["pip installs-psutil"];
 
     "pip installs-pexpect":
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       command => "pip install pexpect",
       require => Exec["pip installs-gittle"];
+
+    "pip installs-jinja":
+      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+      command => "pip install jinja2",
+      require => Exec["pip installs-yapsy"];
   }
 
   exec {
@@ -63,13 +68,13 @@ define python_agent::initialize ($repo, $version, $agent_name, $local_dir, $targ
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
       unless  => "test -d ${local_dir}",
       command => "mkdir -p ${local_dir}",
-        require => Exec["creating_target_for_python_${name}"];
+      require => Exec["creating_target_for_python_${name}"];
   }
 
   file {
     "/${local_dir}/${agent_name}.zip":
-      ensure => present,
-      source => ["puppet:///modules/python_agent/${agent_name}.zip"],
+      ensure    => present,
+      source    => ["puppet:///modules/python_agent/${agent_name}.zip"],
       require   => Exec["creating_local_package_repo_for_python_${name}"],
   }
 
@@ -77,7 +82,7 @@ define python_agent::initialize ($repo, $version, $agent_name, $local_dir, $targ
     "extracting_${agent_name}.zip_for_${name}":
       path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       cwd       => "$target/${agent_name}",
-      #/mnt/apache-stratos-python-cartridge-agent-1.0.0/agent.py
+    #/mnt/apache-stratos-python-cartridge-agent-1.0.0/agent.py
       unless    => "test -d ${target}/${agent_name}/agent.conf",
       command   => "unzip -o ${local_dir}/${agent_name}.zip",
       logoutput => 'on_failure',
