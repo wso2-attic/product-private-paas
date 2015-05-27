@@ -1,19 +1,14 @@
 {
-    "type": "wso2esb",
+    "type": "wso2esb-481",
     "provider": "wso2",
     "category": "framework",
     "host": "esb.wso2.org",
-    "displayName": "WSO2 ESB",
-    "description": "WSO2 ESB Cartridge",
+    "displayName": "WSO2 ESB 4.8.1",
+    "description": "WSO2 ESB 4.8.1 Cartridge",
     "version": "4.8.1",
     "multiTenant": "true",
     "loadBalancingIPType": "public",
     "portMapping": [
-        {
-            "protocol": "http",
-            "port": "9763",
-            "proxyPort": "8763"
-        },
         {
             "protocol": "https",
             "port": "9443",
@@ -41,6 +36,10 @@
         {
             "name": "KUBERNETES_CONTAINER_MEMORY",
             "value": "0"
+        },
+        {
+            "name": "payload_parameter.START_CMD",
+            "value": "PCA"
         }
     ]
 }

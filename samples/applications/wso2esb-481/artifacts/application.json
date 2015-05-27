@@ -1,20 +1,20 @@
 {
-    "applicationId": "wso2esb-4.8.1-app",
-    "alias": "wso2esb-4.8.1-app-1",
+    "applicationId": "wso2esb-481-app",
+    "alias": "wso2esb-481-app-1",
     "multiTenant": false,
     "components": {
         "cartridges": [
             {
-                "type": "wso2esb-4.8.1",
+                "type": "wso2esb-481",
                 "cartridgeMin": 1,
                 "cartridgeMax": 5,
                 "subscribableInfo": {
-                    "alias": "wso2esb-4.8.1-1",
+                    "alias": "wso2esb-481-1",
                     "autoscalingPolicy": "autoscaling-policy-1",
-                    "deploymentPolicy": "deployment-policy-1",
+                    "deploymentPolicy": "deployment-policy-ec2",
                     "artifactRepository": {
                         "privateRepo": false,
-                        "repoUrl": "https://github.com/imesh/wso2-ppaas-esb-samples.git",
+                        "repoUrl": "",
                         "repoUsername": "",
                         "repoPassword": ""
                     }

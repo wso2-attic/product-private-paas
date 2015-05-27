@@ -21,7 +21,7 @@
 # --------------------------------------------------------------
 #
 iaas=$1
-host_ip="localhost"
+host_ip="52.28.77.87"
 host_port=9443
 
 prgdir=`dirname "$0"`
@@ -53,8 +53,8 @@ curl -X POST -H "Content-Type: application/json" -d "@${network_partitions_path}
 echo "Adding deployment policy..."
 curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/deployment-policy-1.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/deploymentPolicies
 
-echo "Adding php cartridge..."
-curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/php.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
+echo "Adding wso2esb-481 cartridge..."
+curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/wso2esb-481.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
 
 sleep 1
 echo "Adding application policy..."
@@ -66,4 +66,4 @@ curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/applicat
 
 sleep 1
 echo "Deploying application..."
-curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/wso2esb-4.8.1/deploy/application-policy-1
+curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/wso2esb-481-app/deploy/application-policy-1

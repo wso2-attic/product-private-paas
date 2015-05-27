@@ -1,0 +1,15 @@
+{
+    "id": "deployment-policy-ec2",
+    "networkPartitions": [
+        {
+            "id": "network-partition-ec2",
+            "partitionAlgo": "one-after-another",
+            "partitions": [
+                {
+                    "id": "partition-1",
+                    "partitionMax": 10
+                }
+            ]
+        }
+    ]
+}

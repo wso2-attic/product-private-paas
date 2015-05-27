@@ -1,0 +1,15 @@
+{
+    "id": "network-partition-ec2",
+    "provider": "kubernetes",
+    "partitions": [
+        {
+            "id": "partition-1",
+            "property": [
+                {
+                    "name": "cluster",
+                    "value": "kubernetes-cluster-ec2"
+                }
+            ]
+        }
+    ]
+}
