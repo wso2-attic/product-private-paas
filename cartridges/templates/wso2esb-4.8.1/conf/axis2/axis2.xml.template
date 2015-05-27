@@ -262,7 +262,7 @@
             {% endfor -%}
          {% else -%}
                 <!--parameter name="WSDLEPRPrefix" locked="false">http//:{{ STRATOS_WORKER_HOST_NAME }}:{{ key }}</parameter-->
-         {$ endif -%}
+         {% endif -%}
         <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.transport.nhttp.api.PassThroughNHttpGetProcessor</parameter>
          <!--<parameter name="priorityConfigFile" locked="false">location of priority configuration file</parameter>-->
     </transportReceiver>
