@@ -95,13 +95,13 @@ class esb (
   }
 
 
-  esb::start { $deployment_code:
-    owner   => $owner,
-    target  => $carbon_home,
-    require => [
-      Esb::Initialize[$deployment_code],
-      Esb::Deploy[$deployment_code],
-    ],
-  }
+#  esb::start { $deployment_code:
+#    owner   => $owner,
+#    target  => $carbon_home,
+#    require => [
+#      Esb::Initialize[$deployment_code],
+#      Esb::Deploy[$deployment_code],
+#    ],
+#  }
 
 }
