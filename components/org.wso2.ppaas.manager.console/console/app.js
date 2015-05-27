@@ -26,6 +26,6 @@ caramel.configs({
     cache: true,
     negotiation: true,
     themer: function () {
-        return 'theme0';
+        return 'privatePaaS';
     }
 });
