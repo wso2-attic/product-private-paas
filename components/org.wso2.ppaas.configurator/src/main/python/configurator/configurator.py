@@ -99,17 +99,17 @@ def generate_context(config_file_path):
             context[key] = os.environ.get(key, context[key])
 
     # Converting Members to dictionary
-    if "STRATOS_WKA_MEMBERS" in context:
-        context["STRATOS_WKA_MEMBERS"] = ConfigParserUtil.convert_properties_to_dictionary(
-            context['STRATOS_WKA_MEMBERS'])
+    if "CARBON_WKA_MEMBERS" in context:
+        context["CARBON_WKA_MEMBERS"] = ConfigParserUtil.convert_properties_to_dictionary(
+            context['CARBON_WKA_MEMBERS'])
 
-    if "STRATOS_HTTP_PORT_MAPPING" in context:
-        context["STRATOS_HTTP_PORT_MAPPING"] = ConfigParserUtil.convert_properties_to_dictionary(
-            context["STRATOS_HTTP_PORT_MAPPING"])
+    if "CARBON_HTTP_PORT_MAPPING" in context:
+        context["CARBON_HTTP_PORT_MAPPING"] = ConfigParserUtil.convert_properties_to_dictionary(
+            context["CARBON_HTTP_PORT_MAPPING"])
 
-    if "STRATOS_HTTPS_PORT_MAPPING" in context:
-        context["STRATOS_HTTPS_PORT_MAPPING"] = ConfigParserUtil.convert_properties_to_dictionary(
-            context["STRATOS_HTTPS_PORT_MAPPING"])
+    if "CARBON_HTTPS_PORT_MAPPING" in context:
+        context["CARBON_HTTPS_PORT_MAPPING"] = ConfigParserUtil.convert_properties_to_dictionary(
+            context["CARBON_HTTPS_PORT_MAPPING"])
 
     log.info("Context generated: %s", context)
     return context

@@ -27,17 +27,14 @@
     <!--
        Product Name
     -->
-    <Name>WSO2 Enterprise Service Bus</Name>
-
-    <!--
-       machine readable unique key to identify each product
-    -->
-    <ServerKey>ESB</ServerKey>
+    <Name>WSO2 API Manager</Name>
 
     <!--
        Product Version
     -->
-    <Version>4.8.1</Version>
+    <Version>1.8.0</Version>
+
+    <ServerKey>AM</ServerKey>
 
     <!--
        Host name or IP address of the machine hosting this server
@@ -46,20 +43,22 @@
        services deployed on this server instance.
     -->
     {% if CARBON_WORKER_HOST_NAME is defined -%}
-            <HostName>{{CARBON_WORKER_HOST_NAME}}</HostName>
+        <HostName>{{CARBON_WORKER_HOST_NAME}}</HostName>
     {% else -%}
-            <!--HostName>www.wso2.org</HostName-->
+        <!--HostName>www.wso2.org</HostName-->
     {% endif -%}
+
     <!--
     Host name to be used for the Carbon management console
     -->
     {% if CARBON_MGT_HOST_NAME is defined -%}
-            {% if CARBON_SUB_DOMAIN == 'mgt' -%}
-             <MgtHostName>{{CARBON_MGT_HOST_NAME}}</MgtHostName>
-            {% endif -%}
+        {% if CARBON_SUB_DOMAIN == 'mgt' %}
+            <MgtHostName>{{CARBON_MGT_HOST_NAME}}</MgtHostName>
+        {% endif -%}
     {% else -%}
-            <!--MgtHostName>mgt.wso2.org</MgtHostName-->
+        <!--MgtHostName>mgt.wso2.org</MgtHostName-->
     {% endif -%}
+
     <!--
         The URL of the back end server. This is where the admin services are hosted and
         will be used by the clients in the front end server.
@@ -82,8 +81,9 @@
     Ex : <Role>.*</Role> means this server can act any role
     -->
     <ServerRoles>
-        <Role>EnterpriseServiceBus</Role>
+        <Role>APIManager</Role>
     </ServerRoles>
+
 
     <!-- uncommnet this line to subscribe to a bam instance automatically -->
     <!--<BamServerURL>https://bamhost:bamport/services/</BamServerURL>-->
@@ -158,12 +158,17 @@
         JNDI Configuration
     -->
     <JNDI>
-        <!-- 
+        <!--
+             If we use multiple usertsore with tenants, we might need to use following initialContextfactory implementation to do datasource lookup
+         -->
+        <DefaultInitialContextFactory>org.wso2.carbon.tomcat.jndi.CarbonJavaURLContextFactory</DefaultInitialContextFactory>
+
+        <!--
              The fully qualified name of the default initial context factory
         -->
-        <DefaultInitialContextFactory>org.wso2.carbon.tomcat.jndi.CarbonJavaURLContextFactory</DefaultInitialContextFactory>
-        <!-- 
-             The restrictions that are done to various JNDI Contexts in a Multi-tenant environment 
+        <!--<DefaultInitialContextFactory>org.apache.naming.java.javaURLContextFactory</DefaultInitialContextFactory>-->
+        <!--
+             The restrictions that are done to various JNDI Contexts in a Multi-tenant environment
         -->
         <Restrictions>
             <!--
@@ -179,7 +184,7 @@
                     </UrlContext>
                 </UrlContexts>
             </SuperTenantOnly> -->
-            <!-- 
+            <!--
                 Contexts that are common to all tenants
             -->
             <AllTenants>
@@ -192,8 +197,8 @@
                     </UrlContext> -->
                 </UrlContexts>
             </AllTenants>
-            <!-- 
-                 All other contexts not mentioned above will be available on a per-tenant basis 
+            <!--
+                 All other contexts not mentioned above will be available on a per-tenant basis
                  (i.e. will not be shared among tenants)
             -->
         </Restrictions>
@@ -219,10 +224,10 @@
         because the Ghost Deployer works only with the HTTP/S transports. If you are using
         other transports, don't enable Ghost Deployer.
     -->
-    <GhostDeployment>
-        <Enabled>false</Enabled>
-        <PartialUpdate>false</PartialUpdate>
-    </GhostDeployment>
+    <EnableGhostDeployer>false</EnableGhostDeployer>
+
+    <!--Enable/Disable POXSecurityHandler -->
+    <EnablePoxSecurity>false</EnablePoxSecurity>
 
     <!--
     Axis2 related configurations
@@ -243,7 +248,7 @@
 
         <!--
          Deployment update interval in seconds. This is the interval between repository listener
-         executions. 
+         executions.
         -->
         <DeploymentUpdateInterval>15</DeploymentUpdateInterval>
 
@@ -300,8 +305,8 @@
         </Role>
     </ServiceUserRoles>
 
-    <!-- 
-      Enable following config to allow Emails as usernames. 	
+    <!--
+      Enable following config to allow Emails as usernames.
     -->
     <!--EnableEmailUserName>true</EnableEmailUserName-->
 
@@ -357,11 +362,11 @@
 
         <!--
             The Authenticator configuration to be used at the JVM level. We extend the
-            java.net.Authenticator to make it possible to authenticate to given servers and 
+            java.net.Authenticator to make it possible to authenticate to given servers and
             proxies.
         -->
         <NetworkAuthenticatorConfig>
-            <!-- 
+            <!--
                 Below is a sample configuration for a single authenticator. Please note that
                 all child elements are mandatory. Not having some child elements would lead to
                 exceptions at runtime.
@@ -398,12 +403,24 @@
 
         <!--Option to disable storing of tokens issued by STS-->
         <DisableTokenStore>false</DisableTokenStore>
-
         <!--
-         Security token store class name. If this is not set, default class will be
-         org.wso2.carbon.security.util.SecurityTokenStore
+        Token Persister configuration for non-volatile storage of SAML tokens issued by STS:
+        1. TokenPersister class
+        2. TokenStorage path
+        3. Maximum number of tokens in volatile storage
+        4. Any other custom properties
         -->
-        <!--TokenStoreClassName>org.wso2.carbon.identity.sts.store.DBTokenStore</TokenStoreClassName-->
+        <TokenPersister>
+            <Class>org.apache.rahas.impl.FSBasedRetiredTokenPersister</Class>
+            <StoragePath>${carbon.home}/repository/resources/security/tokenstore</StoragePath>
+            <InMemoryThreshold>500</InMemoryThreshold>
+            <!--Properties>
+                <Property>
+                    <Name>propName</Name>
+                    <Value>propValue</Value>
+                </Property>
+            </Properties-->
+        </TokenPersister>
     </Security>
 
     <!--
@@ -492,7 +509,7 @@
 
        The value of the Item element is the first parameter in the query string(e.g. ?wsdl)
        which needs special processing
-       
+
        The value of the Class element is a class which implements
        org.wso2.carbon.transport.HttpGetRequestProcessor
     -->
@@ -515,12 +532,12 @@
         </Processor>
     </HttpGetRequestProcessors>
 
-    <!-- Deployment Synchronizer Configuration. t Enabled value to true when running with "svn based" dep sync.
+    <!-- Deployment Synchronizer Configuration. Uncomment the following section when running with "svn based" dep sync.
 	In master nodes you need to set both AutoCommit and AutoCheckout to true
 	and in  worker nodes set only AutoCheckout to true.
     -->
-    <DeploymentSynchronizer>
-        <Enabled>false</Enabled>
+    <!--<DeploymentSynchronizer>
+        <Enabled>true</Enabled>
         <AutoCommit>false</AutoCommit>
         <AutoCheckout>true</AutoCheckout>
         <RepositoryType>svn</RepositoryType>
@@ -528,7 +545,7 @@
         <SvnUser>username</SvnUser>
         <SvnPassword>password</SvnPassword>
         <SvnUrlAppendTenantId>true</SvnUrlAppendTenantId>
-    </DeploymentSynchronizer>
+    </DeploymentSynchronizer>-->
 
     <!-- Deployment Synchronizer Configuration. Uncomment the following section when running with "registry based" dep sync.
         In master nodes you need to set both AutoCommit and AutoCheckout to true
@@ -577,7 +594,7 @@
         name="pgPort"  - The port (default: 5435)
         name="pgAllowOthers"  - Allow other computers to connect
         name="trace" - Print additional trace information; for all servers
-        name="baseDir" - The base directory for H2 databases; for all servers  
+        name="baseDir" - The base directory for H2 databases; for all servers
     -->
     <!--H2DatabaseConfiguration>
         <property name="web" />
@@ -605,7 +622,7 @@
     -->
     <FeatureRepository>
         <RepositoryName>default repository</RepositoryName>
-        <RepositoryURL>${p2.repo.url}</RepositoryURL>
+        <RepositoryURL>http://dist.wso2.org/p2/carbon/releases/4.2.0/</RepositoryURL>
     </FeatureRepository>
 
     <!--
@@ -616,7 +633,7 @@
         <!--Uses the embedded API Manager by default. If you want to use an external
         API Manager instance to manage APIs, configure below  externalAPIManager-->
 
-        <Enabled>true</Enabled>
+        <Enabled>false</Enabled>
 
         <!--Uncomment and configure API Gateway and
         Publisher URLs to use external API Manager instance-->

@@ -27,8 +27,8 @@
         -->
         <Connector  protocol="org.apache.coyote.http11.Http11NioProtocol"
                     port="9763"
-                    {% if STRATOS_HTTP_PROXY_PORT is defined %}
-                        proxyPort="{{STRATOS_HTTP_PROXY_PORT}}"
+                    {% if CARBON_HTTP_PROXY_PORT is defined %}
+                        proxyPort="{{CARBON_HTTP_PROXY_PORT}}"
                     {% endif %}
                     redirectPort="9443"
                     bindOnInit="false"
@@ -54,8 +54,8 @@
         -->
         <Connector  protocol="org.apache.coyote.http11.Http11NioProtocol"
                     port="9443"
-        {% if STRATOS_HTTPS_PROXY_PORT is defined %}
-                    proxyPort="{{STRATOS_HTTPS_PROXY_PORT}}"
+        {% if CARBON_HTTPS_PROXY_PORT is defined %}
+                    proxyPort="{{CARBON_HTTPS_PROXY_PORT}}"
         {% endif %}
                     bindOnInit="false"
                     sslProtocol="TLS"
