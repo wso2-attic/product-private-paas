@@ -79,21 +79,3 @@ $(document).ready(function() {
     });
 
 });
-
-
-function toolbar_top() {
-    var window_top = $(window).scrollTop();
-    var div_top = $('.title-main').offset().top;
-    if (window_top > div_top) {
-        $('.form-toolbar').addClass('stick-to-top container');
-    } else {
-        $('.form-toolbar').removeClass('stick-to-top container');
-    }
-}
-
-$(function () {
-    $(window).scroll(toolbar_top);
-    toolbar_top();
-});
-
-//changeBoxHeight();

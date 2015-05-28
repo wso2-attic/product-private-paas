@@ -28,10 +28,52 @@
         <a href="{{url ""}}/{{breadcrumbPathLevelOne}}/" >/{{breadcrumbPathLevelOne}}</a>
         <a href="{{url ""}}/{{breadcrumbPathLevelOne}}/{{breadcrumbPathLevelTwo}}/" >/{{breadcrumbPathLevelTwo}}</a>
     </div>
-    <a href="{{url ""}}" class="btn-action">
+    {{#if isForm}}
+        {{#if isEdit}}
+            <a onclick='window.location.replace(document.referrer)' class="btn-action">
+            <span class="fw-stack fw-lg btn-action-ico">
+                    <i class="fw fw-ring fw-stack-2x"></i>
+                    <i class="fw fw-left-arrow fw-stack-1x"></i>
+                </span> Cancel
+            </a>
+        {{else}}
+            {{#if isUpdate}}
+                <a onclick='window.location.replace(document.referrer)' class="btn-action">
                 <span class="fw-stack fw-lg btn-action-ico">
                     <i class="fw fw-ring fw-stack-2x"></i>
                     <i class="fw fw-left-arrow fw-stack-1x"></i>
-                </span> Back to Home
-    </a>
+                </span> Cancel
+                </a>
+                <a class="btn-action" id='update' data-form='update-{{formContext}}'>
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-check fw-stack-1x"></i>
+                    </span> Save
+                </a>
+            {{else}}
+                <a onclick='window.location.replace(document.referrer)' class="btn-action">
+                <span class="fw-stack fw-lg btn-action-ico">
+                    <i class="fw fw-ring fw-stack-2x"></i>
+                    <i class="fw fw-left-arrow fw-stack-1x"></i>
+                </span> Cancel
+                </a>
+                <a class="btn-action" id='deploy' data-form='{{formContext}}'>
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-check fw-stack-1x"></i>
+                    </span> Save {{formTitle}}
+                </a>
+            {{/if}}
+        {{/if}}
+    {{else}}
+            {{#if buttonText}}
+                <a href="new/" class="btn-action">
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-add fw-stack-1x"></i>
+                    </span> Add {{buttonText}}
+                </a>
+            {{/if}}
+    {{/if}}
+
 </div>

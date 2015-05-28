@@ -314,7 +314,8 @@ var render = function (theme, data, meta, require) {
                             partial:'index_sub_header',
                             context:{
                                 breadcrumbPathLevelOne:data.breadcrumbPathLevelOne,
-                                breadcrumbPathLevelTwo:data.breadcrumbPathLevelTwo
+                                breadcrumbPathLevelTwo:data.breadcrumbPathLevelTwo,
+                                buttonText: data.buttonText,
                             }
                         }
                     ],

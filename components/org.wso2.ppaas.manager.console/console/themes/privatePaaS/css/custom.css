@@ -135,7 +135,7 @@ h1{font-family: 'Open Sans', san-serif;
 
 /* menu box realted styles */
 .title{
-    margin-top: 3em;
+    margin-top: 4.5em;
 }
 .content{
 
@@ -177,6 +177,7 @@ a.btn-action {
     text-transform: uppercase;
     height: 53px;
     padding: 9px 10px;
+    cursor: pointer;
 }
 .btn-action:hover {
     background-color: #304255;
@@ -185,7 +186,8 @@ a.btn-action {
 .breadcrumb-bar {
     display: inline;
     background-color: #4D4D4D;
-    padding: 18px 10px;
+    padding: 13px 10px;
+    float: left;
 }
 .breadcrumb-bar a {
     font-size: 19px;
@@ -321,4 +323,17 @@ h3.panel-title {
 
 .col-md-4 {
     width: 30.333333%;
+}
+
+.btn-primary{
+    background-color: #526A84;
+    border-color: #526A84;
+}
+
+.btn-primary span{
+    margin-top: 4px;
+}
+
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active{
+    background-color: #304255;
 }
