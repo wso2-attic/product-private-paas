@@ -210,5 +210,7 @@ div#general>div>h3 {
     display: none;
 }
 .highlightme{
-    background-color: #6BCFFE;
+    background-color: #6C89A8;
 }
+
+.description .panel-default{margin-top: 0px}

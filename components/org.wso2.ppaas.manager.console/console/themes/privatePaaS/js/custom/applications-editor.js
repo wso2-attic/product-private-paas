@@ -829,7 +829,11 @@ $(document).ready(function(){
         var appJSON = generateJsplumbTree(applicationJson, jsPlumb.getConnections(), appeditor);
         var btn = $(this);
         var formtype = 'applications';
-        btn.html("<i class='fa fa-spinner fa-spin'></i> Adding...");
+        var addico = '<span class="fw-stack fw-lg btn-action-ico">' +
+            '<i class="fw fw-ring fw-stack-2x"></i>' +
+            '<i class="fw fw-add fw-stack-1x"></i></span>';
+
+        btn.html(addico + " <i class='fa fa-spinner fa-spin'></i> Adding...");
         $.ajax({
             type: "POST",
             url: caramel.context + "/controllers/applications/application_requests.jag",
@@ -849,7 +853,7 @@ $(document).ready(function(){
             }
         })
             .always(function () {
-                btn.html('Add New Application Definition');
+                btn.html(addico + ' Save');
             });
 
     });

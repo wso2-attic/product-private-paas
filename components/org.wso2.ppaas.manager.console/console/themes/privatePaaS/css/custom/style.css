@@ -152,7 +152,7 @@
 
 .block.list-group-item:nth-of-type(odd)
 {
-    background: #eeeeee;
+    background: #D9D8D8;
 }
 
 .block.list-group-item:before, .block.list-group-item:after
