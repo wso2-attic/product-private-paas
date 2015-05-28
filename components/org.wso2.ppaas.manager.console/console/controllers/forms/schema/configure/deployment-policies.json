@@ -1,0 +1,71 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "root",
+    "type": "object",
+    "title":"Deployment Policy Definition",
+    "name": "Deployment Policy",
+    "options": {
+        "disable_properties": true,
+        "disable_collapse": true
+    },
+    "properties": {
+        "id": {
+            "id": "root/id",
+            "type": "string",
+            "title":"Deployment Policy ID"
+        },
+        "networkPartitions": {
+            "id": "root/networkPartitions",
+            "title":"Network Partitions",
+            "type": "array",
+            "format":"tabs",
+            "items": {
+                "id": "root/networkPartitions/0",
+                "type": "object",
+                "title":"Network Partition",
+                "properties": {
+                    "id": {
+                        "id": "root/networkPartitions/0/id",
+                        "type": "string",
+                        "title":"Network Partition ID",
+                    },
+                    "partitionAlgo": {
+                        "id": "root/networkPartitions/0/partitionAlgo",
+                        "type": "string",
+                        "title":"Network Partition Algorithm",
+                        "enum": ["round-robin", "one-after-another"],
+                        "maxItems":1
+                    },
+                    "partitions": {
+                        "id": "root/networkPartitions/0/partitions",
+                        "type": "array",
+                        "title":"Partitions",
+                        "format":"tabs",
+                        "items": {
+                            "id": "root/networkPartitions/0/partitions/0",
+                            "type": "object",
+                            "title":"Partition",
+                            "properties": {
+                                "id": {
+                                    "id": "root/networkPartitions/0/partitions/0/id",
+                                    "type": "string",
+                                    "title":"Partition ID",
+                                },
+                                "partitionMax": {
+                                    "id": "root/networkPartitions/0/partitions/0/partitionMax",
+                                    "type": "integer",
+                                    "title":"Partition Max",
+                                    "format": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "id",
+        "networkPartitions"
+    ]
+}

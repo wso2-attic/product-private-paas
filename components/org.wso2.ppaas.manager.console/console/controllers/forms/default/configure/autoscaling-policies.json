@@ -1,0 +1,15 @@
+{
+    "id": "economy",
+    "description":"autoscale policy description",
+    "loadThresholds": {
+        "requestsInFlight": {
+            "threshold": 30
+        },
+        "memoryConsumption": {
+            "threshold": 80
+        },
+        "loadAverage": {
+            "threshold": 100
+        }
+    }
+}

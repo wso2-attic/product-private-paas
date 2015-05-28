@@ -1,0 +1,138 @@
+<!--
+
+ Licensed to the Apache Software Foundation (ASF) under one
+ or more contributor license agreements.  See the NOTICE file
+ distributed with this work for additional information
+ regarding copyright ownership.  The ASF licenses this file
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+
+-->
+
+<div class="action-bar">
+    <div class="breadcrumb-bar">
+        <a href="{{url ""}}" ><i class="fa fa-home"></i></a>
+        <a href="{{url ""}}/{{breadcrumbPathLevelOne}}/" >/{{breadcrumbPathLevelOne}}</a>
+        <a href="{{url ""}}/{{breadcrumbPathLevelOne}}/{{breadcrumbPathLevelTwo}}/" >/{{breadcrumbPathLevelTwo}}</a>
+    </div>
+    <!-- BOF configure section -->
+    {{#ifCond page "==" "config"}}
+    {{#if isForm}}
+        {{#if isEdit}}
+            <a onclick='window.location.replace(document.referrer)' class="btn-action">
+            <span class="fw-stack fw-lg btn-action-ico">
+                    <i class="fw fw-ring fw-stack-2x"></i>
+                    <i class="fw fw-left-arrow fw-stack-1x"></i>
+                </span> Cancel
+            </a>
+        {{else}}
+            {{#if isUpdate}}
+                <a onclick='window.location.replace(document.referrer)' class="btn-action">
+                <span class="fw-stack fw-lg btn-action-ico">
+                    <i class="fw fw-ring fw-stack-2x"></i>
+                    <i class="fw fw-left-arrow fw-stack-1x"></i>
+                </span> Cancel
+                </a>
+                <a class="btn-action" id='update' data-form='update-{{formContext}}'>
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-check fw-stack-1x"></i>
+                    </span> Save
+                </a>
+            {{else}}
+                <a onclick='window.location.replace(document.referrer)' class="btn-action">
+                <span class="fw-stack fw-lg btn-action-ico">
+                    <i class="fw fw-ring fw-stack-2x"></i>
+                    <i class="fw fw-left-arrow fw-stack-1x"></i>
+                </span> Cancel
+                </a>
+                <a class="btn-action" id='deploy' data-form='{{formContext}}'>
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-check fw-stack-1x"></i>
+                    </span> Save {{formTitle}}
+                </a>
+            {{/if}}
+        {{/if}}
+    {{else}}
+            {{#if buttonText}}
+                <a href="new/" class="btn-action">
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-add fw-stack-1x"></i>
+                    </span> Add {{buttonText}}
+                </a>
+            {{/if}}
+    {{/if}}
+    {{/ifCond}}
+    {{#if groupEditor}}
+        <a onclick='window.location.replace(document.referrer)' class="btn-action">
+                <span class="fw-stack fw-lg btn-action-ico">
+                    <i class="fw fw-ring fw-stack-2x"></i>
+                    <i class="fw fw-left-arrow fw-stack-1x"></i>
+                </span> Cancel
+        </a>
+        <button class="btn-action" type='button' id='deploy'
+                disabled="disabled" data-form='{{formContext}}'>
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-add fw-stack-1x"></i>
+                    </span> Save
+        </button>
+    {{/if}}
+    <!-- EOF configure section -->
+    <!-- BOF User section -->
+    {{#ifCond page "==" "user"}}
+        {{#if isForm}}
+            <a onclick='window.location.replace(document.referrer)' class="btn-action">
+                <span class="fw-stack fw-lg btn-action-ico">
+                    <i class="fw fw-ring fw-stack-2x"></i>
+                    <i class="fw fw-left-arrow fw-stack-1x"></i>
+                </span> Cancel
+            </a>
+            <a class="btn-action" id='deploy' data-form='{{formContext}}'>
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-check fw-stack-1x"></i>
+                    </span> Save {{formTitle}}
+            </a>
+        {{else}}
+            <a href="new/" class="btn-action">
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-add fw-stack-1x"></i>
+                    </span> Add {{formTitle}}
+            </a>
+        {{/if}}
+
+    {{/ifCond}}
+    <!-- EOF User section -->
+    <!-- BOF Application section -->
+    {{#ifCond page "==" "applications"}}
+        <a onclick='window.location.replace(document.referrer)' class="btn-action">
+                <span class="fw-stack fw-lg btn-action-ico">
+                    <i class="fw fw-ring fw-stack-2x"></i>
+                    <i class="fw fw-left-arrow fw-stack-1x"></i>
+                </span> Cancel
+        </a>
+        <button class="btn-action" type='button' id='deploy'
+                disabled="disabled" data-form='{{formContext}}'>
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-add fw-stack-1x"></i>
+                    </span> Save
+        </button>
+    {{/ifCond}}
+    <!-- EOF Application section -->
+
+</div>

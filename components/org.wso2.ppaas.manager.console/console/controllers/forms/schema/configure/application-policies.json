@@ -1,0 +1,68 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "id": "root",
+    "type": "object",
+    "title": "Application Policy Definition",
+    "name": "Application Policy",
+    "options": {
+        "disable_properties": true,
+        "disable_collapse": true
+    },
+    "properties": {
+        "id": {
+            "id": "root/id",
+            "type": "string",
+            "title": "Application Policy Id ",
+            "name": "Application Policy Id",
+        },
+        "algorithm": {
+            "id": "root/algorithm",
+            "type": "string",
+            "title": "Application Policy Algorithm ",
+            "name": "Application Policy Algorithm",
+            "enum": ["one-after-another","all-at-once"],
+        },
+        "networkPartitions": {
+            "id": "root/networkPartitions",
+            "type": "array",
+            "title": "Network Partitions ",
+            "name": "Network Partitions",
+            "format":"tabs",
+            "items": {
+                "id": "root/networkPartitions/0",
+                "type": "string",
+                "title": "Network Partitions ",
+                "name": "Network Partitions"
+            }
+        },
+        "properties": {
+            "id": "root/properties",
+            "type": "array",
+            "title": "Properties",
+            "format": "tabs",
+            "items": {
+                "id": "root/properties/0",
+                "type": "object",
+                "title": "Property",
+                "properties": {
+                    "name": {
+                        "id": "root/properties/0/name",
+                        "title": "Name",
+                        "type": "string"
+                    },
+                    "value": {
+                        "id": "root/properties/0/value",
+                        "title": "Value",
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    },
+    "required": [
+        "id",
+        "algorithm",
+        "networkPartitions",
+        "properties"
+    ]
+}

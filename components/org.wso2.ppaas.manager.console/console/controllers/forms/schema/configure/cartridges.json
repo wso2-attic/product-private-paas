@@ -1,0 +1,350 @@
+{
+    "type": "object",
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "id": "root",
+    "title": "Cartridge Definition",
+    "name": "Cartridge ",
+    "options": {
+        "disable_properties": true,
+        "disable_collapse": true
+    },
+    "required": ["type","category", "provider", "host", "displayName", "description", "version", "multiTenant", "portMapping"],
+    "properties": {
+        "type": {
+            "type": "string",
+            "id": "root/type",
+            "title": "Type",
+            "description": "You need to enter cartridge type without space",
+            "name": "Type",
+            "minLength":2,
+            "default": "php",
+            "propertyOrder": 1,
+            "maxItems": 1,
+            "pattern": "^[a-zA-Z0-9-_]+$"
+        },
+        "category": {
+            "type": "string",
+            "id": "root/category",
+            "title": "Category",
+            "description": "This will use to identify cartridge usage type",
+            "name": "Category",
+            "default": "framework",
+            "propertyOrder": 1,
+            "maxItems": 1,
+            "enum": ["framework","data","lb"]
+        },
+        "provider": {
+            "type": "string",
+            "id": "root/provider",
+            "title": "Provider",
+            "name": "Provider",
+            "default": "apache",
+            "minLength":2,
+            "propertyOrder": 3,
+            "maxItems": 1
+        },
+        "host": {
+            "type": "string",
+            "id": "root/host",
+            "title": "Host",
+            "name": "Host",
+            "default": "stratos.org",
+            "propertyOrder": 4,
+            "minLength":2,
+            "maxItems": 1
+        },
+        "displayName": {
+            "type": "string",
+            "id": "root/displayName",
+            "title": "Display Name",
+            "name": "Display Name",
+            "default": "load balancer",
+            "propertyOrder": 5,
+            "maxItems": 1
+        },
+        "description": {
+            "type": "string",
+            "id": "root/description",
+            "title": "Description",
+            "name": "Description",
+            "default": "LB Cartridge",
+            "minLength":5,
+            "propertyOrder": 6,
+            "maxItems": 1
+        },
+        "version": {
+            "type": "string",
+            "id": "root/version",
+            "title": "Version",
+            "name": "Version",
+            "default": "4",
+            "propertyOrder": 7,
+            "maxItems": 1
+        },
+        "multiTenant": {
+            "type": "boolean",
+            "id": "root/multiTenant",
+            "title": "Multi Tenant",
+            "name": "Multi Tenant",
+            "default": false,
+            "maxItems": 1
+        },
+        "loadBalancingIPType": {
+            "type": "string",
+            "id": "root/loadBalancingIPType",
+            "title": "Load Balancing IP Type",
+            "description": "This will use to load balance to either private or public IP of the member",
+            "name": "Load Balancing IP Type",
+            "default": "private",
+            "propertyOrder": 7,
+            "maxItems": 1,
+            "enum": ["private","public"]
+        },
+        "metadataKeys": {
+            "id": "root/metadataKeys",
+            "type": "array",
+            "title": "Metadata Keys",
+            "name": "Metadata Keys",
+            "format": "tabs",
+            "items": {
+                "id": "root/metadataKeys",
+                "type": "string",
+                "title": "Metadata Key ",
+                "name": "Metadata Key"
+            }
+        },
+        "portMapping": {
+            "id": "root/portMapping",
+            "type": "array",
+            "format": "tabs",
+            "options": {
+                "collapsed": true
+            },
+            "title": "PortMappings",
+            "items": {
+                "id": "root/portMapping/0",
+                "type": "object",
+                "format": "grid",
+                "required": ["port", "protocol", "proxyPort"],
+                "title": "PortMapping",
+                "properties": {
+                    "protocol": {
+                        "type": "string",
+                        "id": "root/portMapping/0/protocol",
+                        "title": "Protocol",
+                        "default": "http"
+                    },
+                    "port": {
+                        "type": "number",
+                        "id": "root/portMapping/0/port",
+                        "title": "Port",
+                        "default": "8280",
+                        "format": "number"
+                    },
+                    "proxyPort": {
+                        "type": "number",
+                        "id": "root/portMapping/0/proxyPort",
+                        "title": "Proxy Port",
+                        "default": "8280",
+                        "format": "number"
+                    }
+                }
+            }
+        },
+        "iaasProvider": {
+            "type": "array",
+            "id": "root/iaasProvider",
+            "title": "IaaS Providers",
+            "name": "IaaS Provider",
+            "options": {
+                "collapsed": false
+            },
+            "format":"tabs",
+            "items": {
+                "type": "object",
+                "id": "root/iaasProvider/0",
+                "format": "grid",
+                "required": ["type", "imageId"],
+                "title": "IaaS Provider",
+                "name": "IaaS Provider",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "id": "root/iaasProvider/0/type",
+                        "title": "Type",
+                        "name": "Type",
+                        "enum": ["ec2","kubernetes","mock","openstack", "gce"],
+                        "default": "ec2"
+                    },
+                    "imageId": {
+                        "type": "string",
+                        "id": "root/iaasProvider/0/imageId",
+                        "title": "Image ID",
+                        "name": "Image ID",
+                        "default": "ap-southeast-1/ami­-70326522"
+                    },
+                    "property": {
+                        "id": "root/iaasProvider/0/property",
+                        "type": "array",
+                        "title": "Property",
+                        "format": "tabs",
+                        "items": {
+                            "id": "root/iaasProvider/0/property/0",
+                            "type": "object",
+                            "title": "Property",
+                            "properties": {
+                                "name": {
+                                    "id": "root/iaasProvider/0/property/0/name",
+                                    "title": "Name",
+                                    "type": "string"
+                                },
+                                "value": {
+                                    "id": "root/iaasProvider/0/property/0/value",
+                                    "title": "Value",
+                                    "type": "string"
+                                }
+                            }
+                        }
+                    },
+                    "networkInterfaces": {
+                        "id": "root/iaasProvider/0/networkInterfaces",
+                        "type": "array",
+                        "format": "tabs",
+                        "required": true,
+                        "title": "Network Interfaces",
+                        "items": {
+                            "id": "root/iaasProvider/0/networkInterfaces/0",
+                            "type": "object",
+                            "required": ["networkUuid"],
+                            "title": "NetworkInterface",
+                            "properties": {
+                                "networkUuid": {
+                                    "id": "root/iaasProvider/0/networkInterfaces/0/networkUuid",
+                                    "type": "string",
+                                    "title": "Network UUID"
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+        },
+        "persistence": {
+            "type": "object",
+            "id": "root/persistence",
+            "title": "Persistence",
+            "name": "Persistence",
+            "required": ["isRequired", "volume"],
+            "options": {
+                "collapsed": true
+            },
+            "properties": {
+                "isRequired": {
+                    "type": "boolean",
+                    "id": "root/persistence/isRequired",
+                    "title": "Is Required",
+                    "name": "Is Required",
+                    "default": "true"
+                },
+                "volume": {
+                    "id": "root/persistence/volume",
+                    "type": "array",
+                    "format": "tabs",
+                    "title": "Volumes",
+                    "items": {
+                        "id": "root/persistence/volume/0",
+                        "type": "object",
+                        "title": "Volume",
+                        "required": ["device", "mappingPath", "size", "removeOnTermination"],
+                        "properties": {
+                            "device": {
+                                "type": "string",
+                                "id": "root/persistence/volume/0/device",
+                                "title": "Device",
+                                "name": "Device",
+                                "default": "/dev/sdc"
+                            },
+                            "mappingPath": {
+                                "type": "string",
+                                "id": "root/persistence/volume/0/mappingPath",
+                                "title": "Mapping Path",
+                                "name": "Mapping Path",
+                                "default": "/home/ubuntu/sdc"
+                            },
+                            "size": {
+                                "type": "number",
+                                "id": "root/persistence/volume/0/size",
+                                "title": "Size",
+                                "name": "Size",
+                                "default": "11",
+                                "format": "number"
+                            },
+                            "removeOnTermination": {
+                                "type": "boolean",
+                                "id": "root/persistence/volume/0/removeOnTermination",
+                                "title": "Remove On Termination",
+                                "name": "Remove On Termination",
+                                "default": false
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "deployment": {
+            "type": "object",
+            "id": "root/deployment",
+            "title": "Deployment",
+            "name": "Deployment",
+            "required": ["baseDir", "dir"],
+            "options": {
+                "collapsed": true
+            },
+            "properties": {
+                "baseDir": {
+                    "type": "string",
+                    "id": "root/deployment/baseDir",
+                    "title": "Base Directory",
+                    "name": "Base Directory"
+                },
+                "dir": {
+                    "id": "root/deployment/dir",
+                    "type": "array",
+                    "title": "Directories ",
+                    "name": "Directories",
+                    "format": "tabs",
+                    "items": {
+                        "id": "root/deployment/dir",
+                        "type": "string",
+                        "title": "Directory",
+                        "name": "Directory"
+                    }
+                }
+            }
+        },
+        "property": {
+            "id": "root/property",
+            "type": "array",
+            "title":"Property",
+            "format":"tabs",
+            "items": {
+                "id": "root/property/0",
+                "type": "object",
+                "title":"Property",
+                "properties": {
+                    "name": {
+                        "id": "root/property/0/name",
+                        "title":"Name",
+                        "type": "string"
+                    },
+                    "value": {
+                        "id": "root/property/0/value",
+                        "title":"Value",
+                        "type": "string"
+                    }
+                }
+            }
+        }
+    }
+}

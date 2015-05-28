@@ -1,0 +1,66 @@
+{
+    "type":"object",
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "id": "root",
+    "title": "User",
+    "options": {
+        "disable_properties": true,
+        "disable_collapse": true
+    },
+    "required":["userName","credential","role"],
+    "properties":{
+        "firstName": {
+            "type":"string",
+            "id": "root/firstName",
+            "title": "First Name",
+            "name": "First Name",
+            "default": "",
+            "required":false
+        },
+        "lastName": {
+            "type":"string",
+            "id": "root/lastName",
+            "title": "Last Name",
+            "name": "Last Name",
+            "default": "",
+            "required":false
+        },
+        "userName": {
+            "type":"string",
+            "id": "root/userName",
+            "title": "User Name",
+            "name": "User Name",
+            "minLength":3,
+            "required":true,
+            "pattern":"^[^~!#$;%^*+={}\\|\\\\&lt;&gt;,\'\"]{3,30}$",
+            "default": ""
+        },
+        "credential": {
+            "type":"string",
+            "id": "root/credential",
+            "minLength":6,
+            "description":"Enter six characters long password",
+            "format":"password",
+            "title": "Password",
+            "name": "Password",
+            "default": ""
+        },
+        "email": {
+            "type":"string",
+            "id": "root/email",
+            "title": "Email",
+            "name": "Email",
+            "format":"email",
+            "default": "name@host.com",
+            "required":false
+        },
+        "role": {
+            "type":"string",
+            "id": "root/role",
+            "title": "User Role",
+            "name": "User Role",
+            "enum":["admin","Internal/user"],
+            "default": "Internal/user"
+        }
+    }
+}
