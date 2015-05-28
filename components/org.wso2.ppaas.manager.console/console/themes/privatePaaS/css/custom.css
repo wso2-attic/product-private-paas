@@ -19,18 +19,27 @@
  *
 */
 
-body{ background-color:#4872fd; height: 100%;width: 100%; font-family: 'Open Sans', san-serif; }
+body{ background-color:#F0F0F0; height: 100%;width: 100%; font-family: 'Open Sans', san-serif; }
 .btn {border-radius: 0;}
-h1{font-family: 'Open Sans', san-serif; color: rgb(255,255,255); text-shadow: 0 0 5px rgb(75,75,75); margin: 2em 0px; font-weight: 600 }
+h1{font-family: 'Open Sans', san-serif;
+    color: rgb(25, 62, 85);
+    text-shadow: 1px 1px 0px rgb(255, 255, 255);
+    margin: 2em 0px;
+    font-weight: 200; }
 .error-page{margin-top: 2em;}
 /* index_header partial related styles */
-.logo img { width: 140px; }
-.user-image img { width: 50px; background-color: rgb(228, 242, 255);}
+.user-drop {}
+.user-image{margin-left: 10px;}
 
 .navbar { border-radius: 0px; box-shadow:0 0 5px -1px rgb(100,100,100); margin-bottom: 0px; z-index: 99999; position: fixed; width: 100%; }
-.navbar-default { background: #fff; }
-.navbar-nav>li>a { padding: 5px; }
-.navbar-brand { float: left; height: 50px; padding: 6px 15px; font-size: 18px; line-height: 20px; }
+.navbar-default { background: #11375B; border-color:transparent}
+.navbar-nav>li>a { padding: 15px; }
+.navbar-brand { float: left; height: 50px; padding: 17px 15px; font-size: 18px; line-height: 20px; }
+.logo img, .logo h2{float: left; }
+.logo h2{margin-top: -1px;
+    margin-left: 11px;
+    color: #fff;
+    font-size: 24px;}
 .navbar-nav{ margin: 0px }
 
 .bootstrap-switch { z-index: 50; }
@@ -120,29 +129,55 @@ h1{font-family: 'Open Sans', san-serif; color: rgb(255,255,255); text-shadow: 0 
 
 }
 
+.menu a, .sub-header a{
+    color: #2c3e50;
+}
+.navbar-default .navbar-nav>li>a, a{
+    color: #fff;
+}
+.navbar-default .navbar-nav>li>a:hover, .navbar-default .navbar-nav>li>a:focus{
+    color: #fff;
+}
+
+#footer, #push {
+    height: 36px;
+}
+#footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background-color: #333333;
+    z-index: 9999;
+}
+.footer-text {
+    margin-top: 1em;
+    color: #fff;
+    font-size: 11px;
+}
+
 .content-menu-block {
-    padding: 2em;
-    min-height: 24.429em;
+    padding: 4em 3em 0em 3em;
+    min-height: 22.429em;
     cursor: pointer;
     background-color: #fff;
     margin: 1em;
 }
 
 .content-menu-block i{
-    font-size: 10em;
-    color:#7fbee8;
+    font-size: 8em;
+    color:#fff;
 }
 
 .content-menu-block i:hover {
-    color: #7b828c;
+    color: #EBEBEB;
 }
 
 .content a:hover, .content a:focus {
-    color: #7b828c;
+    color: #F6F6F6;
     text-decoration: none;
 }
 .content a:hover > .content-menu-block i{
-    color: #7b828c;
+    color: #EBEBEB;
 }
 
 .form-toolbar{
@@ -209,7 +244,6 @@ div#textform>div>h3 {
 }
 
 .login-logo img {
-    width: 210px;
     padding-bottom: 25px;
 }
 

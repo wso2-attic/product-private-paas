@@ -26,17 +26,17 @@
             <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
                 <span class="sr-only">Toggle navigation</span><span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand logo" href="{{url ""}}"><img src="{{url "/themes/privatePaaS/images/wso2_private_paas.png"}}"></a>
+            <a class="navbar-brand logo" href="{{url ""}}"><img src="{{url "/themes/privatePaaS/images/wso2_logo.png"}}">  <h2>Private PaaS</h2></a>
         </div>
         <!-- default navigation -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
             <ul class="nav navbar-nav navbar-right">
                 <li class="dropdown">
-                    <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <span class="user-image">
-                  <img src="{{url "/themes/privatePaaS/images/avatar/"}}user.png" alt="example image" class="img-circle">
-                </span>
+                    <a href="#" class="dropdown-toggle user-drop" data-toggle="dropdown">
                         {{#user}}{{/user}}
+                        <span class="user-image">
+                            <i class="fa fa-user"></i>
+                        </span>
                         <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu" role="menu">
