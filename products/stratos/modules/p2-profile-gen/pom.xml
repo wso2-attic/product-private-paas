@@ -212,6 +212,25 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+		    <execution>
+                        <id>unpack-cep-artifacts</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.apache.stratos</groupId>
+                                    <artifactId>apache-stratos-cep-artefacts</artifactId>
+                                    <version>${pom.version}</version>
+                                    <type>zip</type>
+                                    <overWrite>true</overWrite>
+                                    <outputDirectory>target</outputDirectory>
+                                </artifactItem>
+                            </artifactItems>
+                        </configuration>
+                    </execution>
                     <execution>
                         <id>unpack-equinox-executable</id>
                         <phase>test</phase>

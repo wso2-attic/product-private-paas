@@ -552,6 +552,51 @@
             <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/scripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/scripts</outputDirectory>
         </fileSet>
+	<!-- Pack CEP artifacts downloaded from Apache repo -->
+<!--
+	<fileSet>
+            <directory>../p2-profile-gen/target/apache-stratos-cep-artefacts-${pom.version}/eventbuilders</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/eventbuilders</outputDirectory>
+            <includes>
+                <include>**/**.xml</include>                                                                                                                                                                                           
+            </includes>
+        </fileSet>
+	<fileSet>
+            <directory>../p2-profile-gen/target/apache-stratos-cep-artefacts-${pom.version}/eventformatters</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/eventformatters</outputDirectory>
+            <includes>
+                <include>**/**.xml</include>                                                                                                                                                                                           
+            </includes>
+        </fileSet>
+	<fileSet>
+            <directory>../p2-profile-gen/target/apache-stratos-cep-artefacts-${pom.version}/executionplans</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/executionplans</outputDirectory>
+            <includes>
+                <include>**/**.xml</include>                                                                                                                                                                                           
+            </includes>
+        </fileSet>
+	<fileSet>
+            <directory>../p2-profile-gen/target/apache-stratos-cep-artefacts-${pom.version}/inputeventadaptors</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/inputeventadaptors</outputDirectory>
+            <includes>
+                <include>**/**.xml</include>                                                                                                                                                                                           
+            </includes>
+        </fileSet>
+	<fileSet>
+            <directory>../p2-profile-gen/target/apache-stratos-cep-artefacts-${pom.version}/outputeventadaptors</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/outputeventadaptors</outputDirectory>
+            <includes>
+                <include>**/**.xml</include>                                                                                                                                                                                           
+            </includes>
+        </fileSet>
+	<fileSet>
+            <directory>../p2-profile-gen/target/apache-stratos-cep-artefacts-${pom.version}/streamdefinitions</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/streamdefinitions</outputDirectory>
+            <includes>
+                <include>**/**.xml</include>                                                                                                                                                                                           
+            </includes>
+        </fileSet>
+-->
     </fileSets>
     <dependencySets>
         <dependencySet>
