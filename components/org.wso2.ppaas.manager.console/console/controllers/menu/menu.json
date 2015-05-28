@@ -6,6 +6,7 @@
             "context": "/",
             "title": "Configurations",
             "icon": "fa-gears",
+            "block-color":"#34495e",
             "permissionPaths": [
                 "/permission",
                 "/permission/admin",
@@ -40,6 +41,7 @@
                     "context": "/configure",
                     "title": "Network Partitions",
                     "icon": "fa-th-large",
+                    "block-color":"#34495e",
                     "permissionPaths": [
                         "/permission",
                         "/permission/admin",
@@ -55,6 +57,7 @@
                     "context": "/configure",
                     "title": "Autoscaling Policies",
                     "icon": "fa-expand",
+                    "block-color":"#34495e",
                     "permissionPaths": [
                         "/permission",
                         "/permission/admin",
@@ -70,6 +73,7 @@
                     "context": "/configure",
                     "title": "Deployment Policies",
                     "icon": "fa-road",
+                    "block-color":"#34495e",
                     "permissionPaths": [
                         "/permission",
                         "/permission/admin",
@@ -85,6 +89,7 @@
                     "context": "/configure",
                     "title": "Application Policies",
                     "icon": "fa-cube",
+                    "block-color":"#34495e",
                     "permissionPaths": [
                         "/permission",
                         "/permission/admin",
@@ -100,6 +105,7 @@
                     "context": "/configure",
                     "title": "Cartridges",
                     "icon": "fa-inbox",
+                    "block-color":"#34495e",
                     "permissionPaths": [
                         "/permission",
                         "/permission/admin",
@@ -115,6 +121,7 @@
                     "context": "/configure",
                     "title": "Cartridge Groups",
                     "icon": "fa-briefcase",
+                    "block-color":"#34495e",
                     "permissionPaths": [
                         "/permission",
                         "/permission/admin",
@@ -130,6 +137,7 @@
                     "context": "/configure",
                     "title": "Kubernetes Clusters",
                     "icon": "fa-sitemap",
+                    "block-color":"#34495e",
                     "permissionPaths": [
                         "/permission",
                         "/permission/admin",
@@ -147,6 +155,7 @@
             "context": "/",
             "title": "Users",
             "icon": "fa-users",
+            "block-color":"#27ae60",
             "permissionPaths": ["/permission", "/permission/admin"],
             "description": "Manage tenants & users.",
             "sub-menu": [
@@ -156,6 +165,7 @@
                     "context": "/users",
                     "title": "Manage Users",
                     "icon": "fa-user",
+                    "block-color":"#27ae60",
                     "permissionPaths": [
                         "/permission",
                         "/permission/admin"
@@ -168,6 +178,7 @@
                     "context": "/users",
                     "title": "Manage Tenants",
                     "icon": "fa-building",
+                    "block-color":"#27ae60",
                     "permissionPaths": [
                         "/permission"
                     ],
@@ -181,6 +192,7 @@
             "context": "/",
             "title": "Applications",
             "icon": "fa-cubes",
+            "block-color":"#2980b9",
             "permissionPaths": [
                 "/permission",
                 "/permission/admin",
@@ -195,6 +207,7 @@
             "context": "/",
             "title": "JIRA",
             "icon": "fa-bug",
+            "block-color":"#8e44ad",
             "permissionPaths": [
                 "/permission",
                 "/permission/admin",
@@ -229,6 +242,7 @@
             "context": "/",
             "title": "Documentation",
             "icon": "fa-life-saver",
+            "block-color":"#16a085",
             "permissionPaths": [
                 "/permission",
                 "/permission/admin",
