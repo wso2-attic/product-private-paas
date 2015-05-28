@@ -589,7 +589,7 @@
     </phaseOrder>
 
     <clustering class="org.wso2.carbon.core.clustering.hazelcast.HazelcastClusteringAgent"
-                enable="{{ STRATOS_CLUSTERING }}">
+                enable="{{ CARBON_CLUSTERING }}">
 
         <!--
            This parameter indicates whether the cluster has to be automatically initalized
@@ -611,7 +611,7 @@
                     is deemed to have left the cluster, it will be detected by the Group Membership
                     Service (GMS) using a TCP ping mechanism.
         -->
-        <parameter name="membershipScheme">{{STRATOS_MEMBERSHIP_SCHEME}}</parameter>
+        <parameter name="membershipScheme">{{CARBON_MEMBERSHIP_SCHEME}}</parameter>
         <!--<parameter name="licenseKey">xxx</parameter>-->
         <!--<parameter name="mgtCenterURL">http://localhost:8081/mancenter/</parameter>-->
 
@@ -619,7 +619,7 @@
          The clustering domain/group. Nodes in the same group will belong to the same multicast
          domain. There will not be interference between nodes in different groups.
         -->
-        <parameter name="domain">{{STRATOS_DOMAIN}}</parameter>
+        <parameter name="domain">{{CARBON_DOMAIN}}</parameter>
 
         <!-- The multicast address to be used -->
         <!--<parameter name="mcastAddress">228.0.0.4</parameter>-->
@@ -640,7 +640,7 @@
         -->
         <!-- The host name or IP address of this member -->
 
-        <parameter name="localMemberHost">{{ STRATOS_LOCAL_MEMBER_HOST }}</parameter>
+        <parameter name="localMemberHost">{{ CARBON_LOCAL_MEMBER_HOST }}</parameter>
 
         <!--
             The bind adress of this member. The difference between localMemberHost & localMemberBindAddress
@@ -655,7 +655,7 @@
         The TCP port used by this member. This is the port through which other nodes will
         contact this member
          -->
-            <parameter name="localMemberPort">{{STRATOS_LOCAL_MEMBER_PORT}}</parameter>
+            <parameter name="localMemberPort">{{CARBON_LOCAL_MEMBER_PORT}}</parameter>
         <!--
             The bind port of this member. The difference between localMemberPort & localMemberBindPort
             is that localMemberPort is the one that is advertised by this member, while localMemberBindPort
@@ -671,7 +671,7 @@
         <parameter name="properties">
             <property name="backendServerURL" value="https://${hostName}:${httpsPort}/services/"/>
             <property name="mgtConsoleURL" value="https://${hostName}:${httpsPort}/"/>
-            <property name="subDomain" value="{{STRATOS_SUB_DOMAIN}}"/>
+            <property name="subDomain" value="{{CARBON_SUB_DOMAIN}}"/>
         </parameter>
 
         <!--
@@ -679,7 +679,7 @@
            "membershipScheme" above is set to "wka"
         -->
         <members>
-               {% for key, value in STRATOS_WKA_MEMBERS.iteritems() -%}
+               {% for key, value in CARBON_WKA_MEMBERS.iteritems() -%}
                 <member>
                     <hostName>{{ key }}</hostName>
                     <port>{{ value }}</port>

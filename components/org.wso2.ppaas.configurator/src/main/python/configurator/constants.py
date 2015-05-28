@@ -22,9 +22,6 @@ CONFIG_FILE_NAME = "module.ini"
 LOG_FILE_LOCATION = "./configurator.log"
 
 # Configurations
-CONFIG_DEFAULTS = "DEFAULTS"
 CONFIG_SETTINGS = "SETTINGS"
 CONFIG_PARAMS = "PARAMS"
 
-# Output Location
-OUTPUT_DIRECTORY = "./output"
