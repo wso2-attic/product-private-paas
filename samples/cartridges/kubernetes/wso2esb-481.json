@@ -12,7 +12,7 @@
         {
             "protocol": "https",
             "port": "9443",
-            "proxyPort": "8443"
+            "proxyPort": "8244"
         }
     ],
     "deployment": {
