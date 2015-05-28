@@ -30,9 +30,8 @@ h1{font-family: 'Open Sans', san-serif;
 /* index_header partial related styles */
 .user-drop {}
 .user-image{margin-left: 10px;}
-
 .navbar { border-radius: 0px; box-shadow:0 0 5px -1px rgb(100,100,100); margin-bottom: 0px; z-index: 99999; position: fixed; width: 100%; }
-.navbar-default { background: #11375B; border-color:transparent}
+.navbar-default { background: #333333; border-color:transparent}
 .navbar-nav>li>a { padding: 15px; }
 .navbar-brand { float: left; height: 50px; padding: 17px 15px; font-size: 18px; line-height: 20px; }
 .logo img, .logo h2{float: left; }
@@ -43,6 +42,18 @@ h1{font-family: 'Open Sans', san-serif;
 .navbar-nav{ margin: 0px }
 
 .bootstrap-switch { z-index: 50; }
+/* centered columns styles */
+.row-centered {
+    text-align:center;
+}
+.col-centered {
+    display:inline-block;
+    float:none;
+    /* reset the text-align */
+    text-align:left;
+    /* inline-block space fix */
+    margin-right:-4px;
+}
 
 /* index_sub_header partial related styles */
 .sub-header {
@@ -190,9 +201,20 @@ h1{font-family: 'Open Sans', san-serif;
 }
 
 /*style for login page*/
+.login-logo h2{display: inline;}
 .form-control-feedback{top: 0px;}
-.form-error{color: red;margin-bottom: .5em;}
-
+.form-error{margin-bottom: .5em;}
+.form-error-show{
+    display: block;
+    color: #ff2353 !important;
+    margin-top: 15px;
+    font-weight: 400 !important;
+    background: #fff2f2;
+    padding: 7px 17px;
+    font-size: 13px !important;
+    border-left: 3px solid #ff2353;
+}
+.panel-default{margin-top: 14em;}
 .no-item{margin-bottom: 5em;}
 .no-item h2, .no-item h3{margin-bottom: 2em;}
 
@@ -224,9 +246,9 @@ a.btn:hover {
     overflow: hidden;
     width: 100%;
     position: absolute;
-    margin: 0px -20px;
+    margin: 0px -20.5px;
     padding: 20px;
-    bottom: -19px;
+    bottom: 0px;
     z-index: 800;
 }
 

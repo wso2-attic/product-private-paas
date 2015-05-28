@@ -51,7 +51,7 @@ $(document).ready(function () {
                 password.parent().removeClass('has-error has-feedback');
                 password.parent().find('span').empty().remove();
             }
-            form_error.html(error).show();
+            form_error.addClass('form-error-show').html(error).show();
             return false;
         } else {
             username.parent().removeClass('has-error has-feedback');

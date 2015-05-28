@@ -168,10 +168,13 @@
     margin: 0 0 11px;
 }
 
-.grid-group-item{
-    padding: 1.5em;
+.grid-group-item {
+    margin: 1em;
     min-height: 21.429em;
-    /*cursor: pointer;*/
+    /* cursor: pointer; */
+    background-color: #fff;
+    padding: 1.5em;
+    border: 1px solid rgb(227, 227, 227);
 }
 
 .grid-group-item i{
@@ -186,15 +189,6 @@
     margin-left: .2em;
 }
 
-.grid-group-item:after {
-    content: '';
-    position: absolute;
-    width:90%;
-    min-height: 21.429em;
-    border-bottom: 1px solid #e4e7ea;
-    left: 1.429em;
-    top: 1.429em;
-}
 
 .list-group-item > .toggle-menu-icon, .list-group-item > h2,  .list-group-item > .toggle-menu-description{
     float: left;

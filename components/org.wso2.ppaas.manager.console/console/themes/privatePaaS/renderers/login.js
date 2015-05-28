@@ -64,7 +64,7 @@ var render = function (theme, data, meta, require) {
             ],
             header:[
                 {
-                    partial: 'index_header',
+                    partial: 'login_header',
                     context:{
                     }
                 }
