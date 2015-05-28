@@ -284,10 +284,10 @@
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
         {% if CARBON_SUB_DOMAIN == 'mgt' -%}
             {% for key, value in CARBON_HTTP_PORT_MAPPING.iteritems() -%}
-                <parameter name="WSDLEPRPrefix" locked="false">http//:{{ CARBON_WORKER_HOST_NAME }}:{{ key }}</parameter>
+                <parameter name="WSDLEPRPrefix" locked="false">http://{{ CARBON_WORKER_HOST_NAME }}:{{ key }}</parameter>
             {% endfor -%}
         {% else -%}
-            <!--parameter name="WSDLEPRPrefix" locked="false">http//:apachehost:port/somepath</parameter-->
+            <!--parameter name="WSDLEPRPrefix" locked="false">http://apachehost:port/somepath</parameter-->
         {% endif -%}
         <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.transport.nhttp.api.PassThroughNHttpGetProcessor</parameter>
         <!--<parameter name="priorityConfigFile" locked="false">location of priority configuration file</parameter>-->
@@ -309,7 +309,7 @@
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
         {% if CARBON_SUB_DOMAIN == 'mgt' -%}
             {% for key, value in CARBON_HTTPS_PORT_MAPPING.iteritems() -%}
-                <parameter name="WSDLEPRPrefix" locked="false">https//:{{ CARBON_WORKER_HOST_NAME }}:{{ key }}</parameter>
+                <parameter name="WSDLEPRPrefix" locked="false">https://{{ CARBON_WORKER_HOST_NAME }}:{{ key }}</parameter>
             {% endfor -%}
         {% endif -%}
         <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.transport.nhttp.api.PassThroughNHttpGetProcessor</parameter>
