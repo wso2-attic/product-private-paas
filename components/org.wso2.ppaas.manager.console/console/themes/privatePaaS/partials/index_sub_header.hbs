@@ -19,16 +19,19 @@
 
 -->
 
-<div class="sub-header">
-    <h2>
-        <a href="{{url ""}}">
-            <i class="fa fa-home"></i>
-        </a>
-        <a href="{{url ""}}/{{breadcrumbPathLevelOne}}/">
-            /{{breadcrumbPathLevelOne}}
-        </a>
-        <a href="{{url ""}}/{{breadcrumbPathLevelOne}}/{{breadcrumbPathLevelTwo}}/">
-            /{{breadcrumbPathLevelTwo}}
-        </a>
-    </h2>
+<!--<div class="sub-header">
+
+</div>-->
+<div class="action-bar">
+    <div class="breadcrumb-bar">
+        <a href="{{url ""}}" ><i class="fa fa-home"></i></a>
+        <a href="{{url ""}}/{{breadcrumbPathLevelOne}}/" >/{{breadcrumbPathLevelOne}}</a>
+        <a href="{{url ""}}/{{breadcrumbPathLevelOne}}/{{breadcrumbPathLevelTwo}}/" >/{{breadcrumbPathLevelTwo}}</a>
+    </div>
+    <a href="{{url ""}}" class="btn-action">
+                <span class="fw-stack fw-lg btn-action-ico">
+                    <i class="fw fw-ring fw-stack-2x"></i>
+                    <i class="fw fw-left-arrow fw-stack-1x"></i>
+                </span> Back to Home
+    </a>
 </div>
