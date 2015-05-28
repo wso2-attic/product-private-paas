@@ -68,6 +68,7 @@ import org.apache.stratos.rest.endpoint.bean.util.converter.PojoConverter;
 import org.apache.stratos.rest.endpoint.exception.RestAPIException;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -1192,6 +1193,13 @@ public class ServiceUtils {
 
     static StratosAdminResponse unsubscribe(String alias, String tenantDomain) throws RestAPIException {
 
+        int tenantId;
+        try {
+            tenantId = getTenantId(tenantDomain);
+        } catch (UserStoreException e) {
+            throw new RestAPIException("No tenant found for the tenant domain " + tenantDomain);
+        }
+
         try {
             cartridgeSubsciptionManager.unsubscribeFromCartridge(tenantDomain, alias);
 
@@ -1208,6 +1216,70 @@ public class ServiceUtils {
         StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
         stratosAdminResponse.setMessage("Successfully terminated the subscription with alias " + alias);
         return stratosAdminResponse;
+    }
+
+
+    static StratosAdminResponse unsubsribeForTenant(String alias, String tenantDomain, String unsubscribingTenantDomain) throws RestAPIException {
+
+        int unsubscribingTenantId;
+        try {
+            unsubscribingTenantId = getTenantId(unsubscribingTenantDomain);
+            if(log.isDebugEnabled()){
+                log.debug("Id of the tenant to be unsubscribed " + unsubscribingTenantId);
+            }
+
+            if(unsubscribingTenantId == MultitenantConstants.INVALID_TENANT_ID){
+                String message = "No tenant found for the domain " + unsubscribingTenantDomain;
+                log.error(message);
+                throw new RestAPIException(message);
+            }
+        } catch (UserStoreException e) {
+            throw new RestAPIException("No tenant found for the tenant domain " + unsubscribingTenantDomain);
+        }
+
+        String tenantAdminUsername;
+        try {
+            tenantAdminUsername = getTenantAdminUsername(unsubscribingTenantId);
+            if(log.isDebugEnabled()){
+                log.debug("Tenant admin name of tenant to be unsubscribed " + tenantAdminUsername);
+            }
+        } catch (UserStoreException e) {
+            throw new RestAPIException("Could not find tenant admin username for " + unsubscribingTenantId, e);
+        }
+
+        try {
+            if(!isSuperTenant(unsubscribingTenantId)){
+                if(log.isDebugEnabled()){
+                    log.debug(String.format("Provided tenant domain %s is not super tenant domain, hence starting tenant flow", unsubscribingTenantDomain));
+                }
+                PrivilegedCarbonContext.startTenantFlow();
+                setTenantInfomationToPrivilegedCC(unsubscribingTenantDomain, unsubscribingTenantId, tenantAdminUsername);
+            }
+
+            cartridgeSubsciptionManager.unsubscribeFromCartridge(unsubscribingTenantDomain, alias);
+        } catch (ADCException e) {
+            String msg = "Failed to unsubscribe from [alias] "+alias+". Cause: "+ e.getMessage();
+            log.error(msg, e);
+            throw new RestAPIException(msg, e);
+
+        } catch (NotSubscribedException e){
+            log.error(e.getMessage(), e);
+            throw new RestAPIException(e.getMessage(), e);
+        }
+        finally {
+            PrivilegedCarbonContext.endTenantFlow();
+            if (log.isDebugEnabled()) {
+                log.debug("Ended tenant flow for tenant: " + unsubscribingTenantDomain + ", tenant id: " + unsubscribingTenantId);
+            }
+        }
+
+        StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
+        stratosAdminResponse.setMessage("Successfully terminated the subscription with alias " + alias);
+        return stratosAdminResponse;
+    }
+
+    private static boolean isSuperTenant(int unsubscribingTenantId) {
+        return MultitenantConstants.SUPER_TENANT_ID == unsubscribingTenantId;
     }
     
     /**
@@ -1329,7 +1401,7 @@ public class ServiceUtils {
     }
 
     public static List<SubscriptionDomainBean> getSubscriptionDomains(ConfigurationContext configurationContext, String cartridgeType,
-                                                      String subscriptionAlias) throws RestAPIException {
+                                                                      String subscriptionAlias) throws RestAPIException {
         try {
             int tenantId = ApplicationManagementUtil.getTenantId(configurationContext);
             return PojoConverter.populateSubscriptionDomainPojos(cartridgeSubsciptionManager.getSubscriptionDomains(tenantId, subscriptionAlias));
