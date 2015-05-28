@@ -425,6 +425,7 @@ $(document).ready(function(){
         var  payload = genGroupJSON({}, jsPlumb.getConnections());
         var btn = $(this);
         var formtype = 'cartridge-groups';
+
         btn.html("<i class='fa fa-spinner fa-spin'></i> Adding...");
         $.ajax({
             type: "POST",

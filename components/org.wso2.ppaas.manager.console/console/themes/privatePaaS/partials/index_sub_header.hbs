@@ -75,6 +75,21 @@
             {{/if}}
     {{/if}}
     {{/ifCond}}
+    {{#if groupEditor}}
+        <a onclick='window.location.replace(document.referrer)' class="btn-action">
+                <span class="fw-stack fw-lg btn-action-ico">
+                    <i class="fw fw-ring fw-stack-2x"></i>
+                    <i class="fw fw-left-arrow fw-stack-1x"></i>
+                </span> Cancel
+        </a>
+        <button class="btn-action" type='button' id='deploy'
+                disabled="disabled" data-form='{{formContext}}'>
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-add fw-stack-1x"></i>
+                    </span> Save
+        </button>
+    {{/if}}
     <!-- EOF configure section -->
     <!-- BOF User section -->
     {{#ifCond page "==" "user"}}

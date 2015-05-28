@@ -337,3 +337,16 @@ h3.panel-title {
 .btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active{
     background-color: #304255;
 }
+
+.action-bar>button{
+    border: none;
+    padding: 9px 6px 7px;
+    background-color: #526A84;
+    text-transform: uppercase;
+    cursor: pointer;
+}
+
+.action-bar>button:disabled{
+    opacity: 0.2;
+    cursor: default;
+}
