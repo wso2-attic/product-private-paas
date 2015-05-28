@@ -7,11 +7,11 @@
             {
                 "type": "wso2esb-481",
                 "cartridgeMin": 1,
-                "cartridgeMax": 5,
+                "cartridgeMax": 3,
                 "subscribableInfo": {
                     "alias": "wso2esb-481-1",
                     "autoscalingPolicy": "autoscaling-policy-1",
-                    "deploymentPolicy": "deployment-policy-ec2",
+                    "deploymentPolicy": "deployment-policy-1",
                     "artifactRepository": {
                         "privateRepo": false,
                         "repoUrl": "",
