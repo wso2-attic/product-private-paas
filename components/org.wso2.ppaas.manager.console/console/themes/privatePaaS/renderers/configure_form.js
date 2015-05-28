@@ -119,7 +119,8 @@ var render = function (theme, data, meta, require) {
                                 isEdit: data.isEdit,
                                 isUpdate: data.isUpdate,
                                 formTitle: data.formTitle,
-                                formContext: data.breadcrumbPathLevelTwo
+                                formContext: data.breadcrumbPathLevelTwo,
+                                page: 'config'
                             }
                         }
                     ],

@@ -19,15 +19,14 @@
 
 -->
 
-<!--<div class="sub-header">
-
-</div>-->
 <div class="action-bar">
     <div class="breadcrumb-bar">
         <a href="{{url ""}}" ><i class="fa fa-home"></i></a>
         <a href="{{url ""}}/{{breadcrumbPathLevelOne}}/" >/{{breadcrumbPathLevelOne}}</a>
         <a href="{{url ""}}/{{breadcrumbPathLevelOne}}/{{breadcrumbPathLevelTwo}}/" >/{{breadcrumbPathLevelTwo}}</a>
     </div>
+    <!-- BOF configure section -->
+    {{#ifCond page "==" "config"}}
     {{#if isForm}}
         {{#if isEdit}}
             <a onclick='window.location.replace(document.referrer)' class="btn-action">
@@ -75,5 +74,32 @@
                 </a>
             {{/if}}
     {{/if}}
+    {{/ifCond}}
+    <!-- EOF configure section -->
+    <!-- BOF User section -->
+    {{#ifCond page "==" "user"}}
+        {{#if isForm}}
+            <a onclick='window.location.replace(document.referrer)' class="btn-action">
+                <span class="fw-stack fw-lg btn-action-ico">
+                    <i class="fw fw-ring fw-stack-2x"></i>
+                    <i class="fw fw-left-arrow fw-stack-1x"></i>
+                </span> Cancel
+            </a>
+            <a class="btn-action" id='deploy' data-form='{{formContext}}'>
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-check fw-stack-1x"></i>
+                    </span> Save {{formTitle}}
+            </a>
+        {{else}}
+            <a href="new/" class="btn-action">
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-add fw-stack-1x"></i>
+                    </span> Add {{formTitle}}
+            </a>
+        {{/if}}
 
+    {{/ifCond}}
+    <!-- EOF User section -->
 </div>

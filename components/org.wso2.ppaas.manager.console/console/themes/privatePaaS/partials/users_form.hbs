@@ -36,9 +36,6 @@
                     <div class='container text-center form-toolbar'>
                         <div class='col-md-5'></div>
                         <div class='col-md-7 '>
-                            <button class='btn btn-info btn-lg pull-right' type='button' id='deploy' data-form=''> Add {{formTitle}}</button>
-                            <button class='btn btn-default btn-lg pull-right button-gap' type='button' onclick='window.location.replace(document.referrer)'> Cancel
-                            </button>
                         </div>
                     </div>
                 </div>
@@ -63,7 +60,9 @@
 
             {{#if content_body.sections}}
                 <div class="row form-toolbar ">
-                    <div class="col-md-5 col-sm-3 text-left">
+                    <div class="col-md-7 col-sm-3 text-left">
+                        </div>
+                    <div class="col-md-5 col-sm-3 text-right">
                         <!--<input type="text" class="form-control" placeholder="Search">-->
                         <div class="btn-group">
                             <a href="#" id="list" class="btn btn-default">
@@ -74,15 +73,17 @@
                             </a>
                         </div>
                     </div>
-                    <div class="col-md-7 col-sm-3 text-right">
-                        <a type="button" class="btn btn-primary btn-lg" href="new/">Add New {{formTitle}}</a>
-                    </div>
                 </div>
             {{else}}
                 <div class="row no-item row-overide">
                     <div class="row title">
                         <h2>No {{formTitle}}s found...</h2>
-                        <a type="button" class="btn btn-primary btn-lg" href="new/">Add New {{formTitle}}</a>
+                        <a type="button" class="btn btn-primary btn-lg" href="new/">
+                            <span class="fw-stack fw-lg btn-action-ico">
+                                <i class="fw fw-ring fw-stack-2x"></i>
+                                <i class="fw fw-add fw-stack-1x"></i>
+                            </span>
+                            Add New {{formTitle}}</a>
                     </div>
                 </div>
             {{/if}}
@@ -331,8 +332,11 @@
             var payload = editor.getValue();
             var btn = $(this);
             var formtype = '{{formContext}}';
+            var addico = '<span class="fw-stack fw-lg btn-action-ico">' +
+                    '<i class="fw fw-ring fw-stack-2x"></i>' +
+                    '<i class="fw fw-add fw-stack-1x"></i></span>';
 
-            btn.html("<i class='fa fa-spinner fa-spin'></i> Adding "+formtype);
+            btn.html(addico + " <i class='fa fa-spinner fa-spin'></i> Adding "+formtype);
             $.ajax({
                 type: "POST",
                 url: caramel.context + "/controllers/users/users_requests.jag",
@@ -352,7 +356,7 @@
                 }
             })
                     .always(function () {
-                        btn.html('Add New '+formtype);
+                        btn.html(addico + ' Save '+formtype);
                     });
         });//end of deploy button trigger
 

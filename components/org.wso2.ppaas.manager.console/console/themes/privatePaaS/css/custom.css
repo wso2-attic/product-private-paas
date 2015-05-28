@@ -263,7 +263,7 @@ a.btn-action {
     border-left: 3px solid #ff2353;
 }
 .panel-default{margin-top: 14em;}
-.no-item{margin-bottom: 5em;}
+.no-item{padding-bottom: 5em; background-color: #fff;   border: 1px solid rgb(227, 227, 227);}
 .no-item h2, .no-item h3{margin-bottom: 2em;}
 
 h2.truncate {
