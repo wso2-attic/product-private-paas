@@ -36,7 +36,8 @@ EXPOSE 22
 # ----------------------
 # Install dependencies
 # ----------------------
-RUN apt-get install -y git python python-pip python-dev gcc zip
+# stress tool is added for demo purposes
+RUN apt-get install -y git python python-pip python-dev gcc zip stress
 RUN pip install paho-mqtt \
     psutil \
     pexpect \
