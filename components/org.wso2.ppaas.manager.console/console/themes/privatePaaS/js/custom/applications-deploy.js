@@ -416,8 +416,10 @@ $(document).ready(function(){
         var formtype = 'deployments';
         var applicationId = applicationJSON.applicationId;
         var btn = $(this);
-
-        btn.html("<i class='fa fa-spinner fa-spin'></i> Adding Application Policy ");
+        var addico = '<span class="fw-stack fw-lg btn-action-ico">' +
+            '<i class="fw fw-ring fw-stack-2x"></i>' +
+            '<i class="fw fw-add fw-stack-1x"></i></span>';
+        btn.html(addico + " <i class='fa fa-spinner fa-spin'></i> Adding Application Policy ");
         $.ajax({
             type: "POST",
             url: caramel.context + "/controllers/applications/application_requests.jag",
@@ -437,7 +439,7 @@ $(document).ready(function(){
             }
         })
             .always(function () {
-                btn.html('Add '+formtype);
+                btn.html(addico+ ' Add '+formtype);
             });
 
     });
