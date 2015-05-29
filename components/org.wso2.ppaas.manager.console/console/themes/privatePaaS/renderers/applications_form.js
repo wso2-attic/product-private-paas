@@ -247,7 +247,8 @@ var render = function (theme, data, meta, require) {
                                 breadcrumbPathLevelOne: data.breadcrumbPathLevelOne,
                                 breadcrumbPathLevelTwo: data.breadcrumbPathLevelTwo,
                                 page: 'applications',
-                                formContext: data.breadcrumbPathLevelTwo
+                                formContext: data.breadcrumbPathLevelTwo,
+                                isForm: data.isForm,
                             }
                         }
                     ],
@@ -318,6 +319,9 @@ var render = function (theme, data, meta, require) {
                                 breadcrumbPathLevelOne:data.breadcrumbPathLevelOne,
                                 breadcrumbPathLevelTwo:data.breadcrumbPathLevelTwo,
                                 buttonText: data.buttonText,
+                                page: 'applications',
+                                isForm: data.isForm,
+                                formTitle: data.formTitle,
                             }
                         }
                     ],
