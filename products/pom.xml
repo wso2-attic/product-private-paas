@@ -33,7 +33,7 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>stratos</module>
+        <module>wso2pp</module>
     </modules>
 </project>
 

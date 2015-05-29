@@ -1,0 +1,181 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] Using the builder org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder with a thread count of 1
+[INFO]                                                                         
+[INFO] ------------------------------------------------------------------------
+[INFO] Building Apache Stratos - Distribution 4.1.0-SNAPSHOT
+[INFO] ------------------------------------------------------------------------
+[WARNING] The POM for org.apache.bsf:bsf-all:jar:3.0 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] The POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] The POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] The POM for org.apache.axis2:mex:jar:impl:1.6.1-wso2v1 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] The POM for org.apache.ws.security:wss4j:jar:1.5.11-wso2v1 is invalid, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] The POM for net.sf.saxon:saxon-xpath:jar:8.9 is missing, no dependency information available
+[INFO] 
+[INFO] --- maven-clean-plugin:2.6.1:clean (default-clean) @ wso2ppaas ---
+[INFO] Deleting /home/udara/projects/private-paas/products/stratos/modules/distribution/target
+[INFO] 
+[INFO] --- maven-enforcer-plugin:1.3.1:enforce (enforce) @ wso2ppaas ---
+[INFO] 
+[INFO] --- incremental-build-plugin:1.3:incremental-build (default) @ wso2ppaas ---
+[INFO] Verifying module descriptor ...
+[INFO] Pom descriptor modification detected.
+[INFO] Deleting /home/udara/projects/private-paas/products/stratos/modules/distribution/target
+[INFO] 
+[INFO] --- maven-buildnumber-plugin:0.9.4:create (default) @ wso2ppaas ---
+[INFO] Storing buildNumber: 28 May 2015
+[INFO] 
+[INFO] --- maven-remote-resources-plugin:1.5:process (default) @ wso2ppaas ---
+[WARNING] Invalid POM for org.apache.bsf:bsf-all:jar:3.0, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.axis2:mex:jar:impl:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.ws.security:wss4j:jar:1.5.11-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Missing POM for net.sf.saxon:saxon-xpath:jar:8.9
+[WARNING] Invalid project model for artifact [bsf-all:org.apache.bsf:3.0]. It will be ignored by the remote resources Mojo.
+[INFO] 
+[INFO] --- maven-resources-plugin:2.7:resources (default-resources) @ wso2ppaas ---
+[INFO] Using 'UTF-8' encoding to copy filtered resources.
+[INFO] Copying 1 resource
+[INFO] Copying 3 resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.2:compile (default-compile) @ wso2ppaas ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- maven-resources-plugin:2.7:testResources (default-testResources) @ wso2ppaas ---
+[INFO] Not copying test resources
+[INFO] 
+[INFO] --- maven-compiler-plugin:3.2:testCompile (default-testCompile) @ wso2ppaas ---
+[INFO] Not compiling test sources
+[INFO] 
+[INFO] --- maven-surefire-plugin:2.18:test (default-test) @ wso2ppaas ---
+[INFO] Tests are skipped.
+[INFO] 
+[INFO] --- maven-jar-plugin:2.5:jar (default-jar) @ wso2ppaas ---
+[INFO] Building jar: /home/udara/projects/private-paas/products/stratos/modules/distribution/target/wso2ppaas-4.1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- maven-dependency-plugin:2.9:unpack (2-unpack-wso2carbon) @ wso2ppaas ---
+[INFO] Configured Artifact: org.wso2.carbon:wso2carbon-core:4.2.0:zip
+[INFO] Configured Artifact: com.acme.shoppingcart.global:shopping-cart-global:2.1.0:zip
+[INFO] Unpacking /home/udara/.m2/repository/org/wso2/carbon/wso2carbon-core/4.2.0/wso2carbon-core-4.2.0.zip to /home/udara/projects/private-paas/products/stratos/modules/distribution/target with includes "" and excludes ""
+[INFO] Unpacking /home/udara/.m2/repository/com/acme/shoppingcart/global/shopping-cart-global/2.1.0/shopping-cart-global-2.1.0.zip to /home/udara/projects/private-paas/products/stratos/modules/distribution/target with includes "" and excludes ""
+[INFO] 
+[INFO] --- maven-antrun-plugin:1.7:run (1-run-ant) @ wso2ppaas ---
+[WARNING] Parameter tasks is deprecated, use target instead
+[INFO] Executing tasks
+
+main:
+     [copy] Copying 16 files to /home/udara/projects/private-paas/products/stratos/modules/distribution/target/wso2carbon-core-4.2.0/dbscripts/identity
+     [echo] ########### Adding identity , identity/application-mgt tables to WSO2Carbon DB ##############
+      [sql] Executing resource: /home/udara/projects/private-paas/products/stratos/modules/distribution/target/wso2carbon-core-4.2.0/dbscripts/identity/application-mgt/h2.sql
+      [sql] 29 of 29 SQL statements executed successfully
+      [sql] Executing resource: /home/udara/projects/private-paas/products/stratos/modules/distribution/target/wso2carbon-core-4.2.0/dbscripts/identity/h2.sql
+      [sql] 20 of 20 SQL statements executed successfully
+[INFO] Executed tasks
+[INFO] 
+[INFO] --- maven-assembly-plugin:2.2-beta-2:attached (4-dist) @ wso2ppaas ---
+[INFO] Reading assembly descriptor: /home/udara/projects/private-paas/products/stratos/modules/distribution/src/assembly/bin.xml
+[INFO] Processing DependencySet (output=${pom.artifactId}-${pom.version}/repository/lib)
+[WARNING] Invalid POM for org.apache.bsf:bsf-all:jar:3.0, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.axis2:mex:jar:impl:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.ws.security:wss4j:jar:1.5.11-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Missing POM for net.sf.saxon:saxon-xpath:jar:8.9
+[INFO] Processing DependencySet (output=${pom.artifactId}-${pom.version}/lib/core/WEB-INF/lib)
+[WARNING] Invalid POM for org.apache.bsf:bsf-all:jar:3.0, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.axis2:mex:jar:impl:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.ws.security:wss4j:jar:1.5.11-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Missing POM for net.sf.saxon:saxon-xpath:jar:8.9
+[INFO] Processing DependencySet (output=${pom.artifactId}-${pom.version}/repository/axis2/client/lib)
+[WARNING] Invalid POM for org.apache.bsf:bsf-all:jar:3.0, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.axis2:mex:jar:impl:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.ws.security:wss4j:jar:1.5.11-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Missing POM for net.sf.saxon:saxon-xpath:jar:8.9
+[INFO] Processing DependencySet (output=${pom.artifactId}-${pom.version}/repository/deployment/client/modules)
+[WARNING] Invalid POM for org.apache.bsf:bsf-all:jar:3.0, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.axis2:mex:jar:impl:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.ws.security:wss4j:jar:1.5.11-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Missing POM for net.sf.saxon:saxon-xpath:jar:8.9
+[INFO] Processing DependencySet (output=${pom.artifactId}-${pom.version}/repository/components/lib)
+[WARNING] Invalid POM for org.apache.bsf:bsf-all:jar:3.0, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.axis2:mex:jar:impl:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.ws.security:wss4j:jar:1.5.11-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Missing POM for net.sf.saxon:saxon-xpath:jar:8.9
+[INFO] Processing DependencySet (output=${pom.artifactId}-${pom.version}/repository/components/lib)
+[WARNING] Invalid POM for org.apache.bsf:bsf-all:jar:3.0, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.axis2:mex:jar:impl:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.ws.security:wss4j:jar:1.5.11-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Missing POM for net.sf.saxon:saxon-xpath:jar:8.9
+[INFO] Processing DependencySet (output=${pom.artifactId}-${pom.version}/lib/endorsed)
+[WARNING] Invalid POM for org.apache.bsf:bsf-all:jar:3.0, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.axis2:mex:jar:impl:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.ws.security:wss4j:jar:1.5.11-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Missing POM for net.sf.saxon:saxon-xpath:jar:8.9
+[INFO] Processing DependencySet (output=${pom.artifactId}-${pom.version}/repository/components/dropins)
+[WARNING] Invalid POM for org.apache.bsf:bsf-all:jar:3.0, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.axis2:mex:jar:impl:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.ws.security:wss4j:jar:1.5.11-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-trust:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Invalid POM for org.apache.rampart:rampart-policy:jar:1.6.1-wso2v1, transitive dependencies (if any) will not be available, enable debug logging for more details
+[WARNING] Missing POM for net.sf.saxon:saxon-xpath:jar:8.9
+[INFO] Building zip: /home/udara/projects/private-paas/products/stratos/modules/distribution/target/wso2ppaas-4.1.0-SNAPSHOT.zip
+[WARNING] Configuration options: 'appendAssemblyId' is set to false, and 'classifier' is missing.
+Instead of attaching the assembly file: /home/udara/projects/private-paas/products/stratos/modules/distribution/target/wso2ppaas-4.1.0-SNAPSHOT.zip, it will become the file for main project artifact.
+NOTE: If multiple descriptors or descriptor-formats are provided for this project, the value of this file will be non-deterministic!
+[WARNING] Replacing pre-existing project main-artifact file: /home/udara/projects/private-paas/products/stratos/modules/distribution/target/wso2ppaas-4.1.0-SNAPSHOT.jar
+with assembly file: /home/udara/projects/private-paas/products/stratos/modules/distribution/target/wso2ppaas-4.1.0-SNAPSHOT.zip
+[INFO] 
+[INFO] --- maven-install-plugin:2.5.2:install (default-install) @ wso2ppaas ---
+[INFO] Installing /home/udara/projects/private-paas/products/stratos/modules/distribution/target/wso2ppaas-4.1.0-SNAPSHOT.zip to /home/udara/.m2/repository/org/wso2/wso2ppaas/4.1.0-SNAPSHOT/wso2ppaas-4.1.0-SNAPSHOT.jar
+[INFO] Installing /home/udara/projects/private-paas/products/stratos/modules/distribution/pom.xml to /home/udara/.m2/repository/org/wso2/wso2ppaas/4.1.0-SNAPSHOT/wso2ppaas-4.1.0-SNAPSHOT.pom
+[INFO] 
+[INFO] --- maven-antrun-plugin:1.7:run (clean_target) @ wso2ppaas ---
+[WARNING] Parameter tasks is deprecated, use target instead
+[INFO] Executing tasks
+
+main:
+   [delete] Deleting directory /home/udara/projects/private-paas/products/stratos/modules/distribution/target/archive-tmp
+   [delete] Deleting directory /home/udara/projects/private-paas/products/stratos/modules/distribution/target/dependency-maven-plugin-markers
+   [delete] Deleting directory /home/udara/projects/private-paas/products/stratos/modules/distribution/target/maven-archiver
+   [delete] Deleting directory /home/udara/projects/private-paas/products/stratos/modules/distribution/target/wso2carbon-core-4.2.0
+   [delete] Deleting directory /home/udara/projects/private-paas/products/stratos/modules/distribution/target/shopping-cart-global-2.1.0
+   [delete] Deleting: /home/udara/projects/private-paas/products/stratos/modules/distribution/target/wso2ppaas-4.1.0-SNAPSHOT.jar
+[INFO] Executed tasks
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time: 58.636 s
+[INFO] Finished at: 2015-05-28T15:37:50+05:30
+[INFO] Final Memory: 109M/798M
+[INFO] ------------------------------------------------------------------------
