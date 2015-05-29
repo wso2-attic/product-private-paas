@@ -425,8 +425,10 @@ $(document).ready(function(){
         var  payload = genGroupJSON({}, jsPlumb.getConnections());
         var btn = $(this);
         var formtype = 'cartridge-groups';
-
-        btn.html("<i class='fa fa-spinner fa-spin'></i> Adding...");
+        var addico = '<span class="fw-stack fw-lg btn-action-ico">' +
+            '<i class="fw fw-ring fw-stack-2x"></i>' +
+            '<i class="fw fw-check fw-stack-1x"></i></span>';
+        btn.html(addico + " <i class='fa fa-spinner fa-spin'></i> Saving...");
         $.ajax({
             type: "POST",
             url: caramel.context + "/controllers/configure/configure_requests.jag",
@@ -446,7 +448,7 @@ $(document).ready(function(){
             }
         })
             .always(function () {
-                btn.html('Add Cartridge Group Definition');
+                btn.html(addico + ' Save');
             });
 
     });

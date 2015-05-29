@@ -532,9 +532,9 @@ $(document).ready(function () {
         var formtype = '{{formContext}}';
         var addico = '<span class="fw-stack fw-lg btn-action-ico">' +
                         '<i class="fw fw-ring fw-stack-2x"></i>' +
-                        '<i class="fw fw-add fw-stack-1x"></i></span>';
+                        '<i class="fw fw-check fw-stack-1x"></i></span>';
 
-        btn.html(addico + " <i class='fa fa-spinner fa-spin'></i> Adding...");
+        btn.html(addico + " <i class='fa fa-spinner fa-spin'></i> Saving...");
         $.ajax({
             type: "POST",
             url: caramel.context + "/controllers/configure/configure_requests.jag",
@@ -554,7 +554,7 @@ $(document).ready(function () {
             }
         })
                 .always(function () {
-                    btn.html(addico + ' Add ' + '{{formTitle}}');
+                    btn.html(addico + ' Save ' + '{{formTitle}}');
                 });
 
     });//end of deploy button trigger
@@ -564,7 +564,10 @@ $(document).ready(function () {
         var payload = editor.getValue();
         var btn = $(this);
         var formtype = $(this).attr("data-form");
-        btn.html("<i class='fa fa-spinner fa-spin'></i> Saving...");
+        var addico = '<span class="fw-stack fw-lg btn-action-ico">' +
+                '<i class="fw fw-ring fw-stack-2x"></i>' +
+                '<i class="fw fw-check fw-stack-1x"></i></span>';
+        btn.html(addico +  " <i class='fa fa-spinner fa-spin'></i> Saving...");
         $.ajax({
             type: "POST",
             url: caramel.context + "/controllers/configure/configure_requests.jag",
@@ -584,7 +587,7 @@ $(document).ready(function () {
             }
         })
                 .always(function () {
-                    btn.html('Save');
+                    btn.html(addico +  ' Save');
                 });
 
     });//end of deploy button trigger
