@@ -212,6 +212,7 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+<!--
 		    <execution>
                         <id>unpack-cep-artifacts</id>
                         <phase>test</phase>
@@ -231,6 +232,7 @@
                             </artifactItems>
                         </configuration>
                     </execution>
+-->
                     <execution>
                         <id>unpack-equinox-executable</id>
                         <phase>test</phase>
