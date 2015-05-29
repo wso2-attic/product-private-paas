@@ -33,7 +33,7 @@
     <url>http://wso2.org</url>
 
     <modules>
-        <module>wso2pp</module>
+        <module>ppaas</module>
     </modules>
 </project>
 

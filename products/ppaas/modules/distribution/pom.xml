@@ -27,8 +27,8 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wso2ppaas</artifactId>
     <packaging>jar</packaging>
-    <name>Apache Stratos - Distribution</name>
-    <description>Apache Stratos Manager Distribution</description>
+    <name>WSO2 Private PaaS - Distribution</name>
+    <description>WSO2 Private PaaS Distribution</description>
     <dependencies>
         <dependency>
             <groupId>org.apache.rampart</groupId>
