@@ -6,17 +6,27 @@
     "displayName": "WSO2 ESB 4.8.1",
     "description": "WSO2 ESB 4.8.1 Cartridge",
     "version": "4.8.1",
-    "multiTenant": "true",
+    "multiTenant": "false",
     "loadBalancingIPType": "public",
     "portMapping": [
         {
             "protocol": "https",
             "port": "9443",
-            "proxyPort": "8244"
+            "proxyPort": "8243"
+        },
+        {
+            "protocol": "http",
+            "port": "8280",
+            "proxyPort": "7280"
+        },
+        {
+            "protocol": "https",
+            "port": "8243",
+            "proxyPort": "7243"
         }
     ],
     "deployment": {
-        "baseDir": "/opt/wso2esb-4.8.1/repository/deployment/server"
+        "baseDir": "/opt/wso2esb-4.8.1/repository/deployment/server/synapse-configs/default/"
     },
     "iaasProvider": [
         {

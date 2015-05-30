@@ -64,6 +64,10 @@ RUN unzip /opt/wso2esb-${WSO2_ESB_VERSION}.zip -d /opt/ && \
 
 # ESB https port
 EXPOSE 9443
+# ESB http pass-through transport port
+EXPOSE 8280
+# ESB https pass-through transport port
+EXPOSE 8243
 
 # -------------------------------
 # Define entry point & start sshd

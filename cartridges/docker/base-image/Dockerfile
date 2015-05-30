@@ -53,7 +53,7 @@ WORKDIR /opt/
 COPY packages/${PCA_FILENAME}.zip /opt/${PCA_FILENAME}.zip
 COPY scripts/start-agent.sh /usr/local/bin/start-agent.sh
 
-RUN unzip -q /opt/${PCA_FILENAME}.zip -d /opt/${PCA_FILENAME}/ && \
+RUN unzip -q /opt/${PCA_FILENAME}.zip && \
     rm /opt/${PCA_FILENAME}.zip && \
     mkdir -p /opt/${PCA_FILENAME}/payload && \
     chmod +x /opt/${PCA_FILENAME}/extensions/bash/* && \
