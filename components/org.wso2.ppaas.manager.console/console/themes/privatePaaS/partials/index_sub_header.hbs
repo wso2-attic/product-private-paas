@@ -86,7 +86,7 @@
                 disabled="disabled" data-form='{{formContext}}'>
                     <span class="fw-stack fw-lg btn-action-ico">
                         <i class="fw fw-ring fw-stack-2x"></i>
-                        <i class="fw fw-add fw-stack-1x"></i>
+                        <i class="fw fw-check fw-stack-1x"></i>
                     </span> Save
         </button>
     {{/if}}
@@ -119,19 +119,56 @@
     <!-- EOF User section -->
     <!-- BOF Application section -->
     {{#ifCond page "==" "applications"}}
-        <a onclick='window.location.replace(document.referrer)' class="btn-action">
+        {{#if topologyActive}}
+            <a onclick='window.location.replace(document.referrer)' class="btn-action">
                 <span class="fw-stack fw-lg btn-action-ico">
                     <i class="fw fw-ring fw-stack-2x"></i>
                     <i class="fw fw-left-arrow fw-stack-1x"></i>
-                </span> Cancel
-        </a>
-        <button class="btn-action" type='button' id='deploy'
-                disabled="disabled" data-form='{{formContext}}'>
+                </span> Back
+            </a>
+
+        {{else}}
+            {{#if isForm}}
+                {{#if isEdit}}
+                    <a onclick='window.location.replace(document.referrer)' class="btn-action">
                     <span class="fw-stack fw-lg btn-action-ico">
                         <i class="fw fw-ring fw-stack-2x"></i>
-                        <i class="fw fw-add fw-stack-1x"></i>
-                    </span> Save
-        </button>
+                        <i class="fw fw-left-arrow fw-stack-1x"></i>
+                    </span> Cancel
+                    </a>
+                    <button class="btn-action" type='button' id='deploy'
+                            data-form='{{formContext}}'>
+                        <span class="fw-stack fw-lg btn-action-ico">
+                            <i class="fw fw-ring fw-stack-2x"></i>
+                            <i class="fw fw-add fw-stack-1x"></i>
+                        </span> Deploy Application Policy
+                    </button>
+                {{else}}
+                    <a onclick='window.location.replace(document.referrer)' class="btn-action">
+                    <span class="fw-stack fw-lg btn-action-ico">
+                        <i class="fw fw-ring fw-stack-2x"></i>
+                        <i class="fw fw-left-arrow fw-stack-1x"></i>
+                    </span> Cancel
+                    </a>
+                    <button class="btn-action" type='button' id='deploy'
+                            disabled="disabled" data-form='{{formContext}}'>
+                        <span class="fw-stack fw-lg btn-action-ico">
+                            <i class="fw fw-ring fw-stack-2x"></i>
+                            <i class="fw fw-add fw-stack-1x"></i>
+                        </span> Save
+                    </button>
+                {{/if}}
+
+                {{else}}
+                <a href="new/" class="btn-action">
+                        <span class="fw-stack fw-lg btn-action-ico">
+                            <i class="fw fw-ring fw-stack-2x"></i>
+                            <i class="fw fw-add fw-stack-1x"></i>
+                        </span> Add {{formTitle}}
+                </a>
+            {{/if}}
+
+        {{/if}}
     {{/ifCond}}
     <!-- EOF Application section -->
 

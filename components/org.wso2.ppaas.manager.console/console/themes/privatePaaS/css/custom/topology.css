@@ -54,6 +54,8 @@
     margin-top: 30px;
 }
 
+.left-side .panel-default{margin-top: 0px}
+
 .keys>div {
     margin-top: 7px;
 }
@@ -72,14 +74,14 @@
     float: right;
     margin-top: 38px;
     margin-left: -92px;
-    z-index: 999;
+    z-index: 998;
     position: relative;
     padding: 10px 10px 0px;
 }
 
 .topology-buttons i{
     padding: 5px;
-    background-color: #fff;
+    background-color: #8BB0D9;
     border: 1px solid;
     cursor: pointer;
     font-size: 20px;
@@ -123,3 +125,5 @@
     margin-top: 2px;
     color: #e67e22;
 }
+
+.app-view, .top-view{color:rgb(25, 62, 85)}
