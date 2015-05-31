@@ -64,19 +64,19 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         log.info("Kubernetes service pass-through https port: %s" % pt_https_port)
 
         if mgt_console_https_port is not None:
-            command = "sed -i \"s/^CONFIG_PARAM_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_HTTPS_PROXY_PORT = %s/g\" %s" % (mgt_console_https_port, "${CONFIGURATOR_HOME}/templates/wso2esb-4.8.1/configs.ini")
+            command = "sed -i \"s/^#CONFIG_PARAM_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_HTTPS_PROXY_PORT = %s/g\" %s" % (mgt_console_https_port, "${CONFIGURATOR_HOME}/templates/wso2esb-4.8.1/configs.ini")
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
             log.info("Successfully updated management console https proxy port: %s in ESB template module" % mgt_console_https_port)
 
         if pt_http_port is not None:
-            command = "sed -i \"s/^CONFIG_PARAM_PT_HTTP_PROXY_PORT = .*/CONFIG_PARAM_PT_HTTP_PROXY_PORT = %s/g\" %s" % (pt_http_port, "${CONFIGURATOR_HOME}/templates/wso2esb-4.8.1/configs.ini")
+            command = "sed -i \"s/^#CONFIG_PARAM_PT_HTTP_PROXY_PORT = .*/CONFIG_PARAM_PT_HTTP_PROXY_PORT = %s/g\" %s" % (pt_http_port, "${CONFIGURATOR_HOME}/templates/wso2esb-4.8.1/configs.ini")
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
             log.info("Successfully updated pass-through http proxy port: %s in ESB template module" % pt_http_port)
 
         if pt_https_port is not None:
-            command = "sed -i \"s/^CONFIG_PARAM_PT_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_PT_HTTPS_PROXY_PORT = %s/g\" %s" % (pt_https_port, "${CONFIGURATOR_HOME}/templates/wso2esb-4.8.1/configs.ini")
+            command = "sed -i \"s/^#CONFIG_PARAM_PT_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_PT_HTTPS_PROXY_PORT = %s/g\" %s" % (pt_https_port, "${CONFIGURATOR_HOME}/templates/wso2esb-4.8.1/configs.ini")
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
             log.info("Successfully updated pass-through https proxy port: %s in ESB template module" % pt_https_port)

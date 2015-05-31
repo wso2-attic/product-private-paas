@@ -29,7 +29,11 @@ if [ ${START_CMD} = 'PCA' ]; then
 	echo "Python cartridge agent started successfully"
 else
     echo "Configuring WSO2 ESB..."
-    ${CONFIGURATOR_HOME}/configurator.py
+    echo "Environment variables:"
+    printenv
+    pushd ${CONFIGURATOR_HOME}
+    python configurator.py
+    popd
     echo "WSO2 ESB configured successfully"
 
     echo "Starting WSO2 ESB..."
