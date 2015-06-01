@@ -90,6 +90,8 @@ def generate_context(config_file_path):
     global PACK_LOCATION
     PACK_LOCATION = settings["REPOSITORY_CONF_DIRECTORY"]
 
+
+
     # if read_env_variables is true context will be generated from environment variables
     # if read_env_variables is not true context will be read from config.ini
     if settings["READ_FROM_ENVIRONMENT"] == "true":
@@ -99,17 +101,19 @@ def generate_context(config_file_path):
             context[key] = os.environ.get(key, context[key])
 
     # Converting Members to dictionary
-    if "STRATOS_WKA_MEMBERS" in context:
-        context["STRATOS_WKA_MEMBERS"] = ConfigParserUtil.convert_properties_to_dictionary(
-            context['STRATOS_WKA_MEMBERS'])
+    # if "CONFIG_PARAM_WKA_MEMBERS" in context:
+    #     context["CONFIG_PARAM_WKA_MEMBERS"] = ConfigParserUtil.convert_properties_to_dictionary(
+    #         context['CONFIG_PARAM_WKA_MEMBERS'])
+    #
+    # if "STRATOS_HTTP_PORT_MAPPING" in context:
+    #     context["STRATOS_HTTP_PORT_MAPPING"] = ConfigParserUtil.convert_properties_to_dictionary(
+    #         context["STRATOS_HTTP_PORT_MAPPING"])
+    #
+    # if "STRATOS_HTTPS_PORT_MAPPING" in context:
+    #     context["STRATOS_HTTPS_PORT_MAPPING"] = ConfigParserUtil.convert_properties_to_dictionary(
+    #         context["STRATOS_HTTPS_PORT_MAPPING"])
 
-    if "STRATOS_HTTP_PORT_MAPPING" in context:
-        context["STRATOS_HTTP_PORT_MAPPING"] = ConfigParserUtil.convert_properties_to_dictionary(
-            context["STRATOS_HTTP_PORT_MAPPING"])
-
-    if "STRATOS_HTTPS_PORT_MAPPING" in context:
-        context["STRATOS_HTTPS_PORT_MAPPING"] = ConfigParserUtil.convert_properties_to_dictionary(
-            context["STRATOS_HTTPS_PORT_MAPPING"])
+    ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
 
     log.info("Context generated: %s", context)
     return context
@@ -128,11 +132,9 @@ def traverse(root_dir, context):
         for file_name in fileList:
             # generating the relative path of the template
             template_file_name = os.path.join(dir_name, file_name)
-            log.info(template_file_name)
             log.debug("Template file name: %s " % template_file_name)
             config_file_name = \
                 os.path.splitext(os.path.relpath(os.path.join(dir_name, file_name), root_dir))[0]
-            log.info(config_file_name)
             config_file_name = os.path.join(PACK_LOCATION, config_file_name)
             template_file_name = template_file_name.split("/./")[1]
             log.debug("Template file : %s ", template_file_name)

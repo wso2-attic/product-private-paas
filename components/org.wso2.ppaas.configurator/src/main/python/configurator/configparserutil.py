@@ -36,9 +36,21 @@ class ConfigParserUtil(ConfigParser.ConfigParser):
         """
         convert and return multi valued properties as a dictionary e.g :- Members,port mappings
         :param property:
-        :return: dictionary of well known members
+        :return: dictionary of properties
         """
 
         properties = ast.literal_eval(variable).split(",")
-        return dict(s.split(':') for s in properties)
+        return dict(s.split(':') for s in properties if len(s) > 1)
+
+    @staticmethod
+    def get_multivalued_attributes_as_dictionary(context):
+        '''
+        find multivalued attributes from context and convert them to dictionary
+        :param context:
+        :return:dictionary of properties
+        '''
+        for key, value in context.iteritems():
+            if "," in value:
+                context[key]= ConfigParserUtil.convert_properties_to_dictionary(value)
+        return context;
 
