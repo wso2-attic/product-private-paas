@@ -100,19 +100,7 @@ def generate_context(config_file_path):
             # check if value exists for given key; use default if not exists
             context[key] = os.environ.get(key, context[key])
 
-    # Converting Members to dictionary
-    # if "CONFIG_PARAM_WKA_MEMBERS" in context:
-    #     context["CONFIG_PARAM_WKA_MEMBERS"] = ConfigParserUtil.convert_properties_to_dictionary(
-    #         context['CONFIG_PARAM_WKA_MEMBERS'])
-    #
-    # if "STRATOS_HTTP_PORT_MAPPING" in context:
-    #     context["STRATOS_HTTP_PORT_MAPPING"] = ConfigParserUtil.convert_properties_to_dictionary(
-    #         context["STRATOS_HTTP_PORT_MAPPING"])
-    #
-    # if "STRATOS_HTTPS_PORT_MAPPING" in context:
-    #     context["STRATOS_HTTPS_PORT_MAPPING"] = ConfigParserUtil.convert_properties_to_dictionary(
-    #         context["STRATOS_HTTPS_PORT_MAPPING"])
-
+    #Converting multi-valued params to dictionary
     ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
 
     log.info("Context generated: %s", context)
