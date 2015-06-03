@@ -100,7 +100,7 @@ def generate_context(config_file_path):
             # check if value exists for given key; use default if not exists
             context[key] = os.environ.get(key, context[key])
 
-    #Converting multi-valued params to dictionary
+    # Converting multi-valued params to dictionary
     ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
 
     log.info("Context generated: %s", context)
