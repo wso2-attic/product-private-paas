@@ -229,6 +229,84 @@ public class ServiceUtils {
         stratosAdminResponse.setMessage("Successfully deployed autoscaling policy definition with id " + autoscalePolicyBean.getId());
         return stratosAdminResponse;
     }
+    
+    public static StratosAdminResponse updateAutoscalingPolicy(AutoscalePolicy autoscalePolicyBean) throws RestAPIException {
+    	 
+    	org.apache.stratos.autoscaler.policy.model.AutoscalePolicy autoscalePolicy = PojoConverter.
+    			convertToCCAutoscalerPojo(autoscalePolicyBean);
+    	
+    	try {
+    		getAutoscalerServiceClient().updateAutoscalingPolicy(autoscalePolicy);
+    	} catch (RemoteException e) {
+    		String msg = String.format("Error while updating autoscale policy %s . Error while connecting to Cloud Conroller Service", autoscalePolicy.getId());
+    		log.error(msg, e);
+    		throw new RestAPIException(msg, e);
+    	} catch (AutoScalerServiceInvalidPolicyExceptionException e) {
+    		String msg = String.format("Error while updating autoscale policy %s . Autoscale policy is not valid", autoscalePolicy.getId());
+    		log.error(msg, e);
+    		throw new RestAPIException(msg, e);
+    	}
+    	
+    	StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
+    	stratosAdminResponse.setMessage("Successfully updated autoscaling policy definition with id " + autoscalePolicyBean.getId());
+    	return stratosAdminResponse;
+    }
+    
+    public static StratosAdminResponse undeployAutoScalePolicy(String autoscalePolicyName) throws RestAPIException {
+    	
+    	String[] availableCartridges = null;
+		try {
+			availableCartridges = CloudControllerServiceClient.getServiceClient().getRegisteredCartridges();
+		} catch (AxisFault e) {
+        	String msg = String.format("Error while undeploying autoscale policy %s . Error while connecting to Cloud Conroller Service", autoscalePolicyName);
+        	log.error(msg, e);
+        	throw new RestAPIException(msg, e);
+		} catch (RemoteException e) {
+        	String msg = String.format("Error while undeploying autoscale policy %s . Error while connecting to Cloud Conroller Service", autoscalePolicyName);
+        	log.error(msg, e);
+        	throw new RestAPIException(msg, e);
+		}
+    	
+    	if (availableCartridges != null) {
+			for (String availableCartridge : availableCartridges) {
+				Collection<Cluster> clusters;
+				try {
+					TopologyManager.acquireReadLock();
+					org.apache.stratos.messaging.domain.topology.Service service = TopologyManager.getTopology().getService(availableCartridge);
+					clusters = service.getClusters();
+				} finally {
+					TopologyManager.releaseReadLock();
+				}
+				if (clusters != null) {
+					for (Cluster cluster : clusters) {
+						if (cluster != null && cluster.getAutoscalePolicyName() != null) {
+							if (cluster.getAutoscalePolicyName().equals(autoscalePolicyName)) {
+				                String msg = String.format("Cannot remove autoscale policy %s. Because it is used in the service %s ", autoscalePolicyName, cluster.getServiceName());
+				                log.error(msg);
+				                throw new RestAPIException(msg);
+							}
+						}
+					}
+				}
+			}
+		}
+    	
+    	try {
+			getAutoscalerServiceClient().undeployAutoscalePolicy(autoscalePolicyName);
+		} catch (RemoteException e) {
+        	String msg = String.format("Error while undeploying autoscale policy %s . Error while connecting to Cloud Conroller Service", autoscalePolicyName);
+        	log.error(msg, e);
+        	throw new RestAPIException(msg, e);
+		} catch (AutoScalerServiceInvalidPolicyExceptionException e) {
+        	String msg = String.format("Error while undeploying autoscale policy %s . Autoscale policy %s not found", autoscalePolicyName, autoscalePolicyName);
+        	log.error(msg, e);
+        	throw new RestAPIException(msg, e);
+		}
+    	
+        StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
+        stratosAdminResponse.setMessage("Successfully undeployed autoscale policy " + autoscalePolicyName);
+        return stratosAdminResponse;
+    }
 
     public static StratosAdminResponse deployDeploymentPolicy(
             org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment.DeploymentPolicy deploymentPolicyBean)

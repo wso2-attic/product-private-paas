@@ -157,6 +157,29 @@ public class StratosAdmin extends AbstractAdmin {
         return ServiceUtils.deployAutoscalingPolicy(autoscalePolicy);
     }
 
+    @DELETE
+    @Path("/policy/autoscale/{autoscalePolicyName}")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
+    @SuperTenantService(true)
+    public StratosAdminResponse undeployAutoscalingPolicyDefintion(@PathParam("autoscalePolicyName") String autoscalePolicyName) throws RestAPIException {
+
+        return ServiceUtils.undeployAutoScalePolicy(autoscalePolicyName);
+    }
+    
+    @PUT
+    @Path("/policy/autoscale")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
+    @SuperTenantService(true)
+    public StratosAdminResponse updateAutoscalingPolicyDefintion (AutoscalePolicy autoscalePolicy)
+            throws RestAPIException {
+
+        return ServiceUtils.updateAutoscalingPolicy(autoscalePolicy);
+    }
+
     @POST
     @Path("/policy/deployment")
     @Produces("application/json")

@@ -84,9 +84,16 @@ public class AutoscalerUtil {
             log.debug("Autoscaler policy name: " + autoscalePolicyName);
         }
 
-        AutoscalePolicy policy =
+        AutoscalePolicy autoscalePolicy =
                                  PolicyManager.getInstance()
                                               .getAutoscalePolicy(autoscalePolicyName);
+        
+        if (autoscalePolicy == null) {
+        	String msg = "AutoscalePolicy Policy is null. Policy name: " + autoscalePolicyName;
+        	log.error(msg);
+        	throw new PolicyValidationException(msg);
+        }
+        
         DeploymentPolicy deploymentPolicy =
                                             PolicyManager.getInstance()
                                                          .getDeploymentPolicy(deploymentPolicyName);
@@ -111,7 +118,7 @@ public class AutoscalerUtil {
         ClusterMonitor clusterMonitor =
                                         new ClusterMonitor(cluster.getClusterId(),
                                                            cluster.getServiceName(),
-                                                           deploymentPolicy, policy);
+                                                           deploymentPolicy, autoscalePolicyName);
         clusterMonitor.setStatus(ClusterStatus.Created);
         
         for (PartitionGroup partitionGroup: deploymentPolicy.getPartitionGroups()){

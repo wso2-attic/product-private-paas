@@ -42,6 +42,22 @@ public interface AutoScalerServiceInterface {
 	public AutoscalePolicy[] getAllAutoScalingPolicy();
 	public boolean addAutoScalingPolicy(AutoscalePolicy aspolicy) throws InvalidPolicyException;
 	
+	/**
+	* Update an existing auto-scaling policy. If it is not existing, it will deploy it.
+	* @param autoscalePolicy the policy to be updated or deployed
+	* @return true if successfully updated, false otherwise 
+	* @throws InvalidPolicyException if the auto-scaling policy is not valid
+	*/
+	public boolean updateAutoScalingPolicy(AutoscalePolicy autoscalePolicy) throws InvalidPolicyException;
+	
+	/**
+	* Remove an existing auto-scaling policy
+	* @param autoscalePolicyName the policy to be removed
+	* @return true if removed, false otherwise
+	* @throws InvalidPolicyException if the policy not exists
+	*/
+	public boolean removeAutoScalingPolicy(String autoscalePolicyName) throws InvalidPolicyException;
+	
 	public DeploymentPolicy[] getValidDeploymentPoliciesforCartridge(String cartridgeType);
 	
 	public Partition getPartition (String partitionId);

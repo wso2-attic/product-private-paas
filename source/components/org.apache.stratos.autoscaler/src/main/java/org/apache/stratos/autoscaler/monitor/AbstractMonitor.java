@@ -25,6 +25,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.autoscaler.NetworkPartitionContext;
 import org.apache.stratos.autoscaler.deployment.policy.DeploymentPolicy;
+import org.apache.stratos.autoscaler.policy.PolicyManager;
 import org.apache.stratos.autoscaler.policy.model.AutoscalePolicy;
 import org.apache.stratos.autoscaler.rule.AutoscalerRuleEvaluator;
 import org.apache.stratos.autoscaler.util.AutoScalerConstants;
@@ -48,8 +49,7 @@ import org.drools.runtime.rule.FactHandle;
 	// Map<NetworkpartitionId, Network Partition Context>
 	protected Map<String, NetworkPartitionContext> networkPartitionCtxts;
 	protected DeploymentPolicy deploymentPolicy;
-	protected AutoscalePolicy autoscalePolicy;
-	
+	protected String autoscalePolicyName;	
 
 	protected FactHandle minCheckFactHandle;
 	protected FactHandle scaleCheckFactHandle;
@@ -142,12 +142,16 @@ import org.drools.runtime.rule.FactHandle;
     }
 
     public AutoscalePolicy getAutoscalePolicy() {
-        return autoscalePolicy;
+        return PolicyManager.getInstance().getAutoscalePolicy(autoscalePolicyName);
     }
 
-    public void setAutoscalePolicy(AutoscalePolicy autoscalePolicy) {
-        this.autoscalePolicy = autoscalePolicy;
+    public void setAutoscalePolicy(String autoscalePolicyName) {
+        this.autoscalePolicyName = autoscalePolicyName;
     }    
+    
+    public String getAutoscalePolicyName() {
+    	return autoscalePolicyName;
+    }
     
     public String getClusterId() {
         return clusterId;

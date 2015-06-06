@@ -46,8 +46,7 @@ public class ClusterMonitor extends AbstractMonitor {
     private boolean hasPrimary;
     private ClusterStatus status;
 
-    public ClusterMonitor(String clusterId, String serviceId, DeploymentPolicy deploymentPolicy,
-                          AutoscalePolicy autoscalePolicy) {
+    public ClusterMonitor(String clusterId, String serviceId, DeploymentPolicy deploymentPolicy, String autoscalePolicyName) {
         this.clusterId = clusterId;
         this.serviceId = serviceId;
 
@@ -56,7 +55,7 @@ public class ClusterMonitor extends AbstractMonitor {
         this.minCheckKnowledgeSession = autoscalerRuleEvaluator.getMinCheckStatefulSession();
 
         this.deploymentPolicy = deploymentPolicy;
-        this.autoscalePolicy = autoscalePolicy;
+        this.autoscalePolicyName = autoscalePolicyName;
         networkPartitionCtxts = new ConcurrentHashMap<String, NetworkPartitionContext>();
     }
 
@@ -159,7 +158,7 @@ public class ClusterMonitor extends AbstractMonitor {
             if (rifReset || memoryConsumptionReset || loadAverageReset) {
                 scaleCheckKnowledgeSession.setGlobal("clusterId", clusterId);
                 //scaleCheckKnowledgeSession.setGlobal("deploymentPolicy", deploymentPolicy);
-                scaleCheckKnowledgeSession.setGlobal("autoscalePolicy", autoscalePolicy);
+                scaleCheckKnowledgeSession.setGlobal("autoscalePolicy", getAutoscalePolicy());
                 scaleCheckKnowledgeSession.setGlobal("rifReset", rifReset);
                 scaleCheckKnowledgeSession.setGlobal("mcReset", memoryConsumptionReset);
                 scaleCheckKnowledgeSession.setGlobal("laReset", loadAverageReset);
@@ -188,7 +187,7 @@ public class ClusterMonitor extends AbstractMonitor {
     @Override
     public String toString() {
         return "ClusterMonitor [clusterId=" + clusterId + ", serviceId=" + serviceId +
-                ", deploymentPolicy=" + deploymentPolicy + ", autoscalePolicy=" + autoscalePolicy +
+                ", deploymentPolicy=" + deploymentPolicy + ", autoscalePolicy=" + getAutoscalePolicy() +
                 ", lbReferenceType=" + lbReferenceType +
                 ", hasPrimary=" + hasPrimary + " ]";
     }

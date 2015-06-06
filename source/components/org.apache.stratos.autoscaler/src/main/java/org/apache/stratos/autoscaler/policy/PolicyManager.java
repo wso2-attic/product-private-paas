@@ -73,6 +73,42 @@ public class PolicyManager {
         }
         return true;
     }
+    
+    // update the policy to information model and persist. If the policy is not exists already, it will create one
+    public boolean updateAutoscalePolicy(AutoscalePolicy autoscalePolicy) throws InvalidPolicyException {
+    
+    	if(StringUtils.isEmpty(autoscalePolicy.getId())){
+    		throw new AutoScalerException("AutoScaling policy id can not be empty");
+    	}
+    
+    	if (getAutoscalePolicy(autoscalePolicy.getId()) == null) {
+    		if (log.isInfoEnabled()) {
+    			String msg = String.format("AutoScaling policy %s is not found, hence deploying it", autoscalePolicy.getId());
+    			log.info(msg);
+    		}
+    		return deployAutoscalePolicy(autoscalePolicy);
+    	} else {
+    		if (log.isInfoEnabled()) {
+    			String msg = String.format("AutoScaling policy %s already exists, hence updating it", autoscalePolicy.getId());
+    			log.info(msg);
+    		}
+    		this.updateASPolicyToInformationModel(autoscalePolicy);
+    		RegistryManager.getInstance().persistAutoscalerPolicy(autoscalePolicy);
+    		if (log.isInfoEnabled()) {
+    			log.info(String.format("AutoScaling policy is updated successfully: [id] %s", autoscalePolicy.getId()));
+    		}
+    		return true;
+    	}
+    }
+    
+    public void updateASPolicyToInformationModel(AutoscalePolicy autoscalePolicy) throws InvalidPolicyException {
+    	if (autoscalePolicyListMap.containsKey(autoscalePolicy.getId())) {
+    		if (log.isDebugEnabled()) {
+    			log.debug("Updating autoscale-policy :" + autoscalePolicy.getId());
+    		}
+    		autoscalePolicyListMap.put(autoscalePolicy.getId(), autoscalePolicy);
+    	}
+    }
 
     // Add the deployment policy to information model and persist.
     public boolean deployDeploymentPolicy(DeploymentPolicy policy) throws InvalidPolicyException {
@@ -146,15 +182,16 @@ public class PolicyManager {
      * @param policy
      * @throws InvalidPolicyException
      */
-    public void undeployAutoscalePolicy(String policy) throws InvalidPolicyException {
-        if (autoscalePolicyListMap.containsKey(policy)) {
+    public boolean undeployAutoscalePolicy(String autoscalePolicyName) throws InvalidPolicyException {
+    	if (autoscalePolicyListMap.containsKey(autoscalePolicyName)) {
             if (log.isDebugEnabled()) {
-                log.debug("Removing policy :" + policy);
+            	log.debug("Removing policy :" + autoscalePolicyName);
             }
-            autoscalePolicyListMap.remove(policy);
-            RegistryManager.getInstance().removeAutoscalerPolicy(this.getAutoscalePolicy(policy));
+            autoscalePolicyListMap.remove(autoscalePolicyName);
+            RegistryManager.getInstance().removeAutoscalerPolicy(autoscalePolicyName);
+            return true;
         } else {
-            throw new InvalidPolicyException("No such policy [" + policy + "] exists");
+            throw new InvalidPolicyException("No such policy [" + autoscalePolicyName + "] exists");
         }
     }
 

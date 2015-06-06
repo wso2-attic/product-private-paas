@@ -92,6 +92,17 @@ public class AutoScalerServiceImpl implements AutoScalerServiceInterface{
 	public boolean addAutoScalingPolicy(AutoscalePolicy aspolicy) throws InvalidPolicyException {
 		return PolicyManager.getInstance().deployAutoscalePolicy(aspolicy);
 	}
+	
+	@Override
+	public boolean updateAutoScalingPolicy(AutoscalePolicy autoscalePolicy) throws InvalidPolicyException {
+		return PolicyManager.getInstance().updateAutoscalePolicy(autoscalePolicy);
+	}
+	
+	@Override
+	public boolean removeAutoScalingPolicy(String autoscalePolicyName) throws InvalidPolicyException{
+		return PolicyManager.getInstance().undeployAutoscalePolicy(autoscalePolicyName);
+	}
+	 
 
 	@Override
 	public Partition getPartition(String partitionId) {
