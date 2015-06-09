@@ -44,13 +44,13 @@ class ConfigParserUtil(ConfigParser.ConfigParser):
 
     @staticmethod
     def get_multivalued_attributes_as_dictionary(context):
-        '''
+        """
         find multivalued attributes from context and convert them to dictionary
         :param context:
         :return:dictionary of properties
-        '''
+        """
         for key, value in context.iteritems():
             if "," in value:
-                context[key]= ConfigParserUtil.convert_properties_to_dictionary(value)
-        return context;
+                context[key] = ConfigParserUtil.convert_properties_to_dictionary(value)
+        return context
 

@@ -90,8 +90,6 @@ def generate_context(config_file_path):
     global PACK_LOCATION
     PACK_LOCATION = settings["REPOSITORY_CONF_DIRECTORY"]
 
-
-
     # if read_env_variables is true context will be generated from environment variables
     # if read_env_variables is not true context will be read from config.ini
     if settings["READ_FROM_ENVIRONMENT"] == "true":
@@ -101,7 +99,7 @@ def generate_context(config_file_path):
             context[key] = os.environ.get(key, context[key])
 
     # Converting multi-valued params to dictionary
-    ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
+    context = ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
 
     log.info("Context generated: %s", context)
     return context
