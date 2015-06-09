@@ -83,7 +83,7 @@ def generate_context(config_file_path):
     config_parser.optionxform = str
     config_parser.read(os.path.join(PATH, config_file_path))
     configurations = config_parser.as_dictionary()
-    log.info(configurations)
+    log.debug("Configuration file content %s", configurations)
     # Reading the default values
     context = configurations[constants.CONFIG_PARAMS]
     settings = configurations[constants.CONFIG_SETTINGS]

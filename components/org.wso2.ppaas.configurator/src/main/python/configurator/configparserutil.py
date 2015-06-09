@@ -52,6 +52,5 @@ class ConfigParserUtil(ConfigParser.ConfigParser):
         for key, value in context.iteritems():
             if "\"" in value:
                 context[key] = ConfigParserUtil.convert_properties_to_dictionary(value)
-                print(context[key])
         return context
 
