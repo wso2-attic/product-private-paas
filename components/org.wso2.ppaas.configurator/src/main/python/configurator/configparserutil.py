@@ -38,11 +38,8 @@ class ConfigParserUtil(ConfigParser.ConfigParser):
         :param property:
         :return: dictionary of properties
         """
-        if "," in variable:
-            properties = ast.literal_eval(variable).split(",")
-        else:
-            properties = ast.literal_eval(variable)
-        return dict(s.split(':') for s in properties if len(s) > 1)
+        properties = ast.literal_eval(variable).split(",")
+        return dict(s.split(':') for s in properties)
 
     @staticmethod
     def get_multivalued_attributes_as_dictionary(context):
@@ -55,5 +52,6 @@ class ConfigParserUtil(ConfigParser.ConfigParser):
         for key, value in context.iteritems():
             if "\"" in value:
                 context[key] = ConfigParserUtil.convert_properties_to_dictionary(value)
+                print(context[key])
         return context
 
