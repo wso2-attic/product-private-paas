@@ -256,8 +256,8 @@
         <parameter name="port" locked="false">8280</parameter>
         <parameter name="non-blocking" locked="false">true</parameter>
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
-         {% if  (CONFIG_PARAM_HTTP_PORT_MAPPING is defined) and (CONFIG_PARAM_SUB_DOMAIN == 'mgt') -%}
-                <parameter name="WSDLEPRPrefix" locked="false">http//:{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ CONFIG_PARAM_HTTP_PORT_MAPPING }}</parameter>
+         {% if  (CONFIG_PARAM_PT_HTTP_PROXY_PORT is defined) and (CONFIG_PARAM_SUB_DOMAIN == 'mgt') -%}
+                <parameter name="WSDLEPRPrefix" locked="false">http//:{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ CONFIG_PARAM_PT_HTTP_PROXY_PORT }}</parameter>
          {% else -%}
                 <!--parameter name="WSDLEPRPrefix" locked="false">http//:{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ key }}</parameter-->
          {% endif -%}
@@ -270,8 +270,8 @@
         <parameter name="non-blocking" locked="false">true</parameter>
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
 
-         {% if  (CONFIG_PARAM_HTTPS_PORT_MAPPING is defined) and (CONFIG_PARAM_SUB_DOMAIN == 'mgt') -%}
-            <parameter name="WSDLEPRPrefix" locked="false">https//:{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ CONFIG_PARAM_HTTPS_PORT_MAPPING }}</parameter>
+         {% if  (CONFIG_PARAM_PT_HTTPS_PROXY_PORT is defined) and (CONFIG_PARAM_SUB_DOMAIN == 'mgt') -%}
+            <parameter name="WSDLEPRPrefix" locked="false">https//:{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ CONFIG_PARAM_PT_HTTPS_PROXY_PORT }}</parameter>
          {% else -%}
             <!--parameter name="WSDLEPRPrefix" locked="false">https://apachehost:port/somepath</parameter-->
          {% endif -%}
@@ -553,11 +553,11 @@
             <property name="mgtConsoleURL" value="https://${hostName}:${httpsPort}/"/>
  	    <!-- Manger Setup with Port Mapping-->
             {% if CONFIG_PARAM_SUB_DOMAIN == 'mgt' %}
-                {% if CONFIG_PARAM_HTTP_PORT_MAPPING is defined -%}
-                    <property name="port.mapping.{{CONFIG_PARAM_HTTP_PORT_MAPPING}}" value="9763"/>
+                {% if CONFIG_PARAM_PT_HTTP_PROXY_PORT is defined -%}
+                    <property name="port.mapping.8280" value="{{ CONFIG_PARAM_PT_HTTP_PROXY_PORT }}"/>
                 {% endif -%}
-                {% if CONFIG_PARAM_HTTPS_PORT_MAPPING is defined -%}
-                    <property name="port.mapping.{{CONFIG_PARAM_HTTPS_PORT_MAPPING}}" value="9443"/>
+                {% if CONFIG_PARAM_PT_HTTPS_PROXY_PORT is defined -%}
+                    <property name="port.mapping.8243" value="{{ CONFIG_PARAM_PT_HTTPS_PROXY_PORT }}"/>
                 {% endif -%}
             <property name="subDomain" value="mgt"/>
             {% else %}
