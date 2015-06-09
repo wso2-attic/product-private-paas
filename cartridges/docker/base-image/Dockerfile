@@ -22,7 +22,8 @@
 FROM debian:7.7
 MAINTAINER dev@wso2.org
 
-ENV PCA_FILENAME=apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT
+ENV PCA_FILENAME apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT
+ENV DEBIAN_FRONTEND noninteractive
 # ------------------
 # Setup ssh server
 # ------------------
