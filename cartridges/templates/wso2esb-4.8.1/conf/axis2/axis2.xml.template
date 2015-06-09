@@ -256,10 +256,8 @@
         <parameter name="port" locked="false">8280</parameter>
         <parameter name="non-blocking" locked="false">true</parameter>
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
-         {% if CONFIG_PARAM_SUB_DOMAIN == 'mgt' -%}
-            {% for key, value in CONFIG_PARAM_HTTP_PORT_MAPPING.iteritems() -%}
-                <parameter name="WSDLEPRPrefix" locked="false">http//:{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ key }}</parameter>
-            {% endfor -%}
+         {% if  (CONFIG_PARAM_PT_HTTP_PROXY_PORT is defined) and (CONFIG_PARAM_SUB_DOMAIN == 'mgt') -%}
+                <parameter name="WSDLEPRPrefix" locked="false">http//:{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ CONFIG_PARAM_PT_HTTP_PROXY_PORT }}</parameter>
          {% else -%}
                 <!--parameter name="WSDLEPRPrefix" locked="false">http//:{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ key }}</parameter-->
          {% endif -%}
@@ -271,10 +269,11 @@
         <parameter name="port" locked="false">8243</parameter>
         <parameter name="non-blocking" locked="false">true</parameter>
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
-         {% if CONFIG_PARAM_SUB_DOMAIN == 'mgt' -%}
-            {% for key, value in CONFIG_PARAM_HTTPS_PORT_MAPPING.iteritems() -%}
-                    <parameter name="WSDLEPRPrefix" locked="false">https//:{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ key }}</parameter>
-            {% endfor -%}
+
+         {% if  (CONFIG_PARAM_PT_HTTPS_PROXY_PORT is defined) and (CONFIG_PARAM_SUB_DOMAIN == 'mgt') -%}
+            <parameter name="WSDLEPRPrefix" locked="false">https//:{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ CONFIG_PARAM_PT_HTTPS_PROXY_PORT }}</parameter>
+         {% else -%}
+            <!--parameter name="WSDLEPRPrefix" locked="false">https://apachehost:port/somepath</parameter-->
          {% endif -%}
  	 <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.transport.nhttp.api.PassThroughNHttpGetProcessor</parameter>
         <parameter name="keystore" locked="false">
@@ -554,20 +553,25 @@
             <property name="mgtConsoleURL" value="https://${hostName}:${httpsPort}/"/>
  	    <!-- Manger Setup with Port Mapping-->
             {% if CONFIG_PARAM_SUB_DOMAIN == 'mgt' %}
-
-                {% for key, value in CONFIG_PARAM_HTTP_PORT_MAPPING.iteritems() -%}
-                    <property name="port.mapping.{{key}}" value="{{value}}"/>
-                {% endfor -%}
-                {% for key, value in CONFIG_PARAM_HTTPS_PORT_MAPPING.iteritems() -%}
-                    <property name="port.mapping.{{key}}" value="{{value}}"/>
-                {% endfor -%}
+                {% if CONFIG_PARAM_PT_HTTP_PROXY_PORT is defined -%}
+                    <property name="port.mapping.8280" value="{{ CONFIG_PARAM_PT_HTTP_PROXY_PORT }}"/>
+                {% endif -%}
+                {% if CONFIG_PARAM_PT_HTTPS_PROXY_PORT is defined -%}
+                    <property name="port.mapping.8243" value="{{ CONFIG_PARAM_PT_HTTPS_PROXY_PORT }}"/>
+                {% endif -%}
             <property name="subDomain" value="mgt"/>
-            {% endif %}
+            {% else %}
+            <!--property name="port.mapping.8280" value="9764"/>
+                <property name="port.mapping.8243" value="9444"/>
+                <property name="subDomain" value="mgt"/-->
+            {% endif -%}
 
 	    <!-- Worker Setup-->
             {% if CONFIG_PARAM_SUB_DOMAIN == 'worker' %}
 	            <property name="subDomain" value="worker"/>
-            {% endif %}
+            {% else %}
+            <!--property name="subDomain" value="worker"/-->
+            {% endif -%}
         </parameter>
 
         <!--

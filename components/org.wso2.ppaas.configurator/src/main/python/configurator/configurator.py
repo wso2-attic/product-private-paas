@@ -83,7 +83,7 @@ def generate_context(config_file_path):
     config_parser.optionxform = str
     config_parser.read(os.path.join(PATH, config_file_path))
     configurations = config_parser.as_dictionary()
-
+    log.debug("Configuration file content %s", configurations)
     # Reading the default values
     context = configurations[constants.CONFIG_PARAMS]
     settings = configurations[constants.CONFIG_SETTINGS]
@@ -98,18 +98,8 @@ def generate_context(config_file_path):
             # check if value exists for given key; use default if not exists
             context[key] = os.environ.get(key, context[key])
 
-    # Converting Members to dictionary
-    if "STRATOS_WKA_MEMBERS" in context:
-        context["STRATOS_WKA_MEMBERS"] = ConfigParserUtil.convert_properties_to_dictionary(
-            context['STRATOS_WKA_MEMBERS'])
-
-    if "STRATOS_HTTP_PORT_MAPPING" in context:
-        context["STRATOS_HTTP_PORT_MAPPING"] = ConfigParserUtil.convert_properties_to_dictionary(
-            context["STRATOS_HTTP_PORT_MAPPING"])
-
-    if "STRATOS_HTTPS_PORT_MAPPING" in context:
-        context["STRATOS_HTTPS_PORT_MAPPING"] = ConfigParserUtil.convert_properties_to_dictionary(
-            context["STRATOS_HTTPS_PORT_MAPPING"])
+    # Converting multi-valued params to dictionary
+    context = ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
 
     log.info("Context generated: %s", context)
     return context
@@ -128,11 +118,9 @@ def traverse(root_dir, context):
         for file_name in fileList:
             # generating the relative path of the template
             template_file_name = os.path.join(dir_name, file_name)
-            log.info(template_file_name)
             log.debug("Template file name: %s " % template_file_name)
             config_file_name = \
                 os.path.splitext(os.path.relpath(os.path.join(dir_name, file_name), root_dir))[0]
-            log.info(config_file_name)
             config_file_name = os.path.join(PACK_LOCATION, config_file_name)
             template_file_name = template_file_name.split("/./")[1]
             log.debug("Template file : %s ", template_file_name)
