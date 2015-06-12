@@ -33,7 +33,7 @@
     },
     "iaasProvider": [
         {
-            "type": "kubernetes",
+            "type": "mock",
             "imageId": "wso2/esb:4.8.1",
             "networkInterfaces": [
             ],
@@ -42,21 +42,5 @@
         }
     ],
     "property": [
-        {
-            "name": "KUBERNETES_CONTAINER_CPU",
-            "value": "0"
-        },
-        {
-            "name": "KUBERNETES_CONTAINER_MEMORY",
-            "value": "0"
-        },
-        {
-            "name": "payload_parameter.START_CMD",
-            "value": "PCA"
-        },
-        {
-            "name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
-            "value": "ClientIP"
-        }
     ]
 }
