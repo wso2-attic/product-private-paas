@@ -15,8 +15,14 @@
 		<DataSource>
 			<!-- Include a data source name (jndiConfigName) from the set of data 
 				sources defined in master-datasources.xml -->
-	<Name>{{CONFIG_PARAM_DATA_SOURCE}}</Name>
-		</DataSource>
+
+	    {% if CONFIG_PARAM_USER_DB is defined -%}
+        {% set jndiName,dbName = CONFIG_PARAM_USER_DB.items()[0] %}
+        <Name>{{jndiName}}</Name>
+        {% else -%}
+        <Name>jdbc/WSO2CarbonDB</Name>
+        {% endif -%}			
+	    </DataSource>  
 		<!-- If the identity database is created from another place and if it is 
 			required to skip schema initialization during the server start up, set the 
 			following property to "true". -->
