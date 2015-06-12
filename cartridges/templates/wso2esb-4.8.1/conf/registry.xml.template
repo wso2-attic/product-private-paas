@@ -47,7 +47,6 @@
         {%  endif -%}
         <enableCache>true</enableCache>
         <registryRoot>/</registryRoot>
-        <cacheId>root@jdbc:mysql://localhost:3306/REGISTRY_DB?autoReconnect=true</cacheId>
         <cacheId>{{CONFIG_PARAM_USER_NAME}}@{{CONFIG_PARAM_URL}}{{dbName}}?autoReconnect=true</cacheId>
     </remoteInstance>
 

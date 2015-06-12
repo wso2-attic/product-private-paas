@@ -45,22 +45,16 @@
        This is will become part of the End Point Reference of the
        services deployed on this server instance.
     -->
-    {% if CONFIG_PARAM_WORKER_HOST_NAME is defined -%}
-            <HostName>{{CONFIG_PARAM_WORKER_HOST_NAME}}</HostName>
-    {% else -%}
-            <HostName>localhost</HostName>
-    {% endif -%}
+   
+    <HostName>localhost</HostName>
+    
 
     <!--
     Host name to be used for the Carbon management console
     -->
-    {% if CONFIG_PARAM_MGT_HOST_NAME is defined -%}
-            {% if CONFIG_PARAM_SUB_DOMAIN == 'mgt' -%}
-             <MgtHostName>{{CONFIG_PARAM_MGT_HOST_NAME}}</MgtHostName>
-            {% endif -%}
-    {% else -%}
-            <MgtHostName>localhost</MgtHostName>
-    {% endif -%}
+    
+    <MgtHostName>localhost</MgtHostName>
+    
 
     <!--
         The URL of the back end server. This is where the admin services are hosted and
