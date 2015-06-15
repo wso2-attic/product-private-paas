@@ -89,7 +89,7 @@ def generate_context(config_file_path):
     context = configurations[constants.CONFIG_PARAMS]
     settings = configurations[constants.CONFIG_SETTINGS]
     global PACK_LOCATION
-    PACK_LOCATION = settings["REPOSITORY_CONF_DIRECTORY"]
+    PACK_LOCATION = settings["CARBON_HOME"]
 
     # if read_env_variables is true context will be generated from environment variables
     # if read_env_variables is not true context will be read from config.ini
