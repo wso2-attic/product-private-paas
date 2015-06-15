@@ -80,6 +80,14 @@ CONFIG_PARAM_SUB_DOMAIN= worker
 * Used in - <AS_HOME>/repository/conf/carbon.xml
 * Used in - <AS_HOME>/repository/conf/registry.xml
 ---
+#### Set worker and manager hostnames
+* ```
+CONFIG_PARAM_WORKER_HOST_NAME = as.cloud-test.wso2.com
+CONFIG_PARAM_MGT_HOST_NAME = mgt.as.cloud-test.wso2.com
+```
+* Used in - <AS_HOME>/repository/conf/axis2/axis2.xml
+* Used in - <AS_HOME>/repository/conf/carbon.xml
+---
 
 ## Following are the config parameters used for setting up external database 
 * Set URL
