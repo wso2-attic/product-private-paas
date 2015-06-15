@@ -16,15 +16,14 @@
 # under the License.
 
 # Template Paths
-TEMPLATE_PATH = "./templates"
+TEMPLATE_DIRECTORY = "./templates"
 CONFIG_FILE_NAME = "module.ini"
-
 LOG_FILE_LOCATION = "./configurator.log"
+TEMPLATE_FOLDER_NAME = "templates"
+FILES_DIRECTORY_NAME = "files"
 
 # Configurations
 CONFIG_DEFAULTS = "DEFAULTS"
 CONFIG_SETTINGS = "SETTINGS"
 CONFIG_PARAMS = "PARAMS"
 
-# Output Location
-OUTPUT_DIRECTORY = "./output"

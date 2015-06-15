@@ -18,6 +18,7 @@
 # under the License.
 
 import ast
+from distutils.dir_util import copy_tree
 import logging
 import logging.config
 import os
@@ -88,7 +89,7 @@ def generate_context(config_file_path):
     context = configurations[constants.CONFIG_PARAMS]
     settings = configurations[constants.CONFIG_SETTINGS]
     global PACK_LOCATION
-    PACK_LOCATION = settings["REPOSITORY_CONF_DIRECTORY"]
+    PACK_LOCATION = settings["CARBON_HOME"]
 
     # if read_env_variables is true context will be generated from environment variables
     # if read_env_variables is not true context will be read from config.ini
@@ -121,11 +122,22 @@ def traverse(root_dir, context):
             log.debug("Template file name: %s " % template_file_name)
             config_file_name = \
                 os.path.splitext(os.path.relpath(os.path.join(dir_name, file_name), root_dir))[0]
-            config_file_name = os.path.join(PACK_LOCATION, config_file_name)
+            config_file_name = os.path.join(PACK_LOCATION,
+                                            config_file_name)
             template_file_name = template_file_name.split("/./")[1]
             log.debug("Template file : %s ", template_file_name)
             log.debug("Output configuration file : %s ", config_file_name)
             create_output_xml(template_file_name, config_file_name, context)
+
+
+def copy_files_to_pack(source):
+    """
+    Copy files in the template's files directory to pack preserving the structure provided
+    :param source: path to files directory in template folder
+    :return:
+    """
+    result = copy_tree(source, PACK_LOCATION, verbose=1)
+    log.info("Files copied : %s", result)
 
 
 def configure():
@@ -134,18 +146,22 @@ def configure():
     """
     log.info("Configurator started.")
     # traverse through the template directory
-    for dirName in os.listdir(os.path.join(PATH, constants.TEMPLATE_PATH)):
+    for dirName in os.listdir(os.path.join(PATH, constants.TEMPLATE_DIRECTORY)):
         if dirName == ".gitkeep":
             continue
 
-        config_file_path = os.path.join(constants.TEMPLATE_PATH, dirName,
+        module_file_path = os.path.join(constants.TEMPLATE_DIRECTORY, dirName,
                                         constants.CONFIG_FILE_NAME)
-        template_dir = os.path.join(PATH, constants.TEMPLATE_PATH, dirName, "conf")
-        log.info(config_file_path)
-        context = generate_context(config_file_path)
+        template_dir = os.path.join(PATH, constants.TEMPLATE_DIRECTORY, dirName,
+                                    constants.TEMPLATE_FOLDER_NAME)
+        file_dir = os.path.join(PATH, constants.TEMPLATE_DIRECTORY, dirName,
+                                constants.FILES_DIRECTORY_NAME)
+        log.info("module.ini file found %s:", module_file_path)
+        log.info("Template Dir %s:", template_dir)
+        context = generate_context(module_file_path)
         traverse(template_dir, context)
-        log.info("Copying files to %s", PACK_LOCATION)
-
+        log.info("Copying files to the pack")
+        copy_files_to_pack(file_dir)
     log.info("Configuration completed")
 
 
