@@ -24,22 +24,19 @@
 
     <parent>
         <groupId>org.wso2</groupId>
-        <artifactId>ppaas-cartridges-parent</artifactId>
+        <artifactId>ppaas-parent</artifactId>
         <version>4.1.0-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>ppaas-cartridges-template-modules-parent</artifactId>
+    <artifactId>ppaas-cartridges-parent</artifactId>
 
     <packaging>pom</packaging>
-    <name>WSO2 PPaaS - Cartridges - Template Modules</name>
+    <name>WSO2 PPaaS - Cartridges</name>
     <url>http://wso2.com</url>
 
     <modules>
-        <module>wso2am-1.8.0</module>
-        <module>wso2as-5.2.1</module>
-        <module>wso2esb-4.8.1</module>
-        <module>wso2is-5.0.0</module>
+        <module>templates-modules</module>
     </modules>
 </project>

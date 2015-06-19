@@ -39,8 +39,8 @@
     <inceptionYear>2012</inceptionYear>
 
     <modules>
-	<module>extensions</module>
-        <module>cartridges/templates-modules</module>
+	    <module>extensions</module>
+        <module>cartridges</module>
         <module>components</module>
         <module>features</module>
         <module>products</module>
