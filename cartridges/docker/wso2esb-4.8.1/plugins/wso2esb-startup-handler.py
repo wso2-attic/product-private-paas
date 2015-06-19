@@ -36,7 +36,7 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         pt_http_port = None
         pt_https_port = None
 
-        # port mappings format: """NAME:mgt-console|PROTOCOL:https|PORT:4500|PROXY_PORT:8443;
+        # port mappings format: """NAME:mgt-console|PROTOCOL:https|PORT:4500|PROXY_PORT:9443;
         #                          NAME:pt-http|PROTOCOL:http|PORT:4501|PROXY_PORT:7280;
         #                          NAME:pt-https|PROTOCOL:https|PORT:4502|PROXY_PORT:7243"""
 
