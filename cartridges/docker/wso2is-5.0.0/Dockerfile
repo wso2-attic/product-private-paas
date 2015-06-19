@@ -26,10 +26,12 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV JDK_VERSION 1.7.0_60
 ENV JDK_TAR_FILENAME jdk-7u60-linux-x64.tar.gz
 ENV JAVA_HOME /opt/jdk${JDK_VERSION}
-ENV CONFIGURATOR_VERSION 4.1.0
-ENV CONFIGURATOR_NAME wso2configurator-${CONFIGURATOR_VERSION}
+ENV PPAAS_VERSION 4.1.0
+ENV CONFIGURATOR_NAME wso2configurator-${PPAAS_VERSION}
 ENV CONFIGURATOR_HOME /opt/${CONFIGURATOR_NAME}
 ENV WSO2_IS_VERSION 5.0.0
+ENV TEMPLATE_MODULE_NAME wso2is-${WSO2_IS_VERSION}-template-module-${PPAAS_VERSION}
+ENV TEMPLATE_MODULE_HOME $CONFIGURATOR_HOME/templates/
 ENV CARBON_HOME /opt/wso2is-${WSO2_IS_VERSION}
 ENV PCA_NAME apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT
 ENV PCA_HOME /opt/${PCA_NAME}
@@ -41,6 +43,7 @@ ADD scripts/init.sh /usr/local/bin/init.sh
 ADD scripts/export-envs.sh /tmp/export-envs.sh
 ADD packages/${JDK_TAR_FILENAME} /opt/
 ADD packages/${CONFIGURATOR_NAME}.zip /opt/
+ADD packages/${TEMPLATE_MODULE_NAME}.zip /opt/
 ADD packages/wso2is-${WSO2_IS_VERSION}.zip /opt/
 ADD plugins /${PCA_HOME}/plugins
 
@@ -53,6 +56,9 @@ RUN unzip /opt/wso2is-${WSO2_IS_VERSION}.zip -d /opt/ && \
     rm /opt/wso2is-${WSO2_IS_VERSION}.zip && \
     unzip /opt/${CONFIGURATOR_NAME}.zip -d /opt/ && \
     rm /opt/${CONFIGURATOR_NAME}.zip && \
+    unzip /opt/${TEMPLATE_MODULE_NAME}.zip -d /opt/ && \
+    mv /opt/${TEMPLATE_MODULE_NAME}/* $TEMPLATE_MODULE_HOME
+    rm -rf /opt/${TEMPLATE_MODULE_NAME}* && \
     pip install jinja2 && \
     chmod +x /tmp/export-envs.sh && \
     sleep 1 && \
