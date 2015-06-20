@@ -23,29 +23,28 @@ FROM wso2/base-image:4.1.0
 MAINTAINER dev@wso2.org
 
 ENV DEBIAN_FRONTEND noninteractive
+ENV PPAAS_VERSION 4.1.0-SNAPSHOT
 ENV JDK_VERSION 1.7.0_60
 ENV JDK_TAR_FILENAME jdk-7u60-linux-x64.tar.gz
 ENV JAVA_HOME /opt/jdk${JDK_VERSION}
-ENV PPAAS_VERSION 4.1.0
-ENV CONFIGURATOR_NAME wso2configurator-${PPAAS_VERSION}
+ENV CONFIGURATOR_NAME ppaas-configurator-${PPAAS_VERSION}
 ENV CONFIGURATOR_HOME /opt/${CONFIGURATOR_NAME}
 ENV WSO2_IS_VERSION 5.0.0
-ENV TEMPLATE_MODULE_NAME wso2is-${WSO2_IS_VERSION}-template-module-${PPAAS_VERSION}
-ENV TEMPLATE_MODULE_HOME $CONFIGURATOR_HOME/templates/
+ENV IS_TEMPLATE_MODULE_NAME wso2is-${WSO2_IS_VERSION}-template-module-${PPAAS_VERSION}
 ENV CARBON_HOME /opt/wso2is-${WSO2_IS_VERSION}
-ENV PCA_NAME apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT
+ENV PCA_NAME apache-stratos-python-cartridge-agent-${PPAAS_VERSION}
 ENV PCA_HOME /opt/${PCA_NAME}
 
-# -------------------------------
-# Add scripts, packages & plugins
-# -------------------------------
-ADD scripts/init.sh /usr/local/bin/init.sh
-ADD scripts/export-envs.sh /tmp/export-envs.sh
+# --------------------------------
+# Copy scripts, packages & plugins
+# --------------------------------
 ADD packages/${JDK_TAR_FILENAME} /opt/
-ADD packages/${CONFIGURATOR_NAME}.zip /opt/
-ADD packages/${TEMPLATE_MODULE_NAME}.zip /opt/
-ADD packages/wso2is-${WSO2_IS_VERSION}.zip /opt/
-ADD plugins /${PCA_HOME}/plugins
+COPY scripts/init.sh /usr/local/bin/init.sh
+COPY scripts/export-envs.sh /tmp/export-envs.sh
+COPY packages/${CONFIGURATOR_NAME}.zip /opt/
+COPY packages/${IS_TEMPLATE_MODULE_NAME}.zip /opt/
+COPY packages/wso2is-${WSO2_IS_VERSION}.zip /opt/
+COPY plugins /${PCA_HOME}/plugins
 
 # -----------------------------
 # Install prerequisites and IS
@@ -56,9 +55,8 @@ RUN unzip /opt/wso2is-${WSO2_IS_VERSION}.zip -d /opt/ && \
     rm /opt/wso2is-${WSO2_IS_VERSION}.zip && \
     unzip /opt/${CONFIGURATOR_NAME}.zip -d /opt/ && \
     rm /opt/${CONFIGURATOR_NAME}.zip && \
-    unzip /opt/${TEMPLATE_MODULE_NAME}.zip -d /opt/ && \
-    mv /opt/${TEMPLATE_MODULE_NAME}/* $TEMPLATE_MODULE_HOME
-    rm -rf /opt/${TEMPLATE_MODULE_NAME}* && \
+    unzip /opt/${IS_TEMPLATE_MODULE_NAME}.zip -d /opt/${CONFIGURATOR_NAME}/template-modules/ && \
+    rm /opt/${IS_TEMPLATE_MODULE_NAME}.zip && \
     pip install jinja2 && \
     chmod +x /tmp/export-envs.sh && \
     sleep 1 && \
@@ -70,7 +68,6 @@ RUN unzip /opt/wso2is-${WSO2_IS_VERSION}.zip -d /opt/ && \
 
 # IS https port
 EXPOSE 9443
-
 # -------------------------------
 # Define entry point & start sshd
 # -------------------------------
