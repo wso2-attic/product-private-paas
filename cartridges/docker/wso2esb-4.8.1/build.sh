@@ -20,4 +20,40 @@
 #
 # --------------------------------------------------------------
 
+set -e
+prgdir=`dirname "$0"`
+script_path=`cd "$prgdir"; pwd`
+
+project_version="4.1.0-SNAPSHOT"
+configurator_path=`cd ${script_path}/../../../components/org.wso2.ppaas.configurator/; pwd`
+esb_template_module_path=`cd ${script_path}/../../../cartridges/templates-modules/wso2esb-4.8.1/; pwd`
+clean=false
+if [ "$1" = "clean" ]; then
+   clean=true
+fi
+
+if ${clean} ; then
+   echo "----------------------------------"
+   echo "Building configurator"
+   echo "----------------------------------"
+   pushd ${configurator_path}
+   mvn clean install
+   cp -v target/ppaas-configurator-${project_version}.zip ${script_path}/packages/
+   popd
+fi
+
+if ${clean} ; then
+   echo "----------------------------------"
+   echo "Building ESB template module"
+   echo "----------------------------------"
+   pushd ${esb_template_module_path}
+   mvn clean install
+   cp -v target/wso2esb-4.8.1-template-module-${project_version}.zip ${script_path}/packages/
+   popd
+fi
+
+echo "----------------------------------"
+echo "Building ESB docker image"
+echo "----------------------------------"
 docker build -t wso2/esb:4.8.1 .
+echo "ESB docker image built successfully"
