@@ -25,8 +25,18 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
+            <directory>files/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/files/</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.gitkeep</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
             <directory>templates/</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/templates/</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
