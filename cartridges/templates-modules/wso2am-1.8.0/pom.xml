@@ -26,7 +26,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wso2am-1.8.0-template-module</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 AM 1.8.0 Template Module - Distribution</name>
+    <name>WSO2 PPaaS - WSO2 AM 1.8.0 Template Module</name>
     <description>WSO2 AM 1.8.0 Template Module</description>
     <build>
         <plugins>

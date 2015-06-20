@@ -28,8 +28,8 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>private-paas-products-parent</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Private PaaS - Products</name>
-    <description>WSO2 Private PaasS  based products</description>
+    <name>WSO2 PPaaS - Products</name>
+    <description>WSO2 Private PaaS Products</description>
     <url>http://wso2.org</url>
 
     <modules>

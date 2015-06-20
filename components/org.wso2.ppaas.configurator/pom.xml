@@ -31,7 +31,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>org.wso2.ppaas.configurator</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 PPaaS - Python Configurator Component</name>
+    <name>WSO2 PPaaS - Python Configurator</name>
 
     <build>
         <plugins>
