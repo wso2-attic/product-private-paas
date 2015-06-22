@@ -55,8 +55,10 @@ RUN unzip /opt/wso2esb-${WSO2_ESB_VERSION}.zip -d /opt/ && \
     rm /opt/wso2esb-${WSO2_ESB_VERSION}.zip && \
     unzip /opt/${CONFIGURATOR_NAME}.zip -d /opt/ && \
     rm /opt/${CONFIGURATOR_NAME}.zip && \
-    unzip /opt/${ESB_TEMPLATE_MODULE_NAME}.zip -d /opt/${CONFIGURATOR_NAME}/template-modules/ && \
-    rm /opt/${ESB_TEMPLATE_MODULE_NAME}.zip && \
+    unzip /opt/${ESB_TEMPLATE_MODULE_NAME}.zip -d /opt/ && \
+    mkdir -p /opt/${CONFIGURATOR_NAME}/template-modules/wso2esb-${WSO2_ESB_VERSION} && \
+    mv /opt/${ESB_TEMPLATE_MODULE_NAME}/* /opt/${CONFIGURATOR_NAME}/template-modules/wso2esb-${WSO2_ESB_VERSION}/ && \
+    rm -rf /opt/${ESB_TEMPLATE_MODULE_NAME}* && \
     pip install jinja2 && \
     chmod +x /tmp/export-envs.sh && \
     sleep 1 && \
