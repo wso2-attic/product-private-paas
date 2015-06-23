@@ -55,8 +55,10 @@ RUN unzip /opt/wso2as-${WSO2_AS_VERSION}.zip -d /opt/ && \
     rm /opt/wso2as-${WSO2_AS_VERSION}.zip && \
     unzip /opt/${CONFIGURATOR_NAME}.zip -d /opt/ && \
     rm /opt/${CONFIGURATOR_NAME}.zip && \
-    unzip /opt/${AS_TEMPLATE_MODULE_NAME}.zip -d /opt/${CONFIGURATOR_NAME}/template-modules/ && \
-    rm /opt/${AS_TEMPLATE_MODULE_NAME}.zip && \
+    unzip /opt/${AS_TEMPLATE_MODULE_NAME}.zip -d /opt/ && \
+    mkdir -p /opt/${CONFIGURATOR_NAME}/template-modules/wso2as-${WSO2_AS_VERSION} && \
+    mv /opt/${AS_TEMPLATE_MODULE_NAME}/* /opt/${CONFIGURATOR_NAME}/template-modules/wso2as-${WSO2_AS_VERSION}/ && \
+    rm -rf /opt/${AS_TEMPLATE_MODULE_NAME}* && \
     pip install jinja2 && \
     chmod +x /tmp/export-envs.sh && \
     sleep 1 && \
