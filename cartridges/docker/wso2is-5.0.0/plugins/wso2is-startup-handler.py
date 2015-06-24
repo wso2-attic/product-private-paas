@@ -67,7 +67,7 @@ class WSO2ISStartupHandler(ICartridgeAgentPlugin):
 
         # configure server
         log.info("Configuring WSO2 IS...")
-        config_command = "exec /opt/wso2configurator-4.1.0/configurator.py"
+        config_command = "exec /opt/ppaas-configurator-4.1.0-SNAPSHOT/configurator.py"
         env_var = os.environ.copy()
         p = subprocess.Popen(config_command, env=env_var, shell=True)
         output, errors = p.communicate()
