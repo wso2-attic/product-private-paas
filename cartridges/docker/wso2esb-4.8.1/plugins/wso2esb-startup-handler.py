@@ -83,7 +83,7 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
 
         # configure server
         log.info("Configuring WSO2 ESB...")
-        config_command = "exec /opt/ppaas-configurator-4.1.0-SNAPSHOT/configurator.py"
+        config_command = "python /opt/ppaas-configurator-4.1.0-SNAPSHOT/configurator.py"
         env_var = os.environ.copy()
         p = subprocess.Popen(config_command, env=env_var, shell=True)
         output, errors = p.communicate()
