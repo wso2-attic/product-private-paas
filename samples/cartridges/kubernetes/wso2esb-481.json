@@ -96,7 +96,7 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_REGISTRY_DB_PASSWORD",
-            "value": "lahiru"
+            "value": "root"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_USER_MGT_DB_URL",
@@ -108,7 +108,7 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_USER_MGT_DB_PASSWORD",
-            "value": "lahiru"
+            "value": "root"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_DRIVER_CLASS_NAME",
