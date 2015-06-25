@@ -39,10 +39,10 @@
     <remoteInstance url="https://localhost:9443/registry">
         <id>instanceid</id>
         <dbConfig>sharedregistry</dbConfig>
-        {% if CONFIG_PARAM_SUB_DOMAIN == 'mgt' -%}
-            <readOnly>false</readOnly>
-        {% else -%}
+        {% if CONFIG_PARAM_SUB_DOMAIN == 'worker' -%}
             <readOnly>true</readOnly>
+        {% else -%}
+            <readOnly>false</readOnly>
         {%  endif -%}
         <enableCache>true</enableCache>
         <registryRoot>/</registryRoot>
