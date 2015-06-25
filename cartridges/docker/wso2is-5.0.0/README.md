@@ -10,6 +10,7 @@ jdk-7u60-linux-x64.tar
 ppaas-configurator-<version>.zip
 wso2is-5.0.0.zip
 wso2is-5.0.0-template-module-<version>.zip
+mysql-connector-java-<version>-bin.jar
 ```
 
 2. Run build.sh file to build the docker image:
