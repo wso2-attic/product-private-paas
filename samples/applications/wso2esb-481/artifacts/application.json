@@ -6,8 +6,8 @@
         "cartridges": [
             {
                 "type": "wso2esb-481",
-                "cartridgeMin": 1,
-                "cartridgeMax": 3,
+                "cartridgeMin": 2,
+                "cartridgeMax": 4,
                 "subscribableInfo": {
                     "alias": "wso2esb-481-1",
                     "autoscalingPolicy": "autoscaling-policy-1",

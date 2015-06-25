@@ -55,6 +55,70 @@
             "value": "PCA"
         },
         {
+            "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+            "value": "true"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_DOMAIN",
+            "value": "wso2.esb.com"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WKA_MEMBERS",
+            "value": "\"127.0.0.1:4000\""
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_PT_HTTP_PROXY_PORT",
+            "value": "8280"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_PT_HTTPS_PROXY_PORT",
+            "value": "8243"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_LOCAL_MEMBER_HOST",
+            "value": "127.0.0.1"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_LOCAL_MEMBER_PORT",
+            "value": "4100"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_PORT_OFFSET",
+            "value": "0"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_REGISTRY_DB_URL",
+            "value": "jdbc:mysql://172.17.8.1:3306/reg_db?autoReconnect=true"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_REGISTRY_DB_USER_NAME",
+            "value": "root"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_REGISTRY_DB_PASSWORD",
+            "value": "lahiru"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_USER_MGT_DB_URL",
+            "value": "jdbc:mysql://172.17.8.1:3306/user_db"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_USER_MGT_DB_USER_NAME",
+            "value": "root"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_USER_MGT_DB_PASSWORD",
+            "value": "lahiru"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_DRIVER_CLASS_NAME",
+            "value": "com.mysql.jdbc.Driver"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_MEMBERSHIP_SCHEME",
+            "value": "wka"
+        },
+        {
             "name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
             "value": "ClientIP"
         }
