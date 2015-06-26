@@ -6,6 +6,28 @@
 
     <datasources>
 
+        {% if CONFIG_PARAM_LOCAL_REGISTRY_DB_URL is defined -%}
+        <datasource>
+            <name>REGISTRY_LOCAL1</name>
+            <description>The datasource used for registry- local</description>
+            <jndiConfig>
+                <name>jdbc/WSO2CarbonDB</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>{{CONFIG_PARAM_LOCAL_REGISTRY_DB_URL}}</url>
+                    <username>{{CONFIG_PARAM_LOCAL_REGISTRY_DB_USER_NAME}}</username>
+                    <password>{{CONFIG_PARAM_LOCAL_REGISTRY_DB_PASSWORD}}</password>
+                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                    <maxActive>50</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                </configuration>
+            </definition>
+        </datasource>
+        {% else %}
         <datasource>
             <name>WSO2_CARBON_DB</name>
             <description>The datasource used for registry and user manager</description>
@@ -26,75 +48,52 @@
                 </configuration>
             </definition>
         </datasource>
-
-        {% if CONFIG_PARAM_REGISTRY_LOCAL1 is defined -%}
-        {% set jndiName,dbName = CONFIG_PARAM_REGISTRY_LOCAL1.items()[0] %}
-            <datasource>
-                <name>{{ dbName }}</name>
-                <jndiConfig>
-                    <name>{{jndiName}}</name>
-                </jndiConfig>
-                <definition type="RDBMS">
-                    <configuration>
-                        <url>{{ CONFIG_PARAM_URL }}{{dbName}}</url>
-                        <username>{{CONFIG_PARAM_USER_NAME}}</username>
-                        <password>{{CONFIG_PARAM_PASSWORD}}</password>
-                        <driverClassName>{{CONFIG_PARAM_DRIVER_CLASS_NAME}}</driverClassName>
-                        <maxActive>{{CONFIG_PARAM_MAX_ACTIVE}}</maxActive>
-                        <maxWait>{{CONFIG_PARAM_MAX_WAIT}}</maxWait>
-                        <testOnBorrow>{{CONFIG_PARAM_TEST_ON_BORROW}}</testOnBorrow>
-                        <validationQuery>{{CONFIG_PARAM_VALIDATION_QUERY}}</validationQuery>
-                        <validationInterval>{{CONFIG_PARAM_VALIDATION_INTERVAL}}</validationInterval>
-                    </configuration>
-                </definition>
-            </datasource>
-        {% endif -%}
-
-        {% if CONFIG_PARAM_REGISTRY_DB is defined -%}
-        {% set jndiName,dbName = CONFIG_PARAM_REGISTRY_DB.items()[0] %}
+        {% endif %}
+        {% if CONFIG_PARAM_REGISTRY_DB_URL is defined -%}
         <datasource>
-            <name>{{ dbName }}</name>
+            <name>REGISTRY_DB</name>
+            <description>The datasource used for registry- config/governance</description>
             <jndiConfig>
-                <name>{{jndiName}}</name>
+                <name>jdbc/WSO2RegistryDB</name>
             </jndiConfig>
             <definition type="RDBMS">
                 <configuration>
-                    <url>{{ CONFIG_PARAM_URL }}{{dbName}}</url>
-                    <username>{{CONFIG_PARAM_USER_NAME}}</username>
-                    <password>{{CONFIG_PARAM_PASSWORD}}</password>
-                    <driverClassName>{{CONFIG_PARAM_DRIVER_CLASS_NAME}}</driverClassName>
-                    <maxActive>{{CONFIG_PARAM_MAX_ACTIVE}}</maxActive>
-                    <maxWait>{{CONFIG_PARAM_MAX_WAIT}}</maxWait>
-                    <testOnBorrow>{{CONFIG_PARAM_TEST_ON_BORROW}}</testOnBorrow>
-                    <validationQuery>{{CONFIG_PARAM_VALIDATION_QUERY}}</validationQuery>
-                    <validationInterval>{{CONFIG_PARAM_VALIDATION_INTERVAL}}</validationInterval>
+                    <url>{{CONFIG_PARAM_REGISTRY_DB_URL}}</url>
+                    <username>{{CONFIG_PARAM_REGISTRY_DB_USER_NAME}}</username>
+                    <password>{{CONFIG_PARAM_REGISTRY_DB_PASSWORD}}</password>
+                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                    <maxActive>50</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
                 </configuration>
             </definition>
         </datasource>
-        {% endif -%}
-
-        {% if CONFIG_PARAM_USER_DB is defined -%}
-        {% set jndiName,dbName = CONFIG_PARAM_USER_DB.items()[0] %}
+        {% endif %}
+        {% if CONFIG_PARAM_USER_MGT_DB_URL is defined -%}
         <datasource>
-            <name>{{ dbName }}</name>
+            <name>WSO2_USER_DB</name>
+            <description>The datasource used for registry and user manager</description>
             <jndiConfig>
-                <name>{{jndiName}}</name>
+                <name>jdbc/WSO2UMDB</name>
             </jndiConfig>
             <definition type="RDBMS">
                 <configuration>
-                    <url>{{ CONFIG_PARAM_URL }}{{dbName}}</url>
-                    <username>{{CONFIG_PARAM_USER_NAME}}</username>
-                    <password>{{CONFIG_PARAM_PASSWORD}}</password>
-                    <driverClassName>{{CONFIG_PARAM_DRIVER_CLASS_NAME}}</driverClassName>
-                    <maxActive>{{CONFIG_PARAM_MAX_ACTIVE}}</maxActive>
-                    <maxWait>{{CONFIG_PARAM_MAX_WAIT}}</maxWait>
-                    <testOnBorrow>{{CONFIG_PARAM_TEST_ON_BORROW}}</testOnBorrow>
-                    <validationQuery>{{CONFIG_PARAM_VALIDATION_QUERY}}</validationQuery>
-                    <validationInterval>{{CONFIG_PARAM_VALIDATION_INTERVAL}}</validationInterval>
+                    <url>{{CONFIG_PARAM_USER_MGT_DB_URL}}</url>
+                    <username>{{CONFIG_PARAM_USER_MGT_DB_USER_NAME}}</username>
+                    <password>{{CONFIG_PARAM_USER_MGT_DB_PASSWORD}}</password>
+                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                    <maxActive>50</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
                 </configuration>
             </definition>
         </datasource>
-        {% endif -%}
+        {% endif %}
+    </datasources>
         <!-- For an explanation of the properties, see: http://people.apache.org/~fhanik/jdbc-pool/jdbc-pool.html -->
         <!--datasource>
             <name>SAMPLE_DATA_SOURCE</name>

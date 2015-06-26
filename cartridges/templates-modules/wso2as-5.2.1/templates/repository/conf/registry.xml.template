@@ -31,24 +31,34 @@
         <dataSource>jdbc/WSO2CarbonDB</dataSource>
     </dbConfig>
 
-    {% if CONFIG_PARAM_REGISTRY_DB is defined -%}
-    {% set jndiName,dbName = CONFIG_PARAM_REGISTRY_DB.items()[0] -%}
+    {% if CONFIG_PARAM_REGISTRY_DB_URL is defined -%}
     <dbConfig name="sharedregistry">
-        <dataSource>{{ jndiName }}</dataSource>
+        <dataSource>jdbc/WSO2RegistryDB</dataSource>
     </dbConfig>
 
     <remoteInstance url="https://localhost:9443/registry">
         <id>instanceid</id>
         <dbConfig>sharedregistry</dbConfig>
-        {% if CONFIG_PARAM_SUB_DOMAIN == 'mgt' -%}
-            <readOnly>false</readOnly>
-        {% else -%}
+        {% if CONFIG_PARAM_SUB_DOMAIN == 'worker' -%}
             <readOnly>true</readOnly>
+        {% else -%}
+            <readOnly>false</readOnly>
         {%  endif -%}
         <enableCache>true</enableCache>
         <registryRoot>/</registryRoot>
-        <cacheId>{{CONFIG_PARAM_USER_NAME}}@{{CONFIG_PARAM_URL}}{{dbName}}?autoReconnect=true</cacheId>
+        <cacheId>{{CONFIG_PARAM_REGISTRY_DB_USER_NAME}}@{{CONFIG_PARAM_REGISTRY_DB_URL}}</cacheId>
     </remoteInstance>
+
+    <mount path="/_system/config" overwrite="true">
+        <instanceId>instanceid</instanceId>
+        <targetPath>/_system/asNodes</targetPath>
+    </mount>
+
+    <mount path="/_system/governance" overwrite="true">
+        <instanceId>instanceid</instanceId>
+        <targetPath>/_system/governance</targetPath>
+    </mount>
+    {% endif -%}
 
     <mount path="/_system/config" overwrite="true">
         <instanceId>instanceid</instanceId>
