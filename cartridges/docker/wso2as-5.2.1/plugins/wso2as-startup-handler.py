@@ -53,14 +53,14 @@ class WSO2ASStartupHandler(ICartridgeAgentPlugin):
 
         log.info("Kubernetes service management console https port: %s" % mgt_console_https_port)
         if mgt_console_https_port is not None:
-            command = "sed -i \"s/^#CONFIG_PARAM_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_HTTPS_PROXY_PORT = %s/g\" %s" % (mgt_console_https_port, "${CONFIGURATOR_HOME}/templates/wso2as-5.2.1/configs.ini")
+            command = "sed -i \"s/^#CONFIG_PARAM_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_HTTPS_PROXY_PORT = %s/g\" %s" % (mgt_console_https_port, "${CONFIGURATOR_HOME}/template-modules/wso2as-5.2.1/module.ini")
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
             log.info("Successfully updated management console https proxy port: %s in AS template module" % mgt_console_https_port)
 
         # configure server
         log.info("Configuring WSO2 AS...")
-        config_command = "exec /opt/ppaas-configurator-4.1.0-SNAPSHOT/configurator.py"
+        config_command = "python /opt/ppaas-configurator-4.1.0-SNAPSHOT/configurator.py"
         env_var = os.environ.copy()
         p = subprocess.Popen(config_command, env=env_var, shell=True)
         output, errors = p.communicate()
