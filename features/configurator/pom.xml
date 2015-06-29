@@ -27,13 +27,13 @@
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>configurator-features</artifactId>
+    <artifactId>configurator-feature</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 PPaaS - Configurator Features</name>
+    <name>WSO2 PPaaS - Configurator Feature</name>
     <url>http://wso2.org</url>
 
     <modules>
-        <module>org.wso2.ppaas.configurator.feature</module>
+        <!--module>org.wso2.ppaas.configurator.feature</module-->
     </modules>
 </project>
 

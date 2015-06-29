@@ -33,13 +33,14 @@
     <artifactId>ppaas-parent</artifactId>
     <packaging>pom</packaging>
     <version>4.1.0-SNAPSHOT</version>
-    <name>WSO2 Private PaaS Parent</name>
-    <description>WSO2 PPaaS is an open source Platform as a Service (PaaS) solution.</description>
+    <name>WSO2 PPaaS - Parent</name>
+    <description>WSO2 Private PaaS is an open source Platform as a Service (PaaS) solution.</description>
     <url>http://wso2.com/cloud/private-paas</url>
     <inceptionYear>2012</inceptionYear>
 
     <modules>
-	<module>extensions</module>
+	    <module>extensions</module>
+        <module>cartridges</module>
         <module>components</module>
         <module>features</module>
         <module>products</module>

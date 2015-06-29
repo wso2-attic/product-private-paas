@@ -23,16 +23,16 @@
 
     <parent>
         <groupId>org.wso2</groupId>
-        <artifactId>ppaas-products-parent</artifactId>
+        <artifactId>private-paas-products-parent</artifactId>
         <version>4.1.0-SNAPSHOT</version>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>python-configurator</artifactId>
+    <artifactId>configurator</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 PPaaS - Python Configurator Product</name>
+    <name>WSO2 PPaaS - Configurator - Product</name>
     <url>http://apache.org</url>
-    <description>WSO2 PPaaS - Python Configurator Product</description>
+    <description>WSO2 PPaaS - Configurator Product</description>
 
     <build>
         <plugins>
@@ -48,8 +48,8 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <copy file="../../components/org.wso2.ppaas.configurator/target/ppass-configurator-${pom.version}.zip"
-                                      tofile="target/PPasS-configurator-${pom.version}.zip"/>
+                                <copy file="../../components/org.wso2.ppaas.configurator/target/ppaas-configurator-${pom.version}.zip"
+                                      tofile="target/ppaas-configurator-${pom.version}.zip"/>
                             </tasks>
                         </configuration>
                     </execution>

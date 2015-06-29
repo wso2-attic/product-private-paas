@@ -36,7 +36,7 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         pt_http_port = None
         pt_https_port = None
 
-        # port mappings format: """NAME:mgt-console|PROTOCOL:https|PORT:4500|PROXY_PORT:8443;
+        # port mappings format: """NAME:mgt-console|PROTOCOL:https|PORT:4500|PROXY_PORT:9443;
         #                          NAME:pt-http|PROTOCOL:http|PORT:4501|PROXY_PORT:7280;
         #                          NAME:pt-https|PROTOCOL:https|PORT:4502|PROXY_PORT:7243"""
 
@@ -64,26 +64,26 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         log.info("Kubernetes service pass-through https port: %s" % pt_https_port)
 
         if mgt_console_https_port is not None:
-            command = "sed -i \"s/^#CONFIG_PARAM_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_HTTPS_PROXY_PORT = %s/g\" %s" % (mgt_console_https_port, "${CONFIGURATOR_HOME}/templates/wso2esb-4.8.1/configs.ini")
+            command = "sed -i \"s/^#CONFIG_PARAM_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_HTTPS_PROXY_PORT = %s/g\" %s" % (mgt_console_https_port, "${CONFIGURATOR_HOME}/template-modules/wso2esb-4.8.1/module.ini")
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
             log.info("Successfully updated management console https proxy port: %s in ESB template module" % mgt_console_https_port)
 
         if pt_http_port is not None:
-            command = "sed -i \"s/^#CONFIG_PARAM_PT_HTTP_PROXY_PORT = .*/CONFIG_PARAM_PT_HTTP_PROXY_PORT = %s/g\" %s" % (pt_http_port, "${CONFIGURATOR_HOME}/templates/wso2esb-4.8.1/configs.ini")
+            command = "sed -i \"s/^#CONFIG_PARAM_PT_HTTP_PROXY_PORT = .*/CONFIG_PARAM_PT_HTTP_PROXY_PORT = %s/g\" %s" % (pt_http_port, "${CONFIGURATOR_HOME}/template-modules/wso2esb-4.8.1/module.ini")
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
             log.info("Successfully updated pass-through http proxy port: %s in ESB template module" % pt_http_port)
 
         if pt_https_port is not None:
-            command = "sed -i \"s/^#CONFIG_PARAM_PT_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_PT_HTTPS_PROXY_PORT = %s/g\" %s" % (pt_https_port, "${CONFIGURATOR_HOME}/templates/wso2esb-4.8.1/configs.ini")
+            command = "sed -i \"s/^#CONFIG_PARAM_PT_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_PT_HTTPS_PROXY_PORT = %s/g\" %s" % (pt_https_port, "${CONFIGURATOR_HOME}/template-modules/wso2esb-4.8.1/module.ini")
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
             log.info("Successfully updated pass-through https proxy port: %s in ESB template module" % pt_https_port)
 
         # configure server
         log.info("Configuring WSO2 ESB...")
-        config_command = "exec /opt/wso2configurator-4.1.0/configurator.py"
+        config_command = "python /opt/ppaas-configurator-4.1.0-SNAPSHOT/configurator.py"
         env_var = os.environ.copy()
         p = subprocess.Popen(config_command, env=env_var, shell=True)
         output, errors = p.communicate()

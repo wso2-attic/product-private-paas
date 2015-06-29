@@ -17,7 +17,6 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import ast
 from distutils.dir_util import copy_tree
 import logging
 import logging.config
@@ -53,12 +52,12 @@ def render_template(template_filename, context):
     return TEMPLATE_ENVIRONMENT.get_template(template_filename).render(context)
 
 
-def create_output_xml(template_path, output_path, context):
+def generate_file_from_template(template_path, output_path, context):
     """
-    This method write the output generated from jinja file to xml file
+    Generate file from the given template file
 
     :param template_path: Path to the template file
-    :param output_path: Path to the output xml file
+    :param output_path: Path to the output file
     :param context: Dictionary containing values to be used by jinja engine
     :return: None
     """
@@ -66,10 +65,10 @@ def create_output_xml(template_path, output_path, context):
     if not os.path.exists(directory):
         os.makedirs(directory)
     with open(output_path, 'w') as xml_file:
+        log.info("Creating output file: " + output_path)
         content = render_template(template_path, context)
-        xml_file.write(content)
-        log.info("Creating output file :" + output_path)
         log.debug("Creating content: " + content)
+        xml_file.write(content)
 
 
 def generate_context(config_file_path):
@@ -114,7 +113,7 @@ def traverse(root_dir, context):
     :param context: dictionary containing values to be used by jinja engine
     :return:None
     """
-    log.info("Starting to traverse " + root_dir)
+    log.info("Starting to configure: " + root_dir)
     for dir_name, subdirList, fileList in os.walk(root_dir):
         for file_name in fileList:
             # generating the relative path of the template
@@ -125,9 +124,9 @@ def traverse(root_dir, context):
             config_file_name = os.path.join(PACK_LOCATION,
                                             config_file_name)
             template_file_name = template_file_name.split("/./")[1]
-            log.debug("Template file : %s ", template_file_name)
-            log.debug("Output configuration file : %s ", config_file_name)
-            create_output_xml(template_file_name, config_file_name, context)
+            log.debug("Template file: %s ", template_file_name)
+            log.debug("Output configuration file: %s ", config_file_name)
+            generate_file_from_template(template_file_name, config_file_name, context)
 
 
 def copy_files_to_pack(source):
@@ -137,33 +136,33 @@ def copy_files_to_pack(source):
     :return:
     """
     result = copy_tree(source, PACK_LOCATION, verbose=1)
-    log.info("Files copied : %s", result)
+    log.info("Files copied: %s", result)
 
 
 def configure():
     """
     Main method    :return: None
     """
-    log.info("Configurator started.")
+    log.info("Configurator started")
     # traverse through the template directory
     for dirName in os.listdir(os.path.join(PATH, constants.TEMPLATE_DIRECTORY)):
         if dirName == ".gitkeep":
             continue
 
-        module_file_path = os.path.join(constants.TEMPLATE_DIRECTORY, dirName,
-                                        constants.CONFIG_FILE_NAME)
-        template_dir = os.path.join(PATH, constants.TEMPLATE_DIRECTORY, dirName,
-                                    constants.TEMPLATE_FOLDER_NAME)
-        file_dir = os.path.join(PATH, constants.TEMPLATE_DIRECTORY, dirName,
-                                constants.FILES_DIRECTORY_NAME)
-        log.info("module.ini file found %s:", module_file_path)
-        log.info("Template Dir %s:", template_dir)
+        module_file_path = os.path.join(constants.TEMPLATE_DIRECTORY, dirName, constants.CONFIG_FILE_NAME)
+        template_dir = os.path.join(PATH, constants.TEMPLATE_DIRECTORY, dirName, constants.TEMPLATE_FOLDER_NAME)
+        files_dir = os.path.join(PATH, constants.TEMPLATE_DIRECTORY, dirName, constants.FILES_DIRECTORY_NAME)
+        log.info("module.ini file found: %s", module_file_path)
+        log.info("Template directory: %s", template_dir)
         context = generate_context(module_file_path)
         traverse(template_dir, context)
-        log.info("Copying files to the pack")
-        copy_files_to_pack(file_dir)
-    log.info("Configuration completed")
 
+        # copy files if exists
+        if os.path.exists(files_dir):
+            log.info("Copying files...")
+            copy_files_to_pack(files_dir)
+
+    log.info("Configuration completed")
 
 if __name__ == "__main__":
     configure()

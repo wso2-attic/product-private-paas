@@ -16,7 +16,7 @@
 # under the License.
 
 # Template Paths
-TEMPLATE_DIRECTORY = "./templates"
+TEMPLATE_DIRECTORY = "./template-modules"
 CONFIG_FILE_NAME = "module.ini"
 LOG_FILE_LOCATION = "./configurator.log"
 TEMPLATE_FOLDER_NAME = "templates"

@@ -27,7 +27,7 @@
     <groupId>org.wso2</groupId>
     <artifactId>private-paas</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Private PaaS - Product</name>
+    <name>WSO2 PPaaS - Product</name>
     <url>http://apache.org</url>
     <description>Private PaaS  Product Parent</description>
 

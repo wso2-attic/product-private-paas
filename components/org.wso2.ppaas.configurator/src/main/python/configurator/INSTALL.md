@@ -30,9 +30,9 @@ Please follow below steps to proceed with the installation:
    ```
    pip install Jinja2
    ```
-3. Copy template files to <configurator_home>/templates.
+3. Copy template files to <configurator_home>/template-modules.
 
-4. Change <configurator_home>/templates/<wso2_product_name>/module.ini as required for cluster.
+4. Change <configurator_home>/template-modules/<wso2_product_name>/module.ini as required for cluster.
   
 5. Run <confiugrator_home>/configurator.py.
    ```

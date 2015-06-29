@@ -23,7 +23,7 @@
 # run script sets the configurable parameters for the cartridge agent in agent.conf and
 # starts the cartridge agent process.
 
-if [ ${START_CMD} = 'PCA' ]; then
+if [ "${START_CMD}" = "PCA" ]; then
     echo "Starting python cartridge agent..."
 	/usr/local/bin/start-agent.sh
 	echo "Python cartridge agent started successfully"
