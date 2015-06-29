@@ -34,16 +34,6 @@ fi
 
 if ${clean} ; then
    echo "----------------------------------"
-   echo "Building configurator"
-   echo "----------------------------------"
-   pushd ${configurator_path}
-   mvn clean install
-   cp -v target/ppaas-configurator-${project_version}.zip ${script_path}/packages/
-   popd
-fi
-
-if ${clean} ; then
-   echo "----------------------------------"
    echo "Building ESB template module"
    echo "----------------------------------"
    pushd ${esb_template_module_path}
