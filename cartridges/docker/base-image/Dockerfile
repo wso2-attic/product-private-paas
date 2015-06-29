@@ -25,10 +25,10 @@ MAINTAINER dev@wso2.org
 ENV DEBIAN_FRONTEND noninteractive
 ENV PCA_FILENAME apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT
 
-#JDC and configurater
-ENV JDK_VERSION jdk1.7.0_51
+#JDK and configurator
+ENV JDK_VERSION jdk1.7.0_60
 ENV PPAAS_VERSION 4.1.0-SNAPSHOT
-ENV JDK_TAR_FILENAME jdk-7u51-linux-x64.tar.gz
+ENV JDK_TAR_FILENAME ${JDK_VERSION}-linux-x64.tar.gz
 ENV JAVA_HOME /opt/${JDK_VERSION}/
 ENV CONFIGURATOR_NAME ppaas-configurator-${PPAAS_VERSION}
 ENV CONFIGURATOR_HOME /opt/${CONFIGURATOR_NAME}
