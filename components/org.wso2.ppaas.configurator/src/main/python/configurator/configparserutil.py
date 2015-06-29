@@ -38,7 +38,9 @@ class ConfigParserUtil(ConfigParser.ConfigParser):
         :param property:
         :return: dictionary of properties
         """
-        properties = ast.literal_eval(variable).split(",")
+        variable = variable.replace('[', '')
+        variable = variable.replace(']', '')
+        properties = variable.split(",")
         return dict(s.split(':') for s in properties)
 
     @staticmethod
@@ -50,7 +52,7 @@ class ConfigParserUtil(ConfigParser.ConfigParser):
         """
 
         for key, value in context.iteritems():
-            if "\"" in value:
-                context[key] = ConfigParserUtil.convert_properties_to_dictionary(value)
+            if value.startswith('['):
+                context[key]= ConfigParserUtil.convert_properties_to_dictionary(value)
         return context
 

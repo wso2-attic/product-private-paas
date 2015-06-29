@@ -149,9 +149,12 @@ def configure():
         if dirName == ".gitkeep":
             continue
 
-        module_file_path = os.path.join(constants.TEMPLATE_DIRECTORY, dirName, constants.CONFIG_FILE_NAME)
-        template_dir = os.path.join(PATH, constants.TEMPLATE_DIRECTORY, dirName, constants.TEMPLATE_FOLDER_NAME)
-        files_dir = os.path.join(PATH, constants.TEMPLATE_DIRECTORY, dirName, constants.FILES_DIRECTORY_NAME)
+        module_file_path = os.path.join(constants.TEMPLATE_DIRECTORY, dirName,
+                                        constants.CONFIG_FILE_NAME)
+        template_dir = os.path.join(PATH, constants.TEMPLATE_DIRECTORY, dirName,
+                                    constants.TEMPLATE_FOLDER_NAME)
+        files_dir = os.path.join(PATH, constants.TEMPLATE_DIRECTORY, dirName,
+                                 constants.FILES_DIRECTORY_NAME)
         log.info("module.ini file found: %s", module_file_path)
         log.info("Template directory: %s", template_dir)
         context = generate_context(module_file_path)
@@ -163,6 +166,7 @@ def configure():
             copy_files_to_pack(files_dir)
 
     log.info("Configuration completed")
+
 
 if __name__ == "__main__":
     configure()
