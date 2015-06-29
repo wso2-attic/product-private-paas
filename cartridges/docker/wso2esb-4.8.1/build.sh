@@ -25,7 +25,6 @@ prgdir=`dirname "$0"`
 script_path=`cd "$prgdir"; pwd`
 
 project_version="4.1.0-SNAPSHOT"
-configurator_path=`cd ${script_path}/../../../components/org.wso2.ppaas.configurator/; pwd`
 esb_template_module_path=`cd ${script_path}/../../../cartridges/templates-modules/wso2esb-4.8.1/; pwd`
 clean=false
 if [ "$1" = "clean" ]; then
