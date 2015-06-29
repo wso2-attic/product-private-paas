@@ -1,0 +1,57 @@
+{
+    "type": "wso2as-521",
+    "provider": "wso2",
+    "category": "framework",
+    "host": "as.stratos.org",
+    "displayName": "WSO2AS",
+    "description": "WSO2 App Server",
+    "version": "5.2.1",
+    "multiTenant": "false",
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "http-9763",
+            "protocol": "http",
+            "port": "9763",
+            "proxyPort": "8280"
+        },
+        {
+            "name": "http-9443",
+            "protocol": "https",
+            "port": "9443",
+            "proxyPort": "8243"
+        }
+
+    ],
+    "deployment": {
+        "baseDir": "/opt/wso2as-5.2.1/repository/deployment/server/webapps"
+    },
+    "iaasProvider": [
+        {
+            "type": "kubernetes",
+            "imageId": "wso2/as:5.2.1",
+            "networkInterfaces": [
+            ],
+            "property": [
+            ]
+        }
+    ],
+    "property": [
+        {
+            "name": "KUBERNETES_CONTAINER_CPU",
+            "value": "0"
+        },
+        {
+            "name": "KUBERNETES_CONTAINER_MEMORY",
+            "value": "0"
+        },
+        {
+            "name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
+            "value": "ClientIP"
+        },
+        {
+            "name": "payload_parameter.START_CMD",
+            "value": "PCA"
+        }
+    ]
+}
