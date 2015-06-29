@@ -60,16 +60,6 @@
     </mount>
     {% endif -%}
 
-    <mount path="/_system/config" overwrite="true">
-        <instanceId>instanceid</instanceId>
-        <targetPath>/_system/asNodes</targetPath>
-    </mount>
-
-    <mount path="/_system/governance" overwrite="true">
-        <instanceId>instanceid</instanceId>
-        <targetPath>/_system/governance</targetPath>
-    </mount>
-    {% endif -%}
     <!--<handler class="org.wso2.carbon.registry.extensions.handlers.SynapseRepositoryHandler">
          <filter class="org.wso2.carbon.registry.core.jdbc.handlers.filters.MediaTypeMatcher">
              <property name="mediaType">application/vnd.apache.synapse</property>
