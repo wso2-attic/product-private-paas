@@ -1,0 +1,27 @@
+{
+    "applicationId": "wso2as-521-app",
+    "alias": "wso2as-521-app-1",
+    "multiTenant": false,
+    "components": {
+        "cartridges": [
+            {
+                "type": "wso2as-521",
+                "cartridgeMin": 2,
+                "cartridgeMax": 4,
+                "subscribableInfo": {
+                    "alias": "wso2as-521-1",
+                    "autoscalingPolicy": "autoscaling-policy-1",
+                    "deploymentPolicy": "deployment-policy-1",
+                    "artifactRepository": {
+                        "privateRepo": false,
+                        "repoUrl": "https://github.com/imesh/stratos-tomcat-applications.git",
+                        "repoUsername": "",
+                        "repoPassword": ""
+                    }
+                }
+            }
+        ]
+    }
+}
+
+

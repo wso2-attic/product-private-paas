@@ -30,6 +30,7 @@ ENV JAVA_HOME /opt/jdk${JDK_VERSION}
 ENV CONFIGURATOR_NAME ppaas-configurator-${PPAAS_VERSION}
 ENV CONFIGURATOR_HOME /opt/${CONFIGURATOR_NAME}
 ENV WSO2_AS_VERSION 5.2.1
+ENV MYSQL_CONNECTOR_VERSION 5.1.27
 ENV AS_TEMPLATE_MODULE_NAME wso2as-${WSO2_AS_VERSION}-template-module-${PPAAS_VERSION}
 ENV CARBON_HOME /opt/wso2as-${WSO2_AS_VERSION}
 ENV PCA_NAME apache-stratos-python-cartridge-agent-${PPAAS_VERSION}
@@ -44,6 +45,7 @@ COPY scripts/export-envs.sh /tmp/export-envs.sh
 COPY packages/${CONFIGURATOR_NAME}.zip /opt/
 COPY packages/${AS_TEMPLATE_MODULE_NAME}.zip /opt/
 COPY packages/wso2as-${WSO2_AS_VERSION}.zip /opt/
+COPY packages/mysql-connector-java-${MYSQL_CONNECTOR_VERSION}-bin.jar /opt/
 COPY plugins /${PCA_HOME}/plugins
 
 # -----------------------------
@@ -53,6 +55,7 @@ WORKDIR /opt
 
 RUN unzip /opt/wso2as-${WSO2_AS_VERSION}.zip -d /opt/ && \
     rm /opt/wso2as-${WSO2_AS_VERSION}.zip && \
+    mv /opt/mysql-connector-java-${MYSQL_CONNECTOR_VERSION}-bin.jar /opt/wso2as-${WSO2_AS_VERSION}/repository/components/lib && \
     unzip /opt/${CONFIGURATOR_NAME}.zip -d /opt/ && \
     rm /opt/${CONFIGURATOR_NAME}.zip && \
     unzip /opt/${AS_TEMPLATE_MODULE_NAME}.zip -d /opt/ && \

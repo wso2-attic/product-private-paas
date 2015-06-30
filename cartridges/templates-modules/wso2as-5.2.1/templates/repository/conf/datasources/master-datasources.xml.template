@@ -5,7 +5,6 @@
     </providers>
 
     <datasources>
-
         {% if CONFIG_PARAM_LOCAL_REGISTRY_DB_URL is defined -%}
         <datasource>
             <name>REGISTRY_LOCAL1</name>
@@ -93,7 +92,7 @@
             </definition>
         </datasource>
         {% endif %}
-    </datasources>
+
         <!-- For an explanation of the properties, see: http://people.apache.org/~fhanik/jdbc-pool/jdbc-pool.html -->
         <!--datasource>
             <name>SAMPLE_DATA_SOURCE</name>
