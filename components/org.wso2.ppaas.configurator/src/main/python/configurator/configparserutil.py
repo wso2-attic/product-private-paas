@@ -16,8 +16,10 @@
 # under the License.
 
 import ConfigParser
-import ast
+import os
+import logging
 
+log = logging.getLogger()
 
 class ConfigParserUtil(ConfigParser.ConfigParser):
     def as_dictionary(self):
@@ -38,7 +40,9 @@ class ConfigParserUtil(ConfigParser.ConfigParser):
         :param property:
         :return: dictionary of properties
         """
-        properties = ast.literal_eval(variable).split(",")
+        variable = variable.replace('[', '')
+        variable = variable.replace(']', '')
+        properties = variable.split(",")
         return dict(s.split(':') for s in properties)
 
     @staticmethod
@@ -50,7 +54,24 @@ class ConfigParserUtil(ConfigParser.ConfigParser):
         """
 
         for key, value in context.iteritems():
-            if "\"" in value:
+            if value and value.startswith('['):
                 context[key] = ConfigParserUtil.convert_properties_to_dictionary(value)
         return context
 
+    @staticmethod
+    def get_context_from_env(template_variables):
+        """
+        Read values from environment variables
+        :param template_variables:
+        :return: dictionary containing environment variables
+        """
+        context = {}
+        while template_variables:
+            var = template_variables.pop()
+            if os.environ.get(var):
+                context[var] = os.environ.get(var)
+            else:
+                log.info("Environment variable not found %s",var)
+
+        context = ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
+        return context
