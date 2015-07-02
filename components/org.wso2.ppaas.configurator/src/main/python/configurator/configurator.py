@@ -22,7 +22,7 @@ import logging
 import logging.config
 import os
 
-from jinja2 import Environment, FileSystemLoader
+from jinja2 import Environment, FileSystemLoader, meta
 
 import constants
 from configparserutil import ConfigParserUtil
@@ -48,6 +48,15 @@ def render_template(template_filename, context):
     :param context: dictionary containing configurations
     :return: xml as a string
     """
+
+    if not context:
+        template_source = \
+            TEMPLATE_ENVIRONMENT.loader.get_source(TEMPLATE_ENVIRONMENT, template_filename)[0]
+        parsed_content = TEMPLATE_ENVIRONMENT.parse(template_source)
+        variables = meta.find_undeclared_variables(parsed_content)
+        log.debug("Template variables : %s",variables)
+        context = ConfigParserUtil.get_context_from_env(variables)
+        log.info("Context generated from env %s ", context)
     log.info("Rendering template: %s", template_filename)
     return TEMPLATE_ENVIRONMENT.get_template(template_filename).render(context)
 
@@ -84,8 +93,6 @@ def generate_context(config_file_path):
     config_parser.read(os.path.join(PATH, config_file_path))
     configurations = config_parser.as_dictionary()
     log.debug("Configuration file content %s", configurations)
-    # Reading the default values
-    context = configurations[constants.CONFIG_PARAMS]
     settings = configurations[constants.CONFIG_SETTINGS]
     global PACK_LOCATION
     PACK_LOCATION = settings["CARBON_HOME"]
@@ -93,16 +100,17 @@ def generate_context(config_file_path):
     # if read_env_variables is true context will be generated from environment variables
     # if read_env_variables is not true context will be read from config.ini
     if settings["READ_FROM_ENVIRONMENT"] == "true":
-        log.info("Reading from environment variables")
-        for key, value in context.iteritems():
-            # check if value exists for given key; use default if not exists
-            context[key] = os.environ.get(key, context[key])
+        log.info("Reading from env")
 
-    # Converting multi-valued params to dictionary
-    context = ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
-
-    log.info("Context generated: %s", context)
-    return context
+    else:
+        # Reading the default values from module.ini
+        log.info("Reading from module.ini")
+        context = configurations[constants.CONFIG_PARAMS]
+        # Converting multi-valued params to dictionary
+        context = ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
+        log.info("Context generated: %s", context)
+        return context
+    return None
 
 
 def traverse(root_dir, context):
