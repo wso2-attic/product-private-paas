@@ -8,10 +8,12 @@ WSO2 DAS 3.0.0-SNAPSHOT Dockerfile defines required resources for building a Doc
 ```
 jdk-7u60-linux-x64.tar
 ppaas-configurator-<version>.zip
-wso2das-4.8.1.zip
-wso2das-4.8.1-template-module-<version>.zip
+wso2das-3.0.0.zip
+wso2das-3.0.0-template-module-<version>.zip
 mysql-connector-java-<version>-bin.jar
 ```
+
+WSO2 DAS 3.0.0 version is not yet released, thus 3.0.0-SNAPSHOT is used for the moment
 
 2. Run build.sh file to build the docker image:
 ```

@@ -58,6 +58,10 @@ RUN unzip /opt/wso2das-${WSO2_DAS_VERSION}.zip -d /opt/ && \
 
 # DAS https port
 EXPOSE 9443
+# Thrift port
+EXPOSE 7611
+# Binary port
+EXPOSE 9611
 
 # -------------------------------
 # Define entry point & start sshd
