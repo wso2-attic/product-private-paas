@@ -8,7 +8,7 @@ WSO2 DAS 3.0.0-SNAPSHOT Dockerfile defines required resources for building a Doc
 ```
 jdk-7u60-linux-x64.tar
 ppaas-configurator-<version>.zip
-wso2das-3.0.0.zip
+wso2das-3.0.0-SNAPSHOT.zip
 wso2das-3.0.0-template-module-<version>.zip
 mysql-connector-java-<version>-bin.jar
 ```
