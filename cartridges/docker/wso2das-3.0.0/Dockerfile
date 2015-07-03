@@ -49,8 +49,8 @@ WORKDIR /opt
 RUN unzip /opt/wso2das-${WSO2_DAS_VERSION}.zip -d /opt/ && \
     rm /opt/wso2das-${WSO2_DAS_VERSION}.zip && \
     mv /opt/mysql-connector-java-${MYSQL_CONNECTOR_VERSION}-bin.jar /opt/wso2das-${WSO2_DAS_VERSION}/repository/components/lib && \
-    unzip /opt/${DAS_TEMPLATE_MODULE_NAME}.zip -d /opt/ && \
-    rm -rf /opt/${DAS_TEMPLATE_MODULE_NAME}*
+    unzip /opt/${DAS_TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules
+    rm -rf /opt/${DAS_TEMPLATE_MODULE_NAME}.zip
 
 # ----------------------
 # Expose container ports
@@ -67,4 +67,4 @@ EXPOSE 9611
 # Define entry point & start sshd
 # -------------------------------
 
-ENTRYPOINT /usr/local/bin/init.sh >> /tmp/init.sh.log 2>&1 | /usr/sbin/sshd -D
+ENTRYPOINT /usr/local/bin/init.sh /tmp/init.sh.log | /usr/sbin/sshd -D

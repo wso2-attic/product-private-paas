@@ -21,6 +21,26 @@
 # --------------------------------------------------------------
 
 set -e
+prgdir=`dirname "$0"`
+script_path=`cd "$prgdir"; pwd`
+
+project_version="4.1.0-SNAPSHOT"
+as_template_module_path=`cd ${script_path}/../../../cartridges/templates-modules/wso2das-3.0.0-SNAPSHOT/; pwd`
+clean=false
+if [ "$1" = "clean" ]; then
+   clean=true
+fi
+
+if ${clean} ; then
+   echo "----------------------------------"
+   echo "Building DAS template module"
+   echo "----------------------------------"
+   pushd ${as_template_module_path}
+   mvn clean install
+   cp -v target/wso2das-3.0.0-SNAPSHOT-template-module-${project_version}.zip ${script_path}/packages/
+   popd
+fi
+
 
 #TODO copy DAS template module
 
