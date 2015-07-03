@@ -49,8 +49,8 @@ WORKDIR /opt
 RUN unzip /opt/wso2esb-${WSO2_ESB_VERSION}.zip -d /opt/ && \
     rm /opt/wso2esb-${WSO2_ESB_VERSION}.zip && \
     mv /opt/mysql-connector-java-${MYSQL_CONNECTOR_VERSION}-bin.jar /opt/wso2esb-${WSO2_ESB_VERSION}/repository/components/lib && \
-    unzip /opt/${ESB_TEMPLATE_MODULE_NAME}.zip -d /opt/ && \
-    rm -rf /opt/${ESB_TEMPLATE_MODULE_NAME}*
+    unzip /opt/${ESB_TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
+    rm -rf /opt/${ESB_TEMPLATE_MODULE_NAME}.zip
 
 # ----------------------
 # Expose container ports
