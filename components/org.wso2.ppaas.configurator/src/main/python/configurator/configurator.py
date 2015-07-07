@@ -58,8 +58,9 @@ def render_template(template_filename, default_context):
         context = ConfigParserUtil.get_context_from_env(variables, default_context)
     else:
         context = default_context
-    log.info("Final context generated for rendering %s : %s ",os.path.basename(template_filename), context)
-    log.info("Rendering template: %s", template_filename)
+    log.info("Final context generated for rendering %s : %s ", os.path.basename(template_filename),
+             context)
+    log.info("Rendering template: %s \n", template_filename)
     return TEMPLATE_ENVIRONMENT.get_template(template_filename).render(context)
 
 
