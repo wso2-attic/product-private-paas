@@ -20,29 +20,13 @@
 #
 # --------------------------------------------------------------
 
-set -e
-prgdir=`dirname "$0"`
-script_path=`cd "$prgdir"; pwd`
+# Start a DAS instance with docker
+memberId=1
 
-project_version="4.1.0-SNAPSHOT"
-configurator_path=`cd ${script_path}/../../../components/org.wso2.ppaas.configurator/; pwd`
-clean=false
-if [ "$1" = "clean" ]; then
-   clean=true
-fi
+name="wso2das-${memberId}"
+container_id=`docker run -d -P --name ${name} wso2/das:3.0.0-SNAPSHOT`
+member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
+echo "WSO2 DAS started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
 
-if ${clean} ; then
-   echo "----------------------------------"
-   echo "Building configurator"
-   echo "----------------------------------"
-   pushd ${configurator_path}
-   mvn clean install                                                                                      
-   cp -v target/ppaas-configurator-${project_version}.zip ${script_path}/packages/
-   popd
-fi
 
-echo "----------------------------------"
-echo "Building base docker image"
-echo "----------------------------------"
-docker build -t wso2/base-image:4.1.0 .
-echo "Base docker image built successfully"
+

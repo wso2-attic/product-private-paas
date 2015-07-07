@@ -19,17 +19,17 @@
    </analytics-record-store>
 
    <analytics-record-store name = "PROCESSED_DATA_STORE">
-        {% if PROCESSED_DATA_STORE_IMPL is defined -%}
-          <implementation>{{PROCESSED_DATA_STORE_IMPL}}</implementation>
+        {% if CONFIG_PARAM_PROCESSED_DATA_STORE_IMPL is defined -%}
+          <implementation>{{CONFIG_PARAM_PROCESSED_DATA_STORE_IMPL}}</implementation>
           {% else -%}
          <implementation>org.wso2.carbon.analytics.datasource.hbase.HBaseAnalyticsRecordStore</implementation>
           {% endif -%}
 
       <properties>
-                {% if WSO2_ANALYTICS_RS_DB_HBASE is defined -%}
-                    <property  name="datasource" >{{WSO2_ANALYTICS_RS_DB_HBASE}}</property>
+                {% if CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE is defined -%}
+                    <property  name="datasource" >{{CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE}}</property>
                 {% else -%}
-                    <property  name="datasource">WSO2_ANALYTICS_RS_DB_HBASE</property>
+                    <property  name="datasource">CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE</property>
                 {% endif -%}
       </properties>
 
