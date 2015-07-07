@@ -1,4 +1,4 @@
-WSO2-CEP 4.0.0-SNAPSHOT Template for the Configurator
+WSO2-CEP 4.0.0 Template for the Configurator
 -------------------------------------------------------------------------------------
 
 This template supports following configurations
