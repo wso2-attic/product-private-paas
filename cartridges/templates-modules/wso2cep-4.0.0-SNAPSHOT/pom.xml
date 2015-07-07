@@ -27,8 +27,8 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>wso2cep-4.0.0-SNAPSHOT-template-module</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 PPaaS - WSO2 CEP 4.0.0 Template Module</name>
-    <description>WSO2 CEP 4.0.0 Template Module</description>
+    <name>WSO2 PPaaS - WSO2 CEP 4.0.0-SNAPSHOT Template Module</name>
+    <description>WSO2 CEP 4.0.0-SNAPSHOT Template Module</description>
     <build>
         <plugins>
             <plugin>
