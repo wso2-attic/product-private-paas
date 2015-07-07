@@ -100,14 +100,16 @@ def generate_context(config_file_path):
     global PACK_LOCATION
     PACK_LOCATION = settings["CARBON_HOME"]
     context = configurations[constants.CONFIG_PARAMS]
-    # Converting multi-valued params to dictionary
-    context = ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
+   
     log.info("Context generated: %s", context)
     # if read_env_variables is true context will be generated from environment variables
     # if read_env_variables is not true context will be read from config.ini
     if settings["READ_FROM_ENVIRONMENT"] == "true":
         global READ_FROM_ENVIRONMENT
         READ_FROM_ENVIRONMENT = "true"
+    else:
+        # Converting multi-valued params to dictionary
+        context = ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
     return context
 
 
