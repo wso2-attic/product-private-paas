@@ -38,26 +38,29 @@ TEMPLATE_ENVIRONMENT = Environment(
     loader=FileSystemLoader(os.path.join(PATH)),
     trim_blocks=False)
 PACK_LOCATION = None
+READ_FROM_ENVIRONMENT = None
 
 
-def render_template(template_filename, context):
+def render_template(template_filename, default_context):
     """
     parse the xml file and return the content as a text
 
     :param template_filename: template filename path
-    :param context: dictionary containing configurations
+    :param default_context: dictionary containing configurations read from module.ini
     :return: xml as a string
     """
-
-    if not context:
+    if READ_FROM_ENVIRONMENT == "true":
         template_source = \
             TEMPLATE_ENVIRONMENT.loader.get_source(TEMPLATE_ENVIRONMENT, template_filename)[0]
         parsed_content = TEMPLATE_ENVIRONMENT.parse(template_source)
         variables = meta.find_undeclared_variables(parsed_content)
-        log.debug("Template variables : %s",variables)
-        context = ConfigParserUtil.get_context_from_env(variables)
-        log.info("Context generated from env %s ", context)
-    log.info("Rendering template: %s", template_filename)
+        log.debug("Template variables : %s", variables)
+        context = ConfigParserUtil.get_context_from_env(variables, default_context)
+    else:
+        context = default_context
+    log.info("Final context generated for rendering %s : %s ", os.path.basename(template_filename),
+             context)
+    log.info("Rendering template: %s \n", template_filename)
     return TEMPLATE_ENVIRONMENT.get_template(template_filename).render(context)
 
 
@@ -96,21 +99,16 @@ def generate_context(config_file_path):
     settings = configurations[constants.CONFIG_SETTINGS]
     global PACK_LOCATION
     PACK_LOCATION = settings["CARBON_HOME"]
-
+    context = configurations[constants.CONFIG_PARAMS]
+    # Converting multi-valued params to dictionary
+    context = ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
+    log.info("Context generated: %s", context)
     # if read_env_variables is true context will be generated from environment variables
     # if read_env_variables is not true context will be read from config.ini
     if settings["READ_FROM_ENVIRONMENT"] == "true":
-        log.info("Reading from env")
-
-    else:
-        # Reading the default values from module.ini
-        log.info("Reading from module.ini")
-        context = configurations[constants.CONFIG_PARAMS]
-        # Converting multi-valued params to dictionary
-        context = ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
-        log.info("Context generated: %s", context)
-        return context
-    return None
+        global READ_FROM_ENVIRONMENT
+        READ_FROM_ENVIRONMENT = "true"
+    return context
 
 
 def traverse(root_dir, context):

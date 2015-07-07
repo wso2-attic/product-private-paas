@@ -21,6 +21,7 @@ import logging
 
 log = logging.getLogger()
 
+
 class ConfigParserUtil(ConfigParser.ConfigParser):
     def as_dictionary(self):
         """
@@ -59,7 +60,7 @@ class ConfigParserUtil(ConfigParser.ConfigParser):
         return context
 
     @staticmethod
-    def get_context_from_env(template_variables):
+    def get_context_from_env(template_variables, default_context):
         """
         Read values from environment variables
         :param template_variables:
@@ -68,10 +69,15 @@ class ConfigParserUtil(ConfigParser.ConfigParser):
         context = {}
         while template_variables:
             var = template_variables.pop()
-            if os.environ.get(var):
-                context[var] = os.environ.get(var)
+            if not os.environ.get(var):
+                log.info("Environment variable %s is not found. Reading from module.ini", var)
+                if var in default_context:
+                    context[var] = os.environ.get(var, default_context[var])
+                else:
+                    log.warn("Variable %s is not found in module.ini or in environment variables",
+                             var)
             else:
-                log.info("Environment variable not found %s",var)
+                context[var] = os.environ.get(var)
 
         context = ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
         return context
