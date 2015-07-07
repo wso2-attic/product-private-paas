@@ -107,6 +107,7 @@ def generate_context(config_file_path):
     if settings["READ_FROM_ENVIRONMENT"] == "true":
         global READ_FROM_ENVIRONMENT
         READ_FROM_ENVIRONMENT = "true"
+        log.info("Reading from environment")
     else:
         # Converting multi-valued params to dictionary
         context = ConfigParserUtil.get_multivalued_attributes_as_dictionary(context)
