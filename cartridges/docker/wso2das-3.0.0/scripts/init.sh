@@ -37,6 +37,12 @@ else
     echo "WSO2 Carbon server configured successfully"
 
     echo "Starting WSO2 Carbon server"
-    ${CARBON_HOME}/bin/wso2server.sh
+#$PROFILE value should be Ddisable.analytics=true or Ddisable.receiver=true
+    if [ -n "$PROFILE" ]; then
+        ${CARBON_HOME}/bin/wso2server.sh ${PROFILE}
+
+    else
+        ${CARBON_HOME}/bin/wso2server.sh
+    fi
     echo "WSO2 Carbon server started successfully"
 fi
