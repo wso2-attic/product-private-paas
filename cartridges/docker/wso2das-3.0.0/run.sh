@@ -26,7 +26,7 @@ memberId=1
 name="wso2das-${memberId}"
 container_id=`docker run -d -P --name ${name} wso2/das:3.0.0-SNAPSHOT`
 member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
-echo "WSO2 DAS started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
+echo "WSO2 DAS started: [name] ${name} [ip] ${member_ip} [container-id] ${container_id}"
 
 
 
