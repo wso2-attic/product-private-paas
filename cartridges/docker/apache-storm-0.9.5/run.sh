@@ -52,7 +52,7 @@ startZookeeper() {
 
 startUI() {
 	name="wso2cep-${memberId}"
-	name="apache-storm-${memberId}-supervisor"
+	name="apache-storm-${memberId}-ui"
 	container_id=`docker run -e STORM_TYPE=supervisor -e ZOOKEEPER_HOSTNAME=192.168.59.3 -e NIMBUS_HOSTNAME=${nimbus_member_ip} -d -P --name ${name} apache/storm-supervisor:0.9.5`
 	ui_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
 	echo "Apache storm UI started: [name] ${name} [ip] ${ui_member_ip} [container-id] ${container_id}"
