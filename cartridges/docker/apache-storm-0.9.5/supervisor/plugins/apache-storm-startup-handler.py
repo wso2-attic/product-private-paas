@@ -24,7 +24,7 @@ import time
 import subprocess
 import os
 
-class WSO2AMStartupHandler(ICartridgeAgentPlugin):
+class StormStartupHandler(ICartridgeAgentPlugin):
 
     def run_plugin(self, values):
         log = LogFactory().get_log(__name__)
