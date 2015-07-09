@@ -40,52 +40,19 @@ class StormTopologyHandler(ICartridgeAgentPlugin):
             # add service map
             for service_name in topology_str["serviceMap"]:
                 service_str = topology_str["serviceMap"][service_name]
-                if service_name == "zookerper" :
+                if service_name == "zookeeper" :
                     # add cluster map
                     for cluster_id in service_str["clusterIdClusterMap"]:
                         cluster_str = service_str["clusterIdClusterMap"][cluster_id]
                         # add member map
                         for member_id in cluster_str["memberMap"]:
                             member_str = cluster_str["memberMap"][member_id]
+                            zookeeper_member_default_private_ip = member_str["defaultPrivateIP"]
+                            break
+                    break
 
-                            member_default_private_ip = member_str["defaultPrivateIP"] \
-
-
-        port_mappings_str = values["TOPOLOGY_JSON"]
-
-        mgt_console_https_port = None
-        pt_http_port = None
-        pt_https_port = None
-
-        # port mappings format: """NAME:mgt-console|PROTOCOL:https|PORT:4500|PROXY_PORT:8443;
-        #                          NAME:pt-http|PROTOCOL:http|PORT:4501|PROXY_PORT:7280;
-        #                          NAME:pt-https|PROTOCOL:https|PORT:4502|PROXY_PORT:7243"""
-
-        log.info("Port mappings: %s" % port_mappings_str)
-        if port_mappings_str is not None:
-
-            port_mappings_array = port_mappings_str.split(";")
-            if port_mappings_array:
-
-                for port_mapping in port_mappings_array:
-                    log.debug("port_mapping: %s" % port_mapping)
-                    name_value_array = port_mapping.split("|")
-                    name = name_value_array[0].split(":")[1]
-                    protocol = name_value_array[1].split(":")[1]
-                    port = name_value_array[2].split(":")[1]
-                    if name == "mgt-console" and protocol == "https":
-                        mgt_console_https_port = port
-                    if name == "pt-http" and protocol == "http":
-                        pt_http_port = port
-                    if name == "pt-https" and protocol == "https":
-                        pt_https_port = port
-
-        log.info("Kubernetes service management console https port: %s" % mgt_console_https_port)
-        log.info("Kubernetes service pass-through http port: %s" % pt_http_port)
-        log.info("Kubernetes service pass-through https port: %s" % pt_https_port)
-
-        if mgt_console_https_port is not None:
-            command = "sed -i \"s/^#CONFIG_PARAM_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_HTTPS_PROXY_PORT = %s/g\" %s" % (mgt_console_https_port, "${CONFIGURATOR_HOME}/template-modules/wso2am-1.8.0/module.ini")
+        if zookeeper_member_default_private_ip is not None:
+            command = "sed -i \"s/^#CONFIG_PARAM_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_HTTPS_PROXY_PORT = %s/g\" %s" % (zookeeper_member_default_private_ip, "${CONFIGURATOR_HOME}/template-modules/wso2am-1.8.0/module.ini")
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
             log.info("Successfully updated management console https proxy port: %s in AM template module" % mgt_console_https_port)

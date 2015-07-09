@@ -8,7 +8,7 @@
   ~ "License"); you may not use this file except in compliance
   ~ with the License.  You may obtain a copy of the License at
   ~
-  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~     http://www.apache.org/licenses/LICENSE-2.0
   ~
   ~ Unless required by applicable law or agreed to in writing,
   ~ software distributed under the License is distributed on an
@@ -26,8 +26,8 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>apache-storm-0.9.5-template-module</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 PPaaS - apache-storm-nimbus 0.9.5 Template Module</name>
-    <description>WSO2 apache-storm-nimbus 0.9.5 Template Module</description>
+    <name>WSO2 PPaaS - APACHE STORM 0.9.5 Template Module</name>
+    <description>WSO2 PPaaS - APACHE STORM 0.9.5 Template Module</description>
     <build>
         <plugins>
             <plugin>
