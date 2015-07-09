@@ -57,4 +57,11 @@
     nimbus.host: "{{NIMBUS_HOSTNAME}}"
 {% endif -%}
 
+{% if STORM_TYPE == 'ui' %}
+    storm.zookeeper.servers:
+    - "{{ZOOKEEPER_HOSTNAME}}"
+    nimbus.host: "{{NIMBUS_HOSTNAME}}"
+{% endif -%}
+
+
 
