@@ -20,6 +20,4 @@
 #
 # --------------------------------------------------------------
 
-
-
-docker build -t apache/storm-nimbus:0.9.5
+docker build -t apache/storm-nimbus:0.9.5 .
