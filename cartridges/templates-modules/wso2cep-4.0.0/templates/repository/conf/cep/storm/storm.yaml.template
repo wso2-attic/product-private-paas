@@ -15,10 +15,9 @@
 # limitations under the License.
 
 ########### These MUST be filled in for a storm configuration
-# storm.zookeeper.servers:
-#     - "server1"
-#     - "server2"
-# 
+storm.zookeeper.servers:
+     - "{{ CONFIG_PARAM_ZOOKEEPER_HOST }}"
+#
 nimbus.host: "{{ CONFIG_PARAM_NIMBUS_HOST }}"
 # 
 # 
