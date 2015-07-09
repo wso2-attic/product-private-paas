@@ -20,28 +20,43 @@
 #
 # --------------------------------------------------------------
 
-# run script sets the configurable parameters for the cartridge agent in agent.conf and
-# starts the cartridge agent process.
+# delete an AM cluster with docker
+memberId=1
+deleteSupervisor() {
+	name="apache-storm-${memberId}-supervisor"
+	docker rm ${name}
+	echo "Apache storm supervisor deleted"
+	sleep 1
+}
 
-if [ "${START_CMD}" = "PCA" ]; then
-    echo "Starting python cartridge agent..."
-	/usr/local/bin/start-agent.sh
-	echo "Python cartridge agent started successfully"
+# delete an AM cluster with docker
+memberId=1
+deleteNimbus() {
+	name="apache-storm-${memberId}-nimbus"
+	docker rm ${name}
+	echo "Apache storm nimbus deleted"
+	sleep 1
+}
 
-	echo "Starting APACHE zookeeper in ${CARBON_HOME}..."
-    ${CARBON_HOME}/bin/zkServer.sh start
-    echo "APACHE zookeeper started successfully"
+# delete an CEP cluster with docker
+memberId=1
+deleteZookeeper() {
+	name="apache-zookeeper-${memberId}"
+	docker rm ${name}
+	echo "Apache zookeeper deleted"
+	sleep 1
+}
 
-else
-    #echo "Configuring Apache Storm SUPERVISOR..."
-    #echo "Environment variables:"
-    #printenv
-    #pushd ${CONFIGURATOR_HOME}
-    #python configurator.py
-    #popd
-    #echo "APACHE STORM SUPERVISOR configured successfully"
+deleteUI() {
+	name="apache-storm-${memberId}-ui"
+	docker rm ${name}
+	echo "Apache storm ui deleted"
+	sleep 1
+}
 
-    echo "Starting APACHE zookeeper in ${CARBON_HOME}..."
-    ${CARBON_HOME}/bin/zkServer.sh start
-    echo "APACHE zookeeper started successfully"
-fi
+echo "deleteping an Storm cluster with docker..."
+deleteZookeeper
+deleteNimbus
+deleteSupervisor
+deleteUI
+

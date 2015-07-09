@@ -20,28 +20,43 @@
 #
 # --------------------------------------------------------------
 
-# run script sets the configurable parameters for the cartridge agent in agent.conf and
-# starts the cartridge agent process.
+# stop an AM cluster with docker
+memberId=1
+stopSupervisor() {
+	name="apache-storm-${memberId}-supervisor"
+	docker stop ${name}
+	echo "Apache storm supervisor stopped"
+	sleep 1
+}
 
-if [ "${START_CMD}" = "PCA" ]; then
-    echo "Starting python cartridge agent..."
-	/usr/local/bin/start-agent.sh
-	echo "Python cartridge agent started successfully"
+# stop an AM cluster with docker
+memberId=1
+stopNimbus() {
+	name="apache-storm-${memberId}-nimbus"
+	docker stop ${name}
+	echo "Apache storm nimbus stopped"
+	sleep 1
+}
 
-	echo "Starting APACHE zookeeper in ${CARBON_HOME}..."
-    ${CARBON_HOME}/bin/zkServer.sh start
-    echo "APACHE zookeeper started successfully"
+# stop an CEP cluster with docker
+memberId=1
+stopZookeeper() {
+	name="apache-zookeeper-${memberId}"
+	docker stop ${name}
+	echo "Apache zookeeper stopped"
+	sleep 1
+}
 
-else
-    #echo "Configuring Apache Storm SUPERVISOR..."
-    #echo "Environment variables:"
-    #printenv
-    #pushd ${CONFIGURATOR_HOME}
-    #python configurator.py
-    #popd
-    #echo "APACHE STORM SUPERVISOR configured successfully"
+stopUI() {
+	name="apache-storm-${memberId}-ui"
+	docker stop ${name}
+	echo "Apache storm ui stopped"
+	sleep 1
+}
 
-    echo "Starting APACHE zookeeper in ${CARBON_HOME}..."
-    ${CARBON_HOME}/bin/zkServer.sh start
-    echo "APACHE zookeeper started successfully"
-fi
+echo "Stopping an Storm cluster with docker..."
+stopZookeeper
+stopNimbus
+stopSupervisor
+stopUI
+

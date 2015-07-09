@@ -20,28 +20,14 @@
 #
 # --------------------------------------------------------------
 
-# run script sets the configurable parameters for the cartridge agent in agent.conf and
-# starts the cartridge agent process.
 
-if [ "${START_CMD}" = "PCA" ]; then
-    echo "Starting python cartridge agent..."
-	/usr/local/bin/start-agent.sh
-	echo "Python cartridge agent started successfully"
+# stop an CEP cluster with docker
+memberId=1
+stopZookeeper() {
+	name="apache-zookeeper-${memberId}"
+	docker stop ${name}
+	echo "Zookeeper stopped:"
+	sleep 1
+}
 
-	echo "Starting APACHE zookeeper in ${CARBON_HOME}..."
-    ${CARBON_HOME}/bin/zkServer.sh start
-    echo "APACHE zookeeper started successfully"
-
-else
-    #echo "Configuring Apache Storm SUPERVISOR..."
-    #echo "Environment variables:"
-    #printenv
-    #pushd ${CONFIGURATOR_HOME}
-    #python configurator.py
-    #popd
-    #echo "APACHE STORM SUPERVISOR configured successfully"
-
-    echo "Starting APACHE zookeeper in ${CARBON_HOME}..."
-    ${CARBON_HOME}/bin/zkServer.sh start
-    echo "APACHE zookeeper started successfully"
-fi
+stopZookeeper
