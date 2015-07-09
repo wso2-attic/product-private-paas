@@ -20,25 +20,25 @@
 #
 # --------------------------------------------------------------
 
-# Stop the ESB docker cluster
+# Stop the HBase docker cluster
 memberId=1
 stopWkaMember() {
-	name="wso2esb-${memberId}-wka"
+	name="hbase-${memberId}-wka"
 	docker stop ${name}
 	memberId=$((memberId + 1))
-	echo "ESB wka member stopped: [name] ${name}"
+	echo "HBase wka member stopped: [name] ${name}"
 	sleep 1
 }
 
 stopMember() {
-	name="wso2esb-${memberId}"
+	name="hbase-${memberId}"
 	docker stop ${name}
 	memberId=$((memberId + 1))
-	echo "ESB member stopped: [name] ${name}"
+	echo "HBase member stopped: [name] ${name}"
 	sleep 1
 }
 
-echo "Stopping the ESB docker cluster..."
+echo "Stopping the HBase docker cluster..."
 stopWkaMember
 stopMember
 stopMember

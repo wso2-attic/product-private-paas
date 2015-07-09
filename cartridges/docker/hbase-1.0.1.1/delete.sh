@@ -20,26 +20,26 @@
 #
 # --------------------------------------------------------------
 
-# Delete the ESB docker cluster
+# Delete the HBase docker cluster
 memberId=1
 deleteWkaMember() {
-	name="wso2esb-${memberId}-wka"
+	name="hbase-${memberId}-wka"
 	docker rm ${name}
 	memberId=$((memberId + 1))
-	echo "ESB wka member deleted: [name] ${name}"
+	echo "HBase wka member deleted: [name] ${name}"
 	sleep 1
 }
 
 deleteMember() {
-	name="wso2esb-${memberId}"
+	name="hbase-${memberId}"
 	docker rm ${name}
 	memberId=$((memberId + 1))
-	echo "ESB member deleted: [name] ${name}"
+	echo "HBase member deleted: [name] ${name}"
 	sleep 1
 }
 
-echo "Deleting the ESB docker cluster..."
+echo "Deleting the HBase docker cluster..."
 
 deleteWkaMember
 deleteMember
-deleteMember
+# deleteMember

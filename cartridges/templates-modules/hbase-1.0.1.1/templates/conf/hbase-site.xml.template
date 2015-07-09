@@ -23,7 +23,7 @@
 <configuration>
         <property>
                 <name>hbase.rootdir</name>
-                <value>hdfs://{{CONFIG_PARAM_HDFS}}:54310/hbase</value>
+                <value>hdfs://{{CONFIG_PARAM_HDFS_HOST}}:54310/hbase</value>
         </property>
 
         <property>
@@ -38,8 +38,14 @@
 
         <property>
           <name>hbase.zookeeper.quorum</name>
-          <value>localhost</value>
+          <value>{{CONFIG_PARAM_ZOOKEEPER_HOST}}</value>
         </property>
+
+        <property>
+          <name>hbase.master.info.bindAddress</name>
+          <value>{{CONFIG_PARAM_HBASE_MASTER}}</value>
+        </property>
+
 
         <property>
           <name>hbase.zookeeper.property.clientPort</name>

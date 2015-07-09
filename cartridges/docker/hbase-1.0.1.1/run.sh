@@ -20,27 +20,29 @@
 #
 # --------------------------------------------------------------
 
-# Start an ESB cluster with docker
+# Start an HBase cluster with docker
 memberId=1
 startWkaMember() {
-	name="wso2esb-${memberId}-wka"
-	container_id=`docker run -e CONFIG_PARAM_CLUSTERING=true -d -P --name ${name} wso2/esb:4.8.1`
+	name="hbase-${memberId}"
+	container_id=`docker run -e CONFIG_PARAM_HDFS_HOST=localhost -e CONFIG_PARAM_ZOOKEEPER_HOST=localhost -e  CLUSTER=true -d -p 16010:16010 -p 16000:16000 --name ${name} wso2/hbase:1.0.1.1`
 	memberId=$((memberId + 1))
 	wka_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
-	echo "ESB wka member started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
+	wka_member_container_id=container_id
+	echo "Hadoop Master started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
 	sleep 1
 }
 
 startMember() {
-	name="wso2esb-${memberId}"
-	container_id=`docker run -e CONFIG_PARAM_CLUSTERING=true -e CONFIG_PARAM_WKA_MEMBERS="\"${wka_member_ip}:4000\"" -d -P --name ${name} wso2/esb:4.8.1`
+	name="hbase-${memberId}"
+	container_id=`docker run -e CONFIG_PARAM_HDFS_HOST=localhost -e CONFIG_PARAM_ZOOKEEPER_HOST="${wka_member_ip}" -e CONFIG_PARAM_HBASE_MASTER="${wka_member_ip}"  -e CONFIG_PARAM_HBASE_MASTER_HOSTNAME="${wka_member_container_id}" -d -P --name ${name} wso2/hbase:1.0.1.1`
 	memberId=$((memberId + 1))
 	member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
-	echo "ESB member started: [name] ${name} [ip] ${member_ip} [container-id] ${container_id}"
+	echo "Hadoop datanode started: [name] ${name} [ip] ${member_ip} [container-id] ${container_id}"
 	sleep 1
 }
 
-echo "Starting an ESB cluster with docker..."
+echo "Starting an Hadoop cluster with docker..."
 startWkaMember
 startMember
-startMember
+# startMember
+# startMember
