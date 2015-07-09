@@ -67,4 +67,4 @@ EXPOSE 9611
 # Define entry point & start sshd
 # -------------------------------
 
-ENTRYPOINT /usr/local/bin/init.sh /tmp/init.sh.log | /usr/sbin/sshd -D
+ENTRYPOINT /usr/local/bin/init.sh >> /tmp/init.sh.log 2>&1 | /usr/sbin/sshd -D

@@ -24,3 +24,6 @@ sh build.sh
 ```
 docker images
 ```
+
+4. To enable only analytics profile set Environment variable PROFILE to analytics.
+   To enable only receiver profile set Environment variable PROFILE to receiver.
