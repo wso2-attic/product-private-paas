@@ -39,7 +39,7 @@ ENV APACHE_ZOOKEEPER_VERSION 3.4.6
 COPY scripts/init.sh /usr/local/bin/init.sh
 COPY scripts/export-envs.sh /tmp/export-envs.sh
 #COPY plugins /${PCA_HOME}/plugins
-COPY packages/zookeeper-${APACHE_ZOOKEEPER_VERSION}.tar.gz /opt/
+COPY packages/zookeeper-3.4.6.tar.gz /opt/
 
 
 # -----------------------------

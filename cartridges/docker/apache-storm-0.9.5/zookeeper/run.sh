@@ -20,16 +20,15 @@
 #
 # --------------------------------------------------------------
 
-# Start an AM cluster with docker
+# Start an CEP cluster with docker
 memberId=1
-startNimbus() {
-	name="apache-storm-${memberId}-supervisor"
-	container_id=`docker run -e STORM_TYPE=nimbus -e STORM_TYPE=nimbus -e ZOOKEEPER_HOSTNAME=192.168.59.3 -d -P --name nimbus apache/storm-supervisor:0.9.5`
-	memberId=$((memberId + 1))
-	wka_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
-	echo "AM wka member started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
+startZookeeper() {
+	name="apache-zookeeper-${memberId}"
+	container_id=`docker run -d -P --name ${name} apache/zookeeper:3.4.6`
+	zookeeper_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
+	echo "Zookeeper started: [name] ${name} [ip] ${zookeeper_member_ip} [container-id] ${container_id}"
 	sleep 1
 }
 
-echo "Starting an Storm cluster with docker..."
-startNimbus
+echo "Starting an Zookeeper with docker..."
+startZookeeper

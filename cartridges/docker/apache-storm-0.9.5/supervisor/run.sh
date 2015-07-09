@@ -24,12 +24,44 @@
 memberId=1
 startSupervisor() {
 	name="apache-storm-${memberId}-supervisor"
-	container_id=`docker run -e STORM_TYPE=supervisor -e ZOOKEEPER_HOSTNAME=192.168.59.3 -e NIMBUS_HOSTNAME=127.0.0.1 -d -P --name supervisor apache/storm-supervisor:0.9.5`
-	memberId=$((memberId + 1))
-	wka_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
-	echo "AM wka member started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
+	container_id=`docker run -e STORM_TYPE=supervisor -e ZOOKEEPER_HOSTNAME=192.168.59.3 -e NIMBUS_HOSTNAME=${nimbus_member_ip} -d -P --name ${name} apache/storm-supervisor:0.9.5`
+	supervisor_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
+	echo "Apache storm supervisor started: [name] ${name} [ip] ${supervisor_member_ip} [container-id] ${container_id}"
+	sleep 1
+}
+
+# Start an AM cluster with docker
+memberId=1
+startNimbus() {
+	name="apache-storm-${memberId}-nimbus"
+	container_id=`docker run -e STORM_TYPE=nimbus -e ZOOKEEPER_HOSTNAME=${zookeeper_member_ip} -d -P --name ${name} apache/storm-supervisor:0.9.5`
+	nimbus_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
+	echo "Apache storm nimbus started: [name] ${name} [ip] ${nimbus_member_ip} [container-id] ${container_id}"
+	sleep 1
+}
+
+# Start an CEP cluster with docker
+memberId=1
+startZookeeper() {
+	name="apache-zookeeper-${memberId}"
+	container_id=`docker run -d -P --name ${name} apache/zookeeper:3.4.6`
+	zookeeper_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
+	echo "Zookeeper started: [name] ${name} [ip] ${zookeeper_member_ip} [container-id] ${container_id}"
+	sleep 1
+}
+
+startUI() {
+	name="wso2cep-${memberId}"
+	name="apache-storm-${memberId}-supervisor"
+	container_id=`docker run -e STORM_TYPE=supervisor -e ZOOKEEPER_HOSTNAME=192.168.59.3 -e NIMBUS_HOSTNAME=${nimbus_member_ip} -d -P --name ${name} apache/storm-supervisor:0.9.5`
+	ui_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
+	echo "Apache storm UI started: [name] ${name} [ip] ${ui_member_ip} [container-id] ${container_id}"
 	sleep 1
 }
 
 echo "Starting an Storm cluster with docker..."
+startZookeeper
+startNimbus
 startSupervisor
+startUI
+
