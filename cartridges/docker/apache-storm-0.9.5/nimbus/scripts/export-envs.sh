@@ -15,25 +15,8 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import mdsclient
-from plugins.contracts import ICartridgeAgentPlugin
-from xml.dom.minidom import parse
-import socket
-from modules.util.log import LogFactory
-import time
-import subprocess
-import os
+JAVA_HOME=$1
+CARBON_HOME=$2
 
-class StormStartupHandler(ICartridgeAgentPlugin):
-
-    def run_plugin(self, values):
-        log = LogFactory().get_log(__name__)
-
-        # start server
-        log.info("Starting APACHE STORM SUPERVISOR...")
-
-        start_command = "${CARBON_HOME}/bin/storm supervisor"
-        env_var = os.environ.copy()
-        p = subprocess.Popen(start_command, env=env_var, shell=True)
-        output, errors = p.communicate()
-        log.debug("APACHE STORM SUPERVISOR started successfully")
+echo "JAVA_HOME=${JAVA_HOME}" >> /etc/environment
+echo "CARBON_HOME=${CARBON_HOME}" >> /etc/environment

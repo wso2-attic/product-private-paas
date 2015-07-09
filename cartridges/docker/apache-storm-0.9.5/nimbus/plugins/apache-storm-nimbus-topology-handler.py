@@ -52,29 +52,16 @@ class StormTopologyHandler(ICartridgeAgentPlugin):
                             if zookeeper_member_default_private_ip is None:
                                 zookeeper_member_default_private_ip = member_str["defaultPrivateIP"]
 
-                if service_name == "nimbus" :
-                    # add cluster map
-                    for cluster_id in service_str["clusterIdClusterMap"]:
-                        cluster_str = service_str["clusterIdClusterMap"][cluster_id]
-                        # add member map
-                        for member_id in cluster_str["memberMap"]:
-                            member_str = cluster_str["memberMap"][member_id]
-                            if nimbus_member_default_private_ip is None:
-                                nimbus_member_default_private_ip = member_str["defaultPrivateIP"]
-
-
-
         if zookeeper_member_default_private_ip is not None:
             command = "sed -i \"s/^#ZOOKEEPER_HOSTNAME = .*/ZOOKEEPER_HOSTNAME = %s/g\" %s" % (zookeeper_member_default_private_ip, "${CONFIGURATOR_HOME}/template-modules/apache-storm-0.9.5/module.ini")
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
             log.info("Successfully updated zookeeper hostname: %s in Apache Storm template module" % zookeeper_member_default_private_ip)
 
-        if nimbus_member_default_private_ip is not None:
-            command = "sed -i \"s/^#NIMBUS_HOSTNAME = .*/NIMBUS_HOSTNAME = %s/g\" %s" % (nimbus_member_default_private_ip, "${CONFIGURATOR_HOME}/template-modules/apache-storm-0.9.5/module.ini")
-            p = subprocess.Popen(command, shell=True)
-            output, errors = p.communicate()
-            log.info("Successfully updated nimbus hostname: %s in Apache Storm template module" % nimbus_member_default_private_ip)
+        command = "sed -i \"s/^#STORM_TYPE = .*/STORM_TYPE = %s/g\" %s" % ("nimbus", "${CONFIGURATOR_HOME}/template-modules/apache-storm-0.9.5/module.ini")
+        p = subprocess.Popen(command, shell=True)
+        output, errors = p.communicate()
+        log.info("Successfully updated nimbus hostname: %s in Apache Storm template module" % nimbus_member_default_private_ip)
 
         # configure server
         log.info("Configuring Apache Storm Supervisor...")

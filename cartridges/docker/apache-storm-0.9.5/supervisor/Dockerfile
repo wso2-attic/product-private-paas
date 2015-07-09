@@ -56,6 +56,7 @@ RUN tar xzvf /opt/apache-storm-${APACHE_STORM_VERSION}.tar.gz && \
         mv /opt/${STORM_TEMPLATE_MODULE_NAME}/* /opt/${CONFIGURATOR_NAME}/template-modules/apache-storm-0.9.5/ && \
         rm -rf /opt/${STORM_TEMPLATE_MODULE_NAME}* && \
         chmod +x /tmp/export-envs.sh && \
+        chmod +x /usr/local/bin/init.sh && \
         sleep 1 && \
         /tmp/export-envs.sh ${JAVA_HOME} ${CARBON_HOME}
 
