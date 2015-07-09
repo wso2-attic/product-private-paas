@@ -22,9 +22,9 @@
 
 # Start an AM cluster with docker
 memberId=1
-startSupervisor() {
-	name="apache-storm-${memberId}-supervisor"
-	container_id=`docker run -e STORM_TYPE=supervisor -e ZOOKEEPER_HOSTNAME=192.168.59.3 -e NIMBUS_HOSTNAME=127.0.0.1 -d -P --name supervisor apache/storm-supervisor:0.9.5`
+startNimbus() {
+	name="apache-storm-${memberId}-ui"
+	container_id=`docker run -e STORM_TYPE=nimbus -e STORM_TYPE=nimbus -e ZOOKEEPER_HOSTNAME=192.168.59.3 -d -P --name nimbus apache/storm-supervisor:0.9.5`
 	memberId=$((memberId + 1))
 	wka_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
 	echo "AM wka member started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
@@ -32,4 +32,4 @@ startSupervisor() {
 }
 
 echo "Starting an Storm cluster with docker..."
-startSupervisor
+startNimbus

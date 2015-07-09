@@ -1,31 +1,49 @@
+# --------------------------------------------------------------
+#
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
+#
+# --------------------------------------------------------------
+
 FROM wso2/base-image:4.1.0
 
 MAINTAINER dev@wso2.org
 
-
 ENV DEBIAN_FRONTEND noninteractive
-ENV JDK_VERSION jdk1.7.0_72
-ENV JDK_TAR_FILENAME jdk-7u72-linux-x64.tar.gz
+ENV PPAAS_VERSION 4.1.0-SNAPSHOT
+ENV JDK_VERSION 1.7.0_60
+ENV JDK_TAR_FILENAME jdk-7u60-linux-x64.tar.gz
 ENV JAVA_HOME /opt/jdk${JDK_VERSION}
-ENV APACHE_ZOOKEEPER_VERSION 3.4.6
-
+ENV CARBON_HOME /opt/zookeeper-3.4.6
 ENV PCA_NAME apache-stratos-python-cartridge-agent-${PPAAS_VERSION}
 ENV PCA_HOME /opt/${PCA_NAME}
+ENV APACHE_ZOOKEEPER_VERSION 3.4.6
 
+# --------------------------------
+# Copy scripts, packages & plugins
+# --------------------------------
 COPY scripts/init.sh /usr/local/bin/init.sh
 COPY scripts/export-envs.sh /tmp/export-envs.sh
+#COPY plugins /${PCA_HOME}/plugins
 COPY packages/zookeeper-${APACHE_ZOOKEEPER_VERSION}.tar.gz /opt/
 
-#RUN cp /etc/zookeeper/zoo_sample.cfg /etc/zookeeper/zoo.cfg
-
-# workaround packaging issue
-#RUN sed -i 's,/usr/share/java/log4j.jar,/usr/share/java/log4j-1.jar,' /usr/libexec/zkEnv.sh
-#cp /opt/zookeeper-3.4.6/conf/zoo_sample.cfg /opt/zookeeper-3.4.6/conf/zoo.cfg
-
-EXPOSE 2181 2888 3888
 
 # -----------------------------
-# Install prerequisites and AM
+# Install prerequisites and Zookeeper
 # -----------------------------
 
 WORKDIR /opt
@@ -33,13 +51,11 @@ WORKDIR /opt
 RUN tar xzvf /opt/zookeeper-3.4.6.tar.gz && \
     cp /opt/zookeeper-3.4.6/conf/zoo_sample.cfg /opt/zookeeper-3.4.6/conf/zoo.cfg && \
     chmod +x /tmp/export-envs.sh && \
+    chmod +x /usr/local/bin/init.sh && \
     sleep 1 && \
-    /tmp/export-envs.sh ${JAVA_HOME}
+    /tmp/export-envs.sh ${JAVA_HOME} ${CARBON_HOME}
 
-WORKDIR /opt/zookeeper-3.4.6
+EXPOSE 2181 2888 3888
 
-ENTRYPOINT ["bin/zkServer.sh"]
-#CMD ["start-foreground"]
-
-#ENTRYPOINT /usr/local/bin/init.sh >> /tmp/init.sh.log | /usr/sbin/sshd -D
+ENTRYPOINT /usr/local/bin/init.sh >> /tmp/init.sh.log | /usr/sbin/sshd -D
 

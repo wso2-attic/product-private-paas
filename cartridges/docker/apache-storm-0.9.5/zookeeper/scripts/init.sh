@@ -23,6 +23,25 @@
 # run script sets the configurable parameters for the cartridge agent in agent.conf and
 # starts the cartridge agent process.
 
-echo "Starting python cartridge agent..."
-/usr/local/bin/start-agent.sh
-echo "Python cartridge agent started successfully"
+if [ "${START_CMD}" = "PCA" ]; then
+    echo "Starting python cartridge agent..."
+	/usr/local/bin/start-agent.sh
+	echo "Python cartridge agent started successfully"
+
+	echo "Starting APACHE zookeeper..."
+    ${CARBON_HOME}/bin/zkServer.sh start
+    echo "APACHE zookeeper started successfully"
+
+else
+    #echo "Configuring Apache Storm SUPERVISOR..."
+    #echo "Environment variables:"
+    #printenv
+    #pushd ${CONFIGURATOR_HOME}
+    #python configurator.py
+    #popd
+    #echo "APACHE STORM SUPERVISOR configured successfully"
+
+    echo "Starting APACHE STORM SUPERVISOR..."
+    ${CARBON_HOME}/bin/storm supervisor
+    echo "APACHE STORM SUPERVISOR started successfully"
+fi
