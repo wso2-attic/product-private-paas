@@ -60,6 +60,6 @@ RUN tar xzvf /opt/apache-storm-${APACHE_STORM_VERSION}.tar.gz && \
         sleep 1 && \
         /tmp/export-envs.sh ${JAVA_HOME} ${CARBON_HOME}
 
-EXPOSE 6700 6701 6702 6703
+EXPOSE 8080
 
 ENTRYPOINT /usr/local/bin/init.sh >> /tmp/init.sh.log | /usr/sbin/sshd -D
