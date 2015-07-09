@@ -36,7 +36,7 @@ else
     popd
     echo "APACHE STORM SUPERVISOR configured successfully"
 
-    echo "Starting APACHE STORM SUPERVISOR..."
-    ${CARBON_HOME}/bin/storm supervisor
-    echo "APACHE STORM SUPERVISOR started successfully"
+    echo "Starting APACHE STORM ${STORM_TYPE} ******** SUPERVISOR..."
+    nohup ${CARBON_HOME}/bin/storm ${STORM_TYPE} > out&
+    echo "APACHE STORM SUPERVISOR ${STORM_TYPE} started successfully"
 fi
