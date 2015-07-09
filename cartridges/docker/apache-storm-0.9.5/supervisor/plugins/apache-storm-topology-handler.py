@@ -35,6 +35,8 @@ class StormTopologyHandler(ICartridgeAgentPlugin):
         topology_str = values["TOPOLOGY_JSON"]
         log.info("Port mappings: %s" % topology_str)
 
+        zookeeper_member_default_private_ip = None
+        nimbus_member_default_private_ip = None
 
         if topology_str is not None:
             # add service map
@@ -47,41 +49,46 @@ class StormTopologyHandler(ICartridgeAgentPlugin):
                         # add member map
                         for member_id in cluster_str["memberMap"]:
                             member_str = cluster_str["memberMap"][member_id]
-                            zookeeper_member_default_private_ip = member_str["defaultPrivateIP"]
-                            break
-                    break
+                            if zookeeper_member_default_private_ip is None:
+                                zookeeper_member_default_private_ip = member_str["defaultPrivateIP"]
+
+                if service_name == "nimbus" :
+                    # add cluster map
+                    for cluster_id in service_str["clusterIdClusterMap"]:
+                        cluster_str = service_str["clusterIdClusterMap"][cluster_id]
+                        # add member map
+                        for member_id in cluster_str["memberMap"]:
+                            member_str = cluster_str["memberMap"][member_id]
+                            if nimbus_member_default_private_ip is None:
+                                nimbus_member_default_private_ip = member_str["defaultPrivateIP"]
+
+
 
         if zookeeper_member_default_private_ip is not None:
-            command = "sed -i \"s/^#CONFIG_PARAM_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_HTTPS_PROXY_PORT = %s/g\" %s" % (zookeeper_member_default_private_ip, "${CONFIGURATOR_HOME}/template-modules/wso2am-1.8.0/module.ini")
+            command = "sed -i \"s/^#ZOOKEEPER_HOSTNAME = .*/ZOOKEEPER_HOSTNAME = %s/g\" %s" % (zookeeper_member_default_private_ip, "${CONFIGURATOR_HOME}/template-modules/apache-storm-0.9.5/module.ini")
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
-            log.info("Successfully updated management console https proxy port: %s in AM template module" % mgt_console_https_port)
+            log.info("Successfully updated zookeeper hostname: %s in Apache Storm template module" % zookeeper_member_default_private_ip)
 
-        if pt_http_port is not None:
-            command = "sed -i \"s/^#CONFIG_PARAM_PT_HTTP_PROXY_PORT = .*/CONFIG_PARAM_PT_HTTP_PROXY_PORT = %s/g\" %s" % (pt_http_port, "${CONFIGURATOR_HOME}/template-modules/wso2am-1.8.0/module.ini")
+        if nimbus_member_default_private_ip is not None:
+            command = "sed -i \"s/^#ZOOKEEPER_HOSTNAME = .*/ZOOKEEPER_HOSTNAME = %s/g\" %s" % (nimbus_member_default_private_ip, "${CONFIGURATOR_HOME}/template-modules/apache-storm-0.9.5/module.ini")
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
-            log.info("Successfully updated pass-through http proxy port: %s in AM template module" % pt_http_port)
-
-        if pt_https_port is not None:
-            command = "sed -i \"s/^#CONFIG_PARAM_PT_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_PT_HTTPS_PROXY_PORT = %s/g\" %s" % (pt_https_port, "${CONFIGURATOR_HOME}/template-modules/wso2am-1.8.0/module.ini")
-            p = subprocess.Popen(command, shell=True)
-            output, errors = p.communicate()
-            log.info("Successfully updated pass-through https proxy port: %s in AM template module" % pt_https_port)
+            log.info("Successfully updated nimbus hostname: %s in Apache Storm template module" % nimbus_member_default_private_ip)
 
         # configure server
-        log.info("Configuring WSO2 AM...")
+        log.info("Configuring Apache Storm Supervisor...")
         config_command = "exec /opt/ppaas-configurator-4.1.0-SNAPSHOT/configurator.py"
         env_var = os.environ.copy()
         p = subprocess.Popen(config_command, env=env_var, shell=True)
         output, errors = p.communicate()
-        log.info("WSO2 AM configured successfully")
+        log.info("Apache Storm configured successfully")
 
         # start server
-        log.info("Starting WSO2 AM...")
+        log.info("Starting Apache Storm...")
 
-        start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start"
+        start_command = "exec ${CARBON_HOME}/bin/storm supervisor"
         env_var = os.environ.copy()
         p = subprocess.Popen(start_command, env=env_var, shell=True)
         output, errors = p.communicate()
-        log.debug("WSO2 AM started successfully")
+        log.debug("Apache Storm started successfully")
