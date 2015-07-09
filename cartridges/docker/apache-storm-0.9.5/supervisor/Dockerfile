@@ -51,8 +51,6 @@ COPY plugins /${PCA_HOME}/plugins
 WORKDIR /opt
 
 RUN tar xzvf /opt/apache-storm-${APACHE_STORM_VERSION}.tar.gz && \
-        unzip /opt/${CONFIGURATOR_NAME}.zip -d /opt/ && \
-        rm /opt/${CONFIGURATOR_NAME}.zip && \
         unzip /opt/${STORM_TEMPLATE_MODULE_NAME}.zip -d /opt/ && \
         mkdir -p /opt/${CONFIGURATOR_NAME}/template-modules/apache-storm-0.9.5 && \
         mv /opt/${STORM_TEMPLATE_MODULE_NAME}/* /opt/${CONFIGURATOR_NAME}/template-modules/apache-storm-0.9.5/ && \
