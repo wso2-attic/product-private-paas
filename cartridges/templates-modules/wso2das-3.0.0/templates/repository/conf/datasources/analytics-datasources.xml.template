@@ -95,6 +95,7 @@
         </datasource>-->
 
         <!-- Sample datasource implementation for HBase Analytics RecordStore-->
+        {% if CONFIG_PARAM_HBASE_MASTER_HOST is defined -%}
         <datasource>
             <name>WSO2_ANALYTICS_RS_DB_HBASE</name>
             <description>The datasource used for analytics file system</description>
@@ -105,14 +106,10 @@
                 <configuration>
                     <property>
                         <name>hbase.master</name>
-                         {% if CONFIG_PARAM_HBASE_MASTER_HOST is defined -%}
-                            <value>{{CONFIG_PARAM_HBASE_MASTER_HOST}}</value>
-                         {% else -%}
-                            <value>localhost:16000</value>
-                         {% endif -%}
+                        <value>{{CONFIG_PARAM_HBASE_MASTER_HOST}}</value>
                     </property>
                     <property>
-                            <name>hbase.zookeeper.quorum</name>
+                        <name>hbase.zookeeper.quorum</name>
                         {% if CONFIG_PARAM_ZK_HOST is defined -%}
                             <value>{{CONFIG_PARAM_ZK_HOST}}</value>
                          {% else -%}
@@ -130,7 +127,23 @@
                 </configuration>
             </definition>
         </datasource>
-
+        {% else -%}
+        <!--<datasource>
+        <name>WSO2_ANALYTICS_RS_DB_HBASE</name>
+        <description>The datasource used for analytics file system</description>
+        <jndiConfig>
+            <name>jdbc/WSO2HBaseDB</name>
+        </jndiConfig>
+        <definition type="HBASE">
+            <configuration>
+                <property>
+                    <name>hbase.master</name>
+                    <value>localhost:60000</value>
+                </property>
+            </configuration>
+        </definition>
+        </datasource>-->
+        {% endif -%}
     </datasources>
 
 </datasources-configuration>
