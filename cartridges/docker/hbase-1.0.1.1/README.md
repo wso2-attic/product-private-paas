@@ -1,16 +1,15 @@
-# WSO2 ESB 4.8.1 Dockerfile
+# HBase 1.0.1.1 Dockerfile
 
-WSO2 ESB 4.8.1 Dockerfile defines required resources for building a Docker image with WSO2 ESB 4.8.1.
+HBase 1.0.1.1 Dockerfile defines required resources for building a Docker image with HBase 1.0.1.1.
 
 ## How to build
 
 1. Copy following files to the packages folder:
 ```
-jdk-7u60-linux-x64.tar
+jdk-7u79-linux-x64.tar
 ppaas-configurator-<version>.zip
-wso2esb-4.8.1.zip
-wso2esb-4.8.1-template-module-<version>.zip
-mysql-connector-java-<version>-bin.jar
+hbase-1.0.1.1.zip
+hbase-1.0.1.1-template-module-<version>.zip
 ```
 
 2. Run build.sh file to build the docker image:
