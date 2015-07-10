@@ -24,24 +24,24 @@
 memberId=1
 startWkaMember() {
 	name="hbase-${memberId}"
-	container_id=`docker run -e CONFIG_PARAM_HDFS_HOST=localhost -e CONFIG_PARAM_ZOOKEEPER_HOST=localhost -e  CLUSTER=true -d -p 16010:16010 -p 16000:16000 --name ${name} wso2/hbase:1.0.1.1`
+	container_id=`docker run -e CONFIG_PARAM_HDFS_HOST=localhost -e CONFIG_PARAM_ZOOKEEPER_HOST=localhost -e  CLUSTER=true -d --name hbase_master wso2/hbase:1.0.1.1`
 	memberId=$((memberId + 1))
 	wka_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
-	wka_member_container_id=container_id
-	echo "Hadoop Master started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
+	wka_member_container_id="${container_id:0:12}"
+	echo "HBase Master started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
 	sleep 1
 }
 
 startMember() {
 	name="hbase-${memberId}"
-	container_id=`docker run -e CONFIG_PARAM_HDFS_HOST=localhost -e CONFIG_PARAM_ZOOKEEPER_HOST="${wka_member_ip}" -e CONFIG_PARAM_HBASE_MASTER="${wka_member_ip}"  -e CONFIG_PARAM_HBASE_MASTER_HOSTNAME="${wka_member_container_id}" -d -P --name ${name} wso2/hbase:1.0.1.1`
+	container_id=`docker run -e CONFIG_PARAM_HDFS_HOST=localhost -e CONFIG_PARAM_ZOOKEEPER_HOST=localhost -e CONFIG_PARAM_HBASE_MASTER="${wka_member_ip}" -e CONFIG_PARAM_HBASE_MASTER_HOSTNAME="${wka_member_container_id}" -d wso2/hbase:1.0.1.1`
 	memberId=$((memberId + 1))
 	member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
-	echo "Hadoop datanode started: [name] ${name} [ip] ${member_ip} [container-id] ${container_id}"
+	echo "HBase regionserver started: [name] ${name} [ip] ${member_ip} [container-id] ${container_id}"
 	sleep 1
 }
 
-echo "Starting an Hadoop cluster with docker..."
+echo "Starting an HBase cluster with docker..."
 startWkaMember
 startMember
 # startMember

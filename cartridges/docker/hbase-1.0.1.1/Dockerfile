@@ -31,9 +31,6 @@ ENV DEBIAN_FRONTEND noninteractive
 
 ENV PPAAS_VERSION 4.1.0-SNAPSHOT
 ENV HBASE_VERSION 1.0.1.1
-ENV JDK_VERSION 1.7.0_79
-ENV JDK_TAR_FILENAME jdk-7u79-linux-x64.tar.gz
-ENV JAVA_HOME /opt/jdk${JDK_VERSION}
 ENV HBASE_TEMPLATE_MODULE_NAME hbase-${HBASE_VERSION}-template-module-${PPAAS_VERSION}
 ENV PCA_NAME apache-stratos-python-cartridge-agent-${PPAAS_VERSION}
 ENV PCA_HOME /opt/${PCA_NAME}
@@ -42,7 +39,6 @@ ENV HBASE_HOME /opt/hbase-${HBASE_VERSION}
 # --------------------------------
 # Copy scripts, packages & plugins
 # --------------------------------
-ADD packages/${JDK_TAR_FILENAME} /opt/
 ADD packages/hbase-${HBASE_VERSION}-bin.tar.gz /opt/
 COPY scripts/init.sh /usr/local/bin/init.sh
 COPY scripts/export-envs.sh /tmp/export-envs.sh
@@ -56,7 +52,6 @@ WORKDIR /opt
 
 RUN unzip /opt/${HBASE_TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
     rm -rf /opt/${HBASE_TEMPLATE_MODULE_NAME}.zip && \
-    pip install jinja2 && \
     chmod +x /tmp/export-envs.sh && \
     sleep 1 && \
     /tmp/export-envs.sh ${JAVA_HOME} ${HADOOP_HOME}
