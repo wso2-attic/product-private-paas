@@ -1,0 +1,29 @@
+{
+    "name": "storm-group",
+    "cartridges": [
+        "supervisor",
+        "ui",
+        "nimbus",
+        "zookeeper"
+    ],
+    "dependencies": {
+        "terminationBehaviour": "terminate-all",
+        "startupOrders": [
+            {
+                "aliases": [
+                    "cartridge.storm-zookeeper",
+                    "cartridge.my-nimbus",
+                    "cartridge.my-ui"
+                ]
+            },
+            {
+                "aliases": [
+                    "cartridge.storm-zookeeper",
+                    "cartridge.my-nimbus",
+                    "cartridge.my-supervisor"
+                ]
+            }
+        ]
+    }
+}
+
