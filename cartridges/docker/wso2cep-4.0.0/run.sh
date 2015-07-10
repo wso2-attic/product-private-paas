@@ -22,25 +22,28 @@
 
 # Start an CEP cluster with docker
 memberId=1
-startWkaMember() {
+startWkaMamager() {
 	name="wso2cep-${memberId}-wka"
-	container_id=`docker run -e CONFIG_PARAM_CLUSTERING=true -d -P --name ${name} wso2/cep:4.0.0`
+	container_id=`docker run -e CONFIG_PARAM_CLUSTERING=true -e CONFIG_PARAM_MANAGER=true -e CONFIG_PARAM_WORKER=false \
+	-d -P --name ${name} wso2/cep:4.0.0`
 	memberId=$((memberId + 1))
 	wka_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
-	echo "CEP wka member started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
+	echo "CEP wka manager started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
 	sleep 1
 }
 
-startMember() {
+startWorker() {
 	name="wso2cep-${memberId}"
-	container_id=`docker run -e CONFIG_PARAM_CLUSTERING=true -e CONFIG_PARAM_WKA_MEMBERS="\"${wka_member_ip}:4000\"" -d -P --name ${name} wso2/cep:4.0.0`
+	container_id=`docker run -e CONFIG_PARAM_CLUSTERING=true -e CONFIG_PARAM_WKA_MEMBERS="[${wka_member_ip}:4000]" \
+	-e CONFIG_PARAM_MANAGER=false -e CONFIG_PARAM_WORKER=true -e CONFIG_PARAM_MANAGER_MEMBERS="[${wka_member_ip}:8904]" \
+    -d -P --name ${name} wso2/cep:4.0.0`
 	memberId=$((memberId + 1))
 	member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
-	echo "CEP member started: [name] ${name} [ip] ${member_ip} [container-id] ${container_id}"
+	echo "CEP worker started: [name] ${name} [ip] ${member_ip} [container-id] ${container_id}"
 	sleep 1
 }
 
 echo "Starting an CEP cluster with docker..."
-startWkaMember
-startMember
-startMember
+startWkaMamager
+startWorker
+startWorker

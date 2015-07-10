@@ -43,5 +43,6 @@
         <module>wso2is-5.0.0</module>
         <module>wso2das-3.0.0</module>
         <module>wso2cep-4.0.0</module>
+        <module>apache-storm-0.9.5</module>
     </modules>
 </project>
