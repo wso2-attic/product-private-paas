@@ -66,6 +66,8 @@ RUN unzip /opt/wso2cep-${WSO2_CEP_VERSION}.zip -d /opt/ && \
 EXPOSE 9443
 # Thrift port
 EXPOSE 7611
+# Mgt port
+EXPOSE 8904
 
 # -------------------------------
 # Define entry point & start sshd
