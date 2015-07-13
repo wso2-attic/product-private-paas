@@ -29,7 +29,7 @@ startWkaMember () {
     container_id=`docker run -e CONFIG_PARAM_ZK_HOST=10.100.7.80 -e CONFIG_PARAM_PROFILE=$1 -e CONFIG_PARAM_CLUSTERING=true -d -P --name ${name} wso2/das:3.0.0-SNAPSHOT`
     wka_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
     echo "WSO2 DAS $1 started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
-    memberId+=1
+    memberId=$((memberId + 1))
 }
 
 startMember() {
