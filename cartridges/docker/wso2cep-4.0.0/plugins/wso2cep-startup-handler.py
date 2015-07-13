@@ -67,7 +67,7 @@ class WSO2CEPStartupHandler(ICartridgeAgentPlugin):
         log.info("WSO2 CEP configured successfully")
 
         # start server
-        log.info("Starting WSO2 AS...")
+        log.info("Starting WSO2 CEP...")
 
         start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start"
         env_var = os.environ.copy()

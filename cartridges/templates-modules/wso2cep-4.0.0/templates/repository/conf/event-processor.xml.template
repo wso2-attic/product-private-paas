@@ -60,12 +60,14 @@
 
         <management>
             <managers>
+                {% if CONFIG_PARAM_MANAGER_MEMBERS is defined -%}
                 {% for key, value in CONFIG_PARAM_MANAGER_MEMBERS.iteritems() -%}
                 <manager>
                     <hostName>{{ key }}</hostName>
                     <port>{{ value }}</port>
                 </manager>
                 {% endfor -%}
+                {% endif -%}
             </managers>
             <reconnectionInterval>20000</reconnectionInterval>
             <heartbeatInterval>5000</heartbeatInterval>
