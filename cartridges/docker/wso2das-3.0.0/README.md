@@ -24,3 +24,12 @@ sh build.sh
 ```
 docker images
 ```
+
+4. To create  analytics profile cluster run
+```
+sh run.sh  analytics
+```
+  To enable only receiver profile set Environment variable PROFILE to receiver.
+```
+sh run.sh  receiver
+```

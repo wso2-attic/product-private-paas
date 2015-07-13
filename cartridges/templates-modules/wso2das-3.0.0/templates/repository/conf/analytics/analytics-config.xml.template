@@ -10,29 +10,36 @@
             <property name="datasource">WSO2_ANALYTICS_FS_DB</property>
       </properties>
    </analytics-file-system>
-   <!-- Analytics Record Store - properties related to record storage implementation -->
+    <!-- Analytics Record Store - properties related to record storage implementation -->
+    {%- if CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE is defined  and (CONFIG_PARAM_PROFILE =="receiver" or CONFIG_PARAM_PROFILE=="analytics") %}
    <analytics-record-store name="EVENT_STORE">
+       {% if CONFIG_PARAM_EVENT_DATA_STORE_IMPL is defined -%}
+       <implementation>{{CONFIG_PARAM_EVENT_DATA_STORE_IMPL}}</implementation>
+       {% else -%}
        <implementation>org.wso2.carbon.analytics.datasource.rdbms.RDBMSAnalyticsRecordStore</implementation>
-      <properties>
-          <property  name="datasource">WSO2_ANALYTICS_EVENT_STORE_DB</property>
-      </properties>
+       {% endif -%}
+       <properties>
+       {% if CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE is defined -%}
+       <property  name="datasource" >{{CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE}}</property>
+       {% else -%}
+       <property  name="datasource">WSO2_ANALYTICS_EVENT_STORE_DB</property>
+       {% endif -%}
+       </properties>
    </analytics-record-store>
+    {%- else %}
+    <analytics-record-store name="EVENT_STORE">
+        <implementation>org.wso2.carbon.analytics.datasource.rdbms.RDBMSAnalyticsRecordStore</implementation>
+        <properties>
+            <property name="datasource">WSO2_ANALYTICS_EVENT_STORE_DB</property>
+        </properties>
+    </analytics-record-store>
+    {%- endif %}
 
    <analytics-record-store name = "PROCESSED_DATA_STORE">
-        {% if CONFIG_PARAM_PROCESSED_DATA_STORE_IMPL is defined -%}
-          <implementation>{{CONFIG_PARAM_PROCESSED_DATA_STORE_IMPL}}</implementation>
-          {% else -%}
-         <implementation>org.wso2.carbon.analytics.datasource.hbase.HBaseAnalyticsRecordStore</implementation>
-          {% endif -%}
-
-      <properties>
-                {% if CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE is defined -%}
-                    <property  name="datasource" >{{CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE}}</property>
-                {% else -%}
-                    <property  name="datasource">CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE</property>
-                {% endif -%}
-      </properties>
-
+       <implementation>org.wso2.carbon.analytics.datasource.rdbms.RDBMSAnalyticsRecordStore</implementation>
+        <properties>
+            <property  name="datasource">WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB</property>
+        </properties>
    </analytics-record-store>
    <!-- The data indexing analyzer implementation -->
    <analytics-lucene-analyzer>
