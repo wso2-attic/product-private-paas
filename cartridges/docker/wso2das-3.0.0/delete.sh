@@ -21,8 +21,5 @@
 # --------------------------------------------------------------
 
 # Delete the DAS docker container
-memberId=1
-name="wso2das-${memberId}"
-docker rm ${name}
-echo "DAS instance deleted: [name] ${name}"
-
+docker stop $(docker ps -a -q)
+docker rm $(docker ps -a -q)

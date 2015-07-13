@@ -22,11 +22,38 @@
 
 # Start a DAS instance with docker
 memberId=1
+CONFIG_PARAM_ZK_HOST=10.100.7.80
+memberId=1
+startWkaMember () {
+	name="wso2das-$1-${memberId}"
+    container_id=`docker run -e CONFIG_PARAM_ZK_HOST=10.100.7.80 -e CONFIG_PARAM_PROFILE=$1 -e CONFIG_PARAM_CLUSTERING=true -d -P --name ${name} wso2/das:3.0.0-SNAPSHOT`
+    wka_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
+    echo "WSO2 DAS $1 started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
+    memberId+=1
+}
 
-name="wso2das-${memberId}"
-container_id=`docker run -d -P --name ${name} wso2/das:3.0.0-SNAPSHOT`
-member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
-echo "WSO2 DAS started: [name] ${name} [ip] ${member_ip} [container-id] ${container_id}"
+startMember() {
+	name="wso2das-$1-${memberId}"
+    container_id=`docker run -e CONFIG_PARAM_ZK_HOST=10.100.7.80 -e CONFIG_PARAM_CLUSTERING=true -e CONFIG_PARAM_WKA_MEMBERS="[${wka_member_ip}:4100]" -e CONFIG_PARAM_PROFILE=$1 -d -P --name ${name} wso2/das:3.0.0-SNAPSHOT`
+    member_ip==`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
+    echo "WSO2 DAS $1 started: [name] ${name} [ip] ${member_ip} [container-id] ${container_id}"
+    memberId=$((memberId + 1))
+}
 
+startDeafultPack() {
+	name="wso2das-$1-${memberId}"
+    container_id=`docker run-e CONFIG_PARAM_PROFILE=default -d -P --name ${name} wso2/das:3.0.0-SNAPSHOT`
+    member_ip==`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
+    echo "WSO2 DAS $1 started: [name] ${name} [ip] ${member_ip} [container-id] ${container_id}"
+    memberId=$((memberId + 1))
+}
+
+
+if [ "$#" -eq 1 ]; then
+    startWkaMember $1
+    startMember $1
+else
+    startDeafultPack
+fi
 
 

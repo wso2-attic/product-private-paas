@@ -35,18 +35,23 @@ else
     python configurator.py
     popd
     echo "WSO2 Carbon server configured successfully"
-
+    echo ${CONFIG_PARAM_ZK_HOST} xanK >>/etc/hosts
     echo "Starting WSO2 Carbon server"
 # $PROFILE value should be analytics or receiver
-    if [ -n "$PROFILE" ]; then
-        if [ "$PROFILE" = "analytics" ];then
+    if [ -n "$CONFIG_PARAM_PROFILE" ]; then
+        if [ "$CONFIG_PARAM_PROFILE" = "analytics" ];then
             echo "Starting analytics profile"
-            ${CARBON_HOME}/bin/wso2server.sh -Ddisable.receiver=true
-        elif [ "$PROFILE" = "receiver" ];then
+            ${CARBON_HOME}/bin/wso2server.sh -DdisableEventSink=true
+        elif [ "$CONFIG_PARAM_PROFILE" = "receiver" ];then
             echo "Starting receiver profile"
-            ${CARBON_HOME}/bin/wso2server.sh -Ddisable.analytics=true
+            ${CARBON_HOME}/bin/wso2server.sh -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true
+        elif [ "$CONFIG_PARAM_PROFILE" = "dashboard" ];then
+            echo "Starting dashbord profile"
+            ${CARBON_HOME}/bin/wso2server.sh -DdisableEventSink=true -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true
+
         fi
     else
+        echo "Starting default pack"
         ${CARBON_HOME}/bin/wso2server.sh
     fi
     echo "WSO2 Carbon server started successfully"
