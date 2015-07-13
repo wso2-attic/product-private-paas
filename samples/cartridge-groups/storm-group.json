@@ -11,14 +11,14 @@
         "startupOrders": [
             {
                 "aliases": [
-                    "cartridge.storm-zookeeper",
+                    "cartridge.my-zookeeper",
                     "cartridge.my-nimbus",
                     "cartridge.my-ui"
                 ]
             },
             {
                 "aliases": [
-                    "cartridge.storm-zookeeper",
+                    "cartridge.my-zookeeper",
                     "cartridge.my-nimbus",
                     "cartridge.my-supervisor"
                 ]

@@ -15,13 +15,9 @@
 # specific language governing permissions and limitations
 # under the License.
 
-import mdsclient
 import json
 from plugins.contracts import ICartridgeAgentPlugin
-from xml.dom.minidom import parse
-import socket
 from modules.util.log import LogFactory
-import time
 import subprocess
 import os
 
@@ -31,9 +27,9 @@ class StormTopologyHandler(ICartridgeAgentPlugin):
         log = LogFactory().get_log(__name__)
 
         log.info("Reading the Complete Topology in order to get the dependent ip addresses ...")
-
-        topology_str = values["TOPOLOGY_JSON"]
-        log.info("Port mappings: %s" % topology_str)
+        topology = values["TOPOLOGY_JSON"]
+        log.info("Topology: %s" % topology)
+        topology_str = json.loads(topology)
 
         zookeeper_member_default_private_ip = None
         nimbus_member_default_private_ip = None
@@ -65,13 +61,13 @@ class StormTopologyHandler(ICartridgeAgentPlugin):
 
 
         if zookeeper_member_default_private_ip is not None:
-            command = "sed -i \"s/^#ZOOKEEPER_HOSTNAME = .*/ZOOKEEPER_HOSTNAME = %s/g\" %s" % (zookeeper_member_default_private_ip, "${CONFIGURATOR_HOME}/template-modules/apache-storm-0.9.5/module.ini")
+            command = "sed -i \"s/^#ZOOKEEPER_HOSTNAME=.*/ZOOKEEPER_HOSTNAME=%s/g\" %s" % (zookeeper_member_default_private_ip, "${CONFIGURATOR_HOME}/template-modules/apache-storm-0.9.5/module.ini")
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
             log.info("Successfully updated zookeeper hostname: %s in Apache Storm template module" % zookeeper_member_default_private_ip)
 
         if nimbus_member_default_private_ip is not None:
-            command = "sed -i \"s/^#NIMBUS_HOSTNAME = .*/NIMBUS_HOSTNAME = %s/g\" %s" % (nimbus_member_default_private_ip, "${CONFIGURATOR_HOME}/template-modules/apache-storm-0.9.5/module.ini")
+            command = "sed -i \"s/^#NIMBUS_HOSTNAME=.*/NIMBUS_HOSTNAME=%s/g\" %s" % (nimbus_member_default_private_ip, "${CONFIGURATOR_HOME}/template-modules/apache-storm-0.9.5/module.ini")
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
             log.info("Successfully updated nimbus hostname: %s in Apache Storm template module" % nimbus_member_default_private_ip)

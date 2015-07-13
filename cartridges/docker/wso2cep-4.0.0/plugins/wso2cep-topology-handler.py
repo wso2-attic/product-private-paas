@@ -32,8 +32,8 @@ class CEPTopologyHandler(ICartridgeAgentPlugin):
         log.info("CEP Manager: %s" % is_cep_mgr)
 
         topology = values["TOPOLOGY_JSON"]
+        log.info("Topology: %s" % topology)
         topology_str = json.loads(topology)
-        log.info("Topology: %s" % topology_str)
 
         if is_cep_mgr == 'true':
             log.info("Configuring CEP Manager Template module ..")
@@ -118,7 +118,6 @@ class CEPTopologyHandler(ICartridgeAgentPlugin):
                                 cep_mgr_private_ip_list.append(member_str["defaultPrivateIP"])
 
         if cep_mgr_private_ip_list:
-            log.info("CEP Mgr IP List %s" % cep_mgr_private_ip_list)
             managers_string = '['
             for member_ip in cep_mgr_private_ip_list:
                 if member_ip is not cep_mgr_private_ip_list[-1]:
