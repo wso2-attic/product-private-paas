@@ -25,46 +25,51 @@ import os
 class CEPTopologyHandler(ICartridgeAgentPlugin):
     def run_plugin(self, values):
         log = LogFactory().get_log(__name__)
-        # is_cep_mgr = os.environ.get("CONFIG_PARAM_MANAGER", False)
-        log.info(values)
+        # Read Application_Id, MB_IP, CONFIG_PARAM_MANAGER and Topology from values
+        app_id = values["APPLICATION_ID"]
+        mb_ip = values["MB_IP"]
         is_cep_mgr = values["CONFIG_PARAM_MANAGER"]
+        topology_str = values["TOPOLOGY_JSON"]
 
+        # log above information
+        log.info("Application ID: %s" % app_id)
+        log.info("MB IP: %s" % mb_ip)
         log.info("CEP Manager: %s" % is_cep_mgr)
+        log.info("Topology: %s" % topology_str)
 
-        topology = values["TOPOLOGY_JSON"]
-        log.info("Topology: %s" % topology)
-        topology_str = json.loads(topology)
+        topology_json = json.loads(topology_str)
 
         if is_cep_mgr == 'true':
             log.info("Configuring CEP Manager Template module ..")
             log.info("Reading the Complete Topology in order to get the dependent ip addresses ...")
-
             zookeeper_member_default_private_ip = None
             nimbus_member_default_private_ip = None
 
-            if topology_str is not None:
+            if topology_json is not None:
                 # add service map
-                for service_name in topology_str["serviceMap"]:
-                    service_str = topology_str["serviceMap"][service_name]
+                for service_name in topology_json["serviceMap"]:
+                    service_str = topology_json["serviceMap"][service_name]
                     if service_name == "zookeeper":
                         # add cluster map
                         for cluster_id in service_str["clusterIdClusterMap"]:
                             cluster_str = service_str["clusterIdClusterMap"][cluster_id]
-                            # add member map
-                            for member_id in cluster_str["memberMap"]:
-                                member_str = cluster_str["memberMap"][member_id]
-                                if zookeeper_member_default_private_ip is None:
-                                    zookeeper_member_default_private_ip = member_str["defaultPrivateIP"]
+                            if cluster_str["appId"] == app_id:
+                                # add member map
+                                for member_id in cluster_str["memberMap"]:
+                                    member_str = cluster_str["memberMap"][member_id]
+                                    if zookeeper_member_default_private_ip is None:
+                                        zookeeper_member_default_private_ip = member_str["defaultPrivateIP"]
 
                     if service_name == "nimbus":
                         # add cluster map
                         for cluster_id in service_str["clusterIdClusterMap"]:
                             cluster_str = service_str["clusterIdClusterMap"][cluster_id]
-                            # add member map
-                            for member_id in cluster_str["memberMap"]:
-                                member_str = cluster_str["memberMap"][member_id]
-                                if nimbus_member_default_private_ip is None:
-                                    nimbus_member_default_private_ip = member_str["defaultPrivateIP"]
+                            if cluster_str["appId"] == app_id:
+                                # add member map
+                                for member_id in cluster_str["memberMap"]:
+                                    member_str = cluster_str["memberMap"][member_id]
+                                    if nimbus_member_default_private_ip is None:
+                                        nimbus_member_default_private_ip = member_str["defaultPrivateIP"]
 
             if zookeeper_member_default_private_ip is not None:
                 command = "sed -i \"s/^CONFIG_PARAM_ZOOKEEPER_HOST=.*/CONFIG_PARAM_ZOOKEEPER_HOST=%s/g\" %s" % (
@@ -72,7 +77,7 @@ class CEPTopologyHandler(ICartridgeAgentPlugin):
                 p = subprocess.Popen(command, shell=True)
                 output, errors = p.communicate()
                 log.info(
-                    "Successfully updated zookeeper host: %s in WSO2 CEP template module" % zookeeper_member_default_private_ip)
+                    "Successfully updated zookeeper host: %s in WSO2 CEP Manager template module" % zookeeper_member_default_private_ip)
 
             if nimbus_member_default_private_ip is not None:
                 command = "sed -i \"s/^CONFIG_PARAM_NIMBUS_HOST=.*/CONFIG_PARAM_NIMBUS_HOST=%s/g\" %s" % (
@@ -80,7 +85,7 @@ class CEPTopologyHandler(ICartridgeAgentPlugin):
                 p = subprocess.Popen(command, shell=True)
                 output, errors = p.communicate()
                 log.info(
-                    "Successfully updated nimbus host: %s in WSO2 CEP template module" % nimbus_member_default_private_ip)
+                    "Successfully updated nimbus host: %s in WSO2 CEP Manager template module" % nimbus_member_default_private_ip)
 
             # set local ip as CONFIG_PARAM_LOCAL_MEMBER_HOST
             get_local_ip_cmd = "awk 'NR==1 {print $1}' /etc/hosts"
@@ -97,25 +102,27 @@ class CEPTopologyHandler(ICartridgeAgentPlugin):
 
             # Set CONFIG_PARAM_MANAGER=true
             command = "sed -i \"s/^CONFIG_PARAM_MANAGER=.*/CONFIG_PARAM_MANAGER=%s/g\" %s" % (
-            'true', "${CONFIGURATOR_HOME}/template-modules/wso2cep-4.0.0/module.ini")
+            is_cep_mgr, "${CONFIGURATOR_HOME}/template-modules/wso2cep-4.0.0/module.ini")
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
-            log.info("Successfully updated config parameter manager: %s in WSO2 CEP template module" % 'true')
+            log.info("Successfully updated config parameter manager: %s in WSO2 CEP template module" % is_cep_mgr)
 
+        # Read all CEP Manager private IPs and update CONFIG_PARAM_MANAGER_MEMBERS in module.ini
         cep_mgr_private_ip_list = []
-        if topology_str is not None:
+        if topology_json is not None:
             # add service map
-            for service_name in topology_str["serviceMap"]:
-                service_str = topology_str["serviceMap"][service_name]
+            for service_name in topology_json["serviceMap"]:
+                service_str = topology_json["serviceMap"][service_name]
                 if service_name == "cep-mgr":
                     # add cluster map
                     for cluster_id in service_str["clusterIdClusterMap"]:
                         cluster_str = service_str["clusterIdClusterMap"][cluster_id]
-                        # add member map
-                        for member_id in cluster_str["memberMap"]:
-                            member_str = cluster_str["memberMap"][member_id]
-                            if member_str["defaultPrivateIP"] is not None:
-                                cep_mgr_private_ip_list.append(member_str["defaultPrivateIP"])
+                        if cluster_str["appId"] == app_id:
+                            # add member map
+                            for member_id in cluster_str["memberMap"]:
+                                member_str = cluster_str["memberMap"][member_id]
+                                if member_str["defaultPrivateIP"] is not None:
+                                    cep_mgr_private_ip_list.append(member_str["defaultPrivateIP"])
 
         if cep_mgr_private_ip_list:
             managers_string = '['
@@ -132,15 +139,55 @@ class CEPTopologyHandler(ICartridgeAgentPlugin):
             output, errors = p.communicate()
             log.info("Successfully updated CEP Managers list: %s in WSO2 CEP template module" % managers_string)
         else:
+            # If no manager IPs are found comment-out CONFIG_PARAM_MANAGER_MEMBERS property
             command = "sed -i \"s/^CONFIG_PARAM_MANAGER_MEMBERS=.*/#CONFIG_PARAM_MANAGER_MEMBERS=/g\" %s" % "${CONFIGURATOR_HOME}/template-modules/wso2cep-4.0.0/module.ini"
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
             log.warn(
                 "CEP Manager IPs are not found in topology, hence removing CONFIG_PARAM_MANAGER_MEMBERS property from module.ini")
 
-            # configure server
-        log.info("Configuring WSO2 CEP Manager...")
-        config_command = "exec /opt/ppaas-configurator-4.1.0-SNAPSHOT/configurator.py"
+        # Read all CEP Manager/Worker cluster-ids from topology and update CONFIG_PARAM_CLUSTER_IDs in module.ini
+        cep_worker_manager_cluster_ids = []
+        if topology_json is not None:
+            # add service map
+            for service_name in topology_json["serviceMap"]:
+                service_str = topology_json["serviceMap"][service_name]
+                # Check for both CEP-Mgr and CEP-Wkr clusters
+                if service_name == "cep-mgr" or service_name == "cep-wkr":
+                    # add cluster map
+                    for cluster_id in service_str["clusterIdClusterMap"]:
+                        cluster_str = service_str["clusterIdClusterMap"][cluster_id]
+                        if cluster_str["appId"] == app_id:
+                            # Append cep worker/manager cluster id
+                            cep_worker_manager_cluster_ids.append(cluster_str["clusterId"])
+
+        if cep_worker_manager_cluster_ids:
+            cep_clusterIds = ",".join(cep_worker_manager_cluster_ids)
+
+            command = "sed -i \"s/^CONFIG_PARAM_CLUSTER_IDs=.*/CONFIG_PARAM_CLUSTER_IDs=%s/g\" %s" % (
+                cep_clusterIds, "${CONFIGURATOR_HOME}/template-modules/wso2cep-4.0.0/module.ini")
+            p = subprocess.Popen(command, shell=True)
+            output, errors = p.communicate()
+            log.info("Successfully updated cep cluster_ids: %s in WSO2 CEP template module" % cep_clusterIds)
+        else:
+            # If no cluster_ids are found in topology, comment-out CONFIG_PARAM_CLUSTER_IDs property from module.ini
+            command = "sed -i \"s/^CONFIG_PARAM_CLUSTER_IDs=.*/#CONFIG_PARAM_CLUSTER_IDs=/g\" %s" % "${CONFIGURATOR_HOME}/template-modules/wso2cep-4.0.0/module.ini"
+            p = subprocess.Popen(command, shell=True)
+            output, errors = p.communicate()
+            log.warn("CEP Manager/Worker cluster ids are not found in topology, hence removing CONFIG_PARAM_CLUSTER_IDs"
+                     " property from module.ini")
+
+        # Update MB_IP in module.ini to be used by jndi.properties
+        if mb_ip is not None:
+            command = "sed -i \"s/^CONFIG_PARAM_MB_HOST=.*/CONFIG_PARAM_MB_HOST=%s/g\" %s" % (
+                mb_ip, "${CONFIGURATOR_HOME}/template-modules/wso2cep-4.0.0/module.ini")
+            p = subprocess.Popen(command, shell=True)
+            output, errors = p.communicate()
+            log.info("Successfully updated mb ip: %s in WSO2 CEP template module" % mb_ip)
+
+        # configure server
+        log.info("Configuring WSO2 CEP ...")
+        config_command = "python /opt/ppaas-configurator-4.1.0-SNAPSHOT/configurator.py"
         env_var = os.environ.copy()
         p = subprocess.Popen(config_command, env=env_var, shell=True)
         output, errors = p.communicate()

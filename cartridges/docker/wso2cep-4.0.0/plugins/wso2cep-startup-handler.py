@@ -58,14 +58,6 @@ class WSO2CEPStartupHandler(ICartridgeAgentPlugin):
             output, errors = p.communicate()
             log.info("Successfully updated management console https proxy port: %s in CEP template module" % mgt_console_https_port)
 
-        # configure server
-        log.info("Configuring WSO2 CEP...")
-        config_command = "python /opt/ppaas-configurator-4.1.0-SNAPSHOT/configurator.py"
-        env_var = os.environ.copy()
-        p = subprocess.Popen(config_command, env=env_var, shell=True)
-        output, errors = p.communicate()
-        log.info("WSO2 CEP configured successfully")
-
         # start server
         log.info("Starting WSO2 CEP...")
 
