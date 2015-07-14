@@ -44,5 +44,6 @@
         <module>wso2das-3.0.0</module>
         <module>wso2cep-4.0.0</module>
         <module>apache-storm-0.9.5</module>
+        <module>apache-hadoop-2.7.0</module>
     </modules>
 </project>
