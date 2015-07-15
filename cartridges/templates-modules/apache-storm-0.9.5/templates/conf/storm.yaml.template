@@ -46,21 +46,20 @@
 #     parallelism.hint: 1
 #     argument:
 #       - endpoint: "metrics-collector.mycompany.org"
-{% if STORM_TYPE == 'nimbus' %}
-       storm.zookeeper.servers:
-       - "{{ZOOKEEPER_HOSTNAME}}"
+
+{% if STORM_TYPE == 'ui'- %}
+       nimbus.host: "{{NIMBUS_HOSTNAME}}"
 {% endif -%}
 
-{% if STORM_TYPE == 'supervisor' %}
-    storm.zookeeper.servers:
-    - "{{ZOOKEEPER_HOSTNAME}}"
+{% if STORM_TYPE == 'supervisor' -%}
     nimbus.host: "{{NIMBUS_HOSTNAME}}"
 {% endif -%}
 
-{% if STORM_TYPE == 'ui' %}
-    storm.zookeeper.servers:
-    - "{{ZOOKEEPER_HOSTNAME}}"
-    nimbus.host: "{{NIMBUS_HOSTNAME}}"
+{% if ZOOKEEPER_HOSTNAMES is defined -%}
+     storm.zookeeper.servers:
+     {% for value in ZOOKEEPER_HOSTNAMES.iteritems() -%}
+        - "{{ZOOKEEPER_HOSTNAME-1}}"
+     {% endfor -%}
 {% endif -%}
 
 

@@ -51,6 +51,10 @@
         {
             "name": "payload_parameter.APPLICATION_PATH",
             "value": "/var/www"
+        },
+        {
+            "name": "payload_parameter.STORM_TYPE",
+            "value": "ui"
         }
     ]
 }
