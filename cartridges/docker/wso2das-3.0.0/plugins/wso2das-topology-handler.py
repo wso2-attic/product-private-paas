@@ -43,12 +43,12 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
         log.info("Topology: %s" % topology)
         topology_str = json.loads(topology)
 
-        if topology_str is not None:
-            # add service map
-            for service_name in topology_str["serviceMap"]:
-                service_str = topology_str["serviceMap"][service_name]
-                for cluster_id in service_str["clusterIdClusterMap"]:
-                    cluster_str = service_str["clusterIdClusterMap"][cluster_id]
+        # if topology_str is not None:
+        #     # add service map
+        #     for service_name in topology_str["serviceMap"]:
+        #         service_str = topology_str["serviceMap"][service_name]
+        #         for cluster_id in service_str["clusterIdClusterMap"]:
+        #             cluster_str = service_str["clusterIdClusterMap"][cluster_id]
 
 
         # Configuring Port Mappings
