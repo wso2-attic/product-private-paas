@@ -1,45 +1,24 @@
-docker-mysql
-============
+# MySql 5.5 Dockerfile
 
-MySQL on Docker.
+mysql 5.5 Dockerfile defines required resources for building a Docker image with mysql 5.5
 
-Includes a bunch of cool features such as:
+## How to build
 
- - Exporting volumes so your data persists.
- - Not running as root.
- - Printing log output.
- - Setting a root password.
- - Creating a user and database.
- - Passing extra parameters to mysqld.
+1. Copy following files to the packages folder:
+```
+jdk-7u60-linux-x64.tar
+ppaas-configurator-<version>.zip
+wso2das-3.0.0-SNAPSHOT.zip
+wso2das-3.0.0-template-module-<version>.zip
+mysql-connector-java-<version>-bin.jar
+```
 
-Here's how it works:
 
-    $ sudo docker run -d -p 3306:3306 -e MYSQL_ROOT_PASSWORD=password mysql:5.5
-    
-    $ mysql -h 127.0.0.1 -u root -p
-    Enter password:
-    Welcome to the MySQL monitor.  Commands end with ; or \g.
-    Your MySQL connection id is 1
-    Server version: 5.5.34-0ubuntu0.12.04.1-log (Ubuntu)
+2. Run build.sh file to build the docker image:
+```
+sh build.sh
+```
 
-    Copyright (c) 2000, 2013, Oracle and/or its affiliates. All rights reserved.
-
-    Oracle is a registered trademark of Oracle Corporation and/or its
-    affiliates. Other names may be trademarks of their respective
-    owners.
-
-    Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
-
-    mysql>
-
-(Example assumes MySQL client is installed on Docker host.)
-
-Environment variables
----------------------
-
- - `MYSQL_ROOT_PASSWORD`: The password for the root user, set every time the server starts. Defaults to a blank password, which is handy for development, but you should set this to something in production.
- - `MYSQL_DATABASE`: A database to automatically create if it doesn't exist. If not provided, does not create a database.
- - `MYSQL_USER`: A user to create that has access to the database specified by `MYSQL_DATABASE`.
- - `MYSQL_PASSWORD`: The password for `MYSQL_USER`. Defaults to a blank password.
- - `MYSQLD_ARGS`: extra parameters to pass to the mysqld process
- 
+3. List docker images:
+```
+docker images
