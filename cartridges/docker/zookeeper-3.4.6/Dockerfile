@@ -40,6 +40,7 @@ COPY scripts/init.sh /usr/local/bin/init.sh
 COPY scripts/export-envs.sh /tmp/export-envs.sh
 #COPY plugins /${PCA_HOME}/plugins
 COPY packages/zookeeper-3.4.6.tar.gz /opt/
+COPY packages/conf/zoo_sample.cfg /opt/temp/
 
 # -----------------------------
 # Install prerequisites and Zookeeper
@@ -48,7 +49,7 @@ COPY packages/zookeeper-3.4.6.tar.gz /opt/
 WORKDIR /opt
 
 RUN tar xzvf /opt/zookeeper-3.4.6.tar.gz && \
-    cp /opt/zookeeper-3.4.6/conf/zoo_sample.cfg /opt/zookeeper-3.4.6/conf/zoo.cfg && \
+    cp /opt/temp/zoo_sample.cfg /opt/zookeeper-3.4.6/conf/zoo.cfg && \
     chmod +x /tmp/export-envs.sh && \
     chmod +x /usr/local/bin/init.sh && \
     sleep 1 && \
