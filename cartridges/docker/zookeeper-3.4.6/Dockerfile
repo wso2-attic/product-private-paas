@@ -41,7 +41,6 @@ COPY scripts/export-envs.sh /tmp/export-envs.sh
 #COPY plugins /${PCA_HOME}/plugins
 COPY packages/zookeeper-3.4.6.tar.gz /opt/
 
-
 # -----------------------------
 # Install prerequisites and Zookeeper
 # -----------------------------
