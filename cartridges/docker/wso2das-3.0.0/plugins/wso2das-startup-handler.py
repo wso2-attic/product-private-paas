@@ -24,52 +24,28 @@ import time
 import subprocess
 import os
 
-class WSO2DASStartupHandler(ICartridgeAgentPlugin):
 
+class WSO2DASStartupHandler(ICartridgeAgentPlugin):
     def run_plugin(self, values):
         log = LogFactory().get_log(__name__)
 
-        log.info("Reading port mappings...")
-        port_mappings_str = values["PORT_MAPPINGS"]
-
-        mgt_console_https_port = None
-
-        # port mappings format: """NAME:mgt-console|PROTOCOL:https|PORT:4500|PROXY_PORT:9443"""
-
-        log.info("Port mappings: %s" % port_mappings_str)
-        if port_mappings_str is not None:
-
-            port_mappings_array = port_mappings_str.split(";")
-            if port_mappings_array:
-
-                for port_mapping in port_mappings_array:
-                    log.debug("port_mapping: %s" % port_mapping)
-                    name_value_array = port_mapping.split("|")
-                    name = name_value_array[0].split(":")[1]
-                    protocol = name_value_array[1].split(":")[1]
-                    port = name_value_array[2].split(":")[1]
-                    if name == "mgt-console" and protocol == "https":
-                        mgt_console_https_port = port
-
-        log.info("Kubernetes service management console https port: %s" % mgt_console_https_port)
-        if mgt_console_https_port is not None:
-            command = "sed -i \"s/^#CONFIG_PARAM_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_HTTPS_PROXY_PORT = %s/g\" %s" % (mgt_console_https_port, "${CONFIGURATOR_HOME}/template-modules/wso2das-3.0.0-SNAPSHOT/module.ini")
-            p = subprocess.Popen(command, shell=True)
-            output, errors = p.communicate()
-            log.info("Successfully updated management console https proxy port: %s in DAS template module" % mgt_console_https_port)
-
-        # configure server
-        log.info("Configuring WSO2 DAS...")
-        config_command = "python /opt/ppaas-configurator-4.1.0-SNAPSHOT/configurator.py"
-        env_var = os.environ.copy()
-        p = subprocess.Popen(config_command, env=env_var, shell=True)
-        output, errors = p.communicate()
-        log.info("WSO2 DAS configured successfully")
-
         # start server
         log.info("Starting WSO2 DAS...")
-
-        start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start"
+        profile = os.environ['CONFIG_PARAM_PROFILE']
+        log.info("Profile : %s " % profile)
+        start_command = None
+        if profile:
+            if profile == "receiver":
+                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true"
+            elif profile == "analytics":
+                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -DdisableEventSink=true"
+            elif profile == "dashboard":
+                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -DdisableEventSink=true -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true"
+            elif profile == "default":
+                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start"
+            else:
+                log.info("Invalid profile :" + profile)
+        log.info("Start command : %s" % start_command)
         env_var = os.environ.copy()
         p = subprocess.Popen(start_command, env=env_var, shell=True)
         output, errors = p.communicate()
