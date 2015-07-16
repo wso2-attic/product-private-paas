@@ -29,7 +29,7 @@ class MYSQLStartupHandler(ICartridgeAgentPlugin):
         publish_data = mdsclient.MDSPutRequest()
         publish_data.properties = properties_data
         mdsclient.put(publish_data, app=True)
-        log.info("Published metadata: %r " % publish_data)
+        log.info("Published metadata: %s " % publish_data)
 
     def run_plugin(self, values):
         log = LogFactory().get_log(__name__)
@@ -37,9 +37,9 @@ class MYSQLStartupHandler(ICartridgeAgentPlugin):
         log.info("MYSQL_ROOT_PASSWORD : %s" % MYSQL_ROOT_PASSWORD)
         f = open("/tmp/temp.sql", "w+")
         f.write(
-            "USE mysql;"
-            "FLUSH PRIVILEGES; "
-            "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;"
+            "USE mysql;\n"
+            "FLUSH PRIVILEGES;\n"
+            "GRANT ALL PRIVILEGES ON *.* TO 'root'@'%' WITH GRANT OPTION;\n"
             "UPDATE user SET password=PASSWORD('" + MYSQL_ROOT_PASSWORD + "') WHERE user='root';")
         f.close()
 
@@ -52,7 +52,7 @@ class MYSQLStartupHandler(ICartridgeAgentPlugin):
         log.info("File executed")
 
         mysql_start_command = "service mysql restart"
-        p = subprocess.Popen(mysql_command, env=env_var, shell=True)
+        p = subprocess.Popen(mysql_start_command, env=env_var, shell=True)
         output, errors = p.communicate()
         log.debug("mysql started successfully")
 
