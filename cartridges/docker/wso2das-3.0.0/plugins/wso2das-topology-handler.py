@@ -96,10 +96,10 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
 
 
         # configure server
-        log.info("Configuring WSO2 CEP Manager...")
+        log.info("Configuring WSO2 DAS ...")
         config_command = "python /opt/ppaas-configurator-4.1.0-SNAPSHOT/configurator.py"
         env_var = os.environ.copy()
         p = subprocess.Popen(config_command, env=env_var, shell=True)
         output, errors = p.communicate()
-        log.info("WSO2 CEP configured successfully")
+        log.info("WSO2 DAS configured successfully")
 
