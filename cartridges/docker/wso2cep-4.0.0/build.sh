@@ -44,5 +44,5 @@ fi
 echo "----------------------------------"
 echo "Building CEP docker image"
 echo "----------------------------------"
-docker build -t wso2/cep:4.0.0 .
+docker build -t lasinducharith/cep:4.0.0 .
 echo "CEP docker image built successfully"

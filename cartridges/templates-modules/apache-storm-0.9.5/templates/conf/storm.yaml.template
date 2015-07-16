@@ -52,14 +52,11 @@
 {% endif -%}
 
 {% if STORM_TYPE == 'supervisor' -%}
-    nimbus.host: "{{NIMBUS_HOSTNAME}}"
+       nimbus.host: "{{NIMBUS_HOSTNAME}}"
 {% endif -%}
 
-{% if ZOOKEEPER_HOSTNAMES is defined -%}
      storm.zookeeper.servers:
-     {% for value in ZOOKEEPER_HOSTNAMES.iteritems() -%}
-        - "{{ZOOKEEPER_HOSTNAME-1}}"
-     {% endfor -%}
+     - "{{ZOOKEEPER_HOSTNAME}}"
 {% endif -%}
 
 

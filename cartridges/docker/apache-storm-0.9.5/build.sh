@@ -20,4 +20,4 @@
 #
 # --------------------------------------------------------------
 
-docker build -t apache/storm-supervisor:0.9.5 .
+docker build -t apache/storm:0.9.5 .

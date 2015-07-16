@@ -31,9 +31,8 @@ class StormStartupHandler(ICartridgeAgentPlugin):
         cartridge_type = values["STORM_TYPE"]
         # start server
         log.info("Starting APACHE STORM SUPERVISOR...")
-
-        start_command = "exec ${CARBON_HOME}/bin/storm " + cartridge_type
+        start_command = "nohup ${CARBON_HOME}/bin/storm " + cartridge_type + " > out&"
         env_var = os.environ.copy()
         p = subprocess.Popen(start_command, env=env_var, shell=True)
         output, errors = p.communicate()
-        log.debug("APACHE STORM SUPERVISOR started successfully")
+        log.info("APACHE STORM SUPERVISOR started successfully")

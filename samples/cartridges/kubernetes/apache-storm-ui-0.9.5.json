@@ -28,7 +28,7 @@
     "iaasProvider": [
         {
             "type": "kubernetes",
-            "imageId": "apache/storm-supervisor:0.9.5",
+            "imageId": "apache/storm:0.9.5",
             "networkInterfaces": [
             ],
             "property": [
@@ -47,6 +47,10 @@
         {
             "name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
             "value": "ClientIP"
+        },
+        {
+            "name": "payload_parameter.START_CMD",
+            "value": "PCA"
         },
         {
             "name": "payload_parameter.APPLICATION_PATH",

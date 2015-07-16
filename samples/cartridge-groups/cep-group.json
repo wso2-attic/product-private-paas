@@ -1,0 +1,19 @@
+{
+    "name": "cep-group",
+    "cartridges": [
+        "cep-mgr",
+        "cep-wkr"
+    ],
+    "dependencies": {
+        "terminationBehaviour": "terminate-all",
+        "startupOrders": [
+            {
+                "aliases": [
+                    "cartridge.my-cep-mgr",
+                    "cartridge.my-cep-wkr"
+                ]
+            }
+        ]
+    }
+}
+
