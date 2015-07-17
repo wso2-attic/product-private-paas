@@ -1,0 +1,47 @@
+{
+    "applicationId": "cep-app",
+    "alias": "cep-app-alias",
+    "components": {
+        "groups": [
+            {
+                "name": "cep-group",
+                "alias": "cep-group-alias",
+                "deploymentPolicy": "deployment-policy-1",
+                "groupMinInstances": 1,
+                "groupMaxInstances": 1,
+                "cartridges": [
+                    {
+                        "type": "cep-mgr",
+                        "cartridgeMin": 2,
+                        "cartridgeMax": 2,
+                        "subscribableInfo": {
+                            "alias": "my-cep-mgr-alias",
+                            "autoscalingPolicy": "autoscaling-policy-1",
+                            "artifactRepository": {
+                                "privateRepo": false,
+                                "repoUrl": "https://github.com/imesh/stratos-esb-applications.git",
+                                "repoUsername": "",
+                                "repoPassword": ""
+                            }
+                        }
+                    },
+                    {
+                        "type": "cep-wkr",
+                        "cartridgeMin": 3,
+                        "cartridgeMax": 2,
+                        "subscribableInfo": {
+                            "alias": "my-cep-wkr-alias",
+                            "autoscalingPolicy": "autoscaling-policy-1",
+                            "artifactRepository": {
+                                "privateRepo": false,
+                                "repoUrl": "https://github.com/imesh/stratos-php-applications.git",
+                                "repoUsername": "",
+                                "repoPassword": ""
+                            }
+                        }
+                    }
+            }
+        ]
+    }
+}
+

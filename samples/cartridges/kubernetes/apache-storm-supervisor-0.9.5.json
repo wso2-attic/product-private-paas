@@ -14,21 +14,14 @@
             "protocol": "http",
             "port": "22",
             "proxyPort": "8280"
-        },
-        {
-            "name": "http-9443",
-            "protocol": "https",
-            "port": "22",
-            "proxyPort": "8243"
         }
-
     ],
     "deployment": {
     },
     "iaasProvider": [
         {
             "type": "kubernetes",
-            "imageId": "apache/storm-supervisor:0.9.5",
+            "imageId": "apache/storm:0.9.5",
             "networkInterfaces": [
             ],
             "property": [
@@ -55,6 +48,10 @@
         {
             "name": "payload_parameter.APPLICATION_PATH",
             "value": "/var/www"
+        },
+        {
+            "name": "payload_parameter.STORM_TYPE",
+            "value": "supervisor"
         }
     ]
 }

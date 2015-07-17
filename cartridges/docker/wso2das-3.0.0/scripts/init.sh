@@ -48,11 +48,11 @@ else
         elif [ "$CONFIG_PARAM_PROFILE" = "dashboard" ];then
             echo "Starting dashbord profile"
             ${CARBON_HOME}/bin/wso2server.sh -DdisableEventSink=true -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true
-
+        elif [ "$CONFIG_PARAM_PROFILE" = "default" ];then
+            ${CARBON_HOME}/bin/wso2server.sh
         fi
     else
-        echo "Starting default pack"
-        ${CARBON_HOME}/bin/wso2server.sh
+        echo "PROFILE is not set as environment variable"
     fi
     echo "WSO2 Carbon server started successfully"
 fi
