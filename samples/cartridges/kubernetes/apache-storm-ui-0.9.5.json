@@ -10,15 +10,9 @@
     "loadBalancingIPType": "public",
     "portMapping": [
         {
-            "name": "http-9763",
+            "name": "http-ui",
             "protocol": "http",
-            "port": "22",
-            "proxyPort": "8280"
-        },
-        {
-            "name": "http-9443",
-            "protocol": "https",
-            "port": "22",
+            "port": "8080",
             "proxyPort": "8243"
         }
 

@@ -1,24 +1,28 @@
 {
-    "alias":"app-cep-storm-alias",
     "applicationId":"app-cep-storm",
+    "alias":"app-cep-storm-alias",
     "multiTenant":false,
     "components":{
         "groups":[
             {
-                "alias":"cep-storm-group-alias",
+                "name":"cep-storm-group",
+                "alias":"my-cep-storm-group",
                 "groupMaxInstances":1,
                 "groupMinInstances":1,
                 "groups":[
                     {
+                        "name":"storm-group",
                         "alias":"my-storm-group",
+                        "groupMaxInstances":1,
+                        "groupMinInstances":1,
                         "cartridges":[
                             {
+                                "type":"supervisor",
                                 "cartridgeMax":1,
                                 "cartridgeMin":1,
                                 "subscribableInfo":{
                                     "alias":"my-supervisor",
                                     "artifactRepository":{
-                                        "alias":"my-supervisor",
                                         "privateRepo":false,
                                         "repoPassword":"",
                                         "repoUrl":"https://github.com/lakwarus/single-cartridge.git",
@@ -26,16 +30,15 @@
                                     },
                                     "autoscalingPolicy":"autoscaling-policy-1",
                                     "deploymentPolicy":"deployment-policy-1"
-                                },
-                                "type":"supervisor"
+                                }
                             },
                             {
+                                "type":"ui",
                                 "cartridgeMax":1,
                                 "cartridgeMin":1,
                                 "subscribableInfo":{
                                     "alias":"my-ui",
                                     "artifactRepository":{
-                                        "alias":"my-ui",
                                         "privateRepo":false,
                                         "repoPassword":"",
                                         "repoUrl":"https://github.com/lakwarus/single-cartridge.git",
@@ -43,16 +46,15 @@
                                     },
                                     "autoscalingPolicy":"autoscaling-policy-1",
                                     "deploymentPolicy":"deployment-policy-1"
-                                },
-                                "type":"ui"
+                                }
                             },
                             {
+                                "type":"nimbus",
                                 "cartridgeMax":1,
                                 "cartridgeMin":1,
                                 "subscribableInfo":{
                                     "alias":"my-nimbus",
                                     "artifactRepository":{
-                                        "alias":"my-nimbus",
                                         "privateRepo":false,
                                         "repoPassword":"",
                                         "repoUrl":"https://github.com/lakwarus/single-cartridge.git",
@@ -60,16 +62,15 @@
                                     },
                                     "autoscalingPolicy":"autoscaling-policy-1",
                                     "deploymentPolicy":"deployment-policy-1"
-                                },
-                                "type":"nimbus"
+                                }
                             },
                             {
+                                "type":"zookeeper",
                                 "cartridgeMax":1,
                                 "cartridgeMin":1,
                                 "subscribableInfo":{
                                     "alias":"my-zookeeper",
                                     "artifactRepository":{
-                                        "alias":"my-zookeeper",
                                         "privateRepo":false,
                                         "repoPassword":"",
                                         "repoUrl":"https://github.com/lakwarus/single-cartridge.git",
@@ -77,24 +78,24 @@
                                     },
                                     "autoscalingPolicy":"autoscaling-policy-1",
                                     "deploymentPolicy":"deployment-policy-1"
-                                },
-                                "type":"zookeeper"
+                                }
                             }
-                        ],
-                        "groupMaxInstances":1,
-                        "groupMinInstances":1,
-                        "name":"storm-group"
+                        ]
+
                     },
                     {
+                        "name":"cep-group",
                         "alias":"my-cep-group",
+                        "groupMaxInstances":1,
+                        "groupMinInstances":1,
                         "cartridges":[
                             {
+                                "type":"cep-mgr",
                                 "cartridgeMax":2,
                                 "cartridgeMin":2,
                                 "subscribableInfo":{
                                     "alias":"my-cep-mgr",
                                     "artifactRepository":{
-                                        "alias":"my-cep-mgr",
                                         "privateRepo":false,
                                         "repoPassword":"",
                                         "repoUrl":"https://github.com/lakwarus/single-cartridge.git",
@@ -102,16 +103,16 @@
                                     },
                                     "autoscalingPolicy":"autoscaling-policy-1",
                                     "deploymentPolicy":"deployment-policy-1"
-                                },
-                                "type":"cep-mgr"
+                                }
+
                             },
                             {
+                                "type":"cep-wkr",
                                 "cartridgeMax":4,
                                 "cartridgeMin":4,
                                 "subscribableInfo":{
                                     "alias":"my-cep-wkr",
                                     "artifactRepository":{
-                                        "alias":"my-cep-wkr",
                                         "privateRepo":false,
                                         "repoPassword":"",
                                         "repoUrl":"https://github.com/lakwarus/single-cartridge.git",
@@ -119,16 +120,14 @@
                                     },
                                     "autoscalingPolicy":"autoscaling-policy-1",
                                     "deploymentPolicy":"deployment-policy-1"
-                                },
-                                "type":"cep-wkr"
+                                }
+
                             }
-                        ],
-                        "groupMaxInstances":1,
-                        "groupMinInstances":1,
-                        "name":"cep-group"
+                        ]
+
                     }
-                ],
-                "name":"cep-storm-group"
+                ]
+
             }
         ]
     }

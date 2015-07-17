@@ -12,8 +12,8 @@
                 "cartridges": [
                     {
                         "type": "cep-mgr",
-                        "cartridgeMin": 1,
-                        "cartridgeMax": 1,
+                        "cartridgeMin": 2,
+                        "cartridgeMax": 2,
                         "subscribableInfo": {
                             "alias": "my-cep-mgr-alias",
                             "autoscalingPolicy": "autoscaling-policy-1",
@@ -27,7 +27,7 @@
                     },
                     {
                         "type": "cep-wkr",
-                        "cartridgeMin": 2,
+                        "cartridgeMin": 3,
                         "cartridgeMax": 2,
                         "subscribableInfo": {
                             "alias": "my-cep-wkr-alias",
