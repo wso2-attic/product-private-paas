@@ -22,7 +22,7 @@
 
 
 # stop an CEP cluster with docker
-memberId=1
+memberId=$1
 stopZookeeper() {
 	name="apache-zookeeper-${memberId}"
 	docker stop ${name}

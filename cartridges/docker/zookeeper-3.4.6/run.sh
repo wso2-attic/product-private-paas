@@ -21,7 +21,7 @@
 # --------------------------------------------------------------
 
 # Start an CEP cluster with docker
-memberId=1
+memberId=$1
 startZookeeper() {
 	name="apache-zookeeper-${memberId}"
 	container_id=`docker run -d -P --name ${name} apache/zookeeper:3.4.6`

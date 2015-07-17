@@ -15,9 +15,12 @@
 # specific language governing permissions and limitations
 # under the License.
 
-JAVA_HOME=$1
-CARBON_HOME=$2
+[Core]
+Name = apache-zookeeper-topology-handler
+Module = apache-zookeeper-topology-handler.py
 
-echo "JAVA_HOME=${JAVA_HOME}" >> /etc/environment
-echo "CARBON_HOME=${CARBON_HOME}" >> /etc/environment
-
+[Documentation]
+Description = CompleteTopologyEvent
+Author = wso2
+Version = 0.1
+Website = https://wso2.com
