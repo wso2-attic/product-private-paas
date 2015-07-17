@@ -45,10 +45,6 @@
       "value": "/var/www"
     },
     {
-      "name": "payload_parameter.MYSQL_ROOT_USERNAME",
-      "value": "root"
-    },
-    {
       "name": "payload_parameter.MYSQL_ROOT_PASSWORD",
       "value": "123"
     }

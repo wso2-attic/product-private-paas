@@ -34,8 +34,9 @@ class MYSQLStartupHandler(ICartridgeAgentPlugin):
     def run_plugin(self, values):
         log = LogFactory().get_log(__name__)
         MYSQL_ROOT_PASSWORD = os.environ["MYSQL_ROOT_PASSWORD"];
+        TEMP_FILE_PATH="/tmp/temp.sql"
         log.info("MYSQL_ROOT_PASSWORD : %s" % MYSQL_ROOT_PASSWORD)
-        f = open("/tmp/temp.sql", "w+")
+        f = open(TEMP_FILE_PATH, "w+")
         f.write(
             "USE mysql;\n"
             "FLUSH PRIVILEGES;\n"
@@ -45,11 +46,11 @@ class MYSQLStartupHandler(ICartridgeAgentPlugin):
 
         log.info("Temp File created")
 
-        mysql_command = "/usr/sbin/mysqld --bootstrap --verbose=0 < /tmp/temp.sql"
+        mysql_command = "/usr/sbin/mysqld --bootstrap --verbose=0 < "+TEMP_FILE_PATH
         env_var = os.environ.copy()
         p = subprocess.Popen(mysql_command, env=env_var, shell=True)
         output, errors = p.communicate()
-        log.info("File executed")
+        log.info("%s file executed" %TEMP_FILE_PATH)
 
         mysql_start_command = "service mysql restart"
         p = subprocess.Popen(mysql_start_command, env=env_var, shell=True)
