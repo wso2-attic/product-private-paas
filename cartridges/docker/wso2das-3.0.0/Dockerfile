@@ -23,7 +23,7 @@ ENV DEBIAN_FRONTEND noninteractive
 
 ENV PPAAS_VERSION 4.1.0-SNAPSHOT
 ENV WSO2_DAS_VERSION 3.0.0-SNAPSHOT
-ENV MYSQL_CONNECTOR_VERSION 5.1.30
+ENV MYSQL_CONNECTOR_VERSION 5.1.35
 ENV DAS_TEMPLATE_MODULE_NAME wso2das-3.0.0-template-module-${PPAAS_VERSION}
 ENV PCA_NAME apache-stratos-python-cartridge-agent-${PPAAS_VERSION}
 ENV PCA_HOME /opt/${PCA_NAME}
@@ -48,6 +48,8 @@ RUN unzip /opt/wso2das-${WSO2_DAS_VERSION}.zip -d /opt/ && \
     mv /opt/mysql-connector-java-${MYSQL_CONNECTOR_VERSION}-bin.jar /opt/wso2das-${WSO2_DAS_VERSION}/repository/components/lib && \
     unzip /opt/${DAS_TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
     rm -rf /opt/${DAS_TEMPLATE_MODULE_NAME}.zip
+
+RUN pip install PyMySQL \
 
 # ----------------------
 # Expose container ports

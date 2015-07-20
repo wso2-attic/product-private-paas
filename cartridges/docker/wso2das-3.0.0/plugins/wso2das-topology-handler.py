@@ -20,12 +20,45 @@ from plugins.contracts import ICartridgeAgentPlugin
 from modules.util.log import LogFactory
 import subprocess
 import os
+import mdsclient
+import pymysql as db
 
 
 class DASTopologyHandler(ICartridgeAgentPlugin):
+
+    def create_databases(self, dburl, username, password, databasename):
+        log = LogFactory().get_log(__name__)
+        mds_response = mdsclient.get(app=True)
+        if mds_response is not None and mds_response.properties.get("MYSQL_HOST") is not None:
+            remote_host = mds_response.properties.get("MYSQL_HOST")
+            remote_username = mds_response.properties.get("MYSQL_ROOT_USERNAME")
+            remote_password = mds_response.properties.get("MYSQL_ROOT_PASSWORD")
+            log.info("mysql server conf [host]:%s [username]:%s [password]:%s", remote_host,
+                     remote_username, remote_password)
+            try:
+                con = db.connect(host=remote_host, username=remote_username, passwd=remote_password)
+                cur = con.cursor()
+                cur.execute('CREATE DATABASE IF NOT EXISTS ' + databasename + ';')
+                cur.execute('USE ' + databasename + ';')
+                cur.execute(
+                    'GRANT ALL PRIVILEGES ON ' + databasename + '.* TO ' + username + '@"%" IDENTIFIED BY "' + password + '";')
+                log.info("Database %s created successfully" % databasename)
+            except db.Error, e:
+                log("Error in creating database %d: %s" % (e.args[0], e.args[1]))
+
+            finally:
+                if con:
+                    con.close()
+        else:
+            log.error('mysql details not published to metadata')
+
+
     def run_plugin(self, values):
         log = LogFactory().get_log(__name__)
         log.info("Values %r" % values)
+
+        profile = os.environ['CONFIG_PARAM_PROFILE']
+        log.info("Profile : %s " % profile)
 
         app_id = values["APPLICATION_ID"]
         log.info("Application ID: %s" % app_id)
@@ -39,53 +72,46 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
         log.info("env MB_IP=%s MB_PORT=%s", (os.environ.get('CONFIG_PARAM_MB_IP')),
                  (os.environ.get('CONFIG_PARAM_MB_PORT')))
 
+        zookeeper_ip = None
+        hbase_master_ip = None
+
         topology = values["TOPOLOGY_JSON"]
         log.info("Topology: %s" % topology)
-        topology_str = json.loads(topology)
+        topology_json = json.loads(topology)
 
-        # if topology_str is not None:
-        #     # add service map
-        #     for service_name in topology_str["serviceMap"]:
-        #         service_str = topology_str["serviceMap"][service_name]
-        #         for cluster_id in service_str["clusterIdClusterMap"]:
-        #             cluster_str = service_str["clusterIdClusterMap"][cluster_id]
+        for service_name in topology_json["serviceMap"]:
+            service_str = topology_json["serviceMap"][service_name]
+            if service_name == "das-zookeeper":
+                # add cluster map
+                for cluster_id in service_str["clusterIdClusterMap"]:
+                    cluster_str = service_str["clusterIdClusterMap"][cluster_id]
+                    # add member map
+                    for member_id in cluster_str["memberMap"]:
+                        member_str = cluster_str["memberMap"][member_id]
+                        if zookeeper_ip is None:
+                            zookeeper_ip = member_str["defaultPrivateIP"]
+                            os.environ["CONFIG_PARAM_ZK_HOST"] = zookeeper_ip
 
+            if service_name == "hbase":
+                # add cluster map
+                for cluster_id in service_str["clusterIdClusterMap"]:
+                    cluster_str = service_str["clusterIdClusterMap"][cluster_id]
+                    # add member map
+                    for member_id in cluster_str["memberMap"]:
+                        member_str = cluster_str["memberMap"][member_id]
+                        if hbase_master_ip is None:
+                            hbase_master_ip = member_str["defaultPrivateIP"]
+                            os.environ["CONFIG_PARAM_HBASE_MASTER_HOST"] = hbase_master_ip
 
-        # Configuring Port Mappings
-        # log.info("Reading port mappings...")
-        # port_mappings_str = values["PORT_MAPPINGS"]
-        #
-        # mgt_console_https_port = None
-        #
-        # # port mappings format: """NAME:mgt-console|PROTOCOL:https|PORT:4500|PROXY_PORT:9443"""
-        # log.info("Port mappings: %s" % port_mappings_str)
-        # if port_mappings_str is not None:
-        #
-        #     port_mappings_array = port_mappings_str.split(";")
-        #     if port_mappings_array:
-        #
-        #         for port_mapping in port_mappings_array:
-        #             log.debug("port_mapping: %s" % port_mapping)
-        #             name_value_array = port_mapping.split("|")
-        #             name = name_value_array[0].split(":")[1]
-        #             protocol = name_value_array[1].split(":")[1]
-        #             port = name_value_array[2].split(":")[1]
-        #             if name == "mgt-console" and protocol == "https":
-        #                 mgt_console_https_port = port
-        #
-        # log.info("Kubernetes service management console https port: %s" % mgt_console_https_port)
-        # if mgt_console_https_port is not None:
-        #     os.environ['CONFIG_PARAM_HTTPS_PROXY_PORT'] = mgt_console_https_port
-        #     log.info(
-        #         "env https proxy port: %s" % (os.environ.get('CONFIG_PARAM_HTTPS_PROXY_PORT')))
-
-        CONFIG_PARAM_CLUSTERING="true"
-        CONFIG_PARAM_MEMBERSHIP_SCHEME="stratos"
+        CONFIG_PARAM_CLUSTERING = "true"
+        CONFIG_PARAM_MEMBERSHIP_SCHEME = "stratos"
         os.environ['CONFIG_PARAM_CLUSTERING'] = CONFIG_PARAM_CLUSTERING
         os.environ['CONFIG_PARAM_MEMBERSHIP_SCHEME'] = CONFIG_PARAM_MEMBERSHIP_SCHEME
 
         log.info(
-            "env CONFIG_PARAM_CLUSTERING: %s  CONFIG_PARAM_MEMBERSHIP_SCHEME:%s " ,(os.environ.get('CONFIG_PARAM_CLUSTERING')),(os.environ.get('CONFIG_PARAM_MEMBERSHIP_SCHEME')))
+            "env CONFIG_PARAM_CLUSTERING: %s  CONFIG_PARAM_MEMBERSHIP_SCHEME:%s ",
+            (os.environ.get('CONFIG_PARAM_CLUSTERING')),
+            (os.environ.get('CONFIG_PARAM_MEMBERSHIP_SCHEME')))
 
         # Configuring Cluster IDs
         CONFIG_PARAM_CLUSTER_IDS = values["CLUSTER_ID"]
