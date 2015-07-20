@@ -25,8 +25,7 @@ import pymysql as db
 
 
 class DASTopologyHandler(ICartridgeAgentPlugin):
-
-    def create_databases(self, dburl, username, password, databasename):
+    def create_database(self, databasename, username, password):
         log = LogFactory().get_log(__name__)
         mds_response = mdsclient.get(app=True)
         if mds_response is not None and mds_response.properties.get("MYSQL_HOST") is not None:
@@ -50,7 +49,7 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
                 if con:
                     con.close()
         else:
-            log.error('mysql details not published to metadata')
+            log.error('mysql details not published to metadata service')
 
 
     def run_plugin(self, values):
@@ -120,6 +119,28 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
         log.info(
             "env CONFIG_PARAM_CLUSTER_IDS: %s " % (os.environ.get('CONFIG_PARAM_CLUSTER_IDS')))
 
+        # creating databases
+        self.create_database('ANALYTICS_FS_DB', 'FS_user', 'fs123')
+        mds_response = mdsclient.get(app=True)
+        if mds_response is not None and mds_response.properties.get("MYSQL_HOST") is not None:
+            remote_host = mds_response.properties.get("MYSQL_HOST")
+        else:
+            log.error('mysql details not published to metadata service')
+
+        os.environ[
+            'CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL'] = "jdbc:mysql://"+remote_host+":3306/ANALYTICS_FS_DB?autoReconnect=true"
+        os.environ[
+            'CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_USER_NAME'] = "FS_user"
+        os.environ[
+            'CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_PASSWORD'] = "fs123"
+
+        self.create_database('ANALYTICS_PROCESSED_DATA_STORE', 'DS_user', 'ds123')
+        os.environ[
+            'CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_URL'] = "jdbc:mysql://"+remote_host+":3306/ANALYTICS_PROCESSED_DATA_STORE?autoReconnect=true"
+        os.environ[
+            'CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_USER_NAME'] = "DS_user"
+        os.environ[
+            'CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_PASSWORD'] = "ds123"
 
         # configure server
         log.info("Configuring WSO2 DAS ...")
