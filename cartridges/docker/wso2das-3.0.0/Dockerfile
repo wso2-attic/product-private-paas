@@ -28,6 +28,7 @@ ENV DAS_TEMPLATE_MODULE_NAME wso2das-3.0.0-template-module-${PPAAS_VERSION}
 ENV PCA_NAME apache-stratos-python-cartridge-agent-${PPAAS_VERSION}
 ENV PCA_HOME /opt/${PCA_NAME}
 ENV CARBON_HOME /opt/wso2das-${WSO2_DAS_VERSION}
+ENV TERM xterm
 
 # --------------------------------
 # Copy scripts, packages & plugins
