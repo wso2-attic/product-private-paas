@@ -49,7 +49,7 @@ RUN unzip /opt/wso2das-${WSO2_DAS_VERSION}.zip -d /opt/ && \
     unzip /opt/${DAS_TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
     rm -rf /opt/${DAS_TEMPLATE_MODULE_NAME}.zip
 
-RUN pip install PyMySQL \
+RUN pip install PyMySQL
 
 # ----------------------
 # Expose container ports
