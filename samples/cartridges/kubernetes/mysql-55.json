@@ -19,7 +19,7 @@
   "iaasProvider": [
     {
       "type": "kubernetes",
-      "imageId": "mysql:5.5",
+      "imageId": "wso2/mysql:5.5",
       "networkInterfaces": []
     }
   ],
