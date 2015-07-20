@@ -1,10 +1,10 @@
 {
-  "type": "das-receiver",
+  "type": "das-analytics",
   "category": "data",
   "provider": "apache",
   "host": "das.wso2.com",
-  "displayName": "das-receiver",
-  "description": "WSO2 DAS Receiver cartridge",
+  "displayName": "WSO2 DAS Analytics",
+  "description": "WSO2 DAS Analytics Cartridge",
   "version": "4.0.0",
   "multiTenant": false,
   "loadBalancingIPType": "public",

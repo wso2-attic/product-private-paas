@@ -3,7 +3,7 @@
   "category": "data",
   "provider": "apache",
   "host": "das.wso2.com",
-  "displayName": "das-receiver",
+  "displayName": "WSO2 DAS Receiver",
   "description": "WSO2 DAS Receiver cartridge",
   "version": "4.0.0",
   "multiTenant": false,
