@@ -22,7 +22,8 @@ FROM wso2/base-image:4.1.0
 ENV DEBIAN_FRONTEND noninteractive
 
 ENV PPAAS_VERSION 4.1.0-SNAPSHOT
-ENV PCA_NAME apache-stratos-python-cartridge-agent-${PPAAS_VERSION}
+ENV PCA_VERSION 4.1.0
+ENV PCA_NAME apache-stratos-python-cartridge-agent-${PCA_VERSION}
 ENV PCA_HOME /opt/${PCA_NAME}
 
 
