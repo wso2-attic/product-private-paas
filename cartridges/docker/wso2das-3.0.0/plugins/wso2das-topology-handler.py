@@ -33,7 +33,8 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
             remote_username = mds_response.properties.get("MYSQL_ROOT_USERNAME")
             remote_password = mds_response.properties.get("MYSQL_ROOT_PASSWORD")
             log.info("mysql server conf [host]:%s [username]:%s [password]:%s", remote_host,
-                     remote_username, remote_password)
+                     remote_username, remote_password
+            con=None
             try:
                 con = db.connect(host=remote_host, username=remote_username, passwd=remote_password)
                 cur = con.cursor()
