@@ -89,7 +89,7 @@ class CEPTopologyHandler(ICartridgeAgentPlugin):
             else:
                 log.warn("Unable to read zookeeper portal ip from topology")
         else:
-            log.warn("Zookeeper clusterIdClusterMap is not available in topology for application : %" % app_id)
+            log.warn("Zookeeper clusterIdClusterMap is not available in topology for application : %s" % app_id)
 
         nimbus_kubernetes_portal_ip = None
         nimbus_cluster_str = self.get_cluster_id_cluster_map(topology_json, self.TOPOLOGY_NIMBUS_SERVICE_NAME, app_id)
@@ -102,7 +102,7 @@ class CEPTopologyHandler(ICartridgeAgentPlugin):
             else:
                 log.warn("Unable to read nimbus portal ip from topology")
         else:
-            log.warn("Nimbus clusterIdClusterMap is not available in topology for application : %" % app_id)
+            log.warn("Nimbus clusterIdClusterMap is not available in topology for application : %s" % app_id)
 
         # set local ip as CONFIG_PARAM_LOCAL_MEMBER_HOST
         get_local_ip_cmd = "awk 'NR==1 {print $1}' /etc/hosts"
@@ -165,7 +165,7 @@ class CEPTopologyHandler(ICartridgeAgentPlugin):
                 log.warn(
                     "CEP Manager IPs are not found in topology, hence CONFIG_PARAM_MANAGER_MEMBERS property is not set")
         else:
-            log.warn("CEP Manager clusterIdClusterMap is not available in topology for application : %" % app_id)
+            log.warn("CEP Manager clusterIdClusterMap is not available in topology for application : %s" % app_id)
 
         # Read all CEP Manager/Worker cluster-ids from topology and update CONFIG_PARAM_CLUSTER_IDs in module.ini
         cep_worker_manager_cluster_ids = []

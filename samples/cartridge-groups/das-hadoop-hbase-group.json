@@ -1,0 +1,70 @@
+{
+    "name":"das-hadoop-hbase-group",
+    "dependencies":{
+        "terminationBehaviour":"terminate-all",
+        "startupOrders":[
+            {
+                "aliases":[
+                    "cartridge.my-mysql",
+                    "cartridge.my-das-zookeeper",
+                    "group.my-hadoop-group",
+                    "group.my-hbase-group",
+                    "group.my-das-group"
+                ]
+            }
+        ]
+    },
+    "groups":[
+        {
+            "name": "hadoop-group",
+            "cartridges": [
+                "hadoop",
+                "hadoopdata"
+            ],
+            "dependencies": {
+                "terminationBehaviour": "terminate-all",
+                "startupOrders": [
+                    {
+                        "aliases": [
+                            "cartridge.my-hadoop",
+                            "cartridge.my-hadoopdata"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "hbase-group",
+            "cartridges": [
+                "hbase",
+                "hbaseregionserver"
+            ],
+            "dependencies": {
+                "terminationBehaviour": "terminate-all",
+                "startupOrders": [
+                    {
+                        "aliases": [
+                            "cartridge.my-hbase",
+                            "cartridge.my-hbaseregionserver"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "das-group",
+            "cartridges": [
+                "das-receiver",
+                "das-analytics",
+                "das-dashboard"
+            ],
+            "dependencies": {
+                "terminationBehaviour": "terminate-none"
+            }
+        }
+    ],
+    "cartridges": [
+        "mysql",
+        "das-zookeeper"
+    ]
+}
