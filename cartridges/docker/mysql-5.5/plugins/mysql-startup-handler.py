@@ -27,8 +27,7 @@ class MYSQLStartupHandler(ICartridgeAgentPlugin):
     def publish_metadata(self, properties_data):
         log = LogFactory().get_log(__name__)
         publish_data = mdsclient.MDSPutRequest()
-        publish_data.properties = properties_data
-        mdsclient.put(publish_data, app=True)
+        mdsclient.put(properties_data, app=True)
         log.info("Published metadata: %s " % publish_data)
 
     def run_plugin(self, values):
@@ -66,9 +65,9 @@ class MYSQLStartupHandler(ICartridgeAgentPlugin):
         log.info("local IP from /etc/hosts : %s " % local_ip)
 
         # publishing to metadata service
-        mysql_host = {"key": "MYSQL_HOST", "values": local_ip}
-        mysql_password = {"key": "MYSQL_ROOT_PASSWORD", "values": MYSQL_ROOT_PASSWORD}
-        mysql_username = {"key": "MYSQL_ROOT_USERNAME", "values": "root"}
+        mysql_host = {"key": "MYSQL_HOST", "values": [local_ip]}
+        mysql_password = {"key": "MYSQL_ROOT_PASSWORD", "values":[MYSQL_ROOT_PASSWORD]}
+        mysql_username = {"key": "MYSQL_ROOT_USERNAME", "values": ["root"]}
 
         self.publish_metadata(mysql_host)
         self.publish_metadata(mysql_username)
