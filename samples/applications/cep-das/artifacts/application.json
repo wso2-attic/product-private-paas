@@ -11,14 +11,7 @@
                         "cartridgeMin":1,
                         "subscribableInfo":{
                             "alias":"my-mysql",
-                            "artifactRepository":{
-                                "alias":"my-mysql",
-                                "privateRepo":false,
-                                "repoPassword":"",
-                                "repoUrl":"https://github.com/lakwarus/single-cartridge.git",
-                                "repoUsername":""
-                            },
-                            "autoscalingPolicy":"autoscaling-policy-1",
+                             "autoscalingPolicy":"autoscaling-policy-1",
                             "deploymentPolicy":"deployment-policy-1"
                         },
                         "type":"mysql"
@@ -28,13 +21,6 @@
                         "cartridgeMin":1,
                         "subscribableInfo":{
                             "alias":"my-das-zookeeper",
-                            "artifactRepository":{
-                                "alias":"my-das-zookeeper",
-                                "privateRepo":false,
-                                "repoPassword":"",
-                                "repoUrl":"https://github.com/lakwarus/single-cartridge.git",
-                                "repoUsername":""
-                            },
                             "autoscalingPolicy":"autoscaling-policy-1",
                             "deploymentPolicy":"deployment-policy-1"
                         },
@@ -94,13 +80,6 @@
                                 "cartridgeMin":2,
                                 "subscribableInfo":{
                                     "alias":"my-hbase",
-                                    "artifactRepository":{
-                                        "alias":"my-hbase",
-                                        "privateRepo":false,
-                                        "repoPassword":"",
-                                        "repoUrl":"https://github.com/lakwarus/single-cartridge.git",
-                                        "repoUsername":""
-                                    },
                                     "autoscalingPolicy":"autoscaling-policy-1",
                                     "deploymentPolicy":"deployment-policy-1"
                                 },
@@ -111,13 +90,6 @@
                                 "cartridgeMin":2,
                                 "subscribableInfo":{
                                     "alias":"my-hbaseregionserver",
-                                    "artifactRepository":{
-                                        "alias":"my-hbaseregionserver",
-                                        "privateRepo":false,
-                                        "repoPassword":"",
-                                        "repoUrl":"https://github.com/lakwarus/single-cartridge.git",
-                                        "repoUsername":""
-                                    },
                                     "autoscalingPolicy":"autoscaling-policy-1",
                                     "deploymentPolicy":"deployment-policy-1"
                                 },
@@ -203,13 +175,6 @@
                                 "cartridgeMin":1,
                                 "subscribableInfo":{
                                     "alias":"my-supervisor",
-                                    "artifactRepository":{
-                                        "alias":"my-supervisor",
-                                        "privateRepo":false,
-                                        "repoPassword":"",
-                                        "repoUrl":"https://github.com/lakwarus/single-cartridge.git",
-                                        "repoUsername":""
-                                    },
                                     "autoscalingPolicy":"autoscaling-policy-1",
                                     "deploymentPolicy":"deployment-policy-1"
                                 },
@@ -220,13 +185,6 @@
                                 "cartridgeMin":1,
                                 "subscribableInfo":{
                                     "alias":"my-ui",
-                                    "artifactRepository":{
-                                        "alias":"my-ui",
-                                        "privateRepo":false,
-                                        "repoPassword":"",
-                                        "repoUrl":"https://github.com/lakwarus/single-cartridge.git",
-                                        "repoUsername":""
-                                    },
                                     "autoscalingPolicy":"autoscaling-policy-1",
                                     "deploymentPolicy":"deployment-policy-1"
                                 },
@@ -237,13 +195,6 @@
                                 "cartridgeMin":1,
                                 "subscribableInfo":{
                                     "alias":"my-nimbus",
-                                    "artifactRepository":{
-                                        "alias":"my-nimbus",
-                                        "privateRepo":false,
-                                        "repoPassword":"",
-                                        "repoUrl":"https://github.com/lakwarus/single-cartridge.git",
-                                        "repoUsername":""
-                                    },
                                     "autoscalingPolicy":"autoscaling-policy-1",
                                     "deploymentPolicy":"deployment-policy-1"
                                 },
@@ -254,13 +205,6 @@
                                 "cartridgeMin":1,
                                 "subscribableInfo":{
                                     "alias":"my-zookeeper",
-                                    "artifactRepository":{
-                                        "alias":"my-zookeeper",
-                                        "privateRepo":false,
-                                        "repoPassword":"",
-                                        "repoUrl":"https://github.com/lakwarus/single-cartridge.git",
-                                        "repoUsername":""
-                                    },
                                     "autoscalingPolicy":"autoscaling-policy-1",
                                     "deploymentPolicy":"deployment-policy-1"
                                 },

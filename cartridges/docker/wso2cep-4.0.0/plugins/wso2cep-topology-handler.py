@@ -94,7 +94,7 @@ class CEPTopologyHandler(ICartridgeAgentPlugin):
         nimbus_kubernetes_portal_ip = None
         nimbus_cluster_str = self.get_cluster_id_cluster_map(topology_json, self.TOPOLOGY_NIMBUS_SERVICE_NAME, app_id)
         if nimbus_cluster_str is not None:
-            nimbus_kubernetes_portal_ip = self.get_portal_ip_from_cluster_map(nimbus_cluster_str, "tcp")
+            nimbus_kubernetes_portal_ip = self.get_portal_ip_from_cluster_map(nimbus_cluster_str, "thrift")
             if nimbus_kubernetes_portal_ip is not None:
                 self.set_as_env_variable('CONFIG_PARAM_NIMBUS_HOST', nimbus_kubernetes_portal_ip)
                 log.info(

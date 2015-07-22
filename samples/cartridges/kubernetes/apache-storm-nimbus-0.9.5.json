@@ -11,7 +11,7 @@
     "portMapping": [
         {
             "name": "thrift-port",
-            "protocol": "tcp",
+            "protocol": "thrift",
             "port": "6627",
             "proxyPort": "8280"
         }

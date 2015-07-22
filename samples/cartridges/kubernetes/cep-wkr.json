@@ -17,13 +17,13 @@
         },
         {
             "name": "thrift-port",
-            "protocol": "tcp",
+            "protocol": "thrift",
             "port": "7611",
             "proxyPort": "8245"
         },
         {
             "name": "binary-port",
-            "protocol": "tcp",
+            "protocol": "thrift",
             "port": "9611",
             "proxyPort": "8246"
         }
