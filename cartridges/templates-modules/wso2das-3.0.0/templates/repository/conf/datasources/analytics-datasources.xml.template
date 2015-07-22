@@ -147,7 +147,7 @@
                 <configuration>
                     <property>
                         <name>hbase.master</name>
-                        <value>{{CONFIG_PARAM_HBASE_MASTER_HOST}}</value>
+                        <value>{{CONFIG_PARAM_HBASE_MASTER_HOST}}:{{CONFIG_PARAM_HBASE_MASTER_PORT}}</value>
                     </property>
                     <property>
                         <name>hbase.zookeeper.quorum</name>
