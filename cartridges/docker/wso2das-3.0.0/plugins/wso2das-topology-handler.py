@@ -29,9 +29,9 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
         log = LogFactory().get_log(__name__)
         mds_response = mdsclient.get(app=True)
         if mds_response is not None and mds_response.properties.get("MYSQL_HOST") is not None:
-            remote_host = mds_response.properties.get("MYSQL_HOST")
-            remote_username = mds_response.properties.get("MYSQL_ROOT_USERNAME")
-            remote_password = mds_response.properties.get("MYSQL_ROOT_PASSWORD")
+            remote_host = mds_response.properties["MYSQL_HOST"]
+            remote_username = mds_response.properties["MYSQL_ROOT_USERNAME"]
+            remote_password = mds_response.properties["MYSQL_ROOT_PASSWORD"]
             log.info("mysql server conf [host]:%s [username]:%s [password]:%s", remote_host,
                      remote_username, remote_password)
             con = None
@@ -65,7 +65,6 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
 
         # Configuring Message Broker IP and Port
         CONFIG_PARAM_MB_IP = values["MB_IP"]
-        CONFIG_PARAM_MB_PORT = values["MB_PORT"]
         log.info("Message Broker [IP] %s  [PORT] %s", CONFIG_PARAM_MB_IP, CONFIG_PARAM_MB_PORT)
         os.environ['CONFIG_PARAM_MB_IP'] = CONFIG_PARAM_MB_IP
         os.environ['CONFIG_PARAM_MB_PORT'] = CONFIG_PARAM_MB_PORT
