@@ -65,10 +65,9 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
 
         # Configuring Message Broker IP and Port
         CONFIG_PARAM_MB_IP = values["MB_IP"]
-        log.info("Message Broker [IP] %s  [PORT] %s", CONFIG_PARAM_MB_IP)
+        log.info("Message Broker [IP] %s" , CONFIG_PARAM_MB_IP)
         os.environ['CONFIG_PARAM_MB_IP'] = CONFIG_PARAM_MB_IP
-        log.info("env MB_IP=%s MB_PORT=%s", (os.environ.get('CONFIG_PARAM_MB_IP')),
-                 (os.environ.get('CONFIG_PARAM_MB_PORT')))
+        log.info("env MB_IP=%s ", (os.environ.get('CONFIG_PARAM_MB_IP')))
 
         zookeeper_ip = None
         hbase_master_ip = None
