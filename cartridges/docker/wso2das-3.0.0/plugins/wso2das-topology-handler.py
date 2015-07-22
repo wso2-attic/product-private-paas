@@ -33,8 +33,8 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
             remote_username = mds_response.properties.get("MYSQL_ROOT_USERNAME")
             remote_password = mds_response.properties.get("MYSQL_ROOT_PASSWORD")
             log.info("mysql server conf [host]:%s [username]:%s [password]:%s", remote_host,
-                     remote_username, remote_password
-            con=None
+                     remote_username, remote_password)
+            con = None
             try:
                 con = db.connect(host=remote_host, username=remote_username, passwd=remote_password)
                 cur = con.cursor()
@@ -129,7 +129,7 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
             log.error('mysql details not published to metadata service')
 
         os.environ[
-            'CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL'] = "jdbc:mysql://"+remote_host+":3306/ANALYTICS_FS_DB?autoReconnect=true"
+            'CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL'] = "jdbc:mysql://" + remote_host + ":3306/ANALYTICS_FS_DB?autoReconnect=true"
         os.environ[
             'CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_USER_NAME'] = "FS_user"
         os.environ[
@@ -137,7 +137,7 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
 
         self.create_database('ANALYTICS_PROCESSED_DATA_STORE', 'DS_user', 'ds123')
         os.environ[
-            'CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_URL'] = "jdbc:mysql://"+remote_host+":3306/ANALYTICS_PROCESSED_DATA_STORE?autoReconnect=true"
+            'CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_URL'] = "jdbc:mysql://" + remote_host + ":3306/ANALYTICS_PROCESSED_DATA_STORE?autoReconnect=true"
         os.environ[
             'CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_USER_NAME'] = "DS_user"
         os.environ[
