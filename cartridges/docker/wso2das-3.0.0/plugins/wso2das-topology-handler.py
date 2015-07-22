@@ -36,7 +36,7 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
                      remote_username, remote_password)
             con = None
             try:
-                con = db.connect(host=remote_host, username=remote_username, passwd=remote_password)
+                con = db.connect(host=remote_host, user=remote_username, passwd=remote_password)
                 cur = con.cursor()
                 cur.execute('CREATE DATABASE IF NOT EXISTS ' + databasename + ';')
                 cur.execute('USE ' + databasename + ';')
