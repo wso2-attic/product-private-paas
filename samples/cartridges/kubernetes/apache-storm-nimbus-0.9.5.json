@@ -10,8 +10,8 @@
     "loadBalancingIPType": "public",
     "portMapping": [
         {
-            "name": "thrift",
-            "protocol": "thrift",
+            "name": "thrift-port",
+            "protocol": "tcp",
             "port": "6627",
             "proxyPort": "8280"
         }

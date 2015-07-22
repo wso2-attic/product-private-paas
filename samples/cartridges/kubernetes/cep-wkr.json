@@ -14,6 +14,18 @@
             "protocol": "https",
             "port": "9443",
             "proxyPort": "8244"
+        },
+        {
+            "name": "thrift-port",
+            "protocol": "tcp",
+            "port": "7611",
+            "proxyPort": "8245"
+        },
+        {
+            "name": "binary-port",
+            "protocol": "tcp",
+            "port": "9611",
+            "proxyPort": "8246"
         }
     ],
     "deployment": {
