@@ -1,4 +1,4 @@
-#  Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
+# Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -28,12 +28,12 @@ class MYSQLStartupHandler(ICartridgeAgentPlugin):
         log = LogFactory().get_log(__name__)
         publish_data = mdsclient.MDSPutRequest()
         mdsclient.put(properties_data, app=True)
-        log.info("Published metadata: %s " % publish_data)
+        log.info("Published metadata: %s " % properties_data)
 
     def run_plugin(self, values):
         log = LogFactory().get_log(__name__)
         MYSQL_ROOT_PASSWORD = os.environ["MYSQL_ROOT_PASSWORD"];
-        TEMP_FILE_PATH="/tmp/temp.sql"
+        TEMP_FILE_PATH = "/tmp/temp.sql"
         log.info("MYSQL_ROOT_PASSWORD : %s" % MYSQL_ROOT_PASSWORD)
         f = open(TEMP_FILE_PATH, "w+")
         f.write(
@@ -45,11 +45,11 @@ class MYSQLStartupHandler(ICartridgeAgentPlugin):
 
         log.info("Temp File created")
 
-        mysql_command = "/usr/sbin/mysqld --bootstrap --verbose=0 < "+TEMP_FILE_PATH
+        mysql_command = "/usr/sbin/mysqld --bootstrap --verbose=0 < " + TEMP_FILE_PATH
         env_var = os.environ.copy()
         p = subprocess.Popen(mysql_command, env=env_var, shell=True)
         output, errors = p.communicate()
-        log.info("%s file executed" %TEMP_FILE_PATH)
+        log.info("%s file executed" % TEMP_FILE_PATH)
 
         mysql_start_command = "service mysql restart"
         p = subprocess.Popen(mysql_start_command, env=env_var, shell=True)
@@ -66,7 +66,7 @@ class MYSQLStartupHandler(ICartridgeAgentPlugin):
 
         # publishing to metadata service
         mysql_host = {"key": "MYSQL_HOST", "values": [local_ip]}
-        mysql_password = {"key": "MYSQL_ROOT_PASSWORD", "values":[MYSQL_ROOT_PASSWORD]}
+        mysql_password = {"key": "MYSQL_ROOT_PASSWORD", "values": [MYSQL_ROOT_PASSWORD]}
         mysql_username = {"key": "MYSQL_ROOT_USERNAME", "values": ["root"]}
 
         self.publish_metadata(mysql_host)
