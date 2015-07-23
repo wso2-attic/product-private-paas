@@ -44,7 +44,7 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
                     'GRANT ALL PRIVILEGES ON ' + databasename + '.* TO ' + username + '@"%" IDENTIFIED BY "' + password + '";')
                 log.info("Database %s created successfully" % databasename)
             except db.Error, e:
-                log("Error in creating database %d: %s" % (e.args[0], e.args[1]))
+                log.error("Error in creating database %d: %s" % (e.args[0], e.args[1]))
 
             finally:
                 if con:
@@ -52,6 +52,31 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
         else:
             log.error('mysql details not published to metadata service')
 
+    def map_hbase_hostname(self):
+        log = LogFactory().get_log(__name__)
+        mds_response = mdsclient.get(app=True)
+        if mds_response is not None and mds_response.properties.get("CONFIG_PARAM_HBASE_REGIONSERVER_DATA") is not None:
+            hbase_rs_hostmap=mds_response.properties["CONFIG_PARAM_HBASE_REGIONSERVER_DATA"]
+            log.info("Hbase RS hostnames : %s" %hbase_rs_hostmap)
+            if isinstance(hbase_rs_hostmap, (str, unicode)):
+                hbase_list = hbase_rs_hostmap.split()
+                config_command = "echo "+hbase_list[1]+"    "+hbase_list[0]+"  >> /etc/hosts"
+                log.info("Config command %s" % config_command)
+                env_var = os.environ.copy()
+                p = subprocess.Popen(config_command, env=env_var, shell=True)
+                output, errors = p.communicate()
+                log.info("Entry added to /etc/hosts")
+            else:
+                for entry in hbase_rs_hostmap:
+                    hbase_list = hbase_rs_hostmap.split(":")
+                    config_command = "echo "+hbase_list[1]+"    "+hbase_list[0]+"  >> /etc/hosts"
+                    log.info("Config command %s" % config_command)
+                    env_var = os.environ.copy()
+                    p = subprocess.Popen(config_command, env=env_var, shell=True)
+                    output, errors = p.communicate()
+
+        else:
+            log.error("HBASE RS data not found in metadata service")
 
     def run_plugin(self, values):
         log = LogFactory().get_log(__name__)
@@ -106,7 +131,7 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
         CONFIG_PARAM_MEMBERSHIP_SCHEME = "stratos"
         os.environ['CONFIG_PARAM_CLUSTERING'] = CONFIG_PARAM_CLUSTERING
         os.environ['CONFIG_PARAM_MEMBERSHIP_SCHEME'] = CONFIG_PARAM_MEMBERSHIP_SCHEME
-
+        self.map_hbase_hostname()
         log.info(
             "env CONFIG_PARAM_CLUSTERING: %s  CONFIG_PARAM_MEMBERSHIP_SCHEME:%s ",
             (os.environ.get('CONFIG_PARAM_CLUSTERING')),
