@@ -59,7 +59,7 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
             hbase_rs_hostmap=mds_response.properties["CONFIG_PARAM_HBASE_REGIONSERVER_DATA"]
             log.info("Hbase RS hostnames : %s" %hbase_rs_hostmap)
             if isinstance(hbase_rs_hostmap, (str, unicode)):
-                hbase_list = hbase_rs_hostmap.split()
+                hbase_list = hbase_rs_hostmap.split(":")
                 config_command = "echo "+hbase_list[1]+"    "+hbase_list[0]+"  >> /etc/hosts"
                 log.info("Config command %s" % config_command)
                 env_var = os.environ.copy()
@@ -68,7 +68,7 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
                 log.info("Entry added to /etc/hosts")
             else:
                 for entry in hbase_rs_hostmap:
-                    hbase_list = hbase_rs_hostmap.split(":")
+                    hbase_list = entry.split(":")
                     config_command = "echo "+hbase_list[1]+"    "+hbase_list[0]+"  >> /etc/hosts"
                     log.info("Config command %s" % config_command)
                     env_var = os.environ.copy()
