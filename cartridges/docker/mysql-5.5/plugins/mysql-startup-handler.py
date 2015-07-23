@@ -1,7 +1,7 @@
 # Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
 #
-#  Licensed under the Apache License, Version 2.0 (the "License");
-#  you may not use this file except in compliance with the License.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
 #  You may obtain a copy of the License at
 #
 #  http://www.apache.org/licenses/LICENSE-2.0
@@ -26,13 +26,20 @@ import os
 class MYSQLStartupHandler(ICartridgeAgentPlugin):
     def publish_metadata(self, properties_data):
         log = LogFactory().get_log(__name__)
+        mds_response = mdsclient.get(app=True)
+        #Remove key values from metadata service
+        if mds_response is not None and mds_response.properties.get(
+                properties_data["key"]) is not None:
+            old_value = mds_response.properties[properties_data["key"]]
+            log.info(old_value)
+            mdsclient.delete_property_value(properties_data["key"], old_value)
         publish_data = mdsclient.MDSPutRequest()
         mdsclient.put(properties_data, app=True)
         log.info("Published metadata: %s " % properties_data)
 
     def run_plugin(self, values):
         log = LogFactory().get_log(__name__)
-        MYSQL_ROOT_PASSWORD = os.environ["MYSQL_ROOT_PASSWORD"];
+        MYSQL_ROOT_PASSWORD = os.environ["MYSQL_ROOT_PASSWORD"]
         TEMP_FILE_PATH = "/tmp/temp.sql"
         log.info("MYSQL_ROOT_PASSWORD : %s" % MYSQL_ROOT_PASSWORD)
         f = open(TEMP_FILE_PATH, "w+")
