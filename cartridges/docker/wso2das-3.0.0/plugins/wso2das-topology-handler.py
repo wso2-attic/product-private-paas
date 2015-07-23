@@ -83,22 +83,24 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
                 for cluster_id in service_str["clusterIdClusterMap"]:
                     cluster_str = service_str["clusterIdClusterMap"][cluster_id]
                     # add member map
-                    for member_id in cluster_str["memberMap"]:
-                        member_str = cluster_str["memberMap"][member_id]
-                        if zookeeper_ip is None:
-                            zookeeper_ip = member_str["defaultPrivateIP"]
-                            os.environ["CONFIG_PARAM_ZK_HOST"] = zookeeper_ip
+                    if cluster_str["appId"] == app_id:
+                        for member_id in cluster_str["memberMap"]:
+                            member_str = cluster_str["memberMap"][member_id]
+                            if zookeeper_ip is None:
+                                zookeeper_ip = member_str["defaultPrivateIP"]
+                                os.environ["CONFIG_PARAM_ZK_HOST"] = zookeeper_ip
 
             if service_name == "hbase":
                 # add cluster map
                 for cluster_id in service_str["clusterIdClusterMap"]:
                     cluster_str = service_str["clusterIdClusterMap"][cluster_id]
                     # add member map
-                    for member_id in cluster_str["memberMap"]:
-                        member_str = cluster_str["memberMap"][member_id]
-                        if hbase_master_ip is None:
-                            hbase_master_ip = member_str["defaultPrivateIP"]
-                            os.environ["CONFIG_PARAM_HBASE_MASTER_HOST"] = hbase_master_ip
+                    if cluster_str["appId"] == app_id:
+                        for member_id in cluster_str["memberMap"]:
+                            member_str = cluster_str["memberMap"][member_id]
+                            if hbase_master_ip is None:
+                                hbase_master_ip = member_str["defaultPrivateIP"]
+                                os.environ["CONFIG_PARAM_HBASE_MASTER_HOST"] = hbase_master_ip
 
         CONFIG_PARAM_CLUSTERING = "true"
         CONFIG_PARAM_MEMBERSHIP_SCHEME = "stratos"
