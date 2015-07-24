@@ -10,16 +10,10 @@
     "loadBalancingIPType": "public",
     "portMapping": [
         {
-            "name": "http-9763",
+            "name": "http-zookeeper",
             "protocol": "http",
-            "port": "22",
+            "port": "2181",
             "proxyPort": "8280"
-        },
-        {
-            "name": "http-9443",
-            "protocol": "https",
-            "port": "22",
-            "proxyPort": "8243"
         }
 
     ],

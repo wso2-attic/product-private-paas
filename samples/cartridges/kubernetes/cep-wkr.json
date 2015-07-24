@@ -14,6 +14,18 @@
             "protocol": "https",
             "port": "9443",
             "proxyPort": "8244"
+        },
+        {
+            "name": "thrift-port",
+            "protocol": "thrift",
+            "port": "7611",
+            "proxyPort": "8245"
+        },
+        {
+            "name": "binary-port",
+            "protocol": "thrift",
+            "port": "9611",
+            "proxyPort": "8246"
         }
     ],
     "deployment": {
@@ -52,7 +64,7 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_MEMBERSHIP_SCHEME",
-            "value": "wka"
+            "value": "stratos"
         },
         {
             "name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
@@ -65,6 +77,10 @@
         {
             "name": "payload_parameter.CONFIG_PARAM_WORKER",
             "value": "true"
+        },
+        {
+            "name": "payload_parameter.APPLICATION_PATH",
+            "value": "/opt/wso2cep-4.0.0/repository/deployment/server"
         }
     ]
 }
