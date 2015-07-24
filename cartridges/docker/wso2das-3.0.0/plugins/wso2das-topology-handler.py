@@ -29,9 +29,9 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
         log = LogFactory().get_log(__name__)
         mds_response = mdsclient.get(app=True)
         if mds_response is not None and mds_response.properties.get("MYSQL_HOST") is not None:
-            remote_host = mds_response.properties["MYSQL_HOST"]
-            remote_username = mds_response.properties["MYSQL_ROOT_USERNAME"]
-            remote_password = mds_response.properties["MYSQL_ROOT_PASSWORD"]
+            remote_host = str(mds_response.properties["MYSQL_HOST"])
+            remote_username = str(mds_response.properties["MYSQL_ROOT_USERNAME"])
+            remote_password = str(mds_response.properties["MYSQL_ROOT_PASSWORD"])
             log.info("mysql server conf [host]:%s [username]:%s [password]:%s", remote_host,
                      remote_username, remote_password)
             con = None
