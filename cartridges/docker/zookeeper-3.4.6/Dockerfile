@@ -25,9 +25,11 @@ MAINTAINER dev@wso2.org
 
 ENV DEBIAN_FRONTEND noninteractive
 ENV PPAAS_VERSION 4.1.0-SNAPSHOT
-ENV JDK_VERSION 1.7.0_60
+ENV JDK_VERSION 1.7.0_72
 ENV JDK_TAR_FILENAME jdk-7u60-linux-x64.tar.gz
 ENV JAVA_HOME /opt/jdk${JDK_VERSION}
+ENV CONFIGURATOR_NAME ppaas-configurator-${PPAAS_VERSION}
+ENV CONFIGURATOR_HOME /opt/${CONFIGURATOR_NAME}
 ENV CARBON_HOME /opt/zookeeper-3.4.6
 ENV PCA_NAME apache-stratos-python-cartridge-agent-${PPAAS_VERSION}
 ENV PCA_HOME /opt/${PCA_NAME}
@@ -38,9 +40,9 @@ ENV APACHE_ZOOKEEPER_VERSION 3.4.6
 # --------------------------------
 COPY scripts/init.sh /usr/local/bin/init.sh
 COPY scripts/export-envs.sh /tmp/export-envs.sh
-#COPY plugins /${PCA_HOME}/plugins
+COPY plugins /${PCA_HOME}/plugins
 COPY packages/zookeeper-3.4.6.tar.gz /opt/
-
+COPY packages/conf/zoo_sample.cfg /opt/temp/
 
 # -----------------------------
 # Install prerequisites and Zookeeper
@@ -49,7 +51,7 @@ COPY packages/zookeeper-3.4.6.tar.gz /opt/
 WORKDIR /opt
 
 RUN tar xzvf /opt/zookeeper-3.4.6.tar.gz && \
-    cp /opt/zookeeper-3.4.6/conf/zoo_sample.cfg /opt/zookeeper-3.4.6/conf/zoo.cfg && \
+    cp /opt/temp/zoo_sample.cfg /opt/zookeeper-3.4.6/conf/zoo.cfg && \
     chmod +x /tmp/export-envs.sh && \
     chmod +x /usr/local/bin/init.sh && \
     sleep 1 && \

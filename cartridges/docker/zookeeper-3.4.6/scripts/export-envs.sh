@@ -20,3 +20,4 @@ CARBON_HOME=$2
 
 echo "JAVA_HOME=${JAVA_HOME}" >> /etc/environment
 echo "CARBON_HOME=${CARBON_HOME}" >> /etc/environment
+

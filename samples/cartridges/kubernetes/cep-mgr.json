@@ -65,6 +65,10 @@
         {
             "name": "payload_parameter.CONFIG_PARAM_WORKER",
             "value": "false"
+        },
+        {
+            "name": "payload_parameter.APPLICATION_PATH",
+            "value": "/opt/wso2cep-4.0.0/repository/deployment/server"
         }
     ]
 }

@@ -33,8 +33,8 @@ class StormTopologyHandler(ICartridgeAgentPlugin):
         log.info("Application ID: %s" % app_id)
         topology_str = json.loads(topology)
 
-        zookeeper_member_default_private_ip = []
-        nimbus_member_default_private_ip = []
+        zookeeper_member_default_private_ip = None
+        nimbus_member_default_private_ip = None
 
         if topology_str is not None:
             # add service map
@@ -48,7 +48,7 @@ class StormTopologyHandler(ICartridgeAgentPlugin):
                             # add member map
                             for member_id in cluster_str["memberMap"]:
                                 member_str = cluster_str["memberMap"][member_id]
-                                zookeeper_member_default_private_ip.append(member_str["defaultPrivateIP"])
+                                zookeeper_member_default_private_ip = member_str["defaultPrivateIP"]
 
                 if service_name == "nimbus" :
                     # add cluster map

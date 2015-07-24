@@ -10,18 +10,11 @@
     "loadBalancingIPType": "public",
     "portMapping": [
         {
-            "name": "http-9763",
-            "protocol": "http",
-            "port": "22",
+            "name": "thrift-port",
+            "protocol": "thrift",
+            "port": "6627",
             "proxyPort": "8280"
-        },
-        {
-            "name": "http-9443",
-            "protocol": "https",
-            "port": "22",
-            "proxyPort": "8243"
         }
-
     ],
     "deployment": {
     },

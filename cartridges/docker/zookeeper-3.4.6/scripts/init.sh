@@ -28,18 +28,20 @@ if [ "${START_CMD}" = "PCA" ]; then
 	/usr/local/bin/start-agent.sh
 	echo "Python cartridge agent started successfully"
 
-	echo "Starting APACHE zookeeper in ${CARBON_HOME}..."
+	echo "Starting APACHE Zookeeper in ${CARBON_HOME}..."
     ${CARBON_HOME}/bin/zkServer.sh start
     echo "APACHE zookeeper started successfully"
 
 else
-    #echo "Configuring Apache Storm SUPERVISOR..."
+    #echo "Configuring Apache Zookeeper SUPERVISOR..."
     #echo "Environment variables:"
     #printenv
     #pushd ${CONFIGURATOR_HOME}
     #python configurator.py
     #popd
-    #echo "APACHE STORM SUPERVISOR configured successfully"
+    #echo "APACHE STORM zookeeper configured successfully"
+    #  set $IP_ADDRESS=ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1 -d'/'
+    #  echo $IP_ADDRESS"  zookeeper-"${memberId} >> /etc/hosts
 
     echo "Starting APACHE zookeeper in ${CARBON_HOME}..."
     ${CARBON_HOME}/bin/zkServer.sh start
