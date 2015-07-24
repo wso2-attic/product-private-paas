@@ -29,6 +29,8 @@ ENV PCA_NAME apache-stratos-python-cartridge-agent-${PCA_VERSION}
 ENV PCA_HOME /opt/${PCA_NAME}
 ENV CARBON_HOME /opt/wso2das-${WSO2_DAS_VERSION}
 ENV TERM xterm
+ENV JDK_VERSION 1.7.0_72
+ENV JAVA_HOME /opt/jdk${JDK_VERSION}
 
 # --------------------------------
 # Copy scripts, packages & plugins
@@ -38,6 +40,7 @@ COPY packages/${DAS_TEMPLATE_MODULE_NAME}.zip /opt/
 COPY packages/wso2das-${WSO2_DAS_VERSION}.zip /opt/
 COPY packages/mysql-connector-java-${MYSQL_CONNECTOR_VERSION}-bin.jar /opt/
 COPY plugins /${PCA_HOME}/plugins
+COPY scripts/export-envs.sh /tmp/export-envs.sh
 
 # -----------------------------
 # Install prerequisites and DAS
@@ -48,6 +51,9 @@ RUN unzip /opt/wso2das-${WSO2_DAS_VERSION}.zip -d /opt/ && \
     rm /opt/wso2das-${WSO2_DAS_VERSION}.zip && \
     mv /opt/mysql-connector-java-${MYSQL_CONNECTOR_VERSION}-bin.jar /opt/wso2das-${WSO2_DAS_VERSION}/repository/components/lib && \
     unzip /opt/${DAS_TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
+    chmod +x /tmp/export-envs.sh && \
+    sleep 1 && \
+    /tmp/export-envs.sh ${JAVA_HOME} ${CARBON_HOME} \
     rm -rf /opt/${DAS_TEMPLATE_MODULE_NAME}.zip
 
 RUN pip install PyMySQL
