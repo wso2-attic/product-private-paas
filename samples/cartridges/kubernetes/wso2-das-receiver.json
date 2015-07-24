@@ -12,8 +12,32 @@
     {
       "protocol": "https",
       "port": 9443,
-      "proxyPort": 8443,
+      "proxyPort": 8244,
       "name": "mgt-console"
+    },
+    {
+      "protocol": "http",
+      "port": 7611,
+      "proxyPort": 8245,
+      "name": "thrift-port"
+    },
+    {
+      "protocol": "https",
+      "port": 7711,
+      "proxyPort": 8246,
+      "name": "thrift-port2"
+    },
+    {
+      "protocol": "http",
+      "port": 9611,
+      "proxyPort": 8247,
+      "name": "binary-port"
+    },
+    {
+      "protocol": "https",
+      "port": 9711,
+      "proxyPort": 8248,
+      "name": "binary-port2"
     }
   ],
   "iaasProvider": [
