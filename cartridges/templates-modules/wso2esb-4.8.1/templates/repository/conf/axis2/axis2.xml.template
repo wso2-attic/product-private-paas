@@ -256,10 +256,10 @@
         <parameter name="port" locked="false">8280</parameter>
         <parameter name="non-blocking" locked="false">true</parameter>
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
-         {% if  (CONFIG_PARAM_PT_HTTP_PROXY_PORT is defined) and (CONFIG_PARAM_SUB_DOMAIN != 'worker') -%}
-                <parameter name="WSDLEPRPrefix" locked="false">http//:{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ CONFIG_PARAM_PT_HTTP_PROXY_PORT }}</parameter>
+         {% if  (CONFIG_PARAM_WORKER_HOST_NAME is defined) and (CONFIG_PARAM_PT_HTTP_PROXY_PORT is defined) -%}
+                <parameter name="WSDLEPRPrefix" locked="false">http://{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ CONFIG_PARAM_PT_HTTP_PROXY_PORT }}</parameter>
          {% else -%}
-                <!--parameter name="WSDLEPRPrefix" locked="false">http//:{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ key }}</parameter-->
+                <!--parameter name="WSDLEPRPrefix" locked="false">http://{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ key }}</parameter-->
          {% endif -%}
         <parameter name="httpGetProcessor" locked="false">org.wso2.carbon.transport.nhttp.api.PassThroughNHttpGetProcessor</parameter>
          <!--<parameter name="priorityConfigFile" locked="false">location of priority configuration file</parameter>-->
@@ -270,8 +270,8 @@
         <parameter name="non-blocking" locked="false">true</parameter>
         <!--parameter name="bind-address" locked="false">hostname or IP address</parameter-->
 
-         {% if  (CONFIG_PARAM_PT_HTTPS_PROXY_PORT is defined) and (CONFIG_PARAM_SUB_DOMAIN != 'worker') -%}
-            <parameter name="WSDLEPRPrefix" locked="false">https//:{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ CONFIG_PARAM_PT_HTTPS_PROXY_PORT }}</parameter>
+         {% if (CONFIG_PARAM_WORKER_HOST_NAME is defined) and (CONFIG_PARAM_PT_HTTPS_PROXY_PORT is defined) -%}
+            <parameter name="WSDLEPRPrefix" locked="false">https://{{ CONFIG_PARAM_WORKER_HOST_NAME }}:{{ CONFIG_PARAM_PT_HTTPS_PROXY_PORT }}</parameter>
          {% else -%}
             <!--parameter name="WSDLEPRPrefix" locked="false">https://apachehost:port/somepath</parameter-->
          {% endif -%}

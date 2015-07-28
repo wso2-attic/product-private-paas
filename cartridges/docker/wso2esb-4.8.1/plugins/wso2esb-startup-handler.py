@@ -89,6 +89,6 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         log = LogFactory().get_log(__name__)
         if value is not None:
             os.environ[variable] = value
-            log.info("Exported environment variable %s " % variable, value)
+            log.info("Exported environment variable %s: %s" % (variable, value))
         else:
-            log.warn("Could not export environment variable %s " % variable, value)
+            log.warn("Could not export environment variable %s " % variable)
