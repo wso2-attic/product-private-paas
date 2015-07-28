@@ -85,7 +85,8 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         output, errors = p.communicate()
         log.debug("WSO2 ESB started successfully")
 
-    def export_env_var(self, log, variable, value):
+    def export_env_var(self, variable, value):
+        log = LogFactory().get_log(__name__)
         if value is not None:
             os.environ[variable] = value
             log.info("Exported environment variable %s " % variable, value)
