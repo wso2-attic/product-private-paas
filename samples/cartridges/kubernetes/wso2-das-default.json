@@ -1,0 +1,52 @@
+{
+  "type": "das",
+  "category": "data",
+  "provider": "apache",
+  "host": "das.wso2.com",
+  "displayName": "WSO2 DAS",
+  "description": "WSO2 DAS Cartridge",
+  "version": "4.0.0",
+  "multiTenant": false,
+  "loadBalancingIPType": "public",
+  "portMapping": [
+    {
+      "protocol": "https",
+      "port": 9443,
+      "proxyPort": 8443,
+      "name": "mgt-console"
+    }
+  ],
+  "iaasProvider": [
+    {
+      "type": "kubernetes",
+      "imageId": "wso2/das:3.0.0-SNAPSHOT",
+      "networkInterfaces": []
+    }
+  ],
+  "property": [
+    {
+      "name": "KUBERNETES_CONTAINER_CPU",
+      "value": "0"
+    },
+    {
+      "name": "KUBERNETES_CONTAINER_MEMORY",
+      "value": "0"
+    },
+    {
+      "name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
+      "value": "ClientIP"
+    },
+    {
+      "name": "payload_parameter.START_CMD",
+      "value": "PCA"
+    },
+    {
+      "name": "payload_parameter.APPLICATION_PATH",
+      "value": "/var/www"
+    },
+    {
+      "name": "payload_parameter.CONFIG_PARAM_PROFILE",
+      "value": "default"
+    }
+  ]
+}

@@ -7,16 +7,21 @@
     </providers>
 
     <datasources>
-        {% if CONFIG_PARAM_PROFILE !='default' and CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL is defined -%}
+        {% if CONFIG_PARAM_PROFILE !='default' and
+        CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL is defined -%}
         <datasource>
             <name>WSO2_ANALYTICS_FS_DB</name>
             <description>The datasource used for analytics file system</description>
             <definition type="RDBMS">
                 <configuration>
                     <url>{{CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL}}</url>
-                    <username>{{CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_USER_NAME}}</username>
-                    <password>{{CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_PASSWORD}}</password>
-                    <driverClassName>{{CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_DRIVER_CLASS_NAME}}</driverClassName>
+                    <username>{{CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_USER_NAME}}
+                    </username>
+                    <password>{{CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_PASSWORD}}
+                    </password>
+                    <driverClassName>
+                        {{CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_DRIVER_CLASS_NAME}}
+                    </driverClassName>
                     <maxActive>50</maxActive>
                     <maxWait>60000</maxWait>
                     <testOnBorrow>true</testOnBorrow>
@@ -32,7 +37,9 @@
             <description>The datasource used for analytics file system</description>
             <definition type="RDBMS">
                 <configuration>
-                    <url>jdbc:h2:repository/database/ANALYTICS_FS_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000</url>
+                    <url>
+                        jdbc:h2:repository/database/ANALYTICS_FS_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000
+                    </url>
                     <username>wso2carbon</username>
                     <password>wso2carbon</password>
                     <driverClassName>org.h2.Driver</driverClassName>
@@ -52,7 +59,9 @@
             <description>The datasource used for analytics record store</description>
             <definition type="RDBMS">
                 <configuration>
-                    <url>jdbc:h2:repository/database/ANALYTICS_EVENT_STORE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000</url>
+                    <url>
+                        jdbc:h2:repository/database/ANALYTICS_EVENT_STORE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000
+                    </url>
                     <username>wso2carbon</username>
                     <password>wso2carbon</password>
                     <driverClassName>org.h2.Driver</driverClassName>
@@ -66,16 +75,21 @@
             </definition>
         </datasource>
 
-        {% if (CONFIG_PARAM_PROFILE=='analytics' or CONFIG_PARAM_PROFILE=='dashboard') and CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_URL is defined %}
+        {% if (CONFIG_PARAM_PROFILE=='analytics' or CONFIG_PARAM_PROFILE=='dashboard') and
+        CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_URL is defined %}
         <datasource>
             <name>WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB</name>
             <description>The datasource used for analytics record store</description>
             <definition type="RDBMS">
                 <configuration>
                     <url>{{CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_URL}}</url>
-                    <username>{{CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_USER_NAME}}</username>
-                    <password>{{CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_PASSWORD}}</password>
-                    <driverClassName>{{CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_DRIVER_CLASS_NAME}}</driverClassName>
+                    <username>{{CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_USER_NAME}}
+                    </username>
+                    <password>{{CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_PASSWORD}}
+                    </password>
+                    <driverClassName>
+                        {{CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_DRIVER_CLASS_NAME}}
+                    </driverClassName>
                     <maxActive>50</maxActive>
                     <maxWait>60000</maxWait>
                     <testOnBorrow>true</testOnBorrow>
@@ -91,7 +105,9 @@
             <description>The datasource used for analytics record store</description>
             <definition type="RDBMS">
                 <configuration>
-                    <url>jdbc:h2:repository/database/ANALYTICS_PROCESSED_DATA_STORE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000</url>
+                    <url>
+                        jdbc:h2:repository/database/ANALYTICS_PROCESSED_DATA_STORE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000
+                    </url>
                     <username>wso2carbon</username>
                     <password>wso2carbon</password>
                     <driverClassName>org.h2.Driver</driverClassName>
@@ -136,7 +152,8 @@
         </datasource>-->
 
         <!-- Sample datasource implementation for HBase Analytics RecordStore-->
-        {% if CONFIG_PARAM_HBASE_MASTER_HOST is defined and (CONFIG_PARAM_PROFILE=='analytics' or CONFIG_PARAM_PROFILE=='receiver') -%}
+        {% if CONFIG_PARAM_HBASE_MASTER_HOST is defined and (CONFIG_PARAM_PROFILE=='analytics' or
+        CONFIG_PARAM_PROFILE=='receiver') -%}
         <datasource>
             <name>{{CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE}}</name>
             <description>The datasource used for analytics event store</description>
@@ -147,23 +164,33 @@
                 <configuration>
                     <property>
                         <name>hbase.master</name>
-                        <value>{{CONFIG_PARAM_HBASE_MASTER_HOST}}</value>
+                        <value>
+                            {{CONFIG_PARAM_HBASE_MASTER_HOST}}:{{CONFIG_PARAM_HBASE_MASTER_PORT}}
+                        </value>
                     </property>
                     <property>
                         <name>hbase.zookeeper.quorum</name>
                         {% if CONFIG_PARAM_ZK_HOST is defined -%}
-                            <value>{{CONFIG_PARAM_ZK_HOST}}</value>
-                         {% else -%}
-                            <value>localhost</value>
-                         {% endif -%}
+                        <value>{{CONFIG_PARAM_ZK_HOST}}</value>
+                        {% else -%}
+                        <value>localhost</value>
+                        {% endif -%}
                     </property>
                     <property>
                         <name>hbase.zookeeper.property.clientPort</name>
                         {% if CONFIG_PARAM_ZK_PORT is defined -%}
-                            <value>{{CONFIG_PARAM_ZK_PORT}}</value>
+                        <value>{{CONFIG_PARAM_ZK_PORT}}</value>
                         {% else -%}
-                            <value>2181</value>
+                        <value>2181</value>
                         {% endif -%}
+                    </property>
+                    <property>
+                        <name>fs.hdfs.impl</name>
+                        <value>org.apache.hadoop.hdfs.DistributedFileSystem</value>
+                    </property>
+                    <property>
+                        <name>fs.file.impl</name>
+                        <value>org.apache.hadoop.fs.LocalFileSystem</value>
                     </property>
                 </configuration>
             </definition>

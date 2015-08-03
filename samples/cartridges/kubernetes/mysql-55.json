@@ -1,0 +1,52 @@
+{
+  "type": "mysql",
+  "category": "data",
+  "provider": "wso2",
+  "host": "mysql.wso2.com",
+  "displayName": "MySQL",
+  "description": "MySQL cartridge",
+  "version": "5.5",
+  "multiTenant": false,
+  "loadBalancingIPType": "public",
+  "portMapping": [
+    {
+      "protocol": "http",
+      "port": 3306,
+      "proxyPort": 8443,
+      "name": "http-mysql"
+    }
+  ],
+  "iaasProvider": [
+    {
+      "type": "kubernetes",
+      "imageId": "wso2/mysql:5.5",
+      "networkInterfaces": []
+    }
+  ],
+  "property": [
+    {
+      "name": "KUBERNETES_CONTAINER_CPU",
+      "value": "0"
+    },
+    {
+      "name": "KUBERNETES_CONTAINER_MEMORY",
+      "value": "0"
+    },
+    {
+      "name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
+      "value": "ClientIP"
+    },
+    {
+      "name": "payload_parameter.START_CMD",
+      "value": "PCA"
+    },
+    {
+      "name": "payload_parameter.APPLICATION_PATH",
+      "value": "/var/www"
+    },
+    {
+      "name": "payload_parameter.MYSQL_ROOT_PASSWORD",
+      "value": "123"
+    }
+  ]
+}

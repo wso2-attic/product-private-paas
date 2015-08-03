@@ -1,5 +1,5 @@
 #!/bin/bash
-# --------------------------------------------------------------
+# ----------------------------------------------------------------------------
 #
 #  Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
 #
@@ -15,11 +15,6 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 #
-# --------------------------------------------------------------
+# ----------------------------------------------------------------------------
 
-# Stop the DAS container
-memberId=1
-name="wso2das-${memberId}"
-docker stop ${name}
-echo "DAS container stopped: [name] ${name}"
-
+docker build -t=wso2/mysql:5.5 .

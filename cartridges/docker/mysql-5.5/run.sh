@@ -1,6 +1,4 @@
-#!/bin/bash
-# --------------------------------------------------------------
-#
+#!/usr/bin/env bash
 #  Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,12 +12,4 @@
 #  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
-#
-# --------------------------------------------------------------
-
-# Stop the DAS container
-memberId=1
-name="wso2das-${memberId}"
-docker stop ${name}
-echo "DAS container stopped: [name] ${name}"
-
+docker run --name some-mysql -e MYSQL_ROOT_PASSWORD=root123 -d -P wso2/mysql:5.5

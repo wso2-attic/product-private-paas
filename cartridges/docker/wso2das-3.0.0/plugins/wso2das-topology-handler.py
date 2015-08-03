@@ -20,72 +20,122 @@ from plugins.contracts import ICartridgeAgentPlugin
 from modules.util.log import LogFactory
 import subprocess
 import os
+import mdsclient
+import pymysql as db
 
 
 class DASTopologyHandler(ICartridgeAgentPlugin):
+    def create_database(self, databasename, username, password):
+        log = LogFactory().get_log(__name__)
+        mds_response = mdsclient.get(app=True)
+        if mds_response is not None and mds_response.properties.get("MYSQL_HOST") is not None:
+            remote_host = str(mds_response.properties["MYSQL_HOST"])
+            remote_username = str(mds_response.properties["MYSQL_ROOT_USERNAME"])
+            remote_password = str(mds_response.properties["MYSQL_ROOT_PASSWORD"])
+            log.info("mysql server conf [host]:%s [username]:%s [password]:%s", remote_host,
+                     remote_username, remote_password)
+            con = None
+            try:
+                con = db.connect(host=remote_host, user=remote_username, passwd=remote_password)
+                cur = con.cursor()
+                cur.execute('CREATE DATABASE IF NOT EXISTS ' + databasename + ';')
+                cur.execute('USE ' + databasename + ';')
+                cur.execute(
+                    'GRANT ALL PRIVILEGES ON ' + databasename + '.* TO ' + username + '@"%" IDENTIFIED BY "' + password + '";')
+                log.info("Database %s created successfully" % databasename)
+            except db.Error, e:
+                log.error("Error in creating database %d: %s" % (e.args[0], e.args[1]))
+
+            finally:
+                if con:
+                    con.close()
+        else:
+            log.error('mysql details not published to metadata service')
+
+    def map_hbase_hostname(self):
+        log = LogFactory().get_log(__name__)
+        mds_response = mdsclient.get(app=True)
+        if mds_response is not None and mds_response.properties.get("CONFIG_PARAM_HBASE_REGIONSERVER_DATA") is not None:
+            hbase_rs_hostmap=mds_response.properties["CONFIG_PARAM_HBASE_REGIONSERVER_DATA"]
+            log.info("Hbase RS hostnames : %s" %hbase_rs_hostmap)
+            if isinstance(hbase_rs_hostmap, (str, unicode)):
+                hbase_list = hbase_rs_hostmap.split(":")
+                config_command = "echo "+hbase_list[1]+"    "+hbase_list[0]+"  >> /etc/hosts"
+                log.info("Config command %s" % config_command)
+                env_var = os.environ.copy()
+                p = subprocess.Popen(config_command, env=env_var, shell=True)
+                output, errors = p.communicate()
+                log.info("Entry added to /etc/hosts")
+            else:
+                for entry in hbase_rs_hostmap:
+                    hbase_list = entry.split(":")
+                    config_command = "echo "+hbase_list[1]+"    "+hbase_list[0]+"  >> /etc/hosts"
+                    log.info("Config command %s" % config_command)
+                    env_var = os.environ.copy()
+                    p = subprocess.Popen(config_command, env=env_var, shell=True)
+                    output, errors = p.communicate()
+
+        else:
+            log.error("HBASE RS data not found in metadata service")
+
     def run_plugin(self, values):
         log = LogFactory().get_log(__name__)
         log.info("Values %r" % values)
+
+        profile = os.environ['CONFIG_PARAM_PROFILE']
+        log.info("Profile : %s " % profile)
 
         app_id = values["APPLICATION_ID"]
         log.info("Application ID: %s" % app_id)
 
         # Configuring Message Broker IP and Port
         CONFIG_PARAM_MB_IP = values["MB_IP"]
-        CONFIG_PARAM_MB_PORT = values["MB_PORT"]
-        log.info("Message Broker [IP] %s  [PORT] %s", CONFIG_PARAM_MB_IP, CONFIG_PARAM_MB_PORT)
+        log.info("Message Broker [IP] %s" , CONFIG_PARAM_MB_IP)
         os.environ['CONFIG_PARAM_MB_IP'] = CONFIG_PARAM_MB_IP
-        os.environ['CONFIG_PARAM_MB_PORT'] = CONFIG_PARAM_MB_PORT
-        log.info("env MB_IP=%s MB_PORT=%s", (os.environ.get('CONFIG_PARAM_MB_IP')),
-                 (os.environ.get('CONFIG_PARAM_MB_PORT')))
+        log.info("env MB_IP=%s ", (os.environ.get('CONFIG_PARAM_MB_IP')))
+
+        zookeeper_ip = None
+        hbase_master_ip = None
 
         topology = values["TOPOLOGY_JSON"]
         log.info("Topology: %s" % topology)
-        topology_str = json.loads(topology)
+        topology_json = json.loads(topology)
 
-        # if topology_str is not None:
-        #     # add service map
-        #     for service_name in topology_str["serviceMap"]:
-        #         service_str = topology_str["serviceMap"][service_name]
-        #         for cluster_id in service_str["clusterIdClusterMap"]:
-        #             cluster_str = service_str["clusterIdClusterMap"][cluster_id]
+        for service_name in topology_json["serviceMap"]:
+            service_str = topology_json["serviceMap"][service_name]
+            if service_name == "das-zookeeper":
+                # add cluster map
+                for cluster_id in service_str["clusterIdClusterMap"]:
+                    cluster_str = service_str["clusterIdClusterMap"][cluster_id]
+                    # add member map
+                    if cluster_str["appId"] == app_id:
+                        for member_id in cluster_str["memberMap"]:
+                            member_str = cluster_str["memberMap"][member_id]
+                            if zookeeper_ip is None:
+                                zookeeper_ip = member_str["defaultPrivateIP"]
+                                os.environ["CONFIG_PARAM_ZK_HOST"] = zookeeper_ip
 
+            if service_name == "hbase":
+                # add cluster map
+                for cluster_id in service_str["clusterIdClusterMap"]:
+                    cluster_str = service_str["clusterIdClusterMap"][cluster_id]
+                    # add member map
+                    if cluster_str["appId"] == app_id:
+                        for member_id in cluster_str["memberMap"]:
+                            member_str = cluster_str["memberMap"][member_id]
+                            if hbase_master_ip is None:
+                                hbase_master_ip = member_str["defaultPrivateIP"]
+                                os.environ["CONFIG_PARAM_HBASE_MASTER_HOST"] = hbase_master_ip
 
-        # Configuring Port Mappings
-        # log.info("Reading port mappings...")
-        # port_mappings_str = values["PORT_MAPPINGS"]
-        #
-        # mgt_console_https_port = None
-        #
-        # # port mappings format: """NAME:mgt-console|PROTOCOL:https|PORT:4500|PROXY_PORT:9443"""
-        # log.info("Port mappings: %s" % port_mappings_str)
-        # if port_mappings_str is not None:
-        #
-        #     port_mappings_array = port_mappings_str.split(";")
-        #     if port_mappings_array:
-        #
-        #         for port_mapping in port_mappings_array:
-        #             log.debug("port_mapping: %s" % port_mapping)
-        #             name_value_array = port_mapping.split("|")
-        #             name = name_value_array[0].split(":")[1]
-        #             protocol = name_value_array[1].split(":")[1]
-        #             port = name_value_array[2].split(":")[1]
-        #             if name == "mgt-console" and protocol == "https":
-        #                 mgt_console_https_port = port
-        #
-        # log.info("Kubernetes service management console https port: %s" % mgt_console_https_port)
-        # if mgt_console_https_port is not None:
-        #     os.environ['CONFIG_PARAM_HTTPS_PROXY_PORT'] = mgt_console_https_port
-        #     log.info(
-        #         "env https proxy port: %s" % (os.environ.get('CONFIG_PARAM_HTTPS_PROXY_PORT')))
-
-        CONFIG_PARAM_CLUSTERING="true"
-        CONFIG_PARAM_MEMBERSHIP_SCHEME="stratos"
+        CONFIG_PARAM_CLUSTERING = "true"
+        CONFIG_PARAM_MEMBERSHIP_SCHEME = "stratos"
         os.environ['CONFIG_PARAM_CLUSTERING'] = CONFIG_PARAM_CLUSTERING
         os.environ['CONFIG_PARAM_MEMBERSHIP_SCHEME'] = CONFIG_PARAM_MEMBERSHIP_SCHEME
-
+        self.map_hbase_hostname()
         log.info(
-            "env CONFIG_PARAM_CLUSTERING: %s  CONFIG_PARAM_MEMBERSHIP_SCHEME:%s " ,(os.environ.get('CONFIG_PARAM_CLUSTERING')),(os.environ.get('CONFIG_PARAM_MEMBERSHIP_SCHEME')))
+            "env CONFIG_PARAM_CLUSTERING: %s  CONFIG_PARAM_MEMBERSHIP_SCHEME:%s ",
+            (os.environ.get('CONFIG_PARAM_CLUSTERING')),
+            (os.environ.get('CONFIG_PARAM_MEMBERSHIP_SCHEME')))
 
         # Configuring Cluster IDs
         CONFIG_PARAM_CLUSTER_IDS = values["CLUSTER_ID"]
@@ -94,6 +144,28 @@ class DASTopologyHandler(ICartridgeAgentPlugin):
         log.info(
             "env CONFIG_PARAM_CLUSTER_IDS: %s " % (os.environ.get('CONFIG_PARAM_CLUSTER_IDS')))
 
+        # creating databases
+        self.create_database('ANALYTICS_FS_DB', 'FS_user', 'fs123')
+        mds_response = mdsclient.get(app=True)
+        if mds_response is not None and mds_response.properties.get("MYSQL_HOST") is not None:
+            remote_host = mds_response.properties.get("MYSQL_HOST")
+        else:
+            log.error('mysql details not published to metadata service')
+
+        os.environ[
+            'CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL'] = "jdbc:mysql://" + remote_host + ":3306/ANALYTICS_FS_DB?autoReconnect=true"
+        os.environ[
+            'CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_USER_NAME'] = "FS_user"
+        os.environ[
+            'CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_PASSWORD'] = "fs123"
+
+        self.create_database('ANALYTICS_PROCESSED_DATA_STORE', 'DS_user', 'ds123')
+        os.environ[
+            'CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_URL'] = "jdbc:mysql://" + remote_host + ":3306/ANALYTICS_PROCESSED_DATA_STORE?autoReconnect=true"
+        os.environ[
+            'CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_USER_NAME'] = "DS_user"
+        os.environ[
+            'CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_PASSWORD'] = "ds123"
 
         # configure server
         log.info("Configuring WSO2 DAS ...")
