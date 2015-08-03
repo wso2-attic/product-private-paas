@@ -63,23 +63,10 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         log.info("Kubernetes service pass-through http port: %s" % pt_http_port)
         log.info("Kubernetes service pass-through https port: %s" % pt_https_port)
 
-        if mgt_console_https_port is not None:
-            command = "sed -i \"s/^#CONFIG_PARAM_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_HTTPS_PROXY_PORT = %s/g\" %s" % (mgt_console_https_port, "${CONFIGURATOR_HOME}/template-modules/wso2esb-4.8.1/module.ini")
-            p = subprocess.Popen(command, shell=True)
-            output, errors = p.communicate()
-            log.info("Successfully updated management console https proxy port: %s in ESB template module" % mgt_console_https_port)
-
-        if pt_http_port is not None:
-            command = "sed -i \"s/^#CONFIG_PARAM_PT_HTTP_PROXY_PORT = .*/CONFIG_PARAM_PT_HTTP_PROXY_PORT = %s/g\" %s" % (pt_http_port, "${CONFIGURATOR_HOME}/template-modules/wso2esb-4.8.1/module.ini")
-            p = subprocess.Popen(command, shell=True)
-            output, errors = p.communicate()
-            log.info("Successfully updated pass-through http proxy port: %s in ESB template module" % pt_http_port)
-
-        if pt_https_port is not None:
-            command = "sed -i \"s/^#CONFIG_PARAM_PT_HTTPS_PROXY_PORT = .*/CONFIG_PARAM_PT_HTTPS_PROXY_PORT = %s/g\" %s" % (pt_https_port, "${CONFIGURATOR_HOME}/template-modules/wso2esb-4.8.1/module.ini")
-            p = subprocess.Popen(command, shell=True)
-            output, errors = p.communicate()
-            log.info("Successfully updated pass-through https proxy port: %s in ESB template module" % pt_https_port)
+        # export environment variables
+        self.export_env_var('CONFIG_PARAM_HTTPS_PROXY_PORT', mgt_console_https_port)
+        self.export_env_var('CONFIG_PARAM_PT_HTTP_PROXY_PORT', pt_http_port)
+        self.export_env_var('CONFIG_PARAM_PT_HTTPS_PROXY_PORT', pt_https_port)
 
         # configure server
         log.info("Configuring WSO2 ESB...")
@@ -97,3 +84,11 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         p = subprocess.Popen(start_command, env=env_var, shell=True)
         output, errors = p.communicate()
         log.debug("WSO2 ESB started successfully")
+
+    def export_env_var(self, variable, value):
+        log = LogFactory().get_log(__name__)
+        if value is not None:
+            os.environ[variable] = value
+            log.info("Exported environment variable %s: %s" % (variable, value))
+        else:
+            log.warn("Could not export environment variable %s " % variable)
