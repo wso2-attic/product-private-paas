@@ -22,21 +22,10 @@ prgdir=`dirname "$0"`
 script_path=`cd "$prgdir"; pwd`
 
 project_version="4.1.0-SNAPSHOT"
-configurator_path=`cd ${script_path}/../../../components/org.wso2.ppaas.configurator/; pwd`
 as_template_module_path=`cd ${script_path}/../../../cartridges/templates-modules/wso2as-5.2.1/; pwd`
 clean=false
 if [ "$1" = "clean" ]; then
    clean=true
-fi
-
-if ${clean} ; then
-   echo "----------------------------------"
-   echo "Building configurator"
-   echo "----------------------------------"
-   pushd ${configurator_path}
-   mvn clean install
-   cp -v target/ppaas-configurator-${project_version}.zip ${script_path}/packages/
-   popd
 fi
 
 if ${clean} ; then

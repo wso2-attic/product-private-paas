@@ -6,11 +6,8 @@ WSO2 IS 5.0.0 Dockerfile defines required resources for building a Docker image 
 
 1. Copy following files to the packages folder:
 ```
-jdk-7u60-linux-x64.tar
-ppaas-configurator-<version>.zip
 wso2is-5.0.0.zip
-wso2is-5.0.0-template-module-<version>.zip
-mysql-connector-java-<version>-bin.jar
+wso2is-5.0.0-template-module-<PPAAS_VERSION>.zip
 ```
 
 2. Run build.sh file to build the docker image:

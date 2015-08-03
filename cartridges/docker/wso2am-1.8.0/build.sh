@@ -17,4 +17,29 @@
 #
 # ------------------------------------------------------------------------
 
+set -e
+prgdir=`dirname "$0"`
+script_path=`cd "$prgdir"; pwd`
+
+project_version="4.1.0-SNAPSHOT"
+am_template_module_path=`cd ${script_path}/../../../cartridges/templates-modules/wso2am-1.8.0/; pwd`
+clean=false
+if [ "$1" = "clean" ]; then
+   clean=true
+fi
+
+if ${clean} ; then
+   echo "----------------------------------"
+   echo "Building AM template module"
+   echo "----------------------------------"
+   pushd ${am_template_module_path}
+   mvn clean install
+   cp -v target/wso2am-1.8.0-template-module-${project_version}.zip ${script_path}/packages/
+   popd
+fi
+
+echo "----------------------------------"
+echo "Building AM docker image"
+echo "----------------------------------"
 docker build -t wso2/am:1.8.0 .
+echo "AM docker image built successfully"

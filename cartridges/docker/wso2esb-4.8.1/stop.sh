@@ -16,6 +16,7 @@
 # limitations under the License
 #
 # ------------------------------------------------------------------------
+
 # Stop the ESB docker cluster
 memberId=1
 stopWkaMember() {

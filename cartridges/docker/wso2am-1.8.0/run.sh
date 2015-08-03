@@ -30,7 +30,7 @@ startWkaMember() {
 
 startMember() {
 	name="wso2am-${memberId}"
-	container_id=`docker run -e CONFIG_PARAM_CLUSTERING=true -e CONFIG_PARAM_WKA_MEMBERS="${wka_member_ip}:4000" -d -P --name ${name} wso2/am:1.8.0`
+	container_id=`docker run -e CONFIG_PARAM_CLUSTERING=true -e CONFIG_PARAM_WKA_MEMBERS="[${wka_member_ip}:4000]" -d -P --name ${name} wso2/am:1.8.0`
 	memberId=$((memberId + 1))
 	member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
 	echo "AM member started: [name] ${name} [ip] ${member_ip} [container-id] ${container_id}"
