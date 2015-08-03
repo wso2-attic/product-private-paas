@@ -21,7 +21,7 @@ set -e
 prgdir=`dirname "$0"`
 script_path=`cd "$prgdir"; pwd`
 
-project_version="4.1.0-SNAPSHOT"
+ppaas_version="4.1.0-SNAPSHOT"
 configurator_path=`cd ${script_path}/../../../components/org.wso2.ppaas.configurator/; pwd`
 clean=false
 if [ "$1" = "clean" ]; then
@@ -34,7 +34,7 @@ if ${clean} ; then
    echo "----------------------------------"
    pushd ${configurator_path}
    mvn clean install                                                                                      
-   cp -v target/ppaas-configurator-${project_version}.zip ${script_path}/packages/
+   cp -v target/ppaas-configurator-${ppaas_version}.zip ${script_path}/packages/
    popd
 fi
 

@@ -6,11 +6,8 @@ WSO2 ESB 4.8.1 Dockerfile defines required resources for building a Docker image
 
 1. Copy following files to the packages folder:
 ```
-jdk-7u60-linux-x64.tar
-ppaas-configurator-<version>.zip
 wso2esb-4.8.1.zip
-wso2esb-4.8.1-template-module-<version>.zip
-mysql-connector-java-<version>-bin.jar
+wso2esb-4.8.1-template-module-<PPAAS_VERSION>.zip
 ```
 
 2. Run build.sh file to build the docker image:
