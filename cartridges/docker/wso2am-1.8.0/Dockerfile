@@ -31,7 +31,7 @@ ENV CARBON_HOME /opt/wso2am-${WSO2_AM_VERSION}
 COPY scripts/init.sh /usr/local/bin/init.sh
 COPY packages/${AM_TEMPLATE_MODULE_NAME}.zip /opt/
 COPY packages/wso2am-${WSO2_AM_VERSION}.zip /opt/
-COPY plugins /${PCA_HOME}/plugins
+COPY plugins ${PCA_HOME}/plugins
 
 # -----------------------------
 # Install prerequisites and AM

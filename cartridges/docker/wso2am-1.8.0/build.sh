@@ -21,25 +21,37 @@ set -e
 prgdir=`dirname "$0"`
 script_path=`cd "$prgdir"; pwd`
 
-project_version="4.1.0-SNAPSHOT"
-am_template_module_path=`cd ${script_path}/../../../cartridges/templates-modules/wso2am-1.8.0/; pwd`
+wso2_ppaas_version="4.1.0-SNAPSHOT"
+wso2_product_type="am"
+wso2_product_version="1.8.0"
+wso2_product_template_module_path=`cd ${script_path}/../../templates-modules/wso2${wso2_product_type}-${wso2_product_version}/; pwd`
+wso2_product_plugin_path=`cd ${script_path}/../../plugins/wso2${wso2_product_type}-${wso2_product_version}/; pwd`
 clean=false
+
 if [ "$1" = "clean" ]; then
    clean=true
 fi
 
 if ${clean} ; then
-   echo "----------------------------------"
-   echo "Building AM template module"
-   echo "----------------------------------"
-   pushd ${am_template_module_path}
+   echo "-----------------------------------"
+   echo "Building" ${wso2_product_type^^} - ${wso2_product_version} "template module"
+   echo "-----------------------------------"
+   pushd ${wso2_product_template_module_path}
    mvn clean install
-   cp -v target/wso2am-1.8.0-template-module-${project_version}.zip ${script_path}/packages/
+   cp -v target/wso2${wso2_product_type}-${wso2_product_version}-template-module-${wso2_ppaas_version}.zip ${script_path}/packages/
+   popd
+
+   echo "----------------------------------"
+   echo "Copying" ${wso2_product_type^^} - ${wso2_product_version} "python plugins"
+   echo "----------------------------------"
+   pushd ${wso2_product_plugin_path}
+   cp * ${script_path}/plugins
    popd
 fi
 
 echo "----------------------------------"
-echo "Building AM docker image"
+echo "Building" ${wso2_product_type^^} - ${wso2_product_version} "docker image"
 echo "----------------------------------"
-docker build -t wso2/am:1.8.0 .
-echo "AM docker image built successfully"
+docker build -t wso2/${wso2_product_type}:${wso2_product_version} .
+
+echo "WSO2" ${wso2_product_type^^} - ${wso2_product_version} "docker image built successfully."

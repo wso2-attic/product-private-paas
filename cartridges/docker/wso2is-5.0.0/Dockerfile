@@ -31,7 +31,7 @@ ENV CARBON_HOME /opt/wso2is-${WSO2_IS_VERSION}
 COPY scripts/init.sh /usr/local/bin/init.sh
 COPY packages/${IS_TEMPLATE_MODULE_NAME}.zip /opt/
 COPY packages/wso2is-${WSO2_IS_VERSION}.zip /opt/
-COPY plugins /${PCA_HOME}/plugins
+COPY plugins ${PCA_HOME}/plugins
 
 # -----------------------------
 # Install prerequisites and IS
