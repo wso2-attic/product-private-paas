@@ -27,7 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>apache-hbase-1.0.1.1-template-module</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 PPaaS - APACHE HBASE 1.0.1.1 Template Module</name>
+    <name>WSO2 PPaaS - Apache HBASE 1.0.1.1 Template Module</name>
     <description>Hbase 1.0.1.1 Template Module</description>
     <build>
         <plugins>

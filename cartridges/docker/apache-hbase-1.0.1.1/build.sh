@@ -24,4 +24,4 @@ echo "----------------------------------"
 echo "Building hbase docker image"
 echo "----------------------------------"
 docker build -t wso2/hbase:1.0.1.1 .
-echo "hbase docker image built successfully"
+echo "Hbase docker image built successfully"

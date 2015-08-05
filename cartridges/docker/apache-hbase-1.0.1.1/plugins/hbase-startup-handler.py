@@ -27,17 +27,17 @@ class HbaseStartupHandler(ICartridgeAgentPlugin):
         log = LogFactory().get_log(__name__)
 
         log.info("Reading environment variables...")
-        clustering_enable= os.environ.get('CLUSTER')
+        clustering_enable = os.environ.get('CLUSTER')
         log.info(clustering_enable)
 
-        configured= os.environ.get('CONFIGURED')
+        configured = os.environ.get('CONFIGURED')
         log.info(configured)
 
         while configured is not 'true':
             time.sleep(5)
             configured = os.environ.get('CONFIGURED')
             log.info(configured)
-            log.info("####### Waiting for configurations #############")
+            log.info("Waiting for configurations completion.")
 
         if clustering_enable == 'true':
 
@@ -49,7 +49,7 @@ class HbaseStartupHandler(ICartridgeAgentPlugin):
             p = subprocess.Popen(start_command, env=env_var, shell=True)
             output, errors = p.communicate()
 
-            log.debug("Hbase Master node started successfully")
+            log.info("Hbase Master node started successfully")
 
 
         else:
@@ -62,4 +62,4 @@ class HbaseStartupHandler(ICartridgeAgentPlugin):
             p = subprocess.Popen(start_command, env=env_var, shell=True)
             output, errors = p.communicate()
 
-            log.debug("Hbase Regionserver started successfully")
+            log.info("Hbase Regionserver started successfully")

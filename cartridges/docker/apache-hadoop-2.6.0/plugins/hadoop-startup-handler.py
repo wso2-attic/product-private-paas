@@ -35,7 +35,7 @@ class HadoopStartupHandler(ICartridgeAgentPlugin):
         while configured is not 'true':
             time.sleep(5)
             configured = os.environ.get('CONFIGURED')
-            log.info("Waiting for Configuration Completion")
+            log.info("Waiting for Configuration Completion.")
 
         if clustering_enable == 'true':
 
@@ -57,7 +57,7 @@ class HadoopStartupHandler(ICartridgeAgentPlugin):
             p = subprocess.Popen(start_command, env=env_var, shell=True)
             output, errors = p.communicate()
 
-            log.debug("Hadoop Namenode started successfully")
+            log.info("Hadoop Namenode started successfully")
 
         else:
 
@@ -69,5 +69,5 @@ class HadoopStartupHandler(ICartridgeAgentPlugin):
             p = subprocess.Popen(start_command, env=env_var, shell=True)
             output, errors = p.communicate()
 
-            log.debug("Hadoop Datanode started successfully")
+            log.info("Hadoop Datanode started successfully")
 

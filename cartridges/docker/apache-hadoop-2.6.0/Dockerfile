@@ -69,13 +69,8 @@ RUN unzip /opt/${HADOOP_TEMPLATE_MODULE_NAME}.zip -d /opt/${CONFIGURATOR_NAME}/t
 # ----------------------
 
 # HADOOP htts port
-EXPOSE 50070
-EXPOSE 54310
-EXPOSE 54311
-EXPOSE 50075
-EXPOSE 50010
-EXPOSE 50020
-EXPOSE 50090
+EXPOSE 50070 54310 54311 50075 50010 50020 50090
+
 # -------------------------------
 # Define entry point & start sshd
 # -------------------------------
