@@ -27,9 +27,9 @@
         -->
         <Connector  protocol="org.apache.coyote.http11.Http11NioProtocol"
                     port="9763"
-                    {% if CONFIG_PARAM_HTTP_PROXY_PORT is defined %}
+                    {% if CONFIG_PARAM_HTTP_PROXY_PORT is defined -%}
                         proxyPort="{{CONFIG_PARAM_HTTP_PROXY_PORT}}"
-                    {% endif %}
+                    {% endif -%}
                     redirectPort="9443"
                     bindOnInit="false"
                     maxHttpHeaderSize="8192"
@@ -54,9 +54,9 @@
         -->
         <Connector  protocol="org.apache.coyote.http11.Http11NioProtocol"
                     port="9443"
-        {% if CONFIG_PARAM_HTTPS_PROXY_PORT is defined %}
+                    {% if CONFIG_PARAM_HTTPS_PROXY_PORT is defined -%}
                     proxyPort="{{CONFIG_PARAM_HTTPS_PROXY_PORT}}"
-        {% endif %}
+                    {% endif -%}
                     bindOnInit="false"
                     sslProtocol="TLS"
                     maxHttpHeaderSize="8192"

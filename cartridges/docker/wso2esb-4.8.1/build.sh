@@ -44,6 +44,7 @@ if ${clean} ; then
    echo "----------------------------------"
    echo "Copying" ${wso2_product_type^^} - ${wso2_product_version} "python plugins"
    echo "----------------------------------"
+   rm ${script_path}/plugins/*
    pushd ${wso2_product_plugin_path}
    cp * ${script_path}/plugins
    popd
