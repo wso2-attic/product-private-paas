@@ -21,7 +21,7 @@ Name = wso2esb-startup-handler
 Module = wso2esb-startup-handler
 
 [Documentation]
-Description = InstanceStartedEvent
+Description = ArtifactUpdatedEvent
 Author = wso2
 Version = 0.1
 Website = https://wso2.com
