@@ -16,10 +16,10 @@
 
 
 class configurator (
-  
+
   $target= "/mnt",
   $configurator_home     = "${target}/${configurator_name}-${configurator_version}"
-  )
+)
 {
 
   exec {
@@ -29,15 +29,15 @@ class configurator (
       command => "mkdir -p ${local_package_dir}";
   }
 
-  file {"${local_package_dir}/${configurator_name}-${configurator_version}.zip":
-      ensure => present,
-      source => "puppet:///modules/configurator/${configurator_name}-${configurator_version}.zip",
-      owner => "root",
-      mode => "0755",
-      require   => Exec["creating_local_package_repo_for_${configurator_name}"];
+  file { "${local_package_dir}/${configurator_name}-${configurator_version}.zip":
+    ensure    => present,
+    source    => "puppet:///modules/configurator/${configurator_name}-${configurator_version}.zip",
+    owner     => "root",
+    mode      => "0755",
+    require   => Exec["creating_local_package_repo_for_${configurator_name}"];
   }
 
- exec {
+  exec {
     "extracting_${configurator_name}":
       path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       cwd       => $target,
@@ -48,5 +48,5 @@ class configurator (
       require   => File["${local_package_dir}/${configurator_name}-${configurator_version}.zip"];
   }
 
-  
+
 }

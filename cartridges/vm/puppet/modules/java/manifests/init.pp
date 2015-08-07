@@ -1,4 +1,4 @@
-class java { 
+class java {
 
   $java_home  = "/opt/${java_name}"
   $package  = $java_distribution
@@ -16,9 +16,9 @@ class java {
       target  => "${java_home}",
       require => Exec['Install java'];
   }
-    
-  exec { 
-     'Install java':
+
+  exec {
+    'Install java':
       path    => "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
       cwd     => '/opt',
       command => "/bin/tar xzf ${package}",
@@ -28,7 +28,7 @@ class java {
   }
 
   file { "/etc/environment":
-        content => inline_template("JAVA_HOME=${java_home}"),
- 	require => Exec['Install java'];
-   }
+    content => inline_template("JAVA_HOME=${java_home}"),
+    require => Exec['Install java'];
+  }
 }

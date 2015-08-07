@@ -39,13 +39,13 @@ class python_agent(
   tag($service_code)
 
 
- python_agent::initialize { $service_code:
-    repo      => $package_repo,
-    version   => $version,
+  python_agent::initialize { $service_code:
+    repo       => $package_repo,
+    version    => $version,
     agent_name => $agent_name,
-    local_dir => $local_package_dir,
-    target    => $target,
-    owner     => $owner,
+    local_dir  => $local_package_dir,
+    target     => $target,
+    owner      => $owner,
   }
 
   exec { 'copy launch-params to agent_home':
@@ -67,22 +67,22 @@ class python_agent(
 
 
   file { "${agent_home}/agent.conf":
-    ensure => file,
+    ensure  => file,
     content => template("python_agent/agent.conf.erb"),
     require => Python_agent::Initialize[$service_code],
   }
 
   file { "${agent_home}/logging.ini":
-    ensure => file,
+    ensure  => file,
     content => template("python_agent/logging.ini.erb"),
     require => File["${agent_home}/agent.conf"],
   }
 
 
- # python_agent::start { $service_code:
- #   owner   => $owner,
- #   target  => $agent_home,
- #   require => Exec['copy launch-params to agent_home']
- # }
+# python_agent::start { $service_code:
+#   owner   => $owner,
+#   target  => $agent_home,
+#   require => Exec['copy launch-params to agent_home']
+# }
 }
 
