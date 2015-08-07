@@ -103,7 +103,7 @@ def generate_context(config_file_path):
     global PACK_LOCATION
     PACK_LOCATION = os.environ.get(constants.CONFIG_SETTINGS_CARBON_HOME,
                                    settings[constants.CONFIG_SETTINGS_CARBON_HOME])
-    log.info("CARBON_HOME : "%PACK_LOCATION)
+    log.info("CARBON_HOME : %s" %PACK_LOCATION)
     context = configurations[constants.CONFIG_PARAMS]
 
     log.info("Context generated: %s", context)
