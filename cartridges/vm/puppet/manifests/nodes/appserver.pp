@@ -18,27 +18,26 @@
 # appserver cartridge node
 node /[0-9]{1,12}.(default|manager|worker).appserver/ inherits base {
   $docroot = "/mnt/${server_ip}/wso2as-5.2.1"
-  require java	
-  class {'python_agent':}
-  class {'appserver':
+  require java
+  class { 'python_agent': }
+  class { 'appserver':
 
-        version            => '5.2.1',
-        sub_cluster_domain => 'test',
-	    members            => undef,
-	    offset		   => 0,
-        hazelcast_port     => 4000,
-	    config_db          => 'AS_CONFIG_DB',
-        config_target_path => 'AS_CONFIG_PATH',
-        maintenance_mode   => 'zero',
-        agent_home         =>
-        depsync            => false,
-        clustering         => CLUSTERING,
-        membership_scheme   => MEMBERSHIP_SCHEME,
-	    cloud		   => true,
-        owner              => 'root',
-        group              => 'root',
-        target             => "/mnt/${server_ip}",
-        agent_home          => "/mnt/${server_ip}/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT"
+    version             => '5.2.1',
+    sub_cluster_domain  => 'test',
+    members             => undef,
+    offset              => 0,
+    hazelcast_port      => 4000,
+    config_db           => 'AS_CONFIG_DB',
+    config_target_path  => 'AS_CONFIG_PATH',
+    maintenance_mode    => 'zero',
+    depsync             => false,
+    clustering          => CLUSTERING,
+    membership_scheme   => MEMBERSHIP_SCHEME,
+    cloud               => true,
+    owner               => 'root',
+    group               => 'root',
+    target              => "/mnt/${server_ip}",
+    agent_home          => "/mnt/${server_ip}/apache-stratos-python-cartridge-agent-4.1.0"
 
   }
 
