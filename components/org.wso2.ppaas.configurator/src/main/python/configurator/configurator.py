@@ -58,6 +58,9 @@ def render_template(template_filename, default_context):
         context = ConfigParserUtil.get_context_from_env(variables, default_context)
     else:
         context = default_context
+
+    #Adding CARBON_HOME to context as it is required for registry db
+    context[constants.CONFIG_SETTINGS_CARBON_HOME]=PACK_LOCATION
     log.info("Final context generated for rendering %s : %s ", os.path.basename(template_filename),
              context)
     log.info("Rendering template: %s \n", template_filename)
@@ -98,9 +101,11 @@ def generate_context(config_file_path):
     log.debug("Configuration file content %s", configurations)
     settings = configurations[constants.CONFIG_SETTINGS]
     global PACK_LOCATION
-    PACK_LOCATION = settings["CARBON_HOME"]
+    PACK_LOCATION = os.environ.get(constants.CONFIG_SETTINGS_CARBON_HOME,
+                                   settings[constants.CONFIG_SETTINGS_CARBON_HOME])
+    log.info("CARBON_HOME : %s" %PACK_LOCATION)
     context = configurations[constants.CONFIG_PARAMS]
-   
+
     log.info("Context generated: %s", context)
     # if read_env_variables is true context will be generated from environment variables
     # if read_env_variables is not true context will be read from config.ini
