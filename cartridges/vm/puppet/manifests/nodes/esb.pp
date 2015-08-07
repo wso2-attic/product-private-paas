@@ -14,30 +14,18 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 
-# stratos components related nodes
-# not supported in alpha version.
-node 'autoscaler.wso2.com' inherits base {
-  require java
-  class {'autoscaler': maintenance_mode => 'norestart',}
-}
+# ESB cartridge node
+node /esb/ inherits base {
+  class { 'java': }
+  class { 'python_agent': }
+  class { 'configurator': }
+  class { 'esb':
+    server_name      => 'wso2esb',
+    version          => '4.8.1'
 
-node 'cc.wso2.com' inherits base {
-  require java
-  class {'cc': maintenance_mode   => 'norestart',}
-}
+  }
 
-node 'cep.wso2.com' inherits base {
-  require java
-  class {'cep': maintenance_mode   => 'norestart',}
+  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['esb']
 }
 
 
-node 'mb.wso2.com' inherits base {
-  require java
-  class {'messagebroker': maintenance_mode   => 'norestart',}
-}
-
-node 'sc.wso2.com' inherits base {
-  require java
-  class {'manager': maintenance_mode   => 'norestart',}
-}
