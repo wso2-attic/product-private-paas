@@ -26,11 +26,11 @@ node 'base' {
   $pca_version          = '4.1.1-SNAPSHOT'
   $package_repo         = 'PACKAGE_REPO'
   $local_package_dir    = '/mnt/packs'
-  $mb_ip                = 'MB_IP'
-  $mb_port              = 'MB_PORT'
-  $mb_url               = 'tcp://MB_IP:MB_PORT'
+  $mb_ip                = '127.0.0.1'
+  $mb_port              = '66601'
+  $mb_url               = 'tcp://127.0.0.1:4500'
   $mb_type    = 'activemq' #in wso2 mb case, value should be 'wso2mb'
-  $cep_url              = 'CEP_URL' #eg: tcp://10.100.2.32:7611,tcp://10.100.2.33:7611
+  $cep_url              = 'tcp://10.100.2.32:7611' #eg: tcp://10.100.2.32:7611,tcp://10.100.2.33:7611
   $truststore_password  = 'wso2carbon'
   $java_distribution  = 'jdk-7u72-linux-x64.gz'
   $java_name    = 'jdk1.7.0_72'

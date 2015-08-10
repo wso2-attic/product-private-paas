@@ -16,16 +16,19 @@
 
 # ESB cartridge node
 node /esb/ inherits base {
-  class { 'java': }
-  class { 'python_agent': }
-  class { 'configurator': }
-  class { 'esb':
-    server_name      => 'wso2esb',
-    version          => '4.8.1'
-
+  
+  class {'java':}
+  class {'python_agent':
+   docroot => "/mnt/${server_ip}/wso2esb-4.8.1"
+  }
+  class {'configurator':}
+  class {'esb':
+     server_name     => 'wso2esb',
+     version  	      => '4.8.1'
+     
   }
 
-  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['esb']
+  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['esb'] 
 }
 
 

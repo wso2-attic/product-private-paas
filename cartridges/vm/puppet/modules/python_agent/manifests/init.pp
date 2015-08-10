@@ -16,7 +16,6 @@
 # under the License.
 
 class python_agent(
-  $version                = '4.1.1-SNAPSHOT',
   $owner                  = 'root',
   $group                  = 'root',
   $target                 = "/mnt",
@@ -24,11 +23,12 @@ class python_agent(
   $enable_artifact_update = true,
   $auto_commit            = false,
   $auto_checkout          = true,
-  $module                 = 'undef'
+  $module                 = 'undef',
+  $docroot 		  = 'undef'
 ){
 
   $service_code    = 'cartridge-agent'
-  $agent_name = "apache-stratos-python-${service_code}-${version}"
+  $agent_name = "${pca_name}-${pca_version}"
   $agent_home= "${target}/${agent_name}"
 
   $split_mburls = split($mb_url, "//")
@@ -39,13 +39,13 @@ class python_agent(
   tag($service_code)
 
 
-  python_agent::initialize { $service_code:
-    repo       => $package_repo,
-    version    => $version,
+ python_agent::initialize { $service_code:
+    repo      => $package_repo,
+    version   => $pca_version,
     agent_name => $agent_name,
-    local_dir  => $local_package_dir,
-    target     => $target,
-    owner      => $owner,
+    local_dir => $local_package_dir,
+    target    => $target,
+    owner     => $owner,
   }
 
   exec { 'copy launch-params to agent_home':
@@ -67,22 +67,22 @@ class python_agent(
 
 
   file { "${agent_home}/agent.conf":
-    ensure  => file,
+    ensure => file,
     content => template("python_agent/agent.conf.erb"),
     require => Python_agent::Initialize[$service_code],
   }
 
   file { "${agent_home}/logging.ini":
-    ensure  => file,
+    ensure => file,
     content => template("python_agent/logging.ini.erb"),
     require => File["${agent_home}/agent.conf"],
   }
 
+#Setting PCA_HOME
+ file { "/etc/profile.d/pca_home.sh":
+   content => "export PCA_HOME= ${agent_home}",
+   mode    => 755
+ }
 
-# python_agent::start { $service_code:
-#   owner   => $owner,
-#   target  => $agent_home,
-#   require => Exec['copy launch-params to agent_home']
-# }
 }
 
