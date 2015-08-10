@@ -14,11 +14,9 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <parent>
         <groupId>org.wso2</groupId>
         <artifactId>ppaas-parent</artifactId>
@@ -27,13 +25,11 @@
 
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ppaas-component-parent</artifactId>
-
     <packaging>pom</packaging>
     <name>WSO2 PPaaS - Components</name>
     <url>http://wso2.com</url>
 
     <modules>
-        <!--python configurator-->
         <module>org.wso2.ppaas.configurator</module>
     </modules>
 
@@ -42,7 +38,6 @@
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>
-                <version>1.7</version>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

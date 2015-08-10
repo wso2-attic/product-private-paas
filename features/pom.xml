@@ -14,11 +14,9 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
     <parent>
         <groupId>org.wso2</groupId>
         <artifactId>ppaas-parent</artifactId>
@@ -43,12 +41,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <properties>
-        <wso2carbon.version>4.2.0</wso2carbon.version>
-        <!--carbon.patch.version.4.1.1>4.1.1</carbon.patch.version.4.1.1-->
-        <carbon.p2.plugin.version>1.5.3</carbon.p2.plugin.version>
-
-    </properties>
-
 </project>

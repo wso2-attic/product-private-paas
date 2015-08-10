@@ -14,19 +14,16 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-
-    <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.wso2</groupId>
         <artifactId>wso2</artifactId>
         <version>1</version>
     </parent>
 
-    <groupId>org.wso2</groupId>
+    <modelVersion>4.0.0</modelVersion>
     <artifactId>ppaas-parent</artifactId>
     <packaging>pom</packaging>
     <version>4.1.0-SNAPSHOT</version>
@@ -36,7 +33,7 @@
     <inceptionYear>2012</inceptionYear>
 
     <modules>
-	    <module>extensions</module>
+        <module>extensions</module>
         <module>cartridges</module>
         <module>components</module>
         <module>features</module>
@@ -51,10 +48,6 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <source>1.6</source>
-                            <target>1.6</target>
-                        </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.rat</groupId>
@@ -68,7 +61,7 @@
                                 <exclude>**/.git/**/*</exclude>
                                 <exclude>**/README.md</exclude>
                                 <exclude>**/MANIFEST.MF</exclude>
-                                <exclude>**/edit_area/**/*</exclude>
+                                <!--exclude>**/edit_area/**/*</exclude>
                                 <exclude>**/editarea/**/*</exclude>
                                 <exclude>**/jquery/**/*</exclude>
                                 <exclude>**/jquery*</exclude>
@@ -95,15 +88,7 @@
                                 <exclude>**/jqueryui/**/*</exclude>
                                 <exclude>**/scriptaculous/**/*</exclude>
                                 <exclude>**/prototype-1.6.js</exclude>
-                                <exclude>**/prototype.js</exclude>
-
-                                <!-- Added following based on jclouds -->
-                                <exclude>**/src/test/resources/**/*.xml</exclude>
-                                <!-- META-INF/services files -->
-                                <exclude>**/services/*LoggingModule</exclude>
-                                <exclude>**/services/*ApiMetadata</exclude>
-                                <exclude>**/services/*ProviderMetadata</exclude>
-                                <exclude>**/dhtmlHistory.js</exclude>
+                                <exclude>**/prototype.js</exclude-->
                             </excludes>
                             <excludeSubProjects>false</excludeSubProjects>
                         </configuration>
@@ -165,14 +150,6 @@
                                 <exclude>**/templates/*.cfg.template</exclude>
                                 <exclude>**/instrumentation.txt</exclude>
                                 <exclude>**/*json</exclude>
-
-
-                                <!-- Added following based on jclouds -->
-                                <exclude>**/src/test/resources/**/*.xml</exclude>
-                                <!-- META-INF/services files -->
-                                <exclude>**/services/*LoggingModule</exclude>
-                                <exclude>**/services/*ApiMetadata</exclude>
-                                <exclude>**/services/*ProviderMetadata</exclude>
                             </excludes>
                             <licenses>
                                 <license
@@ -325,11 +302,11 @@
 
     <pluginRepositories>
         <pluginRepository>
-            <id>wso2-maven2-repository-1</id>
+            <id>wso2-release-repo</id>
             <url>http://dist.wso2.org/maven2</url>
         </pluginRepository>
         <pluginRepository>
-            <id>wso2-maven2-repository-2</id>
+            <id>wso2-snapshot-repo</id>
             <url>http://dist.wso2.org/snapshots/maven2</url>
         </pluginRepository>
     </pluginRepositories>
@@ -339,14 +316,13 @@
             <extension>
                 <groupId>org.apache.maven.wagon</groupId>
                 <artifactId>wagon-ssh</artifactId>
-                <version>2.1</version>
+                <version>${maven.wagon.ssh.extension.version}</version>
             </extension>
         </extensions>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-enforcer-plugin</artifactId>
-                <version>1.3.1</version>
                 <executions>
                     <execution>
                         <id>enforce</id>
@@ -384,17 +360,27 @@
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
                     <encoding>UTF-8</encoding>
-                    <source>1.6</source>
-                    <target>1.6</target>
+                    <source>1.7</source>
+                    <target>1.7</target>
                 </configuration>
             </plugin>
         </plugins>
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.plugin.version}</version>
+                    <configuration>
+                        <encoding>UTF-8</encoding>
+                        <source>1.7</source>
+                        <target>1.7</target>
+                    </configuration>
+                </plugin>
+                <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-scr-plugin</artifactId>
-                    <version>1.7.2</version>
+                    <version>${maven.scr.plugin.version}</version>
                     <executions>
                         <execution>
                             <id>generate-scr-scrdescriptor</id>
@@ -407,18 +393,16 @@
                 <plugin>
                     <groupId>org.apache.felix</groupId>
                     <artifactId>maven-bundle-plugin</artifactId>
-                    <version>2.3.5</version>
+                    <version>${maven.bundle.plugin.version}</version>
                     <extensions>true</extensions>
                     <configuration>
                         <obrRepository>NONE</obrRepository>
-                        <!--<instructions>
-                          <_include>-osgi.bnd</_include>
-                        </instructions>-->
                     </configuration>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-source-plugin</artifactId>
+                    <version>${maven.source.plugin.version}</version>
                     <executions>
                         <execution>
                             <id>attach-sources</id>
@@ -430,24 +414,123 @@
                     </executions>
                 </plugin>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-assembly-plugin</artifactId>
-                    <version>2.2-beta-2</version>
+                    <version>${maven.assembly.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>build-helper-maven-plugin</artifactId>
+                    <version>${maven.build.helper.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.wso2.maven</groupId>
+                    <artifactId>carbon-p2-plugin</artifactId>
+                    <version>${carbon.p2.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>maven-buildnumber-plugin</artifactId>
+                    <version>${maven.build.number.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.axis2</groupId>
+                    <artifactId>axis2-aar-maven-plugin</artifactId>
+                    <version>${version.axis2}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-jar-plugin</artifactId>
+                    <version>${maven.jar.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-enforcer-plugin</artifactId>
+                    <version>${maven.enforcer.plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-project-info-reports-plugin</artifactId>
+                    <version>${maven.project.info.reports.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.plugin.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven.resources.plugin.verison}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${maven.dependency.plugin.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
     </build>
 
     <properties>
-        <!-- Carbon related versions -->
-        <wso2carbon.version>4.2.0</wso2carbon.version>
-        <carbon.platform.package.import.version.range>[4.2.0, 5.0.0)
-        </carbon.platform.package.import.version.range>
-        <carbon.platform.package.export.version>4.2.0</carbon.platform.package.export.version>
-        <axis2.osgi.version>1.6.1.wso2v10</axis2.osgi.version>
+        <!-- Apache Stratos version -->
         <stratos.version>4.1.0</stratos.version>
+
+        <!-- Carbon related versions -->
+        <carbon.kernel.version>4.2.0</carbon.kernel.version>
+        <carbon.kernel.package.import.version.range>[4.2.0, 4.5.0)</carbon.kernel.package.import.version.range>
+        <axis2.osgi.version>1.6.1.wso2v10</axis2.osgi.version>
+        <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
+        <version.axis2>1.6.1-wso2v10</version.axis2>
+        <synapse.wso2.version>2.1.2-wso2v3</synapse.wso2.version>
+        <store.version>1.0.1</store.version>
+        <carbon.platform.patch.version.4.2.1>4.2.1</carbon.platform.patch.version.4.2.1>
+        <carbon.platform.patch.version.4.2.2>4.2.2</carbon.platform.patch.version.4.2.2>
+        <carbon.platform.patch.version.4.2.3>4.2.3</carbon.platform.patch.version.4.2.3>
+        <carbon.platform.patch.version.4.2.4>4.2.4</carbon.platform.patch.version.4.2.4>
+        <carbon.platform.patch.version.4.2.5>4.2.5</carbon.platform.patch.version.4.2.5>
+        <carbon.platform.patch.version.4.2.6>4.2.6</carbon.platform.patch.version.4.2.6>
+        <carbon.platform.patch.version.4.2.7>4.2.7</carbon.platform.patch.version.4.2.7>
+        <carbon.platform.patch.version.4.2.8>4.2.8</carbon.platform.patch.version.4.2.8>
+        <carbon.logaggregator.version>1.0.0</carbon.logaggregator.version>
+        <carbon.event.version>1.0.0</carbon.event.version>
+        <carbon.ui.stratos.version>4.2.0-stratos</carbon.ui.stratos.version>
+        <wso2.stratos.common.version>2.2.2</wso2.stratos.common.version>
+
+        <!-- Jaggery versions -->
+        <jaggery.version>0.9.0.ALPHA4.wso2v3</jaggery.version>
+        <jaggery.caramel.version>1.0.1</jaggery.caramel.version>
+
+        <!-- External libraries -->
+        <commons.version>1.0.1</commons.version>
+        <org.testng.version>6.1.1</org.testng.version>
+        <activemq.version>5.10.0</activemq.version>
+        <andes.client.version>0.13.wso2v8</andes.client.version>
+        <drools.wso2.version>5.0.1.wso2v1</drools.wso2.version>
+        <rampart.mar.version>1.6.1-wso2v8</rampart.mar.version>
+        <bcprov.version>132</bcprov.version>
+        <geronimo.j2ee.management_1.1.spec.version>1.0.1</geronimo.j2ee.management_1.1.spec.version>
+        <hawtbuf.version>1.9</hawtbuf.version>
+        <mqtt.client.version>0.4.0</mqtt.client.version>
+        <geronimo.jta_1.1.spec.version>1.1.1</geronimo.jta_1.1.spec.version>
+
+        <!-- Maven plugin versions -->
+        <maven.incremental.plugin.version>1.3</maven.incremental.plugin.version>
+        <maven.scr.plugin.version>1.7.4</maven.scr.plugin.version>
+        <maven.bundle.plugin.version>2.3.5</maven.bundle.plugin.version>
+        <maven.source.plugin.version>2.1.2</maven.source.plugin.version>
+        <maven.assembly.plugin.version>2.4</maven.assembly.plugin.version>
+        <maven.build.helper.plugin.version>1.7</maven.build.helper.plugin.version>
+        <maven.build.number.plugin.version>0.9.4</maven.build.number.plugin.version>
+        <maven.jar.plugin.version>2.4</maven.jar.plugin.version>
+        <maven.clean.plugin.version>2.4.1</maven.clean.plugin.version>
+        <maven.enforcer.plugin.version>1.3.1</maven.enforcer.plugin.version>
+        <maven.compiler.plugin.version>2.3.1</maven.compiler.plugin.version>
+        <maven.wagon.ssh.extension.version>2.1</maven.wagon.ssh.extension.version>
+        <maven.project.info.reports.plugin.version>2.4</maven.project.info.reports.plugin.version>
+        <maven.surefire.plugin.version>2.18</maven.surefire.plugin.version>
+        <maven.resources.plugin.verison>2.7</maven.resources.plugin.verison>
+        <maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>

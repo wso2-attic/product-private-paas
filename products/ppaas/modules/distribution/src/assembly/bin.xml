@@ -54,7 +54,8 @@
         </fileSet>
         <!-- Copying p2 profile and osgi bundles-->
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/components</directory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/components
+            </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/components</outputDirectory>
             <excludes>
                 <exclude>**/eclipse.ini</exclude>
@@ -82,7 +83,9 @@
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps</directory>
+            <directory>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/jaggeryapps
+            </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps</outputDirectory>
             <excludes>
                 <exclude>**/publisher/**</exclude>
@@ -103,14 +106,16 @@
         </fileSet>
         <fileSet>
             <directory>../../../../components/org.wso2.ppaas.manager.console/console</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/console</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/console
+            </outputDirectory>
             <excludes>
                 <exclude>**/README</exclude>
             </excludes>
         </fileSet>
         <fileSet>
             <directory>../../../../components/org.wso2.ppaas.manager.console/sso</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/jaggeryapps/sso
+            </outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../../../../components/org.wso2.ppaas.manager.console/modules/console</directory>
@@ -134,7 +139,8 @@
         </fileSet>
         <fileSet>
             <directory>../../conf/synapse-configs</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/synapse-configs</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/synapse-configs
+            </outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../../conf</directory>
@@ -213,27 +219,6 @@
                 <exclude>.svn</exclude>
             </excludes>
         </fileSet>
-        <!--start BAM related files -->
-        <!--<fileSet>
-            <directory>resources/dataservices</directory>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/dataservices
-            </outputDirectory>
-            <includes>
-                <include>*.dbs</include>
-                <include>*.xml</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>resources/dataservices/bam</directory>
-            <outputDirectory>
-                ${pom.artifactId}-${pom.version}/repository/deployment/server/dataservices
-            </outputDirectory>
-            <includes>
-                <include>*.dbs</include>
-                <include>*.xml</include>
-            </includes>
-        </fileSet>-->
         <fileSet>
             <directory>resources</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources</outputDirectory>
@@ -241,17 +226,10 @@
                 <include>**/*</include>
             </includes>
         </fileSet>
-        <!--fileSet>
-            <directory>resources/dbscripts</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-        </fileSet-->
-        <!--end BAM related files -->
         <!--qpid related files -->
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/advanced/</directory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/advanced/
+            </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/advanced</outputDirectory>
             <includes>
                 <include>**/*</include>
@@ -304,7 +282,8 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/multitenancy/</directory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/multitenancy/
+            </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/multitenancy/</outputDirectory>
             <includes>
                 <include>**/multitenancy-packages.xml</include>
@@ -316,7 +295,8 @@
         <!-- copy the landing page webapp -->
         <fileSet>
             <directory>lib/home</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/STRATOS_ROOT
+            </outputDirectory>
         </fileSet>
         <fileSet>
             <directory>../../modules/features-dashboard/target/</directory>
@@ -446,12 +426,6 @@
                 <include>**/patch0008/*.*</include>
             </includes>
         </fileSet>
-        <!--
-		<fileSet>
-                   <directory>../../dbscripts/</directory>
-                   <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts</outputDirectory>
-                </fileSet>
--->
         <fileSet>
             <directory>../../payload</directory>
             <includes>
@@ -488,7 +462,8 @@
         <!-- autoscaler -->
         <fileSet>
             <directory>src/main/autoscale-policies</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/autoscale-policies</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/autoscale-policies
+            </outputDirectory>
             <directoryMode>0600</directoryMode>
             <includes>
                 <include>*.xml</include>
@@ -496,7 +471,8 @@
         </fileSet>
         <fileSet>
             <directory>src/main/deployment-policies</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/deployment-policies</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/deployment-policies
+            </outputDirectory>
             <directoryMode>0600</directoryMode>
             <includes>
                 <include>*.xml</include>
@@ -522,78 +498,39 @@
         <!--creating an empty input event adaptors directory-->
         <fileSet>
             <directory>../../../../extensions/cep/artifacts/inputeventadaptors</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/inputeventadaptors</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/inputeventadaptors
+            </outputDirectory>
         </fileSet>
         <!--creating an empty output event adaptors directory-->
         <fileSet>
             <directory>../../../../extensions/cep/artifacts/outputeventadaptors</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/outputeventadaptors</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/outputeventadaptors
+            </outputDirectory>
         </fileSet>
         <!--creating an empty event builders directory-->
         <fileSet>
             <directory>../../../../extensions/cep/artifacts/eventbuilders</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/eventbuilders</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/eventbuilders
+            </outputDirectory>
         </fileSet>
         <!--creating an empty event formatters directory-->
         <fileSet>
             <directory>../../../../extensions/cep/artifacts/eventformatters</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/eventformatters</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/eventformatters
+            </outputDirectory>
         </fileSet>
         <!--creating an empty execution plans directory-->
         <fileSet>
             <directory>../../../../extensions/cep/artifacts/executionplans</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/executionplans</outputDirectory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/executionplans
+            </outputDirectory>
         </fileSet>
         <!--customization scripts-->
         <fileSet>
-            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/scripts</directory>
+            <directory>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/scripts
+            </directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/scripts</outputDirectory>
         </fileSet>
-	<!-- Pack CEP artifacts downloaded from Apache repo -->
-<!--
-	<fileSet>
-            <directory>../p2-profile-gen/target/apache-stratos-cep-artefacts-${pom.version}/eventbuilders</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/eventbuilders</outputDirectory>
-            <includes>
-                <include>**/**.xml</include>                                                                                                                                                                                           
-            </includes>
-        </fileSet>
-	<fileSet>
-            <directory>../p2-profile-gen/target/apache-stratos-cep-artefacts-${pom.version}/eventformatters</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/eventformatters</outputDirectory>
-            <includes>
-                <include>**/**.xml</include>                                                                                                                                                                                           
-            </includes>
-        </fileSet>
-	<fileSet>
-            <directory>../p2-profile-gen/target/apache-stratos-cep-artefacts-${pom.version}/executionplans</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/executionplans</outputDirectory>
-            <includes>
-                <include>**/**.xml</include>                                                                                                                                                                                           
-            </includes>
-        </fileSet>
-	<fileSet>
-            <directory>../p2-profile-gen/target/apache-stratos-cep-artefacts-${pom.version}/inputeventadaptors</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/inputeventadaptors</outputDirectory>
-            <includes>
-                <include>**/**.xml</include>                                                                                                                                                                                           
-            </includes>
-        </fileSet>
-	<fileSet>
-            <directory>../p2-profile-gen/target/apache-stratos-cep-artefacts-${pom.version}/outputeventadaptors</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/outputeventadaptors</outputDirectory>
-            <includes>
-                <include>**/**.xml</include>                                                                                                                                                                                           
-            </includes>
-        </fileSet>
-	<fileSet>
-            <directory>../p2-profile-gen/target/apache-stratos-cep-artefacts-${pom.version}/streamdefinitions</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/streamdefinitions</outputDirectory>
-            <includes>
-                <include>**/**.xml</include>                                                                                                                                                                                           
-            </includes>
-        </fileSet>
--->
     </fileSets>
     <dependencySets>
         <dependencySet>
@@ -670,7 +607,9 @@
         </file>
         <!-- cloud-controller -->
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/cloud-controller.xml</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/cloud-controller.xml
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
         </file>
         <!-- cloud-controller -->
@@ -706,14 +645,6 @@
             <filtered>false</filtered>
             <fileMode>600</fileMode>
         </file>
-<!--
-        <file>
-            <source>src/main/conf/axis2/tenant-axis2.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/axis2/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>600</fileMode>
-        </file>
--->
         <file>
             <source>src/main/conf/drools/mincheck.drl</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/drools</outputDirectory>
@@ -789,29 +720,29 @@
         </file>
         <!-- copy custome webapp classLoading files -->
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/webapp-classloading.xml</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/webapp-classloading.xml
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/tomcat</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/webapp-classloading-environments.xml</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/webapp-classloading-environments.xml
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/tomcat</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/tomcat/context.xml
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/tomcat</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        <!--file>
-            <source>../../conf/cartridge-config.properties</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file-->
         <file>
             <source>../../conf/cloud-services-desc.xml</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/multitenancy</outputDirectory>
@@ -824,12 +755,6 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        <!--file>
-            <source>LICENSE.txt</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file-->
         <file>
             <source>target/wso2carbon-core-${carbon.kernel.version}/bin/README.txt</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/bin/</outputDirectory>
@@ -842,32 +767,18 @@
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
-        <!--file>
-            <source>target/wso2carbon-core-${carbon.kernel.version}/bin/wso2server.bat</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/bin/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file-->
-        <!--file>
-            <source>bam-resources/bam.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file-->
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/security/userRP.jks</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/resources/security/userRP.jks
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/security/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-        <!--file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/event-broker.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
-	    <filtered>true</filtered>
-	    <fileMode>644</fileMode>	
-        </file-->
         <!-- Including logging-config.xml file -->
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/etc/logging-config.xml</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/etc/logging-config.xml
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc/</outputDirectory>
         </file>
         <file>
@@ -876,14 +787,12 @@
             <filtered>true</filtered>
             <fileMode>755</fileMode>
         </file>
-<!--
         <file>
-            <source>src/bin/stratos.bat</source>
-            <outputDirectory>apache-stratos-${pom.version}/bin/</outputDirectory>
+            <source>src/bin/wso2server.bat</source>
+            <outputDirectory>wso2ppaas-${pom.version}/bin/</outputDirectory>
             <filtered>true</filtered>
             <fileMode>755</fileMode>
         </file>
--->
         <file>
             <source>src/bin/git-folder-structure.sh</source>
             <outputDirectory>${pom.artifactId}-${pom.version}/bin/</outputDirectory>
@@ -921,13 +830,16 @@
             <fileMode>755</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/claim-config.xml</source>
+            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/claim-config.xml
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf</outputDirectory>
             <filtered>true</filtered>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/etc/tasks-config.xml</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/conf/etc/tasks-config.xml
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/etc</outputDirectory>
         </file>
         <file>
@@ -954,31 +866,41 @@
         </file>
         <!-- REST endpoint webapp -->
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api.war</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/api.war
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <!-- Mock iaas webapp -->
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/mock-iaas.war</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/mock-iaas.war
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <!--oauth2.war and authenticationendpoint.war is related to oAuth feature  -->
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/oauth2.war</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/oauth2.war
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/authenticationendpoint.war</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/authenticationendpoint.war
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
         <!-- End of REST endpoint webapp -->
         <!-- Meta data service webapp -->
         <file>
-            <source>../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/metadata.war</source>
+            <source>
+                ../p2-profile-gen/target/wso2carbon-core-${carbon.kernel.version}/repository/deployment/server/webapps/metadata.war
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/deployment/server/webapps/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
@@ -993,28 +915,17 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/data-bridge/</outputDirectory>
             <fileMode>644</fileMode>
         </file>
-<!--
         <file>
-            <source>../../conf/thrift-client-config.xml</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/</outputDirectory>
-            <fileMode>644</fileMode>
-        </file>
--->
-        <!--Copying config files from kernel patches -->
-        <!--
-        <file>
-            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0001/dbscripts/mysql.sql</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}/dbscripts/registry</outputDirectory>
-            <filtered>true</filtered>
-        </file>
--->
-        <file>
-            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0002/repository/conf/security/cipher-text.properties</source>
+            <source>
+                ../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0002/repository/conf/security/cipher-text.properties
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/security/</outputDirectory>
             <filtered>true</filtered>
         </file>
         <file>
-            <source>../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0002/repository/conf/security/cipher-tool.properties</source>
+            <source>
+                ../p2-profile-gen/target/WSO2-CARBON-PATCH-4.2.0-0002/repository/conf/security/cipher-tool.properties
+            </source>
             <outputDirectory>${pom.artifactId}-${pom.version}/repository/conf/security/</outputDirectory>
             <filtered>true</filtered>
         </file>
