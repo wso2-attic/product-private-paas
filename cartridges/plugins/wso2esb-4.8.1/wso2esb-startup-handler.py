@@ -150,7 +150,7 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
                     protocol = name_value_array[1].split(":")[1]
                     proxy_port = name_value_array[3].split(":")[1]
                     # If PROXY_PORT is not set,
-                    if proxy_port == "0":
+                    if proxy_port == '0':
                         proxy_port = name_value_array[2].split(":")[1]
 
                     if name == self.CONST_PORT_MAPPING_MGT_CONSOLE and protocol == self.CONST_PROTOCOL_HTTPS:

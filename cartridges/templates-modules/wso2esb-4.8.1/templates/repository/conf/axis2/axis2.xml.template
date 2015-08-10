@@ -557,10 +557,12 @@
             {% if CONFIG_PARAM_PT_HTTPS_PROXY_PORT is defined -%}
             <property name="port.mapping.8243" value="{{ CONFIG_PARAM_PT_HTTPS_PROXY_PORT }}"/>
             {% endif -%}
+            {% if CONFIG_PARAM_SUB_DOMAIN is defined -%}
             {% if CONFIG_PARAM_SUB_DOMAIN == 'mgt' %}
             <property name="subDomain" value="mgt"/>
             {% elif CONFIG_PARAM_SUB_DOMAIN == 'worker'%}
             <property name="subDomain" value="worker"/>
+            {% endif -%}
             {% endif -%}
         </parameter>
 

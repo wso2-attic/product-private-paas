@@ -20,39 +20,32 @@ FROM wso2/base-image:4.1.0
 MAINTAINER dev@wso2.org
 
 ENV DEBIAN_FRONTEND noninteractive
-
-ENV WSO2_ESB_VERSION 4.8.1
-ENV ESB_TEMPLATE_MODULE_NAME wso2esb-${WSO2_ESB_VERSION}-template-module-${PPAAS_VERSION}
-ENV CARBON_HOME /opt/wso2esb-${WSO2_ESB_VERSION}
+ENV WSO2_SERVER_TYPE esb
+ENV WSO2_SERVER_VERSION 4.8.1
+ENV TEMPLATE_MODULE_NAME wso2${WSO2_SERVER_TYPE}-${WSO2_SERVER_VERSION}-template-module-${PPAAS_VERSION}
 
 # --------------------------------
 # Copy scripts, packages & plugins
 # --------------------------------
 COPY scripts/init.sh /usr/local/bin/init.sh
-COPY packages/${ESB_TEMPLATE_MODULE_NAME}.zip /opt/
-COPY packages/wso2esb-${WSO2_ESB_VERSION}.zip /opt/
+COPY packages/${TEMPLATE_MODULE_NAME}.zip /opt/
+COPY packages/wso2${WSO2_SERVER_TYPE}-${WSO2_SERVER_VERSION}.zip /opt/
 COPY plugins ${PCA_HOME}/plugins
 
-# -----------------------------
-# Install prerequisites and ESB
-# -----------------------------
+# -------------------------------
+# Unzip and move template modules
+# -------------------------------
 WORKDIR /opt
 
-RUN unzip /opt/wso2esb-${WSO2_ESB_VERSION}.zip -d /opt/ && \
-    rm /opt/wso2esb-${WSO2_ESB_VERSION}.zip && \
-    unzip /opt/${ESB_TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
-    rm -rf /opt/${ESB_TEMPLATE_MODULE_NAME}.zip
+RUN unzip /opt/${TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
+    rm -rf /opt/${TEMPLATE_MODULE_NAME}.zip
 
 # ----------------------
 # Expose container ports
 # ----------------------
 
-# ESB https port
-EXPOSE 9443
-# ESB http pass-through transport port
-EXPOSE 8280
-# ESB https pass-through transport port
-EXPOSE 8243
+# ESB https/pt-http/pt-https ports
+EXPOSE 9443 8280 8243
 
 # -------------------------------
 # Define entry point & start sshd
