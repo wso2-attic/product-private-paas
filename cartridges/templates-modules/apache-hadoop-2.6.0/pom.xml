@@ -27,7 +27,7 @@
     <modelVersion>4.0.0</modelVersion>
     <artifactId>apache-hadoop-2.6.0-template-module</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 PPaaS - APACHE HADOOP 2.6.0 Template Module</name>
+    <name>WSO2 PPaaS - Apache HADOOP 2.6.0 Template Module</name>
     <description>Apache Hadoop 2.6.0 Template Module</description>
     <build>
         <plugins>

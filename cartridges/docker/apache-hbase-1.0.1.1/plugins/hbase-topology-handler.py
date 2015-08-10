@@ -45,7 +45,7 @@ class HbaseTopologyHandler(ICartridgeAgentPlugin):
     def run_plugin(self, values):
 
         log = LogFactory().get_log(__name__)
-        log.info("Reading the Complete Topology in order to get the dependent ip addresses ...")
+        log.info("Reading the Complete Topology in order to get the dependent ip addresses.")
 
         topology = values["TOPOLOGY_JSON"]
         app_id = values["APPLICATION_ID"]
@@ -98,7 +98,7 @@ class HbaseTopologyHandler(ICartridgeAgentPlugin):
                                         os.environ["CONFIG_PARAM_HBASE_MASTER"] = hbase_master_ip
 
 
-        log.info("Configured dependent cartridge ips.. ")
+        log.info("Configured dependent cartridge ips.")
         log.info(hadoop_master_ip)
         log.info(zookeeper_ip)
         log.info(hbase_master_ip)

@@ -24,7 +24,6 @@ import socket
 
 class HadoopTopologyHandler(ICartridgeAgentPlugin):
 
-
     def run_plugin(self, values):
 
         log = LogFactory().get_log(__name__)
@@ -38,7 +37,7 @@ class HadoopTopologyHandler(ICartridgeAgentPlugin):
             # add service map
             for service_name in topology_str["serviceMap"]:
                 service_str = topology_str["serviceMap"][service_name]
-                if service_name == "hadoop" :
+                if service_name == "hadoop":
                     # add cluster map
                     for cluster_id in service_str["clusterIdClusterMap"]:
                         cluster_str = service_str["clusterIdClusterMap"][cluster_id]
@@ -50,16 +49,15 @@ class HadoopTopologyHandler(ICartridgeAgentPlugin):
                                     master_ip = member_str["defaultPrivateIP"]
                                     os.environ["CONFIG_PARAM_HADOOP_MASTER"] = master_ip
 
-        log.info("Configured master ip - "+master_ip)
+        log.info("Configured master ip - " + master_ip)
 
-        clustering_enable= os.environ.get('CLUSTER')
+        clustering_enable = os.environ.get('CLUSTER')
 
         if clustering_enable != 'true':
+            server_hostname = socket.gethostname()
+            server_ip = socket.gethostbyname(server_hostname)
 
-            server_hostname=socket.gethostname()
-            server_ip=socket.gethostbyname(server_hostname)
-
-            add_host_command = "ssh root@"+master_ip+" 'bash -s' < /tmp/add-host.sh "+server_ip+" "+server_hostname
+            add_host_command = "ssh root@" + master_ip + " 'bash -s' < /tmp/add-host.sh " + server_ip + " " + server_hostname
             env_var = os.environ.copy()
             p = subprocess.Popen(add_host_command, env=env_var, shell=True)
             output, errors = p.communicate()
