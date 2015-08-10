@@ -23,6 +23,7 @@
         <version>1</version>
     </parent>
 
+    <groupId>org.wso2.ppaas</groupId>
     <modelVersion>4.0.0</modelVersion>
     <artifactId>ppaas-parent</artifactId>
     <packaging>pom</packaging>
@@ -33,7 +34,6 @@
     <inceptionYear>2012</inceptionYear>
 
     <modules>
-        <module>extensions</module>
         <module>cartridges</module>
         <module>components</module>
         <module>features</module>
@@ -61,34 +61,12 @@
                                 <exclude>**/.git/**/*</exclude>
                                 <exclude>**/README.md</exclude>
                                 <exclude>**/MANIFEST.MF</exclude>
-                                <!--exclude>**/edit_area/**/*</exclude>
-                                <exclude>**/editarea/**/*</exclude>
-                                <exclude>**/jquery/**/*</exclude>
-                                <exclude>**/jquery*</exclude>
-                                <exclude>**/*.iml</exclude>
-                                <exclude>**/*.iws</exclude>
-                                <exclude>**/*.ipr</exclude>
                                 <exclude>**/.gitignore</exclude>
-                                <exclude>**/payload/launch-params</exclude>
-                                <exclude>**/*.key</exclude>
-                                <exclude>**/bootstrap*.css</exclude>
-                                <exclude>**/animation.css</exclude>
-                                <exclude>**/fontello*</exclude>
-                                <exclude>**/jaggery.conf</exclude>
-                                <exclude>**/zoo.cfg</exclude>
-                                <exclude>**/scripts/*/customization</exclude>
+                                <exclude>**/jquery/**/*</exclude>
+                                <exclude>**/*.iml</exclude>
                                 <exclude>**/siddhi.extension</exclude>
-                                <exclude>**/templates/*.cfg.template</exclude>
-                                <exclude>**/instrumentation.txt</exclude>
-                                <exclude>**/*json</exclude>
                                 <exclude>**/.idea/**/*</exclude>
-                                <exclude>**/tlds/**/*</exclude>
-                                <exclude>**/highlighter/**/*</exclude>
-                                <exclude>**/yui/**/*</exclude>
                                 <exclude>**/jqueryui/**/*</exclude>
-                                <exclude>**/scriptaculous/**/*</exclude>
-                                <exclude>**/prototype-1.6.js</exclude>
-                                <exclude>**/prototype.js</exclude-->
                             </excludes>
                             <excludeSubProjects>false</excludeSubProjects>
                         </configuration>
@@ -346,7 +324,6 @@
             <plugin>
                 <groupId>org.jvnet.maven.incrementalbuild</groupId>
                 <artifactId>incremental-build-plugin</artifactId>
-                <version>1.3</version>
                 <executions>
                     <execution>
                         <goals>
@@ -367,6 +344,11 @@
         </plugins>
         <pluginManagement>
             <plugins>
+                <plugin>
+                    <groupId>org.jvnet.maven.incrementalbuild</groupId>
+                    <artifactId>incremental-build-plugin</artifactId>
+                    <version>${maven.incremental.build.plugin.version}</version>
+                </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-compiler-plugin</artifactId>
@@ -531,6 +513,7 @@
         <maven.surefire.plugin.version>2.18</maven.surefire.plugin.version>
         <maven.resources.plugin.verison>2.7</maven.resources.plugin.verison>
         <maven.dependency.plugin.version>2.10</maven.dependency.plugin.version>
+        <maven.incremental.build.plugin.version>1.3</maven.incremental.build.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>
 </project>

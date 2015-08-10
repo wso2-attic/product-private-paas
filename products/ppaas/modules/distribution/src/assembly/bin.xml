@@ -427,17 +427,6 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>../../payload</directory>
-            <includes>
-                <include>user-data</include>
-            </includes>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources</outputDirectory>
-        </fileSet>
-        <fileSet>
-            <directory>../../payload/user-data/</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/repository/resources/user-data</outputDirectory>
-        </fileSet>
-        <fileSet>
             <directory>../../conf/temp-artifacts/sso</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/modules/sso</outputDirectory>
         </fileSet>
