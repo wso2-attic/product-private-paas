@@ -16,16 +16,21 @@
 
 class esb (
   $server_name        = undef,
-  $version          = undef,
+  $version            = undef,
   $owner              = 'root',
   $group              = 'root',
   $target             = "/mnt/${server_ip}",
-  $server_home        = "${target}/${server_name}-${version}",
+  $carbon_home        = "${target}/${server_name}-${version}",
   $configurator_home  = "/mnt/${configurator_name}-${configurator_version}",
   $template_module_pack = "${server_name}-${version}-template-module-${ppaas_version}.zip",
   $pca_home = "/mnt/${pca_name}-${pca_version}"
 
 )  {
+
+  esb::clean { $deployment_code:
+    mode   => 'new',
+    target => $carbon_home,
+  }
 
 
 # creating /mnt/{ip_address} folder
@@ -53,7 +58,6 @@ class esb (
     "extracting_${server_name}-${version}.zip_for_${server_name}":
       path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       cwd       => $target,
-      unless    => "test -d ${target}/${server_name}-${version}/repository",
       command   => "unzip ${local_package_dir}/${server_name}-${version}.zip",
       logoutput => 'on_failure',
       creates   => "${target}/${server_name}-${version}/repository",
@@ -68,11 +72,6 @@ class esb (
       logoutput => 'on_failure',
       timeout   => 0,
       require   => Exec["extracting_${server_name}-${version}.zip_for_${server_name}"];
-  }
-
-  file { "/etc/environment":
-    content => inline_template("JAVA_HOME=${java_home}"),
-    require => Exec[ "setting_permission_for_${server_name}"];
   }
 
 # Copying template module
@@ -97,6 +96,21 @@ class esb (
   file { "${pca_home}/plugins":
     source  => "puppet:///modules/esb/plugins",
     recurse => true,
+  }
+
+#Setting CARBON_HOME
+  file { "/etc/profile.d/carbon_home.sh":
+    content => "export CARBON_HOME=${carbon_home}",
+    mode    => 755
+  }
+
+# starting python cartridge agent
+  exec { "starting_${pca_home}":
+    user    => $owner,
+    path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:',
+    cwd     => "${pca_home}",
+    command => "python agent.py > /tmp/agent.screen.log 2>&1 &",
+    require =>  File["${pca_home}/plugins"]
   }
 
 }

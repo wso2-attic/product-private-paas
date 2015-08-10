@@ -15,6 +15,11 @@ class java {
       ensure  => link,
       target  => "${java_home}",
       require => Exec['Install java'];
+
+  "/etc/profile.d/java_home.sh":
+      content => "export JAVA_HOME=${java_home}",
+      mode    => 755
+  }
   }
 
   exec {
@@ -27,8 +32,4 @@ class java {
       require => File["/opt/${package}"];
   }
 
-  file { "/etc/environment":
-    content => inline_template("JAVA_HOME=${java_home}"),
-    require => Exec['Install java'];
-  }
 }
