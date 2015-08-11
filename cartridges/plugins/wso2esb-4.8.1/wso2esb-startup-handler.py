@@ -21,6 +21,7 @@ from modules.util.log import LogFactory
 from modules.topology.topologycontext import TopologyContext
 import subprocess
 import os
+import psutil
 
 
 class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
@@ -37,7 +38,7 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
     CONST_MB_IP = "MB_IP"
     CONST_SERVICE_NAME = "SERVICE_NAME"
     CONST_ESB_WORKER = "esbworker"
-    CONST_STRATOS_MEMBERSHIP_SCHEME = "stratos"
+    CONST_PPAAS_MEMBERSHIP_SCHEME = "private-paas"
 
     SERVICES = ["esbworker", "esbmanager", "esb"]
 
@@ -51,7 +52,10 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
     ENV_CONFIG_PARAM_MEMBERSHIP_SCHEME = 'CONFIG_PARAM_MEMBERSHIP_SCHEME'
 
     def run_plugin(self, values):
-
+        # Check if carbon server is already running (plugin is already executed)
+        # If so skipping the execution of plugin
+        if self.check_server_started():
+            return
         # read Port_mappings, Application_Id, MB_IP and Topology, clustering, membership_scheme from 'values'
         port_mappings_str = values[self.CONST_PORT_MAPPINGS].replace("'", "")
         app_id = values[self.CONST_APPLICATION_ID]
@@ -72,7 +76,7 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         self.set_proxy_ports(port_mappings_str)
 
         # Check if clustering is enabled and membership scheme is set to 'stratos'
-        if clustering == 'true' and membership_scheme == self.CONST_STRATOS_MEMBERSHIP_SCHEME:
+        if clustering == 'true' and membership_scheme == self.CONST_PPAAS_MEMBERSHIP_SCHEME:
             # export Cluster_Ids as Env. variables - used in for axis2.xml
             self.set_cluster_ids(app_id)
             # export mb_ip as Env.variable - used in jndi.properties
@@ -97,6 +101,27 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         p = subprocess.Popen(start_command, env=env_var, shell=True)
         output, errors = p.communicate()
         WSO2ESBStartupHandler.log.info("WSO2 ESB started successfully")
+
+    def check_server_started(self):
+        status = False
+        carbon_home = os.environ['CARBON_HOME']
+        if os.path.isfile("%s/wso2carbon.pid" % carbon_home):
+            try:
+                pid_file = open("%s/wso2carbon.pid" % carbon_home, "r")
+                pid = int(pid_file.readline())
+
+                if psutil.pid_exists(pid):
+                    WSO2ESBStartupHandler.log.info(
+                        "Carbon server is already running with [PID] %s, hence skipping plugin execution" % pid)
+                    status = True
+                else:
+                    WSO2ESBStartupHandler.log.debug(
+                        "Carbon server is not running, hence proceeding with plugin execution")
+                    status = False
+            except Exception as e:
+                WSO2ESBStartupHandler.log.exception("Error reading PID from wso2carbon.pid file: %s" % e)
+                status = False
+        return status
 
     def set_cluster_ids(self, app_id):
         cluster_ids = []
@@ -136,7 +161,7 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         pt_https_port = None
 
         # port mappings format: """NAME:mgt-console|PROTOCOL:https|PORT:4500|PROXY_PORT:9443|TYPE:NodePort;
-        #                          NAME:pt-http|PROTOCOL:http|PORT:4501|PROXY_PORT:7280|TYPE:ClientIP;
+        # NAME:pt-http|PROTOCOL:http|PORT:4501|PROXY_PORT:7280|TYPE:ClientIP;
         #                          NAME:pt-https|PROTOCOL:https|PORT:4502|PROXY_PORT:7243|TYPE:NodePort"""
         if port_mappings_str is not None:
 
