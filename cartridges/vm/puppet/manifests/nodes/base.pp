@@ -23,14 +23,23 @@ node 'base' {
   $configurator_name    = 'ppaas-configurator'
   $configurator_version = '4.1.0-SNAPSHOT'
   $pca_name             = 'apache-stratos-python-cartridge-agent'
-  $pca_version          = '4.1.1-SNAPSHOT'
+  $pca_version          = '4.1.1'
   $package_repo         = 'PACKAGE_REPO'
   $local_package_dir    = '/mnt/packs'
-  $mb_ip                = '127.0.0.1'
-  $mb_port              = '66601'
-  $mb_url               = 'tcp://127.0.0.1:4500'
+  $mb_ip                = '192.168.30.245'
+  $mb_port              = '1183'
+  $mb_url               = 'tcp://192.168.30.245:1883'
   $mb_type    = 'activemq' #in wso2 mb case, value should be 'wso2mb'
-  $cep_url              = 'tcp://10.100.2.32:7611' #eg: tcp://10.100.2.32:7611,tcp://10.100.2.33:7611
+  $cep_url              = 'tcp://192.168.30.245:7611' #eg: tcp://10.100.2.32:7611,tcp://10.100.2.33:7611
+  $cep_ip = "192.168.30.245"
+  $cep_port="7611"
+  $cep_username="admin"
+  $cep_password="admin"
+  $bam_ip                  ='192.168.30.245'
+  $bam_port                ='7611'
+  $bam_secure_port         ='7711'
+  $bam_username	      ='admin'
+  $bam_password      ='admin'
   $truststore_password  = 'wso2carbon'
   $java_distribution  = 'jdk-7u72-linux-x64.gz'
   $java_name    = 'jdk1.7.0_72'
@@ -45,13 +54,14 @@ node 'base' {
   $idp_hostname    = 'identity.stratos.com'
   $idp_port    = '443'
   $tomcat_version  = '7.0.52'
-  $enable_log_publisher = 'ENABLE_LOG_PUBLISHER'
+  $enable_log_publisher = 'false'
   $server_ip            = $ipaddress
   $using_dns    = 'USING_DNS'
   $greg_url    = 'https://localhost/registry'
-
+  $metadata_service_url = 'https://192.168.30.245:9443'
   $agent_log_level = "INFO"
   $extensions_dir = '${script_path}/../extensions'
+   
 
   require stratos_base
 }

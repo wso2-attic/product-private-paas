@@ -80,7 +80,7 @@ class python_agent(
 
 #Setting PCA_HOME
  file { "/etc/profile.d/pca_home.sh":
-   content => "export PCA_HOME= ${agent_home}",
+   content => "export PCA_HOME=${agent_home}",
    mode    => 755
  }
 

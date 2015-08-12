@@ -15,26 +15,26 @@
 # ----------------------------------------------------------------------------
 
 class esb (
-  $server_name        = undef,
-  $version            = undef,
+  $server_name	      = undef,
+  $version  	      = undef,
   $owner              = 'root',
   $group              = 'root',
   $target             = "/mnt/${server_ip}",
-  $carbon_home        = "${target}/${server_name}-${version}",
+  $carbon_home        = "/mnt/${server_ip}/${server_name}-${version}",
   $configurator_home  = "/mnt/${configurator_name}-${configurator_version}",
   $template_module_pack = "${server_name}-${version}-template-module-${ppaas_version}.zip",
   $pca_home = "/mnt/${pca_name}-${pca_version}"
-
+ 
 )  {
 
-  esb::clean { $deployment_code:
+ esb::clean { $deployment_code:
     mode   => 'new',
     target => $carbon_home,
   }
-
+   
 
 # creating /mnt/{ip_address} folder
-  exec {
+ exec {
     "creating_target_for_${server_name}":
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       command => "mkdir -p ${target}";
@@ -48,8 +48,8 @@ class esb (
 # copy {server}.zip file to /mnt/packs folder
   file {
     "$local_package_dir/${server_name}-${version}.zip":
-      ensure    => present,
-      source    => ["puppet:///modules/esb/packs/${server_name}-${version}.zip"],
+      ensure => present,
+      source => ["puppet:///modules/esb/packs/${server_name}-${version}.zip"],
       require   => Exec["creating_local_package_repo_for_${server_name}", "creating_target_for_${server_name}"];
   }
 
@@ -75,14 +75,14 @@ class esb (
   }
 
 # Copying template module
-  file {
-    "$local_package_dir/${template_module_pack}":
-      ensure    => present,
-      source    => ["puppet:///modules/esb/packs/${template_module_pack}"],
+ file {
+     "$local_package_dir/${template_module_pack}":
+      ensure => present,
+      source => ["puppet:///modules/esb/packs/${template_module_pack}"],
       require   => Exec["creating_local_package_repo_for_${server_name}"];
   }
 
-  exec {
+ exec {
     "extracting_template_module_${template_module_pack}":
       path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       cwd       => "/mnt/${configurator_name }-${configurator_version}/template-modules",
@@ -90,27 +90,28 @@ class esb (
       logoutput => 'on_failure',
       timeout   => 0,
       require   => File["$local_package_dir/${template_module_pack}"];
-  }
+ }
 
 
-  file { "${pca_home}/plugins":
-    source  => "puppet:///modules/esb/plugins",
-    recurse => true,
-  }
+file { "${pca_home}/plugins":
+   source  => "puppet:///modules/esb/plugins",
+   recurse => true,
+ }
 
-#Setting CARBON_HOME
-  file { "/etc/profile.d/carbon_home.sh":
-    content => "export CARBON_HOME=${carbon_home}",
-    mode    => 755
-  }
+# Setting CARBON_HOME
+# file { "/etc/profile.d/carbon_home.sh":
+#  content => "export CARBON_HOME=${carbon_home}",
+#  mode    => 755
+# }
 
 # starting python cartridge agent
-  exec { "starting_${pca_home}":
+exec { "starting_${pca_home}":
+    environment => [ "CARBON_HOME=${carbon_home}", "PCA_HOME=/mnt/${pca_name}-${pca_version}" ,"JAVA_HOME=/opt/jdk1.7.0_72", "CONFIGURATOR_HOME=/mnt/${configurator_name}-${configurator_version}" ],    
     user    => $owner,
     path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:',
     cwd     => "${pca_home}",
-    command => "python agent.py > /tmp/agent.screen.log 2>&1 &",
+    command => "python ./agent.py > /tmp/agent.screen.log 2>&1 &",
     require =>  File["${pca_home}/plugins"]
   }
-
+ 
 }

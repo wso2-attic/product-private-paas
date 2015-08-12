@@ -47,6 +47,7 @@ class stratos_base(
     'wget',
     'zip',
     'unzip',
+    'git',
     'tar']
 
   package { $packages:
