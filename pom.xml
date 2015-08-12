@@ -456,7 +456,7 @@
 
     <properties>
         <!-- Apache Stratos version -->
-        <stratos.version>4.1.0</stratos.version>
+        <stratos.version>4.1.1</stratos.version>
 
         <!-- Carbon related versions -->
         <carbon.kernel.version>4.2.0</carbon.kernel.version>
