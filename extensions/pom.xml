@@ -29,6 +29,6 @@
     <description>Private PaaS Extensions</description>
 
     <modules>
-        <module>carbon</module>
+        <!-- module>carbon</module -->
     </modules>
 </project>
