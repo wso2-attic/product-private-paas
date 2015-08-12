@@ -37,10 +37,10 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
     CONST_APPLICATION_ID = "APPLICATION_ID"
     CONST_MB_IP = "MB_IP"
     CONST_SERVICE_NAME = "SERVICE_NAME"
-    CONST_ESB_WORKER = "esbworker"
+    CONST_ESB_WORKER = "wso2esb-481-worker"
     CONST_PPAAS_MEMBERSHIP_SCHEME = "private-paas"
 
-    SERVICES = ["esbworker", "esbmanager", "esb"]
+    SERVICES = ["wso2esb-481-manager", "wso2esb-481-worker", "wso2esb-481"]
 
     # list of environment variables exported by the plugin
     ENV_CONFIG_PARAM_MB_HOST = 'CONFIG_PARAM_MB_HOST'
@@ -160,9 +160,9 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         pt_http_port = None
         pt_https_port = None
 
-        # port mappings format: """NAME:mgt-console|PROTOCOL:https|PORT:4500|PROXY_PORT:9443|TYPE:NodePort;
-        # NAME:pt-http|PROTOCOL:http|PORT:4501|PROXY_PORT:7280|TYPE:ClientIP;
-        #                          NAME:pt-https|PROTOCOL:https|PORT:4502|PROXY_PORT:7243|TYPE:NodePort"""
+        # port mappings format: """NAME:mgt-console|PROTOCOL:https|PORT:30001|PROXY_PORT:9443|TYPE:NodePort;
+        #                          NAME:pt-http|PROTOCOL:http|PORT:30002|PROXY_PORT:7280|TYPE:ClientIP;
+        #                          NAME:pt-https|PROTOCOL:https|PORT:30003|PROXY_PORT:7243|TYPE:NodePort"""
         if port_mappings_str is not None:
 
             port_mappings_array = port_mappings_str.split(";")

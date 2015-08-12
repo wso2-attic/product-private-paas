@@ -17,8 +17,8 @@
 # ------------------------------------------------------------------------
 
 [Core]
-Name = wso2esb-startup-handler
-Module = wso2esb-startup-handler
+Name = wso2esb481-startup-handler
+Module = wso2esb481-startup-handler
 
 [Documentation]
 Description = ArtifactUpdatedEvent
