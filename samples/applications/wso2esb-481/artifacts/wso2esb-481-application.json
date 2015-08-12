@@ -1,0 +1,47 @@
+{
+  "applicationId": "wso2esb-481-application",
+  "alias": "my-wso2esb-481-application",
+  "components": {
+    "groups": [
+      {
+        "name": "wso2esb-481-group",
+        "alias": "my-wso2esb-481-group",
+        "deploymentPolicy": "deployment-policy-1",
+        "groupMinInstances": 1,
+        "groupMaxInstances": 1,
+        "cartridges": [
+          {
+            "type": "wso2esb-481-manager",
+            "cartridgeMin": 2,
+            "cartridgeMax": 2,
+            "subscribableInfo": {
+              "alias": "my-wso2esb-481-manager",
+              "autoscalingPolicy": "autoscaling-policy-1",
+              "artifactRepository": {
+                "privateRepo": false,
+                "repoUrl": "https://github.com/lasinducharith/esb-dep-sync.git",
+                "repoUsername": "",
+                "repoPassword": ""
+              }
+            }
+          },
+          {
+            "type": "wso2esb-481-worker",
+            "cartridgeMin": 2,
+            "cartridgeMax": 2,
+            "subscribableInfo": {
+              "alias": "my-wso2esb-481-worker",
+              "autoscalingPolicy": "autoscaling-policy-1",
+              "artifactRepository": {
+                "privateRepo": false,
+                "repoUrl": "https://github.com/lasinducharith/esb-dep-sync.git",
+                "repoUsername": "",
+                "repoPassword": ""
+              }
+            }
+          }
+        ]
+      }
+    ]
+  }
+}

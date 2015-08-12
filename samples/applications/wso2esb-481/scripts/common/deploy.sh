@@ -26,19 +26,19 @@ host_port=9443
 
 prgdir=`dirname "$0"`
 script_path=`cd "$prgdir"; pwd`
-
+application_id="wso2esb-481"
 artifacts_path=`cd "${script_path}/../../artifacts"; pwd`
-iaas_cartridges_path=`cd "${script_path}/../../../../cartridges/${iaas}"; pwd`
-cartridges_groups_path=`cd "${script_path}/../../../../cartridge-groups"; pwd`
+iaas_cartridges_path=`cd "${script_path}/../../../../cartridges/${iaas}/${application_id}"; pwd`
+cartridges_groups_path=`cd "${script_path}/../../../../cartridge-groups/${application_id}"; pwd`
 autoscaling_policies_path=`cd "${script_path}/../../../../autoscaling-policies"; pwd`
 network_partitions_path=`cd "${script_path}/../../../../network-partitions/${iaas}"; pwd`
 deployment_policies_path=`cd "${script_path}/../../../../deployment-policies"; pwd`
 application_policies_path=`cd "${script_path}/../../../../application-policies"; pwd`
 
+echo ${network_partitions_path}
 network_partition_id="network-partition-1"
 deployment_policy_id="deployment-policy-1"
 autoscaling_policy_id="autoscaling-policy-1"
-application_id="wso2esb-481"
 application_policy_id="application-policy-1"
 
 set -e
@@ -58,8 +58,14 @@ curl -X POST -H "Content-Type: application/json" -d "@${network_partitions_path}
 echo "Adding deployment policy..."
 curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/${deployment_policy_id}.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/deploymentPolicies
 
-echo "Adding ${application_id} cartridge..."
-curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/${application_id}.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
+echo "Adding ${application_id} Manager cartridge..."
+curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/${application_id}-manager.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
+
+echo "Adding ${application_id} Worker cartridge..."
+curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/${application_id}-worker.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
+
+echo "Adding ${application_id} cartridge Group ..."
+curl -X POST -H "Content-Type: application/json" -d "@${cartridges_groups_path}/${application_id}-group.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridgeGroups
 
 sleep 1
 echo "Adding application policy..."
@@ -67,8 +73,8 @@ curl -X POST -H "Content-Type: application/json" -d "@${application_policies_pat
 
 sleep 1
 echo "Adding application..."
-curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/application.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications
+curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/${application_id}-application.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications
 
 sleep 1
 echo "Deploying application..."
-curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/${application_id}-app/deploy/${application_policy_id}
+curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/${application_id}-application/deploy/${application_policy_id}

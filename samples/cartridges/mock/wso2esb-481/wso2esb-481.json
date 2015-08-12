@@ -13,24 +13,21 @@
 			"name": "mgt-console",
             "protocol": "https",
             "port": "9443",
-            "proxyPort": "8244"
+            "proxyPort": "0"
         },
         {
 			"name": "pt-http",
             "protocol": "http",
             "port": "8280",
-            "proxyPort": "8281"
+            "proxyPort": "0"
         },
         {
 			"name": "pt-https",
             "protocol": "https",
             "port": "8243",
-            "proxyPort": "7243"
+            "proxyPort": "0"
         }
     ],
-    "deployment": {
-        "baseDir": "/opt/wso2esb-4.8.1/repository/deployment/server/synapse-configs/default/"
-    },
     "iaasProvider": [
         {
             "type": "mock",
