@@ -27,16 +27,19 @@ export STRATOS_VERSION="4.1.0"
 export PCA_HOME="/opt/apache-stratos-python-cartridge-agent-${STRATOS_VERSION}"
 
 set -o posix ; set | sed -e ':a;N;$!ba;s/\n/,/g' > ${PCA_HOME}/payload/launch-params
-
+# set PCA_HOME
 echo "PCA_HOME=${PCA_HOME}" >> /etc/environment
 
-#mandatory parameters
+# set CARBON_HOME as APPLICATION_PATH
+export APPLICATION_PATH="${CARBON_HOME}"
+echo "APPLICATION_PATH=${APPLICATION_PATH}" >> /etc/environment
+
+# mandatory parameters
 sed -i "s/MB-IP/${MB_IP}/g" ${PCA_HOME}/agent.conf
 sed -i "s/MB-PORT/${MB_PORT}/g" ${PCA_HOME}/agent.conf
 
-
-#parameters that can be empty
-#default values have to be set
+# parameters that can be empty
+# default values have to be set
 
 if [ -z "${LISTEN_ADDR}" ]; then
 	sed -i "s/LISTEN_ADDR/localhost/g" ${PCA_HOME}/agent.conf
