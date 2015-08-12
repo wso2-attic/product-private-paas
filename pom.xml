@@ -38,6 +38,7 @@
         <module>components</module>
         <module>features</module>
         <module>products</module>
+        <module>extensions</module>
     </modules>
 
     <profiles>
