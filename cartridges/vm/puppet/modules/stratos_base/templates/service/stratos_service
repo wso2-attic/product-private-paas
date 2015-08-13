@@ -19,18 +19,51 @@
 # under the License.
 #
 # --------------------------------------------------------------
-# This extension script will be executed when a subscription domain removed
-# event is received by the cartridge agent.
+# This extension script will be executed to start the servers.
 # --------------------------------------------------------------
 #
 
-log=/var/log/apache-stratos/cartridge-agent-extensions.log
-OUTPUT=`date`": Domain Mapping Removed Event"
-OUTPUT="$OUTPUT SUBSCRIPTION_APPLICATION_ID: ${SUBSCRIPTION_APPLICATION_ID},"
-OUTPUT="$OUTPUT STRATOS_SUBSCRIPTION_SERVICE_NAME: ${STRATOS_SUBSCRIPTION_SERVICE_NAME},"
-OUTPUT="$OUTPUT STRATOS_SUBSCRIPTION_DOMAIN_NAME: ${STRATOS_SUBSCRIPTION_DOMAIN_NAME},"
-OUTPUT="$OUTPUT SUBSCRIPTION_CLUSTER_ID: ${SUBSCRIPTION_CLUSTER_ID},"
-OUTPUT="$OUTPUT STRATOS_SUBSCRIPTION_TENANT_ID: ${STRATOS_SUBSCRIPTION_TENANT_ID},"
-OUTPUT="$OUTPUT APPLICATION_PATH: ${APPLICATION_PATH},"
-OUTPUT="$OUTPUT STRATOS_SUBSCRIPTION_TENANT_DOMAIN: $STRATOS_SUBSCRIPTION_TENANT_DOMAIN}"
-echo $OUTPUT | tee -a $log
+SERVICE_NAME="apache-stratos-agent"
+SERVICE_USER="root"
+FOLDER="<%= @carbon_home %>"
+
+start() {
+
+if [[ `/usr/bin/whoami` == $SERVICE_USER ]]
+then
+  cd $FOLDER
+  ./bin/stratos.sh
+
+#NOT USER _root
+else
+  cd $FOLDER
+  su $SERVICE_USER ./bin/stratos.sh
+fi
+}
+
+stop() {
+  cd $FOLDER
+  su $SERVICE_USER ./bin/stratos.sh stop
+}
+
+#Body main
+case "$1" in
+  start)
+    start
+    ;;
+  stop)
+    stop
+    ;;
+  restart)
+    echo "Restarting $SERVICE_NAME..."
+    echo " "
+    stop
+    sleep 10
+    start
+    ;;
+  *)
+    echo $"Usage: $0 {start|stop|restart}"
+    exit 1
+esac
+exit 0
+

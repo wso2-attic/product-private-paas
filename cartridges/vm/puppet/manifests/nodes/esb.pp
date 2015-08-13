@@ -13,10 +13,22 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 # ----------------------------------------------------------------------------
-#
-# import private paas nodes definitions
-import 'nodes/base.pp'
-import 'nodes/esb.pp'
-import 'nodes/appserver.pp'
-import 'nodes/is.pp'
-import 'nodes/default.pp'
+
+# ESB cartridge node
+node /esb/ inherits base {
+  
+  class {'java':}
+  class {'python_agent':
+   docroot => "/home/ubuntu"
+  }
+  class {'configurator':}
+  class {'esb':
+     server_name     => 'wso2esb',
+     version  	      => '4.8.1'
+     
+  }
+
+  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['esb'] 
+}
+
+

@@ -17,7 +17,7 @@
 
 class stratos_base(
   $ensure = 'present',
-  $autoupgrade=true, 
+  $autoupgrade=true,
 ){
 
   if ! ($ensure in [ "present", "absent" ]) {
@@ -31,33 +31,34 @@ class stratos_base(
 # Set local variables based on the desired state
   if $ensure == "present" {
     if $autoupgrade == true {
-      $package_ensure = latest      
-    } 
-    else {
-      $package_ensure = present     
+      $package_ensure = latest
     }
-  } 
-  else {        
-      $package_ensure = absent      
+    else {
+      $package_ensure = present
+    }
+  }
+  else {
+    $package_ensure = absent
   }
 
   $packages = [
-    'nano',       
+    'nano',
     'curl',
-    'wget',    
+    'wget',
     'zip',
     'unzip',
+    'git',
     'tar']
 
   package { $packages:
-    ensure => $package_ensure,    
-  }  
+    ensure => $package_ensure,
+  }
 
   define printPackages{
-    notify { $name: 
+    notify { $name:
       message => "Installed package: ${name}",
     }
   }
-  printPackages{ $packages:}
+  printPackages{ $packages: }
 
 }
