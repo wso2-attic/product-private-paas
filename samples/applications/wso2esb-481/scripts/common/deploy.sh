@@ -35,7 +35,6 @@ network_partitions_path=`cd "${script_path}/../../../../network-partitions/${iaa
 deployment_policies_path=`cd "${script_path}/../../../../deployment-policies"; pwd`
 application_policies_path=`cd "${script_path}/../../../../application-policies"; pwd`
 
-echo ${network_partitions_path}
 network_partition_id="network-partition-1"
 deployment_policy_id="deployment-policy-1"
 autoscaling_policy_id="autoscaling-policy-1"

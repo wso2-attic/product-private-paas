@@ -48,6 +48,8 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
     ENV_CONFIG_PARAM_HTTPS_PROXY_PORT = 'CONFIG_PARAM_HTTPS_PROXY_PORT'
     ENV_CONFIG_PARAM_PT_HTTP_PROXY_PORT = 'CONFIG_PARAM_PT_HTTP_PROXY_PORT'
     ENV_CONFIG_PARAM_PT_HTTPS_PROXY_PORT = 'CONFIG_PARAM_PT_HTTPS_PROXY_PORT'
+
+    # clustering related environment variables read from payload_parameters
     ENV_CONFIG_PARAM_CLUSTERING = 'CONFIG_PARAM_CLUSTERING'
     ENV_CONFIG_PARAM_MEMBERSHIP_SCHEME = 'CONFIG_PARAM_MEMBERSHIP_SCHEME'
 
@@ -56,6 +58,7 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         # If so skipping the execution of plugin
         if self.check_server_started():
             return
+
         # read Port_mappings, Application_Id, MB_IP and Topology, clustering, membership_scheme from 'values'
         port_mappings_str = values[self.CONST_PORT_MAPPINGS].replace("'", "")
         app_id = values[self.CONST_APPLICATION_ID]
@@ -75,9 +78,9 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         # export Proxy Ports as Env. variables - used in catalina-server.xml
         self.set_proxy_ports(port_mappings_str)
 
-        # Check if clustering is enabled and membership scheme is set to 'stratos'
+        # Check if clustering is enabled and membership scheme is set to 'private-paas'
         if clustering == 'true' and membership_scheme == self.CONST_PPAAS_MEMBERSHIP_SCHEME:
-            # export Cluster_Ids as Env. variables - used in for axis2.xml
+            # export Cluster_Ids as Env. variables - used in axis2.xml
             self.set_cluster_ids(app_id)
             # export mb_ip as Env.variable - used in jndi.properties
             if mb_ip is not None:
@@ -103,29 +106,27 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         WSO2ESBStartupHandler.log.info("WSO2 ESB started successfully")
 
     def check_server_started(self):
-        status = False
+        status_running = False
         carbon_home = os.environ['CARBON_HOME']
         if os.path.isfile("%s/wso2carbon.pid" % carbon_home):
             try:
                 pid_file = open("%s/wso2carbon.pid" % carbon_home, "r")
                 pid = int(pid_file.readline())
-
                 if psutil.pid_exists(pid):
                     WSO2ESBStartupHandler.log.info(
                         "Carbon server is already running with [PID] %s, hence skipping plugin execution" % pid)
-                    status = True
+                    status_running = True
                 else:
                     WSO2ESBStartupHandler.log.debug(
                         "Carbon server is not running, hence proceeding with plugin execution")
-                    status = False
+                    status_running = False
             except Exception as e:
                 WSO2ESBStartupHandler.log.exception("Error reading PID from wso2carbon.pid file: %s" % e)
-                status = False
-        return status
+                status_running = False
+        return status_running
 
     def set_cluster_ids(self, app_id):
         cluster_ids = []
-
         for service_name in self.SERVICES:
             cluster_id_of_service = self.read_cluster_id_of_service(service_name, app_id)
             if cluster_id_of_service is not None:

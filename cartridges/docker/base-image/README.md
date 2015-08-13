@@ -13,7 +13,7 @@ ppaas-configurator-<PPAAS_VERSION>.zip
 
 (2)  Run build.sh file to build the docker image:
 ```
-sh build.sh
+sh build.sh clean
 ```
 
 (3) List docker images:
