@@ -49,24 +49,8 @@
             "value": "PCA"
         },
         {
-            "name": "payload_parameter.CONFIG_PARAM_MGT_HOST_NAME",
-            "value": "mgt.esb.wso2.com"
-        },
-        {
-            "name": "payload_parameter.CONFIG_PARAM_WORKER_HOST_NAME",
-            "value": "worker.esb.wso2.com"
-        },
-        {
-            "name": "payload_parameter.CONFIG_PARAM_SUB_DOMAIN",
-            "value": "worker"
-        },
-        {
             "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
             "value": "true"
-        },
-        {
-            "name": "payload_parameter.CONFIG_PARAM_MEMBERSHIP_SCHEME",
-            "value": "private-paas"
         }
     ]
 }

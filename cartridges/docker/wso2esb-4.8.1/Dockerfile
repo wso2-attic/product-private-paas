@@ -44,8 +44,8 @@ RUN unzip /opt/${TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modu
 # Expose container ports
 # ----------------------
 
-# ESB https/pt-http/pt-https ports
-EXPOSE 9443 8280 8243
+# ESB mgt-http/mgt-https/pt-http/pt-https ports
+EXPOSE 9763 9443 8280 8243
 
 # -------------------------------
 # Define entry point & start sshd

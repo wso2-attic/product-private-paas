@@ -21,7 +21,7 @@ sh build.sh clean
 docker images
 ```
 
-## Docker ENV Variables
+## Docker environment variables
 ```
 PPAAS_VERSION - WSO2 Private PaaS Version
 PCA_HOME - Apache Stratos Python Cartridge Agent Home

@@ -36,6 +36,9 @@ ENV PPAAS_VERSION 4.1.0-SNAPSHOT
 ENV CONFIGURATOR_NAME ppaas-configurator-${PPAAS_VERSION}
 ENV CONFIGURATOR_HOME /opt/${CONFIGURATOR_NAME}
 
+# Docker Issue #9299 - for demo purposes
+ENV TERM xterm
+
 WORKDIR /opt/
 
 # ------------------
@@ -49,8 +52,9 @@ RUN apt-get update && apt-get install -y \
 		python-pip \ 
 		python-dev gcc \
 		zip \
+		vim \
 		stress
-# stress tool is added for demo purposes
+# stress tool and vim are added for demo purposes
 
 RUN mkdir -p /var/run/sshd
 RUN echo 'root:stratos' | chpasswd
@@ -69,9 +73,9 @@ RUN pip install jinja2 \
     gitpython \
     yapsy
 
-# -------------------------
-# Install cartridge agent 
-# -------------------------
+# ------------------------------
+# Install JDK, PCA, Configurator
+# ------------------------------
 ADD  packages/${JDK_TAR_FILE} /opt/
 COPY packages/${CONFIGURATOR_NAME}.zip /opt/
 COPY scripts/start-agent.sh /usr/local/bin/start-agent.sh
