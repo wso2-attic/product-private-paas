@@ -21,7 +21,6 @@
 # it will execute start-agent.sh file if it's started from private-paas
 # and will start the configurator/carbon-server otherwise
 
-# export CARBON_HOME as an envrionment variable
 local_ip=`awk 'NR==1 {print $1}' /etc/hosts`
 server_path=/mnt/${local_ip}
 mkdir -p $server_path

@@ -19,3 +19,14 @@ sh build.sh
 ```
 docker images
 ```
+
+## Docker environment variables
+```
+PPAAS_VERSION - WSO2 Private PaaS Version
+PCA_HOME - Apache Stratos Python Cartridge Agent Home
+JAVA_HOME - JAVA HOME
+CONFIGURATOR_HOME - WSO2 Private PaaS Configurator Home
+WSO2_SERVER_TYPE - WSO2 Carbon Server type
+WSO2_SERVER_VERSION - WSO2 Carbon Server version
+TEMPLATE_MODULE_NAME - PPaaS Carbon Server template module name
+```
