@@ -21,10 +21,9 @@ from modules.util.log import LogFactory
 from modules.topology.topologycontext import TopologyContext
 import subprocess
 import os
-import psutil
 
 
-class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
+class WSO2StartupHandler(ICartridgeAgentPlugin):
     """
     Configures and starts configurator, carbon server
     """
@@ -36,6 +35,7 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
     CONST_MB_IP = "MB_IP"
     CONST_SERVICE_NAME = "SERVICE_NAME"
     CONST_CLUSTER_ID = "CLUSTER_ID"
+    CONST_LB_IP = "LB_IP"
     CONST_WORKER = "worker"
     CONST_MANAGER = "manager"
     CONST_MGT = "mgt"
@@ -46,10 +46,12 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
     CONST_PORT_MAPPING_PT_HTTPS_TRANSPORT = "pt-https"
     CONST_PROTOCOL_HTTP = "http"
     CONST_PROTOCOL_HTTPS = "https"
-    CONST_ESB = "wso2esb-481"
-    CONST_ESB_WORKER = "%s-worker" % CONST_ESB
+    CONST_DEFAULT_CONFIG_PARAM_HOST_NAME = 'esb.wso2.com'
+    CONST_DEFAULT_CONFIG_PARAM_MGT_HOST_NAME = 'mgt.esb.wso2.com'
     CONST_PPAAS_MEMBERSHIP_SCHEME = "private-paas"
-    SERVICES = ["%s-manager" % CONST_ESB, "%s-worker" % CONST_ESB]
+    CONST_PRODUCT = "ESB"
+
+    SERVICES = ["wso2esb-481-manager", "wso2esb-481-worker"]
 
     # list of environment variables exported by the plugin
     ENV_CONFIG_PARAM_SUB_DOMAIN = 'CONFIG_PARAM_SUB_DOMAIN'
@@ -63,30 +65,48 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
     # clustering related environment variables read from payload_parameters
     ENV_CONFIG_PARAM_CLUSTERING = 'CONFIG_PARAM_CLUSTERING'
     ENV_CONFIG_PARAM_MEMBERSHIP_SCHEME = 'CONFIG_PARAM_MEMBERSHIP_SCHEME'
+    ENV_CONFIG_PARAM_HOST_NAME = 'CONFIG_PARAM_HOST_NAME'
+    ENV_CONFIG_PARAM_MGT_HOST_NAME = 'CONFIG_PARAM_MGT_HOST_NAME'
 
     def run_plugin(self, values):
 
-        # read Port_mappings, Application_Id, MB_IP and Topology, clustering, membership_scheme from 'values'
+        # read from 'values'
         port_mappings_str = values[self.CONST_PORT_MAPPINGS].replace("'", "")
         app_id = values[self.CONST_APPLICATION_ID]
         mb_ip = values[self.CONST_MB_IP]
         service_type = values[self.CONST_SERVICE_NAME]
         my_cluster_id = values[self.CONST_CLUSTER_ID]
-        # if CONFIG_PARAM_CLUSTERING is not set, set the default value as false
         clustering = values.get(self.ENV_CONFIG_PARAM_CLUSTERING, 'false')
         membership_scheme = values.get(self.ENV_CONFIG_PARAM_MEMBERSHIP_SCHEME)
+        host_name = values.get(self.ENV_CONFIG_PARAM_HOST_NAME, self.CONST_DEFAULT_CONFIG_PARAM_HOST_NAME)
+        mgt_host_name = values.get(self.ENV_CONFIG_PARAM_MGT_HOST_NAME, self.CONST_DEFAULT_CONFIG_PARAM_MGT_HOST_NAME)
+        lb_ip = values.get(self.CONST_LB_IP)
 
         # log above values
-        WSO2ESBStartupHandler.log.info("Port Mappings: %s" % port_mappings_str)
-        WSO2ESBStartupHandler.log.info("Application ID: %s" % app_id)
-        WSO2ESBStartupHandler.log.info("MB IP: %s" % mb_ip)
-        WSO2ESBStartupHandler.log.info("Service Name: %s" % service_type)
-        WSO2ESBStartupHandler.log.info("Cluster ID: %s" % my_cluster_id)
-        WSO2ESBStartupHandler.log.info("Clustering: %s" % clustering)
-        WSO2ESBStartupHandler.log.info("Membership Scheme: %s" % membership_scheme)
+        WSO2StartupHandler.log.info("Port Mappings: %s" % port_mappings_str)
+        WSO2StartupHandler.log.info("Application ID: %s" % app_id)
+        WSO2StartupHandler.log.info("MB IP: %s" % mb_ip)
+        WSO2StartupHandler.log.info("Service Name: %s" % service_type)
+        WSO2StartupHandler.log.info("Cluster ID: %s" % my_cluster_id)
+        WSO2StartupHandler.log.info("Clustering: %s" % clustering)
+        WSO2StartupHandler.log.info("Membership Scheme: %s" % membership_scheme)
+        WSO2StartupHandler.log.info("Host Name: %s" % host_name)
+        WSO2StartupHandler.log.info("Mgt Host Name: %s" % mgt_host_name)
+        WSO2StartupHandler.log.info("LB IP: %s" % lb_ip)
 
         # export Proxy Ports as Env. variables - used in catalina-server.xml
-        self.set_proxy_ports(port_mappings_str)
+        mgt_http_proxy_port = self.read_proxy_port(port_mappings_str, self.CONST_PORT_MAPPING_MGT_HTTP_TRANSPORT,
+                                                   self.CONST_PROTOCOL_HTTP)
+        mgt_https_proxy_port = self.read_proxy_port(port_mappings_str, self.CONST_PORT_MAPPING_MGT_HTTPS_TRANSPORT,
+                                                    self.CONST_PROTOCOL_HTTPS)
+        pt_http_proxy_port = self.read_proxy_port(port_mappings_str, self.CONST_PORT_MAPPING_PT_HTTP_TRANSPORT,
+                                                  self.CONST_PROTOCOL_HTTP)
+        pt_https_proxy_port = self.read_proxy_port(port_mappings_str, self.CONST_PORT_MAPPING_PT_HTTPS_TRANSPORT,
+                                                   self.CONST_PROTOCOL_HTTPS)
+        self.export_env_var(self.ENV_CONFIG_PARAM_HTTP_PROXY_PORT, mgt_http_proxy_port)
+        self.export_env_var(self.ENV_CONFIG_PARAM_HTTPS_PROXY_PORT, mgt_https_proxy_port)
+        self.export_env_var(self.ENV_CONFIG_PARAM_PT_HTTP_PROXY_PORT, pt_http_proxy_port)
+        self.export_env_var(self.ENV_CONFIG_PARAM_PT_HTTPS_PROXY_PORT, pt_https_proxy_port)
 
         # set sub-domain
         sub_domain = None
@@ -96,6 +116,15 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
             sub_domain = self.CONST_WORKER
         if sub_domain is not None:
             self.export_env_var(self.ENV_CONFIG_PARAM_SUB_DOMAIN, sub_domain)
+
+        # update /etc/hosts - when cluster is fronted by an LB
+        if lb_ip is not None and clustering == 'true':
+            if host_name is not None:
+                self.update_hosts_file(lb_ip, host_name)
+            if mgt_host_name is not None:
+                self.update_hosts_file(lb_ip, mgt_host_name)
+        else:
+            WSO2StartupHandler.log.warn("LB_IP is not set. Hence cluster might fail.")
 
         # if CONFIG_PARAM_MEMBERSHIP_SCHEME is not set, set the private-paas membership scheme as default one
         if membership_scheme is None:
@@ -111,23 +140,23 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
                 self.export_env_var(self.ENV_CONFIG_PARAM_MB_HOST, mb_ip)
 
         # start configurator
-        WSO2ESBStartupHandler.log.info("Configuring WSO2 ESB...")
+        WSO2StartupHandler.log.info("Configuring WSO2 %s..." % self.CONST_PRODUCT)
         config_command = "python ${CONFIGURATOR_HOME}/configurator.py"
         env_var = os.environ.copy()
         p = subprocess.Popen(config_command, env=env_var, shell=True)
         output, errors = p.communicate()
-        WSO2ESBStartupHandler.log.info("WSO2 ESB configured successfully")
+        WSO2StartupHandler.log.info("WSO2 %s configured successfully" % self.CONST_PRODUCT)
 
         # start server
-        WSO2ESBStartupHandler.log.info("Starting WSO2 ESB...")
-        if service_type == self.CONST_ESB_WORKER:
+        WSO2StartupHandler.log.info("Starting WSO2 %s ..." % self.CONST_PRODUCT)
+        if service_type.endswith(self.CONST_WORKER):
             start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -DworkerNode=true start"
         else:
             start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dsetup start"
         env_var = os.environ.copy()
         p = subprocess.Popen(start_command, env=env_var, shell=True)
         output, errors = p.communicate()
-        WSO2ESBStartupHandler.log.info("WSO2 ESB started successfully")
+        WSO2StartupHandler.log.info("WSO2 %s started successfully" % self.CONST_PRODUCT)
 
     def set_cluster_ids(self, app_id, service_type, my_cluster_id):
         """
@@ -158,7 +187,7 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
             service = topology.get_service(service_name)
             clusters = service.get_clusters()
         else:
-            WSO2ESBStartupHandler.log.warn("[Service] %s is not available in topology" % service_name)
+            WSO2StartupHandler.log.warn("[Service] %s is not available in topology" % service_name)
 
         if clusters is not None:
             for cluster in clusters:
@@ -167,49 +196,50 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
 
         return cluster_id
 
-    def set_proxy_ports(self, port_mappings_str):
+    def update_hosts_file(self, ip_address, host_name):
         """
-        exports proxy ports from PORT_MAPPINGS as env. variables
+        Updates /etc/hosts file with clustering hostnames
 
         :return: void
         """
-        mgt_http_port = None
-        mgt_https_port = None
-        pt_http_port = None
-        pt_https_port = None
+        config_command = "echo %s  %s >> /etc/hosts" % (ip_address, host_name)
+        env_var = os.environ.copy()
+        p = subprocess.Popen(config_command, env=env_var, shell=True)
+        output, errors = p.communicate()
+        WSO2StartupHandler.log.info(
+            "Successfully updated [ip_address] %s & [hostname] %s in etc/hosts" % (ip_address, host_name))
+
+    def read_proxy_port(self, port_mappings_str, port_mapping_name, port_mapping_protocol):
+        """
+        returns proxy port of the requested port mapping
+
+        :return: void
+        """
 
         # port mappings format: NAME:mgt-http|PROTOCOL:http|PORT:30001|PROXY_PORT:0|TYPE:NodePort;
         #                       NAME:mgt-https|PROTOCOL:https|PORT:30002|PROXY_PORT:0|TYPE:NodePort;
         #                       NAME:pt-http|PROTOCOL:http|PORT:30003|PROXY_PORT:7280|TYPE:ClientIP;
         #                       NAME:pt-https|PROTOCOL:https|PORT:30004|PROXY_PORT:7243|TYPE:NodePort
-        if port_mappings_str is not None:
 
+        service_proxy_port = None
+        if port_mappings_str is not None:
             port_mappings_array = port_mappings_str.split(";")
             if port_mappings_array:
 
                 for port_mapping in port_mappings_array:
-                    WSO2ESBStartupHandler.log.debug("port_mapping: %s" % port_mapping)
+                    # WSO2StartupHandler.log.debug("port_mapping: %s" % port_mapping)
                     name_value_array = port_mapping.split("|")
                     name = name_value_array[0].split(":")[1]
                     protocol = name_value_array[1].split(":")[1]
                     proxy_port = name_value_array[3].split(":")[1]
-                    # If PROXY_PORT is not set, set PORT as the proxy port (Kubernetes),
+                    # If PROXY_PORT is not set, set PORT as the proxy port (ex:Kubernetes),
                     if proxy_port == '0':
                         proxy_port = name_value_array[2].split(":")[1]
-                    if name == self.CONST_PORT_MAPPING_MGT_HTTP_TRANSPORT and protocol == self.CONST_PROTOCOL_HTTP:
-                        mgt_http_port = proxy_port
-                    if name == self.CONST_PORT_MAPPING_MGT_HTTPS_TRANSPORT and protocol == self.CONST_PROTOCOL_HTTPS:
-                        mgt_https_port = proxy_port
-                    if name == self.CONST_PORT_MAPPING_PT_HTTP_TRANSPORT and protocol == self.CONST_PROTOCOL_HTTP:
-                        pt_http_port = proxy_port
-                    if name == self.CONST_PORT_MAPPING_PT_HTTPS_TRANSPORT and protocol == self.CONST_PROTOCOL_HTTPS:
-                        pt_https_port = proxy_port
 
-        # export environment variables
-        self.export_env_var(self.ENV_CONFIG_PARAM_HTTP_PROXY_PORT, mgt_http_port)
-        self.export_env_var(self.ENV_CONFIG_PARAM_HTTPS_PROXY_PORT, mgt_https_port)
-        self.export_env_var(self.ENV_CONFIG_PARAM_PT_HTTP_PROXY_PORT, pt_http_port)
-        self.export_env_var(self.ENV_CONFIG_PARAM_PT_HTTPS_PROXY_PORT, pt_https_port)
+                    if name == port_mapping_name and protocol == port_mapping_protocol:
+                        service_proxy_port = proxy_port
+
+        return service_proxy_port
 
     def export_env_var(self, variable, value):
         """
@@ -219,6 +249,6 @@ class WSO2ESBStartupHandler(ICartridgeAgentPlugin):
         """
         if value is not None:
             os.environ[variable] = value
-            WSO2ESBStartupHandler.log.info("Exported environment variable %s: %s" % (variable, value))
+            WSO2StartupHandler.log.info("Exported environment variable %s: %s" % (variable, value))
         else:
-            WSO2ESBStartupHandler.log.warn("Could not export environment variable %s " % variable)
+            WSO2StartupHandler.log.warn("Could not export environment variable %s " % variable)
