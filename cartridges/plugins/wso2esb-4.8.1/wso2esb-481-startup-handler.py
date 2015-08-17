@@ -18,7 +18,7 @@
 
 from plugins.contracts import ICartridgeAgentPlugin
 from modules.util.log import LogFactory
-from modules.topology.topologycontext import TopologyContext
+from entity import *
 import subprocess
 import os
 
@@ -181,18 +181,19 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     def read_cluster_id_of_service(self, service_name, app_id):
         cluster_id = None
         clusters = None
-        topology = TopologyContext().get_topology()
+        topology = TopologyContext.topology
 
-        if topology.service_exists(service_name):
-            service = topology.get_service(service_name)
-            clusters = service.get_clusters()
-        else:
-            WSO2StartupHandler.log.warn("[Service] %s is not available in topology" % service_name)
+        if topology is not None:
+            if topology.service_exists(service_name):
+                service = topology.get_service(service_name)
+                clusters = service.get_clusters()
+            else:
+                WSO2StartupHandler.log.warn("[Service] %s is not available in topology" % service_name)
 
-        if clusters is not None:
-            for cluster in clusters:
-                if cluster.app_id == app_id:
-                    cluster_id = cluster.cluster_id
+            if clusters is not None:
+                for cluster in clusters:
+                    if cluster.app_id == app_id:
+                        cluster_id = cluster.cluster_id
 
         return cluster_id
 

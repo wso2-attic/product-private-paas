@@ -23,9 +23,6 @@
 
 source /root/.bashrc
 
-export STRATOS_VERSION="4.1.0"
-export PCA_HOME="/opt/apache-stratos-python-cartridge-agent-${STRATOS_VERSION}"
-
 set -o posix ; set | sed -e ':a;N;$!ba;s/\n/,/g' > ${PCA_HOME}/payload/launch-params
 # set PCA_HOME
 echo "PCA_HOME=${PCA_HOME}" >> /etc/environment
@@ -112,6 +109,18 @@ if [ -z "${ARTFCT_UPDATE_INT}" ]; then
 	sed -i "s/ARTFCT_UPDATE_INT/15/g" ${PCA_HOME}/agent.conf
 else
 	sed -i "s/ARTFCT_UPDATE_INT/${ARTFCT_UPDATE_INT}/g" ${PCA_HOME}/agent.conf
+fi
+
+if [ -z "${ARTFCT_CLONE_RETRIES}" ]; then
+	sed -i "s/ARTFCT_CLONE_RETRIES/5/g" ${PCA_HOME}/agent.conf
+else
+	sed -i "s/ARTFCT_CLONE_RETRIES/${ARTFCT_CLONE_RETRIES}/g" ${PCA_HOME}/agent.conf
+fi
+
+if [ -z "${ARTFCT_CLONE_INT}" ]; then
+	sed -i "s/ARTFCT_CLONE_INT/10/g" ${PCA_HOME}/agent.conf
+else
+	sed -i "s/ARTFCT_CLONE_INT/${ARTFCT_CLONE_INT}/g" ${PCA_HOME}/agent.conf
 fi
 
 if [ -z "${PORT_CHECK_TIMEOUT}" ]; then
