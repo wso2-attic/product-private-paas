@@ -17,8 +17,8 @@
 # ------------------------------------------------------------------------
 
 [Core]
-Name = wso2is-startup-handler
-Module = wso2is-startup-handler
+Name = wso2is-500-startup-handler
+Module = wso2is-500-startup-handler
 
 [Documentation]
 Description = InstanceStartedEvent
