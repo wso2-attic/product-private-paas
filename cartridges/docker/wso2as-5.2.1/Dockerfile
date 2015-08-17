@@ -20,35 +20,32 @@ FROM wso2/base-image:4.1.0
 MAINTAINER dev@wso2.org
 
 ENV DEBIAN_FRONTEND noninteractive
-
-ENV WSO2_AS_VERSION 5.2.1
-ENV AS_TEMPLATE_MODULE_NAME wso2as-${WSO2_AS_VERSION}-template-module-${PPAAS_VERSION}
-ENV CARBON_HOME /opt/wso2as-${WSO2_AS_VERSION}
+ENV WSO2_SERVER_TYPE as
+ENV WSO2_SERVER_VERSION 5.2.1
+ENV TEMPLATE_MODULE_NAME wso2${WSO2_SERVER_TYPE}-${WSO2_SERVER_VERSION}-template-module-${PPAAS_VERSION}
 
 # --------------------------------
 # Copy scripts, packages & plugins
 # --------------------------------
 COPY scripts/init.sh /usr/local/bin/init.sh
-COPY packages/${AS_TEMPLATE_MODULE_NAME}.zip /opt/
-COPY packages/wso2as-${WSO2_AS_VERSION}.zip /opt/
+COPY packages/${TEMPLATE_MODULE_NAME}.zip /opt/
+COPY packages/wso2${WSO2_SERVER_TYPE}-${WSO2_SERVER_VERSION}.zip /opt/
 COPY plugins ${PCA_HOME}/plugins
 
-# -----------------------------
-# Install prerequisites and AS
-# -----------------------------
+# -------------------------------
+# Unzip and move template modules
+# -------------------------------
 WORKDIR /opt
 
-RUN unzip /opt/wso2as-${WSO2_AS_VERSION}.zip -d /opt/ && \
-    rm /opt/wso2as-${WSO2_AS_VERSION}.zip && \
-	unzip /opt/${AS_TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
-    rm -rf /opt/${AS_TEMPLATE_MODULE_NAME}.zip
+RUN unzip /opt/${TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
+    rm -rf /opt/${TEMPLATE_MODULE_NAME}.zip
 
 # ----------------------
 # Expose container ports
 # ----------------------
 
-# AS https port
-EXPOSE 9443
+# mgt-http/mgt-https ports
+EXPOSE 9763 9443
 
 # -------------------------------
 # Define entry point & start sshd

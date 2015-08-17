@@ -17,8 +17,9 @@
 #
 # ------------------------------------------------------------------------
 
-# run script sets the configurable parameters for the cartridge agent in agent.conf and
-# starts the cartridge agent process.
+# init script will export CARBON_HOME as an envrionment variable
+# it will execute start-agent.sh file if it's started from private-paas
+# and will start the configurator/carbon-server otherwise
 
 # export CARBON_HOME as an envrionment variable
 local_ip=`awk 'NR==1 {print $1}' /etc/hosts`

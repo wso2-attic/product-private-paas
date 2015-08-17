@@ -29,7 +29,6 @@ script_path=`cd "$prgdir"; pwd`
 product_type="esb"
 product_version="481"
 product_directory="wso2${product_type}-${product_version}"
-application_id="wso2esb-481"
 artifacts_path=`cd "${script_path}/../../artifacts"; pwd`
 iaas_cartridges_path=`cd "${script_path}/../../../../cartridges/${iaas}/${product_directory}"; pwd`
 cartridges_groups_path=`cd "${script_path}/../../../../cartridge-groups/${product_directory}"; pwd`
@@ -79,4 +78,4 @@ curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/wso2${pr
 
 sleep 1
 echo "Deploying application..."
-curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/wso2${product_type}-${product_version}-application/deploy/${application_policy_id}
+curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/esb-app/deploy/${application_policy_id}

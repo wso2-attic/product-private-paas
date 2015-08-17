@@ -27,5 +27,5 @@ queue.MyQueue = example.MyQueue
 topic.MyTopic = example.MyTopic
 
 connectionfactoryName=TopicConnectionFactory
-java.naming.provider.url=tcp://{{CONFIG_PARAM_MB_HOST}}:61616
+java.naming.provider.url=tcp://{{CONFIG_PARAM_MB_HOST}}:{{CONFIG_PARAM_MB_PORT}}
 java.naming.factory.initial=org.apache.activemq.jndi.ActiveMQInitialContextFactory
