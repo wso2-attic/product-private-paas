@@ -13,34 +13,20 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 # ----------------------------------------------------------------------------
-#
 
-# appserver cartridge node
-node /[0-9]{1,12}.(default|manager|worker).appserver/ inherits base {
-  $docroot = "/mnt/${server_ip}/wso2as-5.2.1"
-  require java	
-  class {'python_agent':}
+# AppServer cartridge node
+node /appserver/ inherits base {
+  
+  class {'java':}
+  class {'python_agent':
+   docroot => "/home/ubuntu"
+  }
+  class {'configurator':}
   class {'appserver':
-
-        version            => '5.2.1',
-        sub_cluster_domain => 'test',
-	    members            => undef,
-	    offset		   => 0,
-        hazelcast_port     => 4000,
-	    config_db          => 'AS_CONFIG_DB',
-        config_target_path => 'AS_CONFIG_PATH',
-        maintenance_mode   => 'zero',
-        agent_home         =>
-        depsync            => false,
-        clustering         => CLUSTERING,
-        membership_scheme   => MEMBERSHIP_SCHEME,
-	    cloud		   => true,
-        owner              => 'root',
-        group              => 'root',
-        target             => "/mnt/${server_ip}",
-        agent_home          => "/mnt/${server_ip}/apache-stratos-python-cartridge-agent-4.1.0-SNAPSHOT"
-
+     server_name     => 'wso2as',
+     version  	      => '5.2.1'
+     
   }
 
-  Class['stratos_base'] -> Class['java'] -> Class['appserver'] ~> Class['agent']
+  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['appserver'] 
 }
