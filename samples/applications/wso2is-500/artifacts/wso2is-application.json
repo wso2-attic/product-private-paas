@@ -1,0 +1,27 @@
+{
+    "applicationId": "is-app",
+    "alias": "my-is-app",
+    "multiTenant": true,
+    "components": {
+        "groups": [
+            {
+                "name": "wso2is-500-group",
+                "alias": "my-wso2is-500-group",
+                "deploymentPolicy": "deployment-policy-1",
+                "groupMinInstances": 1,
+                "groupMaxInstances": 1,
+                "cartridges": [
+                    {
+                        "type": "wso2is-500-manager",
+                        "cartridgeMin": 2,
+                        "cartridgeMax": 2,
+                        "subscribableInfo": {
+                            "alias": "my-wso2is-500-manager",
+                            "autoscalingPolicy": "autoscaling-policy-1"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
