@@ -24,9 +24,8 @@
                      <Password>admin</Password>
                 </AdminUser>
             <EveryOneRoleName>everyone</EveryOneRoleName> <!-- By default users in this role sees the registry root -->
-              {% if CONFIG_PARAM_USER_DB is defined -%}
-            {% set jndiName,dbName = CONFIG_PARAM_USER_DB.items()[0] %}
-            <Property name="dataSource">{{jndiName}}</Property>
+            {% if CONFIG_PARAM_USER_MGT_DB_URL is defined -%}
+            <Property name="dataSource">jdbc/WSO2UMDB</Property>
             {% else -%}
             <Property name="dataSource">jdbc/WSO2CarbonDB</Property>
             {% endif -%}
