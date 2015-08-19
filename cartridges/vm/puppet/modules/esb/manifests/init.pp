@@ -17,6 +17,7 @@
 class esb (
   $server_name        = undef,
   $version          = undef,
+  $service_code       = 'esb',
   $owner              = 'root',
   $group              = 'root',
   $target             = "/mnt/${server_ip}",
@@ -44,7 +45,7 @@ class esb (
   file {
     "$local_package_dir/${server_name}-${version}.zip":
       ensure    => present,
-      source    => ["puppet:///modules/esb/packs/${server_name}-${version}.zip"],
+      source    => ["puppet:///modules/${service_code}/packs/${server_name}-${version}.zip"],
       require   => Exec["creating_local_package_repo_for_${server_name}", "creating_target_for_${server_name}"];
   }
 
@@ -73,7 +74,7 @@ class esb (
   file {
     "$local_package_dir/${template_module_pack}":
       ensure    => present,
-      source    => ["puppet:///modules/esb/packs/${template_module_pack}"],
+      source    => ["puppet:///modules/${service_code}/packs/${template_module_pack}"],
       require   => Exec["creating_local_package_repo_for_${server_name}"];
   }
 
@@ -89,8 +90,9 @@ class esb (
 
 
   file { "${pca_home}/plugins":
-    source  => "puppet:///modules/esb/plugins",
+    source  => "puppet:///modules/${service_code}/plugins",
     recurse => true,
+    ignore => "README"
   }
 
 # starting python cartridge agent
