@@ -1,6 +1,6 @@
 {
-  "applicationId": "esb-app",
-  "alias": "my-esb-app",
+  "applicationId": "wso2esb-481-application",
+  "alias": "my-wso2esb-481-application",
   "multiTenant": true,
   "components": {
     "groups": [

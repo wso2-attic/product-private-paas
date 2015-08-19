@@ -76,4 +76,4 @@ curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/wso2${pr
 sleep 1
 echo "Deploying application..."
 # replace with wso2${product_type}-${product_version}-application
-curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/is-app/deploy/${application_policy_id}
+curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/wso2${product_type}-application/deploy/${application_policy_id}
