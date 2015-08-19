@@ -32,7 +32,7 @@ curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${
 sleep 5
 
 echo "Deleting application..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/as-app
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/is-app
 
 sleep 1
 echo "Removing cartridges..."

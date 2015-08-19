@@ -27,7 +27,7 @@
     "iaasProvider": [
         {
             "type": "kubernetes",
-            "imageId": "wso2/is:5.2.1",
+            "imageId": "wso2/is:5.0.0",
             "networkInterfaces": []
         }
     ],
