@@ -1,0 +1,60 @@
+{
+  "type": "wso2is-500",
+  "category": "framework",
+  "provider": "wso2",
+  "host": "is.wso2.org",
+  "displayName": "WSO2 IS 5.0.0",
+  "description": "WSO2 IS 5.0.0 Cartridge",
+  "version": "5.0.0",
+  "multiTenant": true,
+  "loadBalancingIPType": "public",
+  "portMapping": [
+    {
+      "name": "mgt-http",
+      "protocol": "http",
+      "port": 9763,
+      "proxyPort": 0
+    },
+    {
+      "name": "mgt-https",
+      "protocol": "https",
+      "port": 9443,
+      "proxyPort": 0
+    }
+  ],
+  "iaasProvider": [
+    {
+      "type": "openstack",
+      "imageId": "RegionOne/abab3e25-0d53-444b-b7f4-d7c9c21b9bf0",
+      "property": [
+        {
+          "name": "instanceType",
+          "value": "RegionOne/15c3065c-462c-4977-9143-094d63d1c2c7"
+        },
+        {
+          "name": "keyPair",
+          "value": "anuruddha"
+        },
+        {
+          "name": "securityGroups",
+          "value": "default"
+        }
+      ],
+      "networkInterfaces": [
+        {
+          "networkUuid": "512e1f54-1e85-4dac-b2e6-f0b30fc552cf"
+        }
+      ]
+    }
+  ],
+  "property": [
+    {
+      "name": "payload_parameter.START_CMD",
+      "value": "PCA"
+    },
+    {
+      "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+      "value": "false"
+    }
+  ]
+}

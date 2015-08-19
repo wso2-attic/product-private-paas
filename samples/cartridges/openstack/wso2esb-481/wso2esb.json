@@ -1,0 +1,80 @@
+{
+  "type": "wso2esb-481",
+  "category": "framework",
+  "provider": "wso2",
+  "host": "esb.wso2.org",
+  "displayName": "WSO2 ESB 4.8.1",
+  "description": "WSO2 ESB 4.8.1 Cartridge",
+  "version": "4.8.1",
+  "multiTenant": true,
+  "loadBalancingIPType": "public",
+  "portMapping": [
+    {
+      "name": "mgt-http",
+      "protocol": "http",
+      "port": 9763,
+      "proxyPort": 0
+    },
+    {
+      "name": "mgt-https",
+      "protocol": "https",
+      "port": 9443,
+      "proxyPort": 0
+    },
+    {
+      "name": "pt-http",
+      "protocol": "http",
+      "port": 8280,
+      "proxyPort": 0
+    },
+    {
+      "name": "pt-https",
+      "protocol": "https",
+      "port": 8243,
+      "proxyPort": 0
+    }
+  ],
+  "iaasProvider": [
+    {
+      "type": "openstack",
+      "imageId": "RegionOne/abab3e25-0d53-444b-b7f4-d7c9c21b9bf0",
+      "property": [
+        {
+          "name": "instanceType",
+          "value": "RegionOne/15c3065c-462c-4977-9143-094d63d1c2c7"
+        },
+        {
+          "name": "keyPair",
+          "value": "anuruddha"
+        },
+        {
+          "name": "securityGroups",
+          "value": "default"
+        }
+      ],
+      "networkInterfaces": [
+        {
+          "networkUuid": "512e1f54-1e85-4dac-b2e6-f0b30fc552cf"
+        }
+      ]
+    }
+  ],
+  "property": [
+    {
+      "name": "payload_parameter.CONFIG_PARAM_WORKER_HOST_NAME",
+      "value": "esb.wso2.com"
+    },
+    {
+      "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+      "value": "false"
+    },
+    {
+      "name": "payload_parameter.CONFIG_PARAM_MEMBERSHIP_SCHEME",
+      "value": "stratos"
+    },
+    {
+      "name": "payload_parameter.APPLICATION_PATH",
+      "value": "/var/www"
+    }
+  ]
+}

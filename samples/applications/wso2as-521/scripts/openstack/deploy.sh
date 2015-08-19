@@ -20,7 +20,7 @@
 #
 # --------------------------------------------------------------
 #
-iaas="mock"
+iaas="openstack"
 
 prgdir=`dirname "$0"`
 script_path=`cd "$prgdir"; pwd`
