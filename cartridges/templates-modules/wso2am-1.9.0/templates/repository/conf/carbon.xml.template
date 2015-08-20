@@ -32,7 +32,7 @@
     <!--
        Product Version
     -->
-    <Version>1.8.0</Version>
+    <Version>1.9.0</Version>
 
     <ServerKey>AM</ServerKey>
 
@@ -68,10 +68,10 @@
     <!--
     <ServerURL>https://${carbon.local.ip}:${carbon.management.port}${carbon.context}/services/</ServerURL>
     -->
-    <!--
-    The URL of the index page. This is where the user will be redirected after signing in to the
-    carbon server.
-    -->
+     <!--
+     The URL of the index page. This is where the user will be redirected after signing in to the
+     carbon server.
+     -->
     <!-- IndexPageURL>/carbon/admin/index.jsp</IndexPageURL-->
 
     <!--
@@ -137,20 +137,20 @@
             <KDCServerPort>8000</KDCServerPort>
         </EmbeddedLDAP>
 
-        <!-- Embedded Qpid broker ports -->
+	    <!-- Embedded Qpid broker ports -->
         <EmbeddedQpid>
-            <!-- Broker TCP Port -->
+	    <!-- Broker TCP Port -->
             <BrokerPort>5672</BrokerPort>
-            <!-- SSL Port -->
+	    <!-- SSL Port -->
             <BrokerSSLPort>8672</BrokerSSLPort>
         </EmbeddedQpid>
 
-        <!--
-                 Override datasources JNDIproviderPort defined in bps.xml and datasources.properties files
-        -->
-        <!--<JNDIProviderPort>2199</JNDIProviderPort>-->
-        <!--Override receive port of thrift based entitlement service.-->
-        <ThriftEntitlementReceivePort>10500</ThriftEntitlementReceivePort>
+	<!--
+             Override datasources JNDIproviderPort defined in bps.xml and datasources.properties files
+	-->
+	<!--<JNDIProviderPort>2199</JNDIProviderPort>-->
+	<!--Override receive port of thrift based entitlement service.-->
+	<ThriftEntitlementReceivePort>10500</ThriftEntitlementReceivePort>
 
     </Ports>
 
@@ -158,15 +158,15 @@
         JNDI Configuration
     -->
     <JNDI>
-        <!--
+		<!--
              If we use multiple usertsore with tenants, we might need to use following initialContextfactory implementation to do datasource lookup
-         -->
-        <DefaultInitialContextFactory>org.wso2.carbon.tomcat.jndi.CarbonJavaURLContextFactory</DefaultInitialContextFactory>
+		 -->
+		<DefaultInitialContextFactory>org.wso2.carbon.tomcat.jndi.CarbonJavaURLContextFactory</DefaultInitialContextFactory>
 
         <!--
              The fully qualified name of the default initial context factory
         -->
-        <!--<DefaultInitialContextFactory>org.apache.naming.java.javaURLContextFactory</DefaultInitialContextFactory>-->
+		<!--<DefaultInitialContextFactory>org.apache.naming.java.javaURLContextFactory</DefaultInitialContextFactory>-->
         <!--
              The restrictions that are done to various JNDI Contexts in a Multi-tenant environment
         -->
@@ -283,9 +283,9 @@
         <!-- If this parameter is set, the ?wsdl on an admin service will not give the admin service wsdl. -->
         <HideAdminServiceWSDLs>true</HideAdminServiceWSDLs>
 
-        <!--WARNING-Use With Care! Uncommenting bellow parameter would expose all AdminServices in HTTP transport.
-        With HTTP transport your credentials and data routed in public channels are vulnerable for sniffing attacks.
-        Use bellow parameter ONLY if your communication channels are confirmed to be secured by other means -->
+	<!--WARNING-Use With Care! Uncommenting bellow parameter would expose all AdminServices in HTTP transport.
+	With HTTP transport your credentials and data routed in public channels are vulnerable for sniffing attacks.
+	Use bellow parameter ONLY if your communication channels are confirmed to be secured by other means -->
         <!--HttpAdminServices>*</HttpAdminServices-->
 
     </Axis2Config>
@@ -305,7 +305,7 @@
         </Role>
     </ServiceUserRoles>
 
-    <!--
+	<!--
       Enable following config to allow Emails as usernames.
     -->
     <!--EnableEmailUserName>true</EnableEmailUserName-->
@@ -331,9 +331,9 @@
             <KeyPassword>wso2carbon</KeyPassword>
         </KeyStore>
 
-        <!--
-           Encrypt Decrypt Store will be used for encrypting and decrypting
-       -->
+		 <!--
+			Encrypt Decrypt Store will be used for encrypting and decrypting
+		-->
         <RegistryKeyStore>
             <!-- Keystore file location-->
             <Location>${carbon.home}/repository/resources/security/wso2carbon.jks</Location>
@@ -372,21 +372,21 @@
                 exceptions at runtime.
             -->
             <!-- <Credential> -->
-            <!--
-                the pattern that would match a subset of URLs for which this authenticator
-                would be used
-            -->
-            <!-- <Pattern>regularExpression</Pattern> -->
-            <!--
-                the type of this authenticator. Allowed values are:
-                1. server
-                2. proxy
-            -->
-            <!-- <Type>proxy</Type> -->
-            <!-- the username used to log in to server/proxy -->
-            <!-- <Username>username</Username> -->
-            <!-- the password used to log in to server/proxy -->
-            <!-- <Password>password</Password> -->
+                <!--
+                    the pattern that would match a subset of URLs for which this authenticator
+                    would be used
+                -->
+                <!-- <Pattern>regularExpression</Pattern> -->
+                <!--
+                    the type of this authenticator. Allowed values are:
+                    1. server
+                    2. proxy
+                -->
+                <!-- <Type>proxy</Type> -->
+                <!-- the username used to log in to server/proxy -->
+                <!-- <Username>username</Username> -->
+                <!-- the password used to log in to server/proxy -->
+                <!-- <Password>password</Password> -->
             <!-- </Credential> -->
         </NetworkAuthenticatorConfig>
 
@@ -401,26 +401,26 @@
         -->
         <TomcatRealm>UserManager</TomcatRealm>
 
-        <!--Option to disable storing of tokens issued by STS-->
-        <DisableTokenStore>false</DisableTokenStore>
-        <!--
-        Token Persister configuration for non-volatile storage of SAML tokens issued by STS:
-        1. TokenPersister class
-        2. TokenStorage path
-        3. Maximum number of tokens in volatile storage
-        4. Any other custom properties
-        -->
-        <TokenPersister>
-            <Class>org.apache.rahas.impl.FSBasedRetiredTokenPersister</Class>
-            <StoragePath>${carbon.home}/repository/resources/security/tokenstore</StoragePath>
-            <InMemoryThreshold>500</InMemoryThreshold>
-            <!--Properties>
-                <Property>
-                    <Name>propName</Name>
-                    <Value>propValue</Value>
-                </Property>
-            </Properties-->
-        </TokenPersister>
+	<!--Option to disable storing of tokens issued by STS-->
+	<DisableTokenStore>false</DisableTokenStore>
+	<!--
+	Token Persister configuration for non-volatile storage of SAML tokens issued by STS:
+	1. TokenPersister class
+	2. TokenStorage path
+	3. Maximum number of tokens in volatile storage
+	4. Any other custom properties
+	-->
+	<TokenPersister>
+		<Class>org.apache.rahas.impl.FSBasedRetiredTokenPersister</Class>
+		<StoragePath>${carbon.home}/repository/resources/security/tokenstore</StoragePath>
+		<InMemoryThreshold>500</InMemoryThreshold>
+		<!--Properties>
+			<Property>
+				<Name>propName</Name>
+				<Value>propValue</Value>
+			</Property>
+		</Properties-->
+	</TokenPersister>
     </Security>
 
     <!--
@@ -621,30 +621,30 @@
        Default Feature Repository of WSO2 Carbon.
     -->
     <FeatureRepository>
-        <RepositoryName>default repository</RepositoryName>
-        <RepositoryURL>http://dist.wso2.org/p2/carbon/releases/4.2.0/</RepositoryURL>
+	<RepositoryName>default repository</RepositoryName>
+	<RepositoryURL>http://dist.wso2.org/p2/carbon/releases/4.2.0/</RepositoryURL>
     </FeatureRepository>
 
     <!--
 	Configure API Management
    -->
-    <APIManagement>
+   <APIManagement>
 
-        <!--Uses the embedded API Manager by default. If you want to use an external
-        API Manager instance to manage APIs, configure below  externalAPIManager-->
+	<!--Uses the embedded API Manager by default. If you want to use an external
+	API Manager instance to manage APIs, configure below  externalAPIManager-->
 
-        <Enabled>false</Enabled>
+	<Enabled>false</Enabled>
 
-        <!--Uncomment and configure API Gateway and
-        Publisher URLs to use external API Manager instance-->
+	<!--Uncomment and configure API Gateway and
+	Publisher URLs to use external API Manager instance-->
 
-        <!--ExternalAPIManager>
+	<!--ExternalAPIManager>
 
-            <APIGatewayURL>http://localhost:8281</APIGatewayURL>
-            <APIPublisherURL>http://localhost:8281/publisher</APIPublisherURL>
+		<APIGatewayURL>http://localhost:8281</APIGatewayURL>
+		<APIPublisherURL>http://localhost:8281/publisher</APIPublisherURL>
 
-        </ExternalAPIManager-->
+	</ExternalAPIManager-->
 
-        <LoadAPIContextsInServerStartup>true</LoadAPIContextsInServerStartup>
-    </APIManagement>
+	<LoadAPIContextsInServerStartup>true</LoadAPIContextsInServerStartup>
+   </APIManagement>
 </Server>

@@ -1,4 +1,4 @@
-WSO2-AM 1.8.0 Template for the Configurator
+WSO2-AM 1.9.0 Template for the Configurator
 -------------------------------------------------------------------------------------
 
 This template supports following configurations
