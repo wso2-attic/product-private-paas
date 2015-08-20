@@ -53,8 +53,8 @@
             "value": "true"
         },
         {
-            "name": "payload_parameter.LB_IP",
-            "value": "172.17.8.102"
+            "name": "payload_parameter.COMMIT_ENABLED",
+            "value": "true"
         }
     ]
 }

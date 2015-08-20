@@ -4,7 +4,6 @@
         "wso2is-500-manager"
     ],
     "dependencies": {
-        "terminationBehaviour": "terminate-all",
         "startupOrders": [
             {
                 "aliases": [

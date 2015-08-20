@@ -35,12 +35,9 @@ echo "Deleting application..."
 curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/wso2${product_type}-${product_version}-application
 
 sleep 1
-echo "Removing cartridges..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/wso2${product_type}-manager
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/wso2${product_type}-worker
 
-echo "Removing autoscale policies..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/autoscalingPolicies/autoscaling-policy-1
+echo "Removing application policies..."
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applicationPolicies/application-policy-1
 
 echo "Removing deployment policies..."
 curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/deploymentPolicies/deployment-policy-1
@@ -48,5 +45,12 @@ curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://
 echo "Removing network partitions..."
 curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/networkPartitions/network-partition-1
 
-echo "Removing application policies..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applicationPolicies/application-policy-1
+echo "Removing autoscale policies..."
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/autoscalingPolicies/autoscaling-policy-1
+
+echo "Removing cartridge Groups ..."
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://localhost:9443/api/cartridgeGroups/wso2${product_type}-${product_version}-group
+
+echo "Removing cartridges..."
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/wso2${product_type}-${product_version}-manager
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/wso2${product_type}-${product_version}-worker

@@ -15,6 +15,13 @@
             "port": 9763,
             "proxyPort": 0,
             "kubernetesPortType": "NodePort"
+        },
+        {
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
         }
     ],
     "iaasProvider": [
@@ -44,10 +51,6 @@
         {
             "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
             "value": "true"
-        },
-        {
-            "name": "payload_parameter.LB_IP",
-            "value": "172.17.8.102"
         }
     ]
 }
