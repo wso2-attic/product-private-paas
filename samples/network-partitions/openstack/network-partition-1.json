@@ -7,7 +7,7 @@
             "property": [
                 {
                     "name": "region",
-                    "value": "RegionOne"
+                    "value": "<REGION>"
                 }
             ]
         }
@@ -15,19 +15,19 @@
     "properties": [
         {
             "name": "payload_parameter.PUPPET_IP",
-            "value": "192.168.30.245"
+            "value": "<PUPPET_MASTER_IP>"
         },
         {
             "name": "payload_parameter.MB_IP",
-            "value": "192.168.30.245"
+            "value": "<MESSAGE_BROKER_IP>"
         },
         {
             "name": "payload_parameter.MB_PORT",
-            "value": "1183"
+            "value": "<MESSAGE_BROKER_PORT>"
         },
         {
             "name": "payload_parameter.PUPPET_HOSTNAME",
-            "value": "puppet-master.openstacklocal"
+            "value": "<PUPPET_MASTER_HOSTNAME>"
         }
     ]
 }
