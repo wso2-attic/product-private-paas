@@ -1,6 +1,6 @@
-# WSO2 AM 1.8.0 Dockerfile
+# WSO2 AM 1.9.0 Dockerfile
 
-WSO2 AM 1.8.0 Dockerfile defines required resources for building a Docker image with WSO2 AM 1.8.0.
+WSO2 AM 1.9.0 Dockerfile defines required resources for building a Docker image with WSO2 AM 1.9.0.
 
 ## How to build
 

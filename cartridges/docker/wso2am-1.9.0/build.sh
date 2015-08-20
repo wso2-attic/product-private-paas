@@ -23,7 +23,7 @@ script_path=`cd "$prgdir"; pwd`
 
 wso2_ppaas_version="4.1.0-SNAPSHOT"
 wso2_product_type="am"
-wso2_product_version="1.8.0"
+wso2_product_version="1.9.0"
 wso2_product_template_module_path=`cd ${script_path}/../../templates-modules/wso2${wso2_product_type}-${wso2_product_version}/; pwd`
 wso2_product_plugin_path=`cd ${script_path}/../../plugins/wso2${wso2_product_type}-${wso2_product_version}/; pwd`
 clean=false
