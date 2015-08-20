@@ -20,7 +20,7 @@
 #
 # --------------------------------------------------------------
 #
-host_ip="192.168.30.96"
+host_ip="localhost"
 host_port=9443
 product_type="esb"
 product_version="481"
