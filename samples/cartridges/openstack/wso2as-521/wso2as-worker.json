@@ -55,7 +55,7 @@
     },
     {
       "name": "payload_parameter.LB_IP",
-      "value": "172.17.8.102"
+      "value": "<LOAD_BALANCER_IP>"
     }
   ]
 }
