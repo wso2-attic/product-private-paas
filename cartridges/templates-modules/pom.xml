@@ -31,7 +31,7 @@
     <url>http://wso2.com</url>
 
     <modules>
-        <module>wso2am-1.8.0</module>
+        <module>wso2am-1.9.0</module>
         <module>wso2as-5.2.1</module>
         <module>wso2esb-4.8.1</module>
         <module>wso2is-5.0.0</module>
