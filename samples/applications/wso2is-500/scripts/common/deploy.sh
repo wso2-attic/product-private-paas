@@ -28,10 +28,10 @@ prgdir=`dirname "$0"`
 script_path=`cd "$prgdir"; pwd`
 product_type="is"
 product_version="500"
-product_directory="wso2${product_type}-${product_version}"
+product="wso2${product_type}-${product_version}"
 artifacts_path=`cd "${script_path}/../../artifacts"; pwd`
-iaas_cartridges_path=`cd "${script_path}/../../../../cartridges/${iaas}/${product_directory}"; pwd`
-cartridges_groups_path=`cd "${script_path}/../../../../cartridge-groups/${product_directory}"; pwd`
+iaas_cartridges_path=`cd "${script_path}/../../../../cartridges/${iaas}/${product}"; pwd`
+cartridges_groups_path=`cd "${script_path}/../../../../cartridge-groups/${product}"; pwd`
 autoscaling_policies_path=`cd "${script_path}/../../../../autoscaling-policies"; pwd`
 network_partitions_path=`cd "${script_path}/../../../../network-partitions/${iaas}"; pwd`
 deployment_policies_path=`cd "${script_path}/../../../../deployment-policies"; pwd`
@@ -59,10 +59,10 @@ curl -X POST -H "Content-Type: application/json" -d "@${network_partitions_path}
 echo "Adding deployment policy..."
 curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/${deployment_policy_id}.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/deploymentPolicies
 
-echo "Adding WSO2 ${product_type^^} - ${product_version} Manager cartridge..."
+echo "Adding WSO2 ${product_type} - ${product_version} Manager cartridge..."
 curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/wso2${product_type}-manager.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
 
-echo "Adding WSO2 ${product_type^^} - ${product_version} cartridge Group ..."
+echo "Adding WSO2 ${product_type} - ${product_version} cartridge Group ..."
 curl -X POST -H "Content-Type: application/json" -d "@${cartridges_groups_path}/wso2${product_type}-group.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridgeGroups
 
 sleep 1
@@ -70,10 +70,10 @@ echo "Adding application policy..."
 curl -X POST -H "Content-Type: application/json" -d "@${application_policies_path}/${application_policy_id}.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applicationPolicies
 
 sleep 1
-echo "Adding WSO2 ${product_type^^} - ${product_version} application..."
+echo "Adding WSO2 ${product_type} - ${product_version} application..."
 curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/wso2${product_type}-application.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications
 
 sleep 1
 echo "Deploying application..."
 # replace with wso2${product_type}-${product_version}-application
-curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/wso2${product_type}-application/deploy/${application_policy_id}
+curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/is-app/deploy/${application_policy_id}

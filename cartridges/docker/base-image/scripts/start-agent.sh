@@ -27,9 +27,11 @@ set -o posix ; set | sed -e ':a;N;$!ba;s/\n/,/g' > ${PCA_HOME}/payload/launch-pa
 # set PCA_HOME
 echo "PCA_HOME=${PCA_HOME}" >> /etc/environment
 
-# set CARBON_HOME as APPLICATION_PATH
-export APPLICATION_PATH="${CARBON_HOME}"
-echo "APPLICATION_PATH=${APPLICATION_PATH}" >> /etc/environment
+# set CARBON_HOME as APPLICATION_PATH for carbon products
+if [ "${CARBON_HOME}" ]; then
+	export APPLICATION_PATH="${CARBON_HOME}"
+	echo "APPLICATION_PATH=${APPLICATION_PATH}" >> /etc/environment
+fi
 
 # mandatory parameters
 sed -i "s/MB-IP/${MB_IP}/g" ${PCA_HOME}/agent.conf

@@ -1,0 +1,17 @@
+{
+    "name": "wso2esb-481-group",
+    "cartridges": [
+        "wso2esb-481-manager",
+        "wso2esb-481-worker"
+    ],
+    "dependencies": {
+        "startupOrders": [
+            {
+                "aliases": [
+                    "cartridge.my-wso2esb-481-manager",
+                    "cartridge.my-wso2esb-481-worker"
+                ]
+            }
+        ]
+    }
+}

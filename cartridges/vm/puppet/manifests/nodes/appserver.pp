@@ -15,18 +15,18 @@
 # ----------------------------------------------------------------------------
 
 # AppServer cartridge node
-node /appserver/ inherits base {
-  
-  class {'java':}
-  class {'python_agent':
-   docroot => "/home/ubuntu"
+node /as/ inherits base {
+
+  class { 'java': }
+  class { 'python_agent':
+    docroot => "/home/ubuntu"
   }
-  class {'configurator':}
-  class {'appserver':
-     server_name     => 'wso2as',
-     version  	      => '5.2.1'
-     
+  class { 'configurator': }
+  class { 'appserver':
+    server_name      => 'wso2as',
+    version          => '5.2.1'
+
   }
 
-  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['appserver'] 
+  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['appserver']
 }

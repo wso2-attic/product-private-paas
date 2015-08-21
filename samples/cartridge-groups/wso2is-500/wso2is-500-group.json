@@ -1,0 +1,15 @@
+{
+    "name": "wso2is-500-group",
+    "cartridges": [
+        "wso2is-500-manager"
+    ],
+    "dependencies": {
+        "startupOrders": [
+            {
+                "aliases": [
+                    "cartridge.my-wso2is-500-manager"
+                ]
+            }
+        ]
+    }
+}
