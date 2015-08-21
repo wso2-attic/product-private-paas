@@ -24,15 +24,16 @@ host_ip="localhost"
 host_port=9443
 product_type="is"
 product_version="500"
+product="wso2${product_type}-${product_version}"
 set -e
 
 echo "Undeploying application..."
-curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/wso2${product_type}-${product_version}-application/undeploy
+curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/${product}-application/undeploy
 
 sleep 5
 
 echo "Deleting application..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/wso2${product_type}-${product_version}-application
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/${product}-application
 
 sleep 1
 
@@ -49,7 +50,7 @@ echo "Removing autoscale policies..."
 curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/autoscalingPolicies/autoscaling-policy-1
 
 echo "Removing cartridge Groups ..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://localhost:9443/api/cartridgeGroups/wso2{product_type}-${product_version}-group
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://localhost:9443/api/cartridgeGroups/${product}-group
 
 echo "Removing cartridges..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/wso2${product_type}-${product_version}-manager
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${product}-manager
