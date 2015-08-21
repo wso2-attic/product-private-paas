@@ -5,7 +5,6 @@
         "wso2esb-481-worker"
     ],
     "dependencies": {
-        "terminationBehaviour": "terminate-all",
         "startupOrders": [
             {
                 "aliases": [

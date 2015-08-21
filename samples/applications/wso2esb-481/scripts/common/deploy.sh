@@ -1,22 +1,25 @@
 #!/bin/bash
-# ------------------------------------------------------------------------
+# --------------------------------------------------------------
 #
-# Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
 #
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
-# http://www.apache.org/licenses/LICENSE-2.0
+# Unless required by applicable law or agreed to in writing,
+# software distributed under the License is distributed on an
+# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+# KIND, either express or implied.  See the License for the
+# specific language governing permissions and limitations
+# under the License.
 #
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License
+# --------------------------------------------------------------
 #
-# ------------------------------------------------------------------------
-
 iaas=$1
 host_ip="localhost"
 host_port=9443
@@ -25,10 +28,10 @@ prgdir=`dirname "$0"`
 script_path=`cd "$prgdir"; pwd`
 product_type="esb"
 product_version="481"
-product_directory="wso2${product_type}-${product_version}"
+product="wso2${product_type}-${product_version}"
 artifacts_path=`cd "${script_path}/../../artifacts"; pwd`
-iaas_cartridges_path=`cd "${script_path}/../../../../cartridges/${iaas}/${product_directory}"; pwd`
-cartridges_groups_path=`cd "${script_path}/../../../../cartridge-groups/${product_directory}"; pwd`
+iaas_cartridges_path=`cd "${script_path}/../../../../cartridges/${iaas}/${product}"; pwd`
+cartridges_groups_path=`cd "${script_path}/../../../../cartridge-groups/${product}"; pwd`
 autoscaling_policies_path=`cd "${script_path}/../../../../autoscaling-policies"; pwd`
 network_partitions_path=`cd "${script_path}/../../../../network-partitions/${iaas}"; pwd`
 deployment_policies_path=`cd "${script_path}/../../../../deployment-policies"; pwd`
@@ -57,13 +60,13 @@ echo "Adding deployment policy..."
 curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/${deployment_policy_id}.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/deploymentPolicies
 
 echo "Adding WSO2 ${product_type} - ${product_version} Manager cartridge..."
-curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/wso2${product_type}-manager.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
+curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/${product}-manager.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
 
 echo "Adding WSO2 ${product_type} - ${product_version} Worker cartridge..."
-curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/wso2${product_type}-worker.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
+curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/${product}-worker.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
 
 echo "Adding WSO2 ${product_type} - ${product_version} cartridge Group ..."
-curl -X POST -H "Content-Type: application/json" -d "@${cartridges_groups_path}/wso2${product_type}-group.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridgeGroups
+curl -X POST -H "Content-Type: application/json" -d "@${cartridges_groups_path}/${product}-group.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridgeGroups
 
 sleep 1
 echo "Adding application policy..."
@@ -71,8 +74,8 @@ curl -X POST -H "Content-Type: application/json" -d "@${application_policies_pat
 
 sleep 1
 echo "Adding WSO2 ${product_type} - ${product_version} application..."
-curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/wso2${product_type}-application.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications
+curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/${product}-application.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications
 
 sleep 1
 echo "Deploying application..."
-curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/esb-app/deploy/${application_policy_id}
+curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/${product}-application/deploy/${application_policy_id}

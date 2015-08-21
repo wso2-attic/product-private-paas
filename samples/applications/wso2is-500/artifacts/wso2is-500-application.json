@@ -1,6 +1,6 @@
 {
-    "applicationId": "is-app",
-    "alias": "my-is-app",
+    "applicationId": "wso2is-500-application",
+    "alias": "my-wso2is-500-application",
     "multiTenant": true,
     "components": {
         "groups": [

@@ -5,7 +5,6 @@
         "wso2as-521-worker"
     ],
     "dependencies": {
-        "terminationBehaviour": "terminate-all",
         "startupOrders": [
             {
                 "aliases": [

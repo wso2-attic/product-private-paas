@@ -16,12 +16,11 @@
 			<!-- Include a data source name (jndiConfigName) from the set of data 
 				sources defined in master-datasources.xml -->
 			<!--Name>jdbc/WSO2_IDP_DB</Name-->
-			 {% if CONFIG_PARAM_USER_DB is defined -%}
-             {% set jndiName,dbName = CONFIG_PARAM_USER_DB.items()[0] %}
-             <Name>{{jndiName}}</Name>
+			 {% if CONFIG_PARAM_USER_MGT_DB_URL is defined -%}
+			 <Name>jdbc/WSO2UMDB</Name>
              {% else -%}
-             <Name>jdbc/WSO2CarbonDB</Name>
-             {% endif -%}			
+			 <Name>jdbc/WSO2CarbonDB</Name>
+			 {% endif -%}
 		</DataSource>
 	</JDBCPersistenceManager>
 	

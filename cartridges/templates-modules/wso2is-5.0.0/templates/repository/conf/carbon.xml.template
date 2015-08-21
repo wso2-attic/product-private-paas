@@ -45,16 +45,24 @@
        This is will become part of the End Point Reference of the
        services deployed on this server instance.
     -->
-   
-    <HostName>localhost</HostName>
-    
+
+    {% if CONFIG_PARAM_HOST_NAME is defined -%}
+    <HostName>{{CONFIG_PARAM_HOST_NAME}}</HostName>
+    {% else -%}
+    <!--HostName>www.wso2.org</HostName-->
+    {% endif -%}
 
     <!--
     Host name to be used for the Carbon management console
     -->
-    
-    <MgtHostName>localhost</MgtHostName>
-    
+
+    {% if CONFIG_PARAM_MGT_HOST_NAME is defined -%}
+    {% if CONFIG_PARAM_SUB_DOMAIN == 'mgt' -%}
+    <MgtHostName>{{CONFIG_PARAM_MGT_HOST_NAME}}</MgtHostName>
+    {% endif -%}
+    {% else -%}
+    <!--MgtHostName>mgt.wso2.org</MgtHostName-->
+    {% endif -%}
 
     <!--
         The URL of the back end server. This is where the admin services are hosted and
@@ -115,7 +123,11 @@
          the define value + Offset.
          e.g. Offset=2 and HTTPS port=9443 will set the effective HTTPS port to 9445
          -->
+        {% if CONFIG_PARAM_PORT_OFFSET is defined -%}
         <Offset>{{CONFIG_PARAM_PORT_OFFSET}}</Offset>
+        {% else -%}
+        <Offset>0</Offset>
+        {% endif -%}
 
         <!-- The JMX Ports -->
         <JMX>

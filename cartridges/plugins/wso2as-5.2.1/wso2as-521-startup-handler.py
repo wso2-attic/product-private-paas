@@ -35,7 +35,6 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     CONST_MB_IP = "MB_IP"
     CONST_SERVICE_NAME = "SERVICE_NAME"
     CONST_CLUSTER_ID = "CLUSTER_ID"
-    CONST_LB_IP = "LB_IP"
     CONST_WORKER = "worker"
     CONST_MANAGER = "manager"
     CONST_MGT = "mgt"
@@ -44,8 +43,6 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     CONST_PORT_MAPPING_MGT_HTTPS_TRANSPORT = "mgt-https"
     CONST_PROTOCOL_HTTP = "http"
     CONST_PROTOCOL_HTTPS = "https"
-    CONST_DEFAULT_CONFIG_PARAM_HOST_NAME = 'as.wso2.com'
-    CONST_DEFAULT_CONFIG_PARAM_MGT_HOST_NAME = 'mgt.as.wso2.com'
     CONST_PPAAS_MEMBERSHIP_SCHEME = "private-paas"
     CONST_PRODUCT = "AS"
 
@@ -57,14 +54,13 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     ENV_CONFIG_PARAM_CLUSTER_IDs = 'CONFIG_PARAM_CLUSTER_IDs'
     ENV_CONFIG_PARAM_HTTP_PROXY_PORT = 'CONFIG_PARAM_HTTP_PROXY_PORT'
     ENV_CONFIG_PARAM_HTTPS_PROXY_PORT = 'CONFIG_PARAM_HTTPS_PROXY_PORT'
-    ENV_CONFIG_PARAM_PT_HTTP_PROXY_PORT = 'CONFIG_PARAM_PT_HTTP_PROXY_PORT'
-    ENV_CONFIG_PARAM_PT_HTTPS_PROXY_PORT = 'CONFIG_PARAM_PT_HTTPS_PROXY_PORT'
+    ENV_CONFIG_PARAM_HOST_NAME = 'CONFIG_PARAM_HOST_NAME'
+    ENV_CONFIG_PARAM_MGT_HOST_NAME = 'CONFIG_PARAM_MGT_HOST_NAME'
 
     # clustering related environment variables read from payload_parameters
     ENV_CONFIG_PARAM_CLUSTERING = 'CONFIG_PARAM_CLUSTERING'
     ENV_CONFIG_PARAM_MEMBERSHIP_SCHEME = 'CONFIG_PARAM_MEMBERSHIP_SCHEME'
-    ENV_CONFIG_PARAM_HOST_NAME = 'CONFIG_PARAM_HOST_NAME'
-    ENV_CONFIG_PARAM_MGT_HOST_NAME = 'CONFIG_PARAM_MGT_HOST_NAME'
+
 
     def run_plugin(self, values):
 
@@ -76,9 +72,8 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         my_cluster_id = values[self.CONST_CLUSTER_ID]
         clustering = values.get(self.ENV_CONFIG_PARAM_CLUSTERING, 'false')
         membership_scheme = values.get(self.ENV_CONFIG_PARAM_MEMBERSHIP_SCHEME)
-        host_name = values.get(self.ENV_CONFIG_PARAM_HOST_NAME, self.CONST_DEFAULT_CONFIG_PARAM_HOST_NAME)
-        mgt_host_name = values.get(self.ENV_CONFIG_PARAM_MGT_HOST_NAME, self.CONST_DEFAULT_CONFIG_PARAM_MGT_HOST_NAME)
-        lb_ip = values.get(self.CONST_LB_IP)
+        # read topology from PCA TopologyContext
+        topology = TopologyContext.topology
 
         # log above values
         WSO2StartupHandler.log.info("Port Mappings: %s" % port_mappings_str)
@@ -88,9 +83,6 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         WSO2StartupHandler.log.info("Cluster ID: %s" % my_cluster_id)
         WSO2StartupHandler.log.info("Clustering: %s" % clustering)
         WSO2StartupHandler.log.info("Membership Scheme: %s" % membership_scheme)
-        WSO2StartupHandler.log.info("Host Name: %s" % host_name)
-        WSO2StartupHandler.log.info("Mgt Host Name: %s" % mgt_host_name)
-        WSO2StartupHandler.log.info("LB IP: %s" % lb_ip)
 
         # export Proxy Ports as Env. variables - used in catalina-server.xml
         mgt_http_proxy_port = self.read_proxy_port(port_mappings_str, self.CONST_PORT_MAPPING_MGT_HTTP_TRANSPORT,
@@ -110,27 +102,22 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         if sub_domain is not None:
             self.export_env_var(self.ENV_CONFIG_PARAM_SUB_DOMAIN, sub_domain)
 
-        # update /etc/hosts - when cluster is fronted by an LB
-        if lb_ip is not None and clustering == 'true':
-            if host_name is not None:
-                self.update_hosts_file(lb_ip, host_name)
-            if mgt_host_name is not None:
-                self.update_hosts_file(lb_ip, mgt_host_name)
-        else:
-            WSO2StartupHandler.log.warn("LB_IP is not set. Hence cluster might fail.")
-
         # if CONFIG_PARAM_MEMBERSHIP_SCHEME is not set, set the private-paas membership scheme as default one
-        if membership_scheme is None:
+        if clustering == 'true' and membership_scheme is None:
             membership_scheme = self.CONST_PPAAS_MEMBERSHIP_SCHEME
             self.export_env_var(self.ENV_CONFIG_PARAM_MEMBERSHIP_SCHEME, membership_scheme)
 
-        # check if clustering is enabled and membership scheme is set to 'private-paas'
-        if clustering == 'true' and membership_scheme == self.CONST_PPAAS_MEMBERSHIP_SCHEME:
-            # export Cluster_Ids as Env. variables - used in axis2.xml
-            self.set_cluster_ids(app_id, service_type, my_cluster_id)
-            # export mb_ip as Env.variable - used in jndi.properties
-            if mb_ip is not None:
-                self.export_env_var(self.ENV_CONFIG_PARAM_MB_HOST, mb_ip)
+        # check if clustering is enabled
+        if clustering == 'true':
+            # set hostnames
+            self.set_host_names(topology, app_id)
+            # check if membership scheme is set to 'private-paas'
+            if membership_scheme == self.CONST_PPAAS_MEMBERSHIP_SCHEME:
+                # export Cluster_Ids as Env. variables - used in axis2.xml
+                self.set_cluster_ids(topology, app_id, service_type, my_cluster_id)
+                # export mb_ip as Env.variable - used in jndi.properties
+                if mb_ip is not None:
+                    self.export_env_var(self.ENV_CONFIG_PARAM_MB_HOST, mb_ip)
 
         # start configurator
         WSO2StartupHandler.log.info("Configuring WSO2 %s..." % self.CONST_PRODUCT)
@@ -151,7 +138,27 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         output, errors = p.communicate()
         WSO2StartupHandler.log.info("WSO2 %s started successfully" % self.CONST_PRODUCT)
 
-    def set_cluster_ids(self, app_id, service_type, my_cluster_id):
+    def set_host_names(self, topology, app_id):
+        """
+        Set hostnames of services read from topology for worker manager instances
+        exports MgtHostName and HostName
+
+        :return: void
+        """
+        for service_name in self.SERVICES:
+            if service_name.endswith(self.CONST_MANAGER):
+                mgr_cluster = self.get_cluster_of_service(topology, service_name, app_id)
+                if mgr_cluster is not None:
+                    mgt_host_name = mgr_cluster.hostnames[0]
+            elif service_name.endswith(self.CONST_WORKER):
+                worker_cluster = self.get_cluster_of_service(topology, service_name, app_id)
+                if worker_cluster is not None:
+                    host_name = worker_cluster.hostnames[0]
+
+        self.export_env_var(self.ENV_CONFIG_PARAM_MGT_HOST_NAME, mgt_host_name)
+        self.export_env_var(self.ENV_CONFIG_PARAM_HOST_NAME, host_name)
+
+    def set_cluster_ids(self, topology, app_id, service_type, my_cluster_id):
         """
         Set clusterIds of services read from topology for worker manager instances
         else use own clusterId
@@ -161,47 +168,39 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         cluster_ids = []
         if service_type.endswith(self.CONST_MANAGER) or service_type.endswith(self.CONST_WORKER):
             for service_name in self.SERVICES:
-                cluster_id_of_service = self.read_cluster_id_of_service(service_name, app_id)
+                cluster_of_service = self.get_cluster_of_service(topology, service_name, app_id)
+                if cluster_of_service is not None:
+                    cluster_id_of_service = cluster_of_service.cluster_id
                 if cluster_id_of_service is not None:
                     cluster_ids.append(cluster_id_of_service)
         else:
             cluster_ids.append(my_cluster_id)
-        # If clusterIds are available, set them as environment variables
+        # If clusterIds are available, export them as environment variables
         if cluster_ids:
             cluster_ids_string = ",".join(cluster_ids)
             self.export_env_var(self.ENV_CONFIG_PARAM_CLUSTER_IDs, cluster_ids_string)
 
-    def read_cluster_id_of_service(self, service_name, app_id):
-        cluster_id = None
+    def get_cluster_of_service(self, topology, service_name, app_id):
+        cluster_obj = None
         clusters = None
-        topology = TopologyContext.topology
-
         if topology is not None:
             if topology.service_exists(service_name):
                 service = topology.get_service(service_name)
-                clusters = service.get_clusters()
+                if service is not None:
+                    clusters = service.get_clusters()
+                else:
+                    WSO2StartupHandler.log.warn("[Service] %s is None" % service_name)
             else:
                 WSO2StartupHandler.log.warn("[Service] %s is not available in topology" % service_name)
+        else:
+            WSO2StartupHandler.log.warn("Topology is empty.")
 
-            if clusters is not None:
-                for cluster in clusters:
-                    if cluster.app_id == app_id:
-                        cluster_id = cluster.cluster_id
+        if clusters is not None:
+            for cluster in clusters:
+                if cluster.app_id == app_id:
+                    cluster_obj = cluster
 
-        return cluster_id
-
-    def update_hosts_file(self, ip_address, host_name):
-        """
-        Updates /etc/hosts file with clustering hostnames
-
-        :return: void
-        """
-        config_command = "echo %s  %s >> /etc/hosts" % (ip_address, host_name)
-        env_var = os.environ.copy()
-        p = subprocess.Popen(config_command, env=env_var, shell=True)
-        output, errors = p.communicate()
-        WSO2StartupHandler.log.info(
-            "Successfully updated [ip_address] %s & [hostname] %s in etc/hosts" % (ip_address, host_name))
+        return cluster_obj
 
     def read_proxy_port(self, port_mappings_str, port_mapping_name, port_mapping_protocol):
         """

@@ -1,11 +1,11 @@
 {
-    "type": "wso2as-521-worker",
+    "type": "wso2esb-481-manager",
     "category": "framework",
     "provider": "wso2",
-    "host": "as.wso2.org",
-    "displayName": "WSO2 AS 5.2.1 Worker",
-    "description": "WSO2 AS 5.2.1 Worker Cartridge",
-    "version": "5.2.1",
+    "host": "esb.wso2.org",
+    "displayName": "WSO2 ESB 4.8.1 Manager",
+    "description": "WSO2 ESB 4.8.1 Manager Cartridge",
+    "version": "4.8.1",
     "multiTenant": true,
     "loadBalancingIPType": "public",
     "portMapping": [
@@ -15,12 +15,19 @@
             "port": 9763,
             "proxyPort": 0,
             "kubernetesPortType": "NodePort"
+        },
+        {
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
         }
     ],
     "iaasProvider": [
         {
             "type": "kubernetes",
-            "imageId": "wso2/as:5.2.1",
+            "imageId": "wso2/esb:4.8.1",
             "networkInterfaces": []
         }
     ],
@@ -46,8 +53,8 @@
             "value": "true"
         },
         {
-            "name": "payload_parameter.LB_IP",
-            "value": "172.17.8.102"
+            "name": "payload_parameter.COMMIT_ENABLED",
+            "value": "true"
         }
     ]
 }

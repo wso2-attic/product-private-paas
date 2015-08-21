@@ -1,11 +1,11 @@
 {
-    "type": "wso2is-500-manager",
+    "type": "wso2as-521-worker",
     "category": "framework",
     "provider": "wso2",
-    "host": "is.wso2.org",
-    "displayName": "WSO2 IS 5.0.0 Manager",
-    "description": "WSO2 IS 5.0.0 Manager Cartridge",
-    "version": "5.0.0",
+    "host": "as.wso2.org",
+    "displayName": "WSO2 AS 5.2.1 Worker",
+    "description": "WSO2 AS 5.2.1 Worker Cartridge",
+    "version": "5.2.1",
     "multiTenant": true,
     "loadBalancingIPType": "public",
     "portMapping": [
@@ -27,7 +27,7 @@
     "iaasProvider": [
         {
             "type": "kubernetes",
-            "imageId": "wso2/is:5.2.1",
+            "imageId": "wso2/as:5.2.1",
             "networkInterfaces": []
         }
     ],
@@ -51,10 +51,6 @@
         {
             "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
             "value": "true"
-        },
-        {
-            "name": "payload_parameter.LB_IP",
-            "value": "172.17.8.102"
         }
     ]
 }
