@@ -14,9 +14,10 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 
-class appserver (
+class is (
   $server_name        = undef,
-  $service_code       = 'appserver',
+  $version          = undef,
+  $service_code       = 'is',
   $owner              = 'root',
   $group              = 'root',
   $target             = "/mnt/${server_ip}",
@@ -25,6 +26,7 @@ class appserver (
   $template_module_pack = "${server_name}-${version}-template-module-${ppaas_version}.zip",
   $pca_home = "/mnt/${pca_name}-${pca_version}",
   $java_home  = "/opt/${java_name}"
+
 )  {
 
 # creating /mnt/{ip_address} folder

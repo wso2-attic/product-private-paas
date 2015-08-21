@@ -60,10 +60,10 @@ echo "Adding deployment policy..."
 curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/${deployment_policy_id}.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/deploymentPolicies
 
 echo "Adding WSO2 ${product_type} - ${product_version} Manager cartridge..."
-curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/${product}-manager.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
+curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/wso2${product_type}-manager.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
 
 echo "Adding WSO2 ${product_type} - ${product_version} cartridge Group ..."
-curl -X POST -H "Content-Type: application/json" -d "@${cartridges_groups_path}/${product}-group.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridgeGroups
+curl -X POST -H "Content-Type: application/json" -d "@${cartridges_groups_path}/wso2${product_type}-group.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridgeGroups
 
 sleep 1
 echo "Adding application policy..."
@@ -71,8 +71,9 @@ curl -X POST -H "Content-Type: application/json" -d "@${application_policies_pat
 
 sleep 1
 echo "Adding WSO2 ${product_type} - ${product_version} application..."
-curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/${product}-application.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications
+curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/wso2${product_type}-application.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications
 
 sleep 1
 echo "Deploying application..."
-curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/${product}-application/deploy/${application_policy_id}
+# replace with wso2${product_type}-${product_version}-application
+curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/is-app/deploy/${application_policy_id}

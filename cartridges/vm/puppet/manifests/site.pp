@@ -18,4 +18,5 @@
 import 'nodes/base.pp'
 import 'nodes/esb.pp'
 import 'nodes/appserver.pp'
+import 'nodes/is.pp'
 import 'nodes/default.pp'
