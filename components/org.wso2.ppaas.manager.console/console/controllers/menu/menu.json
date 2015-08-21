@@ -202,7 +202,7 @@
             "description": "Manage applications."
         },
         {
-            "link": "https://issues.apache.org/jira/",
+            "link": "https://wso2.org/jira/browse/PAAS",
             "linkexternal": true,
             "context": "/",
             "title": "JIRA",
@@ -237,7 +237,7 @@
             "description": "Report your issues that you find."
         },
         {
-            "link": "https://cwiki.apache.org/confluence/display/STRATOS/Home",
+            "link": "https://docs.wso2.com/display/PP410/WSO2+Private+PaaS+Documentation",
             "linkexternal": true,
             "context": "/",
             "title": "Documentation",
