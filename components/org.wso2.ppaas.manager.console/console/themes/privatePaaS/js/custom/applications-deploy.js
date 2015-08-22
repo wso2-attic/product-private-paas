@@ -414,7 +414,7 @@ $(document).ready(function(){
         var addico = '<span class="fw-stack fw-lg btn-action-ico">' +
             '<i class="fw fw-ring fw-stack-2x"></i>' +
             '<i class="fw fw-add fw-stack-1x"></i></span>';
-        btn.html(addico + " <i class='fa fa-spinner fa-spin'></i> Adding Application Policy ");
+        btn.html(addico + " <i class='fa fa-spinner fa-spin'></i> Deploying Application ");
         $.ajax({
             type: "POST",
             url: caramel.context + "/controllers/applications/application_requests.jag",
@@ -434,7 +434,7 @@ $(document).ready(function(){
             }
         })
             .always(function () {
-                btn.html(addico+ ' Add '+formtype);
+                btn.html('Deploy Application');
             });
 
     });

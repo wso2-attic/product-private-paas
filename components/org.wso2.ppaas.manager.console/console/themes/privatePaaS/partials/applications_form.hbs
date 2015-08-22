@@ -119,25 +119,56 @@
 
                             <div class="toggle-menu-description">{{description}} {{status}}</div>
                             {{#ifCond status "!=" "Created"}}
-                            <div class="list-button" style="display: none;">
-                                <button class="btn btn-danger btn-lg hover-undeploy" type="button"
-                                        id="{{applicationId}}"> Undeploy</button>
-                                <button class="btn btn-info btn-lg hover-details" type="button"
-                                        id="details_list_{{applicationId}}"
-                                        data-url="{{url ""}}/applications/{{applicationId}}/" > View
-                                </button>
-                            </div>
-                            <div class="bottom-bar-wrapper">
-                                <div class="bottom-bar">
-                                    <button class="btn btn-danger btn-lg hover-undeploy" type="button"
-                                            id="{{applicationId}}"> Undeploy</button>
-                                    <button class="btn btn-info btn-lg hover-details" type="button"
-                                            id="details_{{applicationId}}"
-                                            data-url="{{url ""}}/applications/{{applicationId}}/" > View
-                                    </button>
-
+                                {{#ifCond status "==" "Deployed"}}
+                                    <div class="list-button" style="display: none;">
+                                        <button class="btn btn-danger btn-lg hover-undeploy" type="button"
+                                                id="{{applicationId}}"> Undeploy</button>
+                                        <button class="btn btn-info btn-lg hover-details" type="button"
+                                                id="details_list_{{applicationId}}"
+                                                data-url="{{url ""}}/applications/{{applicationId}}/" > View
+                                        </button>
+                                        {{#if multiTenant}}
+                                            {{#unless signUpsExist}}
+                                                <button class="btn btn-warning btn-lg hover-signup" type="button"
+                                                        id="signup_{{applicationId}}"
+                                                        data-url="{{url ""}}/applications/{{applicationId}}/signup" > Signup
+                                                </button>
+                                            {{/unless}}
+                                        {{/if}}
+                                    </div>
+                                    <div class="bottom-bar-wrapper">
+                                        <div class="bottom-bar">
+                                            <button class="btn btn-danger btn-lg hover-undeploy" type="button"
+                                                    id="{{applicationId}}"> Undeploy</button>
+                                            <button class="btn btn-info btn-lg hover-details" type="button"
+                                                    id="details_{{applicationId}}"
+                                                    data-url="{{url ""}}/applications/{{applicationId}}/" > View
+                                            </button>
+                                            {{#if multiTenant}}
+                                                {{#unless signUpsExist}}
+                                                    <button class="btn btn-warning btn-lg hover-signup" type="button"
+                                                            id="signup_{{applicationId}}"
+                                                            data-url="{{url ""}}/applications/{{applicationId}}/signup" > Signup
+                                                    </button>
+                                                {{/unless}}
+                                            {{/if}}
+                                        </div>
+                                {{else}}
+                                    <div class="list-button" style="display: none;">
+                                        <button class="btn btn-info btn-lg hover-details" type="button"
+                                                id="details_list_{{applicationId}}"
+                                                data-url="{{url ""}}/applications/{{applicationId}}/" > View
+                                        </button>
+                                    </div>
+                                    <div class="bottom-bar-wrapper">
+                                    <div class="bottom-bar">
+                                        <button class="btn btn-info btn-lg hover-details" type="button"
+                                                id="details_{{applicationId}}"
+                                                data-url="{{url ""}}/applications/{{applicationId}}/" > View
+                                        </button>
+                                    </div>
+                                {{/ifCond}}
                                 </div>
-                            </div>
                             {{else}}
                                 <div class="list-button" style="display: none;">
                                     <button class="btn btn-danger btn-lg hover-delete" type="button"
@@ -312,6 +343,10 @@
             });
 
             $('.general-table').on('click', '.hover-details', function (event) {
+                window.location = $(this).attr("data-url");
+            });
+
+            $('.general-table').on('click', '.hover-signup', function (event) {
                 window.location = $(this).attr("data-url");
             });
 
