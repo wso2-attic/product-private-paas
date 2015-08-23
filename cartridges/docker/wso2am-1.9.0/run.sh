@@ -30,7 +30,7 @@ startDefaultAM() {
 
 startDefaultAMWithMysql() {
 	name="wso2am-${memberId}-wka"
-	env_values="-e CONFIG_PARAM_APIMGT_DB_URL=jdbc:mysql://172.17.42.1:3306 -e CONFIG_PARAM_DB_USER_NAME=root -e
+	env_values="-e CONFIG_PARAM_APIMGT_DB_URL=jdbc:mysql://172.17.42.1:3306/apimgtdb -e CONFIG_PARAM_DB_USER_NAME=root -e
 	CONFIG_PARAM_DB_PASSWORD=root"
 	container_id=`docker run ${env_values} -d -P --name ${name} wso2/am:1.9.0`
 	memberId=$((memberId + 1))

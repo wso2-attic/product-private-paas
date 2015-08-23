@@ -48,8 +48,8 @@
         <!--
             Server URL of the Authentication service
         -->
-        {% if CONFIG_PARAM_PROFILE == 'Publisher' or CONFIG_PARAM_PROFILE == 'Store' -%}
-        <ServerURL>https://{{CONFIG_PARAM_KEYMANAGER_IP}}:9443/services/</ServerURL>            
+        {% if CONFIG_PARAM_PROFILE == 'Publisher' or CONFIG_PARAM_PROFILE == 'Store' or CONFIG_PARAM_PROFILE == 'PubStore' -%}
+        <ServerURL>https://{{CONFIG_PARAM_KEYMANAGER_IP}}:{{CONFIG_PARAM_KEYMANAGER_HTTPS_PROXY_PORT}}/services/</ServerURL>
         {% else -%}
         <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}${carbon.context}/services/</ServerURL>          
         {% endif -%}
@@ -131,7 +131,7 @@
     -->
     <APIGateway>
 	<!-- The environments to which an API will be published -->
-	<Environments>
+	   <Environments>
 		<!-- Environments can be of different types. Allowed values are 'hybrid', 'production' and 'sandbox'.
 		     An API deployed on a 'production' type gateway will only support production keys
 		     An API deployed on a 'sandbox' type gateway will only support sandbox keys
@@ -142,16 +142,20 @@
 			<!--
             			Server URL of the API gateway.
         		-->
-                        {% if CONFIG_PARAM_PROFILE == 'KeyManager' or CONFIG_PARAM_PROFILE == 'Publisher' or CONFIG_PARAM_PROFILE == 'Store' -%}
-                        <ServerURL>https://{{CONFIG_PARAM_GATEWAY_IP}}:9443/services/</ServerURL>
+                        {% if CONFIG_PARAM_PROFILE == 'KeyManager' or CONFIG_PARAM_PROFILE == 'Publisher' or CONFIG_PARAM_PROFILE == 'Store' or CONFIG_PARAM_PROFILE == 'PubStore' -%}
+                        <ServerURL>https://{{CONFIG_PARAM_GATEWAY_IP}}:{{CONFIG_PARAM_GATEWAY_HTTPS_PROXY_PORT}}/services/</ServerURL>
                         <Username>${admin.username}</Username>
                         <Password>${admin.password}</Password>
-                        <GatewayEndpoint>http://{{CONFIG_PARAM_GATEWAY_IP}}:8280,https://{{CONFIG_PARAM_GATEWAY_IP}}:8243</GatewayEndpoint>
+                        <GatewayEndpoint>http://{{CONFIG_PARAM_GATEWAY_IP}}:{{CONFIG_PARAM_GATEWAY_PT_HTTP_PROXY_PORT}},https://{{CONFIG_PARAM_GATEWAY_IP}}:{{CONFIG_PARAM_GATEWAY_PT_HTTPS_PROXY_PORT}}</GatewayEndpoint>
                         {% else -%}
                         <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}${carbon.context}/services/</ServerURL>
                         <Username>${admin.username}</Username>
                         <Password>${admin.password}</Password>
-                        <GatewayEndpoint>http://${carbon.local.ip}:${http.nio.port},https://${carbon.local.ip}:${https.nio.port}</GatewayEndpoint>
+                        	{% if CONFIG_PARAM_GATEWAY_IP is defined -%}
+                        		<GatewayEndpoint>http://{{CONFIG_PARAM_GATEWAY_IP}}:{{CONFIG_PARAM_GATEWAY_PT_HTTP_PROXY_PORT}},https://{{CONFIG_PARAM_GATEWAY_IP}}:{{CONFIG_PARAM_GATEWAY_PT_HTTPS_PROXY_PORT}}</GatewayEndpoint>
+                        	{% else -%}
+                        		<GatewayEndpoint>http://${carbon.local.ip}:${http.nio.port},https://${carbon.local.ip}:${https.nio.port}</GatewayEndpoint>
+                        	{% endif -%}
 			            {% endif -%}
         
                 </Environment>
@@ -246,8 +250,8 @@
             Server URL of the API key manager
         -->
 
-        {% if CONFIG_PARAM_PROFILE == 'Gateway-Manager' or CONFIG_PARAM_PROFILE == 'Gateway-Worker' or CONFIG_PARAM_PROFILE == 'Publisher' or CONFIG_PARAM_PROFILE == 'Store' -%}
-        <ServerURL>https://{{CONFIG_PARAM_KEYMANAGER_IP}}:9443/services/</ServerURL>            
+        {% if CONFIG_PARAM_PROFILE == 'Gateway-Manager' or CONFIG_PARAM_PROFILE == 'Gateway-Worker' or CONFIG_PARAM_PROFILE == 'Publisher' or CONFIG_PARAM_PROFILE == 'Store' or CONFIG_PARAM_PROFILE == 'PubStore' -%}
+        <ServerURL>https://{{CONFIG_PARAM_KEYMANAGER_IP}}:{{CONFIG_PARAM_KEYMANAGER_HTTPS_PROXY_PORT}}/services/</ServerURL>
         {% else -%}
         <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}${carbon.context}/services/</ServerURL>
         {% endif -%}
@@ -336,7 +340,13 @@
 	     gateway https( /http, we recommend users to use 'https' endpoints for security purpose) url.
          Also please note that we should point gateway revoke service to key manager
 	-->
-	<RevokeAPIURL>https://${carbon.local.ip}:${https.nio.port}/revoke</RevokeAPIURL>
+
+    {% if CONFIG_PARAM_PROFILE == 'KeyManager' -%}
+        <RevokeAPIURL>https://{{CONFIG_PARAM_GATEWAY_IP}}:{{CONFIG_PARAM_GATEWAY_PT_HTTPS_PROXY_PORT}}/revoke</RevokeAPIURL>
+    {% else -%}
+        <RevokeAPIURL>https://${carbon.local.ip}:${https.nio.port}/revoke</RevokeAPIURL>       
+    {% endif -%}
+	
 
 	<!-- Whether to encrypt tokens when storing in the Database
 	Note: If changing this value to true, change the value of <TokenPersistenceProcessor> to
