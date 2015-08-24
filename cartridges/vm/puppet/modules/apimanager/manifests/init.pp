@@ -14,9 +14,9 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 
-class appserver (
+class apimanager (
   $server_name        = undef,
-  $service_code       = 'appserver',
+  $service_code       = 'apimanager',
   $owner              = 'root',
   $group              = 'root',
   $target             = "/mnt/${server_ip}",

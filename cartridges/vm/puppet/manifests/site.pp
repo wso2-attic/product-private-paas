@@ -1,5 +1,5 @@
 # ----------------------------------------------------------------------------
-#  Copyright 2005-2013 WSO2, Inc. http://www.wso2.org
+#  Copyright 2005-2015 WSO2, Inc. http://www.wso2.org
 #
 #  Licensed under the Apache License, Version 2.0 (the "License");
 #  you may not use this file except in compliance with the License.
@@ -19,4 +19,5 @@ import 'nodes/base.pp'
 import 'nodes/esb.pp'
 import 'nodes/appserver.pp'
 import 'nodes/is.pp'
+import 'nodes/apimanager.pp'
 import 'nodes/default.pp'
