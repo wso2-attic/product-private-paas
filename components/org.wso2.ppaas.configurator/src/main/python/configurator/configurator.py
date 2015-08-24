@@ -59,8 +59,8 @@ def render_template(template_filename, default_context):
     else:
         context = default_context
 
-    #Adding CARBON_HOME to context as it is required for registry db
-    context[constants.CONFIG_SETTINGS_CARBON_HOME]=PACK_LOCATION
+    # Adding CARBON_HOME to context as it is required for registry db
+    context[constants.CONFIG_SETTINGS_CARBON_HOME] = PACK_LOCATION
     log.info("Final context generated for rendering %s : %s ", os.path.basename(template_filename),
              context)
     log.info("Rendering template: %s \n", template_filename)
@@ -103,7 +103,7 @@ def generate_context(config_file_path):
     global PACK_LOCATION
     PACK_LOCATION = os.environ.get(constants.CONFIG_SETTINGS_CARBON_HOME,
                                    settings[constants.CONFIG_SETTINGS_CARBON_HOME])
-    log.info("CARBON_HOME : %s" %PACK_LOCATION)
+    log.info("CARBON_HOME : %s" % PACK_LOCATION)
     context = configurations[constants.CONFIG_PARAMS]
 
     log.info("Context generated: %s", context)
