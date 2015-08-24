@@ -5,7 +5,6 @@
     </providers>
   
     <datasources>
-
         {% if CONFIG_PARAM_LOCAL_REGISTRY_DB_URL is defined -%}
         <datasource>
             <name>REGISTRY_LOCAL1</name>
@@ -51,8 +50,8 @@
         {% endif %}
         {% if CONFIG_PARAM_REGISTRY_DB_URL is defined -%}
         <datasource>
-            <name>REGISTRY_DB</name>
-            <description>The datasource used for registry- config/governance</description>
+            <name>WSO2_REGISTRY_DB</name>
+            <description>The datasource used for governance registry</description>
             <jndiConfig>
                 <name>jdbc/WSO2RegistryDB</name>
             </jndiConfig>
@@ -71,10 +70,32 @@
             </definition>
         </datasource>
         {% endif %}
+		{% if CONFIG_PARAM_CONFIG_DB_URL is defined -%}
+        <datasource>
+            <name>WSO2_CONFIG_DB</name>
+            <description>The datasource used for config registry</description>
+            <jndiConfig>
+                <name>jdbc/WSO2ConfigDB</name>
+            </jndiConfig>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>{{CONFIG_PARAM_CONFIG_DB_URL}}</url>
+                    <username>{{CONFIG_PARAM_CONFIG_DB_USER_NAME}}</username>
+                    <password>{{CONFIG_PARAM_CONFIG_DB_PASSWORD}}</password>
+                    <driverClassName>com.mysql.jdbc.Driver</driverClassName>
+                    <maxActive>50</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                </configuration>
+            </definition>
+        </datasource>
+        {% endif %}
         {% if CONFIG_PARAM_USER_MGT_DB_URL is defined -%}
         <datasource>
             <name>WSO2_USER_DB</name>
-            <description>The datasource used for registry and user manager</description>
+            <description>The datasource used for user manager</description>
             <jndiConfig>
                 <name>jdbc/WSO2UMDB</name>
             </jndiConfig>
@@ -94,5 +115,4 @@
         </datasource>
         {% endif %}
     </datasources>
-
 </datasources-configuration>
