@@ -17,7 +17,13 @@
             "cartridgeMax": 1,
             "subscribableInfo": {
               "alias": "my-wso2esb-481-manager",
-              "autoscalingPolicy": "autoscaling-policy-1"
+              "autoscalingPolicy": "autoscaling-policy-1",
+              "artifactRepository": {
+                "privateRepo": false,
+                "repoUrl": "https://github.com/imesh/wso2-esb-samples.git",
+                "repoUsername": "",
+                "repoPassword": ""
+              }
             }
           },
           {
@@ -26,7 +32,13 @@
             "cartridgeMax": 2,
             "subscribableInfo": {
               "alias": "my-wso2esb-481-worker",
-              "autoscalingPolicy": "autoscaling-policy-1"
+              "autoscalingPolicy": "autoscaling-policy-1",
+              "artifactRepository": {
+                "privateRepo": false,
+                "repoUrl": "https://github.com/imesh/wso2-esb-samples.git",
+                "repoUsername": "",
+                "repoPassword": ""
+              }
             }
           }
         ]

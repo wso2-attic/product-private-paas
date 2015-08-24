@@ -8,8 +8,8 @@
         "startupOrders": [
             {
                 "aliases": [
-                    "cartridge.my-wso2esb-481-manager",
-                    "cartridge.my-wso2esb-481-worker"
+                    "cartridge.my-wso2esb-481-worker",
+                    "cartridge.my-wso2esb-481-manager"
                 ]
             }
         ]
