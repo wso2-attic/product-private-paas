@@ -57,7 +57,7 @@ RUN apt-get update && apt-get install -y \
 # stress tool and vim are added for demo purposes
 
 RUN mkdir -p /var/run/sshd
-RUN echo 'root:stratos' | chpasswd
+RUN echo 'root:wso2' | chpasswd
 RUN sed -i "s/PermitRootLogin without-password/#PermitRootLogin without-password/" /etc/ssh/sshd_config
 EXPOSE 22
 
