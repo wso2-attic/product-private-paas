@@ -197,13 +197,13 @@
     </filter>
    </handler>
 
-   {% if CONFIG_PARAM_PROFILE == 'Publisher' or CONFIG_PARAM_PROFILE == 'Store'-%}
+   {% if CONFIG_PARAM_PROFILE == 'Publisher' or CONFIG_PARAM_PROFILE == 'Store' or CONFIG_PARAM_PROFILE == 'KeyManager' or CONFIG_PARAM_PROFILE == 'Gateway-Manager' or CONFIG_PARAM_PROFILE == 'Gateway-Worker' or CONFIG_PARAM_PROFILE == 'PubStore' -%}
     <dbConfig name="govregistry">
         <dataSource>jdbc/WSO2REG_DB</dataSource>
     </dbConfig>
-    <remoteInstance url="https://localhost"> 
+    <remoteInstance url="https://localhost">
         <id>gov</id>
-        <cacheId>user@{{CONFIG_PARAM_REG_DB_URL}}/regdb</cacheId>
+        <cacheId>root@{{CONFIG_PARAM_REG_DB_URL}}</cacheId>
         <dbConfig>govregistry</dbConfig>
         <readOnly>false</readOnly>
         <enableCache>true</enableCache>

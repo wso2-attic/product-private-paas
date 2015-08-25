@@ -19,25 +19,29 @@
 
 # Start an AM cluster with docker
 memberId=1
-startWkaMember() {
+startDefaultAM() {
 	name="wso2am-${memberId}-wka"
-	container_id=`docker run -e CONFIG_PARAM_CLUSTERING=true -d -P --name ${name} wso2/am:1.8.0`
+	container_id=`docker run -d -P --name ${name} wso2/am:1.9.0`
 	memberId=$((memberId + 1))
 	wka_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
 	echo "AM wka member started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
 	sleep 1
 }
 
-startMember() {
-	name="wso2am-${memberId}"
-	container_id=`docker run -e CONFIG_PARAM_CLUSTERING=true -e CONFIG_PARAM_WKA_MEMBERS="[${wka_member_ip}:4000]" -d -P --name ${name} wso2/am:1.8.0`
+startDefaultAMWithMysql() {
+	name="wso2am-${memberId}-wka"
+	env_values="-e CONFIG_PARAM_APIMGT_DB_URL=jdbc:mysql://172.17.42.1:3306/apimgtdb -e CONFIG_PARAM_DB_USER_NAME=root -e
+	CONFIG_PARAM_DB_PASSWORD=root"
+	container_id=`docker run ${env_values} -d -P --name ${name} wso2/am:1.9.0`
 	memberId=$((memberId + 1))
-	member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
-	echo "AM member started: [name] ${name} [ip] ${member_ip} [container-id] ${container_id}"
+	wka_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
+	echo "AM wka member started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
 	sleep 1
 }
 
 echo "Starting an AM cluster with docker..."
-startWkaMember
-startMember
-startMember
+
+startDefaultAM
+#startDefaultAMWithMysql
+
+
