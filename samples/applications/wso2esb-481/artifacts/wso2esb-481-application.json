@@ -1,36 +1,48 @@
 {
-  "applicationId": "wso2esb-481-application",
-  "alias": "my-wso2esb-481-application",
-  "multiTenant": true,
-  "components": {
-    "groups": [
-      {
-        "name": "wso2esb-481-group",
-        "alias": "my-wso2esb-481-group",
-        "deploymentPolicy": "deployment-policy-1",
-        "groupMinInstances": 1,
-        "groupMaxInstances": 1,
-        "cartridges": [
-          {
-            "type": "wso2esb-481-manager",
-            "cartridgeMin": 1,
-            "cartridgeMax": 1,
-            "subscribableInfo": {
-              "alias": "my-wso2esb-481-manager",
-              "autoscalingPolicy": "autoscaling-policy-1"
+    "applicationId": "wso2esb-481-application",
+    "alias": "wso2esb-481-application",
+    "multiTenant": true,
+    "components": {
+        "groups": [
+            {
+                "name": "wso2esb-481-group",
+                "alias": "wso2esb-481-group",
+                "deploymentPolicy": "deployment-policy-1",
+                "groupMinInstances": 1,
+                "groupMaxInstances": 1,
+                "cartridges": [
+                    {
+                        "type": "wso2esb-481-manager",
+                        "cartridgeMin": 1,
+                        "cartridgeMax": 1,
+                        "subscribableInfo": {
+                            "alias": "wso2esb-481-manager",
+                            "autoscalingPolicy": "autoscaling-policy-1",
+                            "artifactRepository": {
+                                "privateRepo": false,
+                                "repoUrl": "https://github.com/imesh/wso2-esb-samples.git",
+                                "repoUsername": "",
+                                "repoPassword": ""
+                            }
+                        }
+                    },
+                    {
+                        "type": "wso2esb-481-worker",
+                        "cartridgeMin": 2,
+                        "cartridgeMax": 2,
+                        "subscribableInfo": {
+                            "alias": "wso2esb-481-worker",
+                            "autoscalingPolicy": "autoscaling-policy-1",
+                            "artifactRepository": {
+                                "privateRepo": false,
+                                "repoUrl": "https://github.com/imesh/wso2-esb-samples.git",
+                                "repoUsername": "",
+                                "repoPassword": ""
+                            }
+                        }
+                    }
+                ]
             }
-          },
-          {
-            "type": "wso2esb-481-worker",
-            "cartridgeMin": 2,
-            "cartridgeMax": 2,
-            "subscribableInfo": {
-              "alias": "my-wso2esb-481-worker",
-              "autoscalingPolicy": "autoscaling-policy-1"
-            }
-          }
         ]
-      }
-    ]
-  }
+    }
 }

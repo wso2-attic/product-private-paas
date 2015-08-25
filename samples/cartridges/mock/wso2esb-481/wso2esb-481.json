@@ -10,19 +10,19 @@
     "loadBalancingIPType": "public",
     "portMapping": [
         {
-			"name": "mgt-console",
+            "name": "mgt-console",
             "protocol": "https",
             "port": "9443",
             "proxyPort": "0"
         },
         {
-			"name": "pt-http",
+            "name": "pt-http",
             "protocol": "http",
             "port": "8280",
             "proxyPort": "0"
         },
         {
-			"name": "pt-https",
+            "name": "pt-https",
             "protocol": "https",
             "port": "8243",
             "proxyPort": "0"

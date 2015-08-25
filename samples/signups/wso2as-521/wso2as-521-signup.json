@@ -1,18 +1,18 @@
 {
-  "artifactRepositories": [
-    {
-      "alias": "my-wso2as-521-manager",
-      "privateRepo": false,
-      "repoUrl": "https://github.com/lasinducharith/as-dep-sync.git",
-      "repoUsername": "",
-      "repoPassword": ""
-    },
-    {
-      "alias": "my-wso2as-521-worker",
-      "privateRepo": false,
-      "repoUrl": "https://github.com/lasinducharith/as-dep-sync.git",
-      "repoUsername": "",
-      "repoPassword": ""
-    }
-  ]
+    "artifactRepositories": [
+        {
+            "alias": "my-wso2as-521-manager",
+            "privateRepo": false,
+            "repoUrl": "https://github.com/lasinducharith/as-dep-sync.git",
+            "repoUsername": "",
+            "repoPassword": ""
+        },
+        {
+            "alias": "my-wso2as-521-worker",
+            "privateRepo": false,
+            "repoUrl": "https://github.com/lasinducharith/as-dep-sync.git",
+            "repoUsername": "",
+            "repoPassword": ""
+        }
+    ]
 }

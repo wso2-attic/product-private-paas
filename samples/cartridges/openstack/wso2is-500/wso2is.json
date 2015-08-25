@@ -1,60 +1,60 @@
 {
-  "type": "wso2is-500",
-  "category": "framework",
-  "provider": "wso2",
-  "host": "is.wso2.org",
-  "displayName": "WSO2 IS 5.0.0",
-  "description": "WSO2 IS 5.0.0 Cartridge",
-  "version": "5.0.0",
-  "multiTenant": true,
-  "loadBalancingIPType": "public",
-  "portMapping": [
-    {
-      "name": "mgt-http",
-      "protocol": "http",
-      "port": 9763,
-      "proxyPort": 0
-    },
-    {
-      "name": "mgt-https",
-      "protocol": "https",
-      "port": 9443,
-      "proxyPort": 0
-    }
-  ],
-  "iaasProvider": [
-    {
-      "type": "openstack",
-      "imageId": "<REGION>/<BASE_IMAGE_ID>",
-      "property": [
+    "type": "wso2is-500",
+    "category": "framework",
+    "provider": "wso2",
+    "host": "is.wso2.org",
+    "displayName": "WSO2 IS 5.0.0",
+    "description": "WSO2 IS 5.0.0 Cartridge",
+    "version": "5.0.0",
+    "multiTenant": true,
+    "loadBalancingIPType": "public",
+    "portMapping": [
         {
-          "name": "instanceType",
-          "value": "<REGION>/<FLAVOUR_ID>"
+            "name": "mgt-http",
+            "protocol": "http",
+            "port": 9763,
+            "proxyPort": 0
         },
         {
-          "name": "keyPair",
-          "value": "<KEY_PAIR_NAME>"
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
+            "proxyPort": 0
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "openstack",
+            "imageId": "<REGION>/<BASE_IMAGE_ID>",
+            "property": [
+                {
+                    "name": "instanceType",
+                    "value": "<REGION>/<FLAVOUR_ID>"
+                },
+                {
+                    "name": "keyPair",
+                    "value": "<KEY_PAIR_NAME>"
+                },
+                {
+                    "name": "securityGroups",
+                    "value": "default"
+                }
+            ],
+            "networkInterfaces": [
+                {
+                    "networkUuid": "<NETWORK_UUID>"
+                }
+            ]
+        }
+    ],
+    "property": [
+        {
+            "name": "payload_parameter.START_CMD",
+            "value": "PCA"
         },
         {
-          "name": "securityGroups",
-          "value": "default"
+            "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+            "value": "false"
         }
-      ],
-      "networkInterfaces": [
-        {
-          "networkUuid": "<NETWORK_UUID>"
-        }
-      ]
-    }
-  ],
-  "property": [
-    {
-      "name": "payload_parameter.START_CMD",
-      "value": "PCA"
-    },
-    {
-      "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
-      "value": "false"
-    }
-  ]
+    ]
 }
