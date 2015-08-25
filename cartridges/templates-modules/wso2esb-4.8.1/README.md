@@ -12,10 +12,11 @@
 
  * activemq_client_5.10.0_1.0.0.jar
  * geronimo_j2ee_management_1.1_spec_1.0.1_1.0.0.jar
- * hawtbuf_1.9_1.0.0.jar org.apache.commons.lang3_3.1.0.jar
+ * hawtbuf_1.9_1.0.0.jar 
+ * org.apache.commons.lang3_3.1.0.jar
  * org.apache.stratos.common-4.1.0.jar
  * org.apache.stratos.messaging-4.1.0.jar
- *  ppaas-membership-scheme-4.1.0-SNAPSHOT.jar
+ * ppaas-membership-scheme-4.1.0-SNAPSHOT.jar
 
 (4) Copy following [kernel patches](http://dist.wso2.org/maven2/org/wso2/carbon/WSO2-CARBON-PATCH-4.2.0/) and [security patches](http://product-dist.wso2.com/downloads/carbon/4.2.0/)  to  relevant folder structure accordingly.
 
