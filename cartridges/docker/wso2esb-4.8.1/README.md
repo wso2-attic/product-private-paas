@@ -4,11 +4,11 @@ WSO2 ESB 4.8.1 Dockerfile defines required resources for building a Docker image
 
 ## How to build
 
-(1) Copy following files to the packages folder:
+(1) Copy ESB 4.8.1 binary pack to the packages folder:
 
-* [wso2esb-4.8.1.zip](http://wso2.com/more-downloads/esb/)
+* [wso2esb-4.8.1.zip](http://wso2.com/products/enterprise-service-bus/)
 
-(2) Generate template module wso2esb-4.8.1-template-module-<PPAAS_VERSION>.zip as described in [README.md] (https://github.com/wso2/product-private-paas/tree/master/cartridges/templates-modules/wso2esb-4.8.1) under "Creating ESB Template Module for Private PaaS" section.
+(2) Generate template module `wso2esb-4.8.1-template-module-<PPAAS_VERSION>.zip` as described in [README.md] (https://github.com/wso2/product-private-paas/tree/master/cartridges/templates-modules/wso2esb-4.8.1) under "Creating ESB Template Module for Private PaaS" section.
 
 (3) Run build.sh file to build the docker image: (This will create template zip file and copy it to the docker image.)
 ```
