@@ -34,7 +34,7 @@ fi
 
 if ${clean} ; then
    echo "-----------------------------------"
-   echo "Building" ${wso2_product_type^^} - ${wso2_product_version} "template module"
+   echo "Building" ${wso2_product_type} - ${wso2_product_version} "template module"
    echo "-----------------------------------"
    pushd ${wso2_product_template_module_path}
    mvn clean install
@@ -42,7 +42,7 @@ if ${clean} ; then
    popd
 
    echo "----------------------------------"
-   echo "Copying" ${wso2_product_type^^} - ${wso2_product_version} "python plugins"
+   echo "Copying" ${wso2_product_type} - ${wso2_product_version} "python plugins"
    echo "----------------------------------"
    pushd ${wso2_product_plugin_path}
    cp * ${script_path}/plugins
@@ -50,8 +50,8 @@ if ${clean} ; then
 fi
 
 echo "----------------------------------"
-echo "Building" ${wso2_product_type^^} - ${wso2_product_version} "docker image"
+echo "Building" ${wso2_product_type} - ${wso2_product_version} "docker image"
 echo "----------------------------------"
 docker build -t wso2/${wso2_product_type}:${wso2_product_version} .
 
-echo "WSO2" ${wso2_product_type^^} - ${wso2_product_version} "docker image built successfully."
+echo "WSO2" ${wso2_product_type} - ${wso2_product_version} "docker image built successfully."

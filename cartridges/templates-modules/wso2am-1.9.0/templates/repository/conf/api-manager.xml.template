@@ -146,7 +146,7 @@
                         <ServerURL>https://{{CONFIG_PARAM_GATEWAY_IP}}:{{CONFIG_PARAM_GATEWAY_HTTPS_PROXY_PORT}}/services/</ServerURL>
                         <Username>${admin.username}</Username>
                         <Password>${admin.password}</Password>
-                        <GatewayEndpoint>http://{{CONFIG_PARAM_GATEWAY_IP}}:{{CONFIG_PARAM_GATEWAY_PT_HTTP_PROXY_PORT}},https://{{CONFIG_PARAM_GATEWAY_IP}}:{{CONFIG_PARAM_GATEWAY_PT_HTTPS_PROXY_PORT}}</GatewayEndpoint>
+                        <GatewayEndpoint>http://{{CONFIG_PARAM_GATEWAY_WORKER_IP}}:{{CONFIG_PARAM_GATEWAY_WORKER_PT_HTTP_PROXY_PORT}},https://{{CONFIG_PARAM_GATEWAY_WORKER_IP}}:{{CONFIG_PARAM_GATEWAY_WORKER_PT_HTTPS_PROXY_PORT}}</GatewayEndpoint>
                         {% else -%}
                         <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}${carbon.context}/services/</ServerURL>
                         <Username>${admin.username}</Username>

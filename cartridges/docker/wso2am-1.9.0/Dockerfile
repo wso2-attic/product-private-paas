@@ -45,7 +45,7 @@ RUN unzip /opt/${TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modu
 # ----------------------
 
 # mgt-http/mgt-https/pt-http/pt-https ports
-EXPOSE 9763 9443 8280 8243
+EXPOSE 9763 9443 8280 8243 4000
 
 # -------------------------------
 # Define entry point & start sshd

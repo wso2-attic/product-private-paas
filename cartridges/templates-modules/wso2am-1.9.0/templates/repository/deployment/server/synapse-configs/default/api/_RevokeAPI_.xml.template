@@ -5,8 +5,8 @@
 	    <property name="uri.var.hostname" expression="get-property('keyManager.hostname')"/>
             <send>
                 <endpoint>
-                    {% if CONFIG_PARAM_PROFILE == 'Gateway-Manager' or CONFIG_PARAM_PROFILE == 'Gateway-Worker' -%}
-                    <http uri-template="https://{{CONFIG_PARAM_KEYMANAGER_IP}}:{uri.var.portnum}/oauth2/revoke">
+                    {% if CONFIG_PARAM_PROFILE == 'Gateway-Manager' -%}
+                    <http uri-template="https://{{CONFIG_PARAM_KEYMANAGER_IP}}:{{CONFIG_PARAM_KEYMANAGER_HTTPS_PROXY_PORT}}/oauth2/revoke">
                     {% else -%}
                     <http uri-template="https://{uri.var.hostname}:{uri.var.portnum}/oauth2/revoke">
                     {% endif -%}                       
