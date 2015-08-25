@@ -9,15 +9,12 @@ WSO2 products base image Dockerfile defines required resources for building a Do
 RUN mkdir -p /var/run/sshd
 RUN echo 'root:wso2' | chpasswd
 RUN sed -i "s/PermitRootLogin without-password/#PermitRootLogin without-password/" /etc/ssh/sshd_config
-
 ```
 
 (2) Copy following files to the packages folder:
-```
-apache-stratos-python-cartridge-agent-<PCA_VERSION>.zip
-jdk-7u60-linux-x64.tar
-ppaas-configurator-<PPAAS_VERSION>.zip
-```
+
+* [apache-stratos-cartridge-agent-4.1.2.zip ](http://www.apache.org/dyn/closer.cgi/stratos)
+* [jdk-7u60-linux-x64.tar](https://www.reucon.com/cdn/java/)
 
 (3)  Run build.sh file to build the docker image:
 ```
@@ -28,7 +25,10 @@ sh build.sh clean
 ```
 docker images
 ```
-
+(5) If successfully built docker image similar to following should display
+```
+wso2/base-image        4.1.0               ac57800e96c2        2 minutes ago         677.6 MB
+```
 ## Docker environment variables
 ```
 PPAAS_VERSION - WSO2 Private PaaS Version
