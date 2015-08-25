@@ -17,8 +17,9 @@
  * org.apache.stratos.messaging-4.1.0.jar
  *  ppaas-membership-scheme-4.1.0-SNAPSHOT.jar
 
-(4) Copy and apply following [carbon patches](http://dist.wso2.org/maven2/org/wso2/carbon/WSO2-CARBON-PATCH-4.2.0/) and [security patches](http://product-dist.wso2.com/downloads/carbon/4.2.0/)  to <template_module_home>/files/repository/components/patches folder
+(4) Copy and apply following [kernel patches](http://dist.wso2.org/maven2/org/wso2/carbon/WSO2-CARBON-PATCH-4.2.0/) and [security patches](http://product-dist.wso2.com/downloads/carbon/4.2.0/)  to <template_module_home>/files/repository/components/patches folder
 
+**Kernel patches**
 * patch0006
 * patch0007
 * patch0008
@@ -26,6 +27,8 @@
 * patch0010
 * patch0011
 * patch0012
+
+**Security patches**
 * patch1095
 * patch1261
 
