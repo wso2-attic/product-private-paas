@@ -201,11 +201,12 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
             keymanager_ports = self.get_data_from_meta_data_service(app_id, self.CONST_CONFIG_PARAM_KEYMANAGER_PORTS)
 
             self.export_env_var(self.ENV_CONFIG_PARAM_KEYMANAGER_IP, keymanager_ip)
-            self.set_keymanager_ports(keymanager_ports)
+            km_port = self.set_keymanager_ports(keymanager_ports)
 
             member_ip = socket.gethostbyname(socket.gethostname())
             self.set_host_names_for_gw(app_id, member_ip)
-            start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dprofile=gateway-manager start"
+            set_system_properties = "-Dkm.ip=" + keymanager_ip + " -Dkm.port=" + km_port
+            start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dprofile=gateway-manager " + set_system_properties + " start"
 
             ##################################
             # for wka clustering - remove wka property in json
@@ -225,7 +226,7 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
 
                 wka_members = "[" + ipset + "]"
                 self.export_env_var("CONFIG_PARAM_WKA_MEMBERS", wka_members)
-            ####################################
+                ####################################
 
         elif profile == self.CONST_GATEWAY_WORKER:
             # this is for gateway worker profile
@@ -246,11 +247,13 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
             keymanager_ports = self.get_data_from_meta_data_service(app_id, self.CONST_CONFIG_PARAM_KEYMANAGER_PORTS)
 
             self.export_env_var(self.ENV_CONFIG_PARAM_KEYMANAGER_IP, keymanager_ip)
-            self.set_keymanager_ports(keymanager_ports)
+            km_port = self.set_keymanager_ports(keymanager_ports)
 
             member_ip = socket.gethostbyname(socket.gethostname())
             self.set_host_names_for_gw(app_id, member_ip)
-            start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dprofile=gateway-worker start"
+            set_system_properties = "-Dkm.ip=" + keymanager_ip + " -Dkm.port=" + km_port
+
+            start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dprofile=gateway-worker " + set_system_properties + " start"
 
             ##################################
             # for wka clustering - remove wka property in json
@@ -270,7 +273,7 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
 
                 wka_members = "[" + ipset + "]"
                 self.export_env_var("CONFIG_PARAM_WKA_MEMBERS", wka_members)
-            ####################################
+                ####################################
 
         elif profile == self.CONST_PUBLISHER:
             # this is for publisher profile
@@ -310,13 +313,12 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
             # for wka clustering - remove wka property in json
 
             if membership_scheme == "wka":
-
                 self.export_env_var("CONFIG_PARAM_LOCAL_MEMBER_HOST", member_ip)
                 st_ips = self.read_member_ip_of_service(self.CONST_STORE_SERVICE_NAME, app_id)
                 st = st_ips.split(":")
                 wka_members = "[" + st[0] + ":4000]"
                 self.export_env_var("CONFIG_PARAM_WKA_MEMBERS", wka_members)
-            ####################################
+                ####################################
 
         elif profile == self.CONST_STORE:
             # this is for store profile
@@ -354,13 +356,12 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
 
             ##########################################
             if membership_scheme == "wka":
-                
                 self.export_env_var("CONFIG_PARAM_LOCAL_MEMBER_HOST", member_ip)
                 st_ips = self.read_member_ip_of_service(self.CONST_PUBLISHER_SERVICE_NAME, app_id)
                 st = st_ips.split(":")
                 wka_members = "[" + st[0] + ":4000]"
                 self.export_env_var("CONFIG_PARAM_WKA_MEMBERS", wka_members)
-            ##########################################
+                ##########################################
 
         elif profile == self.CONST_PUBSTORE:
             # Publisher and Store runs on a same node (PubStore profile)
@@ -432,6 +433,8 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
                 keymanager_mgt_https_pp = keymanager_ports_array[1]
 
         self.export_env_var(self.ENV_CONFIG_PARAM_KEYMANAGER_HTTPS_PROXY_PORT, str(keymanager_mgt_https_pp))
+
+        return keymanager_mgt_https_pp
 
     def set_gateway_ports(self, gateway_ports):
         """
@@ -707,8 +710,11 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
         if members is not None:
             member_ips = ""
             for member in members:
-                member_ips = member_ips + member.member_default_private_ip + ":"
-                WSO2AMStartupHandler.log.info("[Member_IPS] %s from topology" % member_ips)
+                ip = member.member_default_private_ip
+                if ip is not None or ip != "":
+                    member_ips = member_ips + ip +":"
+
+            WSO2AMStartupHandler.log.info("[Member_IPS] %s from topology" % member_ips)
 
         return member_ips
 
