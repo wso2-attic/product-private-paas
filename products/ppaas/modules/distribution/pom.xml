@@ -23,7 +23,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>wso2ppaas</artifactId>
+    <artifactId>wso2-ppaas-distribution</artifactId>
     <packaging>jar</packaging>
     <name>WSO2 PPaaS - Product - Distribution</name>
     <description>WSO2 Private PaaS Distribution</description>
@@ -74,11 +74,6 @@
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-jta_1.1_spec</artifactId>
             <version>${geronimo.jta_1.1.spec.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.stratos</groupId>
-            <artifactId>org.wso2.carbon.ui</artifactId>
-            <version>${carbon.ui.stratos.version}</version>
         </dependency>
     </dependencies>
     <build>
@@ -210,6 +205,7 @@
                                     <goal>attached</goal>
                                 </goals>
                                 <configuration>
+                                    <finalName>${ppaas.distribution.name}-${project.version}</finalName>
                                     <filters>
                                         <filter>${basedir}/src/assembly/filter.properties</filter>
                                     </filters>
@@ -245,6 +241,7 @@
                                     <goal>attached</goal>
                                 </goals>
                                 <configuration>
+                                    <finalName>${ppaas.distribution.name}-${project.version}</finalName>
                                     <filters>
                                         <filter>${basedir}/src/assembly/filter.properties</filter>
                                     </filters>
@@ -261,12 +258,14 @@
                                     <goal>attached</goal>
                                 </goals>
                                 <configuration>
+                                    <finalName>${ppaas.distribution.name}-${project.version}</finalName>
                                     <filters>
                                         <filter>${basedir}/src/assembly/filter.properties</filter>
                                     </filters>
                                     <descriptors>
                                         <descriptor>${basedir}/src/assembly/bin.xml</descriptor>
                                     </descriptors>
+                                    <appendAssemblyId>false</appendAssemblyId>
                                 </configuration>
                             </execution>
                         </executions>

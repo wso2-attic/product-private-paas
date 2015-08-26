@@ -44,8 +44,8 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <copy file="../../components/org.wso2.ppaas.configurator/target/ppaas-configurator-${pom.version}.zip"
-                                      tofile="target/ppaas-configurator-${pom.version}.zip"/>
+                                <copy file="../../components/org.wso2.ppaas.configurator/target/${configurator.distribution.name}-${project.version}.zip"
+                                      tofile="target/${configurator.distribution.name}-${project.version}.zip"/>
                             </tasks>
                         </configuration>
                     </execution>
