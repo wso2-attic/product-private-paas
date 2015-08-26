@@ -452,12 +452,6 @@
                                 <featureArtifactDef>
                                     org.apache.stratos:org.apache.stratos.manager.styles.feature:${stratos.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.apache.stratos:org.apache.stratos.tenant.activity.server.feature:${stratos.version}
-                                </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.apache.stratos:org.apache.stratos.logging.mgt.feature:${stratos.version}
-                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -607,19 +601,11 @@
 
                                 <!-- Apache Stratos features -->
                                 <feature>
-                                    <id>org.apache.stratos.logging.mgt.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.apache.stratos.common.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.apache.stratos.manager.styles.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.apache.stratos.tenant.activity.server.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
                                 <feature>
@@ -1182,10 +1168,6 @@
                                 </feature>
                                 <feature>
                                     <id>org.apache.stratos.manager.styles.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.apache.stratos.tenant.activity.server.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
                                 <feature>
