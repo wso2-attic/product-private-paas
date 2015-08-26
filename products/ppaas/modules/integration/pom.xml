@@ -19,13 +19,13 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <groupId>org.wso2.ppaas</groupId>
-        <artifactId>integration-tests</artifactId>
+        <artifactId>private-paas</artifactId>
         <version>4.1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>stratos-integration</artifactId>
+    <artifactId>ppaas-integration</artifactId>
     <name>WSO2 Private PaaS - Integration Tests</name>
     <packaging>jar</packaging>
 
@@ -33,12 +33,12 @@
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-exec</artifactId>
-            <version>${commons.version}</version>
+            <version>1.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.stratos</groupId>
             <artifactId>org.apache.stratos.common</artifactId>
-            <version>${project.version}</version>
+            <version>${stratos.version}</version>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -48,7 +48,7 @@
         <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
-            <version>${org.testng.version}</version>
+            <version>6.1.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
@@ -76,7 +76,17 @@
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-all</artifactId>
-            <version>${activemq.version}</version>
+            <version>5.10.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.wso2</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.3.0.wso2v1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.httpcomponents.wso2</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.2.5.wso2v1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.stratos</groupId>
@@ -85,13 +95,25 @@
             <scope>test</scope>
         </dependency>
         <dependency>
+            <groupId>org.apache.stratos</groupId>
+            <artifactId>org.apache.stratos.mock.iaas.client</artifactId>
+            <version>${stratos.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.andes.wso2</groupId>
             <artifactId>andes-client</artifactId>
-            <version>${andes.client.version}</version>
+            <version>0.13.wso2v8</version>
         </dependency>
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/test/resources/test-conf</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
@@ -100,9 +122,12 @@
                     <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
-                        <extracted.dir>stratos-parent-${project.version}</extracted.dir>
+                        <extracted.dir>ppaas-parent-${project.version}</extracted.dir>
                         <emma.home>${basedir}/target/emma</emma.home>
                     </systemProperties>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>src/test/resources/ppaas-testing.xml</suiteXmlFile>
+                    </suiteXmlFiles>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>
             </plugin>
