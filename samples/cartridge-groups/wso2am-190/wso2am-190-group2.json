@@ -1,0 +1,10 @@
+{
+    "name": "pub-store-grp",
+    "cartridges": [
+        "wso2am-190-pub",
+        "wso2am-190-store"
+    ],
+    "dependencies": {
+        "terminationBehaviour": "terminate-none"
+    }
+}
