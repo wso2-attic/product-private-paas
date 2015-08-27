@@ -17,17 +17,17 @@
 class apimanager (
   $server_name        = undef,
   $service_code       = 'apimanager',
-  $version          = undef,
+  $version            = undef,
   $owner              = 'root',
   $group              = 'root',
+)  {
+
   $target             = "/mnt/${server_ip}",
   $carbon_home        = "/mnt/${server_ip}/${server_name}-${version}",
   $configurator_home  = "/mnt/${configurator_name}-${configurator_version}",
   $template_module_pack = "${server_name}-${version}-template-module-${ppaas_version}.zip",
   $pca_home = "/mnt/${pca_name}-${pca_version}",
   $java_home  = "/opt/${java_name}"
-)  {
-
 # creating /mnt/{ip_address} folder
   exec {
     "creating_target_for_${server_name}":
