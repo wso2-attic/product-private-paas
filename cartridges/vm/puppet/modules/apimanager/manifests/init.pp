@@ -17,6 +17,7 @@
 class apimanager (
   $server_name        = undef,
   $service_code       = 'apimanager',
+  $version          = undef,
   $owner              = 'root',
   $group              = 'root',
   $target             = "/mnt/${server_ip}",

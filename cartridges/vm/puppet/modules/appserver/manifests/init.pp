@@ -16,6 +16,7 @@
 
 class appserver (
   $server_name        = undef,
+  $version          = undef,
   $service_code       = 'appserver',
   $owner              = 'root',
   $group              = 'root',
