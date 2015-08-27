@@ -1,25 +1,21 @@
 #!/bin/bash
-# --------------------------------------------------------------
+# ----------------------------------------------------------------------------
+#  Copyright 2005-2015 WSO2, Inc. http://www.wso2.org
 #
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+#      http://www.apache.org/licenses/LICENSE-2.0
 #
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
-#
-# --------------------------------------------------------------
-#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+# ----------------------------------------------------------------------------
+
+
 iaas=$1
 host_ip="localhost"
 host_port=9443
@@ -59,11 +55,11 @@ curl -X POST -H "Content-Type: application/json" -d "@${network_partitions_path}
 echo "Adding deployment policy..."
 curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/${deployment_policy_id}.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/deploymentPolicies
 
-echo "Adding WSO2 ${product_type} - ${product_version} Manager cartridge..."
-curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/wso2${product_type}-manager.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
+echo "Adding WSO2 ${product_type} - ${product_version} Manager cartridge... ${iaas_cartridges_path}/${product}-manager.json"
+curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/${product}-manager.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
 
 echo "Adding WSO2 ${product_type} - ${product_version} cartridge Group ..."
-curl -X POST -H "Content-Type: application/json" -d "@${cartridges_groups_path}/wso2${product_type}-group.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridgeGroups
+curl -X POST -H "Content-Type: application/json" -d "@${cartridges_groups_path}/${product}-group.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridgeGroups
 
 sleep 1
 echo "Adding application policy..."
@@ -71,9 +67,9 @@ curl -X POST -H "Content-Type: application/json" -d "@${application_policies_pat
 
 sleep 1
 echo "Adding WSO2 ${product_type} - ${product_version} application..."
-curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/wso2${product_type}-application.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications
+curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/${product}-application.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications
 
 sleep 1
 echo "Deploying application..."
 # replace with wso2${product_type}-${product_version}-application
-curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/is-app/deploy/${application_policy_id}
+curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/wso2is-500-application/deploy/${application_policy_id}
