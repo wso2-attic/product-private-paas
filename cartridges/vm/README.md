@@ -6,6 +6,7 @@ This folder contains WSO2 Private PaaS virtual machine cartridges.
 
 ---
 (1) Copy and replace contents inside puppet folder to puppet master (i.e `/etc/puppet/` folder).
+
 (2) Configure mandatory modules and respective server modules as mentioned below.
 
 ### **Mandatory Modules**
@@ -48,7 +49,7 @@ $pca_name             = 'apache-stratos-python-cartridge-agent'
 ```
 chmod 755 jdk-7u72-linux-x64.gz
 ```
-(3) Update the following python agent related variables in `/etc/puppet/manifests/nodes/base.pp` file with respective values.
+(3) Update the following JAVA related variables in `/etc/puppet/manifests/nodes/base.pp` file with respective values.
 ```
 $java_distribution 	= 'jdk-7u72-linux-x64.gz'
 $java_name    		= 'jdk1.7.0_72'
@@ -60,7 +61,7 @@ $java_name    		= 'jdk1.7.0_72'
 ```
 chmod 755 ppaas-configurator-4.1.0-SNAPSHOT.zip 
 ```
-(3) Update the following python agent related variables in `/etc/puppet/manifests/nodes/base.pp` file with respective values.
+(3) Update the following configurator related variables in `/etc/puppet/manifests/nodes/base.pp` file with respective values.
 ```
 $configurator_name    = 'ppaas-configurator'
 $configurator_version = '4.1.0-SNAPSHOT'
@@ -86,7 +87,7 @@ chmod 755 wso2esb-481-startup-handler.py
 chmod 755 wso2esb-481-startup-handler.yapsy-plugin 
 ```
 
-(6) Update the following python agent related variables in `/etc/puppet/manifests/nodes/<server>.pp` file with respective values.
+(6) Update the following server related variables in `/etc/puppet/manifests/nodes/<server>.pp` file with respective values.
 ( If configuring ESB, path is :`/etc/puppet/manifests/nodes/esb.pp` )
 ```
 # ESB cartridge node
