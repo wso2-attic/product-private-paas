@@ -55,7 +55,7 @@ curl -X POST -H "Content-Type: application/json" -d "@${network_partitions_path}
 echo "Adding deployment policy..."
 curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/${deployment_policy_id}.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/deploymentPolicies
 
-echo "Adding WSO2 ${product_type} - ${product_version} Manager cartridge... ${iaas_cartridges_path}/${product}-manager.json"
+echo "Adding WSO2 ${product_type} - ${product_version} Manager cartridge..."
 curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/${product}-manager.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
 
 echo "Adding WSO2 ${product_type} - ${product_version} cartridge Group ..."
