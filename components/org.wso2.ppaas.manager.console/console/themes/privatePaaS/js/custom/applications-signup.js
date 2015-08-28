@@ -267,7 +267,7 @@ var signupBlockTemplate = {
 var signupBlockDefault = {
     "alias": "php",
     "privateRepo": false,
-    "repoUrl": "https://github.com/imesh/stratos-php-applications.git",
+    "repoUrl": "https://hostname/repository.git",
     "repoUsername": "",
     "repoPassword": ""
 };
