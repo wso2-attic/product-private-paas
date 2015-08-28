@@ -647,10 +647,13 @@
                     Service (GMS) using a TCP ping mechanism.
         -->
         <parameter name="membershipScheme">{{CONFIG_PARAM_MEMBERSHIP_SCHEME}}</parameter>
+
+        {% if CONFIG_PARAM_MEMBERSHIP_SCHEME == 'private-paas' -%}
         <!-- private-paas membership scheme specific parameters -->
-        
         <parameter name="membershipSchemeClassName">org.wso2.carbon.ppaas.PrivatePaaSBasedMembershipScheme</parameter>
         <parameter name="clusterIds">{{CONFIG_PARAM_CLUSTER_IDs}}</parameter>
+        {%  endif -%}
+
         <!--<parameter name="licenseKey">xxx</parameter>-->
         <!--<parameter name="mgtCenterURL">http://localhost:8081/mancenter/</parameter>-->
 
