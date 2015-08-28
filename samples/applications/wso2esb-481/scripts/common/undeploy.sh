@@ -16,7 +16,7 @@
 # limitations under the License
 #
 # ------------------------------------------------------------------------
-
+iaas=$1
 host_ip="localhost"
 host_port=9443
 product_type="esb"
@@ -41,13 +41,13 @@ echo "Removing deployment policies..."
 curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/deploymentPolicies/deployment-policy-1
 
 echo "Removing network partitions..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/networkPartitions/network-partition-1
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/networkPartitions/network-partition-${iaas}
 
 echo "Removing autoscale policies..."
 curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/autoscalingPolicies/autoscaling-policy-1
 
 echo "Removing cartridge Groups ..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://localhost:9443/api/cartridgeGroups/${product}-group
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:9443/api/cartridgeGroups/${product}-group
 
 echo "Removing cartridges..."
 curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${product}-manager
