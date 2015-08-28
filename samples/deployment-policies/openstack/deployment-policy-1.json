@@ -2,7 +2,7 @@
     "id": "deployment-policy-1",
     "networkPartitions": [
         {
-            "id": "network-partition-ec2",
+            "id": "network-partition-openstack",
             "partitionAlgo": "round-robin",
             "partitions": [
                 {
