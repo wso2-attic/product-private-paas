@@ -39,16 +39,16 @@ samples
   "value":"`<PPAAS_REGISTRY_DB_PASSWORD>`"
 },
 {
-  "name":"payload_parameter.CONFIG_PARAM_USER_DB_URL",
-  "value":"jdbc:mysql://`<MYSQL_HOST>:<MYSQL_PORT>/<PPAAS_USER_DB>`?autoReconnect=true"
+  "name":"payload_parameter.CONFIG_PARAM_USER_MGT_DB_URL",
+  "value":"jdbc:mysql://`<MYSQL_HOST>:<MYSQL_PORT>/<PPAAS_USER_MGT_DB>`?autoReconnect=true"
 },
 {
-  "name":"payload_parameter.CONFIG_PARAM_USER_DB_USER_NAME",
-  "value":"`<PPAAS_USER_DB_USERNAME>`"
+  "name":"payload_parameter.CONFIG_PARAM_USER_MGT_DB_USER_NAME",
+  "value":"`<PPAAS_USER_MGT_DB_USER_NAME>`"
 },
 {
-  "name":"payload_parameter.CONFIG_PARAM_USER_DB_PASSWORD",
-  "value":"`<PPAAS_USER_DB_PASSWORD>`"
+  "name":"payload_parameter.CONFIG_PARAM_USER_MGT_DB_PASSWORD",
+  "value":"`<PPAAS_USER_MGT_DB_PASSWORD>`"
 },
 {
   "name":"payload_parameter.CONFIG_PARAM_CONFIG_DB_URL",
