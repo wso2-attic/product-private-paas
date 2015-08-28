@@ -1,6 +1,6 @@
 {
-    "id": "network-partition-1",
-    "provider": "mock",
+    "id": "network-partition-kubernetes",
+    "provider": "kubernetes",
     "partitions": [
         {
             "id": "partition-1",

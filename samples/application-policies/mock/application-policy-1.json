@@ -1,8 +1,8 @@
 {
-    "id": "application-policy-ec2",
+    "id": "application-policy-1",
     "algorithm": "one-after-another",
     "networkPartitions": [
-        "network-partition-ec2"
+        "network-partition-mock"
     ],
     "properties": [
     ]

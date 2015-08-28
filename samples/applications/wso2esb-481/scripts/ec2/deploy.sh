@@ -19,13 +19,11 @@
 
 host_ip="localhost"
 host_port=9443
-iaas="kubernetes"
+iaas="ec2"
 
 prgdir=`dirname "$0"`
 script_path=`cd "$prgdir"; pwd`
 common_folder=`cd "${script_path}/../common"; pwd`
 
-bash ${common_folder}/undeploy.sh $iaas
+bash ${common_folder}/deploy.sh ${iaas}
 
-echo "Removing kubernetes cluster..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/kubernetesClusters/kubernetes-cluster-1

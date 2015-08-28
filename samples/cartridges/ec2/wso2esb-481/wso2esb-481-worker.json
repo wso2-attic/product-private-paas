@@ -1,24 +1,24 @@
 {
-    "type": "wso2as-521",
+    "type": "wso2esb-481-worker",
     "category": "framework",
     "provider": "wso2",
-    "host": "as.wso2.org",
-    "displayName": "WSO2 AS 5.2.1",
-    "description": "WSO2 AS 5.2.1 Cartridge",
-    "version": "5.2.1",
+    "host": "esb.wso2.org",
+    "displayName": "WSO2 ESB 4.8.1 Worker",
+    "description": "WSO2 ESB 4.8.1 Worker Cartridge",
+    "version": "4.8.1",
     "multiTenant": false,
     "loadBalancingIPType": "public",
     "portMapping": [
         {
-            "name": "mgt-http",
+            "name": "pt-http",
             "protocol": "http",
-            "port": 9763,
+            "port": 8280,
             "proxyPort": 0
         },
         {
-            "name": "mgt-https",
+            "name": "pt-https",
             "protocol": "https",
-            "port": 9443,
+            "port": 8243,
             "proxyPort": 0
         }
     ],
@@ -36,20 +36,12 @@
     ],
     "property": [
         {
-            "name": "payload_parameter.CONFIG_PARAM_WORKER_HOST_NAME",
-            "value": "as.wso2.com"
-        },
-        {
             "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
-            "value": "false"
+            "value": "true"
         },
         {
-            "name": "payload_parameter.CONFIG_PARAM_MEMBERSHIP_SCHEME",
-            "value": "stratos"
-        },
-        {
-            "name": "payload_parameter.APPLICATION_PATH",
-            "value": "/var/www"
+            "name": "payload_parameter.LB_IP",
+            "value": "<LOAD_BALANCER_IP>"
         }
     ]
 }
