@@ -1,0 +1,51 @@
+{
+    "type": "wso2as-521-manager",
+    "category": "framework",
+    "provider": "wso2",
+    "host": "as.wso2.org",
+    "displayName": "WSO2 AS 5.2.1 Manager",
+    "description": "WSO2 AS 5.2.1 Manager Cartridge",
+    "version": "5.2.1",
+    "multiTenant": false,
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "mgt-http",
+            "protocol": "http",
+            "port": 9763,
+            "proxyPort": 0
+        },
+        {
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
+            "proxyPort": 0
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "ec2",
+            "imageId": "us-west-2/ami-43d2c373",
+            "property": [
+                {
+                    "name": "instanceType",
+                    "value": "t2.medium"
+                },
+                {
+                    "name": "securityGroupIds",
+                    "value": "sg-57a61333"
+                }
+            ]
+        }
+    ],
+    "property": [
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+            "value": "true"
+        },
+        {
+            "name": "payload_parameter.LB_IP",
+            "value": "<LOAD_BALANCER_IP>"
+        }
+    ]
+}

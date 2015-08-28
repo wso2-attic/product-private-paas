@@ -1,13 +1,17 @@
 {
     "id": "network-partition-1",
-    "provider": "openstack",
+    "provider": "ec2",
     "partitions": [
         {
             "id": "partition-1",
             "property": [
                 {
                     "name": "region",
-                    "value": "<REGION>"
+                    "value": "us-west-1"
+                },
+                {
+                    "name": "zone",
+                    "value": "us-west-1a"
                 }
             ]
         },
@@ -16,7 +20,11 @@
             "property": [
                 {
                     "name": "region",
-                    "value": "<REGION>"
+                    "value": "us-west-1"
+                },
+                {
+                    "name": "zone",
+                    "value": "us-west-1b"
                 }
             ]
         }
@@ -24,19 +32,19 @@
     "properties": [
         {
             "name": "payload_parameter.PUPPET_IP",
-            "value": "<PUPPET_MASTER_IP>"
+            "value": "52.26.38.59"
         },
         {
             "name": "payload_parameter.MB_IP",
-            "value": "<MESSAGE_BROKER_IP>"
+            "value": "172.30.0.173"
         },
         {
             "name": "payload_parameter.MB_PORT",
-            "value": "<MESSAGE_BROKER_PORT>"
+            "value": "61616"
         },
         {
             "name": "payload_parameter.PUPPET_HOSTNAME",
-            "value": "<PUPPET_MASTER_HOSTNAME>"
+            "value": "puppet.ppaas.puppetmaster.org"
         }
     ]
 }

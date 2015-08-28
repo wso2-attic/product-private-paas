@@ -3,11 +3,15 @@
     "networkPartitions": [
         {
             "id": "network-partition-1",
-            "partitionAlgo": "one-after-another",
+            "partitionAlgo": "round-robin",
             "partitions": [
                 {
                     "id": "partition-1",
-                    "partitionMax": 5
+                    "partitionMax": 2
+                },
+                {
+                    "id": "partition-2",
+                    "partitionMax": 2
                 }
             ]
         }

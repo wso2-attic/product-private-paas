@@ -10,6 +10,15 @@
                     "value": "kubernetes-cluster-1"
                 }
             ]
+        },
+        {
+            "id": "partition-2",
+            "property": [
+                {
+                    "name": "cluster",
+                    "value": "kubernetes-cluster-1"
+                }
+            ]
         }
     ]
 }
