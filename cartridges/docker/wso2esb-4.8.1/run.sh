@@ -21,7 +21,7 @@
 memberId=1
 startWkaMember() {
 	name="wso2esb-${memberId}-wka"
-	container_id=`docker run -e CONFIG_PARAM_CLUSTERING=true -d -P --name ${name} wso2/esb:4.8.1`
+	container_id=`docker run -e CONFIG_PARAM_CLUSTERING=true -e CONFIG_PARAM_MEMBERSHIP_SCHEME=wka -d -P --name ${name} wso2/esb:4.8.1`
 	memberId=$((memberId + 1))
 	wka_member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
 	echo "ESB wka member started: [name] ${name} [ip] ${wka_member_ip} [container-id] ${container_id}"
@@ -30,7 +30,7 @@ startWkaMember() {
 
 startMember() {
 	name="wso2esb-${memberId}"
-	container_id=`docker run -e CONFIG_PARAM_CLUSTERING=true -e CONFIG_PARAM_WKA_MEMBERS="[${wka_member_ip}:4100]" -d -P --name ${name} wso2/esb:4.8.1`
+	container_id=`docker run -e CONFIG_PARAM_CLUSTERING=true -e CONFIG_PARAM_MEMBERSHIP_SCHEME=wka -e CONFIG_PARAM_WKA_MEMBERS="[${wka_member_ip}:4100]" -d -P --name ${name} wso2/esb:4.8.1`
 	memberId=$((memberId + 1))
 	member_ip=`docker inspect --format '{{ .NetworkSettings.IPAddress }}' ${container_id}`
 	echo "ESB member started: [name] ${name} [ip] ${member_ip} [container-id] ${container_id}"
