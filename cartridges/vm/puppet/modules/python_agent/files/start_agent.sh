@@ -29,13 +29,11 @@ if [ ! -z "${MB_PORT}" ]; then
 fi
 
 # parameters that can be empty
-# default values have to be set
 
 if [ ! -z "${LISTEN_ADDR}" ]; then
 	sed -i "s/^.*listen.address.*=.*$/listen.address = ${LISTEN_ADDR}/g" ${PCA_HOME}/agent.conf
 fi
 
-# defaults to the message broker IP if not set
 if [ ! -z "${CEP_IP}" ]; then
 	sed -i "s/^.*thrift.receiver.ip.*=.*$/thrift.receiver.ip  = ${CEP_IP}/g" ${PCA_HOME}/agent.conf
 fi

@@ -14,7 +14,7 @@ WSO2 IS 5.0.0 Dockerfile defines required resources for building a Docker image 
 
 (3) Run build.sh file to build the docker image:
 ```
-sh build.sh
+sh build.sh clean
 ```
 
 (4) List docker images:
