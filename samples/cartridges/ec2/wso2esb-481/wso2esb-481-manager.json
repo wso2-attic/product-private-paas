@@ -1,12 +1,12 @@
 {
-    "type": "wso2esb-481",
+    "type": "wso2esb-481-manager",
     "category": "framework",
     "provider": "wso2",
     "host": "esb.wso2.org",
-    "displayName": "WSO2 ESB 4.8.1",
-    "description": "WSO2 ESB 4.8.1 Cartridge",
+    "displayName": "WSO2 ESB 4.8.1 Manager",
+    "description": "WSO2 ESB 4.8.1 Manager Cartridge",
     "version": "4.8.1",
-    "multiTenant": true,
+    "multiTenant": false,
     "loadBalancingIPType": "public",
     "portMapping": [
         {
@@ -36,41 +36,24 @@
     ],
     "iaasProvider": [
         {
-            "type": "openstack",
-            "imageId": "<REGION>/<BASE_IMAGE_ID>",
+            "type": "ec2",
+            "imageId": "us-west-2/ami-e57362d5",
             "property": [
                 {
                     "name": "instanceType",
-                    "value": "<REGION>/<FLAVOUR_ID>"
-                },
-                {
-                    "name": "keyPair",
-                    "value": "<KEY_PAIR_NAME>"
-                },
-                {
-                    "name": "securityGroups",
-                    "value": "default"
-                }
-            ],
-            "networkInterfaces": [
-                {
-                    "networkUuid": "<NETWORK_UUID>"
+                    "value": "t2.medium"
                 }
             ]
         }
     ],
     "property": [
         {
-            "name": "payload_parameter.CONFIG_PARAM_WORKER_HOST_NAME",
-            "value": "esb.wso2.com"
-        },
-        {
             "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
-            "value": "false"
+            "value": "true"
         },
         {
-            "name": "payload_parameter.APPLICATION_PATH",
-            "value": "/var/www"
+            "name": "payload_parameter.LB_IP",
+            "value": "<LOAD_BALANCER_IP>"
         }
     ]
 }

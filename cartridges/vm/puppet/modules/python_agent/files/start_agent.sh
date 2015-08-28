@@ -15,9 +15,11 @@ done
 
 echo "PCA_HOME=${PCA_HOME}" >> /etc/environment
 
-# set CARBON_HOME as APPLICATION_PATH
-export APPLICATION_PATH="${CARBON_HOME}"
-echo "APPLICATION_PATH=${APPLICATION_PATH}" >> /etc/environment
+# set CARBON_HOME as APPLICATION_PATH for carbon products
+if [ "${CARBON_HOME}" ]; then
+	export APPLICATION_PATH="${CARBON_HOME}"
+	echo "APPLICATION_PATH=${APPLICATION_PATH}" >> /etc/environment
+fi
 
 # mandatory parameters
 if [ ! -z "${MB_IP}" ]; then

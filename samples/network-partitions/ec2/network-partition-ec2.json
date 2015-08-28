@@ -1,5 +1,5 @@
 {
-    "id": "network-partition-1",
+    "id": "network-partition-ec2",
     "provider": "ec2",
     "partitions": [
         {
@@ -40,7 +40,7 @@
         },
         {
             "name": "payload_parameter.MB_PORT",
-            "value": "61616"
+            "value": "1883"
         },
         {
             "name": "payload_parameter.PUPPET_HOSTNAME",

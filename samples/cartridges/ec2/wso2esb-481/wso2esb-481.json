@@ -36,25 +36,12 @@
     ],
     "iaasProvider": [
         {
-            "type": "openstack",
-            "imageId": "<REGION>/<BASE_IMAGE_ID>",
+            "type": "ec2",
+            "imageId": "us-west-2/ami-e57362d5",
             "property": [
                 {
                     "name": "instanceType",
-                    "value": "<REGION>/<FLAVOUR_ID>"
-                },
-                {
-                    "name": "keyPair",
-                    "value": "<KEY_PAIR_NAME>"
-                },
-                {
-                    "name": "securityGroups",
-                    "value": "default"
-                }
-            ],
-            "networkInterfaces": [
-                {
-                    "networkUuid": "<NETWORK_UUID>"
+                    "value": "t2.medium"
                 }
             ]
         }
@@ -67,10 +54,6 @@
         {
             "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
             "value": "false"
-        },
-        {
-            "name": "payload_parameter.APPLICATION_PATH",
-            "value": "/var/www"
         }
     ]
 }
