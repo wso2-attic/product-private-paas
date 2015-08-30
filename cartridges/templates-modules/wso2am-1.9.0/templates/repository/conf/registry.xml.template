@@ -203,7 +203,7 @@
     </dbConfig>
     <remoteInstance url="https://localhost">
         <id>gov</id>
-        <cacheId>root@{{CONFIG_PARAM_REG_DB_URL}}</cacheId>
+        <cacheId>{{CONFIG_PARAM_DB_USER_NAME}}@{{CONFIG_PARAM_REG_DB_URL}}</cacheId>
         <dbConfig>govregistry</dbConfig>
         <readOnly>false</readOnly>
         <enableCache>true</enableCache>
