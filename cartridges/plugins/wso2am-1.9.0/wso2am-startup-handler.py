@@ -235,6 +235,7 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
 
             member_ip = socket.gethostbyname(socket.gethostname())
             self.set_host_names_for_gw(app_id, member_ip)
+            self.export_env_var("CONFIG_PARAM_LOCAL_MEMBER_HOST", member_ip)
             set_system_properties = "-Dkm.ip=" + keymanager_ip + " -Dkm.port=" + km_port
             start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dprofile=gateway-manager " + set_system_properties + " start"
 
@@ -272,6 +273,7 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
 
             member_ip = socket.gethostbyname(socket.gethostname())
             self.set_host_names_for_gw(app_id, member_ip)
+            self.export_env_var("CONFIG_PARAM_LOCAL_MEMBER_HOST", member_ip)
             set_system_properties = "-Dkm.ip=" + keymanager_ip + " -Dkm.port=" + km_port
 
             start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dprofile=gateway-worker " + set_system_properties + " start"
@@ -332,6 +334,7 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
 
             member_ip = socket.gethostbyname(socket.gethostname())
             self.set_host_name(app_id, service_name, member_ip)
+            self.export_env_var("CONFIG_PARAM_LOCAL_MEMBER_HOST", member_ip)
             start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dprofile=api-publisher start"
 
 
@@ -390,6 +393,7 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
 
             member_ip = socket.gethostbyname(socket.gethostname())
             self.set_host_name(app_id, service_name, member_ip)
+            self.export_env_var("CONFIG_PARAM_LOCAL_MEMBER_HOST", member_ip)
             start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dprofile=api-store start"
 
 
@@ -436,6 +440,7 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
 
             member_ip = socket.gethostbyname(socket.gethostname())
             self.set_host_name(app_id, service_name, member_ip)
+            self.export_env_var("CONFIG_PARAM_LOCAL_MEMBER_HOST", member_ip)
             start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start"
 
         else:
