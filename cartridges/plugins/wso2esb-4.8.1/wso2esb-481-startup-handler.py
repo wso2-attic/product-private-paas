@@ -20,6 +20,7 @@ from plugins.contracts import ICartridgeAgentPlugin
 from modules.util.log import LogFactory
 from entity import *
 import subprocess
+import socket
 import os
 
 
@@ -60,6 +61,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     ENV_CONFIG_PARAM_PT_HTTPS_PROXY_PORT = 'CONFIG_PARAM_PT_HTTPS_PROXY_PORT'
     ENV_CONFIG_PARAM_HOST_NAME = 'CONFIG_PARAM_HOST_NAME'
     ENV_CONFIG_PARAM_MGT_HOST_NAME = 'CONFIG_PARAM_MGT_HOST_NAME'
+    ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST = 'CONFIG_PARAM_LOCAL_MEMBER_HOST'
 
     # clustering related environment variables read from payload_parameters
     ENV_CONFIG_PARAM_CLUSTERING = 'CONFIG_PARAM_CLUSTERING'
@@ -127,6 +129,10 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
                 # export mb_ip as Env.variable - used in jndi.properties
                 if mb_ip is not None:
                     self.export_env_var(self.ENV_CONFIG_PARAM_MB_HOST, mb_ip)
+
+        # set local ip as CONFIG_PARAM_LOCAL_MEMBER_HOST
+        local_ip = socket.gethostbyname(socket.gethostname())
+        self.export_env_var(self.ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST, local_ip)
 
         # start configurator
         WSO2StartupHandler.log.info("Configuring WSO2 %s..." % self.CONST_PRODUCT)
