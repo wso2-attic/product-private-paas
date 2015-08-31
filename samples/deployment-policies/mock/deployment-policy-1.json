@@ -1,8 +1,8 @@
 {
-    "id": "deployment-policy-mock",
+    "id": "deployment-policy-1",
     "networkPartitions": [
         {
-            "id": "network-partition-ec2",
+            "id": "network-partition-mock",
             "partitionAlgo": "round-robin",
             "partitions": [
                 {
