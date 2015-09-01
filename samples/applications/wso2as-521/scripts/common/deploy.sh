@@ -31,7 +31,7 @@ iaas_cartridges_path=`cd "${script_path}/../../../../cartridges/${iaas}/${produc
 cartridges_groups_path=`cd "${script_path}/../../../../cartridge-groups/${product}"; pwd`
 autoscaling_policies_path=`cd "${script_path}/../../../../autoscaling-policies"; pwd`
 network_partitions_path=`cd "${script_path}/../../../../network-partitions/${iaas}"; pwd`
-deployment_policies_path=`cd "${script_path}/../../../../deployment-policies/${iass}"; pwd`
+deployment_policies_path=`cd "${script_path}/../../../../deployment-policies/${iaas}"; pwd`
 application_policies_path=`cd "${script_path}/../../../../application-policies/${iaas}"; pwd`
 
 network_partition_id="network-partition-${iaas}"
