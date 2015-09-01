@@ -17,7 +17,7 @@
 
 
 iaas=$1
-host_ip="52.25.247.216"
+host_ip="localhost"
 host_port=9443
 
 prgdir=`dirname "$0"`
