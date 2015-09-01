@@ -180,9 +180,9 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
             gateway_worker_ports = self.get_data_from_meta_data_service(app_id,
                                                                         self.CONST_CONFIG_PARAM_GATEWAY_WORKER_PORTS)
 
-            is_vm = self.check_vm_or_kubernetes(use_kubernetes, service_name, app_id)
+            environment_type = self.find_environment_type(use_kubernetes, service_name, app_id)
 
-            if is_vm:
+            if environment_type == 'Vm':
                 gateway_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_MANAGER_SERVICE_NAME)
                 gateway_worker_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_WORKER_SERVICE_NAME)
                 gateway_host = gateway_host_name
@@ -221,9 +221,9 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
             keymanager_ip = self.get_data_from_meta_data_service(app_id, self.ENV_CONFIG_PARAM_KEYMANAGER_IP)
             keymanager_ports = self.get_data_from_meta_data_service(app_id, self.CONST_CONFIG_PARAM_KEYMANAGER_PORTS)
 
-            is_vm = self.check_vm_or_kubernetes(use_kubernetes, service_name, app_id)
+            environment_type = self.find_environment_type(use_kubernetes, service_name, app_id)
 
-            if is_vm:
+            if environment_type == 'Vm':
                 keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME)
                 keymanager_host = keymanager_host_name
                 self.update_hosts_file(keymanager_ip, keymanager_host_name)
@@ -259,9 +259,9 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
             keymanager_ip = self.get_data_from_meta_data_service(app_id, self.ENV_CONFIG_PARAM_KEYMANAGER_IP)
             keymanager_ports = self.get_data_from_meta_data_service(app_id, self.CONST_CONFIG_PARAM_KEYMANAGER_PORTS)
 
-            is_vm = self.check_vm_or_kubernetes(use_kubernetes, service_name, app_id)
+            environment_type = self.find_environment_type(use_kubernetes,service_name,app_id)
 
-            if is_vm:
+            if environment_type == 'Vm':
                 keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME)
                 keymanager_host = keymanager_host_name
                 self.update_hosts_file(keymanager_ip, keymanager_host_name)
@@ -302,9 +302,9 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
             gateway_worker_ports = self.get_data_from_meta_data_service(app_id,
                                                                         self.CONST_CONFIG_PARAM_GATEWAY_WORKER_PORTS)
 
-            is_vm = self.check_vm_or_kubernetes(use_kubernetes, service_name, app_id)
+            environment_type = self.find_environment_type(use_kubernetes,service_name,app_id)
 
-            if is_vm:
+            if environment_type == 'Vm':
                 keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME)
                 gateway_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_MANAGER_SERVICE_NAME)
                 gateway_worker_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_WORKER_SERVICE_NAME)
@@ -361,9 +361,9 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
             gateway_worker_ports = self.get_data_from_meta_data_service(app_id,
                                                                         self.CONST_CONFIG_PARAM_GATEWAY_WORKER_PORTS)
 
-            is_vm = self.check_vm_or_kubernetes(use_kubernetes, service_name, app_id)
+            environment_type = self.find_environment_type(use_kubernetes,service_name,app_id)
 
-            if is_vm:
+            if environment_type == 'Vm':
                 keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME)
                 gateway_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_MANAGER_SERVICE_NAME)
                 gateway_worker_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_WORKER_SERVICE_NAME)
@@ -413,9 +413,9 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
             gateway_worker_ports = self.get_data_from_meta_data_service(app_id,
                                                                         self.CONST_CONFIG_PARAM_GATEWAY_WORKER_PORTS)
 
-            is_vm = self.check_vm_or_kubernetes(use_kubernetes, service_name, app_id)
+            environment_type = self.find_environment_type(use_kubernetes,service_name,app_id)
 
-            if is_vm:
+            if environment_type == 'Vm':
                 keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME)
                 gateway_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_MANAGER_SERVICE_NAME)
                 gateway_worker_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_WORKER_SERVICE_NAME)
@@ -758,20 +758,20 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
         return clusters
 
 
-    def check_vm_or_kubernetes(self, use_kub, service_name, app_id):
+    def find_environment_type(self, use_kub, service_name, app_id):
         """
         Check for vm or kubernetes
-        :return: True for vm and False for kubernetes
+        :return: Vm or Kubernetes
         """
 
         if use_kub == 'false':
-            return True
+            return 'Vm'
         else:
             isKubernetes = self.check_for_kubernetes_cluster(service_name, app_id)
 
             if isKubernetes:
-                return False
+                return 'Kubernetes'
             else:
-                return True
+                return 'Vm'
 
 
