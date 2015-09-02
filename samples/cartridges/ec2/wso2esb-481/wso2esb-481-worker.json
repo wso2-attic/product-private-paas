@@ -13,19 +13,19 @@
             "name": "pt-http",
             "protocol": "http",
             "port": 8280,
-            "proxyPort": 0
+            "proxyPort": 80
         },
         {
             "name": "pt-https",
             "protocol": "https",
             "port": 8243,
-            "proxyPort": 0
+            "proxyPort": 443
         }
     ],
     "iaasProvider": [
         {
             "type": "ec2",
-            "imageId": "us-west-2/ami-e57362d5",
+            "imageId": "us-west-2/ami-43d2c373",
             "property": [
                 {
                     "name": "instanceType",

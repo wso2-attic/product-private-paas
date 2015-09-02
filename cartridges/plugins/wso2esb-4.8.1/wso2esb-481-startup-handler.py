@@ -20,6 +20,7 @@ from plugins.contracts import ICartridgeAgentPlugin
 from modules.util.log import LogFactory
 from entity import *
 import subprocess
+import socket
 import os
 
 
@@ -60,6 +61,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     ENV_CONFIG_PARAM_PT_HTTPS_PROXY_PORT = 'CONFIG_PARAM_PT_HTTPS_PROXY_PORT'
     ENV_CONFIG_PARAM_HOST_NAME = 'CONFIG_PARAM_HOST_NAME'
     ENV_CONFIG_PARAM_MGT_HOST_NAME = 'CONFIG_PARAM_MGT_HOST_NAME'
+    ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST = 'CONFIG_PARAM_LOCAL_MEMBER_HOST'
 
     # clustering related environment variables read from payload_parameters
     ENV_CONFIG_PARAM_CLUSTERING = 'CONFIG_PARAM_CLUSTERING'
@@ -67,7 +69,6 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
 
 
     def run_plugin(self, values):
-
         # read from 'values'
         port_mappings_str = values[self.CONST_PORT_MAPPINGS].replace("'", "")
         app_id = values[self.CONST_APPLICATION_ID]
@@ -108,8 +109,8 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
             sub_domain = self.CONST_MGT
         elif service_type.endswith(self.CONST_WORKER):
             sub_domain = self.CONST_WORKER
-        if sub_domain is not None:
-            self.export_env_var(self.ENV_CONFIG_PARAM_SUB_DOMAIN, sub_domain)
+        # if sub_domain is not None:
+        self.export_env_var(self.ENV_CONFIG_PARAM_SUB_DOMAIN, sub_domain)
 
         # if CONFIG_PARAM_MEMBERSHIP_SCHEME is not set, set the private-paas membership scheme as default one
         if clustering == 'true' and membership_scheme is None:
@@ -119,14 +120,17 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         # check if clustering is enabled
         if clustering == 'true':
             # set hostnames
-            self.set_host_names(topology, app_id)
+            self.export_host_names(topology, app_id)
             # check if membership scheme is set to 'private-paas'
             if membership_scheme == self.CONST_PPAAS_MEMBERSHIP_SCHEME:
                 # export Cluster_Ids as Env. variables - used in axis2.xml
-                self.set_cluster_ids(topology, app_id, service_type, my_cluster_id)
+                self.export_cluster_ids(topology, app_id, service_type, my_cluster_id)
                 # export mb_ip as Env.variable - used in jndi.properties
-                if mb_ip is not None:
-                    self.export_env_var(self.ENV_CONFIG_PARAM_MB_HOST, mb_ip)
+                self.export_env_var(self.ENV_CONFIG_PARAM_MB_HOST, mb_ip)
+
+        # set local ip as CONFIG_PARAM_LOCAL_MEMBER_HOST
+        local_ip = socket.gethostbyname(socket.gethostname())
+        self.export_env_var(self.ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST, local_ip)
 
         # start configurator
         WSO2StartupHandler.log.info("Configuring WSO2 %s..." % self.CONST_PRODUCT)
@@ -147,13 +151,15 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         output, errors = p.communicate()
         WSO2StartupHandler.log.info("WSO2 %s started successfully" % self.CONST_PRODUCT)
 
-    def set_host_names(self, topology, app_id):
+    def export_host_names(self, topology, app_id):
         """
         Set hostnames of services read from topology for worker manager instances
         exports MgtHostName and HostName
 
         :return: void
         """
+        mgt_host_name = None
+        host_name = None
         for service_name in self.SERVICES:
             if service_name.endswith(self.CONST_MANAGER):
                 mgr_cluster = self.get_cluster_of_service(topology, service_name, app_id)
@@ -167,7 +173,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         self.export_env_var(self.ENV_CONFIG_PARAM_MGT_HOST_NAME, mgt_host_name)
         self.export_env_var(self.ENV_CONFIG_PARAM_HOST_NAME, host_name)
 
-    def set_cluster_ids(self, topology, app_id, service_type, my_cluster_id):
+    def export_cluster_ids(self, topology, app_id, service_type, my_cluster_id):
         """
         Set clusterIds of services read from topology for worker manager instances
         else use own clusterId
@@ -175,6 +181,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         :return: void
         """
         cluster_ids = []
+        cluster_id_of_service = None
         if service_type.endswith(self.CONST_MANAGER) or service_type.endswith(self.CONST_WORKER):
             for service_name in self.SERVICES:
                 cluster_of_service = self.get_cluster_of_service(topology, service_name, app_id)
@@ -189,7 +196,8 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
             cluster_ids_string = ",".join(cluster_ids)
             self.export_env_var(self.ENV_CONFIG_PARAM_CLUSTER_IDs, cluster_ids_string)
 
-    def get_cluster_of_service(self, topology, service_name, app_id):
+    @staticmethod
+    def get_cluster_of_service(topology, service_name, app_id):
         cluster_obj = None
         clusters = None
         if topology is not None:
@@ -211,7 +219,8 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
 
         return cluster_obj
 
-    def read_proxy_port(self, port_mappings_str, port_mapping_name, port_mapping_protocol):
+    @staticmethod
+    def read_proxy_port(port_mappings_str, port_mapping_name, port_mapping_protocol):
         """
         returns proxy port of the requested port mapping
 
@@ -223,7 +232,6 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         #                       NAME:pt-http|PROTOCOL:http|PORT:30003|PROXY_PORT:7280|TYPE:ClientIP;
         #                       NAME:pt-https|PROTOCOL:https|PORT:30004|PROXY_PORT:7243|TYPE:NodePort
 
-        service_proxy_port = None
         if port_mappings_str is not None:
             port_mappings_array = port_mappings_str.split(";")
             if port_mappings_array:
@@ -239,11 +247,10 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
                         proxy_port = name_value_array[2].split(":")[1]
 
                     if name == port_mapping_name and protocol == port_mapping_protocol:
-                        service_proxy_port = proxy_port
+                        return proxy_port
 
-        return service_proxy_port
-
-    def export_env_var(self, variable, value):
+    @staticmethod
+    def export_env_var(variable, value):
         """
         exports key value pairs as env. variables
 

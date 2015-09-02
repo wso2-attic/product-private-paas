@@ -2,7 +2,7 @@
     "type": "wso2esb-481-manager",
     "category": "framework",
     "provider": "wso2",
-    "host": "esb.wso2.org",
+    "host": "mgt.esb.wso2.org",
     "displayName": "WSO2 ESB 4.8.1 Manager",
     "description": "WSO2 ESB 4.8.1 Manager Cartridge",
     "version": "4.8.1",

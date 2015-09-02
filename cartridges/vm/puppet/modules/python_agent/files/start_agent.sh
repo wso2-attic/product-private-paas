@@ -16,7 +16,7 @@ done
 echo "PCA_HOME=${PCA_HOME}" >> /etc/environment
 
 # set CARBON_HOME as APPLICATION_PATH for carbon products
-if [ "${CARBON_HOME}" ]; then
+if [ ! -z "${CARBON_HOME}" ]; then
 	export APPLICATION_PATH="${CARBON_HOME}"
 	echo "APPLICATION_PATH=${APPLICATION_PATH}" >> /etc/environment
 fi
@@ -122,7 +122,7 @@ if [ ! -z "${LOG_FILE_PATHS}" ]; then
 fi
 
 if [ ! -z "${APPLICATION_PATH}" ]; then
-	sed -i "s/^.*APPLICATION_PATH.*=.*$/APPLICATION_PATH = ${APPLICATION_PATH}/g" ${PCA_HOME}/agent.conf
+	sed -i "s#^.*APPLICATION_PATH.*=.*#APPLICATION_PATH = ${APPLICATION_PATH}#g" ${PCA_HOME}/agent.conf
 fi
 
 if [ ! -z "${METADATA_SERVICE_URL}" ]; then
