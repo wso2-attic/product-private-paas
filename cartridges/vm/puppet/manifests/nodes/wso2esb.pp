@@ -14,21 +14,19 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 
-# IS cartridge node
-node /is/ inherits base {
+# ESB cartridge node
+node /[0-9]{1,12}.*wso2esb/ inherits base {
 
   class { 'java': }
   class { 'python_agent':
-    docroot => "/var/www/"
+    docroot => "/var/www"
   }
   class { 'configurator': }
-  class { 'is':
-    server_name      => 'wso2is',
-    version          => '5.0.0'
-
+  class { 'wso2esb':
+    version      => '4.8.1'
   }
 
-  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['is']
+  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['wso2esb']
 }
 
 

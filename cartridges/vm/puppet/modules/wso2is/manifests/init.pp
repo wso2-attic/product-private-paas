@@ -14,18 +14,18 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 
-class is (
-  $server_name        = undef,
+class wso2is (
   $version            = undef,
-  $service_code       = 'is',
   $owner              = 'root',
   $group              = 'root',
 )  {
 
+  $service_code       = "wso2is"
+  $server_name        = "${service_code}-${version}"
   $target             = "/mnt/${server_ip}"
-  $carbon_home        = "/mnt/${server_ip}/${server_name}-${version}"
+  $carbon_home        = "/mnt/${server_ip}/${server_name}"
   $configurator_home  = "/mnt/${configurator_name}-${configurator_version}"
-  $template_module_pack = "${server_name}-${version}-template-module-${ppaas_version}.zip"
+  $template_module_pack = "${server_name}-template-module-${ppaas_version}.zip"
   $pca_home = "/mnt/${pca_name}-${pca_version}"
   $java_home  = "/opt/${java_name}"
 
@@ -43,31 +43,31 @@ class is (
 
 # copy {server}.zip file to /mnt/packs folder
   file {
-    "$local_package_dir/${server_name}-${version}.zip":
+    "$local_package_dir/${server_name}.zip":
       ensure    => present,
-      source    => ["puppet:///modules/${service_code}/packs/${server_name}-${version}.zip"],
+      source    => ["puppet:///modules/${service_code}/packs/${server_name}.zip"],
       require   => Exec["creating_local_package_repo_for_${server_name}", "creating_target_for_${server_name}"];
   }
 
 # unzipping {server}.zip file to /mnt/{ip_address} folder 
   exec {
-    "extracting_${server_name}-${version}.zip_for_${server_name}":
+    "extracting_${server_name}.zip_for_${server_name}":
       path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       cwd       => $target,
-      command   => "unzip ${local_package_dir}/${server_name}-${version}.zip",
+      command   => "unzip ${local_package_dir}/${server_name}.zip",
       logoutput => 'on_failure',
-      creates   => "${target}/${server_name}-${version}/repository",
+      creates   => "${target}/${server_name}/repository",
       timeout   => 0,
-      require   => File["$local_package_dir/${server_name}-${version}.zip"];
+      require   => File["$local_package_dir/${server_name}.zip"];
 
     "setting_permission_for_${server_name}":
       path      => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       cwd       => $target,
-      command   => "chown -R ${owner}:${owner} ${target}/${server_name}-${version} ;
-                    chmod -R 755 ${target}/${server_name}-${version}",
+      command   => "chown -R ${owner}:${owner} ${target}/${server_name} ;
+                    chmod -R 755 ${target}/${server_name}",
       logoutput => 'on_failure',
       timeout   => 0,
-      require   => Exec["extracting_${server_name}-${version}.zip_for_${server_name}"];
+      require   => Exec["extracting_${server_name}.zip_for_${server_name}"];
   }
 
 # Copying template module
@@ -92,12 +92,14 @@ class is (
   file { "${pca_home}/plugins":
     source  => "puppet:///modules/${service_code}/plugins",
     recurse => true,
-    ignore  => "README"
+    ignore => "README",
+    require => Exec["extracting_template_module_${template_module_pack}"]
   }
 
 # starting python cartridge agent
   exec { "starting_${pca_home}":
-    environment => [ "CARBON_HOME=${carbon_home}", "PCA_HOME=${pca_home}" ,"JAVA_HOME=${java_home}", "CONFIGURATOR_HOME=${configurator_home}" ],
+    environment => [ "CARBON_HOME=${carbon_home}", "PCA_HOME=${pca_home}" ,"JAVA_HOME=${java_home}",
+      "CONFIGURATOR_HOME=${configurator_home}" ],
     user        => $owner,
     path        => "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${pca_home}",
     cwd         => "${pca_home}",

@@ -1,6 +1,7 @@
 #!/bin/bash
 value=$(<./payload/launch-params)
 echo "$value\n"
+# set the Internal Field Separator to , character
 IFS=',' read -a array <<< "$value"
 
 for index in "${!array[@]}"
