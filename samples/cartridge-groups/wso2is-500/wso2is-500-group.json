@@ -7,7 +7,7 @@
         "startupOrders": [
             {
                 "aliases": [
-                    "cartridge.my-wso2is-500-manager"
+                    "cartridge.wso2is-500-manager"
                 ]
             }
         ]

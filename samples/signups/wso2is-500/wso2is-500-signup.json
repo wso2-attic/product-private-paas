@@ -1,7 +1,7 @@
 {
     "artifactRepositories": [
         {
-            "alias": "my-wso2is-500-manager",
+            "alias": "wso2is-500-manager",
             "privateRepo": false,
             "repoUrl": "https://github.com/lasinducharith/is-dep-sync.git",
             "repoUsername": "",
