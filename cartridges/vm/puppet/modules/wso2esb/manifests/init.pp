@@ -27,7 +27,7 @@ class wso2esb (
   $configurator_home  = "/mnt/${configurator_name}-${configurator_version}"
   $template_module_pack = "${server_name}-template-module-${ppaas_version}.zip"
   $pca_home = "/mnt/${pca_name}-${pca_version}"
-  $java_home  = "/opt/${java_name}"
+  $java_home  = "/opt/${java_folder}"
 
 # creating /mnt/{ip_address} folder
   exec {

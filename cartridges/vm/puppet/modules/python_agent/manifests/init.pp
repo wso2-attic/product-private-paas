@@ -23,7 +23,7 @@ class python_agent(
   $auto_commit            = false,
   $auto_checkout          = true,
   $module                 = 'undef',
-  $docroot 		  = 'undef'
+  $docroot                = 'undef'
 ){
 
   $service_code    = 'cartridge-agent'
@@ -38,13 +38,13 @@ class python_agent(
   tag($service_code)
 
 
- python_agent::initialize { $service_code:
-    repo      => $package_repo,
-    version   => $pca_version,
+  python_agent::initialize { $service_code:
+    repo       => $package_repo,
+    version    => $pca_version,
     agent_name => $agent_name,
-    local_dir => $local_package_dir,
-    target    => $target,
-    owner     => $owner,
+    local_dir  => $local_package_dir,
+    target     => $target,
+    owner      => $owner,
   }
 
   exec { 'copy launch-params to agent_home':
@@ -53,11 +53,11 @@ class python_agent(
     require => Python_agent::Initialize[$service_code];
   }
 
- file {
+  file {
     "${agent_home}/start_agent.sh":
-      ensure => present,
-      mode => 0755,
-      source => ["puppet:///modules/python_agent/start_agent.sh"],
+      ensure  => present,
+      mode    => 0755,
+      source  => ["puppet:///modules/python_agent/start_agent.sh"],
       require => Exec['copy launch-params to agent_home'];
   }
 
@@ -74,22 +74,22 @@ class python_agent(
 
 
   file { "${agent_home}/agent.conf":
-    ensure => file,
+    ensure  => file,
     content => template("python_agent/agent.conf.erb"),
     require => Python_agent::Initialize[$service_code],
   }
 
   file { "${agent_home}/logging.ini":
-    ensure => file,
+    ensure  => file,
     content => template("python_agent/logging.ini.erb"),
     require => File["${agent_home}/agent.conf"],
   }
 
-#Setting PCA_HOME
- file { "/etc/profile.d/pca_home.sh":
-   content => "export PCA_HOME=${agent_home}",
-   mode    => 755
- }
+# Setting PCA_HOME
+  file { "/etc/profile.d/pca_home.sh":
+    content => "export PCA_HOME=${agent_home}",
+    mode    => 755
+  }
 
 }
 

@@ -44,7 +44,7 @@ node 'base' {
 
 # JAVA Configurations
   $java_distribution    = 'jdk-7u72-linux-x64.gz'
-  $java_folder            = 'jdk1.7.0_72'
+  $java_folder          = 'jdk1.7.0_72'
 
 # Configurator Configurations
   $configurator_name    = 'ppaas-configurator'
