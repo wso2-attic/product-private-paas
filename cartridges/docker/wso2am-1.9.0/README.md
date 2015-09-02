@@ -5,7 +5,7 @@ Please note Following
 * This image only support clustering with WSO2 Private Paas (Cannot run clustering with standalone)
 * You can use this to run API manager as a single docker container with or without mounting external databases
 * If you are running with Kubernetes use one of the minion ip as load balancer ip
-* Use CONFIG_PARAM_USE_KUBERNETES = false in cartridge if you are using an external lb with Kubernetes
+* Use CONFIG_PARAM_USE_EXTERNAL_LB_FOR_KUBERNETES = true in cartridge if you are using an external lb with Kubernetes
 * In VM Scenario, you need a load balancer to run with clustering
 * If you are running with clustering, you need to mount external databases as they share dbs.
 
