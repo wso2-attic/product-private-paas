@@ -35,15 +35,15 @@ if [ "${START_CMD}" = "PCA" ]; then
 	/usr/local/bin/start-agent.sh
 	echo "Python cartridge agent started successfully"
 else
-    echo "Configuring WSO2 ${WSO2_SERVER_TYPE^^} ..."
+    echo "Configuring WSO2 ${WSO2_SERVER_TYPE} ..."
     echo "Environment variables:"
     printenv
     pushd ${CONFIGURATOR_HOME}
     python configurator.py
     popd
-    echo "WSO2 ${WSO2_SERVER_TYPE^^} configured successfully"
+    echo "WSO2 ${WSO2_SERVER_TYPE} configured successfully"
 
-    echo "Starting WSO2 ${WSO2_SERVER_TYPE^^}..."
+    echo "Starting WSO2 ${WSO2_SERVER_TYPE}..."
     ${CARBON_HOME}/bin/wso2server.sh
-    echo "WSO2 ${WSO2_SERVER_TYPE^^} - ${WSO2_SERVER_VERSION^^} started successfully"
+    echo "WSO2 ${WSO2_SERVER_TYPE} - ${WSO2_SERVER_VERSION} started successfully"
 fi
