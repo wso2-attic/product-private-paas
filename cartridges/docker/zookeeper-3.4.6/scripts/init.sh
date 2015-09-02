@@ -23,27 +23,24 @@
 # run script sets the configurable parameters for the cartridge agent in agent.conf and
 # starts the cartridge agent process.
 
+export PRODUCT_HOME="/opt/${SERVER_TYPE}-${SERVER_VERSION}"
+echo "PRODUCT_HOME=${PRODUCT_HOME}" >> /etc/environment
+echo "PRODUCT_HOME is set to ${PRODUCT_HOME}"
+
 if [ "${START_CMD}" = "PCA" ]; then
     echo "Starting python cartridge agent..."
 	/usr/local/bin/start-agent.sh
 	echo "Python cartridge agent started successfully"
-
-	echo "Starting APACHE Zookeeper in ${CARBON_HOME}..."
-    ${CARBON_HOME}/bin/zkServer.sh start
-    echo "APACHE zookeeper started successfully"
-
 else
-    #echo "Configuring Apache Zookeeper SUPERVISOR..."
-    #echo "Environment variables:"
-    #printenv
-    #pushd ${CONFIGURATOR_HOME}
-    #python configurator.py
-    #popd
-    #echo "APACHE STORM zookeeper configured successfully"
-    #  set $IP_ADDRESS=ip addr | grep 'state UP' -A2 | tail -n1 | awk '{print $2}' | cut -f1 -d'/'
-    #  echo $IP_ADDRESS"  zookeeper-"${memberId} >> /etc/hosts
+    echo "Configuring ${SERVER_TYPE} ..."
+    echo "Environment variables:"
+    printenv
+    pushd ${CONFIGURATOR_HOME}
+    python configurator.py
+    popd
+    echo "${SERVER_TYPE} configured successfully"
 
-    echo "Starting APACHE zookeeper in ${CARBON_HOME}..."
-    ${CARBON_HOME}/bin/zkServer.sh start
-    echo "APACHE zookeeper started successfully"
+    echo "Starting Zookeeper"
+    ${PRODUCT_HOME}/bin/zkServer.sh start
+    echo "Zookeeper started successfully"
 fi
