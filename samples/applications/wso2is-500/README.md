@@ -63,7 +63,7 @@ samples
   "value":"`<IS_CONFIG_DB_PASSWORD>`"
 }
 ```
-Make sure you have configured 'IS_CONFIG_DB' using mysql.sql script inside <IS_HOME>/dbscripts before deploying the
+>Make sure you have configured 'IS_CONFIG_DB' using mysql.sql script inside `<IS_HOME>`/dbscripts before deploying the
 IS Multitenant application.
 
 How to run
