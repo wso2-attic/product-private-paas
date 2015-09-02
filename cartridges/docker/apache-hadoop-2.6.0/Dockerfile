@@ -21,22 +21,15 @@
 
 FROM wso2/base-image:4.1.0
 MAINTAINER dev@wso2.org
-USER root
 ENV DEBIAN_FRONTEND noninteractive
 
 RUN ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
 RUN cat ~/.ssh/id_dsa.pub >> ~/.ssh/authorized_keys
 ADD ssh_config /root/.ssh/config
 
-ENV PPAAS_VERSION 4.1.0-SNAPSHOT
-ENV PCA_VERSION 4.1.0
-ENV CONFIGURATOR_NAME ppaas-configurator-${PPAAS_VERSION}
 ENV HADOOP_VERSION 2.6.0
 ENV HADOOP_TEMPLATE_MODULE_NAME apache-hadoop-${HADOOP_VERSION}-template-module-${PPAAS_VERSION}
 ENV HADOOP_HOME /opt/hadoop-${HADOOP_VERSION}
-ENV PCA_NAME apache-stratos-python-cartridge-agent-${PCA_VERSION}
-ENV PCA_HOME /opt/${PCA_NAME}
-ENV CONFIGURATOR_HOME /opt/${CONFIGURATOR_NAME}
 
 # --------------------------------
 # Copy scripts, packages & plugins
@@ -58,11 +51,8 @@ RUN mkdir -p /app/hadoop/tmp
 RUN chown -R root /app/hadoop/tmp
 RUN chown -R root ${HADOOP_HOME}
 
-RUN unzip /opt/${HADOOP_TEMPLATE_MODULE_NAME}.zip -d /opt/${CONFIGURATOR_NAME}/template-modules/ && \
-    rm /opt/${HADOOP_TEMPLATE_MODULE_NAME}.zip && \
-    chmod +x /tmp/export-envs.sh && \
-    sleep 1 && \
-    /tmp/export-envs.sh ${JAVA_HOME} ${HADOOP_HOME} ${PCA_HOME} ${CONFIGURATOR_HOME}
+RUN unzip /opt/${HADOOP_TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules/ && \
+    rm /opt/${HADOOP_TEMPLATE_MODULE_NAME}.zip
 
 # ----------------------
 # Expose container ports
