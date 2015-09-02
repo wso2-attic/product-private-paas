@@ -18,7 +18,7 @@
 # base node
 node 'base' {
 
-# General
+# General Configurations
   $ppaas_version        = '4.1.0-SNAPSHOT'
   $server_ip            = $ipaddress
 
@@ -26,30 +26,27 @@ node 'base' {
   $pca_name             = 'apache-stratos-python-cartridge-agent'
   $pca_version          = '4.1.0'
   $local_package_dir    = '/mnt/packs'
-  $mb_ip                = '192.168.30.245'
-  $mb_port              = '1183'
-  $mb_type    = 'activemq' #in wso2 mb case, value should be 'wso2mb'
-  $cep_ip = "192.168.30.96"
-  $cep_port= "7711"
-  $cep_username="admin"
-  $cep_password="admin"
-  $bam_ip                  ='192.168.30.96'
-  $bam_port                ='7611'
-  $bam_secure_port         ='7711'
-  $bam_username        ='admin'
-  $bam_password      ='admin'
+  $mb_ip                = 'localhost'
+  $mb_port              = '1883'
+  $cep_ip               = "localhost"
+  $cep_port             = "7711"
+  $cep_username         = 'admin'
+  $cep_password         = 'admin'
+  $bam_ip               = 'localhost'
+  $bam_port             = '7611'
+  $bam_secure_port      = '7711'
+  $bam_username         = 'admin'
+  $bam_password         = 'admin'
   $truststore_password  = 'wso2carbon'
-  $lb_private_ip  = ''
-  $lb_public_ip  = ''
   $enable_log_publisher = 'false'
   $metadata_service_url = 'https://192.168.30.96:9443'
-  $agent_log_level = "INFO"
+  $agent_log_level      = "INFO"
 
-  #JAVA Configurations
-  $java_distribution  = 'jdk-7u72-linux-x64.gz'
-  $java_name    = 'jdk1.7.0_72'
+# JAVA Configurations
+  $java_distribution    = 'jdk-7u72-linux-x64.gz'
+  $java_folder          = 'jdk1.7.0_72'
 
-  #Configurator Configurations
+# Configurator Configurations
   $configurator_name    = 'ppaas-configurator'
   $configurator_version = '4.1.0-SNAPSHOT'
 
