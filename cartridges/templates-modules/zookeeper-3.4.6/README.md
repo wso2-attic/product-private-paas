@@ -1,4 +1,4 @@
-Apache Zookeeper Template for the Configurator
+Zookeeper Template for the Configurator
 -------------------------------------------------------------------------------------
 
 This template supports following configurations
