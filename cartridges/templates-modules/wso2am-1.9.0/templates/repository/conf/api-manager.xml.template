@@ -151,8 +151,8 @@
                         <ServerURL>https://${carbon.local.ip}:${mgt.transport.https.port}${carbon.context}/services/</ServerURL>
                         <Username>${admin.username}</Username>
                         <Password>${admin.password}</Password>
-                        	{% if CONFIG_PARAM_GATEWAY_IP is defined -%}
-                        		<GatewayEndpoint>http://{{CONFIG_PARAM_GATEWAY_IP}}:{{CONFIG_PARAM_GATEWAY_PT_HTTP_PROXY_PORT}},https://{{CONFIG_PARAM_GATEWAY_IP}}:{{CONFIG_PARAM_GATEWAY_PT_HTTPS_PROXY_PORT}}</GatewayEndpoint>
+                        	{% if CONFIG_PARAM_GATEWAY_WORKER_IP is defined -%}
+                        		<GatewayEndpoint>http://{{CONFIG_PARAM_GATEWAY_WORKER_IP}}:{{CONFIG_PARAM_GATEWAY_WORKER_PT_HTTP_PROXY_PORT}},https://{{CONFIG_PARAM_GATEWAY_WORKER_IP}}:{{CONFIG_PARAM_GATEWAY_WORKER_PT_HTTPS_PROXY_PORT}}</GatewayEndpoint>
                         	{% else -%}
                         		<GatewayEndpoint>http://${carbon.local.ip}:${http.nio.port},https://${carbon.local.ip}:${https.nio.port}</GatewayEndpoint>
                         	{% endif -%}
