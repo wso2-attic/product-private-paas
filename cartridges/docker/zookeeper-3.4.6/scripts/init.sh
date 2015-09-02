@@ -40,7 +40,7 @@ else
     popd
     echo "${SERVER_TYPE} configured successfully"
 
-    echo "Starting Zookeeper"
+    echo "Starting ${SERVER_TYPE}"
     ${PRODUCT_HOME}/bin/zkServer.sh start
-    echo "Zookeeper started successfully"
+    echo "${SERVER_TYPE} started successfully"
 fi

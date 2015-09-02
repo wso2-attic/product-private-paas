@@ -42,7 +42,7 @@ COPY plugins /${PCA_HOME}/plugins
 WORKDIR /opt
 
 RUN tar xzvf /opt/${SERVER_TYPE}-${SERVER_VERSION}.tar.gz && \
-        rm /opt/${SERVER_TYPE}-${SERVER_VERSION}.tar.gzp && \
+        rm /opt/${SERVER_TYPE}-${SERVER_VERSION}.tar.gz && \
         unzip /opt/${TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
         rm -rf /opt/${TEMPLATE_MODULE_NAME}.zip
 
