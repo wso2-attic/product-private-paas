@@ -53,7 +53,7 @@
                         "cartridgeMin": 1,
                         "cartridgeMax": 1,
                         "subscribableInfo": {
-                            "alias": "store",
+                            "alias": "publisher",
                             "deploymentPolicy": "deployment-policy-1",
                             "autoscalingPolicy": "autoscaling-policy-1"
                         }
@@ -63,7 +63,7 @@
                         "cartridgeMin": 1,
                         "cartridgeMax": 1,
                         "subscribableInfo": {
-                            "alias": "publisher",
+                            "alias": "store",
                             "deploymentPolicy": "deployment-policy-1",
                             "autoscalingPolicy": "autoscaling-policy-1"
                         }
