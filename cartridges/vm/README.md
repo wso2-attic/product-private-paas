@@ -52,7 +52,7 @@ chmod 755 jdk-7u72-linux-x64.gz
 (3) Update the following JAVA related variables in `/etc/puppet/manifests/nodes/base.pp` file with respective values.
 ```
 $java_distribution 	= 'jdk-7u72-linux-x64.gz'
-$java_name    		= 'jdk1.7.0_72'
+$java_folder    		= 'jdk1.7.0_72'
 ```
 ##### **Configurator Module**
 (1) Copy ppaas-configurator-4.1.0-SNAPSHOT.zip from `<PRIVATE_PaaS_HOME>/products/configurator/target/ppaas-configurator-4.1.0-SNAPSHOT.zip`  to `/etc/puppet/modules/configurator/files` folder.
@@ -69,7 +69,7 @@ $configurator_version = '4.1.0-SNAPSHOT'
 ### **Optional Modules**
 Following modules are mandatory to setup puppet-master. Only servers that are used by application needs to be configured. For example, If only esb cartridge is used in application only esb related module needs to be setup.
 
-(1) Copy server pack from   to `/etc/puppet/modules/<server_name>/files/packs` folder. ( If configuring ESB, path is :`/etc/puppet/modules/esb/files/packs` )
+(1) Copy server pack from   to `/etc/puppet/modules/<server_name>/files/packs` folder. ( If configuring ESB, path is :`/etc/puppet/modules/wso2esb/files/packs` )
 
 (2) Copy respective [template module pack](https://github.com/wso2/product-private-paas/tree/master/cartridges/templates-modules) to `/etc/puppet/modules/<server_name>/files/packs/`
 
@@ -91,7 +91,7 @@ chmod 755 wso2esb-481-startup-handler.yapsy-plugin
 ( If configuring ESB, path is :`/etc/puppet/manifests/nodes/esb.pp` )
 ```
 # ESB cartridge node
-node /esb/ inherits base {
+node /wso2esb/ inherits base {
 
   class {'java':}
   class {'python_agent':
@@ -99,7 +99,6 @@ node /esb/ inherits base {
   }
   class {'configurator':}
   class {'esb':
-     server_name     => 'wso2esb',#change this value
      version  	      => '4.8.1'  #change this value
 
   }
@@ -115,15 +114,15 @@ node /esb/ inherits base {
 |-- autosign.conf
 |-- manifests
 |   |-- nodes
-|   |   |-- apimanager.pp
-|   |   |-- appserver.pp
+|   |   |-- wso2am.pp
+|   |   |-- wso2as.pp
 |   |   |-- base.pp
 |   |   |-- default.pp
-|   |   |-- esb.pp
-|   |   `-- is.pp
+|   |   |-- wso2esb.pp
+|   |   `-- wso2is.pp
 |   `-- site.pp
 |-- modules
-|   |-- apimanager
+|   |-- wso2am
 |   |   |-- files
 |   |   |   |-- packs
 |   |   |   |   `-- wso2am-1.9.0.zip
@@ -132,7 +131,7 @@ node /esb/ inherits base {
 |   |   |-- manifests
 |   |   |   `-- init.pp
 |   |   `-- README
-|   |-- appserver
+|   |-- wso2as
 |   |   |-- files
 |   |   |   |-- packs
 |   |   |   |   |-- wso2as-5.2.1-template-module-4.1.0-SNAPSHOT.zip
@@ -151,7 +150,7 @@ node /esb/ inherits base {
 |   |   `-- manifests
 |   |       |-- init.pp
 |   |       
-|   |-- esb
+|   |-- wso2esb
 |   |   |-- files
 |   |   |   |-- packs
 |   |   |   |   |-- wso2esb-4.8.1-template-module-4.1.0-SNAPSHOT.zip
@@ -163,7 +162,7 @@ node /esb/ inherits base {
 |   |   |-- manifests
 |   |   |   `-- init.pp
 |   |   `-- README
-|   |-- is
+|   |-- wso2is
 |   |   |-- files
 |   |   |   |-- packs
 |   |   |   |   |-- wso2is-5.0.0-template-module-4.1.0-SNAPSHOT.zip
