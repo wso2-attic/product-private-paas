@@ -23,20 +23,24 @@
 # run script sets the configurable parameters for the cartridge agent in agent.conf and
 # starts the cartridge agent process.
 
+export PRODUCT_HOME="/opt/${SERVER_TYPE}-${SERVER_VERSION}"
+echo "PRODUCT_HOME=${PRODUCT_HOME}" >> /etc/environment
+echo "PRODUCT_HOME is set to ${PRODUCT_HOME}"
+
 if [ "${START_CMD}" = "PCA" ]; then
     echo "Starting python cartridge agent..."
 	/usr/local/bin/start-agent.sh
 	echo "Python cartridge agent started successfully"
 else
-    echo "Configuring Apache Storm SUPERVISOR..."
+    echo "Configuring ${SERVER_TYPE}..."
     echo "Environment variables:"
     printenv
     pushd ${CONFIGURATOR_HOME}
     python configurator.py
     popd
-    echo "APACHE STORM SUPERVISOR configured successfully"
+    echo "${SERVER_TYPE} configured successfully"
 
-    echo "Starting APACHE STORM ${STORM_TYPE} ******** SUPERVISOR..."
-    nohup ${CARBON_HOME}/bin/storm ${STORM_TYPE} > out&
-    echo "APACHE STORM SUPERVISOR ${STORM_TYPE} started successfully"
+    echo "Starting ${SERVER_TYPE} ${STORM_TYPE}"
+    nohup ${PRODUCT_HOME}/bin/storm ${STORM_TYPE} > out&
+    echo "${SERVER_TYPE} ${STORM_TYPE} started successfully"
 fi

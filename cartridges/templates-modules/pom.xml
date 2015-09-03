@@ -46,6 +46,6 @@
         <module>apache-storm-0.9.5</module>
         <module>apache-hadoop-2.6.0</module>
         <module>apache-hbase-1.0.1.1</module>
-        <module>apache-zookeeper-3.4.6</module>
+        <module>zookeeper-3.4.6</module>
     </modules>
 </project>
