@@ -21,7 +21,7 @@ chmod 755 apache-stratos-cartridge-agent-4.1.2.zip
 ```
 (3) Update the following python agent related variables in `/etc/puppet/manifests/nodes/base.pp` file with respective values.
 ```
-$pca_name             = 'apache-stratos-python-cartridge-agent'
+  $pca_name             = 'apache-stratos-python-cartridge-agent'
   $pca_version          = '4.1.2'
   $mb_ip                = 'MB-IP'
   $mb_port              = 'MB-PORT'
@@ -35,9 +35,6 @@ $pca_name             = 'apache-stratos-python-cartridge-agent'
   $bam_secure_port      = '7711'
   $bam_username	      	= 'admin'
   $bam_password      	= 'admin'
-  $java_distribution  	= 'jdk-7u72-linux-x64.gz'
-  $lb_private_ip  		= ''
-  $lb_public_ip  		= ''
   $metadata_service_url = 'METADATA-SERVICE-URL'
   $agent_log_level 		= 'INFO'
   $enable_log_publisher = 'false'
@@ -51,7 +48,7 @@ chmod 755 jdk-7u72-linux-x64.gz
 ```
 (3) Update the following JAVA related variables in `/etc/puppet/manifests/nodes/base.pp` file with respective values.
 ```
-$java_distribution 	= 'jdk-7u72-linux-x64.gz'
+$java_distribution 	    = 'jdk-7u72-linux-x64.gz'
 $java_folder    		= 'jdk1.7.0_72'
 ```
 ##### **Configurator Module**
@@ -98,7 +95,7 @@ node /wso2esb/ inherits base {
    docroot => "APPLICATION-PATH" #change this value
   }
   class {'configurator':}
-  class {'esb':
+  class {'wso2esb':
      version  	      => '4.8.1'  #change this value
 
   }
