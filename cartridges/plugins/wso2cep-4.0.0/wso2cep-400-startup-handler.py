@@ -68,6 +68,8 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     ENV_ZOOKEEPER_HOSTNAMES = "CONFIG_PARAM_ZOOKEEPER_HOSTNAMES"
     ENV_NIMBUS_HOSTNAME = "CONFIG_PARAM_NIMBUS_HOSTNAME"
     ENV_CONFIG_PARAM_MANAGER_MEMBERS = "CONFIG_PARAM_MANAGER_MEMBERS"
+    ENV_CONFIG_PARAM_MANAGER = "CONFIG_PARAM_MANAGER"
+    ENV_CONFIG_PARAM_WORKER = "CONFIG_PARAM_WORKER"
 
     # clustering related environment variables read from payload_parameters
     ENV_CONFIG_PARAM_CLUSTERING = 'CONFIG_PARAM_CLUSTERING'
@@ -107,9 +109,13 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         sub_domain = None
         if service_type.endswith(self.CONST_MANAGER):
             sub_domain = self.CONST_MGT
+            self.export_env_var(self.ENV_CONFIG_PARAM_MANAGER, 'true')
+            self.export_env_var(self.ENV_CONFIG_PARAM_WORKER, 'false')
         elif service_type.endswith(self.CONST_WORKER):
             sub_domain = self.CONST_WORKER
-        # if sub_domain is not None:
+            self.export_env_var(self.ENV_CONFIG_PARAM_MANAGER, 'false')
+            self.export_env_var(self.ENV_CONFIG_PARAM_WORKER, 'true')
+
         self.export_env_var(self.ENV_CONFIG_PARAM_SUB_DOMAIN, sub_domain)
 
         # if CONFIG_PARAM_MEMBERSHIP_SCHEME is not set, set the private-paas membership scheme as default one
@@ -133,23 +139,26 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         self.export_env_var(self.ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST, local_ip)
 
         zookeeper_ips_list = []
+        zk_hostnames_string = None
         zookeeper_cluster = self.get_cluster_of_service(topology, self.CONST_ZOOKEEPER_SERVICE_TYPE, app_id)
         if zookeeper_cluster is not None:
             member_map = zookeeper_cluster.member_map
             for member in member_map:
-                default_private_ip = member.member_default_private_ip
+                default_private_ip = member_map[member].member_default_private_ip
                 zookeeper_ips_list.append(default_private_ip)
 
-        zk_hostnames_string = self.generate_dictionary_str_from_array(zookeeper_ips_list,
+            zk_hostnames_string = self.generate_dictionary_str_from_array(zookeeper_ips_list,
                                                                       self.CONST_ZOOKEEPER_DEFAULT_PORT)
         self.export_env_var(self.ENV_ZOOKEEPER_HOSTNAMES, zk_hostnames_string)
 
         nimbus_cluster = self.get_cluster_of_service(topology, self.CONST_NIMBUS_SERVICE_TYPE, app_id)
+        nimbus_private_ip = None
         if nimbus_cluster is not None:
             member_map = nimbus_cluster.member_map
             for member in member_map:
-                nimbus_private_ip = member.member_default_private_ip
-                self.export_env_var(self.ENV_NIMBUS_HOSTNAME, nimbus_private_ip)
+                nimbus_private_ip = member_map[member].member_default_private_ip
+
+        self.export_env_var(self.ENV_NIMBUS_HOSTNAME, nimbus_private_ip)
 
         # start configurator
         WSO2StartupHandler.log.info("Configuring WSO2 %s..." % self.CONST_PRODUCT)
@@ -187,7 +196,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
                     mgt_host_name = mgr_cluster.hostnames[0]
                     member_map = mgr_cluster.member_map
                     for member in member_map:
-                        default_private_ip = member.member_default_private_ip
+                        default_private_ip = member_map[member].member_default_private_ip
                         cep_mgr_private_ip_list.append(default_private_ip)
 
             elif service_name.endswith(self.CONST_WORKER):
@@ -198,7 +207,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         cep_managers_string = self.generate_dictionary_str_from_array(cep_mgr_private_ip_list,
                                                                       self.CONST_CEP_MANAGER_MEMBER_PORT)
 
-        self.set_as_env_variable(self.ENV_CONFIG_PARAM_MANAGER_MEMBERS, cep_managers_string)
+        self.export_env_var(self.ENV_CONFIG_PARAM_MANAGER_MEMBERS, cep_managers_string)
         self.export_env_var(self.ENV_CONFIG_PARAM_MGT_HOST_NAME, mgt_host_name)
         self.export_env_var(self.ENV_CONFIG_PARAM_HOST_NAME, host_name)
 

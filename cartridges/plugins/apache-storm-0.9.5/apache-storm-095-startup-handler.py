@@ -45,7 +45,7 @@ class StormStartupHandler(ICartridgeAgentPlugin):
         if zookeeper_cluster is not None:
             member_map = zookeeper_cluster.member_map
             for member in member_map:
-                default_private_ip = member.member_default_private_ip
+                default_private_ip = member_map[member].member_default_private_ip
                 zookeeper_ips_list.append(default_private_ip)
 
         if zookeeper_ips_list:
@@ -64,7 +64,7 @@ class StormStartupHandler(ICartridgeAgentPlugin):
         if nimbus_cluster is not None:
             member_map = nimbus_cluster.member_map
             for member in member_map:
-                nimbus_private_ip = member.member_default_private_ip
+                nimbus_private_ip = member_map[member].member_default_private_ip
                 self.export_env_var(self.ENV_NIMBUS_HOSTNAME, nimbus_private_ip)
 
         # start configurator

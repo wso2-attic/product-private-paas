@@ -22,8 +22,8 @@
 #
 host_ip="localhost"
 host_port=9443
-product_type="esb"
-product_version="481"
+product_type="cep"
+product_version="400"
 product="wso2${product_type}-${product_version}"
 set -e
 

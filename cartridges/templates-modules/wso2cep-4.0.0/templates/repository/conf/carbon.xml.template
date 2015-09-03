@@ -45,8 +45,8 @@
        This is will become part of the End Point Reference of the
        services deployed on this server instance.
     -->
-    {% if CONFIG_PARAM_WORKER_HOST_NAME is defined -%}
-            <HostName>{{CONFIG_PARAM_WORKER_HOST_NAME}}</HostName>
+    {% if CONFIG_PARAM_HOST_NAME is defined -%}
+            <HostName>{{CONFIG_PARAM_HOST_NAME}}</HostName>
     {% else -%}
             <!--HostName>www.wso2.org</HostName-->
     {% endif -%}
