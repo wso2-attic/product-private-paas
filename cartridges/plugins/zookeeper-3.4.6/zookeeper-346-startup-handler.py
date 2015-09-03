@@ -19,6 +19,7 @@ import json
 from plugins.contracts import ICartridgeAgentPlugin
 from modules.util.log import LogFactory
 from entity import *
+import subprocess
 import os
 
 class ZookeeperStartupHandler(ICartridgeAgentPlugin):
@@ -43,6 +44,20 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
                 default_private_ip = member.member_default_private_ip
                 # handle setting hostnames
 
+                # start configurator
+        ZookeeperStartupHandler.log.info("Configuring Zookeeper ...")
+        config_command = "python ${CONFIGURATOR_HOME}/configurator.py"
+        env_var = os.environ.copy()
+        p = subprocess.Popen(config_command, env=env_var, shell=True)
+        output, errors = p.communicate()
+        ZookeeperStartupHandler.log.info("Zookeeper configured successfully")
+
+        # start server
+        ZookeeperStartupHandler.log.info("Starting Zookeeper ...")
+        start_command = "${CARBON_HOME}/bin/zkServer.sh start"
+        p = subprocess.Popen(start_command, env=env_var, shell=True)
+        output, errors = p.communicate()
+        ZookeeperStartupHandler.log.info("Zookeeper started successfully")
 
     @staticmethod
     def get_cluster_of_service(topology, service_name, app_id):
