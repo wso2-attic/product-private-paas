@@ -41,6 +41,30 @@
         <module>extensions</module>
     </modules>
 
+    <licenses>
+        <license>
+            <name>Apache License Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0</url>
+        </license>
+    </licenses>
+
+    <organization>
+        <name>WSO2 Inc</name>
+        <url>http://wso2.com/cloud/private-paas</url>
+    </organization>
+
+    <issueManagement>
+        <system>JIRA</system>
+        <url>https://wso2.org/jira/browse/PAAS</url>
+    </issueManagement>
+
+    <scm>
+        <url>https://github.com/wso2/product-as.git</url>
+        <developerConnection>scm:git:https://github.com/wso2/product-private-paas.git</developerConnection>
+        <connection>scm:git:https://github.com/wso2/product-private-paas.git</connection>
+        <tag>HEAD</tag>
+    </scm>
+
     <profiles>
         <profile>
             <id>pedantic</id>
@@ -83,196 +107,39 @@
                 </plugins>
             </build>
         </profile>
-
         <profile>
-            <id>addLicense</id>
+            <id>sign</id>
+            <activation>
+                <property>
+                    <name>sign</name>
+                </property>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <configuration>
-                            <source>1.6</source>
-                            <target>1.6</target>
-                        </configuration>
-                    </plugin>
-                    <plugin>
-                        <groupId>org.apache.rat</groupId>
-                        <artifactId>apache-rat-plugin</artifactId>
-                        <version>0.10</version>
-                        <configuration>
-                            <excludes>
-                                <exclude>**/target/**/*</exclude>
-                                <exclude>**/.settings/**/*</exclude>
-                                <exclude>**/.project</exclude>
-                                <exclude>**/.classpath</exclude>
-                                <exclude>**/.git/**/*</exclude>
-                                <exclude>**/README.md</exclude>
-                                <exclude>**/MANIFEST.MF</exclude>
-                                <exclude>**/edit_area/**/*</exclude>
-                                <exclude>**/editarea/**/*</exclude>
-                                <exclude>**/jquery/**/*</exclude>
-                                <exclude>**/jquery*</exclude>
-                                <exclude>**/*.iml</exclude>
-                                <exclude>**/*.iws</exclude>
-                                <exclude>**/*.ipr</exclude>
-                                <exclude>**/.gitignore</exclude>
-                                <exclude>**/payload/launch-params</exclude>
-                                <exclude>**/*.key</exclude>
-                                <exclude>**/bootstrap*.css</exclude>
-                                <exclude>**/animation.css</exclude>
-                                <exclude>**/fontello*</exclude>
-                                <exclude>**/jaggery.conf</exclude>
-                                <exclude>**/zoo.cfg</exclude>
-                                <exclude>**/scripts/*/customization</exclude>
-                                <exclude>**/siddhi.extension</exclude>
-                                <exclude>**/templates/*.cfg.template</exclude>
-                                <exclude>**/instrumentation.txt</exclude>
-                                <exclude>**/*json</exclude>
-                            </excludes>
-                            <licenses>
-                                <license
-                                        implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                    <licenseFamilyCategory>BSD</licenseFamilyCategory>
-                                    <licenseFamilyName>The BSD License</licenseFamilyName>
-                                    <patterns>
-                                        <pattern>The BSD License</pattern>
-                                    </patterns>
-                                </license>
-                                <license
-                                        implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                    <licenseFamilyCategory>CDDL</licenseFamilyCategory>
-                                    <licenseFamilyName>COMMON DEVELOPMENT AND DISTRIBUTION LICENSE
-                                        Version 1.0
-                                    </licenseFamilyName>
-                                    <patterns>
-                                        <pattern>COMMON DEVELOPMENT AND DISTRIBUTION LICENSE
-                                        </pattern>
-                                    </patterns>
-                                </license>
-                                <license
-                                        implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                    <licenseFamilyCategory>EPL</licenseFamilyCategory>
-                                    <licenseFamilyName>Eclipse Public License - v 1.0
-                                    </licenseFamilyName>
-                                    <patterns>
-                                        <pattern>Eclipse Public License</pattern>
-                                    </patterns>
-                                </license>
-                                <license
-                                        implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                    <licenseFamilyCategory>MIT</licenseFamilyCategory>
-                                    <licenseFamilyName>The MIT License (MIT)</licenseFamilyName>
-                                    <patterns>
-                                        <pattern>MIT License</pattern>
-                                    </patterns>
-                                </license>
-                                <license
-                                        implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                    <licenseFamilyCategory>JSMON</licenseFamilyCategory>
-                                    <licenseFamilyName>JSMON</licenseFamilyName>
-                                    <patterns>
-                                        <pattern>JSMON</pattern>
-                                    </patterns>
-                                </license>
-                                <license
-                                        implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                    <licenseFamilyCategory>JDOM</licenseFamilyCategory>
-                                    <licenseFamilyName>JDOM</licenseFamilyName>
-                                    <patterns>
-                                        <pattern>JDOM</pattern>
-                                    </patterns>
-                                </license>
-                                <license
-                                        implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                    <licenseFamilyCategory>JSON</licenseFamilyCategory>
-                                    <licenseFamilyName>The JSON License</licenseFamilyName>
-                                    <patterns>
-                                        <pattern>JSON License</pattern>
-                                    </patterns>
-                                </license>
-                                <license
-                                        implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                    <licenseFamilyCategory>MPL10</licenseFamilyCategory>
-                                    <licenseFamilyName>MOZILLA PUBLIC LICENSE Version 1.0
-                                    </licenseFamilyName>
-                                    <patterns>
-                                        <pattern>MOZILLA PUBLIC LICENSE</pattern>
-                                    </patterns>
-                                </license>
-                                <license
-                                        implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                    <licenseFamilyCategory>SNAPTREE</licenseFamilyCategory>
-                                    <licenseFamilyName>SNAPTREE LICENSE</licenseFamilyName>
-                                    <patterns>
-                                        <pattern>SNAPTREE LICENSE</pattern>
-                                    </patterns>
-                                </license>
-                                <license
-                                        implementation="org.apache.rat.analysis.license.SimplePatternBasedLicense">
-                                    <licenseFamilyCategory>CPL1</licenseFamilyCategory>
-                                    <licenseFamilyName>Common Public License 1.0</licenseFamilyName>
-                                    <patterns>
-                                        <pattern>CPL</pattern>
-                                    </patterns>
-                                </license>
-                            </licenses>
-                            <licenseFamilies>
-                                <licenseFamily
-                                        implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                    <familyName>The BSD LicenseThe BSD License</familyName>
-                                </licenseFamily>
-                                <licenseFamily
-                                        implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                    <familyName>COMMON DEVELOPMENT AND DISTRIBUTION LICENSE Version
-                                        1.0
-                                    </familyName>
-                                </licenseFamily>
-                                <licenseFamily
-                                        implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                    <familyName>Eclipse Public License - v 1.0</familyName>
-                                </licenseFamily>
-                                <licenseFamily
-                                        implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                    <familyName>The MIT License (MIT)</familyName>
-                                </licenseFamily>
-                                <licenseFamily
-                                        implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                    <familyName>JSMON</familyName>
-                                </licenseFamily>
-                                <licenseFamily
-                                        implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                    <familyName>JDOM</familyName>
-                                </licenseFamily>
-                                <licenseFamily
-                                        implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                    <familyName>The JSON License</familyName>
-                                </licenseFamily>
-                                <licenseFamily
-                                        implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                    <familyName>MOZILLA PUBLIC LICENSE Version 1.0</familyName>
-                                </licenseFamily>
-                                <licenseFamily
-                                        implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                    <familyName>SNAPTREE LICENSE</familyName>
-                                </licenseFamily>
-                                <licenseFamily
-                                        implementation="org.apache.rat.license.SimpleLicenseFamily">
-                                    <familyName>Common Public License 1.0</familyName>
-                                </licenseFamily>
-                            </licenseFamilies>
-                            <addLicenseHeaders>forced</addLicenseHeaders>
-                            <ignoreErrors>false</ignoreErrors>
-                            <excludeSubProjects>false</excludeSubProjects>
-                        </configuration>
+                        <artifactId>maven-gpg-plugin</artifactId>
                         <executions>
                             <execution>
+                                <id>sign-artifacts</id>
                                 <phase>verify</phase>
                                 <goals>
-                                    <goal>check</goal>
+                                    <goal>sign</goal>
                                 </goals>
                             </execution>
                         </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-release-plugin</artifactId>
+                        <configuration>
+                            <preparationGoals>clean install</preparationGoals>
+                            <autoVersionSubmodules>true</autoVersionSubmodules>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-deploy-plugin</artifactId>
                     </plugin>
                 </plugins>
             </build>
@@ -466,6 +333,166 @@
         </pluginManagement>
     </build>
 
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.hazelcast.wso2</groupId>
+                <artifactId>hazelcast</artifactId>
+                <version>${hazelcast.wso2.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>com.hazelcast</groupId>
+                        <artifactId>hazelcast</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2.wso2</groupId>
+                <artifactId>axis2</artifactId>
+                <version>${axis2.osgi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.axis2.wso2</groupId>
+                <artifactId>axis2-client</artifactId>
+                <version>${axis2.osgi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-logging</groupId>
+                <artifactId>commons-logging</artifactId>
+                <version>${commons.logging.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.messaging</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-log4j12</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.common</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.load.balancer.extension.api</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons.io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.velocity</groupId>
+                <artifactId>velocity</artifactId>
+                <version>${velocity.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-exec</artifactId>
+                <version>${commons.exec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.integration.framework</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.testng</groupId>
+                <artifactId>testng</artifactId>
+                <version>${testng.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.addressing</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.integration.core</artifactId>
+                <classifier>tests</classifier>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>SecVerifier</artifactId>
+                <type>aar</type>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-all</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents.wso2</groupId>
+                <artifactId>httpcore</artifactId>
+                <version>${httpcore.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents.wso2</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${httpclient.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.mock.iaas.client</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>bouncycastle</groupId>
+                <artifactId>bcprov-jdk15</artifactId>
+                <version>${bcprov.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.rampart</groupId>
+                <artifactId>rampart</artifactId>
+                <version>${rampart.mar.version}</version>
+                <type>mar</type>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.mediator.bridge</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-j2ee-management_1.1_spec</artifactId>
+                <version>${geronimo.j2ee.management_1.1.spec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.fusesource.hawtbuf</groupId>
+                <artifactId>hawtbuf</artifactId>
+                <version>${hawtbuf.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-client</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.cep.extension</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.paho</groupId>
+                <artifactId>mqtt-client</artifactId>
+                <version>${mqtt.client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jta_1.1_spec</artifactId>
+                <version>${geronimo.jta_1.1.spec.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+
     <properties>
         <!-- Apache Stratos version -->
         <stratos.version>4.1.2-SNAPSHOT</stratos.version>
@@ -500,7 +527,8 @@
         <jaggery.caramel.version>1.0.1</jaggery.caramel.version>
 
         <!-- External libraries -->
-        <commons.version>1.0.1</commons.version>
+        <commons.logging.version>1.1.1</commons.logging.version>
+        <commons.io.version>2.0</commons.io.version>
         <org.testng.version>6.1.1</org.testng.version>
         <activemq.version>5.10.0</activemq.version>
         <andes.client.version>0.13.wso2v8</andes.client.version>
@@ -511,6 +539,14 @@
         <hawtbuf.version>1.9</hawtbuf.version>
         <mqtt.client.version>0.4.0</mqtt.client.version>
         <geronimo.jta_1.1.spec.version>1.1.1</geronimo.jta_1.1.spec.version>
+        <slf4j.version>1.7.0</slf4j.version>
+        <velocity.version>1.7</velocity.version>
+        <hazelcast.wso2.version>3.2.6.wso2v3</hazelcast.wso2.version>
+        <commons.exec.version>1.0.1</commons.exec.version>
+        <testng.version>6.1.1</testng.version>
+        <activemq.version>5.10.0</activemq.version>
+        <httpcore.version>4.3.0.wso2v1</httpcore.version>
+        <httpclient.version>4.2.5.wso2v1</httpclient.version>
 
         <!-- Maven plugin versions -->
         <maven.incremental.plugin.version>1.3</maven.incremental.plugin.version>

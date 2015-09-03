@@ -26,58 +26,49 @@
 
     <artifactId>wso2-ppaas-distribution</artifactId>
     <packaging>jar</packaging>
-    <name>WSO2 PPaaS - Product - Distribution</name>
+    <name>WSO2 PPaaS - Product Distribution</name>
     <description>WSO2 Private PaaS Distribution</description>
 
     <dependencies>
         <dependency>
             <groupId>bouncycastle</groupId>
             <artifactId>bcprov-jdk15</artifactId>
-            <version>${bcprov.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.rampart</groupId>
             <artifactId>rampart</artifactId>
-            <version>${rampart.mar.version}</version>
             <type>mar</type>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.mediator.bridge</artifactId>
-            <version>${carbon.kernel.version}</version>
         </dependency>
-        <!-- ActiveMQ client jars -->
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-j2ee-management_1.1_spec</artifactId>
-            <version>${geronimo.j2ee.management_1.1.spec.version}</version>
         </dependency>
         <dependency>
             <groupId>org.fusesource.hawtbuf</groupId>
             <artifactId>hawtbuf</artifactId>
-            <version>${hawtbuf.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>activemq-client</artifactId>
-            <version>${activemq.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.stratos</groupId>
             <artifactId>org.apache.stratos.cep.extension</artifactId>
-            <version>${stratos.version}</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.paho</groupId>
             <artifactId>mqtt-client</artifactId>
-            <version>${mqtt.client.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-jta_1.1_spec</artifactId>
-            <version>${geronimo.jta_1.1.spec.version}</version>
         </dependency>
     </dependencies>
+
     <build>
         <plugins>
             <plugin>

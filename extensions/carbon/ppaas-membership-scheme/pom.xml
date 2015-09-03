@@ -33,31 +33,21 @@
         <dependency>
             <groupId>com.hazelcast.wso2</groupId>
             <artifactId>hazelcast</artifactId>
-            <version>3.2.6.wso2v3</version>
             <scope>provided</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>com.hazelcast</groupId>
-                    <artifactId>hazelcast</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
             <artifactId>axis2</artifactId>
-            <version>1.6.1.wso2v12</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
-            <version>1.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.apache.stratos</groupId>
             <artifactId>org.apache.stratos.messaging</artifactId>
-            <version>${stratos.version}</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
