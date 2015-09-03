@@ -1,12 +1,12 @@
 {
     "applicationId": "wso2am-190-application",
     "multiTenant": true,
-    "alias": "my-wso2am-190-application",
+    "alias": "wso2am-190-application",
     "components": {
         "groups": [
             {
                 "name": "keymanager-gw-manager-gw-worker",
-                "alias": "my-keymanager-gw-manager-gw-worker",
+                "alias": "keymanager-gw-manager-gw-worker",
                 "groupMinInstances": 1,
                 "groupMaxInstances": 1,
                 "cartridges": [
@@ -44,7 +44,7 @@
             },
             {
                 "name": "pub-store-grp",
-                "alias": "my-pub-store-grp",
+                "alias": "pub-store-grp",
                 "groupMinInstances": 1,
                 "groupMaxInstances": 1,
                 "cartridges": [
@@ -53,7 +53,7 @@
                         "cartridgeMin": 1,
                         "cartridgeMax": 1,
                         "subscribableInfo": {
-                            "alias": "store",
+                            "alias": "publisher",
                             "deploymentPolicy": "deployment-policy-1",
                             "autoscalingPolicy": "autoscaling-policy-1"
                         }
@@ -63,7 +63,7 @@
                         "cartridgeMin": 1,
                         "cartridgeMax": 1,
                         "subscribableInfo": {
-                            "alias": "publisher",
+                            "alias": "store",
                             "deploymentPolicy": "deployment-policy-1",
                             "autoscalingPolicy": "autoscaling-policy-1"
                         }
@@ -75,8 +75,8 @@
             "startupOrders": [
                 {
                     "aliases": [
-                        "group.my-keymanager-gw-manager-gw-worker",
-                        "group.my-pub-store-grp"
+                        "group.keymanager-gw-manager-gw-worker",
+                        "group.pub-store-grp"
                     ]
                 }
             ],

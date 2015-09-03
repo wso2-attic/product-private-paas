@@ -12,7 +12,7 @@ WSO2 IS 5.0.0 Dockerfile defines required resources for building a Docker image 
 (2) Generate template module `wso2is-5.0.0-template-module-<PPAAS_VERSION>.zip` as described in [README.md](https://github.com/wso2/product-private-paas/tree/master/cartridges/templates-modules/wso2is-5.0.0) under "Creating IS Template Module for Private PaaS" section.
 
 
-(3) Run build.sh file to build the docker image:
+(3) Run build.sh file to build the docker image. (This will copy the plugins and template module to the docker image)
 ```
 sh build.sh clean
 ```

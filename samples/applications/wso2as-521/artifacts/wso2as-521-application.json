@@ -1,12 +1,12 @@
 {
     "applicationId": "wso2as-521-application",
-    "alias": "my-wso2as-521-application",
+    "alias": "wso2as-521-application",
     "multiTenant": true,
     "components": {
         "groups": [
             {
                 "name": "wso2as-521-group",
-                "alias": "my-wso2as-521-group",
+                "alias": "wso2as-521-group",
                 "deploymentPolicy": "deployment-policy-1",
                 "groupMinInstances": 1,
                 "groupMaxInstances": 1,
@@ -16,7 +16,7 @@
                         "cartridgeMin": 1,
                         "cartridgeMax": 1,
                         "subscribableInfo": {
-                            "alias": "my-wso2as-521-manager",
+                            "alias": "wso2as-521-manager",
                             "autoscalingPolicy": "autoscaling-policy-1"
                         }
                     },
@@ -25,7 +25,7 @@
                         "cartridgeMin": 2,
                         "cartridgeMax": 2,
                         "subscribableInfo": {
-                            "alias": "my-wso2as-521-worker",
+                            "alias": "wso2as-521-worker",
                             "autoscalingPolicy": "autoscaling-policy-1"
                         }
                     }

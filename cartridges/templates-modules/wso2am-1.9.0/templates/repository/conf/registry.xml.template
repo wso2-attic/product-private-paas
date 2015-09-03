@@ -213,10 +213,22 @@
         <instanceId>gov</instanceId>
         <targetPath>/_system/governance</targetPath>
     </mount>
-    <mount path="/_system/config" overwrite="true">
-        <instanceId>gov</instanceId>
-        <targetPath>/_system/config</targetPath>
-    </mount>
+
+    <dbConfig name="configregistry">
+            <dataSource>jdbc/WSO2_CONFIG_DB</dataSource>
+        </dbConfig>
+        <remoteInstance url="https://localhost">
+            <id>config</id>
+            <cacheId>{{CONFIG_PARAM_CONFIG_DB_USER_NAME}}@{{CONFIG_PARAM_CONFIG_DB_URL}}</cacheId>
+            <dbConfig>configregistry</dbConfig>
+            <readOnly>false</readOnly>
+            <enableCache>true</enableCache>
+            <registryRoot>/</registryRoot>
+        </remoteInstance>
+        <mount path="/_system/config" overwrite="true">
+            <instanceId>config</instanceId>
+            <targetPath>/_system/config</targetPath>
+        </mount>
     {% endif -%}
 
     <!--remoteInstance url="https://localhost:9443/registry">

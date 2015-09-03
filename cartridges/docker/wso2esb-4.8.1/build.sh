@@ -55,4 +55,4 @@ echo "Building" ${wso2_product_type} - ${wso2_product_version} "docker image"
 echo "----------------------------------"
 docker build -t wso2/${wso2_product_type}:${wso2_product_version} .
 
-echo "WSO2" ${wso2_product_type} - ${wso2_product_version} "docker image built successfully."
+echo "wso2" ${wso2_product_type} - ${wso2_product_version} "docker image built successfully."

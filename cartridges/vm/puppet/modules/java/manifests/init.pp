@@ -16,9 +16,9 @@
 
 class java {
 
-  $java_home  = "/opt/${java_name}"
-  $package  = $java_distribution
-  $local_dir = $local_package_dir
+  $java_home  = "/opt/${java_folder}"
+  $package    = $java_distribution
+  $local_dir  = $local_package_dir
 
   file {
     "/opt/${package}":

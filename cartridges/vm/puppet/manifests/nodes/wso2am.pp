@@ -14,19 +14,17 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 
-# AppServer cartridge node
-node /as/ inherits base {
+# API Manager cartridge node
+node /[0-9]{1,12}.*wso2am/ inherits base {
 
   class { 'java': }
   class { 'python_agent':
-    docroot => "/home/ubuntu"
+    docroot => "/var/www"
   }
   class { 'configurator': }
-  class { 'appserver':
-    server_name      => 'wso2as',
-    version          => '5.2.1'
-
+  class { 'wso2am':
+    version      => '1.9.0'
   }
 
-  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['appserver']
+  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['wso2am']
 }

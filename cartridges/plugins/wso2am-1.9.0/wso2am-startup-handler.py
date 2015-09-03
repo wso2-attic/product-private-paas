@@ -51,11 +51,11 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
     CONST_WORKER = "worker"
     CONST_MANAGER = "manager"
     CONST_MGT = "mgt"
-    CONST_KEY_MANAGER_SERVICE_NAME = "wso2am-190-km"
-    CONST_GATEWAY_MANAGER_SERVICE_NAME = "wso2am-190-gw-manager"
-    CONST_GATEWAY_WORKER_SERVICE_NAME = "wso2am-190-gw-worker"
-    CONST_PUBLISHER_SERVICE_NAME = "wso2am-190-pub"
-    CONST_STORE_SERVICE_NAME = "wso2am-190-store"
+    CONST_KEY_MANAGER_SERVICE_NAME = "api-keymanager"
+    CONST_GATEWAY_MANAGER_SERVICE_NAME = "api-gwmanager"
+    CONST_GATEWAY_WORKER_SERVICE_NAME = "api-gwworker"
+    CONST_PUBLISHER_SERVICE_NAME = "api-publisher"
+    CONST_STORE_SERVICE_NAME = "api-store"
     CONST_PUBLISHER_STORE_NAME = "wso2am-190-pub-store"
     CONST_CONFIG_PARAM_KEYMANAGER_PORTS = 'CONFIG_PARAM_KEYMANAGER_PORTS'
     CONST_CONFIG_PARAM_GATEWAY_PORTS = 'CONFIG_PARAM_GATEWAY_PORTS'
@@ -189,8 +189,8 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
                 gateway_host = gateway_ip
                 gateway_worker_host = gateway_worker_ip
             else:
-                gateway_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_MANAGER_SERVICE_NAME)
-                gateway_worker_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_WORKER_SERVICE_NAME)
+                gateway_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_MANAGER_SERVICE_NAME, app_id)
+                gateway_worker_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_WORKER_SERVICE_NAME, app_id)
                 gateway_host = gateway_host_name
                 gateway_worker_host = gateway_worker_host_name
 
@@ -229,7 +229,7 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
             if environment_type == WSO2AMStartupHandler.CONST_KUBERNETES:
                 keymanager_host = keymanager_ip
             else:
-                keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME)
+                keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME, app_id)
                 keymanager_host = keymanager_host_name
                 self.update_hosts_file(keymanager_ip, keymanager_host_name)
 
@@ -267,7 +267,7 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
             if environment_type == WSO2AMStartupHandler.CONST_KUBERNETES:
                 keymanager_host = keymanager_ip
             else:
-                keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME)
+                keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME, app_id)
                 keymanager_host = keymanager_host_name
                 self.update_hosts_file(keymanager_ip, keymanager_host_name)
 
@@ -313,10 +313,10 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
                 gateway_worker_host = gateway_worker_ip
                 store_host = store_ip
             else:
-                keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME)
-                gateway_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_MANAGER_SERVICE_NAME)
-                gateway_worker_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_WORKER_SERVICE_NAME)
-                store_host_name = self.get_host_name_from_cluster(self.CONST_STORE_SERVICE_NAME)
+                keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME, app_id)
+                gateway_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_MANAGER_SERVICE_NAME, app_id)
+                gateway_worker_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_WORKER_SERVICE_NAME, app_id)
+                store_host_name = self.get_host_name_from_cluster(self.CONST_STORE_SERVICE_NAME, app_id)
                 keymanager_host = keymanager_host_name
                 gateway_host = gateway_host_name
                 gateway_worker_host = gateway_worker_host_name
@@ -372,10 +372,10 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
                 gateway_worker_host = gateway_worker_ip
                 publisher_host = publisher_ip
             else:
-                keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME)
-                gateway_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_MANAGER_SERVICE_NAME)
-                gateway_worker_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_WORKER_SERVICE_NAME)
-                publisher_host_name = self.get_host_name_from_cluster(self.CONST_PUBLISHER_SERVICE_NAME)
+                keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME, app_id)
+                gateway_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_MANAGER_SERVICE_NAME, app_id)
+                gateway_worker_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_WORKER_SERVICE_NAME, app_id)
+                publisher_host_name = self.get_host_name_from_cluster(self.CONST_PUBLISHER_SERVICE_NAME, app_id)
                 keymanager_host = keymanager_host_name
                 gateway_host = gateway_host_name
                 gateway_worker_host = gateway_worker_host_name
@@ -423,9 +423,9 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
                 gateway_host = gateway_ip
                 gateway_worker_host = gateway_worker_ip
             else:
-                keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME)
-                gateway_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_MANAGER_SERVICE_NAME)
-                gateway_worker_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_WORKER_SERVICE_NAME)
+                keymanager_host_name = self.get_host_name_from_cluster(self.CONST_KEY_MANAGER_SERVICE_NAME, app_id)
+                gateway_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_MANAGER_SERVICE_NAME, app_id)
+                gateway_worker_host_name = self.get_host_name_from_cluster(self.CONST_GATEWAY_WORKER_SERVICE_NAME, app_id)
                 keymanager_host = keymanager_host_name
                 gateway_host = gateway_host_name
                 gateway_worker_host = gateway_worker_host_name
