@@ -1,0 +1,36 @@
+{
+    "type": "wso2am-190-gw-worker",
+    "category": "framework",
+    "provider": "wso2",
+    "host": "gw.am.wso2.org",
+    "displayName": "WSO2 AM 1.9.0 - Gateway Worker",
+    "description": "WSO2 AM 1.9.0 Gateway Worker Cartridge",
+    "version": "1.9.0",
+    "multiTenant": true,
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "pt-http",
+            "protocol": "http",
+            "port": 8280,
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
+        },
+        {
+            "name": "pt-https",
+            "protocol": "https",
+            "port": 8243,
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "mock",
+            "imageId": "wso2/am:1.9.0",
+            "networkInterfaces": []
+        }
+    ],
+    "property": [
+    ]
+}

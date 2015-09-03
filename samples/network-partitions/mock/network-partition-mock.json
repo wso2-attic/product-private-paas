@@ -10,6 +10,15 @@
                     "value": "default"
                 }
             ]
+        },
+        {
+            "id": "partition-2",
+            "property": [
+                {
+                    "name": "region",
+                    "value": "default"
+                }
+            ]
         }
     ]
 }
