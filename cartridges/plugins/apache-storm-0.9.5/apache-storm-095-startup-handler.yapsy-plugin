@@ -16,11 +16,11 @@
 # under the License.
 
 [Core]
-Name = wso2cep-topology-handler
-Module = wso2cep-topology-handler.py
+Name = apache-storm-095-startup-handler
+Module = apache-storm-095-startup-handler.py
 
 [Documentation]
-Description = CompleteTopologyEvent
+Description = InstanceStartedEvent
 Author = wso2
 Version = 0.1
 Website = https://wso2.com

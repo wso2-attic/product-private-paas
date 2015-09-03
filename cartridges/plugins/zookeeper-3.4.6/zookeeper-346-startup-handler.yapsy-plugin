@@ -16,8 +16,8 @@
 # under the License.
 
 [Core]
-Name = wso2cep-startup-handler
-Module = wso2cep-startup-handler
+Name = zookeeper-346-startup-handler
+Module = zookeeper-346-startup-handler.py
 
 [Documentation]
 Description = InstanceStartedEvent

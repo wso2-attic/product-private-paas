@@ -32,31 +32,58 @@
     </dbConfig>
 
     {% if CONFIG_PARAM_REGISTRY_DB_URL is defined -%}
-    <dbConfig name="sharedregistry">
+    <dbConfig name="governance">
         <dataSource>jdbc/WSO2RegistryDB</dataSource>
     </dbConfig>
 
     <remoteInstance url="https://localhost:9443/registry">
-        <id>instanceid</id>
-        <dbConfig>sharedregistry</dbConfig>
+        <id>governance</id>
+        <dbConfig>governance</dbConfig>
+    {% if CONFIG_PARAM_SUB_DOMAIN is defined -%}
         {% if CONFIG_PARAM_SUB_DOMAIN == 'worker' -%}
-            <readOnly>true</readOnly>
+        <readOnly>true</readOnly>
         {% else -%}
-            <readOnly>false</readOnly>
+        <readOnly>false</readOnly>
         {%  endif -%}
+    {%  else -%}
+        <readOnly>false</readOnly>
+    {%  endif -%}
         <enableCache>true</enableCache>
         <registryRoot>/</registryRoot>
         <cacheId>{{CONFIG_PARAM_REGISTRY_DB_USER_NAME}}@{{CONFIG_PARAM_REGISTRY_DB_URL}}</cacheId>
     </remoteInstance>
+    
+    <mount path="/_system/governance" overwrite="true">
+        <instanceId>governance</instanceId>
+        <targetPath>/_system/governance</targetPath>
+    </mount>
+    {% endif -%}
+
+    {% if CONFIG_PARAM_CONFIG_DB_URL is defined -%}
+    <dbConfig name="config">
+ 	<dataSource>jdbc/WSO2ConfigDB</dataSource>
+    </dbConfig>
+
+    <remoteInstance url="https://localhost:9443/registry">
+        <id>config</id>
+        <dbConfig>config</dbConfig>
+     {% if CONFIG_PARAM_SUB_DOMAIN is defined -%}
+        {% if CONFIG_PARAM_SUB_DOMAIN == 'worker' -%}
+        <readOnly>true</readOnly>
+        {% else -%}
+        <readOnly>false</readOnly>
+        {%  endif -%}
+    {%  else -%}
+        <readOnly>false</readOnly>
+    {%  endif -%}
+        <registryRoot>/</registryRoot>
+ 	<enableCache>true</enableCache>
+        <cacheId>{{CONFIG_PARAM_CONFIG_DB_USER_NAME}}@{{CONFIG_PARAM_CONFIG_DB_URL}}</cacheId>
+    </remoteInstance>
 
     <mount path="/_system/config" overwrite="true">
-        <instanceId>instanceid</instanceId>
-        <targetPath>/_system/asNodes</targetPath>
-    </mount>
-
-    <mount path="/_system/governance" overwrite="true">
-        <instanceId>instanceid</instanceId>
-        <targetPath>/_system/governance</targetPath>
+        <instanceId>config</instanceId>
+        <targetPath>/_system/config</targetPath>
     </mount>
     {% endif -%}
 

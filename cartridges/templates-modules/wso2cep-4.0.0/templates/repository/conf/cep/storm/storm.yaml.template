@@ -15,10 +15,11 @@
 # limitations under the License.
 
 ########### These MUST be filled in for a storm configuration
-storm.zookeeper.servers:
-     - "{{ CONFIG_PARAM_ZOOKEEPER_HOST }}"
+# storm.zookeeper.servers:
+#     - "server1"
+#     - "server2"
 #
-nimbus.host: "{{ CONFIG_PARAM_NIMBUS_HOST }}"
+# nimbus.host: "nimbus"
 # 
 # 
 # ##### These may optionally be filled in:
@@ -45,3 +46,10 @@ nimbus.host: "{{ CONFIG_PARAM_NIMBUS_HOST }}"
 #     parallelism.hint: 1
 #     argument:
 #       - endpoint: "metrics-collector.mycompany.org"
+
+nimbus.host: "{{CONFIG_PARAM_NIMBUS_HOSTNAME}}"
+
+storm.zookeeper.servers:
+{% for key, value in CONFIG_PARAM_ZOOKEEPER_HOSTNAMES.iteritems() -%}
+- {{ key }}
+{% endfor -%}

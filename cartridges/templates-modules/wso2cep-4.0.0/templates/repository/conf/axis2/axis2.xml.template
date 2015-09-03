@@ -610,9 +610,13 @@
                     Service (GMS) using a TCP ping mechanism.
         -->
         <parameter name="membershipScheme">{{CONFIG_PARAM_MEMBERSHIP_SCHEME}}</parameter>
-        {% if CONFIG_PARAM_CLUSTER_IDs is defined -%}
+
+        {% if CONFIG_PARAM_MEMBERSHIP_SCHEME == 'private-paas' -%}
+        <!-- private-paas membership scheme specific parameters -->
+        <parameter name="membershipSchemeClassName">org.wso2.carbon.ppaas.PrivatePaaSBasedMembershipScheme</parameter>
         <parameter name="clusterIds">{{CONFIG_PARAM_CLUSTER_IDs}}</parameter>
-        {% endif -%}
+        {%  endif -%}
+
         <!--<parameter name="licenseKey">xxx</parameter>-->
         <!--<parameter name="mgtCenterURL">http://localhost:8081/mancenter/</parameter>-->
 
@@ -673,7 +677,13 @@
         <parameter name="properties">
             <property name="backendServerURL" value="https://${hostName}:${httpsPort}/services/"/>
             <property name="mgtConsoleURL" value="https://${hostName}:${httpsPort}/"/>
-            <property name="subDomain" value="{{CONFIG_PARAM_SUB_DOMAIN}}"/>
+          {% if CONFIG_PARAM_SUB_DOMAIN is defined -%}
+            {% if CONFIG_PARAM_SUB_DOMAIN == 'mgt' %}
+            <property name="subDomain" value="mgt"/>
+            {% elif CONFIG_PARAM_SUB_DOMAIN == 'worker'%}
+            <property name="subDomain" value="worker"/>
+            {% endif -%}
+          {% endif -%}
         </parameter>
 
         <!--

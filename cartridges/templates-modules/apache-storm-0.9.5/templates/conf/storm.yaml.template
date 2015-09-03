@@ -47,16 +47,12 @@
 #     argument:
 #       - endpoint: "metrics-collector.mycompany.org"
 
-{% if STORM_TYPE == 'ui' -%}
-nimbus.host: "{{NIMBUS_HOSTNAME}}"
-{% endif -%}
-
-{% if STORM_TYPE == 'supervisor' -%}
-nimbus.host: "{{NIMBUS_HOSTNAME}}"
+{% if (CONFIG_PARAM_STORM_TYPE == 'ui') or (CONFIG_PARAM_STORM_TYPE == 'supervisor') -%}
+nimbus.host: "{{CONFIG_PARAM_NIMBUS_HOSTNAME}}"
 {% endif -%}
 
 storm.zookeeper.servers:
-{% for key, value in ZOOKEEPER_HOSTNAMES.iteritems() -%}
+{% for key, value in CONFIG_PARAM_ZOOKEEPER_HOSTNAMES.iteritems() -%}
      - {{ key }}
 {% endfor -%}
 

@@ -23,9 +23,9 @@
 # run script sets the configurable parameters for the cartridge agent in agent.conf and
 # starts the cartridge agent process.
 
-export PRODUCT_HOME="/opt/${SERVER_TYPE}-${SERVER_VERSION}"
-echo "PRODUCT_HOME=${PRODUCT_HOME}" >> /etc/environment
-echo "PRODUCT_HOME is set to ${PRODUCT_HOME}"
+export CARBON_HOME="/opt/${SERVER_TYPE}-${SERVER_VERSION}"
+echo "CARBON_HOME=${CARBON_HOME}" >> /etc/environment
+echo "CARBON_HOME is set to ${CARBON_HOME}"
 
 if [ "${START_CMD}" = "PCA" ]; then
     echo "Starting python cartridge agent..."
@@ -41,6 +41,6 @@ else
     echo "${SERVER_TYPE} configured successfully"
 
     echo "Starting ${SERVER_TYPE}"
-    ${PRODUCT_HOME}/bin/zkServer.sh start
+    ${CARBON_HOME}/bin/zkServer.sh start
     echo "${SERVER_TYPE} started successfully"
 fi
