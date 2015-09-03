@@ -1,4 +1,4 @@
-##WSO2 Private PaaS
+# WSO2 Private PaaS
 
 WSO2 Private PaaS delivers standard, on-premise, application, integration, data, identity, governance, and analytics Platform as a Service (PaaS) to your IT project teams. It is a complete, multi-tenant, self-service, metered, middleware cloud for complex, enterprise-ready projects.
 

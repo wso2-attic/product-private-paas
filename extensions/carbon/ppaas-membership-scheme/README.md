@@ -1,4 +1,4 @@
-## Private PaaS Membership Scheme for Carbon Cluster Discovery
+# Private PaaS Membership Scheme for Carbon Cluster Discovery
 
 Private PaaS membership scheme is a Carbon membership scheme implemented for discovering the Hazelcast cluster
 of a Carbon server via the topology.
