@@ -37,7 +37,6 @@ ENV HBASE_HOME /opt/hbase-${HBASE_VERSION}
 # --------------------------------
 ADD packages/hbase-${HBASE_VERSION}-bin.tar.gz /opt/
 COPY scripts/init.sh /usr/local/bin/init.sh
-COPY scripts/export-envs.sh /tmp/export-envs.sh
 COPY scripts/add-host.sh /tmp/add-host.sh
 COPY packages/${HBASE_TEMPLATE_MODULE_NAME}.zip /opt/
 COPY plugins /${PCA_HOME}/plugins

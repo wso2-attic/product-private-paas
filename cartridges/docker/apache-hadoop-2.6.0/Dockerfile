@@ -36,7 +36,6 @@ ENV HADOOP_HOME /opt/hadoop-${HADOOP_VERSION}
 # --------------------------------
 
 COPY scripts/init.sh /usr/local/bin/init.sh
-COPY scripts/export-envs.sh /tmp/export-envs.sh
 COPY scripts/add-host.sh /tmp/add-host.sh
 COPY packages/${HADOOP_TEMPLATE_MODULE_NAME}.zip /opt/
 ADD packages/hadoop-${HADOOP_VERSION}.tar.gz /opt/

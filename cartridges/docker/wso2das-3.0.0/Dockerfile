@@ -20,41 +20,27 @@ FROM wso2/base-image:4.1.0
 MAINTAINER dev@wso2.org
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV PCA_VERSION 4.1.0
-ENV PPAAS_VERSION 4.1.0-SNAPSHOT
-ENV WSO2_DAS_VERSION 3.0.0-SNAPSHOT
+
+ENV WSO2_SERVER_TYPE das
+ENV WSO2_SERVER_VERSION 3.0.0-SNAPSHOT
+ENV TEMPLATE_MODULE_NAME wso2${WSO2_SERVER_TYPE}-${WSO2_SERVER_VERSION}-template-module-${PPAAS_VERSION}
 ENV MYSQL_CONNECTOR_VERSION 5.1.35
-ENV DAS_TEMPLATE_MODULE_NAME wso2das-3.0.0-template-module-${PPAAS_VERSION}
-ENV PCA_NAME apache-stratos-python-cartridge-agent-${PCA_VERSION}
-ENV PCA_HOME /opt/${PCA_NAME}
-ENV CARBON_HOME /opt/wso2das-${WSO2_DAS_VERSION}
-ENV TERM xterm
-ENV JDK_VERSION 1.7.0_72
-ENV JAVA_HOME /opt/jdk${JDK_VERSION}
 
 # --------------------------------
 # Copy scripts, packages & plugins
 # --------------------------------
 COPY scripts/init.sh /usr/local/bin/init.sh
-COPY packages/${DAS_TEMPLATE_MODULE_NAME}.zip /opt/
-COPY packages/wso2das-${WSO2_DAS_VERSION}.zip /opt/
-COPY packages/mysql-connector-java-${MYSQL_CONNECTOR_VERSION}-bin.jar /opt/
+COPY packages/${TEMPLATE_MODULE_NAME}.zip /opt/
+COPY packages/wso2${WSO2_SERVER_TYPE}-${WSO2_SERVER_VERSION}.zip /opt/
 COPY plugins /${PCA_HOME}/plugins
-COPY scripts/export-envs.sh /tmp/export-envs.sh
 
 # -----------------------------
 # Install prerequisites and DAS
 # -----------------------------
 WORKDIR /opt
 
-RUN unzip /opt/wso2das-${WSO2_DAS_VERSION}.zip -d /opt/ && \
-    rm /opt/wso2das-${WSO2_DAS_VERSION}.zip && \
-    mv /opt/mysql-connector-java-${MYSQL_CONNECTOR_VERSION}-bin.jar /opt/wso2das-${WSO2_DAS_VERSION}/repository/components/lib && \
-    unzip /opt/${DAS_TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
-    chmod +x /tmp/export-envs.sh && \
-    sleep 1 && \
-    /tmp/export-envs.sh ${JAVA_HOME} ${CARBON_HOME} \
-    rm -rf /opt/${DAS_TEMPLATE_MODULE_NAME}.zip
+RUN unzip /opt/${TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
+    rm -rf /opt/${TEMPLATE_MODULE_NAME}.zip
 
 RUN pip install PyMySQL
 

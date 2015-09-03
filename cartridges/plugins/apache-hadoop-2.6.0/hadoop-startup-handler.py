@@ -29,15 +29,17 @@ class HadoopStartupHandler(ICartridgeAgentPlugin):
     CONST_PORT_MAPPING_MGT_CONSOLE = "mgt-console"
     CONST_SERVICE_NAME = "SERVICE_NAME"
     CONST_HADOOP_SERVICE_NAME = "hadoop"
+    CONST_APPLICATION_ID = "APPLICATION_ID"
 
     ENV_CONFIG_PARAM_HADOOP_MASTER = "CONFIG_PARAM_HADOOP_MASTER"
     ENV_CLUSTER = "CLUSTER"
 
+
     def run_plugin(self, values):
 
-        app_id = values["APPLICATION_ID"]
+        app_id = values[HadoopStartupHandler.CONST_APPLICATION_ID]
         service_name = values[HadoopStartupHandler.CONST_SERVICE_NAME]
-        clustering_enable = os.environ.get('CLUSTER')
+        clustering_enable = os.environ.get(HadoopStartupHandler.ENV_CLUSTER)
 
         HadoopStartupHandler.log.info("Application ID: %s" % app_id)
         HadoopStartupHandler.log.info("Service Name: %s" % service_name)
