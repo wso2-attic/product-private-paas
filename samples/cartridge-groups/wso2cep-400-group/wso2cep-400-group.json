@@ -1,16 +1,16 @@
 {
-    "name": "cep-group",
+    "name": "wso2cep-400-group",
     "cartridges": [
-        "cep-mgr",
-        "cep-wkr"
+        "wso2cep-400-manager",
+        "wso2cep-400-worker"
     ],
     "dependencies": {
         "terminationBehaviour": "terminate-all",
         "startupOrders": [
             {
                 "aliases": [
-                    "cartridge.my-cep-mgr",
-                    "cartridge.my-cep-wkr"
+                    "cartridge.my-wso2cep-400-manager",
+                    "cartridge.my-wso2cep-400-worker"
                 ]
             }
         ]

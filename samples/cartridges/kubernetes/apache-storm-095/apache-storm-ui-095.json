@@ -1,27 +1,29 @@
 {
-    "type": "nimbus",
+    "type": "apache-storm-ui-095",
     "provider": "apache",
     "category": "framework",
-    "host": "supervisor.stratos.org",
-    "displayName": "Apache Storm Nimbus",
-    "description": "Apache Storm Nimbus",
+    "host": "ui.storm.wso2.org",
+    "displayName": "Apache Storm Ui",
+    "description": "Apache Storm Ui",
     "version": "0.9.5",
     "multiTenant": "false",
     "loadBalancingIPType": "public",
     "portMapping": [
         {
-            "name": "thrift-port",
-            "protocol": "thrift",
-            "port": "6627",
-            "proxyPort": "8280"
+            "name": "http-ui",
+            "protocol": "http",
+            "port": "8080",
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
         }
+
     ],
     "deployment": {
     },
     "iaasProvider": [
         {
             "type": "kubernetes",
-            "imageId": "apache/storm:0.9.5",
+            "imageId": "ppaas/storm:0.9.5",
             "networkInterfaces": [
             ],
             "property": [
@@ -50,8 +52,8 @@
             "value": "/var/www"
         },
         {
-            "name": "payload_parameter.STORM_TYPE",
-            "value": "nimbus"
+            "name": "payload_parameter.CONFIG_PARAM_STORM_TYPE",
+            "value": "ui"
         }
     ]
 }

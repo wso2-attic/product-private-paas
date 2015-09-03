@@ -1,0 +1,63 @@
+{
+    "name":"wso2cep-400-apache-storm-095-group",
+    "dependencies":{
+        "terminationBehaviour":"terminate-all",
+        "startupOrders":[
+            {
+                "aliases":[
+                    "group.my-apache-storm-095-group",
+                    "group.my-wso2cep-400-group"
+                ]
+            }
+        ]
+    },
+    "groups":[
+        {
+            "name": "apache-storm-095-group",
+            "cartridges": [
+                "apache-storm-supervisor-095",
+                "apache-storm-ui-095",
+                "apache-storm-nimbus-095",
+                "zookeeper-346"
+            ],
+            "dependencies": {
+                "terminationBehaviour": "terminate-all",
+                "startupOrders": [
+                    {
+                        "aliases": [
+                            "cartridge.my-zookeeper-346",
+                            "cartridge.my-apache-storm-nimbus-095",
+                            "cartridge.my-apache-storm-ui-095"
+                        ]
+                    },
+                    {
+                        "aliases": [
+                            "cartridge.my-zookeeper-346",
+                            "cartridge.my-apache-storm-nimbus-095",
+                            "cartridge.my-apache-storm-supervisor-095"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "name": "wso2cep-400-group",
+            "cartridges": [
+                "wso2cep-400-manager",
+                "wso2cep-400-worker"
+            ],
+            "dependencies": {
+                "terminationBehaviour": "terminate-all",
+                "startupOrders": [
+                    {
+                        "aliases": [
+                            "cartridge.my-wso2cep-400-manager",
+                            "cartridge.my-wso2cep-400-worker"
+                        ]
+                    }
+                ]
+            }
+        }
+
+    ]
+}

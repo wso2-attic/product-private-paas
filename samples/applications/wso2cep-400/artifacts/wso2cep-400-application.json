@@ -1,45 +1,46 @@
 {
-    "applicationId": "cep-app",
-    "alias": "cep-app-alias",
+    "applicationId": "wso2cep-400-application",
+    "alias": "my-wso2cep-400-application",
     "components": {
         "groups": [
             {
-                "name": "cep-group",
-                "alias": "cep-group-alias",
+                "name": "wso2cep-400-group",
+                "alias": "my-wso2cep-400-group",
                 "deploymentPolicy": "deployment-policy-1",
                 "groupMinInstances": 1,
                 "groupMaxInstances": 1,
                 "cartridges": [
                     {
-                        "type": "cep-mgr",
+                        "type": "wso2cep-400-manager",
                         "cartridgeMin": 2,
                         "cartridgeMax": 2,
                         "subscribableInfo": {
-                            "alias": "my-cep-mgr-alias",
+                            "alias": "my-wso2cep-400-manager",
                             "autoscalingPolicy": "autoscaling-policy-1",
                             "artifactRepository": {
                                 "privateRepo": false,
-                                "repoUrl": "https://github.com/imesh/stratos-esb-applications.git",
+                                "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
                                 "repoUsername": "",
                                 "repoPassword": ""
                             }
                         }
                     },
                     {
-                        "type": "cep-wkr",
+                        "type": "wso2cep-400-worker",
                         "cartridgeMin": 3,
                         "cartridgeMax": 2,
                         "subscribableInfo": {
-                            "alias": "my-cep-wkr-alias",
+                            "alias": "my-wso2cep-400-worker",
                             "autoscalingPolicy": "autoscaling-policy-1",
                             "artifactRepository": {
                                 "privateRepo": false,
-                                "repoUrl": "https://github.com/imesh/stratos-php-applications.git",
+                                "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
                                 "repoUsername": "",
                                 "repoPassword": ""
                             }
                         }
                     }
+                ]
             }
         ]
     }

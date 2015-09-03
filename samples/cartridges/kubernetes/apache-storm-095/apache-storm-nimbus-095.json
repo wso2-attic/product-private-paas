@@ -1,28 +1,28 @@
 {
-    "type": "zookeeper",
+    "type": "apache-storm-nimbus-095",
     "provider": "apache",
     "category": "framework",
-    "host": "zookeeper.stratos.org",
-    "displayName": "Apache Zookeeper",
-    "description": "Apache Zookeeper",
-    "version": "3.4.6",
+    "host": "nimbus.storm.wso2.org",
+    "displayName": "Apache Storm Nimbus",
+    "description": "Apache Storm Nimbus",
+    "version": "0.9.5",
     "multiTenant": "false",
     "loadBalancingIPType": "public",
     "portMapping": [
         {
-            "name": "http-zookeeper",
-            "protocol": "http",
-            "port": "2181",
-            "proxyPort": "8280"
+            "name": "thrift-port",
+            "protocol": "thrift",
+            "port": "6627",
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
         }
-
     ],
     "deployment": {
     },
     "iaasProvider": [
         {
             "type": "kubernetes",
-            "imageId": "apache/zookeeper:3.4.6",
+            "imageId": "ppaas/storm:0.9.5",
             "networkInterfaces": [
             ],
             "property": [
@@ -49,6 +49,10 @@
         {
             "name": "payload_parameter.APPLICATION_PATH",
             "value": "/var/www"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_STORM_TYPE",
+            "value": "nimbus"
         }
     ]
 }

@@ -1,8 +1,8 @@
 {
-    "type": "supervisor",
+    "type": "apache-storm-supervisor-095",
     "provider": "apache",
     "category": "framework",
-    "host": "supervisor.stratos.org",
+    "host": "supervisor.storm.wso2.org",
     "displayName": "Apache Storm Supervisor",
     "description": "Apache Storm Supervisor",
     "version": "0.9.5",
@@ -13,7 +13,8 @@
             "name": "http-9763",
             "protocol": "http",
             "port": "22",
-            "proxyPort": "8280"
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
         }
     ],
     "deployment": {
@@ -21,7 +22,7 @@
     "iaasProvider": [
         {
             "type": "kubernetes",
-            "imageId": "apache/storm:0.9.5",
+            "imageId": "ppaas/storm:0.9.5",
             "networkInterfaces": [
             ],
             "property": [
@@ -50,7 +51,7 @@
             "value": "/var/www"
         },
         {
-            "name": "payload_parameter.STORM_TYPE",
+            "name": "payload_parameter.CONFIG_PARAM_STORM_TYPE",
             "value": "supervisor"
         }
     ]

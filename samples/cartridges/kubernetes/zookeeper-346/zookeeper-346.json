@@ -1,19 +1,20 @@
 {
-    "type": "ui",
+    "type": "zookeeper-346",
     "provider": "apache",
     "category": "framework",
-    "host": "supervisor.stratos.org",
-    "displayName": "Apache Storm Ui",
-    "description": "Apache Storm Ui",
-    "version": "0.9.5",
+    "host": "zookeeper.wso2.org",
+    "displayName": "Apache Zookeeper",
+    "description": "Apache Zookeeper",
+    "version": "3.4.6",
     "multiTenant": "false",
     "loadBalancingIPType": "public",
     "portMapping": [
         {
-            "name": "http-ui",
+            "name": "http-zookeeper",
             "protocol": "http",
-            "port": "8080",
-            "proxyPort": "8243"
+            "port": "2181",
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
         }
 
     ],
@@ -22,7 +23,7 @@
     "iaasProvider": [
         {
             "type": "kubernetes",
-            "imageId": "apache/storm:0.9.5",
+            "imageId": "ppaas/zookeeper:3.4.6",
             "networkInterfaces": [
             ],
             "property": [
@@ -49,10 +50,6 @@
         {
             "name": "payload_parameter.APPLICATION_PATH",
             "value": "/var/www"
-        },
-        {
-            "name": "payload_parameter.STORM_TYPE",
-            "value": "ui"
         }
     ]
 }

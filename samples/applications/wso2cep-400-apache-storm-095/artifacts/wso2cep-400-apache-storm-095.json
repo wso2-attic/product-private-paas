@@ -1,0 +1,126 @@
+{
+    "applicationId":"wso2cep-400-apache-storm-095",
+    "alias":"my-wso2cep-400-apache-storm-095",
+    "multiTenant":false,
+    "components":{
+        "groups":[
+            {
+                "name":"cep-storm-group",
+                "alias":"my-cep-storm-group",
+                "groupMaxInstances":1,
+                "groupMinInstances":1,
+                "groups":[
+                    {
+                        "name": "apache-storm-095-group",
+                        "alias": "my-apache-storm-095-group",
+                        "deploymentPolicy": "deployment-policy-1",
+                        "groupMinInstances": 1,
+                        "groupMaxInstances": 1,
+                        "cartridges": [
+                            {
+                                "type": "apache-storm-supervisor-095",
+                                "cartridgeMin": 1,
+                                "cartridgeMax": 1,
+                                "subscribableInfo": {
+                                    "alias": "my-apache-storm-supervisor-095",
+                                    "autoscalingPolicy": "autoscaling-policy-1",
+                                    "artifactRepository": {
+                                        "privateRepo": false,
+                                        "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
+                                        "repoUsername": "",
+                                        "repoPassword": ""
+                                    }
+                                }
+                            },
+                            {
+                                "type": "apache-storm-nimbus-095",
+                                "cartridgeMin": 1,
+                                "cartridgeMax": 1,
+                                "subscribableInfo": {
+                                    "alias": "my-apache-storm-nimbus-095",
+                                    "autoscalingPolicy": "autoscaling-policy-1",
+                                    "artifactRepository": {
+                                        "privateRepo": false,
+                                        "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
+                                        "repoUsername": "",
+                                        "repoPassword": ""
+                                    }
+                                }
+                            },
+                            {
+                                "type": "apache-storm-ui-095",
+                                "cartridgeMin": 1,
+                                "cartridgeMax": 1,
+                                "subscribableInfo": {
+                                    "alias": "my-apache-storm-ui-095",
+                                    "autoscalingPolicy": "autoscaling-policy-1",
+                                    "artifactRepository": {
+                                        "privateRepo": false,
+                                        "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
+                                        "repoUsername": "",
+                                        "repoPassword": ""
+                                    }
+                                }
+                            },
+                            {
+                                "type": "zookeeper-346",
+                                "cartridgeMin": 1,
+                                "cartridgeMax": 1,
+                                "subscribableInfo": {
+                                    "alias": "my-zookeeper-346",
+                                    "autoscalingPolicy": "autoscaling-policy-1",
+                                    "artifactRepository": {
+                                        "privateRepo": false,
+                                        "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
+                                        "repoUsername": "",
+                                        "repoPassword": ""
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "wso2cep-400-group",
+                        "alias": "my-wso2cep-400-group",
+                        "deploymentPolicy": "deployment-policy-1",
+                        "groupMinInstances": 1,
+                        "groupMaxInstances": 1,
+                        "cartridges": [
+                            {
+                                "type": "wso2cep-400-manager",
+                                "cartridgeMin": 2,
+                                "cartridgeMax": 2,
+                                "subscribableInfo": {
+                                    "alias": "my-wso2cep-400-manager",
+                                    "autoscalingPolicy": "autoscaling-policy-1",
+                                    "artifactRepository": {
+                                        "privateRepo": false,
+                                        "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
+                                        "repoUsername": "",
+                                        "repoPassword": ""
+                                    }
+                                }
+                            },
+                            {
+                                "type": "wso2cep-400-worker",
+                                "cartridgeMin": 3,
+                                "cartridgeMax": 2,
+                                "subscribableInfo": {
+                                    "alias": "my-wso2cep-400-worker",
+                                    "autoscalingPolicy": "autoscaling-policy-1",
+                                    "artifactRepository": {
+                                        "privateRepo": false,
+                                        "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
+                                        "repoUsername": "",
+                                        "repoPassword": ""
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+
+            }
+        ]
+    }
+}

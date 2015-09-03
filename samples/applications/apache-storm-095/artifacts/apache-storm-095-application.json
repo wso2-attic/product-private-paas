@@ -1,21 +1,21 @@
 {
-    "applicationId": "storm-group-app",
-    "alias": "storm-group-app",
+    "applicationId": "apache-storm-095-application",
+    "alias": "my-apache-storm-095-application",
     "components": {
         "groups": [
             {
-                "name": "storm-group",
-                "alias": "my-storm-group",
+                "name": "apache-storm-095-group",
+                "alias": "my-apache-storm-095-group",
                 "deploymentPolicy": "deployment-policy-1",
                 "groupMinInstances": 1,
                 "groupMaxInstances": 1,
                 "cartridges": [
                     {
-                        "type": "supervisor",
+                        "type": "apache-storm-supervisor-095",
                         "cartridgeMin": 1,
                         "cartridgeMax": 1,
                         "subscribableInfo": {
-                            "alias": "my-supervisor",
+                            "alias": "my-apache-storm-supervisor-095",
                             "autoscalingPolicy": "autoscaling-policy-1",
                             "artifactRepository": {
                                 "privateRepo": false,
@@ -26,11 +26,11 @@
                         }
                     },
                     {
-                        "type": "nimbus",
+                        "type": "apache-storm-nimbus-095",
                         "cartridgeMin": 1,
                         "cartridgeMax": 1,
                         "subscribableInfo": {
-                            "alias": "my-nimbus",
+                            "alias": "my-apache-storm-nimbus-095",
                             "autoscalingPolicy": "autoscaling-policy-1",
                             "artifactRepository": {
                                 "privateRepo": false,
@@ -41,11 +41,11 @@
                         }
                     },
                     {
-                        "type": "zookeeper",
+                        "type": "apache-storm-ui-095",
                         "cartridgeMin": 1,
                         "cartridgeMax": 1,
                         "subscribableInfo": {
-                            "alias": "my-zookeeper",
+                            "alias": "my-apache-storm-ui-095",
                             "autoscalingPolicy": "autoscaling-policy-1",
                             "artifactRepository": {
                                 "privateRepo": false,
@@ -56,11 +56,11 @@
                         }
                     },
                     {
-                        "type": "ui",
+                        "type": "zookeeper-346",
                         "cartridgeMin": 1,
                         "cartridgeMax": 1,
                         "subscribableInfo": {
-                            "alias": "my-ui",
+                            "alias": "my-zookeeper-346",
                             "autoscalingPolicy": "autoscaling-policy-1",
                             "artifactRepository": {
                                 "privateRepo": false,
