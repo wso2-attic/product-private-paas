@@ -1,9 +1,9 @@
 {
     "name": "apache-storm-095-group",
     "cartridges": [
-        "apache-storm-supervisor-095",
-        "apache-storm-ui-095",
-        "apache-storm-nimbus-095",
+        "apache-storm-095-supervisor",
+        "apache-storm-095-ui",
+        "apache-storm-095-nimbus",
         "zookeeper-346"
     ],
     "dependencies": {
@@ -12,15 +12,15 @@
             {
                 "aliases": [
                     "cartridge.my-zookeeper-346",
-                    "cartridge.my-apache-storm-nimbus-095",
-                    "cartridge.my-apache-storm-ui-095"
+                    "cartridge.my-apache-storm-095-nimbus",
+                    "cartridge.my-apache-storm-095-ui"
                 ]
             },
             {
                 "aliases": [
                     "cartridge.my-zookeeper-346",
-                    "cartridge.my-apache-storm-nimbus-095",
-                    "cartridge.my-apache-storm-supervisor-095"
+                    "cartridge.my-apache-storm-095-nimbus",
+                    "cartridge.my-apache-storm-095-supervisor"
                 ]
             }
         ]

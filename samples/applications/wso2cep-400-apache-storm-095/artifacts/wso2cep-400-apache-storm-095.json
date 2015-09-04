@@ -18,11 +18,11 @@
                         "groupMaxInstances": 1,
                         "cartridges": [
                             {
-                                "type": "apache-storm-supervisor-095",
+                                "type": "apache-storm-095-supervisor",
                                 "cartridgeMin": 1,
                                 "cartridgeMax": 1,
                                 "subscribableInfo": {
-                                    "alias": "my-apache-storm-supervisor-095",
+                                    "alias": "my-apache-storm-095-supervisor",
                                     "autoscalingPolicy": "autoscaling-policy-1",
                                     "artifactRepository": {
                                         "privateRepo": false,
@@ -33,11 +33,11 @@
                                 }
                             },
                             {
-                                "type": "apache-storm-nimbus-095",
+                                "type": "apache-storm-095-nimbus",
                                 "cartridgeMin": 1,
                                 "cartridgeMax": 1,
                                 "subscribableInfo": {
-                                    "alias": "my-apache-storm-nimbus-095",
+                                    "alias": "my-apache-storm-095-nimbus",
                                     "autoscalingPolicy": "autoscaling-policy-1",
                                     "artifactRepository": {
                                         "privateRepo": false,
@@ -48,11 +48,11 @@
                                 }
                             },
                             {
-                                "type": "apache-storm-ui-095",
+                                "type": "apache-storm-095-ui",
                                 "cartridgeMin": 1,
                                 "cartridgeMax": 1,
                                 "subscribableInfo": {
-                                    "alias": "my-apache-storm-ui-095",
+                                    "alias": "my-apache-storm-095-ui",
                                     "autoscalingPolicy": "autoscaling-policy-1",
                                     "artifactRepository": {
                                         "privateRepo": false,

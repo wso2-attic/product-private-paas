@@ -32,7 +32,7 @@ clientPort=2181
 # ZooKeeper ensemble should know about every other machine in the ensemble
 # specify server id by creating 'myid' file in the dataDir
 # use hostname instead of IP address for convenient maintenance
-server.1=zookeeper-1:2888:3888
-server.2=zookeeper-2:2888:3888
-server.3=zookeeper-3:2888:3888
+#server.1=zookeeper-1:2888:3888
+#server.2=zookeeper-2:2888:3888
+#server.3=zookeeper-3:2888:3888
 
