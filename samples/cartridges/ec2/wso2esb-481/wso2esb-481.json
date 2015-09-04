@@ -42,6 +42,14 @@
                 {
                     "name": "instanceType",
                     "value": "t2.medium"
+                },
+                {
+                    "name":"tag:Name",
+                    "value":"WSO2 PPaaS ESB"
+                },
+                {
+                    "name":"tag:User",
+                    "value":"reka@wso2.com"
                 }
             ]
         }

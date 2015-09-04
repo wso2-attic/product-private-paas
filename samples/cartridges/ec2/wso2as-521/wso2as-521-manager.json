@@ -34,6 +34,14 @@
                 {
                     "name": "securityGroupIds",
                     "value": "sg-57a61333"
+                },
+                {
+                    "name":"tag:Name",
+                    "value":"WSO2 PPaaS AS Mgt"
+                },
+                {
+                    "name":"tag:User",
+                    "value":"reka@wso2.com"
                 }
             ]
         }
