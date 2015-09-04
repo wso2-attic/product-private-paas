@@ -53,7 +53,7 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
     CONST_MGT = "mgt"
     CONST_KEY_MANAGER_SERVICE_NAME = "wso2am-190-km"
     CONST_GATEWAY_MANAGER_SERVICE_NAME = "wso2am-190-gw-manager"
-    CONST_GATEWAY_WORKER_SERVICE_NAME = "wso2am-190-gw-work"
+    CONST_GATEWAY_WORKER_SERVICE_NAME = "wso2am-190-gw-worker"
     CONST_PUBLISHER_SERVICE_NAME = "wso2am-190-publisher"
     CONST_STORE_SERVICE_NAME = "wso2am-190-store"
     CONST_PUBLISHER_STORE_NAME = "wso2am-190-pub-store"
