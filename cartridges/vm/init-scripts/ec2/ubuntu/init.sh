@@ -101,7 +101,6 @@ if [ ! -d /tmp/payload ]; then
 
 	cd /tmp/payload
 	SERVICE_NAME=`sed 's/,/\n/g' launch-params | grep SERVICE_NAME | cut -d "=" -f 2`
-	DEPLOYMENT=`sed 's/,/\n/g' launch-params | grep DEPLOYMENT | cut -d "=" -f 2`
 	INSTANCE_HOSTNAME=`sed 's/,/\n/g' launch-params | grep HOSTNAME | cut -d "=" -f 2`
 	PUPPET_IP=`sed 's/,/\n/g' launch-params | grep PUPPET_IP | cut -d "=" -f 2`
 	PUPPET_HOSTNAME=`sed 's/,/\n/g' launch-params | grep PUPPET_HOSTNAME | cut -d "=" -f 2`
@@ -112,7 +111,7 @@ if [ ! -d /tmp/payload ]; then
 	if [  -z $PUPPET_DNS_AVAILABLE ];then
 		PUPPET_DNS_AVAILABLE=false
 	fi
-	NODEID="${RANDOMNUMBER}.${DEPLOYMENT}.${SERVICE_NAME}"
+	NODEID="${RANDOMNUMBER}.${SERVICE_NAME}"
 	#essential to have PUPPET_HOSTNAME at the end in order to auto-sign the certs
 	DOMAIN="${PUPPET_HOSTNAME}"
 	${ECHO} -e "\nNode Id ${NODEID}\n"
