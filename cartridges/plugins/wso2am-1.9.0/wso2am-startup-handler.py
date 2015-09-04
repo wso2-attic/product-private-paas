@@ -197,6 +197,9 @@ class WSO2AMStartupHandler(ICartridgeAgentPlugin):
                 self.update_hosts_file(gateway_ip, gateway_host_name)
                 self.update_hosts_file(gateway_worker_ip, gateway_worker_host_name)
 
+            member_ip = socket.gethostbyname(socket.gethostname())
+            self.set_host_name(app_id, service_name, member_ip)
+            self.export_env_var("CONFIG_PARAM_LOCAL_MEMBER_HOST", member_ip)
             self.export_env_var(self.ENV_CONFIG_PARAM_GATEWAY_IP, gateway_host)
             self.set_gateway_ports(gateway_ports)
             self.export_env_var(self.ENV_CONFIG_PARAM_GATEWAY_WORKER_IP, gateway_worker_host)
