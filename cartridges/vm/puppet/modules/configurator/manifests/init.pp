@@ -21,12 +21,8 @@ class configurator (
   $configurator_home  = "/mnt/${configurator_name}-${configurator_version}"
 )
 {
-  $packages = ['python-dev', 'python-pip']
 
-  package { $packages:
-    ensure   => latest,
-    provider => 'apt',
-  }
+  ensure_packages(['python-dev', 'python-pip'])
 
   exec {
     "pip installs-jinja2":

@@ -18,33 +18,28 @@
 
 define python_agent::initialize ($repo, $version, $agent_name, $local_dir, $target, $owner,) {
 
-  $packages = ['python-dev', 'python-pip', 'gcc']
-
-  package { $packages:
-    ensure => latest,
-    provider => 'apt',
-  }
+  ensure_packages(['python-dev', 'python-pip', 'gcc'])
 
   exec {
     "pip installs-paho":
-        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        command => "pip install paho-mqtt",
-        require => Package[$packages];
+      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+      command => "pip install paho-mqtt",
+      require => Package[$packages];
 
     "pip installs-GitPython==0.3.1-beta2":
-        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        command => "pip install GitPython==0.3.1-beta2",
-        require => Exec["pip installs-paho"];
+      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+      command => "pip install GitPython==0.3.1-beta2",
+      require => Exec["pip installs-paho"];
 
     "pip installs-psutil":
-        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        command => "pip install psutil",
-        require => Exec["pip installs-GitPython==0.3.1-beta2"];
+      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+      command => "pip install psutil",
+      require => Exec["pip installs-GitPython==0.3.1-beta2"];
 
     "pip installs-gittle":
-        path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-        command => "pip install gittle",
-        require => Exec["pip installs-psutil"];
+      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
+      command => "pip install gittle",
+      require => Exec["pip installs-psutil"];
 
     "pip installs-pexpect":
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
@@ -68,13 +63,13 @@ define python_agent::initialize ($repo, $version, $agent_name, $local_dir, $targ
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
       unless  => "test -d ${local_dir}",
       command => "mkdir -p ${local_dir}",
-        require => Exec["creating_target_for_python_${name}"];
+      require => Exec["creating_target_for_python_${name}"];
   }
 
   file {
     "/${local_dir}/${agent_name}.zip":
-      ensure => present,
-      source => ["puppet:///modules/python_agent/${agent_name}.zip"],
+      ensure    => present,
+      source    => ["puppet:///modules/python_agent/${agent_name}.zip"],
       require   => Exec["creating_local_package_repo_for_python_${name}"],
   }
 
