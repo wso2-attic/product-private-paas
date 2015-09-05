@@ -56,10 +56,6 @@ define python_agent::initialize ($repo, $version, $agent_name, $local_dir, $targ
       command => "pip install yapsy",
       require => Exec["pip installs-pexpect"];
 
-    "pip installs-jinja2":
-      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-      command => "pip install jinja2",
-      require => Exec["pip installs-yapsy"];
   }
 
   exec {
