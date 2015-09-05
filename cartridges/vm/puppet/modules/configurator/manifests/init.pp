@@ -22,15 +22,6 @@ class configurator (
 )
 {
 
-  ensure_packages(['python-dev', 'python-pip'])
-
-  exec {
-    "pip installs-jinja2":
-      path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
-      command => "pip install jinja2",
-      require => Package[$packages];
-  }
-
   exec {
     "creating_local_package_repo_for_${configurator_name}":
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/opt/java/bin/',
