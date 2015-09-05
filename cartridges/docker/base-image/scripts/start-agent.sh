@@ -28,7 +28,7 @@ set -o posix ; set | sed -e ':a;N;$!ba;s/\n/,/g' > ${PCA_HOME}/payload/launch-pa
 echo "PCA_HOME=${PCA_HOME}" >> /etc/environment
 
 # set CARBON_HOME as APPLICATION_PATH for carbon products
-if [ "${CARBON_HOME}" ]; then
+if [ "${CARBON_HOME}" ] && [ "${MULTITENANT}" == "true" ]; then
 	export APPLICATION_PATH="${CARBON_HOME}"
 	echo "APPLICATION_PATH=${APPLICATION_PATH}" >> /etc/environment
 fi
