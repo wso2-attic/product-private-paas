@@ -21,7 +21,7 @@ class configurator (
   $configurator_home  = "/mnt/${configurator_name}-${configurator_version}"
 )
 {
-  $packages = ['python-dev', 'python-pip', 'gcc']
+  $packages = ['python-dev', 'python-pip']
 
   package { $packages:
     ensure   => latest,
