@@ -29,11 +29,10 @@ class configurator (
   }
 
   exec {
-    
     "pip installs-jinja2":
       path    => '/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin',
       command => "pip install jinja2",
-      require => Exec["pip installs-yapsy"];
+      require => Package[$packages];
   }
 
   exec {
