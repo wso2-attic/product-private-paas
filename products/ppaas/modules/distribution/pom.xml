@@ -24,7 +24,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>wso2-ppaas-distribution</artifactId>
+    <artifactId>wso2ppaas</artifactId>
     <packaging>jar</packaging>
     <name>WSO2 PPaaS - Product Distribution</name>
     <description>WSO2 Private PaaS Distribution</description>
@@ -70,6 +70,23 @@
     </dependencies>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/test/resources/test-conf</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+        <testResources>
+            <testResource>
+                <directory>src/test/resources/common</directory>
+                <includes>
+                    <include>**/jndi.properties</include>
+                </includes>
+            </testResource>
+            <testResource>
+                <directory>src/test/resources</directory>
+            </testResource>
+        </testResources>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>

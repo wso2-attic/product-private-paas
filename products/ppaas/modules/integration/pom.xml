@@ -39,12 +39,55 @@
             <artifactId>org.apache.stratos.common</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.integration.framework</artifactId>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.test.utils</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.testng</groupId>
-            <artifactId>testng</artifactId>
+            <groupId>org.wso2.carbon.automationutils</groupId>
+            <artifactId>org.wso2.carbon.integration.common.admin.client</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.extensions</artifactId>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.tomcat.embed</groupId>
+                    <artifactId>tomcat-embed-logging-juli</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automationutils</groupId>
+            <artifactId>org.wso2.carbon.integration.common.utils</artifactId>
+            <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>log4j-over-slf4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>jul-to-slf4j</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-jdk14</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.carbon.automation</groupId>
+            <artifactId>org.wso2.carbon.automation.engine</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.axis2.wso2</groupId>
@@ -53,12 +96,6 @@
         <dependency>
             <groupId>org.wso2.carbon</groupId>
             <artifactId>org.wso2.carbon.addressing</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.wso2.carbon</groupId>
-            <artifactId>org.wso2.carbon.integration.core</artifactId>
-            <classifier>tests</classifier>
-            <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.wso2.carbon</groupId>
@@ -87,6 +124,10 @@
             <artifactId>org.apache.stratos.mock.iaas.client</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.jacoco</groupId>
+            <artifactId>org.jacoco.agent</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -101,11 +142,37 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <inherited>false</inherited>
                 <configuration>
+                    <argLine>-Xmx1024m -XX:PermSize=256m -XX:MaxPermSize=512m</argLine>
                     <systemProperties>
                         <maven.test.haltafterfailure>false</maven.test.haltafterfailure>
+                        <property>
+                            <name>carbon.zip</name>
+                            <value>${basedir}/../distribution/target/${ppaas.distribution.name}-${project.version}.zip
+                            </value>
+                        </property>
+                        <property>
+                            <name>activemq.bind.address</name>
+                            <value>tcp://localhost:63016</value>
+                        </property>
+                        <property>
+                            <name>carbon.port.offset</name>
+                            <value>1400</value>
+                        </property>
+                        <property>
+                            <name>framework.resource.location</name>
+                            <value>${basedir}/src/test/resources/</value>
+                        </property>
+                        <property>
+                            <name>server.list</name>
+                            <value>PPAAS</value>
+                        </property>
+                        <property>
+                            <name>usedefaultlisteners</name>
+                            <value>false</value>
+                        </property>
                         <sec.verifier.dir>${basedir}/target/security-verifier/</sec.verifier.dir>
-                        <extracted.dir>ppaas-parent-${project.version}</extracted.dir>
-                        <emma.home>${basedir}/target/emma</emma.home>
+                        <instr.file>${basedir}/src/test/resources/instrumentation.txt</instr.file>
+                        <filters.file>${basedir}/src/test/resources/filters.txt</filters.file>
                     </systemProperties>
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/resources/ppaas-testing.xml</suiteXmlFile>
@@ -114,29 +181,18 @@
                 </configuration>
             </plugin>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>test-jar</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-emma-dependencies</id>
+                        <id>copy-jacoco­dependencies</id>
                         <phase>compile</phase>
                         <goals>
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.directory}/emma</outputDirectory>
+                            <outputDirectory>${project.build.directory}/jacoco</outputDirectory>
                             <includeTypes>jar</includeTypes>
-                            <includeArtifactIds>emma,org.wso2.carbon.integration.framework</includeArtifactIds>
+                            <includeArtifactIds>org.jacoco.agent</includeArtifactIds>
                         </configuration>
                     </execution>
                     <execution>
@@ -151,6 +207,17 @@
                             <includeArtifactIds>SecVerifier</includeArtifactIds>
                             <stripVersion>true</stripVersion>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>

@@ -22,9 +22,11 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.common.beans.partition.NetworkPartitionReferenceBean;
 import org.apache.stratos.common.beans.partition.PartitionReferenceBean;
 import org.apache.stratos.common.beans.policy.deployment.DeploymentPolicyBean;
-import org.wso2.ppaas.integration.tests.RestConstants;
-import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
+import org.wso2.ppaas.integration.tests.RestConstants;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -39,8 +41,17 @@ public class DeploymentPolicyTest extends PPaaSTestServerManager {
     private static final Log log = LogFactory.getLog(DeploymentPolicyTest.class);
     private static final String RESOURCES_PATH = "/deployment-policy-test";
 
+    @BeforeClass(alwaysRun = true)
+    public void testInit() throws Exception {
+        super.init();
+    }
 
-    @Test
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
+        super.cleanup();
+    }
+
+    @Test(alwaysRun = true, description = "Deploy deployment policy", priority = 1, timeOut = GLOBAL_TEST_TIMEOUT)
     public void testDeploymentPolicy() {
         try {
             String deploymentPolicyId = "deployment-policy-deployment-policy-test";
@@ -166,14 +177,15 @@ public class DeploymentPolicyTest extends PPaaSTestServerManager {
 
             log.info("-------------------------Ended deployment policy test case-------------------------");
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("An error occurred while handling deployment policy", e);
             assertTrue("An error occurred while handling deployment policy", false);
         }
     }
 
 
-    @Test
+    @Test(alwaysRun = true, description = "Deploy deployment policy 2", timeOut = GLOBAL_TEST_TIMEOUT)
     public void testDeploymentPolicyList() {
         try {
             String deploymentPolicyId1 = "deployment-policy-deployment-policy-test-1";
@@ -270,7 +282,8 @@ public class DeploymentPolicyTest extends PPaaSTestServerManager {
 
             log.info("-------------------------Ended deployment policy list test case-------------------------");
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("An error occurred while handling deployment policy", e);
             assertTrue("An error occurred while handling deployment policy", false);
         }

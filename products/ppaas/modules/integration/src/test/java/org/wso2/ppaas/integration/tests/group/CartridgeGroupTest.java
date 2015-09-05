@@ -20,9 +20,11 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.common.beans.cartridge.CartridgeGroupBean;
-import org.wso2.ppaas.integration.tests.RestConstants;
-import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
+import org.wso2.ppaas.integration.tests.RestConstants;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -37,7 +39,17 @@ public class CartridgeGroupTest extends PPaaSTestServerManager {
     private static final Log log = LogFactory.getLog(CartridgeGroupTest.class);
     private static final String RESOURCES_PATH = "/cartridge-group-test";
 
-    @Test
+    @BeforeClass(alwaysRun = true)
+    public void testInit() throws Exception {
+        super.init();
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
+        super.cleanup();
+    }
+
+    @Test(alwaysRun = true, description = "Deploy cartridge group", priority = 1, timeOut = GLOBAL_TEST_TIMEOUT)
     public void testCartridgeGroup() {
         try {
             log.info("-------------------------Started Cartridge group test case-------------------------");
@@ -130,13 +142,14 @@ public class CartridgeGroupTest extends PPaaSTestServerManager {
 
             log.info("-------------------------Ended Cartridge group test case-------------------------");
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("An error occurred while handling Cartridge group test case", e);
             assertFalse("An error occurred while handling Cartridge group test case", false);
         }
     }
 
-    @Test
+    @Test(alwaysRun = true, description = "Deploy cartridge group 2", priority = 1, timeOut = GLOBAL_TEST_TIMEOUT)
     public void testCartridgeGroupList() {
         try {
             log.info("-------------------------Started Cartridge group list test case-------------------------");
@@ -255,7 +268,8 @@ public class CartridgeGroupTest extends PPaaSTestServerManager {
                     "c6-cartridge-group-test"), removedC3);
 
             log.info("-------------------------Ended Cartridge group list test case-------------------------");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("An error occurred while handling Cartridge list group test case", e);
             assertFalse("An error occurred while handling Cartridge list group test case", false);
         }

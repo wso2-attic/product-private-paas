@@ -21,9 +21,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.common.beans.partition.NetworkPartitionBean;
 import org.apache.stratos.common.beans.partition.PartitionBean;
-import org.wso2.ppaas.integration.tests.RestConstants;
-import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
+import org.wso2.ppaas.integration.tests.RestConstants;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -38,8 +40,17 @@ public class NetworkPartitionTest extends PPaaSTestServerManager {
     private static final Log log = LogFactory.getLog(NetworkPartitionTest.class);
     private static final String RESOURCES_PATH = "/network-partition-test";
 
+    @BeforeClass(alwaysRun = true)
+    public void testInit() throws Exception {
+        super.init();
+    }
 
-    @Test
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
+        super.cleanup();
+    }
+
+    @Test(alwaysRun = true, description = "Deploy network partition", priority = 1, timeOut = GLOBAL_TEST_TIMEOUT)
     public void testNetworkPartition() {
         try {
             String networkPartitionId = "network-partition-network-partition-test";
@@ -89,13 +100,14 @@ public class NetworkPartitionTest extends PPaaSTestServerManager {
             assertNull(beanRemoved);
 
             log.info("-------------------------Ended network partition test case-------------------------");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("An error occurred while handling network partitions", e);
             assertTrue("An error occurred while handling network partitions", false);
         }
     }
 
-    @Test
+    @Test(alwaysRun = true, description = "Deploy network partition 2", timeOut = GLOBAL_TEST_TIMEOUT)
     public void testNetworkPartitionList() {
         try {
             String networkPartitionId1 = "network-partition-network-partition-test-1";
@@ -157,7 +169,8 @@ public class NetworkPartitionTest extends PPaaSTestServerManager {
             assertNull(beanRemoved);
 
             log.info("-------------------------Ended network partition test case-------------------------");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("An error occurred while handling network partitions", e);
             assertTrue("An error occurred while handling network partitions", false);
         }

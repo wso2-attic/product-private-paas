@@ -20,9 +20,11 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.common.beans.UserInfoBean;
-import org.wso2.ppaas.integration.tests.RestConstants;
-import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
+import org.wso2.ppaas.integration.tests.RestConstants;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -37,7 +39,17 @@ public class UserTest extends PPaaSTestServerManager {
     private static final Log log = LogFactory.getLog(UserTest.class);
     private static final String RESOURCES_PATH = "/user-test";
 
-    @Test
+    @BeforeClass(alwaysRun = true)
+    public void testInit() throws Exception {
+        super.init();
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
+        super.cleanup();
+    }
+
+    @Test(alwaysRun = true, description = "List, update user", timeOut = GLOBAL_TEST_TIMEOUT)
     public void addUser() {
         try {
             log.info("-------------------------------Started users test case-------------------------------");
@@ -87,7 +99,7 @@ public class UserTest extends PPaaSTestServerManager {
             assertEquals(bean1.getCredential(), "kim123456");*/
 
             boolean removedUser1 = restClient.removeEntity(RestConstants.USERS,
-                            userId, RestConstants.USERS_NAME);
+                    userId, RestConstants.USERS_NAME);
             assertTrue(removedUser1);
 
             userInfoBeanList = (List<UserInfoBean>) restClient.listEntity(RestConstants.USERS,
@@ -103,9 +115,10 @@ public class UserTest extends PPaaSTestServerManager {
 
             log.info("-------------------------Ended users test case-------------------------");
 
-        } catch (Exception e) {
-            log.error("An error occurred while handling  application bursting", e);
-            assertTrue("An error occurred while handling  application bursting", false);
+        }
+        catch (Exception e) {
+            log.error("An error occurred while running user test", e);
+            assertTrue("An error occurred while running user test", false);
         }
 
     }

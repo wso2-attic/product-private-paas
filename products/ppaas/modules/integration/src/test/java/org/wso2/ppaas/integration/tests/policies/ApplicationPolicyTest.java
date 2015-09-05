@@ -22,6 +22,8 @@ import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.common.beans.PropertyBean;
 import org.apache.stratos.common.beans.partition.NetworkPartitionBean;
 import org.apache.stratos.common.beans.policy.deployment.ApplicationPolicyBean;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.wso2.ppaas.integration.tests.RestConstants;
 import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
 import org.testng.annotations.Test;
@@ -39,8 +41,17 @@ public class ApplicationPolicyTest extends PPaaSTestServerManager {
     private static final Log log = LogFactory.getLog(ApplicationPolicyTest.class);
     private static final String RESOURCES_PATH = "/application-policy-test";
 
+    @BeforeClass(alwaysRun = true)
+    public void testInit() throws Exception {
+        super.init();
+    }
 
-    @Test
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
+        super.cleanup();
+    }
+
+    @Test(alwaysRun = true, description = "Deploy application policy", priority = 1, timeOut = GLOBAL_TEST_TIMEOUT)
     public void testApplicationPolicy() {
         try {
             String applicationPolicyId = "application-policy-application-policy-test";
@@ -132,7 +143,7 @@ public class ApplicationPolicyTest extends PPaaSTestServerManager {
         }
     }
 
-    @Test
+    @Test(alwaysRun = true, description = "Deploy application policy 2", timeOut = GLOBAL_TEST_TIMEOUT)
     public void testApplicationPolicyList() {
         try {
             String applicationPolicyId1 = "application-policy-application-policy-test-1";

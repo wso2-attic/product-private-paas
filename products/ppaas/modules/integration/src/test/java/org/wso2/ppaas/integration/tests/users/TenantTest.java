@@ -16,9 +16,11 @@
 
 package org.wso2.ppaas.integration.tests.users;
 
-import org.wso2.ppaas.integration.tests.RestConstants;
-import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
+import org.wso2.ppaas.integration.tests.RestConstants;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -28,14 +30,22 @@ import static junit.framework.Assert.assertTrue;
 public class TenantTest extends PPaaSTestServerManager {
     private static final String RESOURCES_PATH = "/user-test";
 
+    @BeforeClass(alwaysRun = true)
+    public void testInit() throws Exception {
+        super.init();
+    }
 
-    @Test
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
+        super.cleanup();
+    }
+
+    @Test(alwaysRun = true, description = "Add tenant user", timeOut = GLOBAL_TEST_TIMEOUT)
     public void addUser() {
         String tenantId = "tenant-1";
         boolean addedUser1 = restClient.addEntity(RESOURCES_PATH + "/" +
                         tenantId + ".json",
                 RestConstants.USERS, RestConstants.USERS_NAME);
         assertTrue(addedUser1);
-
     }
 }

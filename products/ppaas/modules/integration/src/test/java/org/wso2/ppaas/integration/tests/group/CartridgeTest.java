@@ -21,9 +21,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.common.beans.PropertyBean;
 import org.apache.stratos.common.beans.cartridge.CartridgeBean;
-import org.wso2.ppaas.integration.tests.RestConstants;
-import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
+import org.wso2.ppaas.integration.tests.RestConstants;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -38,8 +40,17 @@ public class CartridgeTest extends PPaaSTestServerManager {
     private static final Log log = LogFactory.getLog(CartridgeTest.class);
     private static final String RESOURCES_PATH = "/cartridge-test";
 
+    @BeforeClass(alwaysRun = true)
+    public void testInit() throws Exception {
+        super.init();
+    }
 
-    @Test
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
+        super.cleanup();
+    }
+
+    @Test(alwaysRun = true, description = "Deploy cartridge", priority = 1, timeOut = GLOBAL_TEST_TIMEOUT)
     public void testCartridge() {
         log.info("--------------------Started Cartridge test case-----------------------------");
 
@@ -123,13 +134,14 @@ public class CartridgeTest extends PPaaSTestServerManager {
             assertNull(beanRemoved);
 
             log.info("---------------------------Ended Cartridge test case-------------------------");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("An error occurred while handling RESTConstants.CARTRIDGES_PATH", e);
             assertTrue("An error occurred while handling RESTConstants.CARTRIDGES_PATH", false);
         }
     }
 
-    @Test
+    @Test(alwaysRun = true, description = "Cartridge list", priority = 1, timeOut = GLOBAL_TEST_TIMEOUT)
     public void testCartridgeList() {
         log.info("--------------------Started Cartridge list test case-----------------------------");
 
@@ -188,7 +200,8 @@ public class CartridgeTest extends PPaaSTestServerManager {
             assertNull(beanRemoved);
 
             log.info("---------------------------Ended Cartridge list test case-------------------------");
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("An error occurred while handling Cartridges list", e);
             assertTrue("An error occurred while handling Cartridges list", false);
         }

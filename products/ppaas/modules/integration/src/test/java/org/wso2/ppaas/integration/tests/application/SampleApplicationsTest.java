@@ -23,9 +23,13 @@ import org.apache.stratos.common.beans.application.ApplicationBean;
 import org.apache.stratos.common.beans.cartridge.CartridgeGroupBean;
 import org.apache.stratos.common.beans.cartridge.CartridgeGroupReferenceBean;
 import org.apache.stratos.common.beans.cartridge.CartridgeReferenceBean;
-import org.wso2.ppaas.integration.tests.RestConstants;
-import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
+import org.wso2.carbon.automation.engine.annotations.ExecutionEnvironment;
+import org.wso2.carbon.automation.engine.annotations.SetEnvironment;
+import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
+import org.wso2.ppaas.integration.tests.RestConstants;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -40,7 +44,18 @@ public class SampleApplicationsTest extends PPaaSTestServerManager {
     private static final Log log = LogFactory.getLog(SampleApplicationsTest.class);
     private static final String RESOURCES_PATH = "/sample-applications-test";
 
-    @Test
+    @BeforeClass(alwaysRun = true)
+    public void testInit() throws Exception {
+        super.init();
+    }
+
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
+        super.cleanup();
+    }
+
+    @Test(alwaysRun = true, description = "Deploy sample application", priority = 1, timeOut = GLOBAL_TEST_TIMEOUT)
+    @SetEnvironment(executionEnvironments = {ExecutionEnvironment.STANDALONE})
     public void testApplication() {
         log.info("-------------------------------Started application test case-------------------------------");
         try {
@@ -51,15 +66,18 @@ public class SampleApplicationsTest extends PPaaSTestServerManager {
                     RestConstants.AUTOSCALING_POLICIES, RestConstants.AUTOSCALING_POLICIES_NAME);
             assertEquals(addedScalingPolicy, true);
 
-            boolean addedC1 = restClient.addEntity(RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" + "c1-sample-applications-test.json",
+            boolean addedC1 = restClient.addEntity(
+                    RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" + "c1-sample-applications-test.json",
                     RestConstants.CARTRIDGES, RestConstants.CARTRIDGES_NAME);
             assertEquals(addedC1, true);
 
-            boolean addedC2 = restClient.addEntity(RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" + "c2-sample-applications-test.json",
+            boolean addedC2 = restClient.addEntity(
+                    RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" + "c2-sample-applications-test.json",
                     RestConstants.CARTRIDGES, RestConstants.CARTRIDGES_NAME);
             assertEquals(addedC2, true);
 
-            boolean addedC3 = restClient.addEntity(RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" + "c3-sample-applications-test.json",
+            boolean addedC3 = restClient.addEntity(
+                    RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" + "c3-sample-applications-test.json",
                     RestConstants.CARTRIDGES, RestConstants.CARTRIDGES_NAME);
             assertEquals(addedC3, true);
 
@@ -176,8 +194,9 @@ public class SampleApplicationsTest extends PPaaSTestServerManager {
             assertEquals(c3.getCartridgeMax(), 3);
 
 
-            boolean removedGroup = restClient.removeEntity(RestConstants.CARTRIDGE_GROUPS, "G1-sample-applications-test",
-                    RestConstants.CARTRIDGE_GROUPS_NAME);
+            boolean removedGroup =
+                    restClient.removeEntity(RestConstants.CARTRIDGE_GROUPS, "G1-sample-applications-test",
+                            RestConstants.CARTRIDGE_GROUPS_NAME);
             assertFalse(removedGroup);
 
             boolean removedAuto = restClient.removeEntity(RestConstants.AUTOSCALING_POLICIES,
@@ -194,8 +213,9 @@ public class SampleApplicationsTest extends PPaaSTestServerManager {
                     "deployment-policy-sample-applications-test", RestConstants.DEPLOYMENT_POLICIES_NAME);
             assertFalse(removedDep);
 
-            boolean removed = restClient.removeEntity(RestConstants.APPLICATIONS, "g-sc-G123-1-sample-applications-test",
-                    RestConstants.APPLICATIONS_NAME);
+            boolean removed =
+                    restClient.removeEntity(RestConstants.APPLICATIONS, "g-sc-G123-1-sample-applications-test",
+                            RestConstants.APPLICATIONS_NAME);
             assertTrue(removed);
 
             ApplicationBean beanRemoved = (ApplicationBean) restClient.getEntity(RestConstants.APPLICATIONS,
@@ -237,15 +257,16 @@ public class SampleApplicationsTest extends PPaaSTestServerManager {
 
             log.info("-------------------------------Ended application test case-------------------------------");
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("An error occurred while handling application test case", e);
             assertTrue("An error occurred while handling application test case", false);
         }
     }
 
-    @Test
+    @Test(alwaysRun = true, description = "List applications")
     public void testApplicationList() {
-        log.info("-------------------------------Started application listtest case-------------------------------");
+        log.info("-------------------------------Started application list test case-------------------------------");
         try {
             String autoscalingPolicyId = "autoscaling-policy-sample-applications-test";
 
@@ -254,15 +275,18 @@ public class SampleApplicationsTest extends PPaaSTestServerManager {
                     RestConstants.AUTOSCALING_POLICIES, RestConstants.AUTOSCALING_POLICIES_NAME);
             assertEquals(addedScalingPolicy, true);
 
-            boolean addedC1 = restClient.addEntity(RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" + "c1-sample-applications-test.json",
+            boolean addedC1 = restClient.addEntity(
+                    RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" + "c1-sample-applications-test.json",
                     RestConstants.CARTRIDGES, RestConstants.CARTRIDGES_NAME);
             assertEquals(addedC1, true);
 
-            boolean addedC2 = restClient.addEntity(RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" + "c2-sample-applications-test.json",
+            boolean addedC2 = restClient.addEntity(
+                    RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" + "c2-sample-applications-test.json",
                     RestConstants.CARTRIDGES, RestConstants.CARTRIDGES_NAME);
             assertEquals(addedC2, true);
 
-            boolean addedC3 = restClient.addEntity(RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" + "c3-sample-applications-test.json",
+            boolean addedC3 = restClient.addEntity(
+                    RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" + "c3-sample-applications-test.json",
                     RestConstants.CARTRIDGES, RestConstants.CARTRIDGES_NAME);
             assertEquals(addedC3, true);
 
@@ -337,8 +361,9 @@ public class SampleApplicationsTest extends PPaaSTestServerManager {
                     app1, ApplicationBean.class, RestConstants.APPLICATIONS_NAME);
             assertNull(beanRemoved);
 
-            boolean removedGroup = restClient.removeEntity(RestConstants.CARTRIDGE_GROUPS, "G1-sample-applications-test",
-                    RestConstants.CARTRIDGE_GROUPS_NAME);
+            boolean removedGroup =
+                    restClient.removeEntity(RestConstants.CARTRIDGE_GROUPS, "G1-sample-applications-test",
+                            RestConstants.CARTRIDGE_GROUPS_NAME);
             assertFalse(removedGroup);
 
             boolean removedAuto = restClient.removeEntity(RestConstants.AUTOSCALING_POLICIES,
@@ -393,12 +418,13 @@ public class SampleApplicationsTest extends PPaaSTestServerManager {
 
             boolean removedN2 = restClient.removeEntity(RestConstants.NETWORK_PARTITIONS,
                     "network-partition-sample-applications-test-2", RestConstants.NETWORK_PARTITIONS_NAME);
-            assertEquals(String.format("[Network partition] network-partition-sample-applications-test-2 " +
-                    "could not be removed for [application] g-sc-G123-1-sample-applications-test"), removedN2, true);
+            assertEquals("[Network partition] network-partition-sample-applications-test-2 " +
+                    "could not be removed for [application] g-sc-G123-1-sample-applications-test", removedN2, true);
 
             log.info("-------------------------------Ended application test case-------------------------------");
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("An error occurred while handling application test case", e);
             assertTrue("An error occurred while handling application test case", false);
         }

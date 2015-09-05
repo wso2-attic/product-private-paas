@@ -20,6 +20,8 @@ import com.google.gson.reflect.TypeToken;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.common.beans.policy.autoscale.AutoscalePolicyBean;
+import org.testng.annotations.AfterClass;
+import org.testng.annotations.BeforeClass;
 import org.wso2.ppaas.integration.tests.RestConstants;
 import org.wso2.ppaas.integration.tests.PPaaSTestServerManager;
 import org.testng.annotations.Test;
@@ -37,8 +39,17 @@ public class AutoscalingPolicyTest extends PPaaSTestServerManager {
     private static final Log log = LogFactory.getLog(AutoscalingPolicyTest.class);
     private static final String RESOURCES_PATH = "/autoscaling-policy-test";
 
+    @BeforeClass(alwaysRun = true)
+    public void testInit() throws Exception {
+        super.init();
+    }
 
-    @Test
+    @AfterClass(alwaysRun = true)
+    public void destroy() throws Exception {
+        super.cleanup();
+    }
+
+    @Test(alwaysRun = true, description = "Deploy autoscaling policy", priority = 1, timeOut = GLOBAL_TEST_TIMEOUT)
     public void testAutoscalingPolicy() {
         log.info("-------------------------Started autoscaling policy test case-------------------------");
         String policyId = "autoscaling-policy-autoscaling-policy-test";
@@ -91,7 +102,7 @@ public class AutoscalingPolicyTest extends PPaaSTestServerManager {
         }
     }
 
-    @Test
+    @Test(alwaysRun = true, description = "Deploy autoscaling policy 2", timeOut = GLOBAL_TEST_TIMEOUT)
     public void testAutoscalingPolicyList() {
         log.info("-------------------------Started autoscaling policy list test case-------------------------");
         String policyId1 = "autoscaling-policy-autoscaling-policy-test-1";

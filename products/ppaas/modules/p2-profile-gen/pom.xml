@@ -394,7 +394,7 @@
                                 </featureArtifactDef>
                                 <featureArtifactDef>caramel:caramel.feature:${jaggery.caramel.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>org.wso2.store:org.wso2.store.feature:${store.version}
+                                <featureArtifactDef>org.wso2.store:org.wso2.store.feature:${wso2.store.version}
                                 </featureArtifactDef>
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.logging.mgt.feature:${carbon.platform.patch.version.4.2.2}
@@ -772,7 +772,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.store.feature.group</id>
-                                    <version>${store.version}</version>
+                                    <version>${wso2.store.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.idp.mgt.feature.group</id>
@@ -1114,7 +1114,7 @@
                                 </feature>
                                 <feature>
                                     <id>org.wso2.store.feature.group</id>
-                                    <version>${store.version}</version>
+                                    <version>${wso2.store.version}</version>
                                 </feature>
                                 <feature>
                                     <id>org.wso2.carbon.idp.mgt.feature.group</id>
