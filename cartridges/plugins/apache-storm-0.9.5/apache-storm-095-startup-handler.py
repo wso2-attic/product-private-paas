@@ -28,8 +28,12 @@ class StormStartupHandler(ICartridgeAgentPlugin):
     log = LogFactory().get_log(__name__)
 
     # class constants
+    CONST_APPLICATION_ID = "APPLICATION_ID"
+    CONST_SERVICE_NAME = "SERVICE_NAME"
     CONST_ZOOKEEPER_DEFAULT_PORT = "2888"
     CONST_STORM_TYPE = 'CONFIG_PARAM_STORM_TYPE'
+    CONST_ZOOKEEPER_SERVICE_TYPE = "zookeeper-346"
+    CONST_NIMBUS_SERVICE_TYPE = "apache-storm-095-nimbus"
     ENV_ZOOKEEPER_HOSTNAMES = "CONFIG_PARAM_ZOOKEEPER_HOSTNAMES"
     ENV_NIMBUS_HOSTNAME = "CONFIG_PARAM_NIMBUS_HOSTNAME"
 
@@ -41,7 +45,7 @@ class StormStartupHandler(ICartridgeAgentPlugin):
         topology = TopologyContext.topology
 
         zookeeper_ips_list = []
-        zookeeper_cluster = self.get_cluster_of_service(topology, service_type, app_id)
+        zookeeper_cluster = self.get_cluster_of_service(topology, self.CONST_ZOOKEEPER_SERVICE_TYPE, app_id)
         if zookeeper_cluster is not None:
             member_map = zookeeper_cluster.member_map
             for member in member_map:
@@ -60,7 +64,7 @@ class StormStartupHandler(ICartridgeAgentPlugin):
             self.export_env_var(self.ENV_ZOOKEEPER_HOSTNAMES, zk_hostnames_string)
 
 
-        nimbus_cluster = self.get_cluster_of_service(topology, service_type, app_id)
+        nimbus_cluster = self.get_cluster_of_service(topology, self.CONST_NIMBUS_SERVICE_TYPE, app_id)
         if nimbus_cluster is not None:
             member_map = nimbus_cluster.member_map
             for member in member_map:

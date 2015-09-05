@@ -51,5 +51,5 @@ nimbus.host: "{{CONFIG_PARAM_NIMBUS_HOSTNAME}}"
 
 storm.zookeeper.servers:
 {% for key, value in CONFIG_PARAM_ZOOKEEPER_HOSTNAMES.iteritems() -%}
-- {{ key }}
+     -"{{ key }}"
 {% endfor -%}

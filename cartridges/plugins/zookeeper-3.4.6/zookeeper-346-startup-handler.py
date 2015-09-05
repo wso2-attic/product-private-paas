@@ -28,6 +28,9 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
     """
     log = LogFactory().get_log(__name__)
 
+    CONST_APPLICATION_ID = "APPLICATION_ID"
+    CONST_SERVICE_NAME = "SERVICE_NAME"
+
     def run_plugin(self, values):
 
         app_id = values[self.CONST_APPLICATION_ID]
@@ -41,7 +44,7 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
         if zookeeper_cluster is not None:
             member_map = zookeeper_cluster.member_map
             for member in member_map:
-                default_private_ip = member.member_default_private_ip
+                default_private_ip = member_map[member].member_default_private_ip
                 # handle setting hostnames
 
                 # start configurator

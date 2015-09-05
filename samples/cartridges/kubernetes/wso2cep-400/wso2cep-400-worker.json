@@ -51,6 +51,10 @@
         {
             "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
             "value": "true"
+        },
+        {
+            "name": "payload_parameter.APPLICATION_PATH",
+            "value": "/var/www"
         }
     ]
 }

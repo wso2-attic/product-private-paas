@@ -50,7 +50,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     CONST_STORM_TYPE = 'CONFIG_PARAM_STORM_TYPE'
     CONST_PRODUCT = "CEP"
     CONST_ZOOKEEPER_SERVICE_TYPE = "zookeeper-346"
-    CONST_NIMBUS_SERVICE_TYPE = "nimbus-095"
+    CONST_NIMBUS_SERVICE_TYPE = "apache-storm-095-nimbus"
 
     SERVICES = ["wso2cep-400-manager", "wso2cep-400-worker"]
 
@@ -171,7 +171,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         # start server
         WSO2StartupHandler.log.info("Starting WSO2 %s ..." % self.CONST_PRODUCT)
         if service_type.endswith(self.CONST_WORKER):
-            start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -DworkerNode=true start"
+            start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start"
         else:
             start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dsetup start"
         env_var = os.environ.copy()

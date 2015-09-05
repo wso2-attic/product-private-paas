@@ -1,6 +1,6 @@
 {
-    "applicationId": "apache-storm-095-application",
-    "alias": "my-apache-storm-095-application",
+    "applicationId": "apache-storm-095",
+    "alias": "my-apache-storm-095",
     "components": {
         "groups": [
             {

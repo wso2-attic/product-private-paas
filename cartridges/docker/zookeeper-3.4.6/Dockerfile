@@ -22,6 +22,7 @@
 FROM wso2/base-image:4.1.0
 MAINTAINER dev@wso2.org
 
+ENV DEBIAN_FRONTEND noninteractive
 ENV SERVER_TYPE zookeeper
 ENV SERVER_VERSION 3.4.6
 ENV TEMPLATE_MODULE_NAME ${SERVER_TYPE}-${SERVER_VERSION}-template-module-${PPAAS_VERSION}
@@ -32,7 +33,7 @@ ENV TEMPLATE_MODULE_NAME ${SERVER_TYPE}-${SERVER_VERSION}-template-module-${PPAA
 COPY scripts/init.sh /usr/local/bin/init.sh
 COPY packages/${TEMPLATE_MODULE_NAME}.zip /opt/
 COPY packages/${SERVER_TYPE}-${SERVER_VERSION}.tar.gz /opt/
-COPY plugins /${PCA_HOME}/plugins
+COPY plugins ${PCA_HOME}/plugins
 
 
 # -----------------------------
@@ -44,7 +45,8 @@ WORKDIR /opt
 RUN tar xzvf /opt/${SERVER_TYPE}-${SERVER_VERSION}.tar.gz && \
         rm /opt/${SERVER_TYPE}-${SERVER_VERSION}.tar.gz && \
         unzip /opt/${TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
-        rm -rf /opt/${TEMPLATE_MODULE_NAME}.zip
+        rm -rf /opt/${TEMPLATE_MODULE_NAME}.zip && \
+        chmod +x /usr/local/bin/init.sh
 
 # ----------------------
 # Expose container ports

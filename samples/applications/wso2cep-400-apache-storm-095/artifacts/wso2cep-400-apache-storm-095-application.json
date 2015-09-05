@@ -1,12 +1,12 @@
 {
-    "applicationId":"wso2cep-400-apache-storm-095",
-    "alias":"my-wso2cep-400-apache-storm-095",
+    "applicationId":"cep-storm-app",
+    "alias":"my-cep-storm-app",
     "multiTenant":false,
     "components":{
         "groups":[
             {
-                "name":"cep-storm-group",
-                "alias":"my-cep-storm-group",
+                "name":"wso2cep-400-apache-storm-095-group",
+                "alias":"my-wso2cep-400-apache-storm-095-group",
                 "groupMaxInstances":1,
                 "groupMinInstances":1,
                 "groups":[

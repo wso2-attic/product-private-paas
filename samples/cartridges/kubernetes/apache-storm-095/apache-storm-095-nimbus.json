@@ -22,7 +22,7 @@
     "iaasProvider": [
         {
             "type": "kubernetes",
-            "imageId": "ppaas/storm:0.9.5",
+            "imageId": "ppaas/apache-storm:0.9.5",
             "networkInterfaces": [
             ],
             "property": [
