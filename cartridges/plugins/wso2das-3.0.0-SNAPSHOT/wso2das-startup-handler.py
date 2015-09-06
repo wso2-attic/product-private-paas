@@ -88,7 +88,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_MB_IP, mb_ip)
 
         zookeeper_ip = self.get_portal_ip(WSO2DASStartupHandler.CONST_ZOOKEEPER_SERVICE_NAME, app_id)
-        hbase_master_ip = self.get_portal_ip(WSO2DASStartupHandler.CONST_HBASE_SERVICE_NAME, app_id)
+        hbase_master_ip = self.read_member_ip_from_topology(WSO2DASStartupHandler.CONST_HBASE_SERVICE_NAME, app_id)
 
         self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_ZK_HOST, zookeeper_ip)
         self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_HBASE_MASTER_HOST, hbase_master_ip)
@@ -102,14 +102,14 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
             member_ip = socket.gethostbyname(socket.gethostname())
             self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST, member_ip)
 
-        self.map_hbase_hostname(app_id)
+        self.map_hbase_hostname()
 
         # creating databases
         remote_host = self.get_data_from_meta_data_service(app_id, WSO2DASStartupHandler.CONST_MYSQL_HOST)
 
         self.create_database(app_id, WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB,
                              WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB_USER_NAME,
-                             WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB_USER_NAME, remote_host)
+                             WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB_PASSWORD, remote_host)
 
         analytics_fs_db_url = "jdbc:mysql://" + remote_host + ":3306/" + WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB + "?autoReconnect=true"
         self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL,
@@ -167,7 +167,10 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
 
 
     def create_database(self, app_id, databasename, username, password, remote_host):
-
+        """
+        create database for given values
+        :return: void
+        """
         remote_username = self.get_data_from_meta_data_service(app_id, WSO2DASStartupHandler.CONST_MYSQL_ROOT_USERNAME)
         remote_password = self.get_data_from_meta_data_service(app_id, WSO2DASStartupHandler.CONST_MYSQL_ROOT_PASSWORD)
 
@@ -180,7 +183,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
             cur.execute('CREATE DATABASE IF NOT EXISTS ' + databasename + ';')
             cur.execute('USE ' + databasename + ';')
             cur.execute(
-                'GRANT ALL PRIVILEGES ON ' + databasename + '.* TO ' + username + '@"%" IDENTIFIED BY "' + password + '";')
+                "GRANT ALL ON " + databasename + ".* TO " + username + "@'%' IDENTIFIED BY '" + password + "';")
             WSO2DASStartupHandler.log.info("Database %s created successfully" % databasename)
         except db.Error, e:
             WSO2DASStartupHandler.log.error("Error in creating database %d: %s" % (e.args[0], e.args[1]))
@@ -207,29 +210,36 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         return mds_response.properties[receive_data]
 
 
-    def map_hbase_hostname(self, app_id):
-
-        hbase_rs_hostmap = self.get_data_from_meta_data_service(app_id,
-                                                                WSO2DASStartupHandler.ENV_CONFIG_PARAM_HBASE_REGIONSERVER_DATA)
-
-        WSO2DASStartupHandler.log.info("Hbase RS hostnames : %s" % hbase_rs_hostmap)
-
-        if isinstance(hbase_rs_hostmap, (str, unicode)):
-            hbase_list = hbase_rs_hostmap.split(":")
-            config_command = "echo " + hbase_list[1] + "    " + hbase_list[0] + "  >> /etc/hosts"
-            WSO2DASStartupHandler.log.info("Config command %s" % config_command)
-            env_var = os.environ.copy()
-            p = subprocess.Popen(config_command, env=env_var, shell=True)
-            output, errors = p.communicate()
-            WSO2DASStartupHandler.log.info("Entry added to /etc/hosts")
+    def map_hbase_hostname(self):
+        """
+        populate hostnames of hbase regionservers
+        :return: void
+        """
+        mds_response = mdsclient.get(app=True)
+        if mds_response is not None and mds_response.properties.get(
+                WSO2DASStartupHandler.ENV_CONFIG_PARAM_HBASE_REGIONSERVER_DATA) is None:
+            return
         else:
-            for entry in hbase_rs_hostmap:
-                hbase_list = entry.split(":")
+            hbase_rs_hostmap = mds_response.properties[WSO2DASStartupHandler.ENV_CONFIG_PARAM_HBASE_REGIONSERVER_DATA]
+
+            WSO2DASStartupHandler.log.info("Hbase RS hostnames : %s" % hbase_rs_hostmap)
+
+            if isinstance(hbase_rs_hostmap, (str, unicode)):
+                hbase_list = hbase_rs_hostmap.split(":")
                 config_command = "echo " + hbase_list[1] + "    " + hbase_list[0] + "  >> /etc/hosts"
                 WSO2DASStartupHandler.log.info("Config command %s" % config_command)
                 env_var = os.environ.copy()
                 p = subprocess.Popen(config_command, env=env_var, shell=True)
                 output, errors = p.communicate()
+                WSO2DASStartupHandler.log.info("Entry added to /etc/hosts")
+            else:
+                for entry in hbase_rs_hostmap:
+                    hbase_list = entry.split(":")
+                    config_command = "echo " + hbase_list[1] + "    " + hbase_list[0] + "  >> /etc/hosts"
+                    WSO2DASStartupHandler.log.info("Config command %s" % config_command)
+                    env_var = os.environ.copy()
+                    p = subprocess.Popen(config_command, env=env_var, shell=True)
+                    output, errors = p.communicate()
 
 
     def get_clusters_from_topology(self, service_name):
@@ -335,3 +345,28 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
                 WSO2DASStartupHandler.log.error("[Service] %s is not available in topology" % service_name)
 
         return clusters
+
+    def read_member_ip_from_topology(self, service_name, app_id):
+        """
+        get member ip from topology
+        :return: member ip
+        """
+        members = None
+        member_ip = None
+
+        clusters = self.get_clusters_from_topology(service_name)
+
+        if clusters is not None:
+            for cluster in clusters:
+                if cluster.app_id == app_id:
+                    members = cluster.get_members()
+
+        if members is not None:
+            for member in members:
+                member_ip = member.member_default_private_ip
+
+        if member_ip is None:
+            server_hostname = socket.gethostname()
+            member_ip = socket.gethostbyname(server_hostname)
+
+        return member_ip

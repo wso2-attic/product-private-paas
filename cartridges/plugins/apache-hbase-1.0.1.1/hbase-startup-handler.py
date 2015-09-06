@@ -22,6 +22,7 @@ import os
 import time
 from entity import *
 import socket
+import mdsclient
 
 
 class HbaseStartupHandler(ICartridgeAgentPlugin):
@@ -44,14 +45,13 @@ class HbaseStartupHandler(ICartridgeAgentPlugin):
 
     def run_plugin(self, values):
 
-
         app_id = values[HbaseStartupHandler.CONST_APPLICATION_ID]
         clustering_enable = os.environ.get(HbaseStartupHandler.ENV_CLUSTER)
 
         HbaseStartupHandler.log.info("Application ID: %s" % app_id)
         HbaseStartupHandler.log.info("Clustering Enable : %s" % clustering_enable)
 
-        hadoop_master_ip = self.get_portal_ip(HbaseStartupHandler.CONST_HADOOP_SERVICE_NAME, app_id)
+        hadoop_master_ip = self.read_member_ip_from_topology(HbaseStartupHandler.CONST_HADOOP_SERVICE_NAME,app_id)
         zookeeper_ip = self.get_portal_ip(HbaseStartupHandler.CONST_ZOOKEEPER_SERVICE_NAME, app_id)
 
         self.export_env_var(HbaseStartupHandler.ENV_CONFIG_PARAM_HDFS_HOST, hadoop_master_ip)
@@ -59,9 +59,6 @@ class HbaseStartupHandler(ICartridgeAgentPlugin):
 
         if clustering_enable == 'true':
             # This is the master node
-
-            member_ip = socket.gethostbyname(socket.gethostname())
-            self.export_env_var(HbaseStartupHandler.ENV_CONFIG_PARAM_HBASE_MASTER, member_ip)
 
             self.remove_data_from_metadata(HbaseStartupHandler.ENV_CONFIG_PARAM_HBASE_MASTER_HOSTNAME)
             self.remove_data_from_metadata(HbaseStartupHandler.ENV_CONFIG_PARAM_HBASE_REGIONSERVER_DATA)
@@ -72,7 +69,7 @@ class HbaseStartupHandler(ICartridgeAgentPlugin):
 
         else:
 
-            hbase_master_ip = self.get_portal_ip(HbaseStartupHandler.CONST_HBASE_SERVICE_NAME, app_id)
+            hbase_master_ip = self.read_member_ip_from_topology(HbaseStartupHandler.CONST_HBASE_SERVICE_NAME, app_id)
             self.export_env_var(HbaseStartupHandler.ENV_CONFIG_PARAM_HBASE_MASTER, hbase_master_ip)
 
             master_hostname = self.get_data_from_meta_data_service(app_id,
@@ -128,7 +125,10 @@ class HbaseStartupHandler(ICartridgeAgentPlugin):
 
 
     def remove_data_from_metadata(self, key):
-
+        """
+        remove data from meta data service
+        :return: void
+        """
         mds_response = mdsclient.get(app=True)
 
         if mds_response is not None and mds_response.properties.get(key) is not None:
@@ -138,8 +138,12 @@ class HbaseStartupHandler(ICartridgeAgentPlugin):
             if check_str == True:
                 mdsclient.delete_property_value(key, read_data)
             else:
-                for entry in read_data:
-                    mdsclient.delete_property_value(key, entry)
+                check_int = isinstance(read_data, int)
+                if check_int == True:
+                    mdsclient.delete_property_value(key, read_data)
+                else:
+                    for entry in read_data:
+                        mdsclient.delete_property_value(key, entry)
 
 
     def get_clusters_from_topology(self, service_name):
@@ -220,3 +224,28 @@ class HbaseStartupHandler(ICartridgeAgentPlugin):
         mdsclient.put(data, app=True)
 
         HbaseStartupHandler.log.info("Value added to the metadata service %s: %s" % (key, value))
+
+    def read_member_ip_from_topology(self, service_name, app_id):
+        """
+        get member ip from topology
+        :return: member ip
+        """
+        members = None
+        member_ip = None
+
+        clusters = self.get_clusters_from_topology(service_name)
+
+        if clusters is not None:
+            for cluster in clusters:
+                if cluster.app_id == app_id:
+                    members = cluster.get_members()
+
+        if members is not None:
+            for member in members:
+                member_ip = member.member_default_private_ip
+
+        if member_ip is None:
+            server_hostname = socket.gethostname()
+            member_ip = socket.gethostbyname(server_hostname)
+
+        return member_ip

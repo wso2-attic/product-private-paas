@@ -50,7 +50,7 @@ class HadoopStartupHandler(ICartridgeAgentPlugin):
             server_hostname = socket.gethostname()
             server_ip = socket.gethostbyname(server_hostname)
 
-            master_ip = self.get_portal_ip(HadoopStartupHandler.CONST_HADOOP_SERVICE_NAME, app_id)
+            master_ip = self.read_member_ip_from_topology(HadoopStartupHandler.CONST_HADOOP_SERVICE_NAME, app_id)
             self.export_env_var(HadoopStartupHandler.ENV_CONFIG_PARAM_HADOOP_MASTER, master_ip)
 
             add_host_command = "ssh root@" + master_ip + " 'bash -s' < /tmp/add-host.sh " + server_ip + " " + server_hostname
@@ -71,6 +71,13 @@ class HadoopStartupHandler(ICartridgeAgentPlugin):
         p = subprocess.Popen(config_command, env=env_var, shell=True)
         output, errors = p.communicate()
         HadoopStartupHandler.log.info("Hadoop configured successfully")
+
+        config_command = "echo JAVA_HOME=${JAVA_HOME} >> /etc/environment"
+        env_var = os.environ.copy()
+        p = subprocess.Popen(config_command, env=env_var, shell=True)
+        output, errors = p.communicate()
+        HadoopStartupHandler.log.info("Entry added to /etc/environments")
+
 
         if clustering_enable == 'true':
 
@@ -125,6 +132,44 @@ class HadoopStartupHandler(ICartridgeAgentPlugin):
         return clusters
 
 
+    def export_env_var(self, variable, value):
+        """
+        Export value as an environment variable
+        :return: void
+        """
+        if value is not None:
+            os.environ[variable] = value
+            HadoopStartupHandler.log.info("Exported environment variable %s: %s" % (variable, value))
+        else:
+            HadoopStartupHandler.log.warn("Could not export environment variable %s " % variable)
+
+
+    def read_member_ip_from_topology(self, service_name, app_id):
+        """
+        get member ip from topology
+        :return: member ip
+        """
+        members = None
+        member_ip = None
+
+        clusters = self.get_clusters_from_topology(service_name)
+
+        if clusters is not None:
+            for cluster in clusters:
+                if cluster.app_id == app_id:
+                    members = cluster.get_members()
+
+        if members is not None:
+            for member in members:
+                member_ip = member.member_default_private_ip
+
+        if member_ip is None:
+            server_hostname = socket.gethostname()
+            member_ip = socket.gethostbyname(server_hostname)
+
+        return member_ip
+
+
     def get_portal_ip(self, service_name, app_id):
         """
         Return portal ip of mgt-console
@@ -146,16 +191,3 @@ class HadoopStartupHandler(ICartridgeAgentPlugin):
             HadoopStartupHandler.log.error("Kubernetes Services are not available for [Service] %s" % service_name)
 
         return portal_ip
-
-
-    def export_env_var(self, variable, value):
-        """
-        Export value as an environment variable
-        :return: void
-        """
-        if value is not None:
-            os.environ[variable] = value
-            HadoopStartupHandler.log.info("Exported environment variable %s: %s" % (variable, value))
-        else:
-            HadoopStartupHandler.log.warn("Could not export environment variable %s " % variable)
-

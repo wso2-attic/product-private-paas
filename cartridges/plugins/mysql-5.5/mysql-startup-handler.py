@@ -91,7 +91,10 @@ class MYSQLStartupHandler(ICartridgeAgentPlugin):
 
 
     def remove_data_from_metadata(self, key):
-
+        """
+        remove data from meta data service
+        :return: void
+        """
         mds_response = mdsclient.get(app=True)
 
         if mds_response is not None and mds_response.properties.get(key) is not None:
@@ -101,8 +104,11 @@ class MYSQLStartupHandler(ICartridgeAgentPlugin):
             if check_str == True:
                 mdsclient.delete_property_value(key, read_data)
             else:
-                for entry in read_data:
-                    mdsclient.delete_property_value(key, entry)
-
+                check_int = isinstance(read_data, int)
+                if check_int == True:
+                    mdsclient.delete_property_value(key, read_data)
+                else:
+                    for entry in read_data:
+                        mdsclient.delete_property_value(key, entry)
 
 
