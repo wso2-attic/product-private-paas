@@ -59,7 +59,7 @@
     </issueManagement>
 
     <scm>
-        <url>https://github.com/wso2/product-as.git</url>
+        <url>https://github.com/wso2/product-private-paas.git</url>
         <developerConnection>scm:git:https://github.com/wso2/product-private-paas.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/product-private-paas.git</connection>
         <tag>HEAD</tag>
@@ -275,6 +275,19 @@
                     <source>1.7</source>
                     <target>1.7</target>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <arguments>-Dmaven.test.skip=true -Dmaven.javadoc.skip=true</arguments>
+                    <preparationGoals>clean install</preparationGoals>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
             </plugin>
         </plugins>
         <pluginManagement>
