@@ -31,6 +31,11 @@ class java {
       ensure  => link,
       target  => "${java_home}",
       require => Exec['Install java'];
+  
+    '/etc/profile.d/java_home.sh':
+      ensure   => present,
+      mode     => '0755',
+      content  => template('java/java_home.sh.erb');
   }
 
   exec {
