@@ -180,7 +180,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         try:
             con = db.connect(host=remote_host, user=remote_username, passwd=remote_password)
             cur = con.cursor()
-            cur.execute('CREATE DATABASE IF NOT EXISTS ' + databasename + ';')
+            cur.execute('CREATE DATABASE IF NOT EXISTS ' + databasename + ' character set latin1;')
             cur.execute('USE ' + databasename + ';')
             cur.execute(
                 "GRANT ALL ON " + databasename + ".* TO " + username + "@'%' IDENTIFIED BY '" + password + "';")
