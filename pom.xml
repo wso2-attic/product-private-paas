@@ -34,11 +34,11 @@
     <inceptionYear>2012</inceptionYear>
 
     <modules>
+        <module>extensions</module>
         <module>cartridges</module>
         <module>components</module>
         <module>features</module>
         <module>products</module>
-        <module>extensions</module>
     </modules>
 
     <licenses>
@@ -431,11 +431,6 @@
                 <artifactId>org.jacoco.agent</artifactId>
                 <version>${jacoco.agent.version}</version>
             </dependency>
-            <!--dependency>
-                <groupId>org.testng</groupId>
-                <artifactId>testng</artifactId>
-                <version>${testng.version}</version>
-            </dependency-->
             <dependency>
                 <groupId>org.wso2.carbon</groupId>
                 <artifactId>org.wso2.carbon.addressing</artifactId>
@@ -519,7 +514,7 @@
 
     <properties>
         <!-- Apache Stratos version -->
-        <stratos.version>4.1.2-SNAPSHOT</stratos.version>
+        <stratos.version>4.1.2</stratos.version>
 
         <!-- ppaas distribution properties -->
         <ppaas.distribution.name>wso2ppaas</ppaas.distribution.name>
