@@ -17,4 +17,34 @@
 #
 # ----------------------------------------------------------------------------
 
-docker build -t=wso2/mysql:5.5 .
+
+set -e
+prgdir=`dirname "$0"`
+script_path=`cd "$prgdir"; pwd`
+
+wso2_ppaas_version="4.1.0-SNAPSHOT"
+product_type="mysql"
+product_version="5.5"
+product_plugin_path=`cd ${script_path}/../../plugins/${product_type}-${product_version}/; pwd`
+clean=false
+
+if [ "$1" = "clean" ]; then
+   clean=true
+fi
+
+if ${clean} ; then
+   echo "----------------------------------"
+   echo "Copying" ${product_type} - ${product_version} "python plugins"
+   echo "----------------------------------"
+   pushd ${product_plugin_path}
+   cp * ${script_path}/plugins
+   popd
+fi
+
+echo "----------------------------------"
+echo "Building" ${product_type} - ${product_version} "docker image"
+echo "----------------------------------"
+docker build -t wso2/${product_type}:${product_version} .
+
+echo ${product_type} - ${product_version} "docker image built successfully."
+

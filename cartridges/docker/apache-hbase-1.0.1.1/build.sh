@@ -20,8 +20,41 @@
 #
 # --------------------------------------------------------------
 
+set -e
+prgdir=`dirname "$0"`
+script_path=`cd "$prgdir"; pwd`
+
+wso2_ppaas_version="4.1.0-SNAPSHOT"
+product_type="apache-hbase"
+product_version="1.0.1.1"
+product_template_module_path=`cd ${script_path}/../../templates-modules/${product_type}-${product_version}/; pwd`
+product_plugin_path=`cd ${script_path}/../../plugins/${product_type}-${product_version}/; pwd`
+clean=false
+
+if [ "$1" = "clean" ]; then
+   clean=true
+fi
+
+if ${clean} ; then
+   echo "-----------------------------------"
+   echo "Building" ${product_type} - ${product_version} "template module"
+   echo "-----------------------------------"
+   pushd ${product_template_module_path}
+   mvn clean install
+   cp -v target/${product_type}-${product_version}-template-module-${wso2_ppaas_version}.zip ${script_path}/packages/
+   popd
+
+   echo "----------------------------------"
+   echo "Copying" ${product_type} - ${product_version} "python plugins"
+   echo "----------------------------------"
+   pushd ${product_plugin_path}
+   cp * ${script_path}/plugins
+   popd
+fi
+
 echo "----------------------------------"
-echo "Building hbase docker image"
+echo "Building" ${product_type} - ${product_version} "docker image"
 echo "----------------------------------"
-docker build -t wso2/hbase:1.0.1.1 .
-echo "Hbase docker image built successfully"
+docker build -t wso2/"hbase":${product_version} .
+
+echo ${product_type} - ${product_version} "docker image built successfully."

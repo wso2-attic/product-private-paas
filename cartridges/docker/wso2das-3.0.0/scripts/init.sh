@@ -23,12 +23,22 @@
 # run script sets the configurable parameters for the cartridge agent in agent.conf and
 # starts the cartridge agent process.
 #printenv >> /tmp/envs
+
+local_ip=`awk 'NR==1 {print $1}' /etc/hosts`
+server_path=/mnt/${local_ip}
+mkdir -p $server_path
+unzip /opt/wso2${WSO2_SERVER_TYPE}-${WSO2_SERVER_VERSION}.zip -d $server_path
+rm /opt/wso2${WSO2_SERVER_TYPE}-${WSO2_SERVER_VERSION}.zip
+export CARBON_HOME="$server_path/wso2${WSO2_SERVER_TYPE}-${WSO2_SERVER_VERSION}"
+echo "CARBON_HOME=${CARBON_HOME}" >> /etc/environment
+echo "CARBON_HOME is set to ${CARBON_HOME}"
+
 if [ "${START_CMD}" = "PCA" ]; then
     echo "Starting python cartridge agent..."
 	/usr/local/bin/start-agent.sh
 	echo "Python cartridge agent started successfully"
 else
-    echo "Configuring WSO2 Carbon server"
+    echo "Configuring wso2 ${WSO2_SERVER_TYPE} ..."
     echo "Environment variables:"
     printenv
     pushd ${CONFIGURATOR_HOME}

@@ -21,27 +21,22 @@
 
 FROM wso2/base-image:4.1.0
 MAINTAINER dev@wso2.org
-USER root
 
 RUN ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
 RUN cat ~/.ssh/id_dsa.pub >> ~/.ssh/authorized_keys
 ADD ssh_config /root/.ssh/config
 
 ENV DEBIAN_FRONTEND noninteractive
-ENV PPAAS_VERSION 4.1.0-SNAPSHOT
+
 ENV HBASE_VERSION 1.0.1.1
 ENV HBASE_TEMPLATE_MODULE_NAME apache-hbase-${HBASE_VERSION}-template-module-${PPAAS_VERSION}
-ENV PCA_NAME apache-stratos-python-cartridge-agent-4.1.0
-ENV PCA_HOME /opt/${PCA_NAME}
 ENV HBASE_HOME /opt/hbase-${HBASE_VERSION}
-ENV CONFIGURATOR_HOME /opt/${CONFIGURATOR_NAME}
 
 # --------------------------------
 # Copy scripts, packages & plugins
 # --------------------------------
 ADD packages/hbase-${HBASE_VERSION}-bin.tar.gz /opt/
 COPY scripts/init.sh /usr/local/bin/init.sh
-COPY scripts/export-envs.sh /tmp/export-envs.sh
 COPY scripts/add-host.sh /tmp/add-host.sh
 COPY packages/${HBASE_TEMPLATE_MODULE_NAME}.zip /opt/
 COPY plugins /${PCA_HOME}/plugins
@@ -52,17 +47,12 @@ COPY plugins /${PCA_HOME}/plugins
 WORKDIR /opt
 
 RUN unzip /opt/${HBASE_TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
-    rm -rf /opt/${HBASE_TEMPLATE_MODULE_NAME}.zip && \
-    chmod +x /tmp/export-envs.sh && \
-    sleep 1 && \
-    /tmp/export-envs.sh ${JAVA_HOME} ${HBASE_HOME} ${PCA_HOME} ${CONFIGURATOR_HOME}
+    rm -rf /opt/${HBASE_TEMPLATE_MODULE_NAME}.zip
 
 # ----------------------
 # Expose container ports
 # ----------------------
 
-# zookeeper
-# EXPOSE 2181
 # HBase master
 EXPOSE 16000
 # HBase master web UI
