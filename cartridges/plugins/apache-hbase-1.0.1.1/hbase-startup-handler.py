@@ -67,6 +67,11 @@ class HbaseStartupHandler(ICartridgeAgentPlugin):
             self.add_data_to_meta_data_service(HbaseStartupHandler.ENV_CONFIG_PARAM_HBASE_MASTER_HOSTNAME,
                                                master_hostname)
 
+            server_ip = socket.gethostbyname(master_hostname)
+            data = master_hostname + ":" + server_ip
+            self.add_data_to_meta_data_service(HbaseStartupHandler.ENV_CONFIG_PARAM_HBASE_REGIONSERVER_DATA, data)
+
+
         else:
 
             hbase_master_ip = self.read_member_ip_from_topology(HbaseStartupHandler.CONST_HBASE_SERVICE_NAME, app_id)
