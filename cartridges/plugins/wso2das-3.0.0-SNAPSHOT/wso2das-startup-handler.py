@@ -40,6 +40,10 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
     CONST_ZOOKEEPER_SERVICE_NAME = "das-zookeeper"
     CONST_HBASE_SERVICE_NAME = "hbase"
     CONST_PPAAS_MEMBERSHIP_SCHEME = "private-paas"
+    CONST_PORT_MAPPING_MGT_HTTP_TRANSPORT = "mgt-http"
+    CONST_PORT_MAPPING_MGT_HTTPS_TRANSPORT = "mgt-https"
+    CONST_PROTOCOL_HTTP = "http"
+    CONST_PROTOCOL_HTTPS = "https"
 
     CONST_ANALYTICS_FS_DB = "ANALYTICS_FS_DB"
     CONST_ANALYTICS_FS_DB_USER_NAME = "FS_user"
@@ -67,6 +71,9 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
     ENV_CONFIG_PARAM_HBASE_MASTER_HOST = "CONFIG_PARAM_HBASE_MASTER_HOST"
     ENV_CONFIG_PARAM_CLUSTERING = 'CONFIG_PARAM_CLUSTERING'
 
+    ENV_CONFIG_PARAM_HTTP_PROXY_PORT = 'CONFIG_PARAM_HTTP_PROXY_PORT'
+    ENV_CONFIG_PARAM_HTTPS_PROXY_PORT = 'CONFIG_PARAM_HTTPS_PROXY_PORT'
+
 
     def run_plugin(self, values):
 
@@ -77,6 +84,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         membership_scheme = values.get(WSO2DASStartupHandler.ENV_CONFIG_PARAM_MEMBERSHIP_SCHEME,
                                        WSO2DASStartupHandler.CONST_PPAAS_MEMBERSHIP_SCHEME)
         service_name = values[WSO2DASStartupHandler.CONST_SERVICE_NAME]
+        port_mappings_str = values[WSO2DASStartupHandler.CONST_PORT_MAPPINGS].replace("'", "")
 
         WSO2DASStartupHandler.log.info("Profile : %s " % profile)
         WSO2DASStartupHandler.log.info("Application ID: %s" % app_id)
@@ -84,6 +92,18 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         WSO2DASStartupHandler.log.info("Clustering: %s" % clustering)
         WSO2DASStartupHandler.log.info("Membership Scheme: %s" % membership_scheme)
         WSO2DASStartupHandler.log.info("Service Name: %s" % service_name)
+        WSO2DASStartupHandler.log.info("Port mapping: %s" % port_mappings_str)
+
+
+        mgt_http_proxy_port = self.read_proxy_port(port_mappings_str,
+                                                   WSO2DASStartupHandler.CONST_PORT_MAPPING_MGT_HTTP_TRANSPORT,
+                                                   WSO2DASStartupHandler.CONST_PROTOCOL_HTTP)
+        mgt_https_proxy_port = self.read_proxy_port(port_mappings_str,
+                                                    WSO2DASStartupHandler.CONST_PORT_MAPPING_MGT_HTTPS_TRANSPORT,
+                                                    WSO2DASStartupHandler.CONST_PROTOCOL_HTTPS)
+
+        self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_HTTP_PROXY_PORT, mgt_http_proxy_port)
+        self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_HTTPS_PROXY_PORT, mgt_https_proxy_port)
 
         self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_MB_IP, mb_ip)
 
@@ -370,3 +390,32 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
             member_ip = socket.gethostbyname(server_hostname)
 
         return member_ip
+
+    def read_proxy_port(self, port_mappings_str, port_mapping_name, port_mapping_protocol):
+        """
+        returns proxy port of the requested port mapping
+        :return: void
+        """
+        # port mappings format: NAME:mgt-http|PROTOCOL:http|PORT:30001|PROXY_PORT:0|TYPE:NodePort;
+        #                       NAME:mgt-https|PROTOCOL:https|PORT:30002|PROXY_PORT:0|TYPE:NodePort;
+        #                       NAME:pt-http|PROTOCOL:http|PORT:30003|PROXY_PORT:8280|TYPE:ClientIP;
+        #                       NAME:pt-https|PROTOCOL:https|PORT:30004|PROXY_PORT:8243|TYPE:NodePort
+
+        service_proxy_port = None
+        if port_mappings_str is not None:
+            port_mappings_array = port_mappings_str.split(";")
+            if port_mappings_array:
+
+                for port_mapping in port_mappings_array:
+                    name_value_array = port_mapping.split("|")
+                    name = name_value_array[0].split(":")[1]
+                    protocol = name_value_array[1].split(":")[1]
+                    proxy_port = name_value_array[3].split(":")[1]
+                    # If PROXY_PORT is not set, set PORT as the proxy port (ex:Kubernetes),
+                    if proxy_port == '0':
+                        proxy_port = name_value_array[2].split(":")[1]
+
+                    if name == port_mapping_name and protocol == port_mapping_protocol:
+                        service_proxy_port = proxy_port
+
+        return service_proxy_port
