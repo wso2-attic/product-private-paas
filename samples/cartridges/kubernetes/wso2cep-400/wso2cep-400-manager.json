@@ -55,10 +55,6 @@
         {
             "name": "payload_parameter.COMMIT_ENABLED",
             "value": "true"
-        },
-        {
-            "name": "payload_parameter.APPLICATION_PATH",
-            "value": "/var/www"
         }
     ]
 }
