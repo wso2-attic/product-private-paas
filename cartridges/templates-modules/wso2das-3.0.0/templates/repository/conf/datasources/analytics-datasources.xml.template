@@ -37,9 +37,7 @@
             <description>The datasource used for analytics file system</description>
             <definition type="RDBMS">
                 <configuration>
-                    <url>
-                        jdbc:h2:repository/database/ANALYTICS_FS_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000
-                    </url>
+                    <url>jdbc:h2:repository/database/ANALYTICS_FS_DB;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000</url>
                     <username>wso2carbon</username>
                     <password>wso2carbon</password>
                     <driverClassName>org.h2.Driver</driverClassName>
@@ -59,9 +57,7 @@
             <description>The datasource used for analytics record store</description>
             <definition type="RDBMS">
                 <configuration>
-                    <url>
-                        jdbc:h2:repository/database/ANALYTICS_EVENT_STORE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000
-                    </url>
+                    <url>jdbc:h2:repository/database/ANALYTICS_EVENT_STORE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000</url>
                     <username>wso2carbon</username>
                     <password>wso2carbon</password>
                     <driverClassName>org.h2.Driver</driverClassName>
@@ -105,9 +101,7 @@
             <description>The datasource used for analytics record store</description>
             <definition type="RDBMS">
                 <configuration>
-                    <url>
-                        jdbc:h2:repository/database/ANALYTICS_PROCESSED_DATA_STORE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000
-                    </url>
+                    <url>jdbc:h2:repository/database/ANALYTICS_PROCESSED_DATA_STORE;DB_CLOSE_ON_EXIT=FALSE;LOCK_TIMEOUT=60000</url>
                     <username>wso2carbon</username>
                     <password>wso2carbon</password>
                     <driverClassName>org.h2.Driver</driverClassName>
