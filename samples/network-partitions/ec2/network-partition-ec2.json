@@ -44,7 +44,7 @@
         },
         {
             "name": "payload_parameter.PUPPET_HOSTNAME",
-            "value": "puppet.ppaas.puppetmaster.org"
+            "value": "puppet.ppaas.org"
         }
     ]
 }
