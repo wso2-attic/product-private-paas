@@ -69,7 +69,7 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_APIMGT_DB_URL",
-            "value": "jdbc:mysql://172.17.42.1:3306/apimgtdb"
+            "value": "jdbc:mysql://<MYSQL_IP>:3306/apimgtdb"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_DB_USER_NAME",
@@ -81,7 +81,7 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_LB_IP",
-            "value": "172.17.8.102"
+            "value": "<LB_IP>"
         }
     ]
 }

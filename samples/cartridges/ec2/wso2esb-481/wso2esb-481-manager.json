@@ -25,7 +25,7 @@
     "iaasProvider": [
         {
             "type": "ec2",
-            "imageId": "us-west-2/ami-43d2c373",
+            "imageId": "<REGION_ID>/<IMAGE_ID>",
             "property": [
                 {
                     "name": "instanceType",
@@ -44,12 +44,57 @@
     ],
     "property": [
         {
+            "name": "payload_parameter.COMMIT_ENABLED",
+            "value": "true"
+        },
+        {
             "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
             "value": "true"
         },
         {
             "name": "payload_parameter.LB_IP",
-            "value": "<LOAD_BALANCER_IP>"
+            "value": "<LB_IP>"
+        },
+        {
+            "name": "payload_parameter.START_CMD",
+            "value": "PCA"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_REGISTRY_DB_URL",
+            "value":"jdbc:mysql://<MYSQL_IP>:3306/stratos_reg_db?autoReconnect=true"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_REGISTRY_DB_USER_NAME",
+            "value":"<USER_NAME>"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_REGISTRY_DB_PASSWORD",
+            "value":"<PASSWORD>"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_CONFIG_DB_URL",
+            "value":"jdbc:mysql://<MYSQL_IP>:3306/config_db_esb?autoReconnect=true"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_CONFIG_DB_USER_NAME",
+            "value":"<USER_NAME>"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_CONFIG_DB_PASSWORD",
+            "value":"<PASSWORD>"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_USER_MGT_DB_URL",
+            "value":"jdbc:mysql://<MYSQL_IP>:3306/stratos_user_db?autoReconnect=true"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_USER_MGT_DB_USER_NAME",
+            "value":"<USER_NAME>"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_USER_MGT_DB_PASSWORD",
+            "value":"<PASSWORD>"
         }
     ]
+
 }

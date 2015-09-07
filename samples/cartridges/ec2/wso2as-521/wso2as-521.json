@@ -25,7 +25,7 @@
     "iaasProvider": [
         {
             "type": "ec2",
-            "imageId": "us-west-2/ami-e57362d5",
+            "imageId": "<REGION_ID>/<IMAGE_ID>",
             "property": [
                 {
                     "name": "instanceType",

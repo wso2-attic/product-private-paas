@@ -54,7 +54,7 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_APIMGT_DB_URL",
-            "value": "jdbc:mysql://172.17.42.1:3306/apimgtdb"
+            "value": "jdbc:mysql://<MYSQL_IP>:3306/apimgtdb"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_DB_USER_NAME",
@@ -66,11 +66,11 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_UM_DB_URL",
-            "value": "jdbc:mysql://172.17.42.1:3306/stratos_user_db"
+            "value": "jdbc:mysql://<MYSQL_IP>:3306/stratos_user_db"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_REG_DB_URL",
-            "value": "jdbc:mysql://172.17.42.1:3306/stratos_reg_db"
+            "value": "jdbc:mysql://<MYSQL_IP>:3306/stratos_reg_db"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
@@ -82,7 +82,7 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_LB_IP",
-            "value": "172.17.8.102"
+            "value": "<LB_IP>"
         }
 
     ]
