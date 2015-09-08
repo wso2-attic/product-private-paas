@@ -75,7 +75,7 @@ class wso2am (
     "$local_package_dir/${template_module_pack}":
       ensure    => present,
       source    => ["puppet:///modules/${service_code}/packs/${template_module_pack}"],
-      require   => Exec["creating_local_package_repo_for_${server_name}"];
+      require   => Exec["setting_permission_for_${server_name}"];
   }
 
   exec {
