@@ -17,9 +17,23 @@
             "kubernetesPortType": "NodePort"
         },
         {
+            "name": "thrift-secure-port",
+            "protocol": "thrifts",
+            "port": "7711",
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
+        },
+        {
             "name": "binary-port",
             "protocol": "thrift",
             "port": "9611",
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
+        },
+        {
+            "name": "binary-secure-port",
+            "protocol": "thrifts",
+            "port": "9711",
             "proxyPort": 0,
             "kubernetesPortType": "NodePort"
         }

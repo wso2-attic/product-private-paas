@@ -1,7 +1,7 @@
 {
     "name":"wso2cep-400-apache-storm-095-group",
     "dependencies":{
-        "terminationBehaviour":"terminate-all",
+        "terminationBehaviour":"terminate-none",
         "startupOrders":[
             {
                 "aliases":[
@@ -21,7 +21,7 @@
                 "zookeeper-346"
             ],
             "dependencies": {
-                "terminationBehaviour": "terminate-all",
+                "terminationBehaviour": "terminate-dependents",
                 "startupOrders": [
                     {
                         "aliases": [
@@ -47,7 +47,7 @@
                 "wso2cep-400-worker"
             ],
             "dependencies": {
-                "terminationBehaviour": "terminate-all",
+                "terminationBehaviour": "terminate-none",
                 "startupOrders": [
                     {
                         "aliases": [
