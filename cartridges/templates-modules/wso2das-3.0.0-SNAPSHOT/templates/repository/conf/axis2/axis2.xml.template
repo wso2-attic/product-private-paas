@@ -623,6 +623,8 @@
                     is deemed to have left the cluster, it will be detected by the Group Membership
                     Service (GMS) using a TCP ping mechanism.
         -->
+        <parameter name="membershipScheme">{{CONFIG_PARAM_MEMBERSHIP_SCHEME}}</parameter>
+
         {% if CONFIG_PARAM_MEMBERSHIP_SCHEME == 'private-paas' -%}
         <!-- private-paas membership scheme specific parameters -->
         <parameter name="membershipSchemeClassName">org.wso2.carbon.ppaas.PrivatePaaSBasedMembershipScheme</parameter>
