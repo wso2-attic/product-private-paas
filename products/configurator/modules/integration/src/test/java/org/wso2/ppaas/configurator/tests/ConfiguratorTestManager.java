@@ -13,37 +13,28 @@
 
 package org.wso2.ppaas.configurator.tests;
 
-import java.io.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-import java.util.UUID;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-
 import org.apache.commons.exec.*;
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.commons.io.FileUtils;
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpression;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
+import javax.xml.xpath.*;
+import java.io.*;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 /**
  * Test Manager Class for Configurator integration testing
  */
 public class ConfiguratorTestManager {
-
-    protected final Properties integrationProperties = new Properties();
     public static final String PATH_SEP = File.separator;
     private static final Log log = LogFactory.getLog(ConfiguratorTestManager.class);
     public static final String DISTRIBUTION_NAME = "distribution.name";
@@ -56,17 +47,8 @@ public class ConfiguratorTestManager {
     protected Map<String, Executor> executorList = new HashMap<String, Executor>();
 
     public ConfiguratorTestManager() {
-        try {
-            integrationProperties
-                    .load(ConfiguratorTestManager.class.getResourceAsStream(PATH_SEP +
-                            "integration-test.properties"));
-            distributionName = integrationProperties.getProperty(DISTRIBUTION_NAME);
-            log.info("Configurator integration properties: " + integrationProperties.toString());
-        } catch (IOException e) {
-            log.error("Error loading integration-test.properties file from classpath. " +
-                    "Please make sure that file " +
-                    "exists in classpath.", e);
-        }
+        distributionName = System.getProperty(DISTRIBUTION_NAME);
+        log.info("Configurator distribution name: " + distributionName);
     }
 
     protected static String getResourcesPath() {
@@ -115,7 +97,8 @@ public class ConfiguratorTestManager {
             log.info("Configurator setup completed");
 
             return destConfiguratorPath;
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             String message = "Could not setup configurator distribution";
             log.error(message, e);
             throw new RuntimeException(message, e);
@@ -156,13 +139,13 @@ public class ConfiguratorTestManager {
         bos.close();
     }
 
-    public void setup(String resourcePath,Map<String,String> environment) {
+    public void setup(String resourcePath, Map<String, String> environment) {
         String configuratorPath = setupConfigurator(resourcePath);
         log.info("Python agent working directory name: " + CONFIGURATOR_DIR_NAME);
         log.info("Starting configurator ...");
         int result = executeCommand("python " + configuratorPath + PATH_SEP
-                + "configurator.py",environment);
-        log.info("Configurator completed "+result);
+                + "configurator.py", environment);
+        log.info("Configurator completed " + result);
     }
 
     protected void tearDown() {
@@ -176,7 +159,7 @@ public class ConfiguratorTestManager {
         try {
             String targetFile =
                     ConfiguratorTestManager.class.getResource(PATH_SEP).getPath()
-                            + ".." + PATH_SEP +CONFIGURATOR_DIR_NAME +PATH_SEP+resourcePath;
+                            + ".." + PATH_SEP + CONFIGURATOR_DIR_NAME + PATH_SEP + resourcePath;
             builder = factory.newDocumentBuilder();
             Document doc = builder.parse(targetFile);
             XPathFactory xPathfactory = XPathFactory.newInstance();
@@ -184,10 +167,11 @@ public class ConfiguratorTestManager {
             XPathExpression expr =
                     xpath.compile(xpathExpression);
             String value = expr.evaluate(doc, XPathConstants.STRING).toString();
-            log.info("Parsed value"+value);
+            log.info("Parsed value" + value);
             return value;
 
-        } catch (ParserConfigurationException | SAXException | IOException |
+        }
+        catch (ParserConfigurationException | SAXException | IOException |
                 XPathExpressionException e) {
             log.error("Error in parsing xml " + e.getMessage());
         }
@@ -199,7 +183,7 @@ public class ConfiguratorTestManager {
      *
      * @param commandText
      */
-    protected int executeCommand(final String commandText,Map<String,String> environment) {
+    protected int executeCommand(final String commandText, Map<String, String> environment) {
         final ByteArrayOutputStreamLocal outputStream = new ByteArrayOutputStreamLocal();
         int result;
         try {
@@ -212,9 +196,10 @@ public class ConfiguratorTestManager {
             exec.setStreamHandler(streamHandler);
             ExecuteWatchdog watchdog = new ExecuteWatchdog(TIMEOUT);
             exec.setWatchdog(watchdog);
-            result = exec.execute(commandline,environment);
+            result = exec.execute(commandline, environment);
 
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error(outputStream.toString(), e);
             throw new RuntimeException(e);
         }
