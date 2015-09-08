@@ -29,34 +29,8 @@
     <name>WSO2 PPaaS - Configurator - Product</name>
     <description>WSO2 PPaaS - Configurator Product</description>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>copy-source</id>
-                        <phase>process-resources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <copy file="../../components/org.wso2.ppaas.configurator/target/${configurator.distribution.name}-${project.version}.zip"
-                                      tofile="target/${configurator.distribution.name}-${project.version}.zip"/>
-                            </tasks>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
+    <modules>
+        <module>modules/distribution</module>
+        <module>modules/integration</module>
+    </modules>
 </project>
