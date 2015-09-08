@@ -49,8 +49,8 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
                 command = "echo %s  zookeeper-%s >> /etc/hosts" % (default_private_ip, i)
                 p = subprocess.Popen(command, shell=True)
                 output, errors = p.communicate()
-                ZookeeperStartupHandler.info(
-                    "Successfully updated zookeeper %s ip: %s in etc/hosts" % (i, default_private_ip))
+                ZookeeperStartupHandler.log.info(
+                    "Successfully updated zookeeper-%s ip: %s in etc/hosts" % (i, default_private_ip))
                 i = i + 1
 
         # start configurator
