@@ -7,7 +7,7 @@
         "zookeeper-346"
     ],
     "dependencies": {
-        "terminationBehaviour": "terminate-all",
+        "terminationBehaviour": "terminate-dependents",
         "startupOrders": [
             {
                 "aliases": [

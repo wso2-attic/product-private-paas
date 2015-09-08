@@ -11,6 +11,30 @@
                 "groupMinInstances":1,
                 "groups":[
                     {
+                        "name": "zookeeper-346-group",
+                        "alias": "my-zookeeper-346-group",
+                        "deploymentPolicy": "deployment-policy-1",
+                        "groupMinInstances": 1,
+                        "groupMaxInstances": 1,
+                        "cartridges": [
+                            {
+                                "type": "zookeeper-346",
+                                "cartridgeMin": 3,
+                                "cartridgeMax": 3,
+                                "subscribableInfo": {
+                                    "alias": "my-zookeeper-346",
+                                    "autoscalingPolicy": "autoscaling-policy-1",
+                                    "artifactRepository": {
+                                        "privateRepo": false,
+                                        "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
+                                        "repoUsername": "",
+                                        "repoPassword": ""
+                                    }
+                                }
+                            }
+                        ]
+                    },
+                    {
                         "name": "apache-storm-095-group",
                         "alias": "my-apache-storm-095-group",
                         "deploymentPolicy": "deployment-policy-1",
@@ -53,21 +77,6 @@
                                 "cartridgeMax": 1,
                                 "subscribableInfo": {
                                     "alias": "my-apache-storm-095-ui",
-                                    "autoscalingPolicy": "autoscaling-policy-1",
-                                    "artifactRepository": {
-                                        "privateRepo": false,
-                                        "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
-                                        "repoUsername": "",
-                                        "repoPassword": ""
-                                    }
-                                }
-                            },
-                            {
-                                "type": "zookeeper-346",
-                                "cartridgeMin": 1,
-                                "cartridgeMax": 1,
-                                "subscribableInfo": {
-                                    "alias": "my-zookeeper-346",
                                     "autoscalingPolicy": "autoscaling-policy-1",
                                     "artifactRepository": {
                                         "privateRepo": false,

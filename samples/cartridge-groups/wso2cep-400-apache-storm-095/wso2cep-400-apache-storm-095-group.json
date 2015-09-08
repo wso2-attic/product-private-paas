@@ -5,6 +5,7 @@
         "startupOrders":[
             {
                 "aliases":[
+                    "group.my-zookeeper-346-group",
                     "group.my-apache-storm-095-group",
                     "group.my-wso2cep-400-group"
                 ]
@@ -13,26 +14,39 @@
     },
     "groups":[
         {
+            "name": "zookeeper-346-group",
+            "cartridges": [
+                "zookeeper-346"
+            ],
+            "dependencies": {
+                "terminationBehaviour": "terminate-none",
+                "startupOrders": [
+                    {
+                        "aliases": [
+                            "cartridge.my-zookeeper-346"
+                        ]
+                    }
+                ]
+            }
+        },
+        {
             "name": "apache-storm-095-group",
             "cartridges": [
                 "apache-storm-095-supervisor",
                 "apache-storm-095-ui",
-                "apache-storm-095-nimbus",
-                "zookeeper-346"
+                "apache-storm-095-nimbus"
             ],
             "dependencies": {
                 "terminationBehaviour": "terminate-dependents",
                 "startupOrders": [
                     {
                         "aliases": [
-                            "cartridge.my-zookeeper-346",
                             "cartridge.my-apache-storm-095-nimbus",
                             "cartridge.my-apache-storm-095-ui"
                         ]
                     },
                     {
                         "aliases": [
-                            "cartridge.my-zookeeper-346",
                             "cartridge.my-apache-storm-095-nimbus",
                             "cartridge.my-apache-storm-095-supervisor"
                         ]

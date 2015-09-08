@@ -43,11 +43,17 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
         zookeeper_cluster = self.get_cluster_of_service(topology, service_type, app_id)
         if zookeeper_cluster is not None:
             member_map = zookeeper_cluster.member_map
+            i = 1
             for member in member_map:
                 default_private_ip = member_map[member].member_default_private_ip
-                # handle setting hostnames
+                command = "echo %s  zookeeper-%s >> /etc/hosts" % (default_private_ip, i)
+                p = subprocess.Popen(command, shell=True)
+                output, errors = p.communicate()
+                ZookeeperStartupHandler.info(
+                    "Successfully updated zookeeper %s ip: %s in etc/hosts" % (i, default_private_ip))
+                i = i + 1
 
-                # start configurator
+        # start configurator
         ZookeeperStartupHandler.log.info("Configuring Zookeeper ...")
         config_command = "python ${CONFIGURATOR_HOME}/configurator.py"
         env_var = os.environ.copy()
