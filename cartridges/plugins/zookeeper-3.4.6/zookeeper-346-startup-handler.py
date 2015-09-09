@@ -23,6 +23,7 @@ import subprocess
 import socket
 import operator
 import os
+import time
 
 
 class ZookeeperStartupHandler(ICartridgeAgentPlugin):
@@ -33,6 +34,7 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
 
     CONST_APPLICATION_ID = "APPLICATION_ID"
     CONST_SERVICE_NAME = "SERVICE_NAME"
+    CONST_MAX_RETRY_COUNT = 2
 
     def run_plugin(self, values):
 
@@ -45,7 +47,7 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
         zookeeper_cluster = self.get_cluster_of_service(topology, service_type, app_id)
         if zookeeper_cluster is not None:
             member_map = zookeeper_cluster.member_map
-            member_id_member_ip_dictionary = self.get_member_id_member_ip_dictionary(member_map)
+            member_id_member_ip_dictionary = self.get_member_id_member_ip_dictionary(member_map, service_type, app_id)
             ZookeeperStartupHandler.log.info("Zookeeper dictionary : %s" % member_id_member_ip_dictionary)
             sorted_member_id_member_ip_tuples = sorted(member_id_member_ip_dictionary.items(),
                                                        key=operator.itemgetter(0))
@@ -85,13 +87,14 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
         output, errors = p.communicate()
         ZookeeperStartupHandler.log.info("Zookeeper started successfully")
 
-    def get_member_id_member_ip_dictionary(self, member_map):
+    def get_member_id_member_ip_dictionary(self, member_map, service_type, app_id):
         """
         Retuns a dictionary with following format {'member_id_1':"member_default_ip_1", 'member_id_2':"member_default_ip_2" }
 
         :return: void
         """
         member_id_member_ip_dictionary = {}
+        attempt = 0
         for member in member_map:
             member_id = member_map[member].member_id
             default_private_ip = member_map[member].member_default_private_ip
@@ -101,6 +104,14 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
             else:
                 ZookeeperStartupHandler.log.warn(
                     "default member ip for [member_id] %s is empty, hence re-initializing topology " % member_id)
+                if attempt < self.CONST_MAX_RETRY_COUNT:
+                    time.sleep(60)
+                    attempt = attempt + 1
+                    topology = TopologyContext.topology
+                    zookeeper_cluster = self.get_cluster_of_service(topology, service_type, app_id)
+                    if zookeeper_cluster is not None:
+                        member_map = zookeeper_cluster.member_map
+                        self.get_member_id_member_ip_dictionary(member_map, service_type, app_id)
 
         return member_id_member_ip_dictionary
 
