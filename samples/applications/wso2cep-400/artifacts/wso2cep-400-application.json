@@ -12,14 +12,14 @@
                 "cartridges": [
                     {
                         "type": "wso2cep-400-manager",
-                        "cartridgeMin": 2,
-                        "cartridgeMax": 2,
+                        "cartridgeMin": 1,
+                        "cartridgeMax": 1,
                         "subscribableInfo": {
                             "alias": "my-wso2cep-400-manager",
                             "autoscalingPolicy": "autoscaling-policy-1",
                             "artifactRepository": {
                                 "privateRepo": false,
-                                "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
+                                "repoUrl": "https://github.com/lasinducharith/cep-dep-sync.gi",
                                 "repoUsername": "",
                                 "repoPassword": ""
                             }
@@ -27,14 +27,14 @@
                     },
                     {
                         "type": "wso2cep-400-worker",
-                        "cartridgeMin": 3,
-                        "cartridgeMax": 2,
+                        "cartridgeMin": 2,
+                        "cartridgeMax": 4,
                         "subscribableInfo": {
                             "alias": "my-wso2cep-400-worker",
                             "autoscalingPolicy": "autoscaling-policy-1",
                             "artifactRepository": {
                                 "privateRepo": false,
-                                "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
+                                "repoUrl": "https://github.com/lasinducharith/cep-dep-sync.gi",
                                 "repoUsername": "",
                                 "repoPassword": ""
                             }

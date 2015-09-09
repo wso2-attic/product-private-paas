@@ -23,13 +23,7 @@
                                 "cartridgeMax": 3,
                                 "subscribableInfo": {
                                     "alias": "my-zookeeper-346",
-                                    "autoscalingPolicy": "autoscaling-policy-1",
-                                    "artifactRepository": {
-                                        "privateRepo": false,
-                                        "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
-                                        "repoUsername": "",
-                                        "repoPassword": ""
-                                    }
+                                    "autoscalingPolicy": "autoscaling-policy-1"
                                 }
                             }
                         ]
@@ -47,13 +41,7 @@
                                 "cartridgeMax": 6,
                                 "subscribableInfo": {
                                     "alias": "my-apache-storm-095-supervisor",
-                                    "autoscalingPolicy": "autoscaling-policy-1",
-                                    "artifactRepository": {
-                                        "privateRepo": false,
-                                        "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
-                                        "repoUsername": "",
-                                        "repoPassword": ""
-                                    }
+                                    "autoscalingPolicy": "autoscaling-policy-1"
                                 }
                             },
                             {
@@ -62,13 +50,7 @@
                                 "cartridgeMax": 1,
                                 "subscribableInfo": {
                                     "alias": "my-apache-storm-095-nimbus",
-                                    "autoscalingPolicy": "autoscaling-policy-1",
-                                    "artifactRepository": {
-                                        "privateRepo": false,
-                                        "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
-                                        "repoUsername": "",
-                                        "repoPassword": ""
-                                    }
+                                    "autoscalingPolicy": "autoscaling-policy-1"
                                 }
                             },
                             {
@@ -77,13 +59,7 @@
                                 "cartridgeMax": 1,
                                 "subscribableInfo": {
                                     "alias": "my-apache-storm-095-ui",
-                                    "autoscalingPolicy": "autoscaling-policy-1",
-                                    "artifactRepository": {
-                                        "privateRepo": false,
-                                        "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
-                                        "repoUsername": "",
-                                        "repoPassword": ""
-                                    }
+                                    "autoscalingPolicy": "autoscaling-policy-1"
                                 }
                             }
                         ]

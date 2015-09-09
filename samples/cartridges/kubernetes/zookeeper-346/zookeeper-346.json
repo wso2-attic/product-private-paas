@@ -46,10 +46,6 @@
         {
             "name": "payload_parameter.START_CMD",
             "value": "PCA"
-        },
-        {
-            "name": "payload_parameter.APPLICATION_PATH",
-            "value": "/var/www"
         }
     ]
 }

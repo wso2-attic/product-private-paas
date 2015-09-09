@@ -41,8 +41,6 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
 
         app_id = values[self.CONST_APPLICATION_ID]
         service_type = values[self.CONST_SERVICE_NAME]
-
-        ZookeeperStartupHandler.log.info("Zookeeper Service type: %s" % service_type)
         topology = TopologyContext.topology
 
         zookeeper_cluster = self.get_cluster_of_service(topology, service_type, app_id)
@@ -53,17 +51,16 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
             # set number of zookeeper servers
             num_of_zk_instances = len(member_id_member_ip_dictionary)
             self.export_env_var(self.CONST_NUM_OF_SERVERS, str(num_of_zk_instances))
-            ZookeeperStartupHandler.log.info("Zookeeper dictionary : %s" % member_id_member_ip_dictionary)
 
             sorted_member_id_member_ip_tuples = sorted(member_id_member_ip_dictionary.items(),
                                                        key=operator.itemgetter(0))
-            ZookeeperStartupHandler.log.info("Zookeeper sorted tuples : %s" % sorted_member_id_member_ip_tuples)
             local_ip = socket.gethostbyname(socket.gethostname())
             my_id = None
             for i, v in enumerate(sorted_member_id_member_ip_tuples):
                 if v[1] == local_ip:
                     my_id = i + 1
-            # ZK data-dir is hard-coded here
+
+            # TODO : Remove hard-coded ZK data-dir
             command = "echo %s >> /tmp/zookeeper/myid" % my_id
             p = subprocess.Popen(command, shell=True)
             output, errors = p.communicate()
@@ -95,9 +92,9 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
 
     def get_member_id_member_ip_dictionary(self, member_map, service_type, app_id):
         """
-        Retuns a dictionary with following format {'member_id_1':"member_default_ip_1", 'member_id_2':"member_default_ip_2" }
+        Retuns a dictionary with following format {'member_id_1':"member_default_ip_1", 'member_id_2':"member_default_ip_2"}
 
-        :return: void
+        :return: dictionary
         """
         member_id_member_ip_dictionary = {}
         attempt = 0
