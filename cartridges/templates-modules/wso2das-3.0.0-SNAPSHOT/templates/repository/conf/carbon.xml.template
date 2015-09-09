@@ -45,11 +45,22 @@
        This is will become part of the End Point Reference of the
        services deployed on this server instance.
     -->
-    {% if CONFIG_PARAM_WORKER_HOST_NAME is defined -%}
-        <HostName>{{CONFIG_PARAM_WORKER_HOST_NAME}}</HostName>
+
+    {% if CONFIG_PARAM_HOST_NAME is defined -%}
+        <HostName>{{CONFIG_PARAM_HOST_NAME}}</HostName>
     {% else -%}
         <!--HostName>www.wso2.org</HostName-->
     {% endif -%}
+
+
+     {% if CONFIG_PARAM_MGT_HOST_NAME is defined -%}
+        {% if CONFIG_PARAM_SUB_DOMAIN == 'mgt' %}
+            <MgtHostName>{{CONFIG_PARAM_MGT_HOST_NAME}}</MgtHostName>
+        {% endif -%}
+    {% else -%}
+        <!--MgtHostName>mgt.wso2.org</MgtHostName-->
+    {% endif -%}
+
     <!--
     Host name to be used for the Carbon management console
     -->

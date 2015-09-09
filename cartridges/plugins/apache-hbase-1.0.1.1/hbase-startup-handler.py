@@ -52,7 +52,9 @@ class HbaseStartupHandler(ICartridgeAgentPlugin):
         HbaseStartupHandler.log.info("Clustering Enable : %s" % clustering_enable)
 
         hadoop_master_ip = self.read_member_ip_from_topology(HbaseStartupHandler.CONST_HADOOP_SERVICE_NAME,app_id)
-        zookeeper_ip = self.get_portal_ip(HbaseStartupHandler.CONST_ZOOKEEPER_SERVICE_NAME, app_id)
+        
+        zookeeper_cluster = self.get_clusters_from_topology(HbaseStartupHandler.CONST_ZOOKEEPER_SERVICE_NAME)
+        zookeeper_ip = self.get_zookeeper_member_ips(zookeeper_cluster)
 
         self.export_env_var(HbaseStartupHandler.ENV_CONFIG_PARAM_HDFS_HOST, hadoop_master_ip)
         self.export_env_var(HbaseStartupHandler.ENV_CONFIG_PARAM_ZOOKEEPER_HOST, zookeeper_ip)
@@ -127,6 +129,27 @@ class HbaseStartupHandler(ICartridgeAgentPlugin):
             p = subprocess.Popen(start_command, env=env_var, shell=True)
             output, errors = p.communicate()
             HbaseStartupHandler.log.info("Hbase Regionserver started successfully")
+
+
+    def get_zookeeper_member_ips(self, zookeeper_cluster):
+        """
+        returns zookeeper member ip list
+        :return: default_member_ip_list
+        """
+
+        default_private_ip_list = ""
+
+        if zookeeper_cluster is not None:
+            member_map = zookeeper_cluster.member_map
+
+        for member in member_map:
+            default_private_ip = member_map[member].member_default_private_ip
+            HbaseStartupHandler.log.info("Zookeeper [member_ip]%s" % (default_private_ip))
+
+            if default_private_ip is not None:
+                default_private_ip_list = default_private_ip_list + default_private_ip
+
+        return default_private_ip_list
 
 
     def remove_data_from_metadata(self, key):
