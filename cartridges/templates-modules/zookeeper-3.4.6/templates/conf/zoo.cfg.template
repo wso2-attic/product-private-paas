@@ -1,13 +1,13 @@
 # The number of milliseconds of each tick
 tickTime=2000
-# The number of ticks that the initial 
+# The number of ticks that the initial
 # synchronization phase can take
 initLimit=10
-# The number of ticks that can pass between 
+# The number of ticks that can pass between
 # sending a request and getting an acknowledgement
 syncLimit=5
 # the directory where the snapshot is stored.
-# do not use /tmp for storage, /tmp here is just 
+# do not use /tmp for storage, /tmp here is just
 # example sakes.
 dataDir=/tmp/zookeeper
 # the port at which the clients will connect
@@ -16,7 +16,7 @@ clientPort=2181
 # increase this if you need to handle more clients
 #maxClientCnxns=60
 #
-# Be sure to read the maintenance section of the 
+# Be sure to read the maintenance section of the
 # administrator guide before turning on autopurge.
 #
 # http://zookeeper.apache.org/doc/current/zookeeperAdmin.html#sc_maintenance
@@ -32,7 +32,8 @@ clientPort=2181
 # ZooKeeper ensemble should know about every other machine in the ensemble
 # specify server id by creating 'myid' file in the dataDir
 # use hostname instead of IP address for convenient maintenance
+
+# Currently we only use 3 servers for hackathon to provide HA for ZK
 server.1=zookeeper-1:2888:3888
 server.2=zookeeper-2:2888:3888
 server.3=zookeeper-3:2888:3888
-

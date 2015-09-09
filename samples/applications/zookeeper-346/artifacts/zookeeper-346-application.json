@@ -1,0 +1,33 @@
+{
+    "applicationId": "zookeeper-346",
+    "alias": "my-zookeeper-346",
+    "components": {
+        "groups": [
+            {
+                "name": "zookeeper-346-group",
+                "alias": "my-zookeeper-346-group",
+                "deploymentPolicy": "deployment-policy-1",
+                "groupMinInstances": 1,
+                "groupMaxInstances": 1,
+                "cartridges": [
+                    {
+                        "type": "zookeeper-346",
+                        "cartridgeMin": 3,
+                        "cartridgeMax": 3,
+                        "subscribableInfo": {
+                            "alias": "my-zookeeper-346",
+                            "autoscalingPolicy": "autoscaling-policy-1",
+                            "artifactRepository": {
+                                "privateRepo": false,
+                                "repoUrl": "https://github.com/lakwarus/single-cartridge.git",
+                                "repoUsername": "",
+                                "repoPassword": ""
+                            }
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
+

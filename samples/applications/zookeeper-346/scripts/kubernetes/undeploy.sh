@@ -19,31 +19,15 @@
 # under the License.
 #
 # --------------------------------------------------------------
+#
+host_ip="localhost"
+host_port=9443
 
-# run script sets the configurable parameters for the cartridge agent in agent.conf and
-# starts the cartridge agent process.
+prgdir=`dirname "$0"`
+script_path=`cd "$prgdir"; pwd`
+common_folder=`cd "${script_path}/../common"; pwd`
 
-export CARBON_HOME="/opt/zookeeper-3.4.6"
-echo "CARBON_HOME=${CARBON_HOME}" >> /etc/environment
-echo "CARBON_HOME is set to ${CARBON_HOME}"
+bash ${common_folder}/undeploy.sh
 
-# ZK data directory is hard-coded here
-mkdir -p /tmp/zookeeper
-
-if [ "${START_CMD}" = "PCA" ]; then
-    echo "Starting python cartridge agent..."
-	/usr/local/bin/start-agent.sh
-	echo "Python cartridge agent started successfully"
-else
-    echo "Configuring ${SERVER_TYPE} ..."
-    echo "Environment variables:"
-    printenv
-    pushd ${CONFIGURATOR_HOME}
-    python configurator.py
-    popd
-    echo "${SERVER_TYPE} configured successfully"
-
-    echo "Starting ${SERVER_TYPE}"
-    ${CARBON_HOME}/bin/zkServer.sh start
-    echo "${SERVER_TYPE} started successfully"
-fi
+echo "Removing kubernetes cluster..."
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/kubernetesClusters/kubernetes-cluster-1

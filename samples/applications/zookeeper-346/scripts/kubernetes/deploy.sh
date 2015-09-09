@@ -19,31 +19,18 @@
 # under the License.
 #
 # --------------------------------------------------------------
+#
+host_ip="localhost"
+host_port=9443
+iaas="kubernetes"
 
-# run script sets the configurable parameters for the cartridge agent in agent.conf and
-# starts the cartridge agent process.
+prgdir=`dirname "$0"`
+script_path=`cd "$prgdir"; pwd`
+common_folder=`cd "${script_path}/../common"; pwd`
+kubernetes_clusters_path=`cd "${script_path}/../../../../kubernetes-clusters"; pwd`
 
-export CARBON_HOME="/opt/zookeeper-3.4.6"
-echo "CARBON_HOME=${CARBON_HOME}" >> /etc/environment
-echo "CARBON_HOME is set to ${CARBON_HOME}"
 
-# ZK data directory is hard-coded here
-mkdir -p /tmp/zookeeper
+echo "Adding kubernetes cluster..."
+curl -X POST -H "Content-Type: application/json" -d "@${kubernetes_clusters_path}/kubernetes-cluster-1.json" -k -u admin:admin https://${host_ip}:${host_port}/api/kubernetesClusters
 
-if [ "${START_CMD}" = "PCA" ]; then
-    echo "Starting python cartridge agent..."
-	/usr/local/bin/start-agent.sh
-	echo "Python cartridge agent started successfully"
-else
-    echo "Configuring ${SERVER_TYPE} ..."
-    echo "Environment variables:"
-    printenv
-    pushd ${CONFIGURATOR_HOME}
-    python configurator.py
-    popd
-    echo "${SERVER_TYPE} configured successfully"
-
-    echo "Starting ${SERVER_TYPE}"
-    ${CARBON_HOME}/bin/zkServer.sh start
-    echo "${SERVER_TYPE} started successfully"
-fi
+bash ${common_folder}/deploy.sh ${iaas}

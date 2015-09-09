@@ -20,7 +20,10 @@ from plugins.contracts import ICartridgeAgentPlugin
 from modules.util.log import LogFactory
 from entity import *
 import subprocess
+import socket
+import operator
 import os
+
 
 class ZookeeperStartupHandler(ICartridgeAgentPlugin):
     """
@@ -35,23 +38,37 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
 
         app_id = values[self.CONST_APPLICATION_ID]
         service_type = values[self.CONST_SERVICE_NAME]
+
+        ZookeeperStartupHandler.log.info("Zookeeper Service type: %s" % service_type)
         topology = TopologyContext.topology
-        zookeeper_cluster = None
-        member_map = None
-        default_private_ip = None
 
         zookeeper_cluster = self.get_cluster_of_service(topology, service_type, app_id)
         if zookeeper_cluster is not None:
             member_map = zookeeper_cluster.member_map
-            i = 1
-            for member in member_map:
-                default_private_ip = member_map[member].member_default_private_ip
-                command = "echo %s  zookeeper-%s >> /etc/hosts" % (default_private_ip, i)
+            member_id_member_ip_dictionary = self.get_member_id_member_ip_dictionary(member_map)
+            ZookeeperStartupHandler.log.info("Zookeeper dictionary : %s" % member_id_member_ip_dictionary)
+            sorted_member_id_member_ip_tuples = sorted(member_id_member_ip_dictionary.items(),
+                                                       key=operator.itemgetter(0))
+            ZookeeperStartupHandler.log.info("Zookeeper sorted tuples : %s" % sorted_member_id_member_ip_tuples)
+            local_ip = socket.gethostbyname(socket.gethostname())
+            my_id = None
+            for i, v in enumerate(sorted_member_id_member_ip_tuples):
+                if v[1] == local_ip:
+                    my_id = i + 1
+            # ZK data-dir is hard-coded here
+            command = "echo %s >> /tmp/zookeeper/myid" % my_id
+            p = subprocess.Popen(command, shell=True)
+            output, errors = p.communicate()
+            ZookeeperStartupHandler.log.info(
+                "Successfully updated myid file with: %s in /tmp/zookeeper/myid" % my_id)
+            j = 1
+            for i, v in enumerate(sorted_member_id_member_ip_tuples):
+                command = "echo %s  zookeeper-%s >> /etc/hosts" % (v[1], j)
                 p = subprocess.Popen(command, shell=True)
                 output, errors = p.communicate()
                 ZookeeperStartupHandler.log.info(
-                    "Successfully updated zookeeper-%s ip: %s in etc/hosts" % (i, default_private_ip))
-                i = i + 1
+                    "Successfully updated zookeeper-%s ip: %s in etc/hosts" % (j, v[1]))
+                j = j + 1
 
         # start configurator
         ZookeeperStartupHandler.log.info("Configuring Zookeeper ...")
@@ -67,6 +84,25 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
         p = subprocess.Popen(start_command, env=env_var, shell=True)
         output, errors = p.communicate()
         ZookeeperStartupHandler.log.info("Zookeeper started successfully")
+
+    def get_member_id_member_ip_dictionary(self, member_map):
+        """
+        Retuns a dictionary with following format {'member_id_1':"member_default_ip_1", 'member_id_2':"member_default_ip_2" }
+
+        :return: void
+        """
+        member_id_member_ip_dictionary = {}
+        for member in member_map:
+            member_id = member_map[member].member_id
+            default_private_ip = member_map[member].member_default_private_ip
+            ZookeeperStartupHandler.log.info("Zookeeper [member_id] %s [member_ip]%s" % (member_id, default_private_ip))
+            if default_private_ip is not None:
+                member_id_member_ip_dictionary[member_id] = default_private_ip
+            else:
+                ZookeeperStartupHandler.log.warn(
+                    "default member ip for [member_id] %s is empty, hence re-initializing topology " % member_id)
+
+        return member_id_member_ip_dictionary
 
     @staticmethod
     def get_cluster_of_service(topology, service_name, app_id):
