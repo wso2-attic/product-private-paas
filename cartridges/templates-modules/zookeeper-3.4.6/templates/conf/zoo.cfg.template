@@ -33,7 +33,7 @@ clientPort=2181
 # specify server id by creating 'myid' file in the dataDir
 # use hostname instead of IP address for convenient maintenance
 
-# Currently we only use 3 servers for hackathon to provide HA for ZK
-server.1=zookeeper-1:2888:3888
-server.2=zookeeper-2:2888:3888
-server.3=zookeeper-3:2888:3888
+{% set num_of_servers=NUM_OF_SERVERS|int+1 -%}
+{% for n in range(1,num_of_servers) -%}
+server.{{n}}=zookeeper-{{n}}:2888:3888
+{% endfor -%}

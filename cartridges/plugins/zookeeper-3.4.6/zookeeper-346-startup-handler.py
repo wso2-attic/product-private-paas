@@ -35,6 +35,7 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
     CONST_APPLICATION_ID = "APPLICATION_ID"
     CONST_SERVICE_NAME = "SERVICE_NAME"
     CONST_MAX_RETRY_COUNT = 2
+    CONST_NUM_OF_SERVERS = "NUM_OF_SERVERS"
 
     def run_plugin(self, values):
 
@@ -48,7 +49,11 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
         if zookeeper_cluster is not None:
             member_map = zookeeper_cluster.member_map
             member_id_member_ip_dictionary = self.get_member_id_member_ip_dictionary(member_map, service_type, app_id)
+
+            # set number of zookeeper servers
+            self.export_env_var(self.CONST_NUM_OF_SERVERS, len(member_id_member_ip_dictionary))
             ZookeeperStartupHandler.log.info("Zookeeper dictionary : %s" % member_id_member_ip_dictionary)
+
             sorted_member_id_member_ip_tuples = sorted(member_id_member_ip_dictionary.items(),
                                                        key=operator.itemgetter(0))
             ZookeeperStartupHandler.log.info("Zookeeper sorted tuples : %s" % sorted_member_id_member_ip_tuples)
