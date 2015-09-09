@@ -148,9 +148,9 @@ class HbaseStartupHandler(ICartridgeAgentPlugin):
                 member_ip = member.member_default_private_ip
 
                 if member_ip is not None:
-                    default_private_ip_list = default_private_ip_list + member_ip
+                    default_private_ip_list = default_private_ip_list + member_ip + ","
 
-        return default_private_ip_list
+        return default_private_ip_list[:-1]
 
 
     def remove_data_from_metadata(self, key):
