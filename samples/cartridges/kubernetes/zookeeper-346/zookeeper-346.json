@@ -23,7 +23,7 @@
     "iaasProvider": [
         {
             "type": "kubernetes",
-            "imageId": "ppaas/zookeeper:3.4.6",
+            "imageId": "wso2/zookeeper:3.4.6",
             "networkInterfaces": [
             ],
             "property": [

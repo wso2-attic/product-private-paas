@@ -53,6 +53,6 @@ fi
 echo "----------------------------------"
 echo "Building" ${product_type} - ${product_version} "docker image"
 echo "----------------------------------"
-docker build -t ppaas/${product_type}:${product_version} .
+docker build -t wso2/${product_type}:${product_version} .
 
 echo ${product_type} - ${product_version} "docker image built successfully."
