@@ -51,7 +51,8 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
             member_id_member_ip_dictionary = self.get_member_id_member_ip_dictionary(member_map, service_type, app_id)
 
             # set number of zookeeper servers
-            self.export_env_var(self.CONST_NUM_OF_SERVERS, len(member_id_member_ip_dictionary))
+            num_of_zk_instances = len(member_id_member_ip_dictionary)
+            self.export_env_var(self.CONST_NUM_OF_SERVERS, str(num_of_zk_instances))
             ZookeeperStartupHandler.log.info("Zookeeper dictionary : %s" % member_id_member_ip_dictionary)
 
             sorted_member_id_member_ip_tuples = sorted(member_id_member_ip_dictionary.items(),
