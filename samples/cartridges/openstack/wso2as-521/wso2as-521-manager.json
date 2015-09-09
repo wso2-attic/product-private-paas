@@ -13,13 +13,13 @@
             "name": "mgt-http",
             "protocol": "http",
             "port": 9763,
-            "proxyPort": 0
+            "proxyPort": 80
         },
         {
             "name": "mgt-https",
             "protocol": "https",
             "port": 9443,
-            "proxyPort": 0
+            "proxyPort": 443
         }
     ],
     "iaasProvider": [
@@ -49,12 +49,52 @@
     ],
     "property": [
         {
+            "name": "payload_parameter.COMMIT_ENABLED",
+            "value": "true"
+        },
+        {
             "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
             "value": "true"
         },
         {
             "name": "payload_parameter.LB_IP",
-            "value": "<LOAD_BALANCER_IP>"
+            "value": "<LB_IP>"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_REGISTRY_DB_URL",
+            "value":"jdbc:mysql://<MYSQL_IP>:3306/stratos_reg_db?autoReconnect=true"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_REGISTRY_DB_USER_NAME",
+            "value":"root"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_REGISTRY_DB_PASSWORD",
+            "value":"root"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_CONFIG_DB_URL",
+            "value":"jdbc:mysql://<MYSQL_IP>:3306/config_db_as?autoReconnect=true"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_CONFIG_DB_USER_NAME",
+            "value":"root"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_CONFIG_DB_PASSWORD",
+            "value":"root"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_USER_MGT_DB_URL",
+            "value":"jdbc:mysql://<MYSQL_IP>:3306/stratos_user_db?autoReconnect=true"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_USER_MGT_DB_USER_NAME",
+            "value":"root"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_USER_MGT_DB_PASSWORD",
+            "value":"root"
         }
     ]
 }
