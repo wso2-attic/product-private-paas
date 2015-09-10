@@ -36,6 +36,7 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
     CONST_SERVICE_NAME = "SERVICE_NAME"
     CONST_MAX_RETRY_COUNT = 2
     CONST_NUM_OF_SERVERS = "NUM_OF_SERVERS"
+    current_attempt = 0
 
     def run_plugin(self, values):
 
@@ -97,7 +98,7 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
         :return: dictionary
         """
         member_id_member_ip_dictionary = {}
-        attempt = 0
+
         for member in member_map:
             member_id = member_map[member].member_id
             default_private_ip = member_map[member].member_default_private_ip
@@ -107,9 +108,9 @@ class ZookeeperStartupHandler(ICartridgeAgentPlugin):
             else:
                 ZookeeperStartupHandler.log.warn(
                     "default member ip for [member_id] %s is empty, hence re-initializing topology " % member_id)
-                if attempt < self.CONST_MAX_RETRY_COUNT:
+                if self.current_attempt < self.CONST_MAX_RETRY_COUNT:
                     time.sleep(60)
-                    attempt = attempt + 1
+                    self.current_attempt = self.current_attempt + 1
                     topology = TopologyContext.topology
                     zookeeper_cluster = self.get_cluster_of_service(topology, service_type, app_id)
                     if zookeeper_cluster is not None:
