@@ -1,18 +1,18 @@
 {
-    "type": "apache-storm-095-supervisor",
+    "type": "storm-nimbus",
     "provider": "apache",
     "category": "framework",
-    "host": "supervisor.storm.wso2.org",
-    "displayName": "Apache Storm Supervisor",
-    "description": "Apache Storm Supervisor",
+    "host": "nimbus.storm.wso2.org",
+    "displayName": "Apache Storm Nimbus",
+    "description": "Apache Storm Nimbus",
     "version": "0.9.5",
     "multiTenant": "false",
     "loadBalancingIPType": "public",
     "portMapping": [
         {
-            "name": "http-9763",
-            "protocol": "http",
-            "port": "22",
+            "name": "thrift-port",
+            "protocol": "thrift",
+            "port": "6627",
             "proxyPort": 0,
             "kubernetesPortType": "NodePort"
         }
@@ -48,7 +48,7 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_STORM_TYPE",
-            "value": "supervisor"
+            "value": "nimbus"
         }
     ]
 }

@@ -1,5 +1,5 @@
 {
-    "type": "apache-storm-095-ui",
+    "type": "storm-ui",
     "provider": "apache",
     "category": "framework",
     "host": "ui.storm.wso2.org",

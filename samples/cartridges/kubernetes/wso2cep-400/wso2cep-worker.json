@@ -1,25 +1,39 @@
 {
-    "type": "wso2cep-400-manager",
+    "type": "wso2cep-worker",
     "category": "framework",
     "provider": "wso2",
-    "host": "mgr.cep.wso2.org",
-    "displayName": "WSO2 CEP 4.0.0 Manager",
-    "description": "WSO2 CEP 4.0.0 Manager Cartridge",
+    "host": "cep.wso2.org",
+    "displayName": "WSO2 CEP 4.0.0 Worker",
+    "description": "WSO2 CEP 4.0.0 Worker Cartridge",
     "version": "4.0.0",
     "multiTenant": "false",
     "loadBalancingIPType": "public",
     "portMapping": [
         {
-            "name": "mgt-http",
-            "protocol": "http",
-            "port": 9763,
+            "name": "thrift-port",
+            "protocol": "thrift",
+            "port": "7611",
             "proxyPort": 0,
             "kubernetesPortType": "NodePort"
         },
         {
-            "name": "mgt-https",
-            "protocol": "https",
-            "port": 9443,
+            "name": "thrift-secure-port",
+            "protocol": "thrifts",
+            "port": "7711",
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
+        },
+        {
+            "name": "binary-port",
+            "protocol": "thrift",
+            "port": "9611",
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
+        },
+        {
+            "name": "binary-secure-port",
+            "protocol": "thrifts",
+            "port": "9711",
             "proxyPort": 0,
             "kubernetesPortType": "NodePort"
         }
@@ -41,19 +55,11 @@
             "value": "0"
         },
         {
-            "name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
-            "value": "ClientIP"
-        },
-        {
             "name": "payload_parameter.START_CMD",
             "value": "PCA"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
-            "value": "true"
-        },
-        {
-            "name": "payload_parameter.COMMIT_ENABLED",
             "value": "true"
         }
     ]
