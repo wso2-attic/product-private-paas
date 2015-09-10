@@ -1,0 +1,27 @@
+{
+    "applicationId": "wso2greg-500-application",
+    "alias": "my-wso2greg-500-application",
+    "multiTenant": true,
+    "components": {
+        "groups": [
+            {
+                "name": "wso2greg-500-group",
+                "alias": "wso2greg-500-group",
+                "deploymentPolicy": "deployment-policy-1",
+                "groupMinInstances": 1,
+                "groupMaxInstances": 1,
+                "cartridges": [
+                    {
+                        "type": "wso2greg-500-manager",
+                        "cartridgeMin": 2,
+                        "cartridgeMax": 2,
+                        "subscribableInfo": {
+                            "alias": "wso2greg-500-manager",
+                            "autoscalingPolicy": "autoscaling-policy-1"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

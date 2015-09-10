@@ -34,5 +34,6 @@
         <module>wso2esb-4.8.1</module>
         <module>wso2is-5.0.0</module>
         <module>wso2dss-3.2.2</module>
+		<module>wso2greg-5.0.0</module>
     </modules>
 </project>
