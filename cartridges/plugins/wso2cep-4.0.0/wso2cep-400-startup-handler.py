@@ -49,10 +49,10 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     CONST_CEP_MANAGER_MEMBER_PORT = "8904"
     CONST_STORM_TYPE = 'CONFIG_PARAM_STORM_TYPE'
     CONST_PRODUCT = "CEP"
-    CONST_ZOOKEEPER_SERVICE_TYPE = "zookeeper-346"
-    CONST_NIMBUS_SERVICE_TYPE = "apache-storm-095-nimbus"
+    CONST_ZOOKEEPER_SERVICE_TYPE = "zookeeper"
+    CONST_NIMBUS_SERVICE_TYPE = "storm-nimbus"
 
-    SERVICES = ["wso2cep-400-manager", "wso2cep-400-worker"]
+    SERVICES = ["wso2cep-manager", "wso2cep-worker"]
 
     # list of environment variables exported by the plugin
     ENV_CONFIG_PARAM_SUB_DOMAIN = 'CONFIG_PARAM_SUB_DOMAIN'
