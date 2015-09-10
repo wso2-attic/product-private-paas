@@ -46,6 +46,12 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
     CONST_PROTOCOL_HTTPS = "https"
     CONST_PORT_MAPPINGS = "PORT_MAPPINGS"
 
+    CONST_DAS_RECEIVER_SERVICE_NAME = "das-receiver"
+    CONST_DAS_RECEIVER_MGT_SERVICE_NAME = "das-receiver-manager"
+    CONST_DAS_ANALYTICS_SERVICE_NAME = "das-analytics"
+    CONST_DAS_ANALYTICS_MGT_SERVICE_NAME = "das-analytics-manager"
+    CONST_DAS_DASHBOARD_SERVICE_NAME = "das-dashboard"
+
     CONST_ANALYTICS_FS_DB = "ANALYTICS_FS_DB"
     CONST_ANALYTICS_FS_DB_USER_NAME = "FS_user"
     CONST_ANALYTICS_FS_DB_PASSWORD = "fs123"
@@ -74,6 +80,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
 
     ENV_CONFIG_PARAM_HTTP_PROXY_PORT = 'CONFIG_PARAM_HTTP_PROXY_PORT'
     ENV_CONFIG_PARAM_HTTPS_PROXY_PORT = 'CONFIG_PARAM_HTTPS_PROXY_PORT'
+    ENV_CONFIG_PARAM_HOST_NAME = 'CONFIG_PARAM_HOST_NAME'
 
 
     def run_plugin(self, values):
@@ -95,7 +102,6 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         WSO2DASStartupHandler.log.info("Service Name: %s" % service_name)
         WSO2DASStartupHandler.log.info("Port mapping: %s" % port_mappings_str)
 
-
         mgt_http_proxy_port = self.read_proxy_port(port_mappings_str,
                                                    WSO2DASStartupHandler.CONST_PORT_MAPPING_MGT_HTTP_TRANSPORT,
                                                    WSO2DASStartupHandler.CONST_PROTOCOL_HTTP)
@@ -108,7 +114,8 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
 
         self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_MB_IP, mb_ip)
 
-        zookeeper_ip = self.get_portal_ip(WSO2DASStartupHandler.CONST_ZOOKEEPER_SERVICE_NAME, app_id)
+        zookeeper_cluster = self.get_clusters_from_topology(WSO2DASStartupHandler.CONST_ZOOKEEPER_SERVICE_NAME)
+        zookeeper_ip = self.get_zookeeper_member_ips(zookeeper_cluster,app_id)
         hbase_master_ip = self.read_member_ip_from_topology(WSO2DASStartupHandler.CONST_HBASE_SERVICE_NAME, app_id)
 
         self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_ZK_HOST, zookeeper_ip)
@@ -117,8 +124,12 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         # export CONFIG_PARAM_MEMBERSHIP_SCHEME
         self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_MEMBERSHIP_SCHEME, membership_scheme)
 
+        # set hostname
+        member_ip = socket.gethostbyname(socket.gethostname())
+        self.set_host_name(app_id, service_name, member_ip)
+
         if clustering == 'true' and membership_scheme == self.CONST_PPAAS_MEMBERSHIP_SCHEME:
-            service_list = [service_name]
+            service_list = self.get_service_list_for_clustering(service_name)
             self.set_cluster_ids(app_id, service_list)
             member_ip = socket.gethostbyname(socket.gethostname())
             self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST, member_ip)
@@ -185,6 +196,47 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         p = subprocess.Popen(start_command, env=env_var, shell=True)
         output, errors = p.communicate()
         WSO2DASStartupHandler.log.debug("WSO2 DAS started successfully")
+
+
+    def get_zookeeper_member_ips(self, zookeeper_cluster,app_id):
+        """
+        returns zookeeper member ip list
+        :return: default_member_ip_list
+        """
+        default_private_ip_list = ""
+
+        if zookeeper_cluster is not None:
+            for cluster in zookeeper_cluster:
+                if cluster.app_id == app_id:
+                    members = cluster.get_members()
+
+        if members is not None:
+            for member in members:
+                member_ip = member.member_default_private_ip
+
+                if member_ip is not None:
+                    default_private_ip_list = default_private_ip_list + member_ip + ","
+
+        return default_private_ip_list[:-1]
+
+
+    def get_service_list_for_clustering(self, service_name):
+        """
+        returns the particular service list for a given service name
+        :return: service_list
+        """
+        if service_name == WSO2DASStartupHandler.CONST_DAS_RECEIVER_SERVICE_NAME or service_name == \
+                WSO2DASStartupHandler.CONST_DAS_RECEIVER_MGT_SERVICE_NAME:
+            return [WSO2DASStartupHandler.CONST_DAS_RECEIVER_SERVICE_NAME,
+                    WSO2DASStartupHandler.CONST_DAS_RECEIVER_MGT_SERVICE_NAME]
+
+        elif service_name == WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME or service_name == \
+                WSO2DASStartupHandler.CONST_DAS_ANALYTICS_MGT_SERVICE_NAME:
+            return [WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME,
+                    WSO2DASStartupHandler.CONST_DAS_ANALYTICS_MGT_SERVICE_NAME]
+
+        elif service_name == WSO2DASStartupHandler.CONST_DAS_DASHBOARD_SERVICE_NAME:
+            return [WSO2DASStartupHandler.CONST_DAS_DASHBOARD_SERVICE_NAME]
 
 
     def create_database(self, app_id, databasename, username, password, remote_host):
@@ -350,23 +402,6 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
 
         return cluster_id
 
-    def get_clusters_from_topology(self, service_name):
-        """
-        get clusters from topology
-        :return: clusters
-        """
-        clusters = None
-        topology = TopologyContext().get_topology()
-
-        if topology is not None:
-            if topology.service_exists(service_name):
-                service = topology.get_service(service_name)
-                clusters = service.get_clusters()
-            else:
-                WSO2DASStartupHandler.log.error("[Service] %s is not available in topology" % service_name)
-
-        return clusters
-
     def read_member_ip_from_topology(self, service_name, app_id):
         """
         get member ip from topology
@@ -420,3 +455,39 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
                         service_proxy_port = proxy_port
 
         return service_proxy_port
+
+    def set_host_name(self, app_id, service_name, member_ip):
+        """
+        Set hostname of service read from topology for any service name
+        export hostname and update the /etc/hosts
+        :return: void
+        """
+        host_name = self.get_host_name_from_cluster(service_name, app_id)
+        self.export_env_var(self.ENV_CONFIG_PARAM_HOST_NAME, host_name)
+        self.update_hosts_file(member_ip, host_name)
+
+    def get_host_name_from_cluster(self, service_name, app_id):
+        """
+        Get hostname for a service
+        :return: hostname
+        """
+        clusters = self.get_clusters_from_topology(service_name)
+
+        if clusters is not None:
+            for cluster in clusters:
+                if cluster.app_id == app_id:
+                    hostname = cluster.hostnames[0]
+
+        return hostname
+
+    def update_hosts_file(self, ip_address, host_name):
+        """
+        Updates /etc/hosts file with clustering hostnames
+        :return: void
+        """
+        config_command = "echo %s  %s >> /etc/hosts" % (ip_address, host_name)
+        env_var = os.environ.copy()
+        p = subprocess.Popen(config_command, env=env_var, shell=True)
+        output, errors = p.communicate()
+        WSO2DASStartupHandler.log.info(
+            "Successfully updated [ip_address] %s & [hostname] %s in etc/hosts" % (ip_address, host_name))
