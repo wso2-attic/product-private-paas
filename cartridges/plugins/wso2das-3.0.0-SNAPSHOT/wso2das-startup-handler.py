@@ -152,13 +152,13 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         start_command = None
         if profile:
             if profile == "receiver":
-                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true"
+                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -Dsetup -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true"
             elif profile == "analytics":
-                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -DdisableEventSink=true"
+                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -Dsetup -DdisableEventSink=true"
             elif profile == "dashboard":
-                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -DdisableEventSink=true -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true"
+                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -Dsetup -DdisableEventSink=true -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true"
             elif profile == "default":
-                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start"
+                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dsetup start"
             else:
                 WSO2DASStartupHandler.log.info("Invalid profile :" + profile)
         WSO2DASStartupHandler.log.info("Start command : %s" % start_command)
