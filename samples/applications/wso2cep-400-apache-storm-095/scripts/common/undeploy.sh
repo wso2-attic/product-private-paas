@@ -27,11 +27,7 @@ zookeeper_type="zookeeper"
 zookeeper_version="346"
 zookeeper="${zookeeper_type}-${zookeeper_version}"
 storm_type="storm"
-storm_version="095"
-storm="${storm_type}-${storm_version}"
 cep_type="wso2cep"
-cep_version="400"
-cep="${cep_type}-${cep_version}"
 application_name="wso2cep-storm"
 
 set -e
