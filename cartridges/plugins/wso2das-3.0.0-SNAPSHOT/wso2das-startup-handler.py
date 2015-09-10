@@ -136,36 +136,6 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
 
         self.map_hbase_hostname()
 
-        # creating databases
-        remote_host = self.get_data_from_meta_data_service(app_id, WSO2DASStartupHandler.CONST_MYSQL_HOST)
-
-        self.create_database(app_id, WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB,
-                             WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB_USER_NAME,
-                             WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB_PASSWORD, remote_host)
-
-        analytics_fs_db_url = "jdbc:mysql://" + remote_host + ":3306/" + WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB + "?autoReconnect=true"
-        self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL,
-                            analytics_fs_db_url)
-
-        self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_USER_NAME,
-                            WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB_USER_NAME)
-        self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_PASSWORD,
-                            WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB_PASSWORD)
-
-        self.create_database(app_id, WSO2DASStartupHandler.CONST_ANALYTICS_PROCESSED_DATA_STORE,
-                             WSO2DASStartupHandler.CONST_ANALYTICS_PDS_DB_USER_NAME,
-                             WSO2DASStartupHandler.CONST_ANALYTICS_PDS_DB_PASSWORD, remote_host)
-
-        analytics_pds_db_url = "jdbc:mysql://" + remote_host + ":3306/" + WSO2DASStartupHandler.CONST_ANALYTICS_PROCESSED_DATA_STORE + "?autoReconnect=true"
-        self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_URL,
-                            analytics_pds_db_url)
-
-        self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_USER_NAME,
-                            WSO2DASStartupHandler.CONST_ANALYTICS_PDS_DB_USER_NAME)
-        self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_PASSWORD,
-                            WSO2DASStartupHandler.CONST_ANALYTICS_PDS_DB_PASSWORD)
-
-
         # configure server
         WSO2DASStartupHandler.log.info("Configuring WSO2 DAS ...")
         config_command = "python ${CONFIGURATOR_HOME}/configurator.py"
