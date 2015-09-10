@@ -1,16 +1,19 @@
 {
-    "name": "zookeeper-346-group",
+    "name": "wso2cep-group",
     "cartridges": [
-        "zookeeper-346"
+        "wso2cep-manager",
+        "wso2cep-worker"
     ],
     "dependencies": {
         "terminationBehaviour": "terminate-none",
         "startupOrders": [
             {
                 "aliases": [
-                    "cartridge.my-zookeeper-346"
+                    "cartridge.my-wso2cep-manager",
+                    "cartridge.my-wso2cep-worker"
                 ]
             }
         ]
     }
 }
+

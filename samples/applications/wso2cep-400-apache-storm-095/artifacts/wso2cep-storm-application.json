@@ -1,82 +1,82 @@
 {
-    "applicationId":"cep-storm-app",
-    "alias":"my-cep-storm-app",
+    "applicationId":"wso2cep-storm-application",
+    "alias":"my-wso2cep-storm-application",
     "multiTenant":false,
     "components":{
         "groups":[
             {
-                "name":"wso2cep-400-apache-storm-095-group",
-                "alias":"my-wso2cep-400-apache-storm-095-group",
+                "name":"wso2cep-storm-group",
+                "alias":"my-wso2cep-storm-group",
                 "groupMaxInstances":1,
                 "groupMinInstances":1,
                 "groups":[
                     {
-                        "name": "zookeeper-346-group",
-                        "alias": "my-zookeeper-346-group",
+                        "name": "zookeeper-group",
+                        "alias": "my-zookeeper-group",
                         "deploymentPolicy": "deployment-policy-1",
                         "groupMinInstances": 1,
                         "groupMaxInstances": 1,
                         "cartridges": [
                             {
-                                "type": "zookeeper-346",
+                                "type": "zookeeper",
                                 "cartridgeMin": 3,
                                 "cartridgeMax": 3,
                                 "subscribableInfo": {
-                                    "alias": "my-zookeeper-346",
+                                    "alias": "my-zookeeper",
                                     "autoscalingPolicy": "autoscaling-policy-1"
                                 }
                             }
                         ]
                     },
                     {
-                        "name": "apache-storm-095-group",
-                        "alias": "my-apache-storm-095-group",
+                        "name": "storm-group",
+                        "alias": "my-storm-group",
                         "deploymentPolicy": "deployment-policy-1",
                         "groupMinInstances": 1,
                         "groupMaxInstances": 1,
                         "cartridges": [
                             {
-                                "type": "apache-storm-095-supervisor",
+                                "type": "storm-supervisor",
                                 "cartridgeMin": 4,
                                 "cartridgeMax": 6,
                                 "subscribableInfo": {
-                                    "alias": "my-apache-storm-095-supervisor",
+                                    "alias": "my-storm-supervisor",
                                     "autoscalingPolicy": "autoscaling-policy-1"
                                 }
                             },
                             {
-                                "type": "apache-storm-095-nimbus",
+                                "type": "storm-nimbus",
                                 "cartridgeMin": 1,
                                 "cartridgeMax": 1,
                                 "subscribableInfo": {
-                                    "alias": "my-apache-storm-095-nimbus",
+                                    "alias": "my-storm-nimbus",
                                     "autoscalingPolicy": "autoscaling-policy-1"
                                 }
                             },
                             {
-                                "type": "apache-storm-095-ui",
+                                "type": "storm-ui",
                                 "cartridgeMin": 1,
                                 "cartridgeMax": 1,
                                 "subscribableInfo": {
-                                    "alias": "my-apache-storm-095-ui",
+                                    "alias": "my-storm-ui",
                                     "autoscalingPolicy": "autoscaling-policy-1"
                                 }
                             }
                         ]
                     },
                     {
-                        "name": "wso2cep-400-group",
-                        "alias": "my-wso2cep-400-group",
+                        "name": "wso2cep-group",
+                        "alias": "my-wso2cep-group",
                         "deploymentPolicy": "deployment-policy-1",
                         "groupMinInstances": 1,
                         "groupMaxInstances": 1,
                         "cartridges": [
                             {
-                                "type": "wso2cep-400-manager",
+                                "type": "wso2cep-manager",
                                 "cartridgeMin": 1,
                                 "cartridgeMax": 1,
                                 "subscribableInfo": {
-                                    "alias": "my-wso2cep-400-manager",
+                                    "alias": "my-wso2cep-manager",
                                     "autoscalingPolicy": "autoscaling-policy-1",
                                     "artifactRepository": {
                                         "privateRepo": false,
@@ -87,11 +87,11 @@
                                 }
                             },
                             {
-                                "type": "wso2cep-400-worker",
+                                "type": "wso2cep-worker",
                                 "cartridgeMin": 4,
-                                "cartridgeMax": 5,
+                                "cartridgeMax": 4,
                                 "subscribableInfo": {
-                                    "alias": "my-wso2cep-400-worker",
+                                    "alias": "my-wso2cep-worker",
                                     "autoscalingPolicy": "autoscaling-policy-1",
                                     "artifactRepository": {
                                         "privateRepo": false,

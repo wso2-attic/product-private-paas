@@ -1,33 +1,34 @@
 {
-    "type": "zookeeper-346",
-    "provider": "apache",
+    "type": "wso2cep-manager",
     "category": "framework",
-    "host": "zookeeper.wso2.org",
-    "displayName": "Apache Zookeeper",
-    "description": "Apache Zookeeper",
-    "version": "3.4.6",
+    "provider": "wso2",
+    "host": "mgr.cep.wso2.org",
+    "displayName": "WSO2 CEP 4.0.0 Manager",
+    "description": "WSO2 CEP 4.0.0 Manager Cartridge",
+    "version": "4.0.0",
     "multiTenant": "false",
     "loadBalancingIPType": "public",
     "portMapping": [
         {
-            "name": "http-zookeeper",
+            "name": "mgt-http",
             "protocol": "http",
-            "port": "2181",
+            "port": 9763,
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
+        },
+        {
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
             "proxyPort": 0,
             "kubernetesPortType": "NodePort"
         }
-
     ],
-    "deployment": {
-    },
     "iaasProvider": [
         {
             "type": "kubernetes",
-            "imageId": "wso2/zookeeper:3.4.6",
-            "networkInterfaces": [
-            ],
-            "property": [
-            ]
+            "imageId": "wso2/cep:4.0.0",
+            "networkInterfaces": []
         }
     ],
     "property": [
@@ -46,6 +47,14 @@
         {
             "name": "payload_parameter.START_CMD",
             "value": "PCA"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+            "value": "true"
+        },
+        {
+            "name": "payload_parameter.COMMIT_ENABLED",
+            "value": "true"
         }
     ]
 }

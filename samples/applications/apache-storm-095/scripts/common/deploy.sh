@@ -26,11 +26,16 @@ host_port=9443
 
 prgdir=`dirname "$0"`
 script_path=`cd "$prgdir"; pwd`
-product_type="apache-storm"
+
+zookeeper_type="zookeeper"
+zookeeper_version="346"
+zookeeper="${zookeeper_type}-${zookeeper_version}"
+product_type="storm"
 product_version="095"
 product="${product_type}-${product_version}"
+application_name="wso2cep-storm"
 artifacts_path=`cd "${script_path}/../../artifacts"; pwd`
-zk_cartridges_path=`cd "${script_path}/../../../../cartridges/${iaas}/zookeeper-346"; pwd`
+zk_cartridges_path=`cd "${script_path}/../../../../cartridges/${iaas}/${zookeeper}"; pwd`
 iaas_cartridges_path=`cd "${script_path}/../../../../cartridges/${iaas}/${product}"; pwd`
 cartridges_groups_path=`cd "${script_path}/../../../../cartridge-groups/${product}"; pwd`
 autoscaling_policies_path=`cd "${script_path}/../../../../autoscaling-policies"; pwd`
@@ -61,19 +66,19 @@ echo "Adding deployment policy..."
 curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/${deployment_policy_id}.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/deploymentPolicies
 
 echo "Adding Zookeeper cartridge..."
-curl -X POST -H "Content-Type: application/json" -d "@${zk_cartridges_path}/zookeeper-346.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
+curl -X POST -H "Content-Type: application/json" -d "@${zk_cartridges_path}/${zookeeper_type}.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
 
 echo "Adding ${product_type} - ${product_version} Nimbus cartridge..."
-curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/${product}-nimbus.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
+curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/${product_type}-nimbus.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
 
 echo "Adding ${product_type} - ${product_version} UI cartridge..."
-curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/${product}-ui.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
+curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/${product_type}-ui.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
 
 echo "Adding ${product_type} - ${product_version} Supervisor cartridge..."
-curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/${product}-supervisor.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
+curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/${product_type}-supervisor.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges
 
 echo "Adding ${product_type} - ${product_version} cartridge Group ..."
-curl -X POST -H "Content-Type: application/json" -d "@${cartridges_groups_path}/${product}-group.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridgeGroups
+curl -X POST -H "Content-Type: application/json" -d "@${cartridges_groups_path}/${product_type}-group.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridgeGroups
 
 sleep 1
 echo "Adding application policy..."
@@ -81,8 +86,8 @@ curl -X POST -H "Content-Type: application/json" -d "@${application_policies_pat
 
 sleep 1
 echo "Adding ${product_type} - ${product_version} application..."
-curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/${product}-application.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications
+curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/${product_type}-application.json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications
 
 sleep 1
 echo "Deploying application..."
-curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/${product}/deploy/${application_policy_id}
+curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/${product_type}-application/deploy/${application_policy_id}

@@ -22,22 +22,27 @@
 #
 host_ip="localhost"
 host_port=9443
-storm_type="apache-storm"
+
+zookeeper_type="zookeeper"
+zookeeper_version="346"
+zookeeper="${zookeeper_type}-${zookeeper_version}"
+storm_type="storm"
 storm_version="095"
 storm="${storm_type}-${storm_version}"
-cep_type="cep"
+cep_type="wso2cep"
 cep_version="400"
-cep="wso2${cep_type}-${cep_version}"
-application_name="wso2cep-400-apache-storm-095"
+cep="${cep_type}-${cep_version}"
+application_name="wso2cep-storm"
+
 set -e
 
 echo "Undeploying application..."
-curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/cep-storm-app/undeploy
+curl -X POST -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/${application_name}-aplication/undeploy
 
 sleep 5
 
 echo "Deleting application..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/cep-storm-app
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/applications/${application_name}-aplication
 
 sleep 1
 
@@ -57,9 +62,9 @@ echo "Removing cartridge Groups ..."
 curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:9443/api/cartridgeGroups/${application_name}-group
 
 echo "Removing cartridges..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/zookeeper-346
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${storm}-nimbus
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${storm}-ui
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${storm}-supervisor
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${cep}-manager
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${cep}-worker
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${zookeeper_type}
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${storm_type}-nimbus
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${storm_type}-ui
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${storm_type}-supervisor
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${cep_type}-manager
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${cep_type}-worker

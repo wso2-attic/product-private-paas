@@ -1,48 +1,48 @@
 {
-    "applicationId": "apache-storm-095",
-    "alias": "my-apache-storm-095",
+    "applicationId": "storm-application",
+    "alias": "my-storm-application",
     "components": {
         "groups": [
             {
-                "name": "apache-storm-095-group",
-                "alias": "my-apache-storm-095-group",
+                "name": "storm-group",
+                "alias": "my-storm-group",
                 "deploymentPolicy": "deployment-policy-1",
                 "groupMinInstances": 1,
                 "groupMaxInstances": 1,
                 "cartridges": [
                     {
-                        "type": "apache-storm-095-supervisor",
-                        "cartridgeMin": 1,
-                        "cartridgeMax": 1,
+                        "type": "storm-supervisor",
+                        "cartridgeMin": 4,
+                        "cartridgeMax": 4,
                         "subscribableInfo": {
-                            "alias": "my-apache-storm-095-supervisor",
+                            "alias": "my-storm-supervisor",
                             "autoscalingPolicy": "autoscaling-policy-1"
                         }
                     },
                     {
-                        "type": "apache-storm-095-nimbus",
+                        "type": "storm-nimbus",
                         "cartridgeMin": 1,
                         "cartridgeMax": 1,
                         "subscribableInfo": {
-                            "alias": "my-apache-storm-095-nimbus",
+                            "alias": "my-storm-nimbus",
                             "autoscalingPolicy": "autoscaling-policy-1"
                         }
                     },
                     {
-                        "type": "apache-storm-095-ui",
+                        "type": "storm-ui",
                         "cartridgeMin": 1,
                         "cartridgeMax": 1,
                         "subscribableInfo": {
-                            "alias": "my-apache-storm-095-ui",
+                            "alias": "my-storm-ui",
                             "autoscalingPolicy": "autoscaling-policy-1"
                         }
                     },
                     {
-                        "type": "zookeeper-346",
-                        "cartridgeMin": 1,
-                        "cartridgeMax": 1,
+                        "type": "zookeeper",
+                        "cartridgeMin": 3,
+                        "cartridgeMax": 3,
                         "subscribableInfo": {
-                            "alias": "my-zookeeper-346",
+                            "alias": "my-zookeeper",
                             "autoscalingPolicy": "autoscaling-policy-1"
                         }
                     }
