@@ -53,3 +53,5 @@ storm.zookeeper.servers:
 {% for key, value in CONFIG_PARAM_ZOOKEEPER_HOSTNAMES.iteritems() -%}
      - "{{ key }}"
 {% endfor -%}
+
+topology.workers: {{CONFIG_PARAM_TOPOLOGY_WORKERS}}
