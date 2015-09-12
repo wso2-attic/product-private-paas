@@ -20,6 +20,9 @@ from modules.util.log import LogFactory
 from entity import *
 import subprocess
 import os
+import mdsclient
+import time
+import socket
 
 class StormStartupHandler(ICartridgeAgentPlugin):
     """
@@ -32,10 +35,13 @@ class StormStartupHandler(ICartridgeAgentPlugin):
     CONST_SERVICE_NAME = "SERVICE_NAME"
     CONST_ZOOKEEPER_DEFAULT_PORT = "2888"
     CONST_STORM_TYPE = 'CONFIG_PARAM_STORM_TYPE'
+    CONST_STORM_TYPE_SUPERVISOR = "supervisor"
     CONST_ZOOKEEPER_SERVICE_TYPE = "zookeeper"
     CONST_NIMBUS_SERVICE_TYPE = "storm-nimbus"
     ENV_ZOOKEEPER_HOSTNAMES = "CONFIG_PARAM_ZOOKEEPER_HOSTNAMES"
     ENV_NIMBUS_HOSTNAME = "CONFIG_PARAM_NIMBUS_HOSTNAME"
+    CONST_MAX_RETRY_COUNT = 2
+    current_attempt = 0
 
     def run_plugin(self, values):
 
@@ -70,6 +76,38 @@ class StormStartupHandler(ICartridgeAgentPlugin):
             for member in member_map:
                 nimbus_private_ip = member_map[member].member_default_private_ip
                 self.export_env_var(self.ENV_NIMBUS_HOSTNAME, nimbus_private_ip)
+
+        if cartridge_type == self.CONST_STORM_TYPE_SUPERVISOR:
+            supervisor_cluster = self.get_cluster_of_service(topology, service_type, app_id)
+            if supervisor_cluster is not None:
+                member_map = supervisor_cluster.member_map
+                member_id_member_ip_dictionary = self.get_member_id_member_ip_dictionary(member_map, service_type, app_id)
+
+                # get number of supervisor nodes
+                num_of_supervisor_instances = len(member_id_member_ip_dictionary)
+
+                sorted_member_id_member_ip_tuples = sorted(member_id_member_ip_dictionary.items(),
+                                                           key=operator.itemgetter(0))
+                local_ip = socket.gethostbyname(socket.gethostname())
+                local_hostname = socket.gethostname()
+
+                my_id = None
+                for i, v in enumerate(sorted_member_id_member_ip_tuples):
+                    if v[1] == local_ip:
+                        my_id = i + 1
+
+                self.add_data_to_meta_data_service("supervisor-%s" % my_id, local_ip + ":" + local_hostname)
+
+                for x in range(1, num_of_supervisor_instances + 1):
+                    supervisor_ip_host_tuple = self.get_data_from_meta_data_service("supervisor-%s" % x)
+                    StormStartupHandler.log.info("Storm Supervisor-%s value %s" % (x, supervisor_ip_host_tuple))
+                    if supervisor_ip_host_tuple is not None and x != my_id:
+                        supervisor_array = supervisor_ip_host_tuple.split(":")
+                        command = "echo %s  %s >> /etc/hosts" % (supervisor_array[0], supervisor_array[1])
+                        p = subprocess.Popen(command, shell=True)
+                        output, errors = p.communicate()
+                        StormStartupHandler.log.info(
+                            "Successfully updated %s ip: %s in etc/hosts" % (supervisor_array[1], supervisor_array[0]))
 
         # start configurator
         StormStartupHandler.log.info("Configuring Apache Storm %s..." % cartridge_type)
@@ -121,3 +159,58 @@ class StormStartupHandler(ICartridgeAgentPlugin):
             StormStartupHandler.log.info("Exported environment variable %s: %s" % (variable, value))
         else:
             StormStartupHandler.log.warn("Could not export environment variable %s " % variable)
+
+    @staticmethod
+    def add_data_to_meta_data_service(self, key, value):
+        """
+        add data to meta data service
+        :return: void
+        """
+        mdsclient.MDSPutRequest()
+        data = {"key": key, "values": [value]}
+        mdsclient.put(data, app=True)
+
+    @staticmethod
+    def get_data_from_meta_data_service(self, app_id, receive_data):
+        """
+        Get data from meta data service
+        :return: received data
+        """
+        mds_response = None
+        while mds_response is None:
+            StormStartupHandler.log.info(
+                "Waiting for " + receive_data + " to be available from metadata service for app ID: %s" % app_id)
+            time.sleep(1)
+            mds_response = mdsclient.get(app=True)
+            if mds_response is not None and mds_response.properties.get(receive_data) is None:
+                mds_response = None
+
+        return mds_response.properties[receive_data]
+
+    def get_member_id_member_ip_dictionary(self, member_map, service_type, app_id):
+        """
+        Retuns a dictionary with following format {'member_id_1':"member_default_ip_1", 'member_id_2':"member_default_ip_2"}
+
+        :return: dictionary
+        """
+        member_id_member_ip_dictionary = {}
+
+        for member in member_map:
+            member_id = member_map[member].member_id
+            default_private_ip = member_map[member].member_default_private_ip
+            StormStartupHandler.log.info("Storm Supervisor [member_id] %s [member_ip]%s" % (member_id, default_private_ip))
+            if default_private_ip is not None:
+                member_id_member_ip_dictionary[member_id] = default_private_ip
+            else:
+                StormStartupHandler.log.warn(
+                    "default member ip for [member_id] %s is empty, hence re-initializing topology " % member_id)
+                if self.current_attempt < self.CONST_MAX_RETRY_COUNT:
+                    time.sleep(60)
+                    self.current_attempt = self.current_attempt + 1
+                    topology = TopologyContext.topology
+                    supervisor_cluster = self.get_cluster_of_service(topology, service_type, app_id)
+                    if supervisor_cluster is not None:
+                        member_map = supervisor_cluster.member_map
+                        self.get_member_id_member_ip_dictionary(member_map, service_type, app_id)
+
+        return member_id_member_ip_dictionary
