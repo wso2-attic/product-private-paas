@@ -100,7 +100,7 @@ class StormStartupHandler(ICartridgeAgentPlugin):
                 self.add_data_to_meta_data_service("supervisor-%s" % my_id, local_ip + ":" + local_hostname)
 
                 for x in range(1, num_of_supervisor_instances + 1):
-                    supervisor_ip_host_tuple = self.get_data_from_meta_data_service("supervisor-%s" % x)
+                    supervisor_ip_host_tuple = self.get_data_from_meta_data_service(app_id, "supervisor-%s" % x)
                     StormStartupHandler.log.info("Storm Supervisor-%s value %s" % (x, supervisor_ip_host_tuple))
                     if supervisor_ip_host_tuple is not None and x != my_id:
                         supervisor_array = supervisor_ip_host_tuple.split(":")
@@ -162,7 +162,7 @@ class StormStartupHandler(ICartridgeAgentPlugin):
             StormStartupHandler.log.warn("Could not export environment variable %s " % variable)
 
     @staticmethod
-    def add_data_to_meta_data_service(self, key, value):
+    def add_data_to_meta_data_service(key, value):
         """
         add data to meta data service
         :return: void
@@ -172,7 +172,7 @@ class StormStartupHandler(ICartridgeAgentPlugin):
         mdsclient.put(data, app=True)
 
     @staticmethod
-    def get_data_from_meta_data_service(self, app_id, receive_data):
+    def get_data_from_meta_data_service(app_id, receive_data):
         """
         Get data from meta data service
         :return: received data
