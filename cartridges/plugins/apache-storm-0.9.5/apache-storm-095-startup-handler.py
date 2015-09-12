@@ -96,7 +96,7 @@ class StormStartupHandler(ICartridgeAgentPlugin):
                 for i, v in enumerate(sorted_member_id_member_ip_tuples):
                     if v[1] == local_ip:
                         my_id = i + 1
-
+                self.remove_data_from_metadata("supervisor-%s" % my_id)
                 self.add_data_to_meta_data_service("supervisor-%s" % my_id, local_ip + ":" + local_hostname)
 
                 for x in range(1, num_of_supervisor_instances + 1):
@@ -187,6 +187,28 @@ class StormStartupHandler(ICartridgeAgentPlugin):
                 mds_response = None
 
         return mds_response.properties[receive_data]
+
+    @staticmethod
+    def remove_data_from_metadata(key):
+        """
+        remove data from meta data service
+        :return: void
+        """
+        mds_response = mdsclient.get(app=True)
+
+        if mds_response is not None and mds_response.properties.get(key) is not None:
+            read_data = mds_response.properties[key]
+            check_str = isinstance(read_data, (str, unicode))
+
+            if check_str == True:
+                mdsclient.delete_property_value(key, read_data)
+            else:
+                check_int = isinstance(read_data, int)
+                if check_int == True:
+                    mdsclient.delete_property_value(key, read_data)
+                else:
+                    for entry in read_data:
+                        mdsclient.delete_property_value(key, entry)
 
     def get_member_id_member_ip_dictionary(self, member_map, service_type, app_id):
         """
