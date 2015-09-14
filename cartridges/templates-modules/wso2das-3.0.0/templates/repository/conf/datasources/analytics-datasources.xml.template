@@ -9,8 +9,7 @@
 
     <datasources>
 
-        {% if CONFIG_PARAM_PROFILE !='default' and
-        CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL is defined -%}
+        {% if CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL is defined -%}
         <datasource>
             <name>WSO2_ANALYTICS_FS_DB</name>
             <description>The datasource used for analytics file system</description>
@@ -51,6 +50,26 @@
         {% endif -%}
 
 
+        {% if CONFIG_PARAM_WSO2_ANALYTICS_EVENT_STORE_DB_URL is defined -%}
+        <datasource>
+            <name>WSO2_ANALYTICS_EVENT_STORE_DB</name>
+            <description>The datasource used for analytics file system</description>
+            <definition type="RDBMS">
+                <configuration>
+                    <url>{{CONFIG_PARAM_WSO2_ANALYTICS_EVENT_STORE_DB_URL}}</url>
+                    <username>{{CONFIG_PARAM_WSO2_ANALYTICS_EVENT_STORE_DB_USER_NAME}}</username>
+                    <password>{{CONFIG_PARAM_WSO2_ANALYTICS_EVENT_STORE_DB_PASSWORD}}</password>
+                    <driverClassName>{{CONFIG_PARAM_WSO2_ANALYTICS_EVENT_STORE_DB_DRIVER_CLASS_NAME}}</driverClassName>
+                    <maxActive>50</maxActive>
+                    <maxWait>60000</maxWait>
+                    <testOnBorrow>true</testOnBorrow>
+                    <validationQuery>SELECT 1</validationQuery>
+                    <validationInterval>30000</validationInterval>
+                    <defaultAutoCommit>false</defaultAutoCommit>
+                </configuration>
+            </definition>
+        </datasource>
+        {% else -%}
         <datasource>
             <name>WSO2_ANALYTICS_EVENT_STORE_DB</name>
             <description>The datasource used for analytics record store</description>
@@ -69,9 +88,10 @@
                 </configuration>
             </definition>
         </datasource>
+        {% endif -%}
 
-        {% if (CONFIG_PARAM_PROFILE=='analytics' or CONFIG_PARAM_PROFILE=='dashboard') and
-        CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_URL is defined %}
+
+        {% if CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_URL is defined %}
         <datasource>
             <name>WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB</name>
             <description>The datasource used for analytics record store</description>

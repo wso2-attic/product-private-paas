@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdbms-configuration>
+    <database name = "h2">
+        <recordCountSupported>false</recordCountSupported>
+        <paginationSupported>false</paginationSupported>
+        <paginationMode>MODE1</paginationMode>
+        <recordTableCheckQuery>SELECT 1 FROM {{TABLE_NAME}} LIMIT 1</recordTableCheckQuery>
+        <recordCountQuery>SELECT COUNT(*) FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ?</recordCountQuery>
+        <recordDeletionQuery>DELETE FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ?</recordDeletionQuery>
+        <recordDeletionWithIdsQuery>DELETE FROM {{TABLE_NAME}} WHERE record_id IN ({{RECORD_IDS}})</recordDeletionWithIdsQuery>
+        <recordMergeQuery>MERGE INTO {{TABLE_NAME}} (partition_key, timestamp, data, record_id) KEY (record_id) VALUES (?, ?, ?, ?)</recordMergeQuery>
+        <recordRetrievalQuery>SELECT record_id, timestamp, data FROM {{TABLE_NAME}} WHERE partition_key &gt;= ? and partition_key &lt; ? AND timestamp &gt;= ? AND timestamp &lt; ? LIMIT ?,?</recordRetrievalQuery>
+        <recordRetrievalWithIdsQuery>SELECT record_id, timestamp, data FROM {{TABLE_NAME}} WHERE record_id IN ({{RECORD_IDS}})</recordRetrievalWithIdsQuery>
+        <recordTableDeleteQueries>
+            <query>DROP INDEX IF EXISTS {{TABLE_NAME}}_TIMESTAMP</query>
+            <query>DROP INDEX IF EXISTS {{TABLE_NAME}}_PARTITION_KEY</query>
+            <query>DROP TABLE IF EXISTS {{TABLE_NAME}}</query>
+        </recordTableDeleteQueries>
+        <recordTableInitQueries>
+            {% if CONFIG_PARAM_RECORD_ID_COLUMN_SIZE is defined -%}
+            <query>CREATE TABLE {{TABLE_NAME}} (record_id VARCHAR({{CONFIG_PARAM_RECORD_ID_COLUMN_SIZE}}), timestamp BIGINT, data BINARY, partition_key INT, PRIMARY KEY(record_id))</query>
+            {% else -%}
+            <query>CREATE TABLE {{TABLE_NAME}} (record_id VARCHAR(200), timestamp BIGINT, data BINARY, partition_key INT, PRIMARY KEY(record_id))</query>
+            {% endif -%}
+            <query>CREATE INDEX {{TABLE_NAME}}_TIMESTAMP ON {{TABLE_NAME}} (timestamp)</query>
+            <query>CREATE INDEX {{TABLE_NAME}}_PARTITION_KEY ON {{TABLE_NAME}} (partition_key)</query>
+        </recordTableInitQueries>
+        <fsDataChunkSize>10240</fsDataChunkSize>
+        <fsDeletePathQuery>DELETE FROM AN_FS_PATH WHERE path = ?</fsDeletePathQuery>
+        <fsDeleteDataQuery>DELETE FROM AN_FS_DATA WHERE path = ?</fsDeleteDataQuery>
+        <fsUpdateDataPathQuery>UPDATE AN_FS_DATA SET path = ? WHERE path = ?</fsUpdateDataPathQuery>
+        <fsFileLengthRetrievalQuery>SELECT length FROM AN_FS_PATH WHERE path = ?</fsFileLengthRetrievalQuery>
+        <fsInsertPathQuery>INSERT INTO AN_FS_PATH (path,is_directory,length,parent_path) VALUES (?,?,?,?)</fsInsertPathQuery>
+        <fsListFilesQuery>SELECT path FROM AN_FS_PATH WHERE parent_path = ?</fsListFilesQuery>
+        <fsPathRetrievalQuery>SELECT * FROM AN_FS_PATH WHERE path = ?</fsPathRetrievalQuery>
+        <fsReadDataChunkQuery>SELECT data FROM AN_FS_DATA WHERE path = ? AND sequence = ?</fsReadDataChunkQuery>
+        <fsSetFileLengthQuery>UPDATE AN_FS_PATH SET length = ? WHERE path = ?</fsSetFileLengthQuery>
+        <fsTableInitQueries>
+            <query>CREATE TABLE AN_FS_PATH (path VARCHAR(256), is_directory BOOLEAN, length BIGINT, parent_path VARCHAR(256), PRIMARY KEY(path), FOREIGN KEY (parent_path) REFERENCES AN_FS_PATH(path))</query>
+            <query>CREATE TABLE AN_FS_DATA (path VARCHAR(256), sequence BIGINT, data BINARY, PRIMARY KEY (path,sequence), FOREIGN KEY (path) REFERENCES AN_FS_PATH(path))</query>
+            <query>CREATE INDEX index_parent_id ON AN_FS_PATH(parent_path)</query>
+        </fsTableInitQueries>
+        <fsTablesCheckQuery>SELECT path FROM AN_FS_PATH WHERE path = '/'</fsTablesCheckQuery>
+        <fsMergeDataChunkQuery>MERGE INTO AN_FS_DATA (path,sequence,data) KEY (path,sequence) VALUES (?,?,?)</fsMergeDataChunkQuery>
+    </database>
+    <database name = "mysql" category = "large_dataset_optimized">
+        <recordCountSupported>false</recordCountSupported>
+        <paginationSupported>false</paginationSupported>
+        <paginationMode>MODE1</paginationMode>
+        <recordTableCheckQuery>SELECT 1 FROM {{TABLE_NAME}} LIMIT 1</recordTableCheckQuery>
+        <recordCountQuery>SELECT COUNT(*) FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ?</recordCountQuery>
+        <recordDeletionQuery>DELETE FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ?</recordDeletionQuery>
+        <recordDeletionWithIdsQuery>DELETE FROM {{TABLE_NAME}} WHERE record_id IN ({{RECORD_IDS}})</recordDeletionWithIdsQuery>
+        <recordMergeQuery>INSERT INTO {{TABLE_NAME}} (partition_key, timestamp, data, record_id) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE partition_key=VALUES(partition_key), timestamp=VALUES(timestamp), data=VALUES(data)</recordMergeQuery>
+        <forwardOnlyReadEnabled>true</forwardOnlyReadEnabled>
+        <fetchSize>-2147483648</fetchSize>        
+        <recordRetrievalQuery>SELECT record_id, timestamp, data FROM {{TABLE_NAME}} WHERE partition_key &gt;= ? and partition_key &lt; ? AND timestamp &gt;= ? AND timestamp &lt; ? LIMIT ?,?</recordRetrievalQuery>
+        <recordRetrievalWithIdsQuery>SELECT record_id, timestamp, data FROM {{TABLE_NAME}} WHERE record_id IN ({{RECORD_IDS}})</recordRetrievalWithIdsQuery>
+        <recordTableDeleteQueries>
+            <query>DROP INDEX {{TABLE_NAME}}_PARTITION_KEY ON {{TABLE_NAME}}</query>
+            <query>DROP INDEX {{TABLE_NAME}}_TIMESTAMP ON {{TABLE_NAME}}</query>
+            <query>DROP TABLE IF EXISTS {{TABLE_NAME}}</query>
+        </recordTableDeleteQueries>
+        <recordTableInitQueries>
+            {% if CONFIG_PARAM_RECORD_ID_COLUMN_SIZE is defined -%}
+            <query>CREATE TABLE {{TABLE_NAME}} (record_id VARCHAR({{CONFIG_PARAM_RECORD_ID_COLUMN_SIZE}}), timestamp BIGINT, data LONGBLOB, partition_key INT, PRIMARY KEY(record_id)) ENGINE='MyISAM'</query>
+            {% else -%}
+            <query>CREATE TABLE {{TABLE_NAME}} (record_id VARCHAR(200), timestamp BIGINT, data LONGBLOB, partition_key INT, PRIMARY KEY(record_id)) ENGINE='MyISAM'</query>
+            {% endif -%}
+            <query>CREATE INDEX {{TABLE_NAME}}_TIMESTAMP ON {{TABLE_NAME}} (timestamp)</query>
+            <query>CREATE INDEX {{TABLE_NAME}}_PARTITION_KEY ON {{TABLE_NAME}} (partition_key)</query>
+        </recordTableInitQueries>
+        <fsDataChunkSize>10240</fsDataChunkSize>
+        <fsDeletePathQuery>DELETE FROM AN_FS_PATH WHERE path = ?</fsDeletePathQuery>
+        <fsDeleteDataQuery>DELETE FROM AN_FS_DATA WHERE path = ?</fsDeleteDataQuery>
+        <fsUpdateDataPathQuery>UPDATE AN_FS_DATA SET path = ? WHERE path = ?</fsUpdateDataPathQuery>
+        <fsFileLengthRetrievalQuery>SELECT length FROM AN_FS_PATH WHERE path = ?</fsFileLengthRetrievalQuery>
+        <fsInsertPathQuery>INSERT INTO AN_FS_PATH (path,is_directory,length,parent_path) VALUES (?,?,?,?)</fsInsertPathQuery>
+        <fsListFilesQuery>SELECT path FROM AN_FS_PATH WHERE parent_path = ?</fsListFilesQuery>
+        <fsPathRetrievalQuery>SELECT * FROM AN_FS_PATH WHERE path = ?</fsPathRetrievalQuery>
+        <fsReadDataChunkQuery>SELECT data FROM AN_FS_DATA WHERE path = ? AND sequence = ?</fsReadDataChunkQuery>
+        <fsSetFileLengthQuery>UPDATE AN_FS_PATH SET length = ? WHERE path = ?</fsSetFileLengthQuery>
+        <fsTableInitQueries>
+            <query>CREATE TABLE AN_FS_PATH (path VARCHAR(256), is_directory BOOLEAN, length BIGINT, parent_path VARCHAR(256), PRIMARY KEY(path)) ENGINE='MyISAM'</query>
+            <query>CREATE TABLE AN_FS_DATA (path VARCHAR(256), sequence BIGINT, data LONGBLOB, PRIMARY KEY (path,sequence)) ENGINE='MyISAM'</query>
+            <query>CREATE INDEX index_parent_id ON AN_FS_PATH(parent_path)</query>
+        </fsTableInitQueries>
+        <fsTablesCheckQuery>SELECT path FROM AN_FS_PATH WHERE path = '/'</fsTablesCheckQuery>
+        <fsMergeDataChunkQuery>INSERT INTO AN_FS_DATA (path,sequence,data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=VALUES(data)</fsMergeDataChunkQuery>        
+    </database>
+    <database name = "mysql" category = "limited_dataset_optimized">
+        <recordCountSupported>false</recordCountSupported>
+        <paginationSupported>false</paginationSupported>
+        <paginationMode>MODE1</paginationMode>
+        <recordTableCheckQuery>SELECT 1 FROM {{TABLE_NAME}} LIMIT 1</recordTableCheckQuery>
+        <recordCountQuery>SELECT COUNT(*) FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ?</recordCountQuery>
+        <recordDeletionQuery>DELETE FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ?</recordDeletionQuery>
+        <recordDeletionWithIdsQuery>DELETE FROM {{TABLE_NAME}} WHERE record_id IN ({{RECORD_IDS}})</recordDeletionWithIdsQuery>
+        <recordMergeQuery>INSERT INTO {{TABLE_NAME}} (partition_key, timestamp, data, record_id) VALUES (?, ?, ?, ?) ON DUPLICATE KEY UPDATE partition_key=VALUES(partition_key), timestamp=VALUES(timestamp), data=VALUES(data)</recordMergeQuery>
+        <forwardOnlyReadEnabled>true</forwardOnlyReadEnabled>
+        <fetchSize>-2147483648</fetchSize>        
+        <recordRetrievalQuery>SELECT record_id, timestamp, data FROM {{TABLE_NAME}} WHERE partition_key &gt;= ? and partition_key &lt; ? AND timestamp &gt;= ? AND timestamp &lt; ? LIMIT ?,?</recordRetrievalQuery>
+        <recordRetrievalWithIdsQuery>SELECT record_id, timestamp, data FROM {{TABLE_NAME}} WHERE record_id IN ({{RECORD_IDS}})</recordRetrievalWithIdsQuery>
+        <recordTableDeleteQueries>
+            <query>DROP INDEX {{TABLE_NAME}}_PARTITION_KEY ON {{TABLE_NAME}}</query>
+            <query>DROP INDEX {{TABLE_NAME}}_TIMESTAMP ON {{TABLE_NAME}}</query>
+            <query>DROP TABLE IF EXISTS {{TABLE_NAME}}</query>
+        </recordTableDeleteQueries>
+        <recordTableInitQueries>
+            {% if CONFIG_PARAM_RECORD_ID_COLUMN_SIZE is defined -%}
+            <query>CREATE TABLE {{TABLE_NAME}} (record_id VARCHAR({{CONFIG_PARAM_RECORD_ID_COLUMN_SIZE}}), timestamp BIGINT, data LONGBLOB, partition_key INT, PRIMARY KEY(record_id)) ENGINE='InnoDB'</query>
+            {% else -%}
+            <query>CREATE TABLE {{TABLE_NAME}} (record_id VARCHAR(200), timestamp BIGINT, data LONGBLOB, partition_key INT, PRIMARY KEY(record_id)) ENGINE='InnoDB'</query>
+            {% endif -%}
+            <query>CREATE INDEX {{TABLE_NAME}}_TIMESTAMP ON {{TABLE_NAME}} (timestamp)</query>
+            <query>CREATE INDEX {{TABLE_NAME}}_PARTITION_KEY ON {{TABLE_NAME}} (partition_key)</query>
+        </recordTableInitQueries>
+        <fsDataChunkSize>10240</fsDataChunkSize>
+        <fsDeletePathQuery>DELETE FROM AN_FS_PATH WHERE path = ?</fsDeletePathQuery>
+        <fsDeleteDataQuery>DELETE FROM AN_FS_DATA WHERE path = ?</fsDeleteDataQuery>
+        <fsUpdateDataPathQuery>UPDATE AN_FS_DATA SET path = ? WHERE path = ?</fsUpdateDataPathQuery>
+        <fsFileLengthRetrievalQuery>SELECT length FROM AN_FS_PATH WHERE path = ?</fsFileLengthRetrievalQuery>
+        <fsInsertPathQuery>INSERT INTO AN_FS_PATH (path,is_directory,length,parent_path) VALUES (?,?,?,?)</fsInsertPathQuery>
+        <fsListFilesQuery>SELECT path FROM AN_FS_PATH WHERE parent_path = ?</fsListFilesQuery>
+        <fsPathRetrievalQuery>SELECT * FROM AN_FS_PATH WHERE path = ?</fsPathRetrievalQuery>
+        <fsReadDataChunkQuery>SELECT data FROM AN_FS_DATA WHERE path = ? AND sequence = ?</fsReadDataChunkQuery>
+        <fsSetFileLengthQuery>UPDATE AN_FS_PATH SET length = ? WHERE path = ?</fsSetFileLengthQuery>
+        <fsTableInitQueries>
+            <query>CREATE TABLE AN_FS_PATH (path VARCHAR(256), is_directory BOOLEAN, length BIGINT, parent_path VARCHAR(256), PRIMARY KEY(path)) ENGINE='InnoDB'</query>
+            <query>CREATE TABLE AN_FS_DATA (path VARCHAR(256), sequence BIGINT, data LONGBLOB, PRIMARY KEY (path,sequence)) ENGINE='InnoDB'</query>
+            <query>CREATE INDEX index_parent_id ON AN_FS_PATH(parent_path)</query>
+        </fsTableInitQueries>
+        <fsTablesCheckQuery>SELECT path FROM AN_FS_PATH WHERE path = '/'</fsTablesCheckQuery>
+        <fsMergeDataChunkQuery>INSERT INTO AN_FS_DATA (path,sequence,data) VALUES (?, ?, ?) ON DUPLICATE KEY UPDATE data=VALUES(data)</fsMergeDataChunkQuery>        
+    </database>
+    <database name = "oracle">
+        <recordCountSupported>false</recordCountSupported>
+        <paginationSupported>false</paginationSupported>
+        <paginationMode>MODE2</paginationMode>
+        <paginationFirstInclusive>true</paginationFirstInclusive>
+        <paginationFirstZeroIndexed>true</paginationFirstZeroIndexed>
+        <paginationSecondInclusive>false</paginationSecondInclusive>
+        <paginationSecondLength>true</paginationSecondLength>
+        <paginationSecondZeroIndexed>false</paginationSecondZeroIndexed>
+        <recordTableCheckQuery>SELECT 1 FROM {{TABLE_NAME}} WHERE rownum=1</recordTableCheckQuery>
+        <recordCountQuery>SELECT COUNT(*) FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ?</recordCountQuery>
+        <recordDeletionQuery>DELETE FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ?</recordDeletionQuery>
+        <recordDeletionWithIdsQuery>DELETE FROM {{TABLE_NAME}} WHERE record_id IN ({{RECORD_IDS}})</recordDeletionWithIdsQuery>
+        <recordInsertQuery>INSERT INTO {{TABLE_NAME}} (partition_key, timestamp, data, record_id) VALUES (?, ?, ?, ?)</recordInsertQuery>
+        <recordUpdateQuery>UPDATE {{TABLE_NAME}} SET partition_key = ?, timestamp = ?, data = ? WHERE record_id = ?</recordUpdateQuery>
+        <recordMergeQuery>MERGE INTO {{TABLE_NAME}} dest USING( SELECT  ? partition_key, ? timestamp, ? data, ? record_id FROM dual) src ON(dest.record_id = src.record_id) WHEN NOT MATCHED THEN INSERT(partition_key, timestamp, data, record_id) VALUES(src.partition_key, src.timestamp, src.data, src.record_id) WHEN MATCHED THEN UPDATE SET dest.partition_key = src.partition_key, dest.timestamp = src.timestamp, dest.data = src.data</recordMergeQuery>
+        <recordRetrievalQuery>SELECT record_id, timestamp, data from (SELECT rownum RNUM, record_id, timestamp, data FROM {{TABLE_NAME}} WHERE partition_key &gt;= ? and partition_key &lt; ? AND timestamp &gt;= ? AND timestamp &lt; ? and rownum &lt;= ?) where RNUM &gt; ?</recordRetrievalQuery>
+        <recordRetrievalWithIdsQuery>SELECT record_id, timestamp, data FROM {{TABLE_NAME}} WHERE record_id IN ({{RECORD_IDS}})</recordRetrievalWithIdsQuery>
+        <recordTableDeleteQueries>
+            <query>DROP INDEX {{TABLE_NAME}}_PARTITION_KEY</query>
+            <query>DROP INDEX {{TABLE_NAME}}_TIMESTAMP</query>
+            <query>DROP TABLE {{TABLE_NAME}}</query>
+        </recordTableDeleteQueries>
+        <recordTableInitQueries>
+            {% if CONFIG_PARAM_RECORD_ID_COLUMN_SIZE is defined -%}
+            <query>CREATE TABLE {{TABLE_NAME}} (record_id VARCHAR2({{CONFIG_PARAM_RECORD_ID_COLUMN_SIZE}}), timestamp NUMBER(19), data BLOB, partition_key NUMBER(10), PRIMARY KEY(record_id))</query>
+            {% else -%}
+            <query>CREATE TABLE {{TABLE_NAME}} (record_id VARCHAR2(200), timestamp NUMBER(19), data BLOB, partition_key NUMBER(10), PRIMARY KEY(record_id))</query>
+            {% endif -%}
+            <query>CREATE INDEX {{TABLE_NAME}}_TIMESTAMP ON {{TABLE_NAME}} (timestamp)</query>
+            <query>CREATE INDEX {{TABLE_NAME}}_PARTITION_KEY ON {{TABLE_NAME}} (partition_key)</query>
+        </recordTableInitQueries>
+        <fsDataChunkSize>10240</fsDataChunkSize>
+        <fsDeletePathQuery>DELETE FROM AN_FS_PATH WHERE path = ?</fsDeletePathQuery>
+        <fsDeleteDataQuery>DELETE FROM AN_FS_DATA WHERE path = ?</fsDeleteDataQuery>
+        <fsUpdateDataPathQuery>UPDATE AN_FS_DATA SET path = ? WHERE path = ?</fsUpdateDataPathQuery>
+        <fsFileLengthRetrievalQuery>SELECT length FROM AN_FS_PATH WHERE path = ?</fsFileLengthRetrievalQuery>
+        <fsInsertPathQuery>INSERT INTO AN_FS_PATH (path,is_directory,length,parent_path) VALUES (?,?,?,?)</fsInsertPathQuery>
+        <fsListFilesQuery>SELECT path FROM AN_FS_PATH WHERE parent_path = ?</fsListFilesQuery>
+        <fsPathRetrievalQuery>SELECT * FROM AN_FS_PATH WHERE path = ?</fsPathRetrievalQuery>
+        <fsReadDataChunkQuery>SELECT data FROM AN_FS_DATA WHERE path = ? AND sequence = ?</fsReadDataChunkQuery>
+        <fsSetFileLengthQuery>UPDATE AN_FS_PATH SET length = ? WHERE path = ?</fsSetFileLengthQuery>
+        <fsTableInitQueries>
+            <query>CREATE TABLE AN_FS_PATH (path VARCHAR2(256), is_directory NUMBER(1), length NUMBER(19), parent_path VARCHAR2(256), PRIMARY KEY(path), FOREIGN KEY (parent_path) REFERENCES AN_FS_PATH(path))</query>
+            <query>CREATE TABLE AN_FS_DATA (path VARCHAR2(256), sequence NUMBER(19), data BLOB, PRIMARY KEY (path,sequence), FOREIGN KEY (path) REFERENCES AN_FS_PATH(path))</query>
+            <query>CREATE INDEX index_parent_id ON AN_FS_PATH(parent_path)</query>
+        </fsTableInitQueries>
+        <fsTablesCheckQuery>SELECT path FROM AN_FS_PATH WHERE path = '/'</fsTablesCheckQuery>
+        <fsUpdateDataChunkQuery>UPDATE AN_FS_DATA SET data = ? WHERE path = ? AND sequence = ?</fsUpdateDataChunkQuery>
+        <fsWriteDataChunkQuery>INSERT INTO AN_FS_DATA (path,sequence,data) VALUES (?,?,?)</fsWriteDataChunkQuery>
+        <fsMergeDataChunkQuery>MERGE INTO AN_FS_DATA dest USING( SELECT ? path, ? sequence, ? data FROM dual) src ON(dest.path = src.path AND dest.sequence = src.sequence) WHEN NOT MATCHED THEN INSERT(path, sequence, data) VALUES(src.path, src.sequence, src.data) WHEN MATCHED THEN UPDATE SET dest.data = src.data</fsMergeDataChunkQuery>
+    </database>
+    <database name = "Microsoft SQL Server">
+        <recordCountSupported>false</recordCountSupported>
+        <paginationSupported>false</paginationSupported>
+        <paginationMode>MODE2</paginationMode>
+        <paginationFirstInclusive>true</paginationFirstInclusive>
+        <paginationFirstZeroIndexed>true</paginationFirstZeroIndexed>
+        <paginationSecondInclusive>false</paginationSecondInclusive>
+        <paginationSecondLength>true</paginationSecondLength>
+        <paginationSecondZeroIndexed>false</paginationSecondZeroIndexed>
+        <blobLengthRequired>true</blobLengthRequired>
+        <recordTableCheckQuery>SELECT TOP 1 1 from {{TABLE_NAME}}</recordTableCheckQuery>
+        <recordCountQuery>SELECT COUNT(*) FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ?</recordCountQuery>
+        <recordDeletionQuery>DELETE FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ?</recordDeletionQuery>
+        <recordDeletionWithIdsQuery>DELETE FROM {{TABLE_NAME}} WHERE record_id IN ({{RECORD_IDS}})</recordDeletionWithIdsQuery>
+        <recordMergeQuery>MERGE {{TABLE_NAME}} AS dest USING (SELECT ?, ?, ?, ?) AS src (partition_key, timestamp, data, record_id) ON (dest.record_id = src.record_id) WHEN MATCHED THEN UPDATE SET partition_key = src.partition_key, timestamp = src.timestamp, data = src.data WHEN NOT MATCHED THEN INSERT(partition_key, timestamp, data, record_id) VALUES (src.partition_key, src.timestamp, src.data, src.record_id);</recordMergeQuery>
+        <recordInsertQuery>INSERT INTO {{TABLE_NAME}} (partition_key, timestamp, data, record_id) VALUES (?, ?, ?, ?)</recordInsertQuery>
+        <recordUpdateQuery>UPDATE {{TABLE_NAME}} SET partition_key = ?, timestamp = ?, data = ? WHERE record_id = ?</recordUpdateQuery>
+        <recordRetrievalQuery>SELECT record_id, timestamp, data FROM (SELECT ROW_NUMBER() OVER(ORDER BY record_id) AS rownumber, record_id, timestamp, data FROM {{TABLE_NAME}} WHERE partition_key &gt;= ? and partition_key &lt; ? AND timestamp &gt;= ? AND timestamp &lt; ?) AS A WHERE A.rownumber &lt;= ? AND A.rownumber &gt; ?</recordRetrievalQuery>
+        <!--recordRetrievalQuery>SELECT record_id, timestamp, data FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ? OFFSET ? ROWS FETCH NEXT ? ROWS ONLY</recordRetrievalQuery-->
+        <recordRetrievalWithIdsQuery>SELECT record_id, timestamp, data FROM {{TABLE_NAME}} WHERE record_id IN ({{RECORD_IDS}})</recordRetrievalWithIdsQuery>
+        <recordTableDeleteQueries>
+            <query>DROP INDEX {{TABLE_NAME}}_PARTITION_KEY</query>
+            <query>DROP INDEX {{TABLE_NAME}}_TIMESTAMP</query>
+            <query>DROP TABLE {{TABLE_NAME}}</query>
+        </recordTableDeleteQueries>
+        <recordTableInitQueries>
+            {% if CONFIG_PARAM_RECORD_ID_COLUMN_SIZE is defined -%}
+            <query>CREATE TABLE {{TABLE_NAME}} (record_id VARCHAR({{CONFIG_PARAM_RECORD_ID_COLUMN_SIZE}}), timestamp BIGINT, data VARBINARY(max), partition_key INTEGER, PRIMARY KEY(record_id))</query>
+            {% else -%}
+            <query>CREATE TABLE {{TABLE_NAME}} (record_id VARCHAR(200), timestamp BIGINT, data VARBINARY(max), partition_key INTEGER, PRIMARY KEY(record_id))</query>
+            {% endif -%}
+            <query>CREATE INDEX {{TABLE_NAME}}_TIMESTAMP ON {{TABLE_NAME}} (timestamp)</query>
+            <query>CREATE INDEX {{TABLE_NAME}}_PARTITION_KEY ON {{TABLE_NAME}} (partition_key)</query>
+        </recordTableInitQueries>
+        <fsDataChunkSize>10240</fsDataChunkSize>
+        <fsDeletePathQuery>DELETE FROM AN_FS_PATH WHERE path = ?</fsDeletePathQuery>
+        <fsDeleteDataQuery>DELETE FROM AN_FS_DATA WHERE path = ?</fsDeleteDataQuery>
+        <fsUpdateDataPathQuery>UPDATE AN_FS_DATA SET path = ? WHERE path = ?</fsUpdateDataPathQuery>
+        <fsFileLengthRetrievalQuery>SELECT length FROM AN_FS_PATH WHERE path = ?</fsFileLengthRetrievalQuery>
+        <fsInsertPathQuery>INSERT INTO AN_FS_PATH (path,is_directory,length,parent_path) VALUES (?,?,?,?)</fsInsertPathQuery>
+        <fsListFilesQuery>SELECT path FROM AN_FS_PATH WHERE parent_path = ?</fsListFilesQuery>
+        <fsPathRetrievalQuery>SELECT * FROM AN_FS_PATH WHERE path = ?</fsPathRetrievalQuery>
+        <fsReadDataChunkQuery>SELECT data FROM AN_FS_DATA WHERE path = ? AND sequence = ?</fsReadDataChunkQuery>
+        <fsSetFileLengthQuery>UPDATE AN_FS_PATH SET length = ? WHERE path = ?</fsSetFileLengthQuery>
+        <fsTableInitQueries>
+            <query>CREATE TABLE AN_FS_PATH (path VARCHAR(256), is_directory BIT, length BIGINT, parent_path VARCHAR(256), PRIMARY KEY(path), FOREIGN KEY (parent_path) REFERENCES AN_FS_PATH(path))</query>
+            <query>CREATE TABLE AN_FS_DATA (path VARCHAR(256), sequence BIGINT, data VARBINARY(max), PRIMARY KEY (path,sequence), FOREIGN KEY (path) REFERENCES AN_FS_PATH(path) ON DELETE CASCADE)</query>
+            <query>CREATE INDEX index_parent_id ON AN_FS_PATH(parent_path)</query>
+        </fsTableInitQueries>
+        <fsTablesCheckQuery>SELECT path FROM AN_FS_PATH WHERE path = '/'</fsTablesCheckQuery>
+        <fsUpdateDataChunkQuery>UPDATE AN_FS_DATA SET data = ? WHERE path = ? AND sequence = ?</fsUpdateDataChunkQuery>
+        <fsWriteDataChunkQuery>INSERT INTO AN_FS_DATA (path,sequence,data) VALUES (?,?,?)</fsWriteDataChunkQuery>
+        <fsMergeDataChunkQuery>MERGE AN_FS_DATA AS dest USING (SELECT ?, ?, ?) AS src (path, sequence, data) ON (dest.path = src.path AND dest.sequence = src.sequence) WHEN MATCHED THEN UPDATE SET data = src.data WHEN NOT MATCHED THEN INSERT(path, sequence, data) VALUES (src.path, src.sequence, src.data);</fsMergeDataChunkQuery>
+    </database>
+    <database name = "PostgreSQL">
+        <recordCountSupported>false</recordCountSupported>
+        <paginationSupported>false</paginationSupported>
+        <paginationMode>MODE1</paginationMode>
+        <paginationFirstInclusive>true</paginationFirstInclusive>
+        <paginationFirstZeroIndexed>true</paginationFirstZeroIndexed>
+        <paginationSecondInclusive>false</paginationSecondInclusive>
+        <paginationSecondLength>true</paginationSecondLength>
+        <paginationSecondZeroIndexed>false</paginationSecondZeroIndexed>
+        <recordTableCheckQuery>SELECT 1 FROM {{TABLE_NAME}} LIMIT 1</recordTableCheckQuery>
+        <recordCountQuery>SELECT COUNT(*) FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ?</recordCountQuery>
+        <recordDeletionQuery>DELETE FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ?</recordDeletionQuery>
+        <recordDeletionWithIdsQuery>DELETE FROM {{TABLE_NAME}} WHERE record_id IN ({{RECORD_IDS}})</recordDeletionWithIdsQuery>
+        <recordInsertQuery>INSERT INTO {{TABLE_NAME}} (partition_key, timestamp, data, record_id) VALUES (?, ?, ?, ?)</recordInsertQuery>
+        <recordUpdateQuery>UPDATE {{TABLE_NAME}} SET partition_key = ?, timestamp = ?, data = ? WHERE record_id = ?</recordUpdateQuery>
+        <!--recordMergeQuery>INSERT INTO {{TABLE_NAME}} (partition_key, timestamp, data, record_id) VALUES (?, ?, ?, ?) ON CONFLICT DO UPDATE partition_key=VALUES(partition_key), timestamp=VALUES(timestamp), data=VALUES(data)</recordMergeQuery-->
+        <forwardOnlyReadEnabled>true</forwardOnlyReadEnabled>
+        <fetchSize>1000</fetchSize>
+        <recordRetrievalQuery>SELECT record_id, timestamp, data FROM {{TABLE_NAME}} WHERE partition_key &gt;= ? and partition_key &lt; ? AND timestamp &gt;= ? AND timestamp &lt; ? OFFSET ? LIMIT ?</recordRetrievalQuery>
+        <recordRetrievalWithIdsQuery>SELECT record_id, timestamp, data FROM {{TABLE_NAME}} WHERE record_id IN ({{RECORD_IDS}})</recordRetrievalWithIdsQuery>
+        <recordTableDeleteQueries>
+            <query>DROP INDEX {{TABLE_NAME}}_PARTITION_KEY ON {{TABLE_NAME}}</query>
+            <query>DROP INDEX {{TABLE_NAME}}_TIMESTAMP ON {{TABLE_NAME}}</query>
+            <query>DROP TABLE IF EXISTS {{TABLE_NAME}}</query>
+        </recordTableDeleteQueries>
+        <recordTableInitQueries>
+            {% if CONFIG_PARAM_RECORD_ID_COLUMN_SIZE is defined -%}
+            <query>CREATE TABLE {{TABLE_NAME}} (record_id VARCHAR({{CONFIG_PARAM_RECORD_ID_COLUMN_SIZE}}), timestamp BIGINT, data BYTEA, partition_key INTEGER, PRIMARY KEY(record_id))</query>
+            {% else -%}
+            <query>CREATE TABLE {{TABLE_NAME}} (record_id VARCHAR(200), timestamp BIGINT, data BYTEA, partition_key INTEGER, PRIMARY KEY(record_id))</query>
+            {% endif -%}
+            <query>CREATE INDEX {{TABLE_NAME}}_TIMESTAMP ON {{TABLE_NAME}} (timestamp)</query>
+            <query>CREATE INDEX {{TABLE_NAME}}_PARTITION_KEY ON {{TABLE_NAME}} (partition_key)</query>
+        </recordTableInitQueries>
+        <fsDataChunkSize>10240</fsDataChunkSize>
+        <fsDeletePathQuery>DELETE FROM AN_FS_PATH WHERE path = ?</fsDeletePathQuery>
+        <fsDeleteDataQuery>DELETE FROM AN_FS_DATA WHERE path = ?</fsDeleteDataQuery>
+        <fsUpdateDataPathQuery>UPDATE AN_FS_DATA SET path = ? WHERE path = ?</fsUpdateDataPathQuery>
+        <fsFileLengthRetrievalQuery>SELECT length FROM AN_FS_PATH WHERE path = ?</fsFileLengthRetrievalQuery>
+        <fsInsertPathQuery>INSERT INTO AN_FS_PATH (path,is_directory,length,parent_path) VALUES (?,?,?,?)</fsInsertPathQuery>
+        <fsListFilesQuery>SELECT path FROM AN_FS_PATH WHERE parent_path = ?</fsListFilesQuery>
+        <fsPathRetrievalQuery>SELECT * FROM AN_FS_PATH WHERE path = ?</fsPathRetrievalQuery>
+        <fsReadDataChunkQuery>SELECT data FROM AN_FS_DATA WHERE path = ? AND sequence = ?</fsReadDataChunkQuery>
+        <fsSetFileLengthQuery>UPDATE AN_FS_PATH SET length = ? WHERE path = ?</fsSetFileLengthQuery>
+        <fsTableInitQueries>
+            <query>CREATE TABLE AN_FS_PATH (path VARCHAR(256), is_directory BOOLEAN, length BIGINT, parent_path VARCHAR(256), PRIMARY KEY(path))</query>
+            <query>CREATE TABLE AN_FS_DATA (path VARCHAR(256), sequence BIGINT, data BYTEA, PRIMARY KEY (path,sequence))</query>
+            <query>CREATE INDEX index_parent_id ON AN_FS_PATH(parent_path)</query>
+        </fsTableInitQueries>
+        <fsTablesCheckQuery>SELECT path FROM AN_FS_PATH WHERE path = '/'</fsTablesCheckQuery>
+        <fsUpdateDataChunkQuery>UPDATE AN_FS_DATA SET data = ? WHERE path = ? AND sequence = ?</fsUpdateDataChunkQuery>
+        <fsWriteDataChunkQuery>INSERT INTO AN_FS_DATA (path,sequence,data) VALUES (?,?,?)</fsWriteDataChunkQuery>
+        <!--fsMergeDataChunkQuery>INSERT INTO AN_FS_DATA (path,sequence,data) VALUES (?, ?, ?) ON CONFLICT DO UPDATE data=VALUES(data)</fsMergeDataChunkQuery-->
+    </database>
+    <database name = "DB2/NT64">
+        <recordCountSupported>false</recordCountSupported>
+        <paginationSupported>false</paginationSupported>
+        <paginationMode>MODE1</paginationMode>
+        <paginationFirstInclusive>true</paginationFirstInclusive>
+        <paginationFirstZeroIndexed>true</paginationFirstZeroIndexed>
+        <paginationSecondInclusive>false</paginationSecondInclusive>
+        <paginationSecondLength>true</paginationSecondLength>
+        <paginationSecondZeroIndexed>false</paginationSecondZeroIndexed>
+        <blobLengthRequired>true</blobLengthRequired>
+        <recordTableCheckQuery>SELECT 1 FROM {{TABLE_NAME}} FETCH FIRST 1 ROWS ONLY</recordTableCheckQuery>
+        <recordCountQuery>SELECT COUNT(*) FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ?</recordCountQuery>
+        <recordDeletionQuery>DELETE FROM {{TABLE_NAME}} WHERE timestamp &gt;= ? AND timestamp &lt; ?</recordDeletionQuery>
+        <recordDeletionWithIdsQuery>DELETE FROM {{TABLE_NAME}} WHERE record_id IN ({{RECORD_IDS}})</recordDeletionWithIdsQuery>
+        <recordMergeQuery>MERGE INTO {{TABLE_NAME}} AS dest USING (VALUES(?, ?, ?, ?)) AS src (partition_key, timestamp, data, record_id) ON dest.record_id = src.record_id WHEN MATCHED THEN UPDATE SET dest.partition_key = src.partition_key, dest.timestamp = src.timestamp, dest.data = src.data WHEN NOT MATCHED THEN INSERT (partition_key, timestamp, data, record_id) VALUES (src.partition_key, src.timestamp, src.data, src.record_id)</recordMergeQuery>
+        <recordInsertQuery>INSERT INTO {{TABLE_NAME}} (partition_key, timestamp, data, record_id) VALUES (?, ?, ?, ?)</recordInsertQuery>
+        <recordUpdateQuery>UPDATE {{TABLE_NAME}} SET partition_key = ?, timestamp = ?, data = ? WHERE record_id = ?</recordUpdateQuery>
+        <recordRetrievalQuery>SELECT record_id, timestamp, data FROM {{TABLE_NAME}} WHERE partition_key &gt;= ? and partition_key &lt; ? AND timestamp &gt;= ? AND timestamp &lt; ? LIMIT ?,?</recordRetrievalQuery>
+        <recordRetrievalWithIdsQuery>SELECT record_id, timestamp, data FROM {{TABLE_NAME}} WHERE record_id IN ({{RECORD_IDS}})</recordRetrievalWithIdsQuery>
+        <recordTableDeleteQueries>
+            <query>DROP INDEX {{TABLE_NAME}}_PARTITION_KEY</query>
+            <query>DROP INDEX {{TABLE_NAME}}_TIMESTAMP</query>
+            <query>DROP TABLE {{TABLE_NAME}}</query>
+        </recordTableDeleteQueries>
+        <recordTableInitQueries>
+            {% if CONFIG_PARAM_RECORD_ID_COLUMN_SIZE is defined -%}
+            <query>CREATE TABLE {{TABLE_NAME}} (record_id VARCHAR({{CONFIG_PARAM_RECORD_ID_COLUMN_SIZE}}) NOT NULL, timestamp BIGINT, data BLOB(2G) NOT LOGGED, partition_key INTEGER, PRIMARY KEY(record_id))</query>
+            {% else -%}
+            <query>CREATE TABLE {{TABLE_NAME}} (record_id VARCHAR(200) NOT NULL, timestamp BIGINT, data BLOB(2G) NOT LOGGED, partition_key INTEGER, PRIMARY KEY(record_id))</query>
+            {% endif -%}
+            <query>CREATE INDEX {{TABLE_NAME}}_TIMESTAMP ON {{TABLE_NAME}} (timestamp)</query>
+            <query>CREATE INDEX {{TABLE_NAME}}_PARTITION_KEY ON {{TABLE_NAME}} (partition_key)</query>
+        </recordTableInitQueries>
+        <fsDataChunkSize>10240</fsDataChunkSize>
+        <fsDeletePathQuery>DELETE FROM AN_FS_PATH WHERE path = ?</fsDeletePathQuery>
+        <fsDeleteDataQuery>DELETE FROM AN_FS_DATA WHERE path = ?</fsDeleteDataQuery>
+        <fsUpdateDataPathQuery>UPDATE AN_FS_DATA SET path = ? WHERE path = ?</fsUpdateDataPathQuery>
+        <fsFileLengthRetrievalQuery>SELECT length FROM AN_FS_PATH WHERE path = ?</fsFileLengthRetrievalQuery>
+        <fsInsertPathQuery>INSERT INTO AN_FS_PATH (path,is_directory,length,parent_path) VALUES (?,?,?,?)</fsInsertPathQuery>
+        <fsListFilesQuery>SELECT path FROM AN_FS_PATH WHERE parent_path = ?</fsListFilesQuery>
+        <fsPathRetrievalQuery>SELECT * FROM AN_FS_PATH WHERE path = ?</fsPathRetrievalQuery>
+        <fsReadDataChunkQuery>SELECT data FROM AN_FS_DATA WHERE path = ? AND sequence = ?</fsReadDataChunkQuery>
+        <fsSetFileLengthQuery>UPDATE AN_FS_PATH SET length = ? WHERE path = ?</fsSetFileLengthQuery>
+        <fsTableInitQueries>
+            <query>CREATE TABLE AN_FS_PATH (path VARCHAR(256) NOT NULL, is_directory SMALLINT, length BIGINT, parent_path VARCHAR(256), PRIMARY KEY(path))</query>
+            <query>CREATE TABLE AN_FS_DATA (path VARCHAR(256) NOT NULL, sequence BIGINT NOT NULL, data BLOB(2G) NOT LOGGED, PRIMARY KEY (path,sequence))</query>
+            <query>CREATE INDEX index_parent_id ON AN_FS_PATH(parent_path)</query>
+        </fsTableInitQueries>
+        <fsTablesCheckQuery>SELECT path FROM AN_FS_PATH WHERE path = '/'</fsTablesCheckQuery>
+        <fsUpdateDataChunkQuery>UPDATE AN_FS_DATA SET data = ? WHERE path = ? AND sequence = ?</fsUpdateDataChunkQuery>
+        <fsWriteDataChunkQuery>INSERT INTO AN_FS_DATA (path,sequence,data) VALUES (?,?,?)</fsWriteDataChunkQuery>
+        <fsMergeDataChunkQuery>MERGE INTO AN_FS_DATA AS dest USING (VALUES(?, ?, ?)) AS src (path, sequence, data) ON (dest.path = src.path AND dest.sequence = src.sequence) WHEN MATCHED THEN UPDATE SET dest.data = src.data WHEN NOT MATCHED THEN INSERT(path, sequence, data) VALUES (src.path, src.sequence, src.data)</fsMergeDataChunkQuery>
+    </database>
+</rdbms-configuration>
+
+
