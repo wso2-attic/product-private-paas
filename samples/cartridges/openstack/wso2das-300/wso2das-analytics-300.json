@@ -1,0 +1,68 @@
+{
+  "type": "wso2das-300-analytics",
+  "category": "framework",
+  "provider": "wso2",
+  "host": "das.wso2.com",
+  "displayName": "WSO2 DAS 3.0.0 Analytics",
+  "description": "WSO2 DAS 3.0.0 Analytics Cartridge",
+  "version": "4.0.0",
+  "multiTenant": false,
+  "loadBalancingIPType": "public",
+  "portMapping": [
+    {
+      "name": "mgt-http",
+      "protocol": "http",
+      "port": 9763,
+      "proxyPort": 0
+    },
+    {
+      "name": "mgt-https",
+      "protocol": "https",
+      "port": 9443,
+      "proxyPort": 0
+    }
+  ],
+  "iaasProvider": [
+    {
+      "type": "openstack",
+      "imageId": "<REGION>/<BASE_IMAGE_ID>",
+      "property": [
+        {
+          "name": "instanceType",
+          "value": "<REGION>/<FLAVOUR_ID>"
+        },
+        {
+          "name": "keyPair",
+          "value": "<KEY_PAIR_NAME>"
+        },
+        {
+          "name": "securityGroups",
+          "value": "default"
+        }
+      ],
+      "networkInterfaces": [
+        {
+          "networkUuid": "<NETWORK_UUID>"
+        }
+      ]
+    }
+  ],
+  "property": [
+    {
+      "name": "payload_parameter.CONFIG_PARAM_WORKER_HOST_NAME",
+      "value": "das.wso2.com"
+    },
+    {
+      "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+      "value": "false"
+    },
+    {
+      "name": "payload_parameter.CONFIG_PARAM_MEMBERSHIP_SCHEME",
+      "value": "stratos"
+    },
+    {
+      "name": "payload_parameter.APPLICATION_PATH",
+      "value": "/var/www"
+    }
+  ]
+}
