@@ -15,9 +15,16 @@
   -->
 
 <dataBridgeConfiguration>
-
+  {% if CONFIG_PARAM_WORKER_THREADS is defined -%}
     <workerThreads>{{CONFIG_PARAM_WORKER_THREADS}}</workerThreads>
+  {% else -%}
+    <workerThreads>10</workerThreads>
+  {% endif -%}
+  {% if CONFIG_PARAM_EVENT_BUFFER_CAPACITY is defined -%}
     <eventBufferCapacity>{{CONFIG_PARAM_EVENT_BUFFER_CAPACITY}}</eventBufferCapacity>
+  {% else -%}
+    <eventBufferCapacity>10000</eventBufferCapacity>
+  {% endif -%}
     <clientTimeoutMin>30</clientTimeoutMin>
 
     <dataReceiver name="Thrift">

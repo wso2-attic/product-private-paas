@@ -49,6 +49,14 @@
         {
             "name": "payload_parameter.CONFIG_PARAM_STORM_TYPE",
             "value": "supervisor"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_SUPERVISOR_CHILD_OPTS",
+            "value": "512m"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WORKER_CHILD_OPTS",
+            "value": "1024m"
         }
     ]
 }
