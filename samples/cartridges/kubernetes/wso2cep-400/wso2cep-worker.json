@@ -61,6 +61,42 @@
         {
             "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
             "value": "true"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_XMS",
+            "value": "512m"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_XMX",
+            "value": "2048m"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_MAX_PERM_SIZE",
+            "value": "512m"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WORKER_THREADS",
+            "value": "40"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_EVENT_BUFFER_CAPACITY",
+            "value": "40000"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_QUEUE_SIZE",
+            "value": "65536"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_BATCH_SIZE",
+            "value": "400"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CORE_POOL_SIZE",
+            "value": "2"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_MAX_POOL_SIZE",
+            "value": "2"
         }
     ]
 }
