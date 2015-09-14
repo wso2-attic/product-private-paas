@@ -41,7 +41,7 @@ class StormStartupHandler(ICartridgeAgentPlugin):
     CONST_NIMBUS_SERVICE_TYPE = "storm-nimbus"
     ENV_ZOOKEEPER_HOSTNAMES = "CONFIG_PARAM_ZOOKEEPER_HOSTNAMES"
     ENV_NIMBUS_HOSTNAME = "CONFIG_PARAM_NIMBUS_HOSTNAME"
-    CONST_MAX_RETRY_COUNT = 2
+    CONST_MAX_RETRY_COUNT = 5
     current_attempt = 0
 
     def run_plugin(self, values):
