@@ -443,12 +443,41 @@
          The update frequency is in minutes. Setting readOnly would disable checkIn even if the checkInURL is set. The credentials
          are to connect to the corresponding repository and must be provided if required. -->
     
-    <!--scm>
-        <connection checkOutURL="scm:svn:http://svn.wso2.org/repos/wso2" workingDir="/valid/filesystem/path" mountPoint="/_system/foo" checkInURL="" readOnly="" updateFrequency="">
-        	<username>admin</username>
-        	<password>admin</password>
-        </connection>
-    </scm-->
+    {% if CONFIG_PARAM_SCM_CHECKOUT_URL is defined -%}
+    	<scm>
+        	<connection checkOutURL="{{CONFIG_PARAM_SCM_CHECKOUT_URL}}" 
+        		workingDir="{{CONFIG_PARAM_SCM_WORKING_DIR}}" 
+        		mountPoint="{{CONFIG_PARAM_SCM_MOUNT_POINT}}" 
+        		{% if CONFIG_PARAM_SCM_CHECKIN_URL is defined -%}
+        			checkInURL="{{CONFIG_PARAM_SCM_CHECKIN_URL}}"
+        		{% else -%}
+        			checkInURL="" 
+        		{%  endif -%}
+        		{% if CONFIG_PARAM_SCM_READONLY is defined -%}
+        			readOnly="{{CONFIG_PARAM_SCM_READONLY}}"
+        		{% else -%}
+        			readOnly=""
+        		{%  endif -%}
+        		{% if CONFIG_PARAM_SCM_UPDATE_FREQUENCY is defined -%}
+        			updateFrequency="{{CONFIG_PARAM_SCM_UPDATE_FREQUENCY}}"
+        		{% else -%} 
+        			updateFrequency=""
+        		{%  endif -%}
+        		>
+        		<username>{{CONFIG_PARAM_SCM_USERNAME}}</username>
+        		<password>{{CONFIG_PARAM_SCM_PASSWORD}}</password>
+        	</connection>
+    	</scm>
+    
+    {% else -%}
+    	<!--scm>
+        	<connection checkOutURL="scm:svn:http://svn.wso2.org/repos/wso2" workingDir="/valid/filesystem/path" mountPoint="/_system/foo" checkInURL="" readOnly="" updateFrequency="">
+        		<username>admin</username>
+        		<password>admin</password>
+        	</connection>
+    	</scm-->
+    
+    {%  endif -%}
     
     <!-- This defines the list of scheduled tasks for the registry -->
     
