@@ -24,7 +24,6 @@ import time
 import subprocess
 import os
 from entity import *
-#import pymysql as db
 
 
 class WSO2DASStartupHandler(ICartridgeAgentPlugin):
@@ -67,6 +66,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
     ENV_CONFIG_PARAM_HBASE_REGIONSERVER_DATA = "CONFIG_PARAM_HBASE_REGIONSERVER_DATA"
     ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST = "CONFIG_PARAM_LOCAL_MEMBER_HOST"
     ENV_CONFIG_PARAM_CLUSTER_IDs = 'CONFIG_PARAM_CLUSTER_IDs'
+    ENV_CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT = 'CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT'
 
     ENV_CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL = "CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL"
     ENV_CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_USER_NAME = "CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_USER_NAME"
@@ -223,11 +223,19 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         """
         cluster_ids = []
         cluster_id_of_service = None
+        properties = None
         if service_type.endswith(self.CONST_DAS_DEFAULT_SERVICE_NAME):
             for service_name in self.SERVICES:
                 cluster_of_service = self.get_cluster_of_service(topology, service_name, app_id)
                 if cluster_of_service is not None:
                     cluster_id_of_service = cluster_of_service.cluster_id
+                    members = cluster_of_service.get_members()
+                    if members is not None:
+                        for member in members:
+                            properties = member.properties
+                    if properties is not None:
+                        self.export_env_var(self.ENV_CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT, properties["MIN_COUNT"])
+
                 if cluster_id_of_service is not None:
                     cluster_ids.append(cluster_id_of_service)
         else:
