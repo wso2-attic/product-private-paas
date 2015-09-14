@@ -418,12 +418,9 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
 
         cluster_id_of_service = None
         cluster_of_service = self.get_clusters_from_topology(service_list)
-        WSO2DASStartupHandler.log.info("################# cluster_id_of_service INITTTTTTTT ##################### %s" % cluster_of_service)
         if cluster_of_service is not None:
-            WSO2DASStartupHandler.log.info("################# cluster_id_of_service INSIDEEEEEE ##################### " )
             cluster_id_of_service = cluster_of_service.cluster_id
         if cluster_id_of_service is not None:
-            WSO2DASStartupHandler.log.info("################# cluster_id_of_service : %s" % cluster_id_of_service)
             cluster_ids.append(cluster_id_of_service)
         # If clusterIds are available, export them as environment variables
         if cluster_ids:
