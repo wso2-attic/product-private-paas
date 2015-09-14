@@ -39,15 +39,7 @@
     <remoteInstance url="https://localhost:9443/registry">
         <id>governance</id>
         <dbConfig>governance</dbConfig>
-    {% if CONFIG_PARAM_SUB_DOMAIN is defined -%}
-        {% if CONFIG_PARAM_SUB_DOMAIN == 'worker' -%}
-        <readOnly>true</readOnly>
-        {% else -%}
         <readOnly>false</readOnly>
-        {%  endif -%}
-    {%  else -%}
-        <readOnly>false</readOnly>
-    {%  endif -%}
         <enableCache>true</enableCache>
         <registryRoot>/</registryRoot>
         <cacheId>{{CONFIG_PARAM_REGISTRY_DB_USER_NAME}}@{{CONFIG_PARAM_REGISTRY_DB_URL}}</cacheId>
@@ -67,17 +59,9 @@
     <remoteInstance url="https://localhost:9443/registry">
         <id>config</id>
         <dbConfig>config</dbConfig>
-     {% if CONFIG_PARAM_SUB_DOMAIN is defined -%}
-        {% if CONFIG_PARAM_SUB_DOMAIN == 'worker' -%}
-        <readOnly>true</readOnly>
-        {% else -%}
         <readOnly>false</readOnly>
-        {%  endif -%}
-    {%  else -%}
-        <readOnly>false</readOnly>
-    {%  endif -%}
         <registryRoot>/</registryRoot>
- 	<enableCache>true</enableCache>
+ 	    <enableCache>true</enableCache>
         <cacheId>{{CONFIG_PARAM_CONFIG_DB_USER_NAME}}@{{CONFIG_PARAM_CONFIG_DB_URL}}</cacheId>
     </remoteInstance>
 
