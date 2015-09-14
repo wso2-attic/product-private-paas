@@ -425,10 +425,19 @@
          and URL to connect to the remote instance (ex:- remote BPS server) if you are planning to use a Remote Human Task. You should
          provide credentials and URL to connect to the local instance if you simply want to use Work List notifications. -->
     
-    <!--workList serverURL="local://services/" remote="false">
-        <username>admin</username>
-        <password>admin</password>
-    </workList-->
+    {% if CONFIG_PARAM_WORKLIST_SERVER_URL is defined -%}
+        <workList serverURL="{{CONFIG_PARAM_WORKLIST_SERVER_URL}}" remote="{{CONFIG_PARAM_WORKLIST_REMOTE_SERVER}}">
+        	<username>{{CONFIG_PARAM_WORKLIST_SERVER_USERNAME}}</username>
+        	<password>{{CONFIG_PARAM_WORKLIST_SERVER_PASSWORD}}</password>
+    	</workList>
+    	
+	{% else -%}
+        <!--workList serverURL="local://services/" remote="false">
+        	<username>admin</username>
+        	<password>admin</password>
+    	</workList-->
+    	
+    {%  endif -%}
     
     <!-- Sample SCM configuration. Please note that checkOutURL, workingDir, and mountPoint are mandatory for each connection. 
          The update frequency is in minutes. Setting readOnly would disable checkIn even if the checkInURL is set. The credentials
