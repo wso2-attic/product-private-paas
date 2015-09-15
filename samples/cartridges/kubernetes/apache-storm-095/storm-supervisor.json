@@ -52,11 +52,11 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_SUPERVISOR_CHILD_OPTS",
-            "value": "512m"
+            "value": "1024m"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_WORKER_CHILD_OPTS",
-            "value": "1024m"
+            "value": "2048m"
         }
     ]
 }
