@@ -20,10 +20,15 @@
   {% else -%}
     <workerThreads>10</workerThreads>
   {% endif -%}
-  {% if CONFIG_PARAM_EVENT_BUFFER_CAPACITY is defined -%}
-    <eventBufferCapacity>{{CONFIG_PARAM_EVENT_BUFFER_CAPACITY}}</eventBufferCapacity>
+  {% if CONFIG_PARAM_MAX_EVENT_BUFFER_CAPACITY is defined -%}
+    <maxEventBufferCapacity>{{CONFIG_PARAM_MAX_EVENT_BUFFER_CAPACITY}}</maxEventBufferCapacity>
   {% else -%}
-    <eventBufferCapacity>10000</eventBufferCapacity>
+    <maxEventBufferCapacity>50</maxEventBufferCapacity>
+  {% endif -%}
+  {% if CONFIG_PARAM_EVENT_BUFFER_SIZE is defined -%}
+    <eventBufferSize>{{CONFIG_PARAM_EVENT_BUFFER_SIZE}}</eventBufferSize>
+  {% else -%}
+    <eventBufferSize>2000</eventBufferSize>
   {% endif -%}
     <clientTimeoutMin>30</clientTimeoutMin>
 

@@ -64,23 +64,27 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_XMS",
-            "value": "512m"
+            "value": "1024m"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_XMX",
-            "value": "2048m"
+            "value": "4096m"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_MAX_PERM_SIZE",
-            "value": "512m"
+            "value": "1024m"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_WORKER_THREADS",
             "value": "40"
         },
         {
-            "name": "payload_parameter.CONFIG_PARAM_EVENT_BUFFER_CAPACITY",
-            "value": "40000"
+            "name": "payload_parameter.CONFIG_PARAM_MAX_EVENT_BUFFER_CAPACITY",
+            "value": "100"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_EVENT_BUFFER_SIZE",
+            "value": "4000"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_QUEUE_SIZE",
