@@ -81,6 +81,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
     ENV_CONFIG_PARAM_HTTP_PROXY_PORT = 'CONFIG_PARAM_HTTP_PROXY_PORT'
     ENV_CONFIG_PARAM_HTTPS_PROXY_PORT = 'CONFIG_PARAM_HTTPS_PROXY_PORT'
     ENV_CONFIG_PARAM_HOST_NAME = 'CONFIG_PARAM_HOST_NAME'
+    ENV_CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT = 'CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT'
 
 
     def run_plugin(self, values):
@@ -136,6 +137,13 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
 
         self.map_hbase_hostname()
 
+        if profile == "analytics":
+            mgt_count = self.get_member_count_for_service(app_id,WSO2DASStartupHandler.CONST_DAS_ANALYTICS_MGT_SERVICE_NAME)
+            member_count = self.get_member_count_for_service(app_id,WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME)
+
+            self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT,mgt_count+member_count)
+
+
         # configure server
         WSO2DASStartupHandler.log.info("Configuring WSO2 DAS ...")
         config_command = "python ${CONFIGURATOR_HOME}/configurator.py"
@@ -166,6 +174,27 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         p = subprocess.Popen(start_command, env=env_var, shell=True)
         output, errors = p.communicate()
         WSO2DASStartupHandler.log.debug("WSO2 DAS started successfully")
+
+
+    def get_member_count_for_service(self,app_id,service_name):
+        """
+        Return member count for a service
+        :return: member_count
+        """
+        clusters = self.get_clusters_from_topology(service_name)
+
+        if clusters is not None:
+            for cluster in clusters:
+                if cluster.app_id == app_id:
+                    members = cluster.get_members()
+
+        if members is not None:
+            for member in members:
+                properties = member.properties
+                if properties is not None:
+                    member_count=properties["MIN_COUNT"]
+
+                    return member_count
 
 
     def get_zookeeper_member_ips(self, zookeeper_cluster,app_id):
