@@ -224,17 +224,17 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         returns the particular service list for a given service name
         :return: service_list
         """
-        if service_name == WSO2DASStartupHandler.CONST_DAS_RECEIVER_SERVICE_NAME or service_name == \
+        if service_name in WSO2DASStartupHandler.CONST_DAS_RECEIVER_SERVICE_NAME or service_name in \
                 WSO2DASStartupHandler.CONST_DAS_RECEIVER_MGT_SERVICE_NAME:
             return [WSO2DASStartupHandler.CONST_DAS_RECEIVER_SERVICE_NAME,
                     WSO2DASStartupHandler.CONST_DAS_RECEIVER_MGT_SERVICE_NAME]
 
-        elif service_name == WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME or service_name == \
+        elif service_name in WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME or service_name in \
                 WSO2DASStartupHandler.CONST_DAS_ANALYTICS_MGT_SERVICE_NAME:
             return [WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME,
                     WSO2DASStartupHandler.CONST_DAS_ANALYTICS_MGT_SERVICE_NAME]
 
-        elif service_name == WSO2DASStartupHandler.CONST_DAS_DASHBOARD_SERVICE_NAME:
+        elif service_name in WSO2DASStartupHandler.CONST_DAS_DASHBOARD_SERVICE_NAME:
             return [WSO2DASStartupHandler.CONST_DAS_DASHBOARD_SERVICE_NAME]
 
 
