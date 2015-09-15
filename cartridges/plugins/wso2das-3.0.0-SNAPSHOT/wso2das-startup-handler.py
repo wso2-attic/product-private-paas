@@ -116,7 +116,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_MB_IP, mb_ip)
 
         zookeeper_cluster = self.get_clusters_from_topology(WSO2DASStartupHandler.CONST_ZOOKEEPER_SERVICE_NAME)
-        zookeeper_ip = self.get_zookeeper_member_ips(zookeeper_cluster,app_id)
+        zookeeper_ip = self.get_zookeeper_member_ips(zookeeper_cluster, app_id)
         hbase_master_ip = self.read_member_ip_from_topology(WSO2DASStartupHandler.CONST_HBASE_SERVICE_NAME, app_id)
 
         self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_ZK_HOST, zookeeper_ip)
@@ -138,10 +138,11 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         self.map_hbase_hostname()
 
         if profile == "analytics":
-            mgt_count = self.get_member_count_for_service(app_id,WSO2DASStartupHandler.CONST_DAS_ANALYTICS_MGT_SERVICE_NAME)
-            member_count = self.get_member_count_for_service(app_id,WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME)
-
-            self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT,mgt_count+member_count)
+            mgt_count = 1
+            member_count = self.get_member_count_for_service(app_id,
+                                                             WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME)
+            total_count = mgt_count + int(member_count)
+            self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT, str(total_count))
 
 
         # configure server
@@ -176,7 +177,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         WSO2DASStartupHandler.log.debug("WSO2 DAS started successfully")
 
 
-    def get_member_count_for_service(self,app_id,service_name):
+    def get_member_count_for_service(self, app_id, service_name):
         """
         Return member count for a service
         :return: member_count
@@ -192,12 +193,13 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
             for member in members:
                 properties = member.properties
                 if properties is not None:
-                    member_count=properties["MIN_COUNT"]
+                    member_count = properties["MIN_COUNT"]
+                    WSO2DASStartupHandler.log.info("Member Count - " + member_count)
 
                     return member_count
 
 
-    def get_zookeeper_member_ips(self, zookeeper_cluster,app_id):
+    def get_zookeeper_member_ips(self, zookeeper_cluster, app_id):
         """
         returns zookeeper member ip list
         :return: default_member_ip_list
