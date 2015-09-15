@@ -1,0 +1,17 @@
+{
+    "name": "wso2dss-322-group",
+    "cartridges": [
+        "wso2dss-322-manager",
+        "wso2dss-322-worker"
+    ],
+    "dependencies": {
+        "startupOrders": [
+            {
+                "aliases": [
+                    "cartridge.wso2dss-322-manager",
+                    "cartridge.wso2dss-322-worker"
+                ]
+            }
+        ]
+    }
+}
