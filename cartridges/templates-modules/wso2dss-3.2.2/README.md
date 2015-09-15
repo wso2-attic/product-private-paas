@@ -26,8 +26,8 @@ WSO2-DSS 3.2.2 Template for the Configurator
 
 **Security patches**
 * patch1262
-* patch1095
 * patch1261
+* patch1095
 * patch0955
 
 (5) Final files folder should look like following.
