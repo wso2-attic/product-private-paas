@@ -86,7 +86,7 @@ class StormStartupHandler(ICartridgeAgentPlugin):
 
                 # get number of supervisor nodes
                 num_of_supervisor_instances = len(member_id_member_ip_dictionary)
-
+                StormStartupHandler.log.info("Number of Supervisor nodes : %s" % num_of_supervisor_instances)
                 sorted_member_id_member_ip_tuples = sorted(member_id_member_ip_dictionary.items(),
                                                            key=operator.itemgetter(0))
                 local_ip = socket.gethostbyname(socket.gethostname())
@@ -177,16 +177,17 @@ class StormStartupHandler(ICartridgeAgentPlugin):
         Get data from meta data service
         :return: received data
         """
-        mds_response = None
-        while mds_response is None:
-            StormStartupHandler.log.info(
-                "Waiting for " + receive_data + " to be available from metadata service for app ID: %s" % app_id)
-            time.sleep(1)
+        metadata = None
+        while metadata is None:
             mds_response = mdsclient.get(app=True)
             if mds_response is not None and mds_response.properties.get(receive_data) is None:
-                mds_response = None
+                StormStartupHandler.log.info(
+                    "Waiting for " + receive_data + " to be available from metadata service for app ID: %s" % app_id)
+                time.sleep(1)
+            else:
+                metadata = mds_response.properties[receive_data]
 
-        return mds_response.properties[receive_data]
+        return metadata
 
     @staticmethod
     def remove_data_from_metadata(key):
@@ -199,16 +200,13 @@ class StormStartupHandler(ICartridgeAgentPlugin):
         if mds_response is not None and mds_response.properties.get(key) is not None:
             read_data = mds_response.properties[key]
             check_str = isinstance(read_data, (str, unicode))
+            check_int = isinstance(read_data, int)
 
-            if check_str == True:
+            if check_str or check_int:
                 mdsclient.delete_property_value(key, read_data)
             else:
-                check_int = isinstance(read_data, int)
-                if check_int == True:
-                    mdsclient.delete_property_value(key, read_data)
-                else:
-                    for entry in read_data:
-                        mdsclient.delete_property_value(key, entry)
+                for entry in read_data:
+                    mdsclient.delete_property_value(key, entry)
 
     def get_member_id_member_ip_dictionary(self, member_map, service_type, app_id):
         """
