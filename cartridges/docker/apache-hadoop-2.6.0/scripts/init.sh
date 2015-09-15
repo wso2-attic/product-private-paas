@@ -28,6 +28,7 @@ if [ ${START_CMD} = 'PCA' ]; then
 	/usr/local/bin/start-agent.sh
 	echo "Python cartridge agent started successfully"
 else
+    echo JAVA_HOME=${JAVA_HOME} >> /etc/environment
     echo "Configuring Hadoop..."
     echo ${CLUSTER}
     echo "clustering true or not"
