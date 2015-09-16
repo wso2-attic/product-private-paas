@@ -1,0 +1,36 @@
+{
+    "type": "wso2brs-210-worker",
+    "category": "framework",
+    "provider": "wso2",
+    "host": "as.wso2.org",
+    "displayName": "WSO2 BRS 2.1.0 Worker",
+    "description": "WSO2 BRS 2.1.0 Worker Cartridge",
+    "version": "2.1.0",
+    "multiTenant": true,
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "mgt-http",
+            "protocol": "http",
+            "port": 9763,
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
+        },
+        {
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "mock",
+            "imageId": "wso2/brs:2.1.0",
+            "networkInterfaces": []
+        }
+    ],
+    "property": [
+    ]
+}
