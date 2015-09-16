@@ -1,0 +1,60 @@
+{
+    "type": "wso2brs-210-manager",
+    "category": "framework",
+    "provider": "wso2",
+    "host": "mgt.brs.wso2.org",
+    "displayName": "WSO2 BRS 2.1.0 Manager",
+    "description": "WSO2 BRS 2.1.0 Manager Cartridge",
+    "version": "2.1.0",
+    "multiTenant": true,
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "mgt-http",
+            "protocol": "http",
+            "port": 9763,
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
+        },
+        {
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "kubernetes",
+            "imageId": "wso2/brs:2.1.0",
+            "networkInterfaces": []
+        }
+    ],
+    "property": [
+        {
+            "name": "KUBERNETES_CONTAINER_CPU",
+            "value": "0"
+        },
+        {
+            "name": "KUBERNETES_CONTAINER_MEMORY",
+            "value": "0"
+        },
+        {
+            "name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
+            "value": "ClientIP"
+        },
+        {
+            "name": "payload_parameter.START_CMD",
+            "value": "PCA"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+            "value": "true"
+        },
+        {
+            "name": "payload_parameter.COMMIT_ENABLED",
+            "value": "true"
+        }
+    ]
+}
