@@ -2,7 +2,7 @@
     "type": "wso2as-521-manager",
     "category": "framework",
     "provider": "wso2",
-    "host": "as.wso2.org",
+    "host": "mgt.as.wso2.org",
     "displayName": "WSO2 AS 5.2.1 Manager",
     "description": "WSO2 AS 5.2.1 Manager Cartridge",
     "version": "5.2.1",
