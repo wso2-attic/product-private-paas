@@ -1,0 +1,36 @@
+{
+    "applicationId": "wso2brs-210-application",
+    "alias": "wso2brs-210-application",
+    "multiTenant": true,
+    "components": {
+        "groups": [
+            {
+                "name": "wso2brs-210-group",
+                "alias": "wso2brs-210-group",
+                "deploymentPolicy": "deployment-policy-1",
+                "groupMinInstances": 1,
+                "groupMaxInstances": 1,
+                "cartridges": [
+                    {
+                        "type": "wso2brs-210-manager",
+                        "cartridgeMin": 1,
+                        "cartridgeMax": 1,
+                        "subscribableInfo": {
+                            "alias": "wso2brs-210-manager",
+                            "autoscalingPolicy": "autoscaling-policy-1"
+                        }
+                    },
+                    {
+                        "type": "wso2brs-210-worker",
+                        "cartridgeMin": 2,
+                        "cartridgeMax": 2,
+                        "subscribableInfo": {
+                            "alias": "wso2brs-210-worker",
+                            "autoscalingPolicy": "autoscaling-policy-1"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}

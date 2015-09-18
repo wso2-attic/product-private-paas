@@ -1,0 +1,17 @@
+{
+    "name": "wso2brs-210-group",
+    "cartridges": [
+        "wso2brs-210-manager",
+        "wso2brs-210-worker"
+    ],
+    "dependencies": {
+        "startupOrders": [
+            {
+                "aliases": [
+                    "cartridge.wso2brs-210-manager",
+                    "cartridge.wso2brs-210-worker"
+                ]
+            }
+        ]
+    }
+}

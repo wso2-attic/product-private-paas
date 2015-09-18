@@ -1,0 +1,51 @@
+{
+    "type": "wso2brs-210-manager",
+    "category": "framework",
+    "provider": "wso2",
+    "host": "brs.wso2.org",
+    "displayName": "WSO2 BRS 2.1.0 Manager",
+    "description": "WSO2 BRS 2.1.0 Manager Cartridge",
+    "version": "2.1.0",
+    "multiTenant": false,
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "mgt-http",
+            "protocol": "http",
+            "port": 9763,
+            "proxyPort": 80
+        },
+        {
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
+            "proxyPort": 443
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "ec2",
+            "imageId": "us-west-2/ami-43d2c373",
+            "property": [
+                {
+                    "name": "instanceType",
+                    "value": "t2.medium"
+                },
+                {
+                    "name": "securityGroupIds",
+                    "value": "sg-57a61333"
+                }
+            ]
+        }
+    ],
+    "property": [
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+            "value": "true"
+        },
+        {
+            "name": "payload_parameter.LB_IP",
+            "value": "<LOAD_BALANCER_IP>"
+        }
+    ]
+}

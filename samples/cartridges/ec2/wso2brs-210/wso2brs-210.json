@@ -1,0 +1,55 @@
+{
+    "type": "wso2brs-210",
+    "category": "framework",
+    "provider": "wso2",
+    "host": "brs.wso2.org",
+    "displayName": "WSO2 BRS 2.1.0",
+    "description": "WSO2 BRS 2.1.0 Cartridge",
+    "version": "2.1.0",
+    "multiTenant": false,
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "mgt-http",
+            "protocol": "http",
+            "port": 9763,
+            "proxyPort": 80
+        },
+        {
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
+            "proxyPort": 443
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "ec2",
+            "imageId": "us-west-2/ami-e57362d5",
+            "property": [
+                {
+                    "name": "instanceType",
+                    "value": "t2.medium"
+                }
+            ]
+        }
+    ],
+    "property": [
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WORKER_HOST_NAME",
+            "value": "brs.wso2.com"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+            "value": "false"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_MEMBERSHIP_SCHEME",
+            "value": "stratos"
+        },
+        {
+            "name": "payload_parameter.APPLICATION_PATH",
+            "value": "/var/www"
+        }
+    ]
+}
