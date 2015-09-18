@@ -1,6 +1,6 @@
 # Template modules for the cartridges and network partitions.
 
-How to use this to generate cartridges and network partitions
+How to use template modules to generate cartridges and network partitions
 -------------------------------------------------------------
 
 - Get the Configurator pack ppaas-configurator-4.1.0-SNAPSHOT.zip
