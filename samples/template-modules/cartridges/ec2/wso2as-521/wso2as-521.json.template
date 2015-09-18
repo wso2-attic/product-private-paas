@@ -1,0 +1,63 @@
+{
+    "type": "wso2as-521",
+    "category": "framework",
+    "provider": "wso2",
+    "host": "as.wso2.org",
+    "displayName": "WSO2 AS 5.2.1",
+    "description": "WSO2 AS 5.2.1 Cartridge",
+    "version": "5.2.1",
+    "multiTenant": false,
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "mgt-http",
+            "protocol": "http",
+            "port": 9763,
+            "proxyPort": 80
+        },
+        {
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
+            "proxyPort": 443
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "ec2",
+            "imageId": "{{EC2_REGION_ID}}/{{EC2_IMAGE_ID}}",
+            "property": [
+                {
+                    "name": "instanceType",
+                    "value": "{{EC2_FLAVOUR_ID}}"
+                },
+                {
+                    "name":"tag:Name",
+                    "value":"WSO2 PPaaS AS"
+                },
+                {
+                    "name":"tag:User",
+                    "value":"xxxxxx"
+                }
+            ]
+        }
+    ],
+    "property": [
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WORKER_HOST_NAME",
+            "value": "as.wso2.com"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+            "value": "false"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_MEMBERSHIP_SCHEME",
+            "value": "stratos"
+        },
+        {
+            "name": "payload_parameter.APPLICATION_PATH",
+            "value": "/var/www"
+        }
+    ]
+}

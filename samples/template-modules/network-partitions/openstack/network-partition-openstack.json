@@ -1,0 +1,42 @@
+{
+    "id": "network-partition-openstack",
+    "provider": "openstack",
+    "partitions": [
+        {
+            "id": "partition-1",
+            "property": [
+                {
+                    "name": "region",
+                    "value": "{{OS_REGION}}"
+                }
+            ]
+        },
+        {
+            "id": "partition-2",
+            "property": [
+                {
+                    "name": "region",
+                    "value": "{{OS_REGION}}"
+                }
+            ]
+        }
+    ],
+    "properties": [
+        {
+            "name": "payload_parameter.PUPPET_IP",
+            "value": "{{PUPPET_MASTER_IP}}"
+        },
+        {
+            "name": "payload_parameter.MB_IP",
+            "value": "{{MB_IP}}"
+        },
+        {
+            "name": "payload_parameter.MB_PORT",
+            "value": "{{MB_PORT}}"
+        },
+        {
+            "name": "payload_parameter.PUPPET_HOSTNAME",
+            "value": "{{PUPPET_MASTER_HOSTNAME}}"
+        }
+    ]
+}

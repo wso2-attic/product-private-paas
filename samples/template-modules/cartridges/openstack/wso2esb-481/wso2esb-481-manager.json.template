@@ -1,0 +1,100 @@
+{
+    "type": "wso2esb-481-manager",
+    "category": "framework",
+    "provider": "wso2",
+    "host": "mgt.esb.wso2.org",
+    "displayName": "WSO2 ESB 4.8.1 Manager",
+    "description": "WSO2 ESB 4.8.1 Manager Cartridge",
+    "version": "4.8.1",
+    "multiTenant": false,
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "mgt-http",
+            "protocol": "http",
+            "port": 9763,
+            "proxyPort": 80
+        },
+        {
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
+            "proxyPort": 443
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "openstack",
+            "imageId": "{{OS_REGION}}/{{OS_BASE_IMAGE_ID}}",
+            "property": [
+                {
+                    "name": "instanceType",
+                    "value": "{{OS_REGION}}/{{OS_FLAVOUR_ID}}"
+                },
+                {
+                    "name": "keyPair",
+                    "value": "{{OS_KEY_PAIR_NAME}}"
+                },
+                {
+                    "name": "securityGroups",
+                    "value": "{{OS_SECURITY_GROUP_ID}}"
+                }
+            ],
+            "networkInterfaces": [
+                {
+                    "networkUuid": "{{OS_NETWORK_UUID}}"
+                }
+            ]
+        }
+    ],
+    "property": [
+        {
+            "name": "payload_parameter.COMMIT_ENABLED",
+            "value": "true"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+            "value": "true"
+        },
+        {
+            "name": "payload_parameter.LB_IP",
+            "value": "{{LB_IP}}"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_REGISTRY_DB_URL",
+            "value":"jdbc:mysql://{{MYSQL_IP}}:{{MYSQL_PORT}}/{{REGISTRY_DB}}?autoReconnect=true"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_REGISTRY_DB_USER_NAME",
+            "value":"{{USER_NAME}}"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_REGISTRY_DB_PASSWORD",
+            "value":"{{PASSWORD}}"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_CONFIG_DB_URL",
+            "value":"jdbc:mysql://{{MYSQL_IP}}:{{MYSQL_PORT}}/config_db_esb?autoReconnect=true"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_CONFIG_DB_USER_NAME",
+            "value":"{{USER_NAME}}"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_CONFIG_DB_PASSWORD",
+            "value":"{{PASSWORD}}"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_USER_MGT_DB_URL",
+            "value":"jdbc:mysql://{{MYSQL_IP}}:{{MYSQL_PORT}}/{{USER_DB}}?autoReconnect=true"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_USER_MGT_DB_USER_NAME",
+            "value":"{{USER_NAME}}"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_USER_MGT_DB_PASSWORD",
+            "value":"{{PASSWORD}}"
+        }
+    ]
+}
