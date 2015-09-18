@@ -94,6 +94,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
                                        WSO2DASStartupHandler.CONST_PPAAS_MEMBERSHIP_SCHEME)
         service_name = values[WSO2DASStartupHandler.CONST_SERVICE_NAME]
         port_mappings_str = values[WSO2DASStartupHandler.CONST_PORT_MAPPINGS].replace("'", "")
+        spark_master_count = values.get(WSO2DASStartupHandler.ENV_CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT, '1')
 
         WSO2DASStartupHandler.log.info("Profile : %s " % profile)
         WSO2DASStartupHandler.log.info("Application ID: %s" % app_id)
@@ -127,7 +128,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
 
         # set hostname
         member_ip = socket.gethostbyname(socket.gethostname())
-        self.set_host_name(app_id, service_name, member_ip)
+        # self.set_host_name(app_id, service_name, member_ip)
 
         if clustering == 'true' and membership_scheme == self.CONST_PPAAS_MEMBERSHIP_SCHEME:
             service_list = self.get_service_list_for_clustering(service_name)
@@ -135,14 +136,29 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
             member_ip = socket.gethostbyname(socket.gethostname())
             self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST, member_ip)
 
+        elif clustering == 'true' and membership_scheme == "wka":
+
+            member_ip = socket.gethostbyname(socket.gethostname())
+            self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST, member_ip)
+
         self.map_hbase_hostname()
 
         if profile == "analytics":
-            mgt_count = 1
-            member_count = self.get_member_count_for_service(app_id,
-                                                             WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME)
-            total_count = mgt_count + int(member_count)
-            self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT, str(total_count))
+            # mgt_count = 1
+            # member_count = self.get_member_count_for_service(app_id,
+            #                                                 WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME)
+            self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT,
+                                str(spark_master_count))
+            self.export_env_var("CONFIG_PARAM_DOMAIN", "wso2.spark.carbon.domain")
+
+            if service_name == WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME:
+                mgt_ip = self.read_member_ip_from_topology(WSO2DASStartupHandler.CONST_DAS_ANALYTICS_MGT_SERVICE_NAME,
+                                                           app_id)
+                wka_members = "[" + mgt_ip + ":4000]"
+                self.export_env_var("CONFIG_PARAM_WKA_MEMBERS", wka_members)
+                mgt_hostname = self.get_host_name_from_cluster(
+                    WSO2DASStartupHandler.CONST_DAS_ANALYTICS_MGT_SERVICE_NAME, app_id)
+                self.update_hosts_file(mgt_ip, mgt_hostname)
 
 
         # configure server

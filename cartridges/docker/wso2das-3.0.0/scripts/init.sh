@@ -25,7 +25,7 @@
 #printenv >> /tmp/envs
 
 local_ip=`awk 'NR==1 {print $1}' /etc/hosts`
-server_path=/mnt/${local_ip}
+server_path=/mnt
 super_tenant_artifact_repo_path=repository/deployment/server/
 mkdir -p $server_path
 unzip /opt/wso2${WSO2_SERVER_TYPE}-${WSO2_SERVER_VERSION}.zip -d $server_path
