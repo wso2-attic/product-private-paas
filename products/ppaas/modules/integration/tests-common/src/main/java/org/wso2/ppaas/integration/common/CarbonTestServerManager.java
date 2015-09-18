@@ -19,6 +19,7 @@ package org.wso2.ppaas.integration.common;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.stratos.common.constants.StratosConstants;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.exceptions.AutomationFrameworkException;
 import org.wso2.carbon.automation.extensions.servers.carbonserver.TestServerManager;
@@ -26,6 +27,7 @@ import org.wso2.carbon.automation.extensions.servers.carbonserver.TestServerMana
 import javax.xml.xpath.XPathExpressionException;
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.Map;
 
 import static org.testng.Assert.assertNotNull;
@@ -43,22 +45,27 @@ public class CarbonTestServerManager extends TestServerManager {
     public static final String CARTRIDGE_CONFIG_PROPERTIES_FILENAME = "cartridge-config.properties";
     public static final String IDENTITY_FILENAME = "identity.xml";
     private static final String LOG4J_PROPERTIES_FILENAME = "log4j.properties";
+    private AutomationContext automationContext;
 
 
     public CarbonTestServerManager(AutomationContext context) {
         super(context);
+        this.automationContext = context;
     }
 
     public CarbonTestServerManager(AutomationContext context, String carbonZip, Map<String, String> commandMap) {
         super(context, carbonZip, commandMap);
+        this.automationContext = context;
     }
 
     public CarbonTestServerManager(AutomationContext context, int portOffset) {
         super(context, portOffset);
+        this.automationContext = context;
     }
 
     public CarbonTestServerManager(AutomationContext context, String carbonZip) {
         super(context, carbonZip);
+        this.automationContext = context;
     }
 
     public String startServer() throws IOException, AutomationFrameworkException, XPathExpressionException {
@@ -69,10 +76,34 @@ public class CarbonTestServerManager extends TestServerManager {
 
     public void configureServer() throws AutomationFrameworkException {
         try {
-            copyArtifacts(carbonHome);
+            copyArtifacts();
+            setSystemProperties();
         }
         catch (IOException e) {
             log.error("Could not configure PPAAS server", e);
+        }
+    }
+
+    public void setSystemProperties() throws AutomationFrameworkException {
+        URL resourceUrl = getClass().getResource(File.separator + "keystores" + File.separator
+                + "products" + File.separator + "wso2carbon.jks");
+        System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
+        System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
+        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+        log.info("trustStore set to " + resourceUrl.getPath());
+
+        // Set jndi.properties.dir system property for initializing event receivers
+        String jndiDir = carbonHome + PATH_SEP + Util.CARBON_CONF_PATH;
+        System.setProperty("jndi.properties.dir", jndiDir);
+        log.info("jndi.properties.dir is set to: " + jndiDir);
+        try {
+            String autoscalerServiceURL = automationContext.getContextUrls().getSecureServiceUrl()
+                    + "/AutoscalerService";
+            System.setProperty(StratosConstants.AUTOSCALER_SERVICE_URL, autoscalerServiceURL);
+            log.info("Autoscaler service URL set to " + autoscalerServiceURL);
+        }
+        catch (Exception e) {
+            throw new AutomationFrameworkException("Could not set autoscaler service URL system property", e);
         }
     }
 
@@ -80,7 +111,7 @@ public class CarbonTestServerManager extends TestServerManager {
         super.stopServer();
     }
 
-    protected void copyArtifacts(String carbonHome) throws IOException {
+    protected void copyArtifacts() throws IOException {
         String commonResourcesPath = Util.BASE_PATH + PATH_SEP + ".." + PATH_SEP + ".." + PATH_SEP + "src" + PATH_SEP +
                 "test" + PATH_SEP + "resources" + PATH_SEP + "common";
         copyConfigFile(carbonHome, commonResourcesPath, MOCK_IAAS_XML_FILENAME, Util.CARBON_CONF_PATH);

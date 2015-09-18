@@ -38,77 +38,73 @@ import static org.testng.AssertJUnit.assertTrue;
 public class UserTest extends PPaaSIntegrationTest {
     private static final Log log = LogFactory.getLog(UserTest.class);
     private static final String RESOURCES_PATH = "/user-test";
+    public static final int APPLICATION_TEST_TIMEOUT = 5 * 60 * 1000; // 5 mins
 
-    @Test(alwaysRun = true, description = "List, update user", timeOut = GLOBAL_TEST_TIMEOUT)
-    public void addUser() {
-        try {
-            log.info("-------------------------------Started users test case-------------------------------");
-            String userId = "user-1";
-            boolean addedUser1 = restClient.addEntity(RESOURCES_PATH + "/" +
-                            userId + ".json",
-                    RestConstants.USERS, RestConstants.USERS_NAME);
-            assertTrue(addedUser1);
+    public UserTest() throws Exception {
+    }
 
-            Type listType = new TypeToken<ArrayList<UserInfoBean>>() {
-            }.getType();
+    @Test(description = "List, update user", timeOut = APPLICATION_TEST_TIMEOUT)
+    public void addUser() throws Exception {
+        log.info("-------------------------------Started users test case-------------------------------");
+        String userId = "user-1";
+        boolean addedUser1 = restClient.addEntity(RESOURCES_PATH + "/" +
+                        userId + ".json",
+                RestConstants.USERS, RestConstants.USERS_NAME);
+        assertTrue(addedUser1);
 
-            List<UserInfoBean> userInfoBeanList = (List<UserInfoBean>) restClient.listEntity(RestConstants.USERS,
-                    listType, RestConstants.USERS_NAME);
+        Type listType = new TypeToken<ArrayList<UserInfoBean>>() {
+        }.getType();
 
-            UserInfoBean bean1 = null;
-            for (UserInfoBean userInfoBean : userInfoBeanList) {
-                if (userInfoBean.getUserName().equals(userId)) {
-                    bean1 = userInfoBean;
-                }
+        List<UserInfoBean> userInfoBeanList = (List<UserInfoBean>) restClient.listEntity(RestConstants.USERS,
+                listType, RestConstants.USERS_NAME);
+
+        UserInfoBean bean1 = null;
+        for (UserInfoBean userInfoBean : userInfoBeanList) {
+            if (userInfoBean.getUserName().equals(userId)) {
+                bean1 = userInfoBean;
             }
-            assertNotNull(bean1);
+        }
+        assertNotNull(bean1);
             /*assertEquals(bean1.getEmail(), "foo@bar.com");
             assertEquals(bean1.getFirstName(), "Frank");
             assertEquals(bean1.getRole(), "admin");
             assertEquals(bean1.getLastName(), "Myers");
             assertEquals(bean1.getCredential(), "kim12345");*/
 
-            boolean updatedUser1 = restClient.updateEntity(RESOURCES_PATH + "/" +
-                            userId + "-v1.json",
-                    RestConstants.USERS, RestConstants.USERS_NAME);
-            assertTrue(updatedUser1);
+        boolean updatedUser1 = restClient.updateEntity(RESOURCES_PATH + "/" +
+                        userId + "-v1.json",
+                RestConstants.USERS, RestConstants.USERS_NAME);
+        assertTrue(updatedUser1);
 
-            userInfoBeanList = (List<UserInfoBean>) restClient.listEntity(RestConstants.USERS,
-                    listType, RestConstants.USERS_NAME);
+        userInfoBeanList = (List<UserInfoBean>) restClient.listEntity(RestConstants.USERS,
+                listType, RestConstants.USERS_NAME);
 
-            for (UserInfoBean userInfoBean : userInfoBeanList) {
-                if (userInfoBean.getUserName().equals(userId)) {
-                    bean1 = userInfoBean;
-                }
+        for (UserInfoBean userInfoBean : userInfoBeanList) {
+            if (userInfoBean.getUserName().equals(userId)) {
+                bean1 = userInfoBean;
             }
-            assertNotNull(bean1);
+        }
+        assertNotNull(bean1);
             /*assertEquals(bean1.getEmail(), "user-1@bar.com");
             assertEquals(bean1.getFirstName(), "Frankn");
             assertEquals(bean1.getRole(), "admin");
             assertEquals(bean1.getLastName(), "Myersn");
             assertEquals(bean1.getCredential(), "kim123456");*/
 
-            boolean removedUser1 = restClient.removeEntity(RestConstants.USERS,
-                    userId, RestConstants.USERS_NAME);
-            assertTrue(removedUser1);
+        boolean removedUser1 = restClient.removeEntity(RestConstants.USERS,
+                userId, RestConstants.USERS_NAME);
+        assertTrue(removedUser1);
 
-            userInfoBeanList = (List<UserInfoBean>) restClient.listEntity(RestConstants.USERS,
-                    listType, RestConstants.USERS_NAME);
+        userInfoBeanList = (List<UserInfoBean>) restClient.listEntity(RestConstants.USERS,
+                listType, RestConstants.USERS_NAME);
 
-            bean1 = null;
-            for (UserInfoBean userInfoBean : userInfoBeanList) {
-                if (userInfoBean.getUserName().equals(userId)) {
-                    bean1 = userInfoBean;
-                }
+        bean1 = null;
+        for (UserInfoBean userInfoBean : userInfoBeanList) {
+            if (userInfoBean.getUserName().equals(userId)) {
+                bean1 = userInfoBean;
             }
-            assertNull(bean1);
-
-            log.info("-------------------------Ended users test case-------------------------");
-
         }
-        catch (Exception e) {
-            log.error("An error occurred while running user test", e);
-            assertTrue("An error occurred while running user test", false);
-        }
+        assertNull(bean1);
+        log.info("-------------------------Ended users test case-------------------------");
     }
 }

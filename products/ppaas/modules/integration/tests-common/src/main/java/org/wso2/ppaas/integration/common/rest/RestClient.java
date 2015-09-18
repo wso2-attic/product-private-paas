@@ -291,14 +291,22 @@ public class RestClient {
         }
     }
 
-    public boolean removeEntity(String resourcePath, String identifier, String entityName) {
-        try {
-            URI uri = new URIBuilder(this.endPoint + "/" + resourcePath + "/" + identifier).build();
-            HttpResponse response = doDelete(uri);
-            if (response != null) {
-                if ((response.getStatusCode() >= 200) && (response.getStatusCode() < 300)) {
-                    return true;
-                } else if (response.getContent().contains("it is used") || response.getContent().contains("in use")) {
+    public boolean removeEntity(String resourcePath, String identifier, String entityName) throws Exception {
+
+        URI uri = new URIBuilder(this.endPoint + "/" + resourcePath + "/" + identifier).build();
+        HttpResponse response = doDelete(uri);
+        if (response != null) {
+            if ((response.getStatusCode() >= 200) && (response.getStatusCode() < 300)) {
+                return true;
+            } else {
+                GsonBuilder gsonBuilder = new GsonBuilder();
+                Gson gson = gsonBuilder.create();
+                ErrorResponse errorResponse = gson.fromJson(response.getContent(),
+                        ErrorResponse.class);
+                log.error("Error response while removing entity [identifier] " + identifier + ", [entity name] " +
+                        entityName + ", [error] " + errorResponse.getErrorMessage() + ", [error code] " + errorResponse
+                        .getErrorCode());
+                /*else if (response.getContent().contains("it is used") || response.getContent().contains("in use")) {
                     return false;
                 } else {
                     GsonBuilder gsonBuilder = new GsonBuilder();
@@ -308,16 +316,11 @@ public class RestClient {
                     if (errorResponse != null) {
                         throw new RuntimeException(errorResponse.getErrorMessage());
                     }
-                }
+                }*/
+                return false;
             }
-            String msg = "An unknown error occurred while removing the " + entityName;
-            log.error(msg);
-            throw new RuntimeException(msg);
-        } catch (Exception e) {
-            String message = "Could not remove  " + entityName;
-            log.error(message, e);
-            throw new RuntimeException(message, e);
         }
+        throw new Exception("No response received from back-end.");
     }
 
     public boolean updateEntity(String filePath, String resourcePath, String entityName) {

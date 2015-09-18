@@ -37,161 +37,152 @@ import static org.testng.Assert.*;
 public class CartridgeTest extends PPaaSIntegrationTest {
     private static final Log log = LogFactory.getLog(CartridgeTest.class);
     private static final String RESOURCES_PATH = "/cartridge-test";
+    public static final int APPLICATION_TEST_TIMEOUT = 5 * 60 * 1000; // 5 mins
 
-    @Test(alwaysRun = true, description = "Deploy cartridge", priority = 1, timeOut = GLOBAL_TEST_TIMEOUT)
-    public void testCartridge() {
-        log.info("--------------------Started Cartridge test case-----------------------------");
-
-        try {
-            String cartridgeType = "c0-cartridge-test";
-            boolean added = restClient.addEntity(RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" +
-                            cartridgeType + ".json",
-                    RestConstants.CARTRIDGES, RestConstants.CARTRIDGES_NAME);
-            assertTrue(added);
-            CartridgeBean bean = (CartridgeBean) restClient.
-                    getEntity(RestConstants.CARTRIDGES, cartridgeType,
-                            CartridgeBean.class, RestConstants.CARTRIDGES_NAME);
-            assertEquals(bean.getCategory(), "Application");
-            assertEquals(bean.getHost(), "qmog.cisco.com");
-            for (PropertyBean property : bean.getProperty()) {
-                if (property.getName().equals("payload_parameter.CEP_IP")) {
-                    assertEquals(property.getValue(), "octl.qmog.cisco.com");
-                } else if (property.getName().equals("payload_parameter.CEP_ADMIN_PASSWORD")) {
-                    assertEquals(property.getValue(), "admin");
-                } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_IP")) {
-                    assertEquals(property.getValue(), "octl.qmog.cisco.com");
-                } else if (property.getName().equals("payload_parameter.QTCM_NETWORK_COUNT")) {
-                    assertEquals(property.getValue(), "1");
-                } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_ADMIN_PASSWORD")) {
-                    assertEquals(property.getValue(), "admin");
-                } else if (property.getName().equals("payload_parameter.QTCM_DNS_SEGMENT")) {
-                    assertEquals(property.getValue(), "test");
-                } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_SECURE_PORT")) {
-                    assertEquals(property.getValue(), "7711");
-                } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_PORT")) {
-                    assertEquals(property.getValue(), "7611");
-                } else if (property.getName().equals("payload_parameter.CEP_PORT")) {
-                    assertEquals(property.getValue(), "7611");
-                } else if (property.getName().equals("payload_parameter.MB_PORT")) {
-                    assertEquals(property.getValue(), "61616");
-                }
-            }
-
-
-            boolean updated = restClient.updateEntity(RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" +
-                            cartridgeType + "-v1.json",
-                    RestConstants.CARTRIDGES, RestConstants.CARTRIDGES_NAME);
-            assertTrue(updated);
-            CartridgeBean updatedBean = (CartridgeBean) restClient.
-                    getEntity(RestConstants.CARTRIDGES, cartridgeType,
-                            CartridgeBean.class, RestConstants.CARTRIDGES_NAME);
-            assertEquals(updatedBean.getType(), "c0-cartridge-test");
-            assertEquals(updatedBean.getCategory(), "Data");
-            assertEquals(updatedBean.getHost(), "qmog.cisco.com12");
-            for (PropertyBean property : updatedBean.getProperty()) {
-                if (property.getName().equals("payload_parameter.CEP_IP")) {
-                    assertEquals(property.getValue(), "octl.qmog.cisco.com123");
-                } else if (property.getName().equals("payload_parameter.CEP_ADMIN_PASSWORD")) {
-                    assertEquals(property.getValue(), "admin123");
-                } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_IP")) {
-                    assertEquals(property.getValue(), "octl.qmog.cisco.com123");
-                } else if (property.getName().equals("payload_parameter.QTCM_NETWORK_COUNT")) {
-                    assertEquals(property.getValue(), "3");
-                } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_ADMIN_PASSWORD")) {
-                    assertEquals(property.getValue(), "admin123");
-                } else if (property.getName().equals("payload_parameter.QTCM_DNS_SEGMENT")) {
-                    assertEquals(property.getValue(), "test123");
-                } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_SECURE_PORT")) {
-                    assertEquals(property.getValue(), "7712");
-                } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_PORT")) {
-                    assertEquals(property.getValue(), "7612");
-                } else if (property.getName().equals("payload_parameter.CEP_PORT")) {
-                    assertEquals(property.getValue(), "7612");
-                } else if (property.getName().equals("payload_parameter.MB_PORT")) {
-                    assertEquals(property.getValue(), "61617");
-                }
-            }
-
-            boolean removed = restClient.removeEntity(RestConstants.CARTRIDGES, cartridgeType,
-                    RestConstants.CARTRIDGES_NAME);
-            assertTrue(removed);
-
-            CartridgeBean beanRemoved = (CartridgeBean) restClient.
-                    getEntity(RestConstants.CARTRIDGES, cartridgeType,
-                            CartridgeBean.class, RestConstants.CARTRIDGES_NAME);
-            assertNull(beanRemoved);
-
-            log.info("---------------------------Ended Cartridge test case-------------------------");
-        }
-        catch (Exception e) {
-            log.error("An error occurred while handling RESTConstants.CARTRIDGES_PATH", e);
-            assertTrue(false, "An error occurred while handling RESTConstants.CARTRIDGES_PATH");
-        }
+    public CartridgeTest() throws Exception {
     }
 
-    @Test(alwaysRun = true, description = "Cartridge list", priority = 1, timeOut = GLOBAL_TEST_TIMEOUT)
-    public void testCartridgeList() {
+    @Test(description = "Deploy cartridge", timeOut = APPLICATION_TEST_TIMEOUT)
+    public void testCartridge() throws Exception {
+        log.info("--------------------Started Cartridge test case-----------------------------");
+        String cartridgeType = "c0-cartridge-test";
+        boolean added = restClient.addEntity(RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" +
+                        cartridgeType + ".json",
+                RestConstants.CARTRIDGES, RestConstants.CARTRIDGES_NAME);
+        assertTrue(added);
+        CartridgeBean bean = (CartridgeBean) restClient.
+                getEntity(RestConstants.CARTRIDGES, cartridgeType,
+                        CartridgeBean.class, RestConstants.CARTRIDGES_NAME);
+        assertEquals(bean.getCategory(), "Application");
+        assertEquals(bean.getHost(), "qmog.cisco.com");
+        for (PropertyBean property : bean.getProperty()) {
+            if (property.getName().equals("payload_parameter.CEP_IP")) {
+                assertEquals(property.getValue(), "octl.qmog.cisco.com");
+            } else if (property.getName().equals("payload_parameter.CEP_ADMIN_PASSWORD")) {
+                assertEquals(property.getValue(), "admin");
+            } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_IP")) {
+                assertEquals(property.getValue(), "octl.qmog.cisco.com");
+            } else if (property.getName().equals("payload_parameter.QTCM_NETWORK_COUNT")) {
+                assertEquals(property.getValue(), "1");
+            } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_ADMIN_PASSWORD")) {
+                assertEquals(property.getValue(), "admin");
+            } else if (property.getName().equals("payload_parameter.QTCM_DNS_SEGMENT")) {
+                assertEquals(property.getValue(), "test");
+            } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_SECURE_PORT")) {
+                assertEquals(property.getValue(), "7711");
+            } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_PORT")) {
+                assertEquals(property.getValue(), "7611");
+            } else if (property.getName().equals("payload_parameter.CEP_PORT")) {
+                assertEquals(property.getValue(), "7611");
+            } else if (property.getName().equals("payload_parameter.MB_PORT")) {
+                assertEquals(property.getValue(), "61616");
+            }
+        }
+
+
+        boolean updated = restClient.updateEntity(RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" +
+                        cartridgeType + "-v1.json",
+                RestConstants.CARTRIDGES, RestConstants.CARTRIDGES_NAME);
+        assertTrue(updated);
+        CartridgeBean updatedBean = (CartridgeBean) restClient.
+                getEntity(RestConstants.CARTRIDGES, cartridgeType,
+                        CartridgeBean.class, RestConstants.CARTRIDGES_NAME);
+        assertEquals(updatedBean.getType(), "c0-cartridge-test");
+        assertEquals(updatedBean.getCategory(), "Data");
+        assertEquals(updatedBean.getHost(), "qmog.cisco.com12");
+        for (PropertyBean property : updatedBean.getProperty()) {
+            if (property.getName().equals("payload_parameter.CEP_IP")) {
+                assertEquals(property.getValue(), "octl.qmog.cisco.com123");
+            } else if (property.getName().equals("payload_parameter.CEP_ADMIN_PASSWORD")) {
+                assertEquals(property.getValue(), "admin123");
+            } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_IP")) {
+                assertEquals(property.getValue(), "octl.qmog.cisco.com123");
+            } else if (property.getName().equals("payload_parameter.QTCM_NETWORK_COUNT")) {
+                assertEquals(property.getValue(), "3");
+            } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_ADMIN_PASSWORD")) {
+                assertEquals(property.getValue(), "admin123");
+            } else if (property.getName().equals("payload_parameter.QTCM_DNS_SEGMENT")) {
+                assertEquals(property.getValue(), "test123");
+            } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_SECURE_PORT")) {
+                assertEquals(property.getValue(), "7712");
+            } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_PORT")) {
+                assertEquals(property.getValue(), "7612");
+            } else if (property.getName().equals("payload_parameter.CEP_PORT")) {
+                assertEquals(property.getValue(), "7612");
+            } else if (property.getName().equals("payload_parameter.MB_PORT")) {
+                assertEquals(property.getValue(), "61617");
+            }
+        }
+
+        boolean removed = restClient.removeEntity(RestConstants.CARTRIDGES, cartridgeType,
+                RestConstants.CARTRIDGES_NAME);
+        assertTrue(removed);
+
+        CartridgeBean beanRemoved = (CartridgeBean) restClient.
+                getEntity(RestConstants.CARTRIDGES, cartridgeType,
+                        CartridgeBean.class, RestConstants.CARTRIDGES_NAME);
+        assertNull(beanRemoved);
+
+        log.info("---------------------------Ended Cartridge test case-------------------------");
+    }
+
+
+    @Test(description = "Cartridge list", timeOut = APPLICATION_TEST_TIMEOUT)
+    public void testCartridgeList() throws Exception {
         log.info("--------------------Started Cartridge list test case-----------------------------");
+        String cartridgeType1 = "c1-cartridge-test";
+        String cartridgeType2 = "c2-cartridge-test";
+        boolean added1 = restClient.addEntity(RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" +
+                        cartridgeType1 + ".json",
+                RestConstants.CARTRIDGES, RestConstants.CARTRIDGES_NAME);
+        assertTrue(added1);
 
-        try {
-            String cartridgeType1 = "c1-cartridge-test";
-            String cartridgeType2 = "c2-cartridge-test";
-            boolean added1 = restClient.addEntity(RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" +
-                            cartridgeType1 + ".json",
-                    RestConstants.CARTRIDGES, RestConstants.CARTRIDGES_NAME);
-            assertTrue(added1);
+        boolean added2 = restClient.addEntity(RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" +
+                        cartridgeType2 + ".json",
+                RestConstants.CARTRIDGES, RestConstants.CARTRIDGES_NAME);
+        assertTrue(added2);
 
-            boolean added2 = restClient.addEntity(RESOURCES_PATH + RestConstants.CARTRIDGES_PATH + "/" +
-                            cartridgeType2 + ".json",
-                    RestConstants.CARTRIDGES, RestConstants.CARTRIDGES_NAME);
-            assertTrue(added2);
+        Type listType = new TypeToken<ArrayList<CartridgeBean>>() {
+        }.getType();
 
-            Type listType = new TypeToken<ArrayList<CartridgeBean>>() {
-            }.getType();
+        List<CartridgeBean> cartridgeList = (List<CartridgeBean>) restClient.listEntity(RestConstants.CARTRIDGES,
+                listType, RestConstants.CARTRIDGES_NAME);
+        assertTrue(cartridgeList.size() >= 2);
 
-            List<CartridgeBean> cartridgeList = (List<CartridgeBean>) restClient.listEntity(RestConstants.CARTRIDGES,
-                    listType, RestConstants.CARTRIDGES_NAME);
-            assertTrue(cartridgeList.size() >= 2);
-
-            CartridgeBean bean1 = null;
-            for (CartridgeBean cartridgeBean : cartridgeList) {
-                if (cartridgeBean.getType().equals(cartridgeType1)) {
-                    bean1 = cartridgeBean;
-                }
+        CartridgeBean bean1 = null;
+        for (CartridgeBean cartridgeBean : cartridgeList) {
+            if (cartridgeBean.getType().equals(cartridgeType1)) {
+                bean1 = cartridgeBean;
             }
-            assertNotNull(bean1);
+        }
+        assertNotNull(bean1);
 
-            CartridgeBean bean2 = null;
-            for (CartridgeBean cartridgeBean : cartridgeList) {
-                if (cartridgeBean.getType().equals(cartridgeType1)) {
-                    bean2 = cartridgeBean;
-                }
+        CartridgeBean bean2 = null;
+        for (CartridgeBean cartridgeBean : cartridgeList) {
+            if (cartridgeBean.getType().equals(cartridgeType1)) {
+                bean2 = cartridgeBean;
             }
-            assertNotNull(bean2);
-
-            boolean removed = restClient.removeEntity(RestConstants.CARTRIDGES, cartridgeType1,
-                    RestConstants.CARTRIDGES_NAME);
-            assertTrue(removed);
-
-            CartridgeBean beanRemoved = (CartridgeBean) restClient.
-                    getEntity(RestConstants.CARTRIDGES, cartridgeType1,
-                            CartridgeBean.class, RestConstants.CARTRIDGES_NAME);
-            assertEquals(beanRemoved, null);
-
-            removed = restClient.removeEntity(RestConstants.CARTRIDGES, cartridgeType2,
-                    RestConstants.CARTRIDGES_NAME);
-            assertTrue(removed);
-
-            beanRemoved = (CartridgeBean) restClient.
-                    getEntity(RestConstants.CARTRIDGES, cartridgeType2,
-                            CartridgeBean.class, RestConstants.CARTRIDGES_NAME);
-            assertNull(beanRemoved);
-
-            log.info("---------------------------Ended Cartridge list test case-------------------------");
         }
-        catch (Exception e) {
-            log.error("An error occurred while handling Cartridges list", e);
-            assertTrue(false, "An error occurred while handling Cartridges list");
-        }
+        assertNotNull(bean2);
+
+        boolean removed = restClient.removeEntity(RestConstants.CARTRIDGES, cartridgeType1,
+                RestConstants.CARTRIDGES_NAME);
+        assertTrue(removed);
+
+        CartridgeBean beanRemoved = (CartridgeBean) restClient.
+                getEntity(RestConstants.CARTRIDGES, cartridgeType1,
+                        CartridgeBean.class, RestConstants.CARTRIDGES_NAME);
+        assertEquals(beanRemoved, null);
+
+        removed = restClient.removeEntity(RestConstants.CARTRIDGES, cartridgeType2,
+                RestConstants.CARTRIDGES_NAME);
+        assertTrue(removed);
+
+        beanRemoved = (CartridgeBean) restClient.
+                getEntity(RestConstants.CARTRIDGES, cartridgeType2,
+                        CartridgeBean.class, RestConstants.CARTRIDGES_NAME);
+        assertNull(beanRemoved);
+
+        log.info("---------------------------Ended Cartridge list test case-------------------------");
     }
 }

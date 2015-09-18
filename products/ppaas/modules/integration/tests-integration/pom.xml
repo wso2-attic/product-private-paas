@@ -167,7 +167,7 @@
                         <filters.file>${basedir}/src/test/resources/filters.txt</filters.file>
                     </systemProperties>
                     <suiteXmlFiles>
-                        <suiteXmlFile>${basedir}/src/test/resources/ppaas-testing.xml</suiteXmlFile>
+                        <suiteXmlFile>${basedir}/src/test/resources/ppaas-testng.xml</suiteXmlFile>
                     </suiteXmlFiles>
                     <workingDirectory>${basedir}/target</workingDirectory>
                 </configuration>

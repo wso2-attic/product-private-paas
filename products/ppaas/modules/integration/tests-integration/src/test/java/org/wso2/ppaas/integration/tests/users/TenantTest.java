@@ -17,8 +17,8 @@
 package org.wso2.ppaas.integration.tests.users;
 
 import org.testng.annotations.Test;
-import org.wso2.ppaas.integration.tests.PPaaSIntegrationTest;
 import org.wso2.ppaas.integration.common.RestConstants;
+import org.wso2.ppaas.integration.tests.PPaaSIntegrationTest;
 
 import static junit.framework.Assert.assertTrue;
 
@@ -27,9 +27,13 @@ import static junit.framework.Assert.assertTrue;
  */
 public class TenantTest extends PPaaSIntegrationTest {
     private static final String RESOURCES_PATH = "/user-test";
+    public static final int APPLICATION_TEST_TIMEOUT = 5 * 60 * 1000; // 5 mins
 
-    @Test(alwaysRun = true, description = "Add tenant user", timeOut = GLOBAL_TEST_TIMEOUT)
-    public void addUser() {
+    public TenantTest() throws Exception {
+    }
+
+    @Test(description = "Add tenant user", timeOut = APPLICATION_TEST_TIMEOUT, groups = {"disabled"})
+    public void addUser() throws Exception {
         String tenantId = "tenant-1";
         boolean addedUser1 = restClient
                 .addEntity(RESOURCES_PATH + "/" + tenantId + ".json", RestConstants.USERS, RestConstants.USERS_NAME);
