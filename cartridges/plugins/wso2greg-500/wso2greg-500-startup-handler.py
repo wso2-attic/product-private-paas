@@ -36,7 +36,6 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     CONST_MB_IP = "MB_IP"
     CONST_SERVICE_NAME = "SERVICE_NAME"
     CONST_CLUSTER_ID = "CLUSTER_ID"
-#    CONST_WORKER = "worker"
     CONST_MANAGER = "manager"
     CONST_MGT = "mgt"
 
@@ -45,10 +44,8 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     CONST_PROTOCOL_HTTP = "http"
     CONST_PROTOCOL_HTTPS = "https"
     CONST_PPAAS_MEMBERSHIP_SCHEME = "private-paas"
-#    CONST_PRODUCT = "AS"
     CONST_PRODUCT = "GREG"
 
-#    SERVICES = ["wso2as-521-manager", "wso2as-521-worker"]
     SERVICES = ["wso2greg-500-manager"]
 
     # list of environment variables exported by the plugin
@@ -101,8 +98,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         sub_domain = None
         if service_type.endswith(self.CONST_MANAGER):
             sub_domain = self.CONST_MGT
-#        elif service_type.endswith(self.CONST_WORKER):
-#            sub_domain = self.CONST_WORKER
+            
         self.export_env_var(self.ENV_CONFIG_PARAM_SUB_DOMAIN, sub_domain)
 
         # if CONFIG_PARAM_MEMBERSHIP_SCHEME is not set, set the private-paas membership scheme as default one
@@ -135,9 +131,6 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
 
         # start server
         WSO2StartupHandler.log.info("Starting WSO2 %s ..." % self.CONST_PRODUCT)
-#        if service_type.endswith(self.CONST_WORKER):
-#            start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -DworkerNode=true start"
-#        else:
         start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dsetup start"
         env_var = os.environ.copy()
         p = subprocess.Popen(start_command, env=env_var, shell=True)
@@ -152,7 +145,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         :return: void
         """
         mgt_host_name = None
-        host_name = None
+#       host_name = None
         for service_name in self.SERVICES:
             if service_name.endswith(self.CONST_MANAGER):
                 mgr_cluster = self.get_cluster_of_service(topology, service_name, app_id)
@@ -164,7 +157,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
 #                    host_name = worker_cluster.hostnames[0]
 
         self.export_env_var(self.ENV_CONFIG_PARAM_MGT_HOST_NAME, mgt_host_name)
-        self.export_env_var(self.ENV_CONFIG_PARAM_HOST_NAME, host_name)
+#        self.export_env_var(self.ENV_CONFIG_PARAM_HOST_NAME, host_name)
 
     def export_cluster_ids(self, topology, app_id, service_type, my_cluster_id):
         """
