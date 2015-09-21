@@ -136,12 +136,24 @@
 
         <!-- Copying themes, cloud icons-->
         <fileSet>
-            <directory>src/main/resources</directory>
-            <outputDirectory>${ppaas.distribution.name}-${project.version}/resources</outputDirectory>
+            <directory>../../../../components/org.wso2.ppaas.manager.styles/src/main/resources/web/styles/css
+            </directory>
+            <outputDirectory>${ppaas.distribution.name}-${project.version}/resources/allthemes/Default/admin
+            </outputDirectory>
             <fileMode>755</fileMode>
             <includes>
-                <include>allthemes/**</include>
-                <include>powerded-by-logos/**</include>
+                <include>**/**.css</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../../../components/org.wso2.ppaas.manager.styles/src/main/resources/web/styles/images
+            </directory>
+            <outputDirectory>${ppaas.distribution.name}-${project.version}/resources/allthemes/Default/images
+            </outputDirectory>
+            <fileMode>755</fileMode>
+            <includes>
+                <include>**/**.gif</include>
+                <include>**/**.png</include>
             </includes>
         </fileSet>
 

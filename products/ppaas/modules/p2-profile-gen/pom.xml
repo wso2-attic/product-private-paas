@@ -319,6 +319,11 @@
                             <publishArtifacts>true</publishArtifacts>
                             <publishArtifactRepository>true</publishArtifactRepository>
                             <featureArtifacts>
+                                <!-- PPaaS features -->
+                                <featureArtifactDef>
+                                    org.wso2.ppaas:org.wso2.ppaas.manager.styles.feature:${project.version}
+                                </featureArtifactDef>
+
                                 <!-- Misc Carbon features -->
                                 <featureArtifactDef>
                                     org.wso2.carbon:org.wso2.carbon.logaggregator.feature:${carbon.logaggregator.version}
@@ -520,9 +525,6 @@
                                 <featureArtifactDef>
                                     org.apache.stratos:org.apache.stratos.common.feature:${stratos.version}
                                 </featureArtifactDef>
-                                <featureArtifactDef>
-                                    org.apache.stratos:org.apache.stratos.manager.styles.feature:${stratos.version}
-                                </featureArtifactDef>
                             </featureArtifacts>
                         </configuration>
                     </execution>
@@ -626,6 +628,12 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
+                                <!-- PPaaS features -->
+                                <feature>
+                                    <id> org.wso2.ppaas.manager.styles.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+
                                 <!-- WSO2 Identity features -->
                                 <feature>
                                     <id>org.wso2.carbon.identity.sso.saml.feature.group</id>
@@ -673,10 +681,6 @@
                                 <!-- Apache Stratos features -->
                                 <feature>
                                     <id>org.apache.stratos.common.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.apache.stratos.manager.styles.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
                                 <feature>
@@ -1038,6 +1042,12 @@
                             </destination>
                             <deleteOldProfileFiles>true</deleteOldProfileFiles>
                             <features>
+                                <!-- PPaaS features -->
+                                <feature>
+                                    <id> org.wso2.ppaas.manager.styles.feature.group</id>
+                                    <version>${project.version}</version>
+                                </feature>
+
                                 <!-- Misc Carbon features -->
                                 <feature>
                                     <id>org.wso2.carbon.core.feature.group</id>
@@ -1247,10 +1257,6 @@
                                 <!-- Apache Stratos features -->
                                 <feature>
                                     <id>org.apache.stratos.common.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.apache.stratos.manager.styles.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
                                 <feature>
