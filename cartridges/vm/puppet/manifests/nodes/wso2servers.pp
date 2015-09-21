@@ -43,7 +43,7 @@ node /[0-9]{1,12}.*wso2is-500/ inherits base {
   }
   class { 'configurator': }
   class { 'wso2servers':
-    server_name      => 'wso2is-5.0.0',
+    server_name      => 'wso2is5.0.0',
     module_name   => 'wso2is-500'
   }
 
