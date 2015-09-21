@@ -31,7 +31,6 @@ import org.wso2.ppaas.integration.common.CarbonTestServerManager;
 import org.wso2.ppaas.integration.common.Util;
 
 import java.io.File;
-import java.net.URL;
 
 import static org.testng.Assert.assertNotNull;
 
@@ -79,7 +78,6 @@ public class PPaaSServerExtension extends ExecutionListenerExtension {
             carbonTestServerManager =
                     new CarbonTestServerManager(ppaasAutomationCtx, System.getProperty(Util.CARBON_ZIP_KEY),
                             getParameters());
-            setSystemproperties();
             log.info("PPaaS server port offset: " + carbonTestServerManager.getPortOffset());
             log.info("PPaaS backend URL: " + ppaasBackendURL);
 
@@ -125,15 +123,6 @@ public class PPaaSServerExtension extends ExecutionListenerExtension {
         catch (Exception e) {
             log.error("Could not stop ActiveMQ server", e);
         }
-    }
-
-    public void setSystemproperties() {
-        URL resourceUrl = getClass().getResource(File.separator + "keystores" + File.separator
-                + "products" + File.separator + "wso2carbon.jks");
-        System.setProperty("javax.net.ssl.trustStore", resourceUrl.getPath());
-        System.setProperty("javax.net.ssl.trustStorePassword", "wso2carbon");
-        System.setProperty("javax.net.ssl.trustStoreType", "JKS");
-        log.info("trustStore set to " + resourceUrl.getPath());
     }
 
     private boolean serverStarted() {

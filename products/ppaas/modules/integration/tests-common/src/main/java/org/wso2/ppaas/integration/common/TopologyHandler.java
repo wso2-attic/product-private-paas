@@ -16,13 +16,11 @@
 
 package org.wso2.ppaas.integration.common;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.stratos.autoscaler.stub.pojo.ApplicationContext;
 import org.apache.stratos.common.client.AutoscalerServiceClient;
 import org.apache.stratos.common.threading.StratosThreadPool;
-import org.wso2.ppaas.integration.common.rest.IntegrationMockClient;
 import org.apache.stratos.messaging.domain.application.*;
 import org.apache.stratos.messaging.domain.instance.ClusterInstance;
 import org.apache.stratos.messaging.domain.instance.GroupInstance;
@@ -39,8 +37,8 @@ import org.apache.stratos.messaging.message.receiver.application.ApplicationMana
 import org.apache.stratos.messaging.message.receiver.application.ApplicationsEventReceiver;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyEventReceiver;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyManager;
+import org.wso2.ppaas.integration.common.rest.IntegrationMockClient;
 
-import java.io.File;
 import java.rmi.RemoteException;
 import java.util.Collection;
 import java.util.HashMap;
@@ -73,9 +71,6 @@ public class TopologyHandler {
     private Map<String, Long> activateddMembers = new ConcurrentHashMap<String, Long>();
 
     private TopologyHandler() {
-        // Set jndi.properties.dir system property for initializing event receivers
-        System.setProperty("jndi.properties.dir", getResourcesFolderPath());
-        System.setProperty("autoscaler.service.url", "https://localhost:9443/services/AutoscalerService");
         initializeApplicationEventReceiver();
         initializeTopologyEventReceiver();
         assertApplicationTopologyInitialized();
@@ -482,16 +477,6 @@ public class TopologyHandler {
         Application application = ApplicationManager.getApplications().getApplication(applicationName);
         assertNull(String.format("Application is found in the topology : [application-id] %s", applicationName),
                 application);
-    }
-
-    /**
-     * Get resources folder path
-     *
-     * @return
-     */
-    private String getResourcesFolderPath() {
-        String path = getClass().getResource("/").getPath();
-        return StringUtils.removeEnd(path, File.separator);
     }
 
     private void addTopologyEventListeners() {

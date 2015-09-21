@@ -1,0 +1,120 @@
+{
+    "type": "wso2am-190-pub-store",
+    "category": "framework",
+    "provider": "wso2",
+    "host": "pubstore.am.wso2.org",
+    "displayName": "WSO2 AM 1.9.0 PubStore",
+    "description": "WSO2 AM 1.9.0 PubStore Cartridge",
+    "version": "1.9.0",
+    "multiTenant": true,
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
+            "proxyPort": 443,
+            "kubernetesPortType": "NodePort"
+        },
+        {
+            "name": "mgt-http",
+            "protocol": "http",
+            "port": 9763,
+            "proxyPort": 80,
+            "kubernetesPortType": "NodePort"
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "ec2",
+            "imageId": "{{EC2_REGION_ID}}/{{EC2_IMAGE_ID}}",
+            "property": [
+                {
+                    "name": "instanceType",
+                    "value": "{{EC2_FLAVOUR_ID}}"
+                },
+                {
+                    "name": "securityGroupIds",
+                    "value": "{{EC2_SECURITY_GROUP_ID}}"
+                },
+                {
+                    "name":"tag:Name",
+                    "value":"WSO2 PPaaS Pub-Store"
+                },
+                {
+                    "name":"tag:User",
+                    "value":"xxxxx"
+                }
+            ]
+        }
+    ],
+    "property": [
+        {
+            "name": "KUBERNETES_CONTAINER_CPU",
+            "value": "0"
+        },
+        {
+            "name": "KUBERNETES_CONTAINER_MEMORY",
+            "value": "0"
+        },
+        {
+            "name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
+            "value": "ClientIP"
+        },
+        {
+            "name": "payload_parameter.START_CMD",
+            "value": "PCA"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_PROFILE",
+            "value": "PubStore"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_APIMGT_DB_URL",
+            "value": "jdbc:mysql://{{MYSQL_IP}}:{{MYSQL_PORT}}/{{APIM_DB}}"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CONFIG_DB_URL",
+            "value": "jdbc:mysql://{{MYSQL_IP}}:{{MYSQL_PORT}}/{{CONFIG_DB_APIM}}"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CONFIG_DB_USER_NAME",
+            "value": "{{CONFIG_DB_USERNAME}}"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CONFIG_DB_PASSWORD",
+            "value": "{{CONFIG_DB_PASSWORD}}"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_DB_USER_NAME",
+            "value": "{{DB_USERNAME}}"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_DB_PASSWORD",
+            "value": "{{DB_PASSWORD}}"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_UM_DB_URL",
+            "value": "jdbc:mysql://{{MYSQL_IP}}:{{MYSQL_PORT}}/{{USER_DB}}"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_REG_DB_URL",
+            "value": "jdbc:mysql://{{MYSQL_IP}}:{{MYSQL_PORT}}/{{REGISTRY_DB}}"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+            "value": "true"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_DOMAIN",
+            "value": "wso2.pubstore.domain"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_LB_IP",
+            "value": "{{LB_IP}}"
+        }
+
+
+    ]
+}
+

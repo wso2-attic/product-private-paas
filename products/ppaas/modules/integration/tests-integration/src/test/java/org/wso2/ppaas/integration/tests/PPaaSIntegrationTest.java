@@ -28,24 +28,19 @@ public class PPaaSIntegrationTest {
     protected AutomationContext ppaasAutomationCtx;
     protected String adminUsername;
     protected String adminPassword;
-    protected String ppaasBackendURL;
     protected RestClient restClient;
     protected IntegrationMockClient mockIaasApiClient;
-    public static final int GLOBAL_TEST_TIMEOUT = 60 * 1000;
 
-    public PPaaSIntegrationTest() {
-        try {
-            ppaasAutomationCtx = new AutomationContext("PPAAS", "ppaas-001", TestUserMode.SUPER_TENANT_ADMIN);
-            adminUsername = ppaasAutomationCtx.getConfigurationValue
-                    ("/automation/userManagement/superTenant/tenant/admin/user/userName");
-            adminPassword = ppaasAutomationCtx.getConfigurationValue
-                    ("/automation/userManagement/superTenant/tenant/admin/user/password");
-            ppaasBackendURL = ppaasAutomationCtx.getContextUrls().getWebAppURL();
-            restClient = new RestClient(ppaasBackendURL, adminUsername, adminPassword);
-            mockIaasApiClient = new IntegrationMockClient(ppaasBackendURL + "/mock-iaas/api");
-        }
-        catch (Exception e) {
-            log.error("Could not initialize PPaaSIntegrationTest base parameters");
-        }
+    public PPaaSIntegrationTest() throws Exception {
+        ppaasAutomationCtx = new AutomationContext("PPAAS", "ppaas-001", TestUserMode.SUPER_TENANT_ADMIN);
+        adminUsername = ppaasAutomationCtx.getConfigurationValue
+                ("/automation/userManagement/superTenant/tenant/admin/user/userName");
+        adminPassword = ppaasAutomationCtx.getConfigurationValue
+                ("/automation/userManagement/superTenant/tenant/admin/user/password");
+        restClient =
+                new RestClient(ppaasAutomationCtx.getContextUrls().getWebAppURL(), adminUsername, adminPassword);
+        String mockIaaSEndpoint = ppaasAutomationCtx.getContextUrls().getWebAppURL() + "/mock-iaas/api";
+        mockIaasApiClient = new IntegrationMockClient(mockIaaSEndpoint);
+        log.info("Mock IaaS endpoint URL: " + mockIaaSEndpoint);
     }
 }

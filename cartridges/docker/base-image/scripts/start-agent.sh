@@ -46,17 +46,11 @@ else
 	sed -i "s/LISTEN_ADDR/${LISTEN_ADDR}/g" ${PCA_HOME}/agent.conf
 fi
 
-# defaults to the message broker IP if not set
-if [ -z "${CEP_IP}" ]; then
-	sed -i "s/CEP-IP/${MB_IP}/g" ${PCA_HOME}/agent.conf
+# defaults to the message broker if not set
+if [ -z "${CEP_URLS}" ]; then
+	sed -i "s/CEP-URLS/${MB_IP}:${MB-PORT}/g" ${PCA_HOME}/agent.conf
 else
-	sed -i "s/CEP-IP/${CEP_IP}/g" ${PCA_HOME}/agent.conf
-fi
-
-if [ -z "${CEP_PORT}" ]; then
-	sed -i "s/CEP-PORT/7711/g" ${PCA_HOME}/agent.conf
-else
-	sed -i "s/CEP-PORT/${CEP_PORT}/g" ${PCA_HOME}/agent.conf
+	sed -i "s/CEP-URLS/${CEP_URLS}/g" ${PCA_HOME}/agent.conf
 fi
 
 if [ -z "${CEP_USERNAME}" ]; then

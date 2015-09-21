@@ -53,12 +53,8 @@ if [ ! -z "${LISTEN_ADDR}" ]; then
 	sed -i "s/^.*listen.address.*=.*$/listen.address = ${LISTEN_ADDR}/g" ${PCA_HOME}/agent.conf
 fi
 
-if [ ! -z "${CEP_IP}" ]; then
-	sed -i "s/^.*thrift.receiver.ip.*=.*$/thrift.receiver.ip  = ${CEP_IP}/g" ${PCA_HOME}/agent.conf
-fi
-
-if [ ! -z "${CEP_PORT}" ]; then
-	sed -i "s/^.*thrift.receiver.port.*=.*$/thrift.receiver.port = ${CEP_PORT}/g" ${PCA_HOME}/agent.conf
+if [ ! -z "${CEP_URLS}" ]; then
+	sed -i "s/^.*thrift.receiver.urls.*=.*$/thrift.receiver.urls  = ${CEP_URLS}/g" ${PCA_HOME}/agent.conf
 fi
 
 if [ ! -z "${CEP_USERNAME}" ]; then

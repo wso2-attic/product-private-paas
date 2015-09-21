@@ -58,12 +58,8 @@
             "value": "61616"
         },
         {
-            "name": "payload_parameter.CEP_IP",
-            "value": "octl.qmog.cisco.com"
-        },
-        {
-            "name": "payload_parameter.CEP_PORT",
-            "value": "7611"
+            "name": "payload_parameter.CEP_URLS",
+            "value": "octl.qmog.cisco.com:7611"
         },
         {
             "name": "payload_parameter.CEP_ADMIN_USERNAME",
