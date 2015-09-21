@@ -56,7 +56,7 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_WORKER_CHILD_OPTS",
-            "value": "2048m"
+            "value": "4096m"
         }
     ]
 }

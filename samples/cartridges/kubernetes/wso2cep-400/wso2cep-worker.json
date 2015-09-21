@@ -17,23 +17,9 @@
             "kubernetesPortType": "NodePort"
         },
         {
-            "name": "thrift-secure-port",
-            "protocol": "thrifts",
+            "name": "ssl-port",
+            "protocol": "ssl",
             "port": "7711",
-            "proxyPort": 0,
-            "kubernetesPortType": "NodePort"
-        },
-        {
-            "name": "binary-port",
-            "protocol": "thrift",
-            "port": "9611",
-            "proxyPort": 0,
-            "kubernetesPortType": "NodePort"
-        },
-        {
-            "name": "binary-secure-port",
-            "protocol": "thrifts",
-            "port": "9711",
             "proxyPort": 0,
             "kubernetesPortType": "NodePort"
         }
@@ -63,6 +49,18 @@
             "value": "true"
         },
         {
+            "name":"payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_URL",
+            "value":"jdbc:mysql://172.17.42.1:3306/output_db?autoReconnect=true"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_USER_NAME",
+            "value":"root"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_PASSWORD",
+            "value":"root"
+        },
+        {
             "name": "payload_parameter.CONFIG_PARAM_XMS",
             "value": "1024m"
         },
@@ -80,11 +78,11 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_MAX_EVENT_BUFFER_CAPACITY",
-            "value": "100"
+            "value": "400"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_EVENT_BUFFER_SIZE",
-            "value": "4000"
+            "value": "40000"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_QUEUE_SIZE",
@@ -92,15 +90,15 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_BATCH_SIZE",
-            "value": "400"
+            "value": "800"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_CORE_POOL_SIZE",
-            "value": "2"
+            "value": "100"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_MAX_POOL_SIZE",
-            "value": "2"
+            "value": "200"
         }
     ]
 }
