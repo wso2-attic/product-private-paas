@@ -14,20 +14,20 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 
-class wso2esb (
-  $version            = undef,
+class wso2servers (
   $owner              = 'root',
   $group              = 'root',
+  $module_name        = undef,
+  $server_name        = undef,
 )  {
 
-  $service_code       = "wso2esb"
-  $server_name        = "${service_code}-${version}"
-  $target             = "/mnt/${server_ip}"
-  $carbon_home        = "/mnt/${server_ip}/${server_name}"
-  $configurator_home  = "/mnt/${configurator_name}-${configurator_version}"
+  $service_code         = "wso2servers/${module_name}"
+  $target               = "/mnt/${server_ip}"
+  $carbon_home          = "/mnt/${server_ip}/${server_name}"
+  $configurator_home    = "/mnt/${configurator_name}-${configurator_version}"
   $template_module_pack = "${server_name}-template-module-${ppaas_version}.zip"
-  $pca_home = "/mnt/${pca_name}-${pca_version}"
-  $java_home  = "/opt/${java_folder}"
+  $pca_home             = "/mnt/${pca_name}-${pca_version}"
+  $java_home            = "/opt/${java_folder}"
 
 # creating /mnt/{ip_address} folder
   exec {
