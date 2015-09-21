@@ -245,13 +245,13 @@
         <!--<parameter name="proxyPort">80</parameter>-->
     </transportReceiver>
 
-    <!--Please uncomment this in Multiple Instance Scenario if you want to use NIO Transport Recievers and
+    <!--Please uncomment this in Multiple Instance Scenario if you want to use NIO Transport Recievers and 
  	Remove the current transport REceivers in axis2.xml -->
     <!--transportReceiver name="http" class="org.apache.synapse.transport.nhttp.HttpCoreNIOListener">
         <parameter name="port" locked="false">8280</parameter>
         <parameter name="non-blocking" locked="false">true</parameter>
     </transportReceiver>
-
+    
     <transportReceiver name="https" class="org.apache.synapse.transport.nhttp.HttpCoreNIOSSLListener">
         <parameter name="port" locked="false">8243</parameter>
         <parameter name="non-blocking" locked="false">true</parameter>
@@ -420,7 +420,7 @@
     </transportSender>-->
 
     <!--Please uncomment this in Multiple Instance Scenario if you want to use NIO sender -->
-    <!--
+    <!--  
     <transportSender name="http" class="org.apache.synapse.transport.nhttp.HttpCoreNIOSender">
         <parameter name="non-blocking" locked="false">true</parameter>
     </transportSender>
@@ -622,11 +622,15 @@
                     nodes will notify the others in the group. When a member leaves the cluster or
                     is deemed to have left the cluster, it will be detected by the Group Membership
                     Service (GMS) using a TCP ping mechanism.
-        -->
+        -->     
         <parameter name="membershipScheme">{{CONFIG_PARAM_MEMBERSHIP_SCHEME}}</parameter>
-        {%- if CONFIG_PARAM_CLUSTER_IDS is defined %}
-            <parameter name="clusterIds">{{CONFIG_PARAM_CLUSTER_IDS}}</parameter>
-        {%- endif %}
+
+        {% if CONFIG_PARAM_MEMBERSHIP_SCHEME == 'private-paas' -%}
+        <!-- private-paas membership scheme specific parameters -->
+        <parameter name="membershipSchemeClassName">org.wso2.carbon.ppaas.PrivatePaaSBasedMembershipScheme</parameter>
+        <parameter name="clusterIds">{{CONFIG_PARAM_CLUSTER_IDs}}</parameter>
+        {%  endif -%}
+
         <!--<parameter name="licenseKey">xxx</parameter>-->
         <!--<parameter name="mgtCenterURL">http://localhost:8081/mancenter/</parameter>-->
 
@@ -687,7 +691,7 @@
         <parameter name="properties">
             <property name="backendServerURL" value="https://${hostName}:${httpsPort}/services/"/>
             <property name="mgtConsoleURL" value="https://${hostName}:${httpsPort}/"/>
-            <property name="subDomain" value="{{CONFIG_PARAM_SUB_DOMAIN}}"/>
+            <property name="subDomain" value="worker"/>
         </parameter>
 
         <!--

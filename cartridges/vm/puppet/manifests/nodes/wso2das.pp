@@ -13,14 +13,18 @@
 #  See the License for the specific language governing permissions and
 #  limitations under the License.
 # ----------------------------------------------------------------------------
-#
-# import private paas nodes definitions
-import 'nodes/base.pp'
-import 'nodes/wso2esb.pp'
-import 'nodes/wso2as.pp'
-import 'nodes/wso2is.pp'
-import 'nodes/wso2am.pp'
-import 'nodes/wso2greg.pp'
-import 'nodes/wso2das.pp'
-import 'nodes/wso2brs.pp'
-import 'nodes/default.pp'
+
+# AppServer cartridge node
+node /[0-9]{1,12}.*wso2das/ inherits base {
+
+  class { 'java': }
+  class { 'python_agent':
+    docroot => "/var/www"
+  }
+  class { 'configurator': }
+  class { 'wso2das':
+    version      => '3.0.0-SNAPSHOT'
+  }
+
+  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['wso2das']
+}
