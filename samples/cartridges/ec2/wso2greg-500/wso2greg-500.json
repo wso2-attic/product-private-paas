@@ -1,0 +1,63 @@
+{
+    "type": "wso2greg-500",
+    "category": "framework",
+    "provider": "wso2",
+    "host": "greg.wso2.org",
+    "displayName": "WSO2 GREG 5.0.0",
+    "description": "WSO2 GREG 5.0.0 Cartridge",
+    "version": "5.0.0",
+    "multiTenant": false,
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "mgt-http",
+            "protocol": "http",
+            "port": 9763,
+            "proxyPort": 80
+        },
+        {
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
+            "proxyPort": 443
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "ec2",
+            "imageId": "<REGION_ID>/<IMAGE_ID>",
+            "property": [
+                {
+                    "name": "instanceType",
+                    "value": "t2.medium"
+                },
+                {
+                    "name":"tag:Name",
+                    "value":"WSO2 PPaaS AS"
+                },
+                {
+                    "name":"tag:User",
+                    "value":"xxxxxx"
+                }
+            ]
+        }
+    ],
+    "property": [
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WORKER_HOST_NAME",
+            "value": "greg.wso2.com"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+            "value": "false"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_MEMBERSHIP_SCHEME",
+            "value": "stratos"
+        },
+        {
+            "name": "payload_parameter.APPLICATION_PATH",
+            "value": "/var/www"
+        }
+    ]
+}

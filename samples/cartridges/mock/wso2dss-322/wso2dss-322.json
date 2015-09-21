@@ -1,0 +1,36 @@
+{
+    "type": "wso2dss-322",
+    "category": "framework",
+    "provider": "wso2",
+    "host": "dss.wso2.org",
+    "displayName": "WSO2 DSS 3.2.2",
+    "description": "WSO2 DSS 3.2.2 Cartridge",
+    "version": "3.2.2",
+    "multiTenant": true,
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "mgt-http",
+            "protocol": "http",
+            "port": 9763,
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
+        },
+        {
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "mock",
+            "imageId": "wso2/dss:3.2.2",
+            "networkInterfaces": []
+        }
+    ],
+    "property": [
+    ]
+}
