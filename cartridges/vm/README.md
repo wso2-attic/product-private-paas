@@ -26,8 +26,7 @@ chmod 755 apache-stratos-cartridge-agent-4.1.2.zip
   $mb_ip                = 'MB-IP'
   $mb_port              = 'MB-PORT'
   $mb_type    			= 'activemq' #in wso2mb case, value should be 'wso2mb'
-  $cep_ip 				= "CEP-IP"
-  $cep_port				= "7711"
+  $cep_urls 			= "CEP-IP:CEP-PORT" 
   $cep_username			= "admin"
   $cep_password			= "admin"
   $bam_ip               = '192.168.30.96'

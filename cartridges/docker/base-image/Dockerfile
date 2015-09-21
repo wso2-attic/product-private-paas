@@ -22,7 +22,7 @@ MAINTAINER dev@wso2.org
 ENV DEBIAN_FRONTEND noninteractive
 
 # PCA
-ENV PCA_VERSION 4.1.2
+ENV PCA_VERSION 4.1.3
 ENV PCA_FILENAME apache-stratos-python-cartridge-agent-${PCA_VERSION}
 ENV PCA_HOME /opt/${PCA_FILENAME}
 

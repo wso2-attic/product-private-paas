@@ -72,8 +72,8 @@ public class CartridgeTest extends PPaaSIntegrationTest {
                 assertEquals(property.getValue(), "7711");
             } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_PORT")) {
                 assertEquals(property.getValue(), "7611");
-            } else if (property.getName().equals("payload_parameter.CEP_PORT")) {
-                assertEquals(property.getValue(), "7611");
+            } else if (property.getName().equals("payload_parameter.CEP_URLS")) {
+                assertEquals(property.getValue(), "octl.qmog.cisco.com:7611");
             } else if (property.getName().equals("payload_parameter.MB_PORT")) {
                 assertEquals(property.getValue(), "61616");
             }
@@ -107,8 +107,8 @@ public class CartridgeTest extends PPaaSIntegrationTest {
                 assertEquals(property.getValue(), "7712");
             } else if (property.getName().equals("payload_parameter.MONITORING_SERVER_PORT")) {
                 assertEquals(property.getValue(), "7612");
-            } else if (property.getName().equals("payload_parameter.CEP_PORT")) {
-                assertEquals(property.getValue(), "7612");
+            } else if (property.getName().equals("payload_parameter.CEP_URLS")) {
+                assertEquals(property.getValue(), "octl.qmog.cisco.com123:7612");
             } else if (property.getName().equals("payload_parameter.MB_PORT")) {
                 assertEquals(property.getValue(), "61617");
             }

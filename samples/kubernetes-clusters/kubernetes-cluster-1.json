@@ -41,12 +41,8 @@
             "value": "1883"
         },
         {
-            "name": "payload_parameter.CEP_IP",
-            "value": "172.17.8.1"
-        },
-        {
-            "name": "payload_parameter.CEP_PORT",
-            "value": "7711"
+            "name": "payload_parameter.CEP_URLS",
+            "value": "172.17.8.1:7711"
         },
         {
             "name": "payload_parameter.LOG_LEVEL",
