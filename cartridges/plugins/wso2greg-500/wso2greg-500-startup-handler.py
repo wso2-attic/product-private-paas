@@ -131,7 +131,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
 
         # start server
         WSO2StartupHandler.log.info("Starting WSO2 %s ..." % self.CONST_PRODUCT)
-        start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dsetup start"
+        start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start"
         env_var = os.environ.copy()
         p = subprocess.Popen(start_command, env=env_var, shell=True)
         output, errors = p.communicate()
@@ -145,19 +145,13 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         :return: void
         """
         mgt_host_name = None
-#       host_name = None
         for service_name in self.SERVICES:
             if service_name.endswith(self.CONST_MANAGER):
                 mgr_cluster = self.get_cluster_of_service(topology, service_name, app_id)
                 if mgr_cluster is not None:
                     mgt_host_name = mgr_cluster.hostnames[0]
-#            elif service_name.endswith(self.CONST_WORKER):
-#                worker_cluster = self.get_cluster_of_service(topology, service_name, app_id)
-#                if worker_cluster is not None:
-#                    host_name = worker_cluster.hostnames[0]
 
         self.export_env_var(self.ENV_CONFIG_PARAM_MGT_HOST_NAME, mgt_host_name)
-#        self.export_env_var(self.ENV_CONFIG_PARAM_HOST_NAME, host_name)
 
     def export_cluster_ids(self, topology, app_id, service_type, my_cluster_id):
         """
