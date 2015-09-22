@@ -24,21 +24,14 @@ script_path=`cd "$prgdir"; pwd`
 wso2_ppaas_version="4.1.0-SNAPSHOT"
 wso2_base_image_version="4.1.0"
 configurator_path=`cd ${script_path}/../../../components/org.wso2.ppaas.configurator/; pwd`
-clean=false
 
-if [ "$1" = "clean" ]; then
-   clean=true
-fi
-
-if ${clean} ; then
-   echo "----------------------------------"
-   echo "Building configurator"
-   echo "----------------------------------"
-   pushd ${configurator_path}
-   mvn clean install                                                                                      
-   cp -v target/ppaas-configurator-${wso2_ppaas_version}.zip ${script_path}/packages/
-   popd
-fi
+echo "----------------------------------"
+echo "Building Configurator"
+echo "----------------------------------"
+pushd ${configurator_path}
+mvn clean install
+cp -v target/ppaas-configurator-${wso2_ppaas_version}.zip ${script_path}/packages/
+popd
 
 echo "----------------------------------"
 echo "Building base docker image"
