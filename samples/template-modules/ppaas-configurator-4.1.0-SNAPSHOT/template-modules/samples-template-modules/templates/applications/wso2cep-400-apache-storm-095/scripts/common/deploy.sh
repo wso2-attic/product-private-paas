@@ -21,7 +21,7 @@
 # --------------------------------------------------------------
 #
 iaas=$1
-host_ip="localhost"
+host_ip="{{MACHINE_IP}}"
 host_port=9443
 
 prgdir=`dirname "$0"`
