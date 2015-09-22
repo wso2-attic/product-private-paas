@@ -1,0 +1,84 @@
+{
+    "clusterId": "kubernetes-cluster-1",
+    "description": "Kubernetes Cluster 1",
+    "kubernetesMaster": {
+        "hostId": "master",
+        "hostname": "master.dev.kubernetes.org",
+        "privateIPAddress": "{{MASTER_ONE_PRIVATE_IP}}",
+        "publicIPAddress": "{{MASTER_ONE_PUBLIC_IP}}",
+        "property": [
+        ]
+    },
+    "portRange": {
+        "upper": "32767",
+        "lower": "30000"
+    },
+    "kubernetesHosts": [
+        {
+            "hostId": "minion-1",
+            "hostname": "minion-1.dev.kubernetes.org",
+            "privateIPAddress": "{{MINION_ONE_PRIVATE_IP}}",
+            "publicIPAddress": "{{MINION_ONE_PUBLIC_IP}}",
+            "property": [
+            ]
+        },
+        {
+            "hostId": "minion-2",
+            "hostname": "minion-2.dev.kubernetes.org",
+            "privateIPAddress": "{{MINION_TWO_PRIVATE_IP}}",
+            "publicIPAddress": "{{MINION_TWO_PUBLIC_IP}}",
+            "property": [
+            ]
+        },
+        {
+            "hostId": "minion-3",
+            "hostname": "minion-3.dev.kubernetes.org",
+            "privateIPAddress": "{{MINION_THREE_PRIVATE_IP}}",
+            "publicIPAddress": "{{MINION_THREE_PUBLIC_IP}}",
+            "property": [
+            ]
+        },
+        {
+            "hostId": "minion-4",
+            "hostname": "minion-4.dev.kubernetes.org",
+            "privateIPAddress": "{{MINION_FOUR_PRIVATE_IP}}",
+            "publicIPAddress": "{{MINION_FOUR_PUBLIC_IP}}",
+            "property": [
+            ]
+        },
+        {
+            "hostId": "minion-5",
+            "hostname": "minion-5.dev.kubernetes.org",
+            "privateIPAddress": "{{MINION_FIVE_PRIVATE_IP}}",
+            "publicIPAddress": "{{MINION_FIVE_PUBLIC_IP}}",
+            "property": [
+            ]
+        }
+    ],
+    "property": [
+        {
+            "name": "payload_parameter.MB_IP",
+            "value": "{{STRATOS_MB_IP}}"
+        },
+        {
+            "name": "payload_parameter.MB_PORT",
+            "value": "{{STRATOS_MB_PORT}}"
+        },
+        {
+            "name": "payload_parameter.CEP_IP",
+            "value": "{{STRATOS_CEP_IP}}"
+        },
+        {
+            "name": "payload_parameter.CEP_PORT",
+            "value": "{{STRATOS_CEP_PORT}}"
+        },
+        {
+            "name": "payload_parameter.LOG_LEVEL",
+            "value": "DEBUG"
+        },
+        {
+            "name": "payload_parameter.METADATA_SERVICE_URL",
+            "value": "{{STRATOS_METASERVICE_URL}}"
+        }
+    ]
+}
