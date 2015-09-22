@@ -24,7 +24,7 @@ node 'base' {
 
 # PCA Configurations
   $pca_name             = 'apache-stratos-python-cartridge-agent'
-  $pca_version          = '4.1.0'
+  $pca_version          = '4.1.3'
   $local_package_dir    = '/mnt/packs'
   $mb_ip                = 'localhost'
   $mb_port              = '1883'

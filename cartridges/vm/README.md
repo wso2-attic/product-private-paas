@@ -13,16 +13,17 @@ This folder contains WSO2 Private PaaS virtual machine cartridges.
 Following modules are mandatory to setup puppet-master.
 
 ##### **Python Cartridge Agent Module**
-(1) Copy [apache-stratos-cartridge-agent-4.1.2.zip ](http://www.apache.org/dyn/closer.cgi/stratos)  to `/etc/puppet/modules/python_agent/files/packs` folder.
+(1) Copy [apache-stratos-python-cartridge-agent-4.1.3.zip ](http://www.apache.org/dyn/closer.cgi/stratos)  to 
+`/etc/puppet/modules/python_agent/files/packs` folder.
 
-(2) Change file permission to 0755 for apache-stratos-cartridge-agent-4.1.2.zip.
+(2) Change file permission to 0755 for apache-stratos-python-cartridge-agent-4.1.3.zip.
 ```
-chmod 755 apache-stratos-cartridge-agent-4.1.2.zip
+chmod 755 apache-stratos-python-cartridge-agent-4.1.3.zip
 ```
 (3) Update the following python agent related variables in `/etc/puppet/manifests/nodes/base.pp` file with respective values.
 ```
   $pca_name             = 'apache-stratos-python-cartridge-agent'
-  $pca_version          = '4.1.2'
+  $pca_version          = '4.1.3'
   $mb_ip                = 'MB-IP'
   $mb_port              = 'MB-PORT'
   $mb_type    			= 'activemq' #in wso2mb case, value should be 'wso2mb'
