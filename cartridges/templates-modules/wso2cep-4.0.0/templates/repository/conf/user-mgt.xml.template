@@ -20,8 +20,8 @@
 		<AddAdmin>true</AddAdmin>
                 <AdminRole>admin</AdminRole>
                 <AdminUser>
-                     <UserName>admin</UserName>
-                     <Password>admin</Password>
+                     <UserName>{{CONFIG_PARAM_ADMIN_USERNAME}}</UserName>
+                     <Password>{{CONFIG_PARAM_ADMIN_PASSWORD}}</Password>
                 </AdminUser>
             <EveryOneRoleName>everyone</EveryOneRoleName> <!-- By default users in this role sees the registry root -->
             {% if CONFIG_PARAM_USER_MGT_DB_URL is defined -%}
