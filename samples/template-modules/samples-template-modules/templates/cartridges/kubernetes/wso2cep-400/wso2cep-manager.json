@@ -1,0 +1,109 @@
+{
+    "type": "wso2cep-manager",
+    "category": "framework",
+    "provider": "wso2",
+    "host": "mgr.cep.wso2.org",
+    "displayName": "WSO2 CEP 4.0.0 Manager",
+    "description": "WSO2 CEP 4.0.0 Manager Cartridge",
+    "version": "4.0.0",
+    "multiTenant": "false",
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "mgt-https",
+            "protocol": "https",
+            "port": 9443,
+            "proxyPort": 0,
+            "kubernetesPortType": "NodePort"
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "kubernetes",
+            "imageId": "wso2/cep:4.0.0",
+            "networkInterfaces": []
+        }
+    ],
+    "property": [
+        {
+            "name": "KUBERNETES_CONTAINER_CPU",
+            "value": "0"
+        },
+        {
+            "name": "KUBERNETES_CONTAINER_MEMORY",
+            "value": "0"
+        },
+        {
+            "name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
+            "value": "ClientIP"
+        },
+        {
+            "name": "payload_parameter.START_CMD",
+            "value": "PCA"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
+            "value": "true"
+        },
+        {
+            "name": "payload_parameter.COMMIT_ENABLED",
+            "value": "true"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_TOPOLOGY_WORKERS",
+            "value": "8"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_URL",
+            "value":"jdbc:mysql://{{MYSQL_DB_IP}}:{{MYSQL_DB_PORT}}/output_db?autoReconnect=true"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_USER_NAME",
+            "value":"root"
+        },
+        {
+            "name":"payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_PASSWORD",
+            "value":"root"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_XMS",
+            "value": "1024m"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_XMX",
+            "value": "4096m"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_MAX_PERM_SIZE",
+            "value": "1024m"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WORKER_THREADS",
+            "value": "40"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_MAX_EVENT_BUFFER_CAPACITY",
+            "value": "400"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_EVENT_BUFFER_SIZE",
+            "value": "40000"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_QUEUE_SIZE",
+            "value": "65536"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_BATCH_SIZE",
+            "value": "800"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CORE_POOL_SIZE",
+            "value": "100"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_MAX_POOL_SIZE",
+            "value": "200"
+        }
+    ]
+}

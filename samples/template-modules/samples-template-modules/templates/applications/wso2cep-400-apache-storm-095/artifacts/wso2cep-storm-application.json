@@ -1,0 +1,111 @@
+{
+    "applicationId":"wso2cep-storm-application",
+    "alias":"my-wso2cep-storm-application",
+    "multiTenant":false,
+    "components":{
+        "groups":[
+            {
+                "name":"wso2cep-storm-group",
+                "alias":"my-wso2cep-storm-group",
+                "groupMaxInstances":1,
+                "groupMinInstances":1,
+                "groups":[
+                    {
+                        "name": "zookeeper-group",
+                        "alias": "my-zookeeper-group",
+                        "deploymentPolicy": "deployment-policy-1",
+                        "groupMinInstances": 1,
+                        "groupMaxInstances": 1,
+                        "cartridges": [
+                            {
+                                "type": "zookeeper",
+                                "cartridgeMin": 3,
+                                "cartridgeMax": 3,
+                                "subscribableInfo": {
+                                    "alias": "my-zookeeper",
+                                    "autoscalingPolicy": "autoscaling-policy-1"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "storm-group",
+                        "alias": "my-storm-group",
+                        "deploymentPolicy": "deployment-policy-1",
+                        "groupMinInstances": 1,
+                        "groupMaxInstances": 1,
+                        "cartridges": [
+                            {
+                                "type": "storm-supervisor",
+                                "cartridgeMin": 4,
+                                "cartridgeMax": 6,
+                                "subscribableInfo": {
+                                    "alias": "my-storm-supervisor",
+                                    "autoscalingPolicy": "autoscaling-policy-1"
+                                }
+                            },
+                            {
+                                "type": "storm-nimbus",
+                                "cartridgeMin": 1,
+                                "cartridgeMax": 1,
+                                "subscribableInfo": {
+                                    "alias": "my-storm-nimbus",
+                                    "autoscalingPolicy": "autoscaling-policy-1"
+                                }
+                            },
+                            {
+                                "type": "storm-ui",
+                                "cartridgeMin": 1,
+                                "cartridgeMax": 1,
+                                "subscribableInfo": {
+                                    "alias": "my-storm-ui",
+                                    "autoscalingPolicy": "autoscaling-policy-1"
+                                }
+                            }
+                        ]
+                    },
+                    {
+                        "name": "wso2cep-group",
+                        "alias": "my-wso2cep-group",
+                        "deploymentPolicy": "deployment-policy-1",
+                        "groupMinInstances": 1,
+                        "groupMaxInstances": 1,
+                        "cartridges": [
+                            {
+                                "type": "wso2cep-manager",
+                                "cartridgeMin": 1,
+                                "cartridgeMax": 1,
+                                "subscribableInfo": {
+                                    "alias": "my-wso2cep-manager",
+                                    "autoscalingPolicy": "autoscaling-policy-1",
+                                    "artifactRepository": {
+                                        "privateRepo": false,
+                                        "repoUrl": "{{CEP_GIT_REPO}}",
+                                        "repoUsername": "{{CEP_GIT_REPO_USERNAME}}",
+                                        "repoPassword": "{{CEP_GIT_REPO_PASSWORD}}"
+                                    }
+                                }
+                            },
+                            {
+                                "type": "wso2cep-worker",
+                                "cartridgeMin": 4,
+                                "cartridgeMax": 4,
+                                "subscribableInfo": {
+                                    "alias": "my-wso2cep-worker",
+                                    "autoscalingPolicy": "autoscaling-policy-1",
+                                    "artifactRepository": {
+                                        "privateRepo": false,
+                                        "repoUrl": "{{CEP_GIT_REPO}}",
+                                        "repoUsername": "{{CEP_GIT_REPO_USERNAME}}",
+                                        "repoPassword": "{{CEP_GIT_REPO_PASSWORD}}"
+                                    }
+                                }
+                            }
+                        ]
+                    }
+                ]
+
+            }
+        ]
+    }
+}
