@@ -46,6 +46,14 @@
             "value": "true"
         },
         {
+            "name": "payload_parameter.CONFIG_PARAM_ADMIN_USERNAME",
+            "value": "{{ADMIN_USERNAME}}"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_ADMIN_PASSWORD",
+            "value": "{{ADMIN_PASSWORD}}"
+        },
+        {
             "name": "payload_parameter.COMMIT_ENABLED",
             "value": "true"
         },
@@ -54,16 +62,16 @@
             "value": "8"
         },
         {
-            "name":"payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_URL",
-            "value":"jdbc:mysql://{{MYSQL_DB_IP}}:{{MYSQL_DB_PORT}}/output_db?autoReconnect=true"
+            "name": "payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_URL",
+            "value": "jdbc:mysql://{{MYSQL_DB_IP}}:{{MYSQL_DB_PORT}}/output_db?autoReconnect=true"
         },
         {
-            "name":"payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_USER_NAME",
-            "value":"root"
+            "name": "payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_USER_NAME",
+            "value": "root"
         },
         {
-            "name":"payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_PASSWORD",
-            "value":"root"
+            "name": "payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_PASSWORD",
+            "value": "root"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_XMS",
