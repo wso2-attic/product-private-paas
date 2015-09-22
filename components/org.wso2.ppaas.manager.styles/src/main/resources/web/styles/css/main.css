@@ -49,12 +49,13 @@ table#main-table td#menu-panel table#menu-table tbody tr td img {
 }
 
 /* ---------------- header styles ------------------ */
-div#header-div {    
+div#header-div {
+    background-image: url(../images/header-region-bg.gif);
     height: 121px;
 }
 
 div#header-div div.left-logo {
-    background-image: url(../images/header-logo.gif);
+    background-image: url(../images/header-logo.png);
     background-position: left center;
     height: 50px;
     margin-left: 50px;
@@ -70,9 +71,6 @@ div#header-div div.middle-ad {
 }
 
 div#header-div div.right-logo {
-    background-image: url("../../../../../../../../../carbon/admin/images/t-right-logo.gif");
-    background-position: right top;
-    background-repeat: no-repeat;
     color: #B6D8F2;
     font-size: 0;
     height: 45px;
@@ -173,9 +171,6 @@ div#menu ul.sub li.normal ul.sub li.normal ul.sub li a.menu-default {
 /* ------------- footer styles -------------------- */
 
 div#footer-div div.footer-content {
-    background-image: url(../../../../../../../../../carbon/admin/images/powered.gif);
-    background-position: right center;
-    background-repeat: no-repeat;
     margin-right: 10px;
 }
 
