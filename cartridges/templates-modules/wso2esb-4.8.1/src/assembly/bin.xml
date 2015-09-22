@@ -29,6 +29,7 @@
             </includes>
             <excludes>
                 <exclude>**/*.gitkeep</exclude>
+                <exclude>**/*.gitignore</exclude>
             </excludes>
         </fileSet>
         <fileSet>
