@@ -20,17 +20,13 @@
 node /[0-9]{1,12}.*wso2esb-481/ inherits base {
 
   class { 'java': }
-  class { 'python_agent':
-    docroot => "/var/www"
-  }
+  class { 'python_agent': }
   class { 'configurator': }
-  class { 'wso2servers':
+  class { 'wso2installer':
     server_name      => 'wso2esb-4.8.1',
-    module_name   => 'wso2esb481'
+    module_name      => 'wso2esb481'
 
   }
-
-  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['wso2servers']
 }
 
 
@@ -38,16 +34,12 @@ node /[0-9]{1,12}.*wso2esb-481/ inherits base {
 node /[0-9]{1,12}.*wso2is-500/ inherits base {
 
   class { 'java': }
-  class { 'python_agent':
-    docroot => "/var/www"
-  }
+  class { 'python_agent': }
   class { 'configurator': }
-  class { 'wso2servers':
+  class { 'wso2installer':
     server_name      => 'wso2is5.0.0',
-    module_name   => 'wso2is-500'
+    module_name      => 'wso2is-500'
   }
-
-  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['wso2servers']
 }
 
 
@@ -55,16 +47,12 @@ node /[0-9]{1,12}.*wso2is-500/ inherits base {
 node /[0-9]{1,12}.*wso2am-190/ inherits base {
 
   class { 'java': }
-  class { 'python_agent':
-    docroot => "/var/www"
-  }
+  class { 'python_agent': }
   class { 'configurator': }
-  class { 'wso2servers':
+  class { 'wso2installer':
     server_name      => 'wso2am-1.9.0',
-    module_name  => 'wso2am190'
+    module_name      => 'wso2am190'
   }
-
-  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['wso2servers']
 }
 
 
@@ -72,14 +60,13 @@ node /[0-9]{1,12}.*wso2am-190/ inherits base {
 node /[0-9]{1,12}.*wso2as-521/ inherits base {
 
   class { 'java': }
-  class { 'python_agent':
-    docroot => "/var/www"
-  }
+  class { 'python_agent': }
   class { 'configurator': }
-  class { 'wso2servers':
+  class { 'wso2installer':
     server_name      => 'wso2as-5.2.1',
-    module_name  => 'wso2as521'
+    module_name      => 'wso2as521'
   }
-
-  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['wso2servers']
 }
+
+# Execution sequence
+Class['ppaas_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['wso2installer']

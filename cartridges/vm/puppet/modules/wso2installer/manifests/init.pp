@@ -14,14 +14,14 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 
-class wso2servers (
+class wso2installer (
   $owner              = 'root',
   $group              = 'root',
   $module_name        = undef,
   $server_name        = undef,
 )  {
 
-  $service_code         = "wso2servers/${module_name}"
+  $service_code         = "wso2installer/${module_name}"
   $target               = "/mnt/${server_ip}"
   $carbon_home          = "/mnt/${server_ip}/${server_name}"
   $configurator_home    = "/mnt/${configurator_name}-${configurator_version}"
@@ -103,7 +103,7 @@ class wso2servers (
     user        => $owner,
     path        => "/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:${pca_home}",
     cwd         => "${pca_home}",
-    command     => "./start_agent.sh",
+    command     => "./start_agent.sh /tmp/start_agent.log 2>&1",
     require     =>  File["${pca_home}/plugins"]
   }
 

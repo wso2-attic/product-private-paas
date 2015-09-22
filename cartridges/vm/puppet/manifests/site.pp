@@ -16,8 +16,4 @@
 #
 # import private paas nodes definitions
 import 'nodes/base.pp'
-import 'nodes/wso2esb.pp'
-import 'nodes/wso2as.pp'
-import 'nodes/wso2is.pp'
-import 'nodes/wso2am.pp'
-import 'nodes/default.pp'
+import 'nodes/nodes.pp'

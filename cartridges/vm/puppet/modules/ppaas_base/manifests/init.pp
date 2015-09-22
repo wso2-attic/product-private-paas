@@ -14,7 +14,7 @@
 #  limitations under the License.
 # ----------------------------------------------------------------------------
 
-class stratos_base(
+class ppaas_base(
   $ensure = 'present',
   $autoupgrade=true,
 ){

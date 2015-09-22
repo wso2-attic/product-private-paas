@@ -2,7 +2,7 @@
 
 This folder contains WSO2 Private PaaS virtual machine cartridges.
 
-###How to use Puppet Modules
+### How to use Puppet Modules
 
 ---
 (1) Copy and replace contents inside puppet folder to puppet master (i.e `/etc/puppet/` folder).
@@ -65,134 +65,104 @@ $configurator_version = '4.1.0-SNAPSHOT'
 ### **Optional Modules**
 Following modules are mandatory to setup puppet-master. Only servers that are used by application needs to be configured. For example, If only esb cartridge is used in application only esb related module needs to be setup.
 
-(1) Copy server pack from   to `/etc/puppet/modules/<server_name>/files/packs` folder. ( If configuring ESB, path is :`/etc/puppet/modules/wso2esb/files/packs` )
+(1) Copy server pack from   to `/etc/puppet/modules/wso2installer/files/<server_name>/packs` folder. ( If configuring ESB, path is :`/etc/puppet/modules/wso2installer/files/wso2esb481/packs` )
 
-(2) Copy respective [template module pack](https://github.com/wso2/product-private-paas/tree/master/cartridges/templates-modules) to `/etc/puppet/modules/<server_name>/files/packs/`
+(2) Copy respective [template module pack](https://github.com/wso2/product-private-paas/tree/master/cartridges/templates-modules) to `/etc/puppet/modules/wso2installer/files/<server_name>/packs/`
 
-(3) Change file permission to 0755 for contents in side `/etc/puppet/modules/<server_name>/files/packs/` directory .
+(3) Change file permission to 0755 for contents in side `/etc/puppet/modules/wso2installer/files/<server_name>/packs/` directory .
 ```
 chmod 755 <server_pack>.zip 
 chmod 755 <template_module>.zip 
 ```
 
-(4) Copy respective [PCA plugins](https://github.com/wso2/product-private-paas/tree/master/cartridges/plugins) to `/etc/puppet/modules/<server_name>/files/plugins/`
+(4) Copy respective [PCA plugins](https://github.com/wso2/product-private-paas/tree/master/cartridges/plugins) to `/etc/puppet/modules/wso2installer/files/<server_name>/plugins/`
 
-(5) Change file permission to 0755 for contents in side `/etc/puppet/modules/<server_name>/files/plugins/` directory .
+(5) Change file permission to 0755 for contents in side `/etc/puppet/modules/wso2installer/files/<server_name>/plugins/` directory .
 ```
 chmod 755 wso2esb-481-startup-handler.py 
 chmod 755 wso2esb-481-startup-handler.yapsy-plugin 
 ```
 
-(6) Update the following server related variables in `/etc/puppet/manifests/nodes/<server>.pp` file with respective values.
-( If configuring ESB, path is :`/etc/puppet/manifests/nodes/esb.pp` )
+(6) Update the following server related variables in `/etc/puppet/manifests/nodes/nodes.pp` file with respective values.
+( If configuring ESB )
 ```
 # ESB cartridge node
-node /wso2esb/ inherits base {
+node /[0-9]{1,12}.*wso2esb-481/ inherits base {
 
-  class {'java':}
-  class {'python_agent':
-   docroot => "APPLICATION-PATH" #change this value
+  class { 'java': }
+  class { 'python_agent':
+    docroot => "/var/www"
   }
-  class {'configurator':}
-  class {'wso2esb':
-     version  	      => '4.8.1'  #change this value
-
+  class { 'configurator': }
+  class { 'wso2installer':
+    server_name       => 'wso2esb-4.8.1',
+    module_name       => 'wso2esb481'
   }
-
-  Class['stratos_base'] -> Class['java'] -> Class['configurator']-> Class['python_agent'] -> Class['esb']
 }
 ```
 ---
-#### **Fully configured puppet master should look like below :**
+#### ** Configured puppet master should look like below :**
+
 ```
 /etc/puppet
 |-- auth.conf
 |-- autosign.conf
+|-- environments
+|   `-- example_env
+|       |-- manifests
+|       |-- modules
+|       `-- README.environment
+|-- fileserver.conf
 |-- manifests
 |   |-- nodes
-|   |   |-- wso2am.pp
-|   |   |-- wso2as.pp
 |   |   |-- base.pp
-|   |   |-- default.pp
-|   |   |-- wso2esb.pp
-|   |   `-- wso2is.pp
+|   |   `-- nodes.pp
 |   `-- site.pp
 |-- modules
-|   |-- wso2am
-|   |   |-- files
-|   |   |   |-- packs
-|   |   |   |   `-- wso2am-1.9.0.zip
-|   |   |   `-- plugins
-|   |   |-- LICENSE
-|   |   |-- manifests
-|   |   |   `-- init.pp
-|   |   `-- README
-|   |-- wso2as
-|   |   |-- files
-|   |   |   |-- packs
-|   |   |   |   |-- wso2as-5.2.1-template-module-4.1.0-SNAPSHOT.zip
-|   |   |   |   `-- wso2as-5.2.1.zip
-|   |   |   `-- plugins
-|   |   |       |-- wso2as-521-startup-handler.py
-|   |   |       `-- wso2as-521-startup-handler.yapsy-plugin
-|   |   |-- LICENSE
-|   |   |-- manifests
-|   |   |   |-- init.pp
-|   |   | 
-|   |   `-- README
 |   |-- configurator
 |   |   |-- files
 |   |   |   `-- ppaas-configurator-4.1.0-SNAPSHOT.zip
 |   |   `-- manifests
-|   |       |-- init.pp
-|   |       
-|   |-- wso2esb
-|   |   |-- files
-|   |   |   |-- packs
-|   |   |   |   |-- wso2esb-4.8.1-template-module-4.1.0-SNAPSHOT.zip
-|   |   |   |   `-- wso2esb-4.8.1.zip
-|   |   |   `-- plugins
-|   |   |       |-- wso2esb-481-startup-handler.py
-|   |   |       `-- wso2esb-481-startup-handler.yapsy-plugin
-|   |   |-- LICENSE
-|   |   |-- manifests
-|   |   |   `-- init.pp
-|   |   `-- README
-|   |-- wso2is
-|   |   |-- files
-|   |   |   |-- packs
-|   |   |   |   |-- wso2is-5.0.0-template-module-4.1.0-SNAPSHOT.zip
-|   |   |   |   `-- wso2is-5.0.0.zip
-|   |   |   `-- plugins
-|   |   |       |-- wso2is-500-startup-handler.py
-|   |   |       `-- wso2is-500-startup-handler.yapsy-plugin
-|   |   |-- LICENSE
-|   |   |-- manifests
-|   |   |   `-- init.pp
-|   |   `-- README
+|   |       `-- init.pp
 |   |-- java
 |   |   |-- files
-|   |   |   |-- jdk-7u72-linux-x64.gz
+|   |   |   |-- jdk-7u67-linux-x64.tar.gz
 |   |   |   `-- README
 |   |   |-- manifests
-|   |   |   |-- init.pp
+|   |   |   `-- init.pp
+|   |   `-- templates
+|   |       `-- java_home.sh.erb
+|   |-- ppaas_base
+|   |   `-- manifests
+|   |       `-- init.pp
 |   |-- python_agent
 |   |   |-- files
-|   |   |   |-- apache-stratos-python-cartridge-agent-4.1.2-SNAPSHOT.zip
+|   |   |   |-- apache-stratos-python-cartridge-agent-4.1.3-SNAPSHOT.zip
 |   |   |   |-- README.txt
 |   |   |   `-- start_agent.sh
 |   |   |-- manifests
 |   |   |   |-- copy_plugins.pp
 |   |   |   |-- initialize.pp
 |   |   |   |-- init.pp
-|   |   |   `-- push_templates.pp
+|   |   |   |-- push_templates.pp
+|   |   |   |-- remove_templates.pp
+|   |   |   `-- start.pp
 |   |   `-- templates
 |   |       |-- agent.conf.erb
-|   |       |-- agent.conf.erb~
 |   |       `-- logging.ini.erb
-|   `-- stratos_base
-|       |-- manifests
-|       |   `-- init.pp
+|   `-- wso2installer
+|       |-- files
+|       |   `-- wso2esb481
+|       |       |-- packs
+|       |       |   |-- README
+|       |       |   |-- wso2esb-4.8.1-template-module-4.1.0-SNAPSHOT.zip
+|       |       |   `-- wso2esb-4.8.1.zip
+|       |       `-- plugins
+|       |           |-- README
+|       |           |-- wso2esb-481-startup-handler.py
+|       |           `-- wso2esb-481-startup-handler.yapsy-plugin
+|       `-- manifests
+|           `-- init.pp
 |-- puppet.conf
 `-- templates
 ```

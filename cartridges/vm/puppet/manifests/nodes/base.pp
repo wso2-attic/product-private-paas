@@ -49,5 +49,5 @@ node 'base' {
   $configurator_name    = 'ppaas-configurator'
   $configurator_version = '4.1.0-SNAPSHOT'
 
-  require stratos_base
+  require ppaas_base
 }
