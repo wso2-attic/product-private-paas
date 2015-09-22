@@ -42,7 +42,7 @@ node 'base' {
   $agent_log_level      = "INFO"
 
 # JAVA Configurations
-  $java_distribution    = 'jdk-7u72-linux-x64.gz'
+  $java_distribution    = 'jdk-7u80-linux-x64.tar.gz'
   $java_folder          = 'jdk1.7.0_72'
 
 # Configurator Configurations

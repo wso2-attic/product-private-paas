@@ -14,7 +14,7 @@ RUN sed -i "s/PermitRootLogin without-password/#PermitRootLogin without-password
 (2) Copy following files to the packages folder:
 
 * [apache-stratos-cartridge-agent-4.1.3.zip ](http://www.apache.org/dyn/closer.cgi/stratos)
-* [jdk-7u60-linux-x64.tar](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
+* [jdk-7u80-linux-x64.tar.gz](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html)
 
 (3)  Run build.sh file to build the docker image:
 ```

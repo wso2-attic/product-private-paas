@@ -40,15 +40,15 @@ chmod 755 apache-stratos-python-cartridge-agent-4.1.3.zip
   $enable_log_publisher = 'false'
 ```
 ##### **Java Module**
-(1) Copy [jdk-7u72-linux-x64.gz](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html) to `/etc/puppet/modules/java/files` folder.
+(1) Copy [jdk-7u80-linux-x64.tar.gz](http://www.oracle.com/technetwork/java/javase/downloads/jdk7-downloads-1880260.html) to `/etc/puppet/modules/java/files` folder.
 
-(2) Change file permission to 0755 for jdk-7u72-linux-x64.gz.
+(2) Change file permission to 0755 for jdk-7u80-linux-x64.tar.gz
 ```
-chmod 755 jdk-7u72-linux-x64.gz
+chmod 755 jdk-7u80-linux-x64.tar.gz
 ```
 (3) Update the following JAVA related variables in `/etc/puppet/manifests/nodes/base.pp` file with respective values.
 ```
-$java_distribution 	    = 'jdk-7u72-linux-x64.gz'
+$java_distribution 	    = 'jdk-7u80-linux-x64.tar.gz'
 $java_folder    		= 'jdk1.7.0_72'
 ```
 ##### **Configurator Module**
@@ -127,7 +127,7 @@ node /[0-9]{1,12}.*wso2esb-481/ inherits base {
 |   |       `-- init.pp
 |   |-- java
 |   |   |-- files
-|   |   |   |-- jdk-7u67-linux-x64.tar.gz
+|   |   |   |-- jdk-7u80-linux-x64.tar.gz
 |   |   |   `-- README
 |   |   |-- manifests
 |   |   |   `-- init.pp
