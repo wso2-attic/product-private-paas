@@ -78,6 +78,10 @@
             <artifactId>org.apache.stratos.common</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.stratos</groupId>
+            <artifactId>org.apache.stratos.messaging</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.wso2.ppaas</groupId>
             <artifactId>ppaas-membership-scheme</artifactId>
         </dependency>
