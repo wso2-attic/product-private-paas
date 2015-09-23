@@ -81,6 +81,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
     ENV_CONFIG_PARAM_HTTP_PROXY_PORT = 'CONFIG_PARAM_HTTP_PROXY_PORT'
     ENV_CONFIG_PARAM_HTTPS_PROXY_PORT = 'CONFIG_PARAM_HTTPS_PROXY_PORT'
     ENV_CONFIG_PARAM_HOST_NAME = 'CONFIG_PARAM_HOST_NAME'
+    ENV_CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT = 'CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT'
 
 
     def run_plugin(self, values):
@@ -93,6 +94,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
                                        WSO2DASStartupHandler.CONST_PPAAS_MEMBERSHIP_SCHEME)
         service_name = values[WSO2DASStartupHandler.CONST_SERVICE_NAME]
         port_mappings_str = values[WSO2DASStartupHandler.CONST_PORT_MAPPINGS].replace("'", "")
+        spark_master_count = values.get(WSO2DASStartupHandler.ENV_CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT, '1')
 
         WSO2DASStartupHandler.log.info("Profile : %s " % profile)
         WSO2DASStartupHandler.log.info("Application ID: %s" % app_id)
@@ -115,7 +117,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_MB_IP, mb_ip)
 
         zookeeper_cluster = self.get_clusters_from_topology(WSO2DASStartupHandler.CONST_ZOOKEEPER_SERVICE_NAME)
-        zookeeper_ip = self.get_zookeeper_member_ips(zookeeper_cluster,app_id)
+        zookeeper_ip = self.get_zookeeper_member_ips(zookeeper_cluster, app_id)
         hbase_master_ip = self.read_member_ip_from_topology(WSO2DASStartupHandler.CONST_HBASE_SERVICE_NAME, app_id)
 
         self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_ZK_HOST, zookeeper_ip)
@@ -126,7 +128,7 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
 
         # set hostname
         member_ip = socket.gethostbyname(socket.gethostname())
-        self.set_host_name(app_id, service_name, member_ip)
+        # self.set_host_name(app_id, service_name, member_ip)
 
         if clustering == 'true' and membership_scheme == self.CONST_PPAAS_MEMBERSHIP_SCHEME:
             service_list = self.get_service_list_for_clustering(service_name)
@@ -134,36 +136,29 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
             member_ip = socket.gethostbyname(socket.gethostname())
             self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST, member_ip)
 
+        elif clustering == 'true' and membership_scheme == "wka":
+
+            member_ip = socket.gethostbyname(socket.gethostname())
+            self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST, member_ip)
+
         self.map_hbase_hostname()
 
-        # creating databases
-        remote_host = self.get_data_from_meta_data_service(app_id, WSO2DASStartupHandler.CONST_MYSQL_HOST)
+        if profile == "analytics":
+            # mgt_count = 1
+            # member_count = self.get_member_count_for_service(app_id,
+            #                                                 WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME)
+            self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT,
+                                str(spark_master_count))
+            self.export_env_var("CONFIG_PARAM_DOMAIN", "wso2.spark.carbon.domain")
 
-        self.create_database(app_id, WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB,
-                             WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB_USER_NAME,
-                             WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB_PASSWORD, remote_host)
-
-        analytics_fs_db_url = "jdbc:mysql://" + remote_host + ":3306/" + WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB + "?autoReconnect=true"
-        self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL,
-                            analytics_fs_db_url)
-
-        self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_USER_NAME,
-                            WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB_USER_NAME)
-        self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_PASSWORD,
-                            WSO2DASStartupHandler.CONST_ANALYTICS_FS_DB_PASSWORD)
-
-        self.create_database(app_id, WSO2DASStartupHandler.CONST_ANALYTICS_PROCESSED_DATA_STORE,
-                             WSO2DASStartupHandler.CONST_ANALYTICS_PDS_DB_USER_NAME,
-                             WSO2DASStartupHandler.CONST_ANALYTICS_PDS_DB_PASSWORD, remote_host)
-
-        analytics_pds_db_url = "jdbc:mysql://" + remote_host + ":3306/" + WSO2DASStartupHandler.CONST_ANALYTICS_PROCESSED_DATA_STORE + "?autoReconnect=true"
-        self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_URL,
-                            analytics_pds_db_url)
-
-        self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_USER_NAME,
-                            WSO2DASStartupHandler.CONST_ANALYTICS_PDS_DB_USER_NAME)
-        self.export_env_var(WSO2DASStartupHandler.ENV_CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_PASSWORD,
-                            WSO2DASStartupHandler.CONST_ANALYTICS_PDS_DB_PASSWORD)
+            if service_name == WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME:
+                mgt_ip = self.read_member_ip_from_topology(WSO2DASStartupHandler.CONST_DAS_ANALYTICS_MGT_SERVICE_NAME,
+                                                           app_id)
+                wka_members = "[" + mgt_ip + ":4000]"
+                self.export_env_var("CONFIG_PARAM_WKA_MEMBERS", wka_members)
+                mgt_hostname = self.get_host_name_from_cluster(
+                    WSO2DASStartupHandler.CONST_DAS_ANALYTICS_MGT_SERVICE_NAME, app_id)
+                self.update_hosts_file(mgt_ip, mgt_hostname)
 
 
         # configure server
@@ -182,13 +177,13 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         start_command = None
         if profile:
             if profile == "receiver":
-                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true"
+                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -Dsetup -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true"
             elif profile == "analytics":
-                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -DdisableEventSink=true"
+                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -Dsetup -DdisableEventSink=true"
             elif profile == "dashboard":
-                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -DdisableEventSink=true -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true"
+                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -Dsetup -DdisableEventSink=true -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true"
             elif profile == "default":
-                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start"
+                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dsetup start"
             else:
                 WSO2DASStartupHandler.log.info("Invalid profile :" + profile)
         WSO2DASStartupHandler.log.info("Start command : %s" % start_command)
@@ -198,7 +193,29 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         WSO2DASStartupHandler.log.debug("WSO2 DAS started successfully")
 
 
-    def get_zookeeper_member_ips(self, zookeeper_cluster,app_id):
+    def get_member_count_for_service(self, app_id, service_name):
+        """
+        Return member count for a service
+        :return: member_count
+        """
+        clusters = self.get_clusters_from_topology(service_name)
+
+        if clusters is not None:
+            for cluster in clusters:
+                if cluster.app_id == app_id:
+                    members = cluster.get_members()
+
+        if members is not None:
+            for member in members:
+                properties = member.properties
+                if properties is not None:
+                    member_count = properties["MIN_COUNT"]
+                    WSO2DASStartupHandler.log.info("Member Count - " + member_count)
+
+                    return member_count
+
+
+    def get_zookeeper_member_ips(self, zookeeper_cluster, app_id):
         """
         returns zookeeper member ip list
         :return: default_member_ip_list
@@ -225,17 +242,17 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         returns the particular service list for a given service name
         :return: service_list
         """
-        if service_name == WSO2DASStartupHandler.CONST_DAS_RECEIVER_SERVICE_NAME or service_name == \
+        if service_name in WSO2DASStartupHandler.CONST_DAS_RECEIVER_SERVICE_NAME or service_name in \
                 WSO2DASStartupHandler.CONST_DAS_RECEIVER_MGT_SERVICE_NAME:
             return [WSO2DASStartupHandler.CONST_DAS_RECEIVER_SERVICE_NAME,
                     WSO2DASStartupHandler.CONST_DAS_RECEIVER_MGT_SERVICE_NAME]
 
-        elif service_name == WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME or service_name == \
+        elif service_name in WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME or service_name in \
                 WSO2DASStartupHandler.CONST_DAS_ANALYTICS_MGT_SERVICE_NAME:
             return [WSO2DASStartupHandler.CONST_DAS_ANALYTICS_SERVICE_NAME,
                     WSO2DASStartupHandler.CONST_DAS_ANALYTICS_MGT_SERVICE_NAME]
 
-        elif service_name == WSO2DASStartupHandler.CONST_DAS_DASHBOARD_SERVICE_NAME:
+        elif service_name in WSO2DASStartupHandler.CONST_DAS_DASHBOARD_SERVICE_NAME:
             return [WSO2DASStartupHandler.CONST_DAS_DASHBOARD_SERVICE_NAME]
 
 

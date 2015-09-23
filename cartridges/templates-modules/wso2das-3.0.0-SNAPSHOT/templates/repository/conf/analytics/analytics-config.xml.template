@@ -31,7 +31,7 @@
       </properties>
    </analytics-file-system>
    <!-- Analytics Record Store - properties related to record storage implementation -->
-  {%- if CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE is defined  and (CONFIG_PARAM_PROFILE =="receiver" or CONFIG_PARAM_PROFILE=="analytics") %}
+  {%- if CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE is defined %}
    <analytics-record-store name="EVENT_STORE">
 
        {% if CONFIG_PARAM_EVENT_DATA_STORE_IMPL is defined -%}
