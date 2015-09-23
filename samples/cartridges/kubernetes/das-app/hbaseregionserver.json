@@ -1,0 +1,50 @@
+{
+    "type": "hbaseregionserver",
+    "provider": "WSO2",
+    "category": "framework",
+    "host": "hbaseregionserver.wso2.com",
+    "displayName": "Apache Hbase Regionserver",
+    "description": "Apache Hbase Regionserver Cartridge",
+    "version": "1.0.1.1",
+    "multiTenant": "false",
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "mgt-console",
+            "protocol": "http",
+            "port": "16030",
+            "proxyPort": "0",
+	    "kubernetesPortType": "NodePort"
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "kubernetes",
+            "imageId": "wso2/hbase:1.0.1.1",
+            "networkInterfaces": [
+            ],
+            "property": [
+            ]
+        }
+    ],
+    "property": [
+        {
+            "name": "KUBERNETES_CONTAINER_CPU",
+            "value": "0"
+        },
+        {
+            "name": "KUBERNETES_CONTAINER_MEMORY",
+            "value": "0"
+        },
+        {
+            "name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
+            "value": "ClientIP"
+        },
+        {
+            "name": "payload_parameter.START_CMD",
+            "value": "PCA"
+        }
+
+    ]
+}
+

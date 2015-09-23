@@ -1,0 +1,45 @@
+{
+	"type": "hadoopdata",
+	"category": "framework",
+	"provider": "WSO2",
+	"host": "hadoop.wso2.com",
+	"displayName": "Apache Hadoop Datanode",
+	"description": "Apache Hadoop Datanode Cartridge",
+	"version": "2.6.0",
+	"multiTenant": true,
+	"loadBalancingIPType": "public",
+	"portMapping": [
+		{
+			"name": "mgt-console",
+			"protocol": "http",
+			"port": 50075,
+			"proxyPort": 0,
+			"kubernetesPortType": "NodePort"
+		}
+	],
+	"iaasProvider": [
+		{
+			"type": "kubernetes",
+			"imageId": "wso2/hadoop:2.6.0",
+			"networkInterfaces": []
+		}
+	],
+	"property": [
+		{
+			"name": "KUBERNETES_CONTAINER_CPU",
+			"value": "0"
+		},
+		{
+			"name": "KUBERNETES_CONTAINER_MEMORY",
+			"value": "0"
+		},
+		{
+			"name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
+			"value": "ClientIP"
+		},
+		{
+			"name": "payload_parameter.START_CMD",
+			"value": "PCA"
+		}
+	]
+}
