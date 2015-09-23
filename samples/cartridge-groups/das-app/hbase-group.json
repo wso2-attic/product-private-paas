@@ -1,0 +1,39 @@
+{
+  "dependencies": {
+    "terminationBehaviour": "terminate-none",
+    "startupOrders": [
+      {
+        "aliases": [
+          "group.hadoop-group",
+          "cartridge.hbase-mn",
+          "cartridge.hbase-rsn"
+        ]
+      }
+    ]
+  },
+  "name": "hbase-hadoop-group",
+  "groups": [
+    {
+      "cartridges": [
+        "hadoop",
+        "hadoopdata"
+      ],
+      "dependencies": {
+        "startupOrders": [
+          {
+            "aliases": [
+              "cartridge.hadoop-nn",
+              "cartridge.hadoop-dn"
+            ]
+          }
+        ],
+        "terminationBehaviour": "terminate-none"
+      },
+      "name": "hadoop-group"
+    }
+  ],
+  "cartridges": [
+    "hbase",
+    "hbaseregionserver"
+  ]
+}
