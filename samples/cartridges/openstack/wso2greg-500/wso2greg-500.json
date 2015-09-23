@@ -13,19 +13,19 @@
             "name": "mgt-http",
             "protocol": "http",
             "port": 9763,
-            "proxyPort": 80
+            "proxyPort": 0
         },
         {
             "name": "mgt-https",
             "protocol": "https",
             "port": 9443,
-            "proxyPort": 443
+            "proxyPort": 0
         }
     ],
     "iaasProvider": [
         {
             "type": "openstack",
-            "imageId": "RegionOne/3d4ba1ac-7d29-4e50-99bf-0b637cc51409",
+            "imageId": "RegionOne/87517c2f-3cb2-47ce-8b58-71e4441828fc",
             "property": [
                 {
                     "name": "instanceType",
@@ -59,10 +59,6 @@
         {
             "name": "payload_parameter.CONFIG_PARAM_MEMBERSHIP_SCHEME",
             "value": "stratos"
-        },
-        {
-            "name": "payload_parameter.APPLICATION_PATH",
-            "value": "/var/www"
         }
     ]
 }
