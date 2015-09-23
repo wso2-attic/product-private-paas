@@ -1,0 +1,50 @@
+{
+    "type": "das-zookeeper",
+    "provider": "WSO2",
+    "category": "framework",
+    "host": "das.zookeeper.wso2.com",
+    "displayName": "Apache Zookeeper for DAS",
+    "description": "Apache Zookeeper Cartridge",
+    "version": "3.4.6",
+    "multiTenant": "false",
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "mgt-console",
+            "protocol": "http",
+            "port": "2181",
+            "proxyPort": "0",
+	    "kubernetesPortType": "NodePort"
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "kubernetes",
+            "imageId": "wso2/zookeeper:3.4.6",
+            "networkInterfaces": [
+            ],
+            "property": [
+            ]
+        }
+    ],
+    "property": [
+        {
+            "name": "KUBERNETES_CONTAINER_CPU",
+            "value": "0"
+        },
+        {
+            "name": "KUBERNETES_CONTAINER_MEMORY",
+            "value": "0"
+        },
+        {
+            "name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
+            "value": "ClientIP"
+        },
+        {
+            "name": "payload_parameter.START_CMD",
+            "value": "PCA"
+        }
+
+    ]
+}
+

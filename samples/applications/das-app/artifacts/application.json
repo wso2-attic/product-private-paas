@@ -1,0 +1,215 @@
+{
+  "applicationId": "wso2-das-app",
+  "multiTenant": false,
+  "alias": "hackathon.das",
+  "components": {
+    "dependencies": {
+      "startupOrders": [
+        {
+          "aliases": [
+            "cartridge.zookeeper",
+            "group.hbase-hadoop-grp",
+	    "group.das-grp"
+          ]
+        }
+      ],
+      "terminationBehaviour": "terminate-none"
+    },
+    "groups": [
+      {
+        "name": "das-group",
+        "alias": "das-grp",
+        "groupMinInstances": 1,
+        "groupMaxInstances": 1,
+        "groups": [
+          {
+            "name": "das-analytics-group",
+            "alias": "das-analytics-group",
+            "groupMinInstances": 1,
+            "groupMaxInstances": 1,
+            "cartridges": [
+              {
+                "type": "das-analytics-manager",
+                "cartridgeMin": 1,
+                "cartridgeMax": 1,
+                "subscribableInfo": {
+                  "alias": "das-analytics-mgt",
+                  "deploymentPolicy": "deployment-policy-1",
+                  "autoscalingPolicy": "autoscaling-policy-1",
+                  "maxMembers": 0,
+                  "minMembers": 0,
+                  "artifactRepository": {
+                    "alias": "das-analytics-mgt",
+                    "privateRepo": false
+                  }
+                }
+              },
+              {
+                "type": "das-analytics",
+                "cartridgeMin": 2,
+                "cartridgeMax": 2,
+                "subscribableInfo": {
+                  "alias": "das-analytics-grp",
+                  "deploymentPolicy": "deployment-policy-1",
+                  "autoscalingPolicy": "autoscaling-policy-1",
+                  "maxMembers": 0,
+                  "minMembers": 0,
+                  "artifactRepository": {
+                    "alias": "das-analytics-grp",
+                    "privateRepo": false
+                  }
+                }
+              }
+            ]
+          },
+          {
+            "name": "das-receiver-group",
+            "alias": "das-receiver-group",
+            "groupMinInstances": 1,
+            "groupMaxInstances": 1,
+            "cartridges": [
+              {
+                "type": "das-receiver-manager",
+                "cartridgeMin": 1,
+                "cartridgeMax": 1,
+                "subscribableInfo": {
+                  "alias": "das-receiver-mgt",
+                  "deploymentPolicy": "deployment-policy-1",
+                  "autoscalingPolicy": "autoscaling-policy-1",
+                  "maxMembers": 0,
+                  "minMembers": 0,
+                  "artifactRepository": {
+                    "alias": "das-receiver-mgt",
+                    "privateRepo": true,
+                    "repoUrl": "https://github.com/pubudu538/das-depsync.git",
+                    "repoUsername": "####",
+                    "repoPassword": "####"
+                  }
+                }
+              },
+              {
+                "type": "das-receiver",
+                "cartridgeMin": 2,
+                "cartridgeMax": 2,
+                "subscribableInfo": {
+                  "alias": "das-receivers-grp",
+                  "deploymentPolicy": "deployment-policy-1",
+                  "autoscalingPolicy": "autoscaling-policy-1",
+                  "maxMembers": 0,
+                  "minMembers": 0,
+                  "artifactRepository": {
+                    "alias": "das-receivers-grp",
+                    "privateRepo": true,
+                    "repoUrl": "https://github.com/pubudu538/das-depsync.git",
+                    "repoUsername": "#####",
+                    "repoPassword": "######"
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "name": "hbase-hadoop-group",
+        "alias": "hbase-hadoop-grp",
+        "groupMinInstances": 1,
+        "groupMaxInstances": 1,
+        "cartridges": [
+          {
+            "type": "hbase",
+            "cartridgeMin": 1,
+            "cartridgeMax": 1,
+            "subscribableInfo": {
+              "alias": "hbase-mn",
+              "deploymentPolicy": "deployment-policy-1",
+              "autoscalingPolicy": "autoscaling-policy-1",
+              "maxMembers": 0,
+              "minMembers": 0,
+              "artifactRepository": {
+                "alias": "hbase-mn",
+                "privateRepo": false
+              }
+            }
+          },
+          {
+            "type": "hbaseregionserver",
+            "cartridgeMin": 3,
+            "cartridgeMax": 3,
+            "subscribableInfo": {
+              "alias": "hbase-rsn",
+              "deploymentPolicy": "deployment-policy-1",
+              "autoscalingPolicy": "autoscaling-policy-1",
+              "maxMembers": 0,
+              "minMembers": 0,
+              "artifactRepository": {
+                "alias": "hbase-rsn",
+                "privateRepo": false
+              }
+            }
+          }
+        ],
+        "groups": [
+          {
+            "name": "hadoop-group",
+            "alias": "hadoop-group",
+            "groupMinInstances": 1,
+            "groupMaxInstances": 1,
+            "cartridges": [
+              {
+                "type": "hadoop",
+                "cartridgeMin": 1,
+                "cartridgeMax": 1,
+                "subscribableInfo": {
+                  "alias": "hadoop-nn",
+                  "deploymentPolicy": "deployment-policy-1",
+                  "autoscalingPolicy": "autoscaling-policy-1",
+                  "maxMembers": 0,
+                  "minMembers": 0,
+                  "artifactRepository": {
+                    "alias": "hadoop-nn",
+                    "privateRepo": false
+                  }
+                }
+              },
+              {
+                "type": "hadoopdata",
+                "cartridgeMin": 3,
+                "cartridgeMax": 3,
+                "subscribableInfo": {
+                  "alias": "hadoop-dn",
+                  "deploymentPolicy": "deployment-policy-1",
+                  "autoscalingPolicy": "autoscaling-policy-1",
+                  "maxMembers": 0,
+                  "minMembers": 0,
+                  "artifactRepository": {
+                    "alias": "hadoop-dn",
+                    "privateRepo": false
+                  }
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "cartridges": [
+      {
+        "type": "das-zookeeper",
+        "cartridgeMin": 3,
+        "cartridgeMax": 3,
+        "subscribableInfo": {
+          "alias": "zookeeper",
+          "deploymentPolicy": "deployment-policy-1",
+          "autoscalingPolicy": "autoscaling-policy-1",
+          "maxMembers": 0,
+          "minMembers": 0,
+          "artifactRepository": {
+            "alias": "zookeeper",
+            "privateRepo": false
+          }
+        }
+      }
+    ]
+  }
+}

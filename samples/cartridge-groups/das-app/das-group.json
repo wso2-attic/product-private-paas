@@ -1,0 +1,44 @@
+{
+  "dependencies": {
+    "startupOrders": [
+      {
+        "aliases": [
+          "group.das-analytics-group",
+          "group.das-receiver-group"
+        ]
+      }
+    ],
+    "terminationBehaviour": "terminate-none"
+  },
+  "name": "das-group",
+  "groups": [
+    {
+      "cartridges": [
+        "das-analytics-manager",
+        "das-analytics"
+      ],
+      "dependencies": {
+        "startupOrders": [
+          {
+            "aliases": [
+              "cartridge.das-analytics-mgt",
+              "cartridge.das-analytics-grp"
+            ]
+          }
+        ],
+        "terminationBehaviour": "terminate-none"
+      },
+      "name": "das-analytics-group"
+    },
+    {
+      "cartridges": [
+        "das-receiver-manager",
+        "das-receiver"
+      ],
+      "dependencies": {
+        "terminationBehaviour": "terminate-none"
+      },
+      "name": "das-receiver-group"
+    }
+  ]
+}
