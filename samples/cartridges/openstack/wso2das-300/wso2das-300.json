@@ -12,12 +12,29 @@
     {
       "name": "mgt-http",
       "protocol": "http",
-      "port": 9763
+      "port": 9763,
+      "proxyPort": 0
     },
     {
       "name": "mgt-https",
       "protocol": "https",
-      "port": 9443
+      "port": 9443,
+      "proxyPort": 0
+    },
+    {
+      "name": "thrift-tcp",
+      "protocol": "tcp",
+      "port": 7611
+    },
+    {
+      "name": "thrift-ssl",
+      "protocol": "ssl",
+      "port": 7711
+    },
+    {
+      "name": "spark-manager",
+      "protocol": "http",
+      "port": 8081
     }
   ],
   "iaasProvider": [
@@ -57,10 +74,6 @@
     {
       "name": "payload_parameter.CONFIG_PARAM_MEMBERSHIP_SCHEME",
       "value": "private-paas"
-    },
-    {
-      "name": "payload_parameter.APPLICATION_PATH",
-      "value": "/var/www"
     },
     {
       "name": "payload_parameter.CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL",

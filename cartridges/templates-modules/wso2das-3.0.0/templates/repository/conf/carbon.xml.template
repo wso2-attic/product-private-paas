@@ -54,9 +54,7 @@
 
 
      {% if CONFIG_PARAM_MGT_HOST_NAME is defined -%}
-        {% if CONFIG_PARAM_SUB_DOMAIN == 'mgt' %}
-            <MgtHostName>{{CONFIG_PARAM_MGT_HOST_NAME}}</MgtHostName>
-        {% endif -%}
+        <MgtHostName>{{CONFIG_PARAM_MGT_HOST_NAME}}</MgtHostName>
     {% else -%}
         <!--MgtHostName>mgt.wso2.org</MgtHostName-->
     {% endif -%}
