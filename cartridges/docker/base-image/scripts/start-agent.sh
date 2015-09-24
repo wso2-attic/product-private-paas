@@ -1,24 +1,21 @@
 #!/bin/bash
-# --------------------------------------------------------------
+# ------------------------------------------------------------------------
 #
-# Licensed to the Apache Software Foundation (ASF) under one
-# or more contributor license agreements.  See the NOTICE file
-# distributed with this work for additional information
-# regarding copyright ownership.  The ASF licenses this file
-# to you under the Apache License, Version 2.0 (the
-# "License"); you may not use this file except in compliance
-# with the License.  You may obtain a copy of the License at
+# Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
 #
-#     http://www.apache.org/licenses/LICENSE-2.0
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# Unless required by applicable law or agreed to in writing,
-# software distributed under the License is distributed on an
-# "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-# KIND, either express or implied.  See the License for the
-# specific language governing permissions and limitations
-# under the License.
+# http://www.apache.org/licenses/LICENSE-2.0
 #
-# --------------------------------------------------------------
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License
+#
+# ------------------------------------------------------------------------
 
 # run script sets the configurable parameters for the cartridge agent in agent.conf and
 # starts the cartridge agent process.
@@ -26,20 +23,22 @@
 
 source /root/.bashrc
 
-export STRATOS_VERSION="4.1.0-SNAPSHOT"
-export PCA_HOME="/opt/apache-stratos-python-cartridge-agent-${STRATOS_VERSION}"
-
 set -o posix ; set | sed -e ':a;N;$!ba;s/\n/,/g' > ${PCA_HOME}/payload/launch-params
-
+# set PCA_HOME
 echo "PCA_HOME=${PCA_HOME}" >> /etc/environment
 
-#mandatory parameters
+# set CARBON_HOME as APPLICATION_PATH for carbon products
+if [ "${CARBON_HOME}" ] && [ "${MULTITENANT}" == "true" ]; then
+	export APPLICATION_PATH="${CARBON_HOME}"
+	echo "APPLICATION_PATH=${APPLICATION_PATH}" >> /etc/environment
+fi
+
+# mandatory parameters
 sed -i "s/MB-IP/${MB_IP}/g" ${PCA_HOME}/agent.conf
 sed -i "s/MB-PORT/${MB_PORT}/g" ${PCA_HOME}/agent.conf
 
-
-#parameters that can be empty
-#default values have to be set
+# parameters that can be empty
+# default values have to be set
 
 if [ -z "${LISTEN_ADDR}" ]; then
 	sed -i "s/LISTEN_ADDR/localhost/g" ${PCA_HOME}/agent.conf
@@ -47,17 +46,11 @@ else
 	sed -i "s/LISTEN_ADDR/${LISTEN_ADDR}/g" ${PCA_HOME}/agent.conf
 fi
 
-# defaults to the message broker IP if not set
-if [ -z "${CEP_IP}" ]; then
-	sed -i "s/CEP-IP/${MB_IP}/g" ${PCA_HOME}/agent.conf
+# defaults to the message broker if not set
+if [ -z "${CEP_URLS}" ]; then
+	sed -i "s/CEP-URLS/${MB_IP}:${MB-PORT}/g" ${PCA_HOME}/agent.conf
 else
-	sed -i "s/CEP-IP/${CEP_IP}/g" ${PCA_HOME}/agent.conf
-fi
-
-if [ -z "${CEP_PORT}" ]; then
-	sed -i "s/CEP-PORT/7711/g" ${PCA_HOME}/agent.conf
-else
-	sed -i "s/CEP-PORT/${CEP_PORT}/g" ${PCA_HOME}/agent.conf
+	sed -i "s/CEP-URLS/${CEP_URLS}/g" ${PCA_HOME}/agent.conf
 fi
 
 if [ -z "${CEP_USERNAME}" ]; then
@@ -112,6 +105,18 @@ if [ -z "${ARTFCT_UPDATE_INT}" ]; then
 	sed -i "s/ARTFCT_UPDATE_INT/15/g" ${PCA_HOME}/agent.conf
 else
 	sed -i "s/ARTFCT_UPDATE_INT/${ARTFCT_UPDATE_INT}/g" ${PCA_HOME}/agent.conf
+fi
+
+if [ -z "${ARTFCT_CLONE_RETRIES}" ]; then
+	sed -i "s/ARTFCT_CLONE_RETRIES/5/g" ${PCA_HOME}/agent.conf
+else
+	sed -i "s/ARTFCT_CLONE_RETRIES/${ARTFCT_CLONE_RETRIES}/g" ${PCA_HOME}/agent.conf
+fi
+
+if [ -z "${ARTFCT_CLONE_INT}" ]; then
+	sed -i "s/ARTFCT_CLONE_INT/10/g" ${PCA_HOME}/agent.conf
+else
+	sed -i "s/ARTFCT_CLONE_INT/${ARTFCT_CLONE_INT}/g" ${PCA_HOME}/agent.conf
 fi
 
 if [ -z "${PORT_CHECK_TIMEOUT}" ]; then
