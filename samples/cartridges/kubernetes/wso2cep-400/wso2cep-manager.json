@@ -55,7 +55,7 @@
         },
         {
             "name":"payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_URL",
-            "value":"jdbc:mysql://172.31.9.0:3306/output_db?autoReconnect=true"
+            "value":"jdbc:mysql://172.17.42.1:3306/output_db?autoReconnect=true"
         },
         {
             "name":"payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_USER_NAME",

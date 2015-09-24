@@ -4,8 +4,8 @@
     "kubernetesMaster": {
         "hostId": "master",
         "hostname": "master.dev.kubernetes.org",
-        "privateIPAddress": "54.255.233.209",
-        "publicIPAddress": "54.255.233.209",
+        "privateIPAddress": "172.17.8.101",
+        "publicIPAddress": "172.17.8.101",
         "property": [
         ]
     },
@@ -17,48 +17,48 @@
         {
             "hostId": "minion-0",
             "hostname": "minion-0.dev.kubernetes.org",
-            "privateIPAddress": "54.255.138.223",
-            "publicIPAddress": "54.255.138.223",
+            "privateIPAddress": "172.17.8.102",
+            "publicIPAddress": "172.17.8.102",
             "property": [
             ]
         },
         {
             "hostId": "minion-1",
             "hostname": "minion-1.dev.kubernetes.org",
-            "privateIPAddress": "54.255.233.253",
-            "publicIPAddress": "54.255.233.253",
+            "privateIPAddress": "172.17.8.103",
+            "publicIPAddress": "172.17.8.103",
             "property": [
             ]
         },
         {
             "hostId": "minion-2",
             "hostname": "minion-2.dev.kubernetes.org",
-            "privateIPAddress": "54.255.233.255",
-            "publicIPAddress": "54.255.233.255",
+            "privateIPAddress": "172.17.8.104",
+            "publicIPAddress": "172.17.8.104",
             "property": [
             ]
         },
         {
             "hostId": "minion-3",
             "hostname": "minion-3.dev.kubernetes.org",
-            "privateIPAddress": "54.255.233.252",
-            "publicIPAddress": "54.255.233.252",
+            "privateIPAddress": "172.17.8.105",
+            "publicIPAddress": "172.17.8.105",
             "property": [
             ]
         },
         {
             "hostId": "minion-4",
             "hostname": "minion-4.dev.kubernetes.org",
-            "privateIPAddress": "54.255.196.6",
-            "publicIPAddress": "54.255.196.6",
+            "privateIPAddress": "172.17.8.106",
+            "publicIPAddress": "172.17.8.106",
             "property": [
             ]
         },
         {
             "hostId": "minion-5",
             "hostname": "minion-5.dev.kubernetes.org",
-            "privateIPAddress": "54.255.138.58",
-            "publicIPAddress": "54.255.138.58",
+            "privateIPAddress": "172.17.8.107",
+            "publicIPAddress": "172.17.8.107",
             "property": [
             ]
         }
@@ -66,7 +66,7 @@
     "property": [
         {
             "name": "payload_parameter.MB_IP",
-            "value": "172.31.17.94"
+            "value": "172.17.8.1"
         },
         {
             "name": "payload_parameter.MB_PORT",
@@ -74,7 +74,7 @@
         },
         {
             "name": "payload_parameter.CEP_URLS",
-            "value": "172.31.17.94:7711"
+            "value": "172.17.8.1:7711"
         },
         {
             "name": "payload_parameter.LOG_LEVEL",
@@ -82,7 +82,7 @@
         },
         {
             "name": "payload_parameter.METADATA_SERVICE_URL",
-            "value": "https://172.31.17.94:9443"
+            "value": "https://172.17.8.1:9443"
         }
     ]
 }
