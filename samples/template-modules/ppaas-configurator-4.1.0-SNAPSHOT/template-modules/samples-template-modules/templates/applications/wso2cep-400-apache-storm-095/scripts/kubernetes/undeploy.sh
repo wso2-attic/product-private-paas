@@ -29,5 +29,5 @@ common_folder=`cd "${script_path}/../common"; pwd`
 
 bash ${common_folder}/undeploy.sh
 
-echo "Removing kubernetes cluster..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/kubernetesClusters/kubernetes-cluster-1
+#echo "Removing kubernetes cluster..."
+#curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/kubernetesClusters/kubernetes-cluster-1

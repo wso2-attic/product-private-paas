@@ -37,7 +37,7 @@
                 "storm-nimbus"
             ],
             "dependencies": {
-                "terminationBehaviour": "terminate-dependents",
+                "terminationBehaviour": "terminate-none",
                 "startupOrders": [
                     {
                         "aliases": [

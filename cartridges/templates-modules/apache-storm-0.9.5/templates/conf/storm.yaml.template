@@ -58,12 +58,12 @@ storm.zookeeper.servers:
 
 {% if CONFIG_PARAM_STORM_TYPE == 'supervisor' -%}
 {% if CONFIG_PARAM_SUPERVISOR_CHILD_OPTS is defined -%}
-supervisor.childopts: "-Xmx{{CONFIG_PARAM_SUPERVISOR_CHILD_OPTS}}"
+supervisor.childopts: "{{CONFIG_PARAM_SUPERVISOR_CHILD_OPTS}}"
 {% else -%}
 supervisor.childopts: "-Xmx256m"
 {% endif -%}
 {% if CONFIG_PARAM_SUPERVISOR_CHILD_OPTS is defined -%}
-worker.childopts: "-Xmx{{CONFIG_PARAM_WORKER_CHILD_OPTS}}"
+worker.childopts: "{{CONFIG_PARAM_WORKER_CHILD_OPTS}}"
 {% else -%}
 worker.childopts: "-Xmx768m"
 {% endif -%}

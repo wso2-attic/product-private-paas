@@ -55,7 +55,7 @@
         },
         {
             "name":"payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_URL",
-            "value":"jdbc:mysql://172.17.42.1:3306/output_db?autoReconnect=true"
+            "value":"jdbc:mysql://172.31.9.0:3306/output_db?autoReconnect=true"
         },
         {
             "name":"payload_parameter.CONFIG_PARAM_OUTPUT_DATA_DB_USER_NAME",
@@ -71,39 +71,15 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_XMX",
-            "value": "4096m"
+            "value": "2048m"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_MAX_PERM_SIZE",
             "value": "1024m"
         },
         {
-            "name": "payload_parameter.CONFIG_PARAM_WORKER_THREADS",
-            "value": "40"
-        },
-        {
-            "name": "payload_parameter.CONFIG_PARAM_MAX_EVENT_BUFFER_CAPACITY",
-            "value": "400"
-        },
-        {
-            "name": "payload_parameter.CONFIG_PARAM_EVENT_BUFFER_SIZE",
-            "value": "40000"
-        },
-        {
-            "name": "payload_parameter.CONFIG_PARAM_QUEUE_SIZE",
-            "value": "65536"
-        },
-        {
-            "name": "payload_parameter.CONFIG_PARAM_BATCH_SIZE",
-            "value": "800"
-        },
-        {
-            "name": "payload_parameter.CONFIG_PARAM_CORE_POOL_SIZE",
-            "value": "100"
-        },
-        {
-            "name": "payload_parameter.CONFIG_PARAM_MAX_POOL_SIZE",
-            "value": "200"
+            "name": "payload_parameter.CONFIG_PARAM_STORM_SPOUT_BUFFER_SIZE",
+            "value": "50000"
         }
     ]
 }

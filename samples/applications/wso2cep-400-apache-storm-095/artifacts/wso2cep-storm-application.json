@@ -1,5 +1,5 @@
 {
-    "applicationId":"wso2cep-storm-application",
+    "applicationId":"cep-storm-app",
     "alias":"my-wso2cep-storm-application",
     "multiTenant":false,
     "components":{
@@ -38,7 +38,7 @@
                             {
                                 "type": "storm-supervisor",
                                 "cartridgeMin": 4,
-                                "cartridgeMax": 6,
+                                "cartridgeMax": 4,
                                 "subscribableInfo": {
                                     "alias": "my-storm-supervisor",
                                     "autoscalingPolicy": "autoscaling-policy-1"

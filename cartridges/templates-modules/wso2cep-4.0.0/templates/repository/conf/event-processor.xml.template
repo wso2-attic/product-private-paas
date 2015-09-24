@@ -42,8 +42,6 @@
             <publisherTcpSendBufferSize>5242880</publisherTcpSendBufferSize>
             <!--Character encoding of TCP event publishing client-->
             <publisherCharSet>UTF-8</publisherCharSet>
-            <!--Number of threads to be used by TCPEvent Server to publish events to the CEP nodes-->
-            <receiverThreads>10</receiverThreads>
             <publisherBufferSize>1024</publisherBufferSize>
             <publisherConnectionStatusCheckInterval>30000</publisherConnectionStatusCheckInterval>
             <!--Number of events that could be queued at receiver before they are synced between CEP nodes-->
@@ -65,7 +63,6 @@
             <!--Character encoding of TCP event publishing client-->
             <publisherCharSet>UTF-8</publisherCharSet>
             <!--Number of threads to be used by TCPEvent Server to publish events to the CEP nodes-->
-            <receiverThreads>10</receiverThreads>
             <publisherBufferSize>1024</publisherBufferSize>
             <publisherConnectionStatusCheckInterval>30000</publisherConnectionStatusCheckInterval>
         </presentation>
@@ -132,8 +129,12 @@
             <tcpEventPublisherSendBufferSize>5242880</tcpEventPublisherSendBufferSize>
             <!--Character encoding of TCP event publishing client-->
             <tcpEventPublisherCharSet>UTF-8</tcpEventPublisherCharSet>
-            <!--Number of threads to be used by event receiving servers in "Storm Receivers" and "CEP Publishers"-->
-            <tcpEventReceiverThreadCount>10</tcpEventReceiverThreadCount>
+            <!--Size of the event queue in each storm spout which stores events to be processed by storm bolts -->
+        {% if CONFIG_PARAM_STORM_SPOUT_BUFFER_SIZE is defined -%}
+            <stormSpoutBufferSize>{{CONFIG_PARAM_STORM_SPOUT_BUFFER_SIZE}}</stormSpoutBufferSize>
+        {% else -%}
+            <stormSpoutBufferSize>10000</stormSpoutBufferSize>
+        {% endif -%}
 
             <connectionStatusCheckInterval>20000</connectionStatusCheckInterval>
         </transport>
@@ -144,8 +145,6 @@
             <tcpEventPublisherSendBufferSize>5242880</tcpEventPublisherSendBufferSize>
             <!--Character encoding of TCP event publishing client-->
             <tcpEventPublisherCharSet>UTF-8</tcpEventPublisherCharSet>
-            <!--Number of threads to be used by event receiving servers in "Storm Receivers" and "CEP Publishers"-->
-            <tcpEventReceiverThreadCount>10</tcpEventReceiverThreadCount>
 
             <connectionStatusCheckInterval>20000</connectionStatusCheckInterval>
         </presentation>

@@ -12,7 +12,7 @@
         {
             "name": "http-9763",
             "protocol": "http",
-            "port": "22",
+            "port": "6700",
             "proxyPort": 0,
             "kubernetesPortType": "NodePort"
         }
@@ -52,11 +52,11 @@
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_SUPERVISOR_CHILD_OPTS",
-            "value": "1024m"
+            "value": "-Xmx1024m"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_WORKER_CHILD_OPTS",
-            "value": "4096m"
+            "value": "-Xmx4096m"
         }
     ]
 }

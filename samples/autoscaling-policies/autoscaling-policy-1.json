@@ -5,7 +5,7 @@
             "threshold": 20
         },
         "memoryConsumption": {
-            "threshold": 80
+            "threshold": 100
         },
         "loadAverage": {
             "threshold": 120
