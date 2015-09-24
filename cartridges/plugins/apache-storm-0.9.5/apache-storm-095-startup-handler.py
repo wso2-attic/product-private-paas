@@ -39,6 +39,7 @@ class StormStartupHandler(ICartridgeAgentPlugin):
     CONST_STORM_TYPE_SUPERVISOR = "supervisor"
     CONST_ZOOKEEPER_SERVICE_TYPE = "zookeeper"
     CONST_NIMBUS_SERVICE_TYPE = "storm-nimbus"
+    CONST_MIN_COUNT = "MIN_COUNT"
     ENV_ZOOKEEPER_HOSTNAMES = "CONFIG_PARAM_ZOOKEEPER_HOSTNAMES"
     ENV_NIMBUS_HOSTNAME = "CONFIG_PARAM_NIMBUS_HOSTNAME"
     CONST_MAX_RETRY_COUNT = 5
@@ -218,20 +219,37 @@ class StormStartupHandler(ICartridgeAgentPlugin):
 
         for member in member_map:
             member_id = member_map[member].member_id
-            default_private_ip = member_map[member].member_default_private_ip
-            StormStartupHandler.log.info("Storm Supervisor [member_id] %s [member_ip]%s" % (member_id, default_private_ip))
-            if default_private_ip is not None:
-                member_id_member_ip_dictionary[member_id] = default_private_ip
+            member_properties = member_map[member].properties
+            if member_properties is not None:
+                min_member_count = member_properties[self.CONST_MIN_COUNT]
+                if int(min_member_count) <= len(member_map):
+                    default_private_ip = member_map[member].member_default_private_ip
+                    StormStartupHandler.log.info("Storm Supervisor [member_id] %s [member_ip]%s" % (member_id, default_private_ip))
+                    if default_private_ip is not None:
+                        member_id_member_ip_dictionary[member_id] = default_private_ip
+                    else:
+                        StormStartupHandler.log.warn(
+                            "default member ip for [member_id] %s is empty, hence re-initializing topology " % member_id)
+                        if self.current_attempt < self.CONST_MAX_RETRY_COUNT:
+                            time.sleep(60)
+                            self.current_attempt = self.current_attempt + 1
+                            topology = TopologyContext.topology
+                            supervisor_cluster = self.get_cluster_of_service(topology, service_type, app_id)
+                            if supervisor_cluster is not None:
+                                member_map = supervisor_cluster.member_map
+                                self.get_member_id_member_ip_dictionary(member_map, service_type, app_id)
+                else:
+                    StormStartupHandler.log.warn(
+                        "Member [member] %s min-count does not match, hence re-initializing topology " % member_id)
+                    if self.current_attempt < self.CONST_MAX_RETRY_COUNT:
+                        time.sleep(60)
+                        self.current_attempt = self.current_attempt + 1
+                        topology = TopologyContext.topology
+                        supervisor_cluster = self.get_cluster_of_service(topology, service_type, app_id)
+                        if supervisor_cluster is not None:
+                            member_map = supervisor_cluster.member_map
+                            self.get_member_id_member_ip_dictionary(member_map, service_type, app_id)
             else:
                 StormStartupHandler.log.warn(
-                    "default member ip for [member_id] %s is empty, hence re-initializing topology " % member_id)
-                if self.current_attempt < self.CONST_MAX_RETRY_COUNT:
-                    time.sleep(60)
-                    self.current_attempt = self.current_attempt + 1
-                    topology = TopologyContext.topology
-                    supervisor_cluster = self.get_cluster_of_service(topology, service_type, app_id)
-                    if supervisor_cluster is not None:
-                        member_map = supervisor_cluster.member_map
-                        self.get_member_id_member_ip_dictionary(member_map, service_type, app_id)
-
+                    "Member [member] %s properties are empty." % member_id)
         return member_id_member_ip_dictionary
