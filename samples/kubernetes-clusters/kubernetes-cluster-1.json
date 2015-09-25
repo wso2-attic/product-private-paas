@@ -77,6 +77,10 @@
             "value": "172.17.8.1:7711"
         },
         {
+            "name": "payload_parameter.CEP_PASSWORD",
+            "value": "admin"
+        },
+        {
             "name": "payload_parameter.LOG_LEVEL",
             "value": "DEBUG"
         },

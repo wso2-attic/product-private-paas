@@ -32,11 +32,11 @@
     "property": [
         {
             "name": "KUBERNETES_CONTAINER_CPU",
-            "value": "0"
+            "value": "4"
         },
         {
             "name": "KUBERNETES_CONTAINER_MEMORY",
-            "value": "0"
+            "value": "8Gi"
         },
         {
             "name": "KUBERNETES_SERVICE_SESSION_AFFINITY",
