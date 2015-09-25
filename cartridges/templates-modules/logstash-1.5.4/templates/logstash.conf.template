@@ -16,6 +16,7 @@ filter {
 output {
     elasticsearch {
         host => "{{CONFIG_PARAM_ELASTIC_SEARCH_IP}}"
+        protocol => "http"
     }
     stdout { codec => rubydebug }
 }
