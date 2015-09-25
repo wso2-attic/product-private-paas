@@ -20,9 +20,7 @@ carbon.spark.master.count  {{CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT}}
 {% else -%}
 carbon.spark.master.count  1
 {% endif -%}
-# carbon.spark.master.count  3
-# carbon.spark.client.mode  false (external or client)
-
+carbon.das.symbolic.link {{CONFIG_PARAM_SYMBOLIC_LINK}}
 
 # ------------------------------------------------------
 # SPARK PROPERTIES
