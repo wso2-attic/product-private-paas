@@ -53,7 +53,16 @@
             "publicIPAddress": "{{MINION_FIVE_PUBLIC_IP}}",
             "property": [
             ]
+        },
+        {
+            "hostId": "minion-6",
+            "hostname": "minion-6.dev.kubernetes.org",
+            "privateIPAddress": "{{MINION_SIX_PRIVATE_IP}}",
+            "publicIPAddress": "{{MINION_SIX_PRIVATE_IP}}",
+            "property": [
+            ]
         }
+
     ],
     "property": [
         {
