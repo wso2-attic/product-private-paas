@@ -1,0 +1,21 @@
+input{
+    file {
+        path => "{{CONFIG_PARAM_LOG_FILE_PATH}}"
+        type => "log4j"
+    }
+}
+
+filter {
+	mutate {
+	  add_field => { "TEAM" => "{{CONFIG_PARAM_TEAM_ID}}" }
+	  add_field => { "SERVICE_TYPE" => "{{CONFIG_PARAM_SERVICE_TYPE}}" }
+	  add_field => { "PRIVATE_IP" => "{{CONFIG_PARAM_LOCAL_MEMBER_HOST}}" }
+	}
+}
+
+output {
+    elasticsearch {
+        host => "{{CONFIG_PARAM_ELASTIC_SEARCH_IP}}"
+    }
+    stdout { codec => rubydebug }
+}

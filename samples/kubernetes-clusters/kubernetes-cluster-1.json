@@ -83,6 +83,14 @@
         {
             "name": "payload_parameter.METADATA_SERVICE_URL",
             "value": "https://172.17.8.1:9443"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_TEAM_ID",
+            "value": "team15"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_ELASTIC_SEARCH_IP",
+            "value": "127.0.0.1"
         }
     ]
 }

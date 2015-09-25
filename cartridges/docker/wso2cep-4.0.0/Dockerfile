@@ -23,13 +23,16 @@ ENV DEBIAN_FRONTEND noninteractive
 ENV WSO2_SERVER_TYPE cep
 ENV WSO2_SERVER_VERSION 4.0.0
 ENV TEMPLATE_MODULE_NAME wso2${WSO2_SERVER_TYPE}-${WSO2_SERVER_VERSION}-template-module-${PPAAS_VERSION}
+ENV LOGSTASH_TEMPLATE_MODULE logstash-1.5.4-template-module-${PPAAS_VERSION}
 
 # --------------------------------
 # Copy scripts, packages & plugins
 # --------------------------------
 COPY scripts/init.sh /usr/local/bin/init.sh
 COPY packages/${TEMPLATE_MODULE_NAME}.zip /opt/
+COPY packages/${LOGSTASH_TEMPLATE_MODULE}.zip /opt/
 COPY packages/wso2${WSO2_SERVER_TYPE}-${WSO2_SERVER_VERSION}.zip /opt/
+COPY packages/logstash-1.5.4.tar.gz /opt/
 COPY plugins ${PCA_HOME}/plugins
 
 # -------------------------------
@@ -37,8 +40,12 @@ COPY plugins ${PCA_HOME}/plugins
 # -------------------------------
 WORKDIR /opt
 
-RUN unzip /opt/${TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
-    rm -rf /opt/${TEMPLATE_MODULE_NAME}.zip
+RUN tar xzvf /opt/logstash-1.5.4.tar.gz && \
+    rm /opt/logstash-1.5.4.tar.gz && \
+    unzip /opt/${TEMPLATE_MODULE_NAME}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
+    unzip /opt/${LOGSTASH_TEMPLATE_MODULE}.zip -d ${CONFIGURATOR_HOME}/template-modules && \
+    rm -rf /opt/${TEMPLATE_MODULE_NAME}.zip \
+    rm -rf /opt/${LOGSTASH_TEMPLATE_MODULE}.zip
 
 # ----------------------
 # Expose container ports

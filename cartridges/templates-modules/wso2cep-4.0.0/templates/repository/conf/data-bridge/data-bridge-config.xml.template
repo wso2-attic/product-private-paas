@@ -30,7 +30,12 @@
   {% else -%}
     <eventBufferSize>2000</eventBufferSize>
   {% endif -%}
+  {% if CONFIG_PARAM_CLIENT_TIMEOUT_MIN is defined -%}
+    <clientTimeoutMin>{{CONFIG_PARAM_CLIENT_TIMEOUT_MIN}}</clientTimeoutMin>>
+  {% else -%}
     <clientTimeoutMin>30</clientTimeoutMin>
+  {% endif -%}
+
 
     <dataReceiver name="Thrift">
         <config name="tcpPort">7611</config>

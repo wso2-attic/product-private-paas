@@ -25,6 +25,7 @@ wso2_ppaas_version="4.1.0-SNAPSHOT"
 wso2_product_type="cep"
 wso2_product_version="4.0.0"
 wso2_product_template_module_path=`cd ${script_path}/../../templates-modules/wso2${wso2_product_type}-${wso2_product_version}/; pwd`
+logstash_template_module_path=`cd ${script_path}/../../templates-modules/logstash-1.5.4/; pwd`
 wso2_product_plugin_path=`cd ${script_path}/../../plugins/wso2${wso2_product_type}-${wso2_product_version}/; pwd`
 clean=false
 
@@ -39,6 +40,14 @@ if ${clean} ; then
    pushd ${wso2_product_template_module_path}
    mvn clean install
    cp -v target/wso2${wso2_product_type}-${wso2_product_version}-template-module-${wso2_ppaas_version}.zip ${script_path}/packages/
+   popd
+
+   echo "-----------------------------------"
+   echo "Building logstash 1.5.4 template module"
+   echo "-----------------------------------"
+   pushd ${logstash_template_module_path}
+   mvn clean install
+   cp -v target/logstash-1.5.4-template-module-${wso2_ppaas_version}.zip ${script_path}/packages/
    popd
 
    echo "----------------------------------"

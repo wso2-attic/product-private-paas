@@ -80,6 +80,10 @@
         {
             "name": "payload_parameter.CONFIG_PARAM_STORM_SPOUT_BUFFER_SIZE",
             "value": "50000"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_CLIENT_TIMEOUT_MIN",
+            "value": "5000"
         }
     ]
 }
