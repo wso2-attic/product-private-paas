@@ -143,7 +143,7 @@ if [ ! -z "${METADATA_SERVICE_URL}" ]; then
 fi
 
 if [ ! -z "${LOG_LEVEL}" ]; then
-	sed -i "s/LOG_LEVEL/${LOG_LEVEL}/g" ${PCA_HOME}/logging.ini
+	sed -i "s/^.*level.*=.*$/level=${LOG_LEVEL}/g" ${PCA_HOME}/logging.ini
 fi
 
 # Start cartridge agent

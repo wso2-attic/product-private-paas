@@ -29,13 +29,13 @@ args=tuple()
 
 [handler_log_file]
 class=logging.FileHandler
-level=INFO
+level=<%= @agent_log_level %>
 formatter=default
 args=("agent.log", "w")
 
 [handler_error_file]
 class=logging.FileHandler
-level=ERROR
+level=<%= @agent_log_level %>
 formatter=default
 args=("error.log", "w")
 
@@ -43,6 +43,6 @@ args=("error.log", "w")
 keys=root
 
 [logger_root]
-level=DEBUG
+level=<%= @agent_log_level %>
 formatter=default
 handlers=console,error_file
