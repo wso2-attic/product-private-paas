@@ -177,9 +177,13 @@ class WSO2DASStartupHandler(ICartridgeAgentPlugin):
         start_command = None
         if profile:
             if profile == "receiver":
-                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -Dsetup -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true"
+                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dsetup -DdisableAnalyticsEngine=true " \
+                                "-DdisableAnalyticsExecution=true -DdisableIndexing=true -DdisableDataPurging=true " \
+                                "-DdisableAnalyticsSparkCtx=true -DdisableAnalyticsStats=truestart -Dsetup " \
+                                "-DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true start"
             elif profile == "analytics":
-                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -Dsetup -DdisableEventSink=true"
+                start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dsetup -DdisableIndexing=true -DdisableEventSink=true " \
+                                "-DdisableDataPurging=true start"
             elif profile == "dashboard":
                 start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start -Dsetup -DdisableEventSink=true -DdisableAnalyticsExecution=true -DdisableAnalyticsEngine=true"
             elif profile == "default":
