@@ -29,19 +29,18 @@ from jinja2 import Environment, FileSystemLoader, meta
 import constants
 from configparserutil import ConfigParserUtil
 
-
 PATH = os.path.dirname(os.path.abspath(__file__))
 
 logging.config.fileConfig(os.path.join(PATH, 'conf', 'logging_config.ini'))
 log = logging.getLogger(__name__)
 
-TEMPLATE_ENVIRONMENT = Environment(
-    autoescape=False,
-    loader=FileSystemLoader(os.path.join(PATH)),
-    trim_blocks=False)
 PACK_LOCATION = None
 READ_FROM_ENVIRONMENT = None
-
+TEMPLATE_DIRECTORY = None
+TEMPLATE_ENVIRONMENT = Environment(
+    autoescape=False,
+    loader=FileSystemLoader(os.path.abspath(os.sep)),
+    trim_blocks=False)
 
 def render_template(template_filename, default_context):
     """
@@ -139,7 +138,6 @@ def traverse(root_dir, context):
                 os.path.splitext(os.path.relpath(os.path.join(dir_name, file_name), root_dir))[0]
             config_file_name = os.path.join(PACK_LOCATION,
                                             config_file_name)
-            template_file_name = template_file_name.split("/./")[1]
             log.debug("Template file: %s ", template_file_name)
             log.debug("Output configuration file: %s ", config_file_name)
             generate_file_from_template(template_file_name, config_file_name, context)
@@ -161,17 +159,24 @@ def configure():
     """
     log.info("Configurator started")
     # traverse through the template directory
-    for dirName in os.listdir(os.path.join(PATH, constants.TEMPLATE_DIRECTORY)):
+    global TEMPLATE_DIRECTORY
+    TEMPLATE_DIRECTORY = os.environ.get("CONFIGURATOR_TEMPLATE_PATH", constants.TEMPLATE_DIRECTORY)
+    print os.path.join(PATH, TEMPLATE_DIRECTORY)
+    for dirName in os.listdir(os.path.join(PATH, TEMPLATE_DIRECTORY)):
         if dirName == ".gitkeep":
             continue
 
-        module_file_path = os.path.join(constants.TEMPLATE_DIRECTORY, dirName,
+        module_file_path = os.path.join(TEMPLATE_DIRECTORY, dirName,
                                         constants.CONFIG_FILE_NAME)
-        template_dir = os.path.join(PATH, constants.TEMPLATE_DIRECTORY, dirName,
+        template_dir = os.path.join(PATH, TEMPLATE_DIRECTORY, dirName,
                                     constants.TEMPLATE_FOLDER_NAME)
-        files_dir = os.path.join(PATH, constants.TEMPLATE_DIRECTORY, dirName,
+        files_dir = os.path.join(PATH, TEMPLATE_DIRECTORY, dirName,
                                  constants.FILES_DIRECTORY_NAME)
-        log.info("module.ini file found: %s", module_file_path)
+        if os.path.isfile(module_file_path):
+            log.info("module.ini file found: %s", module_file_path)
+        else:
+            log.error("module.ini file not found in path: %s", module_file_path)
+            return
         log.info("Template directory: %s", template_dir)
         context = generate_context(module_file_path)
         traverse(template_dir, context)
