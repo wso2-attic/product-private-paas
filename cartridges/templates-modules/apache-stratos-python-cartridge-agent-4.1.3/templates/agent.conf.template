@@ -1,0 +1,40 @@
+#  Copyright 2005-2015 WSO2, Inc. http://www.wso2.org
+#
+#  Licensed under the Apache License, Version 2.0 (the "License");
+#  you may not use this file except in compliance with the License.
+#  You may obtain a copy of the License at
+#
+#      http://www.apache.org/licenses/LICENSE-2.0
+#
+#  Unless required by applicable law or agreed to in writing, software
+#  distributed under the License is distributed on an "AS IS" BASIS,
+#  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#  See the License for the specific language governing permissions and
+#  limitations under the License.
+
+[agent]
+mb.ip                                 ={{ CONFIG_PARAMS_MB_IP }}
+mb.port                               ={{ CONFIG_PARAMS_MB_PORT }}
+listen.address                        ={{ CONFIG_PARAMS_LISTEN_ADDRESS }}
+thrift.receiver.urls                  ={{ CONFIG_PARAMS_CEP_URLS }}
+thrift.server.admin.username          ={{ CONFIG_PARAMS_CEP_USER_NAME }}
+thrift.server.admin.password          ={{ CONFIG_PARAMS_CEP_PASSWORD }}
+cep.stats.publisher.enabled           ={{ CONFIG_PARAMS_CEP_STATUS_ENABLED }}
+enable.artifact.update                ={{ CONFIG_PARAMS_ENABLE_ARTIFACT_UPDATE }}
+auto.commit                           ={{ CONFIG_PARAMS_AUTO_COMMIT }}
+auto.checkout                         ={{ CONFIG_PARAMS_AUTO_CHECKOUT }}
+artifact.update.interval              ={{ CONFIG_PARAMS_ARTIFACT_UPDATE_INTERVAL }}
+artifact.clone.retries                ={{ CONFIG_PARAMS_ARTIFACT_CLONE_RETRIES }}
+artifact.clone.interval               ={{ CONFIG_PARAMS_ARTIFACT_CLONE_INTERVAL }}
+port.check.timeout                    ={{ CONFIG_PARAMS_PORT_CHECK_TIMEOUT }}
+enable.data.publisher                 ={{ CONFIG_PARAMS_ENABLE_LOG_PUBLISHER }}
+monitoring.server.ip                  ={{ CONFIG_PARAMS_BAM_IP }}
+monitoring.server.port                ={{ CONFIG_PARAMS_BAM_PORT }}
+monitoring.server.secure.port         ={{ CONFIG_PARAMS_BAM_SECURE_PORT }}
+monitoring.server.admin.username      ={{ CONFIG_PARAMS_BAM_USERNAME }}
+monitoring.server.admin.password      ={{ CONFIG_PARAMS_BAM_PASSWORD }}
+log.file.paths                        ={{ CONFIG_PARAMS_LOG_FILE_PATHS }}
+APPLICATION_PATH                      ={{ CONFIG_PARAMS_APPLICATION_PATH }}
+metadata.service.url                  ={{ CONFIG_PARAMS_METADATA_URL }}
+super.tenant.repository.path          ={{ CONFIG_PARAM_SUPER_TENANT_REPOSITORY_PATH }}
+tenant.repository.path                ={{ CONFIG_PARAM_TENANT_REPOSITORY_PATH }}
