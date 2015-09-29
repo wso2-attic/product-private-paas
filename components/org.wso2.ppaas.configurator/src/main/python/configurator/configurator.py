@@ -81,7 +81,7 @@ def generate_file_from_template(template_path, output_path, context):
     if not os.path.exists(directory):
         os.makedirs(directory)
     with open(output_path, 'w') as xml_file:
-        log.info("Creating output file: " + output_path)
+        log.info("Rendering output file: " + output_path)
         content = render_template(template_path, context)
         log.debug("Creating content: " + content)
         xml_file.write(content)
@@ -161,7 +161,7 @@ def configure():
     # traverse through the template directory
     global TEMPLATE_DIRECTORY
     TEMPLATE_DIRECTORY = os.environ.get("CONFIGURATOR_TEMPLATE_PATH", constants.TEMPLATE_DIRECTORY)
-    print os.path.join(PATH, TEMPLATE_DIRECTORY)
+    log.info("Scanning template directory :%s" % TEMPLATE_DIRECTORY)
     for dirName in os.listdir(os.path.join(PATH, TEMPLATE_DIRECTORY)):
         if dirName == ".gitkeep":
             continue
