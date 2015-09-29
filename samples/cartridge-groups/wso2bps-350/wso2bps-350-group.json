@@ -1,0 +1,17 @@
+{
+    "name": "wso2bps-350-group",
+    "cartridges": [
+        "wso2bps-350-manager",
+        "wso2bps-350-worker"
+    ],
+    "dependencies": {
+        "startupOrders": [
+            {
+                "aliases": [
+                    "cartridge.wso2bps-350-manager",
+                    "cartridge.wso2bps-350-worker"
+                ]
+            }
+        ]
+    }
+}
