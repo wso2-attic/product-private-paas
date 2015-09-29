@@ -29,7 +29,7 @@ args=tuple()
 
 [handler_log_file]
 class=logging.FileHandler
-level=INFO
+level={{ CONFIG_PARAM_LOG_LEVEL }}
 formatter=default
 args=("agent.log", "w")
 
