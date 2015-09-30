@@ -34,7 +34,6 @@
 
     <modules>
         <module>extensions</module>
-        <module>cartridges</module>
         <module>components</module>
         <module>features</module>
         <module>products</module>
