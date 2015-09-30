@@ -57,6 +57,9 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     ENV_CONFIG_PARAM_HOST_NAME = 'CONFIG_PARAM_HOST_NAME'
     ENV_CONFIG_PARAM_MGT_HOST_NAME = 'CONFIG_PARAM_MGT_HOST_NAME'
     ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST = 'CONFIG_PARAM_LOCAL_MEMBER_HOST'
+    ENV_CONFIG_PARAM_HTTP_SERVLET_PORT = 'CONFIG_PARAM_HTTP_SERVLET_PORT'
+    ENV_CONFIG_PARAM_HTTPS_SERVLET_PORT = 'CONFIG_PARAM_HTTPS_SERVLET_PORT'
+    ENV_CONFIG_PARAM_PORT_OFFSET = 'CONFIG_PARAM_PORT_OFFSET'
 
     # clustering related environment variables read from payload_parameters
     ENV_CONFIG_PARAM_CLUSTERING = 'CONFIG_PARAM_CLUSTERING'
@@ -73,6 +76,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         my_cluster_id = values[self.CONST_CLUSTER_ID]
         clustering = values.get(self.ENV_CONFIG_PARAM_CLUSTERING, 'false')
         membership_scheme = values.get(self.ENV_CONFIG_PARAM_MEMBERSHIP_SCHEME)
+        port_offset = values.get(self.ENV_CONFIG_PARAM_PORT_OFFSET)
         # read topology from PCA TopologyContext
         topology = TopologyContext.topology
 
@@ -84,15 +88,25 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         WSO2StartupHandler.log.info("Cluster ID: %s" % my_cluster_id)
         WSO2StartupHandler.log.info("Clustering: %s" % clustering)
         WSO2StartupHandler.log.info("Membership Scheme: %s" % membership_scheme)
+        WSO2StartupHandler.log.info("Port Offset: %s" % port_offset)
 
         # export Proxy Ports as Env. variables - used in catalina-server.xml
-        mgt_http_proxy_port = self.read_proxy_port(port_mappings_str, self.CONST_PORT_MAPPING_MGT_HTTP_TRANSPORT,
-                                                   self.CONST_PROTOCOL_HTTP)
-        mgt_https_proxy_port = self.read_proxy_port(port_mappings_str, self.CONST_PORT_MAPPING_MGT_HTTPS_TRANSPORT,
-                                                    self.CONST_PROTOCOL_HTTPS)
+        mgt_http_proxy_port = self.read_proxy_port(port_mappings_str, port_offset, self.CONST_PORT_MAPPING_MGT_HTTP_TRANSPORT,
+                                                   self.CONST_PROTOCOL_HTTP, self)
+        mgt_https_proxy_port = self.read_proxy_port(port_mappings_str, port_offset, self.CONST_PORT_MAPPING_MGT_HTTPS_TRANSPORT,
+                                                    self.CONST_PROTOCOL_HTTPS, self)
 
         self.export_env_var(self.ENV_CONFIG_PARAM_HTTP_PROXY_PORT, mgt_http_proxy_port)
         self.export_env_var(self.ENV_CONFIG_PARAM_HTTPS_PROXY_PORT, mgt_https_proxy_port)
+        
+        # export servlet ports as environment variables.
+        mgt_http_servlet_port = self.read_servlet_port(port_mappings_str, port_offset, self.CONST_PORT_MAPPING_MGT_HTTP_TRANSPORT,
+                                                   self.CONST_PROTOCOL_HTTP)
+        mgt_https_servlet_port = self.read_servlet_port(port_mappings_str, port_offset, self.CONST_PORT_MAPPING_MGT_HTTPS_TRANSPORT,
+                                                    self.CONST_PROTOCOL_HTTPS)
+
+        self.export_env_var(self.ENV_CONFIG_PARAM_HTTP_SERVLET_PORT, mgt_http_servlet_port)
+        self.export_env_var(self.ENV_CONFIG_PARAM_HTTPS_SERVLET_PORT, mgt_https_servlet_port)
 
         # set sub-domain
         sub_domain = None
@@ -201,7 +215,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         return cluster_obj
 
     @staticmethod
-    def read_proxy_port(port_mappings_str, port_mapping_name, port_mapping_protocol):
+    def read_proxy_port(port_mappings_str, port_offset, port_mapping_name, port_mapping_protocol, self):
         """
         returns proxy port of the requested port mapping
 
@@ -225,7 +239,8 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
                     proxy_port = name_value_array[3].split(":")[1]
                     # If PROXY_PORT is not set, set PORT as the proxy port (ex:Kubernetes),
                     if proxy_port == '0':
-                        proxy_port = name_value_array[2].split(":")[1]
+                        #proxy_port = name_value_array[2].split(":")[1]
+                        proxy_port = self.read_servlet_port(port_mappings_str, port_offset, port_mapping_name, port_mapping_protocol)
 
                     if name == port_mapping_name and protocol == port_mapping_protocol:
                         return proxy_port
@@ -242,3 +257,30 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
             WSO2StartupHandler.log.info("Exported environment variable %s: %s" % (variable, value))
         else:
             WSO2StartupHandler.log.warn("Could not export environment variable %s " % variable)
+
+
+    @staticmethod
+    def read_servlet_port(port_mappings_str, port_offset, port_mapping_name, port_mapping_protocol):
+        """
+        returns servlet port of the requested port mapping
+
+        :return: void
+        """
+        if port_mappings_str is not None:
+            port_mappings_array = port_mappings_str.split(";")
+            if port_mappings_array:
+
+                for port_mapping in port_mappings_array:
+                    # WSO2StartupHandler.log.debug("port_mapping: %s" % port_mapping)
+                    name_value_array = port_mapping.split("|")
+                    name = name_value_array[0].split(":")[1]
+                    protocol = name_value_array[1].split(":")[1]
+                    servlet_port = name_value_array[2].split(":")[1]
+
+                    if port_offset is None:
+                        port_offset = 0
+                        
+                    servlet_port = str(int(servlet_port) + int(port_offset))
+
+                    if name == port_mapping_name and protocol == port_mapping_protocol:
+                        return servlet_port
