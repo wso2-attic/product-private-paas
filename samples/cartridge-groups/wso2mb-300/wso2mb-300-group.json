@@ -1,0 +1,15 @@
+{
+    "name": "wso2mb-300-group",
+    "cartridges": [
+        "wso2mb-300"
+    ],
+    "dependencies": {
+        "startupOrders": [
+            {
+                "aliases": [
+                    "cartridge.wso2mb-300"
+                ]
+            }
+        ]
+    }
+}

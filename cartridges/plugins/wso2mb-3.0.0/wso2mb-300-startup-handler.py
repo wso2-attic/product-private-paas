@@ -36,8 +36,6 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     CONST_MB_IP = "MB_IP"
     CONST_SERVICE_NAME = "SERVICE_NAME"
     CONST_CLUSTER_ID = "CLUSTER_ID"
-    CONST_WORKER = "worker"
-    CONST_MANAGER = "manager"
     CONST_MGT = "mgt"
 
     CONST_PORT_MAPPING_MGT_HTTP_TRANSPORT = "mgt-http"
@@ -45,12 +43,11 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     CONST_PROTOCOL_HTTP = "http"
     CONST_PROTOCOL_HTTPS = "https"
     CONST_PPAAS_MEMBERSHIP_SCHEME = "private-paas"
-    CONST_PRODUCT = "BRS"
+    CONST_PRODUCT = "MB"
 
-    SERVICES = ["wso2brs-210-manager", "wso2brs-210-worker"]
+    SERVICES = ["wso2mb-300"]
 
     # list of environment variables exported by the plugin
-    ENV_CONFIG_PARAM_SUB_DOMAIN = 'CONFIG_PARAM_SUB_DOMAIN'
     ENV_CONFIG_PARAM_MB_HOST = 'CONFIG_PARAM_MB_HOST'
     ENV_CONFIG_PARAM_CLUSTER_IDs = 'CONFIG_PARAM_CLUSTER_IDs'
     ENV_CONFIG_PARAM_HTTP_PROXY_PORT = 'CONFIG_PARAM_HTTP_PROXY_PORT'
@@ -62,6 +59,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     # clustering related environment variables read from payload_parameters
     ENV_CONFIG_PARAM_CLUSTERING = 'CONFIG_PARAM_CLUSTERING'
     ENV_CONFIG_PARAM_MEMBERSHIP_SCHEME = 'CONFIG_PARAM_MEMBERSHIP_SCHEME'
+    ENV_CONFIG_PARAM_THRIFT_SERVER_HOST='CONFIG_PARAM_THRIFT_SERVER_HOST'
 
 
     def run_plugin(self, values):
@@ -95,14 +93,6 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         self.export_env_var(self.ENV_CONFIG_PARAM_HTTP_PROXY_PORT, mgt_http_proxy_port)
         self.export_env_var(self.ENV_CONFIG_PARAM_HTTPS_PROXY_PORT, mgt_https_proxy_port)
 
-        # set sub-domain
-        sub_domain = None
-        if service_type.endswith(self.CONST_MANAGER):
-            sub_domain = self.CONST_MGT
-        elif service_type.endswith(self.CONST_WORKER):
-            sub_domain = self.CONST_WORKER
-        self.export_env_var(self.ENV_CONFIG_PARAM_SUB_DOMAIN, sub_domain)
-
         # if CONFIG_PARAM_MEMBERSHIP_SCHEME is not set, set the private-paas membership scheme as default one
         if clustering == 'true' and membership_scheme is None:
             membership_scheme = self.CONST_PPAAS_MEMBERSHIP_SCHEME
@@ -122,6 +112,9 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         # set local ip as CONFIG_PARAM_LOCAL_MEMBER_HOST
         local_ip = socket.gethostbyname(socket.gethostname())
         self.export_env_var(self.ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST, local_ip)
+
+        # set thrift server host as the IP
+        self.export_env_var(self.ENV_CONFIG_PARAM_THRIFT_SERVER_HOST, local_ip)
 
         # start configurator
         WSO2StartupHandler.log.info("Configuring WSO2 %s..." % self.CONST_PRODUCT)
@@ -152,14 +145,10 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         mgt_host_name = None
         host_name = None
         for service_name in self.SERVICES:
-            if service_name.endswith(self.CONST_MANAGER):
-                mgr_cluster = self.get_cluster_of_service(topology, service_name, app_id)
-                if mgr_cluster is not None:
-                    mgt_host_name = mgr_cluster.hostnames[0]
-            elif service_name.endswith(self.CONST_WORKER):
-                worker_cluster = self.get_cluster_of_service(topology, service_name, app_id)
-                if worker_cluster is not None:
-                    host_name = worker_cluster.hostnames[0]
+            server_cluster = self.get_cluster_of_service(topology, service_name, app_id)
+            if server_cluster is not None:
+                mgt_host_name = server_cluster.hostnames[0]
+                host_name = server_cluster.hostnames[0]
 
         self.export_env_var(self.ENV_CONFIG_PARAM_MGT_HOST_NAME, mgt_host_name)
         self.export_env_var(self.ENV_CONFIG_PARAM_HOST_NAME, host_name)
@@ -173,13 +162,12 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         """
         cluster_ids = []
         cluster_id_of_service = None
-        if service_type.endswith(self.CONST_MANAGER) or service_type.endswith(self.CONST_WORKER):
-            for service_name in self.SERVICES:
-                cluster_of_service = self.get_cluster_of_service(topology, service_name, app_id)
-                if cluster_of_service is not None:
-                    cluster_id_of_service = cluster_of_service.cluster_id
-                if cluster_id_of_service is not None:
-                    cluster_ids.append(cluster_id_of_service)
+        for service_name in self.SERVICES:
+            cluster_of_service = self.get_cluster_of_service(topology, service_name, app_id)
+            if cluster_of_service is not None:
+                cluster_id_of_service = cluster_of_service.cluster_id
+            if cluster_id_of_service is not None:
+                cluster_ids.append(cluster_id_of_service)
         else:
             cluster_ids.append(my_cluster_id)
         # If clusterIds are available, export them as environment variables
