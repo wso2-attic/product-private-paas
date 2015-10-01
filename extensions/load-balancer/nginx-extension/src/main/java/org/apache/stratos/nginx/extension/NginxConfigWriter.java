@@ -212,9 +212,14 @@ public class NginxConfigWriter {
                             List<String> serverList = new ArrayList<String>();
                             existingHostNameToServerMap.put(hostname, serverList);
                         }
-                        // Start upstream server block
-                        existingHostNameToServerMap.get(hostname).add(member.getHostName() + ":" +
-                                selectedPort.getValue());
+                        // Adding member to hostname map against specific port
+                        // that should contain this particular member
+                        List<String> ipPortMapping = existingHostNameToServerMap.get(hostname);
+                        String server = member.getHostName() + ":" + selectedPort.getValue();
+
+                        if(!ipPortMapping.contains(server)) {
+                            ipPortMapping.add(server);
+                        }
 
                     }
                 }
