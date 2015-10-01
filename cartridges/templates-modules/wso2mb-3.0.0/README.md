@@ -1,7 +1,7 @@
-WSO2-AS 5.2.1 Template for the Configurator
+WSO2-MB 3.0.0 Template for the Configurator
 -------------------------------------------------------------------------------------
 
-###Creating AS Template Module for Private PaaS
+###Creating MB Template Module for Private PaaS
 
 (1) Copy [mysql-connector-java-5.1.xx-bin.jar](http://dev.mysql.com/downloads/connector/j/) file to `<template_module_home>/files/repository/components/lib` folder. ( Folder structure needs to be created. )
 
@@ -16,165 +16,24 @@ WSO2-AS 5.2.1 Template for the Configurator
  * org.apache.stratos.common-4.1.0.jar
  * org.apache.stratos.messaging-4.1.0.jar
 
-(4) Copy following [kernel patches](http://dist.wso2.org/maven2/org/wso2/carbon/WSO2-CARBON-PATCH-4.2.0/) and [security patches](http://product-dist.wso2.com/downloads/carbon/4.2.0/)  to  relevant folder structure accordingly.
-
-**Kernel patches**
-* patch0012
-* patch0011
-* patch0010
-* patch0009
-* patch0008
-* patch0007
-* patch0006
-* patch0004
-* patch0005
-
-**Security patches**
-* patch1262
-* patch1095
-* patch1261
-* patch0955
-
-(5) Final files folder should look like following.
+(4) Final files folder should look like following.
 ```
 files
-├── bin
-│   └── ciphertool.bat
 └── repository
-    ├── components
-    │   ├── dropins
-    │   │   ├── activemq_client_5.10.0_1.0.0.jar
-    │   │   ├── geronimo_j2ee_management_1.1_spec_1.0.1_1.0.0.jar
-    │   │   ├── hawtbuf_1.9_1.0.0.jar
-    │   │   ├── org.apache.commons.lang3_3.1.0.jar
-    │   │   ├── org.apache.stratos.common-4.1.0.jar
-    │   │   ├── org.apache.stratos.messaging-4.1.0.jar
-    │   │   └── private-paas-membership-scheme-4.1.0-SNAPSHOT.jar
-    │   ├── lib
-    │   │   ├── mysql-connector-java-5.1.29-bin.jar
-    │   │   ├── org.wso2.carbon.server-4.2.0.jar
-    │   │   └── org.wso2.ciphertool-1.0.0-wso2v2.jar
-    │   └── patches
-    │       ├── patch0004
-    │       │   ├── org.wso2.carbon.application.deployer_4.2.0.jar
-    │       │   ├── org.wso2.carbon.core.services_4.2.0.jar
-    │       │   ├── org.wso2.carbon.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.ui_4.2.0.jar
-    │       │   ├── org.wso2.carbon.user.core_4.2.0.jar
-    │       │   └── org.wso2.carbon.utils_4.2.0.jar
-    │       ├── patch0005
-    │       │   ├── XmlSchema_1.4.7.wso2v2.jar
-    │       │   ├── axis2-transport-jms_1.1.0.wso2v9.jar
-    │       │   ├── axis2_1.6.1.wso2v10.jar
-    │       │   ├── org.wso2.carbon.application.deployer_4.2.0.jar
-    │       │   ├── org.wso2.carbon.core_4.2.0.jar
-    │       │   └── org.wso2.carbon.user.core_4.2.0.jar
-    │       ├── patch0006
-    │       │   ├── axis2-json_1.6.1.wso2v10.jar
-    │       │   ├── axis2-transport-rabbitmq-amqp_1.1.0.wso2v9.jar
-    │       │   ├── axis2_1.6.1.wso2v10.jar
-    │       │   ├── javax.cache.wso2_4.2.0.jar
-    │       │   ├── org.wso2.carbon.application.deployer_4.2.0.jar
-    │       │   ├── org.wso2.carbon.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.user.api_4.2.0.jar
-    │       │   ├── org.wso2.carbon.user.core_4.2.0.jar
-    │       │   └── wsdl4j_1.6.2.wso2v4.jar
-    │       ├── patch0007
-    │       │   ├── axis2-json_1.6.1.wso2v10.jar
-    │       │   ├── axis2_1.6.1.wso2v10.jar
-    │       │   ├── org.wso2.carbon.application.deployer_4.2.0.jar
-    │       │   ├── org.wso2.carbon.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.registry.server_4.2.0.jar
-    │       │   ├── org.wso2.carbon.server.admin_4.2.0.jar
-    │       │   ├── org.wso2.carbon.ui_4.2.0.jar
-    │       │   ├── org.wso2.carbon.user.core_4.2.0.jar
-    │       │   └── org.wso2.carbon.utils_4.2.0.jar
-    │       ├── patch0008
-    │       │   ├── axis2_1.6.1.wso2v10.jar
-    │       │   ├── javax.cache.wso2_4.2.0.jar
-    │       │   ├── org.wso2.carbon.registry.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.securevault_4.2.0.jar
-    │       │   └── org.wso2.carbon.user.core_4.2.0.jar
-    │       ├── patch0009
-    │       │   ├── axiom_1.2.11.wso2v4.jar
-    │       │   ├── axis2-json_1.6.1.wso2v10.jar
-    │       │   ├── axis2-transport-jms_1.1.0.wso2v9.jar
-    │       │   ├── axis2-transport-sms_1.1.0.wso2v9.jar
-    │       │   ├── axis2_1.6.1.wso2v10.jar
-    │       │   ├── hazelcast_3.0.1.wso2v1.jar
-    │       │   ├── javax.cache.wso2_4.2.0.jar
-    │       │   ├── org.wso2.carbon.application.deployer_4.2.0.jar
-    │       │   ├── org.wso2.carbon.base_4.2.0.jar
-    │       │   ├── org.wso2.carbon.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.jasper.patch_4.2.0.jar
-    │       │   ├── org.wso2.carbon.registry.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.registry.server_4.2.0.jar
-    │       │   ├── org.wso2.carbon.server.admin_4.2.0.jar
-    │       │   ├── org.wso2.carbon.ui_4.2.0.jar
-    │       │   ├── org.wso2.carbon.user.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.utils_4.2.0.jar
-    │       │   ├── poi-ooxml_3.9.0.wso2v1.jar
-    │       │   ├── spring.framework_3.1.0.wso2v1.jar
-    │       │   └── woden_1.0.0.M8-wso2v1.jar
-    │       ├── patch0010
-    │       │   ├── axiom_1.2.11.wso2v4.jar
-    │       │   ├── axis2-json_1.6.1.wso2v10.jar
-    │       │   ├── axis2-transport-jms_1.1.0.wso2v9.jar
-    │       │   ├── axis2_1.6.1.wso2v10.jar
-    │       │   ├── hazelcast_3.0.1.wso2v1.jar
-    │       │   ├── javax.cache.wso2_4.2.0.jar
-    │       │   ├── org.wso2.carbon.core.services_4.2.0.jar
-    │       │   ├── org.wso2.carbon.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.feature.mgt.services_4.2.0.jar
-    │       │   ├── org.wso2.carbon.ndatasource.rdbms_4.2.0.jar
-    │       │   ├── org.wso2.carbon.registry.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.tomcat.ext_4.2.0.jar
-    │       │   ├── org.wso2.carbon.tomcat.patch_4.2.0.jar
-    │       │   ├── org.wso2.carbon.ui_4.2.0.jar
-    │       │   ├── org.wso2.carbon.user.core_4.2.0.jar
-    │       │   ├── tomcat-ha_7.0.34.wso2v1.jar
-    │       │   ├── tomcat_7.0.34.wso2v1.jar
-    │       │   └── wss4j_1.5.11.wso2v6.jar
-    │       ├── patch0011
-    │       │   ├── axis2-json_1.6.1.wso2v10.jar
-    │       │   ├── axis2-transport-jms_1.1.0.wso2v9.jar
-    │       │   ├── axis2-transport-rabbitmq-amqp_1.1.0.wso2v9.jar
-    │       │   ├── org.wso2.carbon.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.registry.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.ui-4.2.0.jar
-    │       │   ├── org.wso2.carbon.user.core_4.2.0.jar
-    │       │   └── org.wso2.carbon.utils_4.2.0.jar
-    │       ├── patch0012
-    │       │   ├── axis2-json_1.6.1.wso2v10.jar
-    │       │   ├── axis2-transport-jms_1.1.0.wso2v9.jar
-    │       │   ├── axis2-transport-tcp_1.1.0.wso2v9.jar
-    │       │   ├── axis2_1.6.1.wso2v10.jar
-    │       │   ├── hazelcast_3.0.1.wso2v1.jar
-    │       │   ├── javax.cache.wso2_4.2.0.jar
-    │       │   ├── org.wso2.carbon.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.registry.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.tomcat_4.2.0.jar
-    │       │   ├── org.wso2.carbon.ui_4.2.0.jar
-    │       │   ├── org.wso2.carbon.user.core_4.2.0.jar
-    │       │   └── org.wso2.carbon.utils_4.2.0.jar
-    │       ├── patch0955
-    │       │   ├── org.wso2.carbon.webapp.list.ui_4.2.1.jar
-    │       │   ├── org.wso2.carbon.webapp.mgt.stub_4.2.0.jar
-    │       │   └── org.wso2.carbon.webapp.mgt_4.2.2.jar
-    │       ├── patch1095
-    │       │   └── wss4j_1.5.11.wso2v6.jar
-    │       ├── patch1261
-    │       │   ├── org.wso2.carbon.tomcat.ext_4.2.0.jar
-    │       │   ├── org.wso2.carbon.tomcat.patch_4.2.0.jar
-    │       │   ├── tomcat-ha_7.0.34.wso2v1.jar
-    │       │   └── tomcat_7.0.34.wso2v1.jar
-    │       └── patch1262
-    │           └── org.wso2.carbon.webapp.mgt_4.2.2.jar
-    └── resources
-        └── security
-            └── client-truststore.jks
+     └── components
+        ├── dropins
+        │   ├── activemq_client_5.10.0_1.0.0.jar
+        │   ├── geronimo_j2ee_management_1.1_spec_1.0.1_1.0.0.jar
+        │   ├── hawtbuf_1.9_1.0.0.jar
+        │   ├── org.apache.commons.lang3_3.1.0.jar
+        │   ├── org.apache.stratos.common-4.1.0.jar
+        │   ├── org.apache.stratos.messaging-4.1.0.jar
+        │   └── private-paas-membership-scheme-4.1.0-SNAPSHOT.jar
+        └── lib
+            └── mysql-connector-java-5.1.29-bin.jar
+
 ```
-(6) Build the template module with above files.
+(5) Build the template module with above files.
 ```
 mvn clean install
 ```
@@ -201,7 +60,7 @@ You can configure following in the ***module.ini*** file.
 
     CONFIG_PARAM_CLUSTERING = true
 
-* Used in - < AS_HOME >/repository/conf/axis2/axis2.xml
+* Used in - < MB_HOME >/repository/conf/axis2/axis2.xml
 
 ---
 
@@ -209,13 +68,13 @@ You can configure following in the ***module.ini*** file.
 
     CONFIG_PARAM_MEMBERSHIP_SCHEME = wka
 
-* Used in - < AS_HOME >/repository/conf/axis2/axis2.xml
+* Used in - < MB_HOME >/repository/conf/axis2/axis2.xml
 
 ---
         
 #### Set Domain :
 
-    CONFIG_PARAM_DOMAIN = wso2.am.domain
+    CONFIG_PARAM_DOMAIN = wso2.mb.domain
 
 * Used in - < AS_HOME >/repository/conf/axis2/axis2.xml
 
@@ -226,7 +85,7 @@ You can configure following in the ***module.ini*** file.
     CONFIG_PARAM_WKA_MEMBERS = "127.0.0.1:4000,127.0.1.1:4001"
 
 * Format - "ip_address1:port1,ip_address2:port2"
-* Used in - < AS_HOME >/repository/conf/axis2/axis2.xml
+* Used in - < MB_HOME >/repository/conf/axis2/axis2.xml
 
 ---
 
@@ -235,7 +94,7 @@ You can configure following in the ***module.ini*** file.
     CONFIG_PARAM_LOCAL_MEMBER_HOST = 127.0.0.1
     CONFIG_PARAM_LOCAL_MEMBER_PORT = 4000
 
-* Used in - < AS_HOME >/repository/conf/axis2/axis2.xml
+* Used in - < MB_HOME >/repository/conf/axis2/axis2.xml
 
 ---
 
@@ -243,7 +102,7 @@ You can configure following in the ***module.ini*** file.
 
     CONFIG_PARAM_PORT_OFFSET = 0
 
-* Used in - < AS_HOME >/repository/conf/carbon.xml
+* Used in - < MB_HOME >/repository/conf/carbon.xml
 
 ---
 #### Set proxy ports when using a load balancer :
@@ -251,79 +110,87 @@ You can configure following in the ***module.ini*** file.
     CONFIG_PARAM_HTTP_PROXY_PORT = 80
     CONFIG_PARAM_HTTPS_PROXY_PORT = 443
 
-* Used in - < AS_HOME >/repository/conf/tomcat/catalina-server.xml
+* Used in - < MB_HOME >/repository/conf/tomcat/catalina-server.xml
+
 
 ---
-#### Set worker/manger sub-domain in nodes  :
+#### Set management console hostnames
 
-    CONFIG_PARAM_SUB_DOMAIN= worker
-
- * Used in - < AS_HOME >/repository/conf/axis2/axis2.xml
- * Used in - < AS_HOME >/repository/conf/carbon.xml
- * Used in - < AS_HOME >/repository/conf/registry.xml
-
----
-#### Set worker and manager hostnames
-
-    CONFIG_PARAM_WORKER_HOST_NAME = am.cloud-test.wso2.com
     CONFIG_PARAM_MGT_HOST_NAME = mgt.am.cloud-test.wso2.com
 
-* Used in - < AS_HOME >/repository/conf/axis2/axis2.xml
-* Used in - < AS_HOME >/repository/conf/carbon.xml
+* Used in - < MB_HOME >/repository/conf/carbon.xml
 
 ---
 
 ## Following are the config parameters used for setting up external database 
-#### Set URL
+#### Set URL for MB store DB
 
-    CONFIG_PARAM_URL= jdbc:mysql://localhost:3306/
+    CONFIG_PARAM_MB_STORE_DB_URL= jdbc:mysql://localhost:3306/mb_store_db
 
-#### Set Username
+#### Set Username for MB store DB
 
-    CONFIG_PARAM_USER_NAME=root
+    CONFIG_PARAM_MB_STORE_DB_USER_NAME=root
 
-#### Set Password
+#### Set Password for MB store DB
 ```
-CONFIG_PARAM_PAMSWORD=root
+    CONFIG_PARAM_MB_STORE_DB_PASSWORD=root
 ```
-#### Set Driver class name
+#### Set Driver class name for MB store DB
 
-    CONFIG_PARAM_DRIVER_CLAMS_NAME=com.mysql.jdbc.Driver
+    CONFIG_PARAM_MB_STORE_DB_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
 
-#### Set Max Active
+#### Set URL for MB metrics DB
 
-    CONFIG_PARAM_MAX_ACTIVE=50
+    CONFIG_PARAM_MB_METRICS_DB_URL= jdbc:mysql://localhost:3306/mb_metrics_db
 
-#### Set Max Wait
+#### Set Username for MB metrics DB
 
-    CONFIG_PARAM_MAX_WAIT=60000
+    CONFIG_PARAM_MB_METRICS_DB_USERNAME=root
 
-#### Set test on borrow
+#### Set Password for MB metrics DB
+```
+    CONFIG_PARAM_MB_METRICS_DB_PASSWORD=root
+```
+#### Set Driver class name for MB metrics DB
 
-    CONFIG_PARAM_TEST_ON_BORROW=true
+    CONFIG_PARAM_MB_METRICS_DB_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
 
-#### Set validation query
-    CONFIG_PARAM_VALIDATION_QUERY=SELECT 1
+#### Set URL for registry DB
 
-#### Set validation interval
+    CONFIG_PARAM_REGISTRY_DB_URL= jdbc:mysql://localhost:3306/registry_db
 
-    CONFIG_PARAM_VALIDATION_INTERVAL=30000
+#### Set Username for registry DB
 
-#### Set Local Registry database
+    CONFIG_PARAM_REGISTRY_DB_USER_NAME=root
 
-    CONFIG_PARAM_REGISTRY_LOCAL1="jdbc/WSO2CarbonDB:REGISTRY_LOCAL1"
+#### Set Password for registry DB
+```
+    CONFIG_PARAM_REGISTRY_DB_PASSWORD=root
+```
+#### Set Driver class name for registry DB
 
-#### Set Registry database
+    CONFIG_PARAM_REGISTRY_DB_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
 
-    CONFIG_PARAM_REGISTRY_DB="jdbc/WSO2RegistryDB:REGISTRY_DB"
+#### Set URL for user DB
 
-#### Set datasource and shared user database
+    CONFIG_PARAM_USER_MGT_DB_URL= jdbc:mysql://localhost:3306/user_db
 
-    CONFIG_PARAM_USER_DB="jdbc/WSO2UMDB:WSO2_USER_DB"
+#### Set Username for user DB
+
+    CONFIG_PARAM_USER_MGT_DB_USER_NAME=root
+
+#### Set Password for user DB
+```
+    CONFIG_PARAM_USER_MGT_DB_PASSWORD=root
+```
+#### Set Driver class name for user DB
+
+    CONFIG_PARAM_USER_MGT_DB_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
 
 ##### Used in 
 
-* < AS_HOME >/repository/conf/user-mgt.xml
-* < AS_HOME >/repository/conf/datasources/master-datasources.xml
-* < AS_HOME >/repository/conf/registry.xml
+* < MB_HOME >/repository/conf/user-mgt.xml
+* < MB_HOME >/repository/conf/datasources/master-datasources.xml
+* < MB_HOME >/repository/conf/datasources/metrics-datasources.xml
+* < MB_HOME >/repository/conf/registry.xml
 

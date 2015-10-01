@@ -42,31 +42,6 @@
             "port": 8883
         }
     ],
-    "iaasProvider": [
-        {
-            "type": "openstack",
-            "imageId": "<REGION>/<BASE_IMAGE_ID>",
-            "property": [
-                {
-                    "name": "instanceType",
-                    "value": "<REGION>/<FLAVOUR_ID>"
-                },
-                {
-                    "name": "keyPair",
-                    "value": "<KEY_PAIR_NAME>"
-                },
-                {
-                    "name": "securityGroups",
-                    "value": "default"
-                }
-            ],
-            "networkInterfaces": [
-                {
-                    "networkUuid": "<NETWORK_UUID>"
-                }
-            ]
-        }
-    ],
     "property": [
         {
             "name": "payload_parameter.CONFIG_PARAM_WORKER_HOST_NAME",

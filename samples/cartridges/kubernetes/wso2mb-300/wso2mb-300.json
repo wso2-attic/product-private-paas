@@ -6,7 +6,7 @@
     "displayName": "WSO2 MB 3.0.0",
     "description": "WSO2 MB 3.0.0 Cartridge",
     "version": "3.0.0",
-    "multiTenant": false,
+    "multiTenant": true,
     "loadBalancingIPType": "public",
     "portMapping": [
         {
@@ -44,27 +44,9 @@
     ],
     "iaasProvider": [
         {
-            "type": "openstack",
-            "imageId": "<REGION>/<BASE_IMAGE_ID>",
-            "property": [
-                {
-                    "name": "instanceType",
-                    "value": "<REGION>/<FLAVOUR_ID>"
-                },
-                {
-                    "name": "keyPair",
-                    "value": "<KEY_PAIR_NAME>"
-                },
-                {
-                    "name": "securityGroups",
-                    "value": "default"
-                }
-            ],
-            "networkInterfaces": [
-                {
-                    "networkUuid": "<NETWORK_UUID>"
-                }
-            ]
+            "type": "kubernetes",
+            "imageId": "wso2/mb:3.0.0",
+            "networkInterfaces": []
         }
     ],
     "property": [
@@ -89,9 +71,9 @@
             "value": "<MB_METRICS_DB_USERNAME>"
         },
         {
-            "name": "payload_parameter.CONFIG_PARAM_MB_METRICS_DB_PASSWORD",
-            "value": "<MB_METRICS_DB_PASSWORD>"
-        },
+              "name": "payload_parameter.CONFIG_PARAM_MB_METRICS_DB_PASSWORD",
+              "value": "<MB_METRICS_DB_PASSWORD>"
+          },
         {
             "name": "payload_parameter.CONFIG_PARAM_MB_METRICS_DB_DRIVER_CLASS_NAME",
             "value": "<MB_METRICS_DB_DRIVER_CLASS_NAME>"

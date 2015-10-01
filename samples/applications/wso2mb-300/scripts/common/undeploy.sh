@@ -51,5 +51,4 @@ echo "Removing cartridge Groups ..."
 curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://localhost:9443/api/cartridgeGroups/${product}-group
 
 echo "Removing cartridges..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${product}-manager
-curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${product}-worker
+curl -X DELETE -H "Content-Type: application/json" -k -v -u admin:admin https://${host_ip}:${host_port}/api/cartridges/${product}

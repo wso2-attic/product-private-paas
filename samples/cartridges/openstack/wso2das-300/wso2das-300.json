@@ -35,6 +35,11 @@
       "name": "spark-manager",
       "protocol": "http",
       "port": 8081
+    },
+    {
+      "name": "spark-worker",
+      "protocol": "http",
+      "port": 11500
     }
   ],
   "iaasProvider": [
