@@ -37,5 +37,6 @@
 	<module>wso2greg-5.0.0</module>
         <module>wso2brs-2.1.0</module>
         <module>wso2das-3.0.0</module>
+        <module>wso2mb-3.0.0</module>
     </modules>
 </project>

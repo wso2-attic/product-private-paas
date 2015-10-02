@@ -1,0 +1,27 @@
+{
+    "applicationId": "wso2mb-300-application",
+    "alias": "wso2mb-300-application",
+    "multiTenant": true,
+    "components": {
+        "groups": [
+            {
+                "name": "wso2mb-300-group",
+                "alias": "wso2mb-300-group",
+                "deploymentPolicy": "deployment-policy-1",
+                "groupMinInstances": 1,
+                "groupMaxInstances": 1,
+                "cartridges": [
+                    {
+                        "type": "wso2mb-300",
+                        "cartridgeMin": 2,
+                        "cartridgeMax": 2,
+                        "subscribableInfo": {
+                            "alias": "wso2mb-300",
+                            "autoscalingPolicy": "autoscaling-policy-1"
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
