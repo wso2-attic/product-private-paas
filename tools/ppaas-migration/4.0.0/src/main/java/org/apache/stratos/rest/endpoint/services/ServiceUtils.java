@@ -42,6 +42,7 @@ import org.apache.stratos.manager.dto.SubscriptionInfo;
 import org.apache.stratos.manager.exception.*;
 import org.apache.stratos.manager.manager.CartridgeSubscriptionManager;
 import org.apache.stratos.manager.repository.RepositoryNotification;
+import org.apache.stratos.manager.retriever.DataInsertionAndRetrievalManager;
 import org.apache.stratos.manager.subscription.*;
 import org.apache.stratos.manager.topology.model.TopologyClusterInformationModel;
 import org.apache.stratos.manager.utils.ApplicationManagementUtil;
@@ -55,6 +56,7 @@ import org.apache.stratos.rest.endpoint.ServiceHolder;
 import org.apache.stratos.rest.endpoint.bean.CartridgeInfoBean;
 import org.apache.stratos.rest.endpoint.bean.StratosAdminResponse;
 import org.apache.stratos.rest.endpoint.bean.SubscriptionDomainRequest;
+import org.apache.stratos.rest.endpoint.bean.SubscriptionDomainWrapper;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.PartitionGroup;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.AutoscalePolicy;
@@ -68,6 +70,8 @@ import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.core.multitenancy.utils.TenantAxisUtils;
 import org.wso2.carbon.user.api.UserStoreException;
+import org.wso2.carbon.user.core.tenant.Tenant;
+import org.wso2.carbon.user.core.tenant.TenantManager;
 import org.wso2.carbon.utils.ConfigurationContextService;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
 
@@ -86,6 +90,8 @@ public class ServiceUtils {
     private static Log log = LogFactory.getLog(ServiceUtils.class);
     private static CartridgeSubscriptionManager cartridgeSubsciptionManager = new CartridgeSubscriptionManager();
     private static ServiceDeploymentManager serviceDeploymentManager = new ServiceDeploymentManager();
+    private static DataInsertionAndRetrievalManager dataInsertionAndRetrievalManager =
+            new DataInsertionAndRetrievalManager();
 
     static StratosAdminResponse deployCartridge(CartridgeDefinitionBean cartridgeDefinitionBean,
                                                 ConfigurationContext ctxt,
@@ -1285,12 +1291,15 @@ public class ServiceUtils {
         ArrayList<SubscriptionInfo> subscriptionInfoList = new ArrayList<>();
         try {
             for (CartridgeInfoBean cartridgeInfoBean : cartridgeInfoBeans) {
+                SubscriptionInfo subscriptionInfo;
                 if (cartridgeInfoBean.getSubscribingTenantDomain().equals("carbon.super")) {
-                    subscribeToCartridge(cartridgeInfoBean, getConfigContext(), getUsername(), getTenantDomain());
+                    subscriptionInfo =
+                            subscribeToCartridge(cartridgeInfoBean, getConfigContext(), getUsername(),
+                                    getTenantDomain());
                 } else {
-                    SubscriptionInfo subscriptionInfo = subscribeTenantToCartridge(cartridgeInfoBean);
-                    subscriptionInfoList.add(subscriptionInfo);
+                    subscriptionInfo = subscribeTenantToCartridge(cartridgeInfoBean);
                 }
+                subscriptionInfoList.add(subscriptionInfo);
             }
         }
         catch (Exception e) {
@@ -1804,6 +1813,23 @@ public class ServiceUtils {
         return stratosAdminResponse;
     }
 
+    public static StratosAdminResponse bulkAddSubscriptionDomains(
+            List<SubscriptionDomainWrapper> subscriptionDomainWrapperList) throws RestAPIException {
+        try {
+            for (SubscriptionDomainWrapper subscriptionDomainWrapper : subscriptionDomainWrapperList) {
+                addSubscriptionDomains(getConfigContext(), subscriptionDomainWrapper.getCartridgeType(),
+                        subscriptionDomainWrapper.getSubscriptionAlias(), subscriptionDomainWrapper.getRequest());
+            }
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new RestAPIException(e.getMessage(), e);
+        }
+        StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
+        stratosAdminResponse.setMessage("Successfully added domains to cartridge subscription");
+        return stratosAdminResponse;
+    }
+
     public static StratosAdminResponse addSubscriptionDomains(ConfigurationContext configurationContext,
                                                               String cartridgeType,
                                                               String subscriptionAlias,
@@ -1871,6 +1897,41 @@ public class ServiceUtils {
             log.error(e.getMessage(), e);
             throw new RestAPIException(e.getMessage(), e);
         }
+    }
+
+
+    public static List<SubscriptionDomainBean> getAllSubscriptionDomains() throws RestAPIException {
+        TenantManager tenantManager = ServiceHolder.getTenantManager();
+        Tenant[] tenants;
+        List<SubscriptionDomainBean> subscriptionDomainBeanList = new ArrayList<>();
+
+        try {
+            tenants = (Tenant[]) tenantManager.getAllTenants();
+        }
+        catch (Exception e) {
+            String msg = "Error in retrieving the tenant information";
+            log.error(msg, e);
+            throw new RestAPIException(msg);
+        }
+        for (Tenant tenant : tenants) {
+            try {
+                int tenantId = tenant.getId();
+                Collection<CartridgeSubscription> cartridgeSubscriptions =
+                        dataInsertionAndRetrievalManager.getCartridgeSubscriptions(tenantId);
+
+                for (CartridgeSubscription cartridgeSubscription : cartridgeSubscriptions) {
+                    List<SubscriptionDomainBean> tenantSubscriptionDomains = PojoConverter
+                            .populateSubscriptionDomainPojos(cartridgeSubsciptionManager.getSubscriptionDomains(
+                                    tenantId, cartridgeSubscription.getAlias()));
+                    subscriptionDomainBeanList.addAll(tenantSubscriptionDomains);
+                }
+            }
+            catch (Exception e) {
+                log.error(e.getMessage(), e);
+                throw new RestAPIException(e.getMessage(), e);
+            }
+        }
+        return subscriptionDomainBeanList;
     }
 
     public static SubscriptionDomainBean getSubscriptionDomain(ConfigurationContext configurationContext,

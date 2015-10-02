@@ -32,10 +32,7 @@ import org.apache.stratos.rest.endpoint.ServiceHolder;
 import org.apache.stratos.rest.endpoint.Utils;
 import org.apache.stratos.rest.endpoint.annotation.AuthorizationAction;
 import org.apache.stratos.rest.endpoint.annotation.SuperTenantService;
-import org.apache.stratos.rest.endpoint.bean.CartridgeInfoBean;
-import org.apache.stratos.rest.endpoint.bean.CartridgeInfoBeanWrapper;
-import org.apache.stratos.rest.endpoint.bean.StratosAdminResponse;
-import org.apache.stratos.rest.endpoint.bean.SubscriptionDomainRequest;
+import org.apache.stratos.rest.endpoint.bean.*;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.PartitionGroup;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.AutoscalePolicy;
@@ -1189,6 +1186,19 @@ public class StratosAdmin extends AbstractAdmin {
         return Response.ok().entity(stratosAdminResponse).build();
     }
 
+    @POST
+    @Path("/cartridge/subscription/domains/bulk")
+    @Consumes("application/json")
+    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
+    public Response bulkAddSubscriptionDomains(BulkSubscriptionDomainsWrapper bulkSubscriptionDomainsWrapper)
+            throws RestAPIException {
+
+        StratosAdminResponse stratosAdminResponse =
+                ServiceUtils.bulkAddSubscriptionDomains(
+                        bulkSubscriptionDomainsWrapper.getSubscriptionDomainWrapperList());
+        return Response.ok().entity(stratosAdminResponse).build();
+    }
+
     @GET
     @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domains")
     @Consumes("application/json")
@@ -1199,6 +1209,22 @@ public class StratosAdmin extends AbstractAdmin {
         SubscriptionDomainBean[] subscriptionDomainBean =
                 ServiceUtils.getSubscriptionDomains(getConfigContext(), cartridgeType, subscriptionAlias)
                         .toArray(new SubscriptionDomainBean[0]);
+
+        if (subscriptionDomainBean.length == 0) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        } else {
+            return Response.ok().entity(subscriptionDomainBean).build();
+        }
+    }
+
+    @GET
+    @Path("/cartridge/subscription/domains/all")
+    @Consumes("application/json")
+    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
+    @SuperTenantService(true)
+    public Response getAllSubscriptionDomains() throws RestAPIException {
+        SubscriptionDomainBean[] subscriptionDomainBean =
+                ServiceUtils.getAllSubscriptionDomains().toArray(new SubscriptionDomainBean[0]);
 
         if (subscriptionDomainBean.length == 0) {
             return Response.status(Response.Status.NOT_FOUND).build();
