@@ -10,3 +10,8 @@ WSO2 Private PaaS delivers standard, on-premise, application, integration, data,
 
 Giving you all the power of cloud, WSO2 Private PaaS is built on top of the Apache Stratos project. It is the most complete, enterprise-grade solution, offering an open Platform as a Service, enriched with all the generic features that a PaaS would include. More significantly, it adds functionality to host pre-integrated, fully multi-tenant WSO2 Carbon middleware products as cartridges that deliver a wide range of cloud PaaS.
 
+
+## WSO2 Cartridges
+
+WSO2 Private PaaS can be used together with WSO2 cartridges to deploy WSO2 services on the cloud. 
+Cartridges for WSO2 products can be found at WSO2 Private PaaS Cartridges(https://github.com/wso2/private-paas-cartridges) GitHub repository.
