@@ -14,4 +14,4 @@ Giving you all the power of cloud, WSO2 Private PaaS is built on top of the Apac
 ## WSO2 Cartridges
 
 WSO2 Private PaaS can be used together with WSO2 cartridges to deploy WSO2 services on the cloud. 
-Cartridges for WSO2 products can be found at WSO2 Private PaaS Cartridges(https://github.com/wso2/private-paas-cartridges) GitHub repository.
+Cartridges for WSO2 products can be found at [WSO2 Private PaaS Cartridges GitHub repository](https://github.com/wso2/private-paas-cartridges).
