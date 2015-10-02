@@ -25,7 +25,6 @@ import org.apache.stratos.manager.subscription.SubscriptionDomain;
 import org.apache.stratos.messaging.domain.topology.Cluster;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.PartitionGroup;
-import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.*;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment.DeploymentPolicy;
 import org.apache.stratos.rest.endpoint.bean.cartridge.definition.*;
 import org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean;
@@ -220,59 +219,6 @@ public class PojoConverter {
         return partition;
     }
 
-    public static org.apache.stratos.autoscaler.policy.model.AutoscalePolicy convertToCCAutoscalerPojo (AutoscalePolicy
-                                                                                                                autoscalePolicyBean) {
-
-        org.apache.stratos.autoscaler.policy.model.AutoscalePolicy autoscalePolicy = new
-                org.apache.stratos.autoscaler.policy.model.AutoscalePolicy();
-
-        autoscalePolicy.setId(autoscalePolicyBean.getId());
-        autoscalePolicy.setDescription(autoscalePolicyBean.getDescription());
-        autoscalePolicy.setDisplayName(autoscalePolicyBean.getDisplayName());
-
-        if (autoscalePolicyBean.getLoadThresholds() != null) {
-
-            org.apache.stratos.autoscaler.policy.model.LoadThresholds loadThresholds = new
-                    org.apache.stratos.autoscaler.policy.model.LoadThresholds();
-
-            if(autoscalePolicyBean.getLoadThresholds().loadAverage != null) {
-
-                //set load average information
-                org.apache.stratos.autoscaler.policy.model.LoadAverageThresholds loadAverage = new
-                        org.apache.stratos.autoscaler.policy.model.LoadAverageThresholds();
-                loadAverage.setUpperLimit(autoscalePolicyBean.getLoadThresholds().loadAverage.upperLimit);
-                loadAverage.setLowerLimit(autoscalePolicyBean.getLoadThresholds().loadAverage.lowerLimit);
-                //set load average
-                loadThresholds.setLoadAverage(loadAverage);
-            }
-            if (autoscalePolicyBean.getLoadThresholds().requestsInFlight != null) {
-
-                org.apache.stratos.autoscaler.policy.model.RequestsInFlightThresholds requestsInFlight = new
-                        org.apache.stratos.autoscaler.policy.model.RequestsInFlightThresholds();
-                //set request in flight information
-                requestsInFlight.setUpperLimit(autoscalePolicyBean.getLoadThresholds().requestsInFlight.upperLimit);
-                requestsInFlight.setLowerLimit(autoscalePolicyBean.getLoadThresholds().requestsInFlight.lowerLimit);
-                //set request in flight
-                loadThresholds.setRequestsInFlight(requestsInFlight);
-            }
-            if (autoscalePolicyBean.getLoadThresholds().memoryConsumption != null) {
-
-                org.apache.stratos.autoscaler.policy.model.MemoryConsumptionThresholds memoryConsumption = new
-                        org.apache.stratos.autoscaler.policy.model.MemoryConsumptionThresholds();
-
-                //set memory consumption information
-                memoryConsumption.setUpperLimit(autoscalePolicyBean.getLoadThresholds().memoryConsumption.upperLimit);
-                memoryConsumption.setLowerLimit(autoscalePolicyBean.getLoadThresholds().memoryConsumption.lowerLimit);
-                //set memory consumption
-                loadThresholds.setMemoryConsumption(memoryConsumption);
-            }
-
-            autoscalePolicy.setLoadThresholds(loadThresholds);
-        }
-
-        return autoscalePolicy;
-    }
-
     public static org.apache.stratos.autoscaler.deployment.policy.DeploymentPolicy convetToCCDeploymentPolicyPojo (DeploymentPolicy
                                                                                                                            deploymentPolicyBean) {
 
@@ -450,72 +396,6 @@ public class PojoConverter {
         return propertyBeans;
     }
 
-    public static AutoscalePolicy[] populateAutoscalePojos(org.apache.stratos.autoscaler.policy.model.AutoscalePolicy[]
-                                                                   autoscalePolicies) {
-
-        AutoscalePolicy [] autoscalePolicyBeans;
-        if(autoscalePolicies == null) {
-            autoscalePolicyBeans = new AutoscalePolicy[0];
-            return autoscalePolicyBeans;
-        }
-
-        autoscalePolicyBeans = new AutoscalePolicy[autoscalePolicies.length];
-        for (int i = 0 ; i < autoscalePolicies.length ; i++) {
-            /*AutoscalePolicy autoscalePolicy = new AutoscalePolicy();
-            autoscalePolicy.id = autoscalePolicies[i].getId();
-            autoscalePolicy.displayName = autoscalePolicies[i].getDisplayName();
-            autoscalePolicy.description = autoscalePolicies[i].getDescription();
-            if(autoscalePolicies[i].getLoadThresholds() != null) {
-                autoscalePolicy.loadThresholds = populateLoadThresholds(autoscalePolicies[i].getLoadThresholds());
-            }*/
-            autoscalePolicyBeans[i] = populateAutoscalePojo(autoscalePolicies[i]);
-        }
-        return autoscalePolicyBeans;
-    }
-
-    public static AutoscalePolicy populateAutoscalePojo(org.apache.stratos.autoscaler.policy.model.AutoscalePolicy
-                                                                   autoscalePolicy) {
-
-        AutoscalePolicy autoscalePolicyBean = new AutoscalePolicy();
-        if(autoscalePolicy == null) {
-            return autoscalePolicyBean;
-        }
-
-        autoscalePolicyBean.setId(autoscalePolicy.getId());
-        autoscalePolicyBean.setDisplayName(autoscalePolicy.getDisplayName());
-        autoscalePolicyBean.setDescription(autoscalePolicy.getDescription());
-        if(autoscalePolicy.getLoadThresholds() != null) {
-            autoscalePolicyBean.setLoadThresholds(populateLoadThresholds(autoscalePolicy.getLoadThresholds()));
-        }
-
-        return autoscalePolicyBean;
-    }
-
-    private static LoadThresholds populateLoadThresholds (org.apache.stratos.autoscaler.policy.model.LoadThresholds
-                                                                  loadThresholds) {
-
-        LoadThresholds loadThresholdBean = new LoadThresholds();
-        if(loadThresholds.getLoadAverage() != null) {
-            LoadAverageThresholds loadAverage = new LoadAverageThresholds();
-            loadAverage.upperLimit = loadThresholds.getLoadAverage().getUpperLimit();
-            loadAverage.lowerLimit = loadThresholds.getLoadAverage().getLowerLimit();
-            loadThresholdBean.loadAverage = loadAverage;
-        }
-        if(loadThresholds.getMemoryConsumption() != null) {
-            MemoryConsumptionThresholds memoryConsumption = new MemoryConsumptionThresholds();
-            memoryConsumption.upperLimit = loadThresholds.getMemoryConsumption().getUpperLimit();
-            memoryConsumption.lowerLimit = loadThresholds.getMemoryConsumption().getLowerLimit();
-            loadThresholdBean.memoryConsumption = memoryConsumption;
-        }
-        if(loadThresholds.getRequestsInFlight() != null) {
-            RequestsInFlightThresholds requestsInFlight = new RequestsInFlightThresholds();
-            requestsInFlight.upperLimit = loadThresholds.getRequestsInFlight().getUpperLimit();
-            requestsInFlight.lowerLimit = loadThresholds.getRequestsInFlight().getLowerLimit();
-            loadThresholdBean.requestsInFlight = requestsInFlight;
-        }
-
-        return loadThresholdBean;
-    }
 
     public static DeploymentPolicy[] populateDeploymentPolicyPojos(org.apache.stratos.autoscaler.deployment.policy.DeploymentPolicy[]
                                                                            deploymentPolicies) {

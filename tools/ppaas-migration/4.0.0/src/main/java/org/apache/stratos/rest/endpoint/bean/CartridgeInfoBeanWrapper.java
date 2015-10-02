@@ -23,14 +23,14 @@ import java.util.List;
 
 @XmlRootElement
 public class CartridgeInfoBeanWrapper {
-    private List<CartridgeInfoBean> cartridgeInfoBeans;
+    private List<CartridgeInfoBean> cartridgeInfoBean;
 
-    public List<CartridgeInfoBean> getCartridgeInfoBeans() {
-        return cartridgeInfoBeans;
+    public List<CartridgeInfoBean> getCartridgeInfoBean() {
+        return cartridgeInfoBean;
     }
 
-    public void setCartridgeInfoBeans(
-            List<CartridgeInfoBean> cartridgeInfoBeans) {
-        this.cartridgeInfoBeans = cartridgeInfoBeans;
+    public void setCartridgeInfoBean(
+            List<CartridgeInfoBean> cartridgeInfoBean) {
+        this.cartridgeInfoBean = cartridgeInfoBean;
     }
 }

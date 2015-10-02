@@ -25,14 +25,14 @@
          http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
          http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd">
 
-    <jaxrs:server id="stratosAdmin" address="/">
+    <jaxrs:server id="migrationAdmin" address="/">
         <jaxrs:serviceBeans>
-            <ref bean="stratosRestEndpointBean"/>
+            <ref bean="migrationRestEndpointBean"/>
         </jaxrs:serviceBeans>
 
         <jaxrs:providers>
             <ref bean="throwableExceptionHandler"/>
-			<ref bean="genericExceptionHandler"/>
+            <ref bean="genericExceptionHandler"/>
             <ref bean="jsonProvider"/>
             <ref bean="exceptionHandler"/>
             <ref bean="basicAuthenticationFilter"/>
@@ -41,15 +41,18 @@
         </jaxrs:providers>
     </jaxrs:server>
 
-    <bean id="stratosRestEndpointBean" class="org.apache.stratos.rest.endpoint.services.StratosAdmin"/>
-    <bean id="basicAuthenticationFilter" class="org.apache.stratos.rest.endpoint.handlers.StratosAuthenticationHandler"/>
-    <bean id="sessionAuthenticationFilter" class="org.apache.stratos.rest.endpoint.handlers.CookieBasedAuthenticationHandler"/>
+    <bean id="migrationRestEndpointBean" class="org.apache.stratos.rest.endpoint.services.MigrationAdmin"/>
+    <bean id="basicAuthenticationFilter"
+          class="org.apache.stratos.rest.endpoint.handlers.StratosAuthenticationHandler"/>
+    <bean id="sessionAuthenticationFilter"
+          class="org.apache.stratos.rest.endpoint.handlers.CookieBasedAuthenticationHandler"/>
     <bean id="authorizationFilter" class="org.apache.stratos.rest.endpoint.handlers.StratosAuthorizingHandler">
-        <property name="securedObject" ref="stratosRestEndpointBean"/>
+        <property name="securedObject" ref="migrationRestEndpointBean"/>
     </bean>
     <bean id="exceptionHandler" class="org.apache.stratos.rest.endpoint.handlers.CustomExceptionMapper"/>
     <bean id="genericExceptionHandler" class="org.apache.stratos.rest.endpoint.handlers.GenericExceptionMapper"/>
-    <bean id="throwableExceptionHandler" class="org.apache.stratos.rest.endpoint.handlers.CustomThrowableExceptionMapper"/>
+    <bean id="throwableExceptionHandler"
+          class="org.apache.stratos.rest.endpoint.handlers.CustomThrowableExceptionMapper"/>
     <!--The below config enables OAuth based authentication/authorization for REST API-->
     <bean id="OAuthFilter" class="org.apache.stratos.rest.endpoint.handlers.OAuthHandler">
         <property name="password" value="admin"/>
@@ -75,5 +78,4 @@
             </list>
         </property>
     </bean>
-
 </beans>

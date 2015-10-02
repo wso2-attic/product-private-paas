@@ -26,13 +26,13 @@
     <display-name>WSO2 Private PaaS 4.0.0 Migration Tool</display-name>
 
     <servlet>
-        <servlet-name>StratosAdminEndpoint</servlet-name>
+        <servlet-name>MigrationAdminEndpoint</servlet-name>
         <servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
     <servlet-mapping>
-        <servlet-name>StratosAdminEndpoint</servlet-name>
+        <servlet-name>MigrationAdminEndpoint</servlet-name>
         <url-pattern>/*</url-pattern>
     </servlet-mapping>
 </web-app>
