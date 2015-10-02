@@ -787,11 +787,13 @@ public class ServiceUtils {
                 Collection<CartridgeSubscription> cartridgeSubscriptions =
                         dataInsertionAndRetrievalManager.getCartridgeSubscriptions(tenantId);
 
-                for (CartridgeSubscription cartridgeSubscription : cartridgeSubscriptions) {
-                    List<SubscriptionDomainBean> tenantSubscriptionDomains = PojoConverter
-                            .populateSubscriptionDomainPojos(cartridgeSubsciptionManager.getSubscriptionDomains(
-                                    tenantId, cartridgeSubscription.getAlias()));
-                    subscriptionDomainBeanList.addAll(tenantSubscriptionDomains);
+                if (cartridgeSubscriptions != null) {
+                    for (CartridgeSubscription cartridgeSubscription : cartridgeSubscriptions) {
+                        List<SubscriptionDomainBean> tenantSubscriptionDomains = PojoConverter
+                                .populateSubscriptionDomainPojos(cartridgeSubsciptionManager.getSubscriptionDomains(
+                                        tenantId, cartridgeSubscription.getAlias()));
+                        subscriptionDomainBeanList.addAll(tenantSubscriptionDomains);
+                    }
                 }
             }
             catch (Exception e) {
