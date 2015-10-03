@@ -24,7 +24,7 @@ hawtbuf_1.9_1.0.0.jar
 org.apache.commons.lang3_3.1.0.jar
 org.apache.stratos.common-4.1.0.jar
 org.apache.stratos.messaging-4.1.0.jar
-private-paas-membership-scheme-4.1.0-SNAPSHOT.jar
+private-paas-membership-scheme-4.1.0.jar
 ```
 
 3. Update axis2.xml with the following configuration, cluster id parameter need to contain the
