@@ -30,6 +30,5 @@
 
     <modules>
         <module>carbon</module>
-        <module>load-balancer</module>
     </modules>
 </project>
