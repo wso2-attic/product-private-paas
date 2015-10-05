@@ -136,7 +136,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         if service_type.endswith(self.CONST_WORKER):
             start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -DworkerNode=true start"
         else:
-            start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -Dsetup start"
+            start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start"
         env_var = os.environ.copy()
         p = subprocess.Popen(start_command, env=env_var, shell=True)
         output, errors = p.communicate()
