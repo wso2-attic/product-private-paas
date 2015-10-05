@@ -22,7 +22,7 @@
         <version>4.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ppaas-membership-scheme</artifactId>
+    <artifactId>wso2ppaas-membership-scheme</artifactId>
     <packaging>bundle</packaging>
     <name>WSO2 PPaaS - Carbon Extensions - Membership Scheme</name>
     <description>Private PaaS Membership Scheme</description>
