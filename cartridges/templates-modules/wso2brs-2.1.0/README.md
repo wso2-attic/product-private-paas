@@ -1,7 +1,7 @@
 WSO2-BRS 2.1.0 Template for the Configurator
 -------------------------------------------------------------------------------------
 
-###Creating BRS Template Module for Private PaaS
+### Creating BRS Template Module for Private PaaS
 
 (1) Copy [mysql-connector-java-5.1.xx-bin.jar](http://dev.mysql.com/downloads/connector/j/) file to `<template_module_home>/files/repository/components/lib` folder. ( Folder structure needs to be created. )
 
@@ -50,46 +50,6 @@ files
     │   │   ├── org.wso2.carbon.server-4.2.0.jar
     │   │   └── org.wso2.ciphertool-1.0.0-wso2v2.jar
     │   └── patches
-    │       ├── patch0004
-    │       │   ├── org.wso2.carbon.application.deployer_4.2.0.jar
-    │       │   ├── org.wso2.carbon.core.services_4.2.0.jar
-    │       │   ├── org.wso2.carbon.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.ui_4.2.0.jar
-    │       │   ├── org.wso2.carbon.user.core_4.2.0.jar
-    │       │   └── org.wso2.carbon.utils_4.2.0.jar
-    │       ├── patch0005
-    │       │   ├── XmlSchema_1.4.7.wso2v2.jar
-    │       │   ├── axis2-transport-jms_1.1.0.wso2v9.jar
-    │       │   ├── axis2_1.6.1.wso2v10.jar
-    │       │   ├── org.wso2.carbon.application.deployer_4.2.0.jar
-    │       │   ├── org.wso2.carbon.core_4.2.0.jar
-    │       │   └── org.wso2.carbon.user.core_4.2.0.jar
-    │       ├── patch0006
-    │       │   ├── axis2-json_1.6.1.wso2v10.jar
-    │       │   ├── axis2-transport-rabbitmq-amqp_1.1.0.wso2v9.jar
-    │       │   ├── axis2_1.6.1.wso2v10.jar
-    │       │   ├── javax.cache.wso2_4.2.0.jar
-    │       │   ├── org.wso2.carbon.application.deployer_4.2.0.jar
-    │       │   ├── org.wso2.carbon.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.user.api_4.2.0.jar
-    │       │   ├── org.wso2.carbon.user.core_4.2.0.jar
-    │       │   └── wsdl4j_1.6.2.wso2v4.jar
-    │       ├── patch0007
-    │       │   ├── axis2-json_1.6.1.wso2v10.jar
-    │       │   ├── axis2_1.6.1.wso2v10.jar
-    │       │   ├── org.wso2.carbon.application.deployer_4.2.0.jar
-    │       │   ├── org.wso2.carbon.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.registry.server_4.2.0.jar
-    │       │   ├── org.wso2.carbon.server.admin_4.2.0.jar
-    │       │   ├── org.wso2.carbon.ui_4.2.0.jar
-    │       │   ├── org.wso2.carbon.user.core_4.2.0.jar
-    │       │   └── org.wso2.carbon.utils_4.2.0.jar
-    │       ├── patch0008
-    │       │   ├── axis2_1.6.1.wso2v10.jar
-    │       │   ├── javax.cache.wso2_4.2.0.jar
-    │       │   ├── org.wso2.carbon.registry.core_4.2.0.jar
-    │       │   ├── org.wso2.carbon.securevault_4.2.0.jar
-    │       │   └── org.wso2.carbon.user.core_4.2.0.jar
     │       ├── patch0009
     │       │   ├── axiom_1.2.11.wso2v4.jar
     │       │   ├── axis2-json_1.6.1.wso2v10.jar

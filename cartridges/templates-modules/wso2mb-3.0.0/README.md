@@ -76,7 +76,7 @@ You can configure following in the ***module.ini*** file.
 
     CONFIG_PARAM_DOMAIN = wso2.mb.domain
 
-* Used in - < AS_HOME >/repository/conf/axis2/axis2.xml
+* Used in - < MB_HOME >/repository/conf/axis2/axis2.xml
 
 ---
 
