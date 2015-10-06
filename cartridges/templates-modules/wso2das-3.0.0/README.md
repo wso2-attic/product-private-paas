@@ -7,7 +7,7 @@ This template supports following configurations
 2. Fronting the DAS cluster with WSO2 ELB
 
 
-###Creating AS Template Module for Private PaaS
+###Creating DAS Template Module for Private PaaS
 
 (1) Copy [mysql-connector-java-5.1.xx-bin.jar](http://dev.mysql.com/downloads/connector/j/) file to `<template_module_home>/files/repository/components/lib` folder. ( Folder structure needs to be created. )
 
@@ -79,7 +79,7 @@ You can configure following in the ***module.ini*** file.
         
 #### Set Domain :
 
-    CONFIG_PARAM_DOMAIN = wso2.am.domain
+    CONFIG_PARAM_DOMAIN = wso2.das.domain
 
 * Used in - < DAS_HOME >/repository/conf/axis2/axis2.xml
 
@@ -118,19 +118,22 @@ You can configure following in the ***module.ini*** file.
 * Used in - < DAS_HOME >/repository/conf/tomcat/catalina-server.xml
 
 ---
-#### Set worker/manger sub-domain in nodes  :
+#### Set spark master count  :
 
-    CONFIG_PARAM_SUB_DOMAIN= worker
+    CONFIG_PARAM_CARBON_SPARK_MASTER_COUNT= 2
 
- * Used in - < DAS_HOME >/repository/conf/axis2/axis2.xml
- * Used in - < DAS_HOME >/repository/conf/carbon.xml
- * Used in - < DAS_HOME >/repository/conf/registry.xml
+ * Used in - < DAS_HOME >/repository/conf/analytics/spark/spark-defauls.conf
+ 
+ #### Set spark symbolic link location :
+
+     CONFIG_PARAM_SYMBOLIC_LINK= /mnt/wso2das
+
+  * Used in - < DAS_HOME >/repository/conf/analytics/spark/spark-defauls.conf
 
 ---
-#### Set worker and manager hostnames
-
-    CONFIG_PARAM_WORKER_HOST_NAME = am.cloud-test.wso2.com
-    CONFIG_PARAM_MGT_HOST_NAME = mgt.am.cloud-test.wso2.com
+#### Set hostname
+    CONFIG_PARAM_HOST_NAME = das.cloud-test.wso2.com
+    CONFIG_PARAM_MGT_HOST_NAME = mgt.das.cloud-test.wso2.com
 
 * Used in - < DAS_HOME >/repository/conf/axis2/axis2.xml
 * Used in - < DAS_HOME >/repository/conf/carbon.xml
@@ -138,53 +141,86 @@ You can configure following in the ***module.ini*** file.
 ---
 
 ## Following are the config parameters used for setting up external database 
-#### Set URL
 
-    CONFIG_PARAM_URL= jdbc:mysql://localhost:3306/
+#### Set URL for Analytics FS DB
 
-#### Set Username
+    CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL= jdbc:mysql://localhost:3306/analytics_fs_db
 
-    CONFIG_PARAM_USER_NAME=root
+#### Set Username for Analytics FS DB
 
-#### Set Password
+    CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_USER_NAME=root
+
+#### Set Password for Analytics FS DB
 ```
-CONFIG_PARAM_PAMSWORD=root
+    CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_PASSWORD=root
 ```
-#### Set Driver class name
+#### Set Driver class name for Analytics FS DB
 
-    CONFIG_PARAM_DRIVER_CLAMS_NAME=com.mysql.jdbc.Driver
+    CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
+    
+#### Set URL for Event Store DB
 
-#### Set Max Active
+    CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_URL= jdbc:mysql://localhost:3306/event_store_db
 
-    CONFIG_PARAM_MAX_ACTIVE=50
+#### Set Username for Event Store DB
 
-#### Set Max Wait
+    CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_USER_NAME=root
 
-    CONFIG_PARAM_MAX_WAIT=60000
+#### Set Password for Event Store DB
+```
+    CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_PASSWORD=root
+```
+#### Set Driver class name for Event Store DB
 
-#### Set test on borrow
+    CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
+    
+#### Set URL for Processed Data Store DB
 
-    CONFIG_PARAM_TEST_ON_BORROW=true
+    CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_URL= jdbc:mysql://localhost:3306/processed_data_db
 
-#### Set validation query
-    CONFIG_PARAM_VALIDATION_QUERY=SELECT 1
+#### Set Username for Processed Data Store DB
 
-#### Set validation interval
+    CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_USER_NAME=root
 
-    CONFIG_PARAM_VALIDATION_INTERVAL=30000
+#### Set Password for Processed Data Store DB
+```
+    CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_PASSWORD=root
+```
+#### Set Driver class name for Processed Data Store DB
 
-#### Set Local Registry database
+    CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
+    
+#### Set URL for registry DB
 
-    CONFIG_PARAM_REGISTRY_LOCAL1="jdbc/WSO2CarbonDB:REGISTRY_LOCAL1"
+    CONFIG_PARAM_REGISTRY_DB_URL= jdbc:mysql://localhost:3306/registry_db
 
-#### Set Registry database
+#### Set Username for registry DB
 
-    CONFIG_PARAM_REGISTRY_DB="jdbc/WSO2RegistryDB:REGISTRY_DB"
+    CONFIG_PARAM_REGISTRY_DB_USER_NAME=root
 
-#### Set datasource and shared user database
+#### Set Password for registry DB
+```
+    CONFIG_PARAM_REGISTRY_DB_PASSWORD=root
+```
+#### Set Driver class name for registry DB
 
-    CONFIG_PARAM_USER_DB="jdbc/WSO2UMDB:WSO2_USER_DB"
+    CONFIG_PARAM_REGISTRY_DB_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
 
+#### Set URL for user DB
+
+    CONFIG_PARAM_USER_MGT_DB_URL= jdbc:mysql://localhost:3306/user_db
+
+#### Set Username for user DB
+
+    CONFIG_PARAM_USER_MGT_DB_USER_NAME=root
+
+#### Set Password for user DB
+```
+    CONFIG_PARAM_USER_MGT_DB_PASSWORD=root
+```
+#### Set Driver class name for user DB
+
+    CONFIG_PARAM_USER_MGT_DB_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
 ##### Used in 
 
 * < DAS_HOME >/repository/conf/user-mgt.xml

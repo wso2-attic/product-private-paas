@@ -1,6 +1,6 @@
 WSO2BRS-2.1.0 Application
 =========================
-A simple application with a wso2as-5.2.1 cartridge.
+A simple application with a wso2brs-2.1.0 cartridge.
 
 Application view
 ----------------
