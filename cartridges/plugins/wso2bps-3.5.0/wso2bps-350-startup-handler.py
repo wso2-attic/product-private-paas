@@ -36,6 +36,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     CONST_MB_IP = "MB_IP"
     CONST_SERVICE_NAME = "SERVICE_NAME"
     CONST_CLUSTER_ID = "CLUSTER_ID"
+    CONST_WORKER = "worker"
     CONST_MANAGER = "manager"
     CONST_MGT = "mgt"
 
@@ -44,9 +45,9 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     CONST_PROTOCOL_HTTP = "http"
     CONST_PROTOCOL_HTTPS = "https"
     CONST_PPAAS_MEMBERSHIP_SCHEME = "private-paas"
-    CONST_PRODUCT = "GREG"
+    CONST_PRODUCT = "BPS"
 
-    SERVICES = ["wso2greg-500-manager"]
+    SERVICES = ["wso2bps-350-manager", "wso2bps-350-worker"]
 
     # list of environment variables exported by the plugin
     ENV_CONFIG_PARAM_SUB_DOMAIN = 'CONFIG_PARAM_SUB_DOMAIN'
@@ -57,9 +58,6 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
     ENV_CONFIG_PARAM_HOST_NAME = 'CONFIG_PARAM_HOST_NAME'
     ENV_CONFIG_PARAM_MGT_HOST_NAME = 'CONFIG_PARAM_MGT_HOST_NAME'
     ENV_CONFIG_PARAM_LOCAL_MEMBER_HOST = 'CONFIG_PARAM_LOCAL_MEMBER_HOST'
-    ENV_CONFIG_PARAM_HTTP_SERVLET_PORT = 'CONFIG_PARAM_HTTP_SERVLET_PORT'
-    ENV_CONFIG_PARAM_HTTPS_SERVLET_PORT = 'CONFIG_PARAM_HTTPS_SERVLET_PORT'
-    ENV_CONFIG_PARAM_PORT_OFFSET = 'CONFIG_PARAM_PORT_OFFSET'
 
     # clustering related environment variables read from payload_parameters
     ENV_CONFIG_PARAM_CLUSTERING = 'CONFIG_PARAM_CLUSTERING'
@@ -76,7 +74,6 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         my_cluster_id = values[self.CONST_CLUSTER_ID]
         clustering = values.get(self.ENV_CONFIG_PARAM_CLUSTERING, 'false')
         membership_scheme = values.get(self.ENV_CONFIG_PARAM_MEMBERSHIP_SCHEME)
-        port_offset = values.get(self.ENV_CONFIG_PARAM_PORT_OFFSET)
         # read topology from PCA TopologyContext
         topology = TopologyContext.topology
 
@@ -88,31 +85,22 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         WSO2StartupHandler.log.info("Cluster ID: %s" % my_cluster_id)
         WSO2StartupHandler.log.info("Clustering: %s" % clustering)
         WSO2StartupHandler.log.info("Membership Scheme: %s" % membership_scheme)
-        WSO2StartupHandler.log.info("Port Offset: %s" % port_offset)
 
         # export Proxy Ports as Env. variables - used in catalina-server.xml
-        mgt_http_proxy_port = self.read_proxy_port(port_mappings_str, port_offset, self.CONST_PORT_MAPPING_MGT_HTTP_TRANSPORT,
-                                                   self.CONST_PROTOCOL_HTTP, self)
-        mgt_https_proxy_port = self.read_proxy_port(port_mappings_str, port_offset, self.CONST_PORT_MAPPING_MGT_HTTPS_TRANSPORT,
-                                                    self.CONST_PROTOCOL_HTTPS, self)
+        mgt_http_proxy_port = self.read_proxy_port(port_mappings_str, self.CONST_PORT_MAPPING_MGT_HTTP_TRANSPORT,
+                                                   self.CONST_PROTOCOL_HTTP)
+        mgt_https_proxy_port = self.read_proxy_port(port_mappings_str, self.CONST_PORT_MAPPING_MGT_HTTPS_TRANSPORT,
+                                                    self.CONST_PROTOCOL_HTTPS)
 
         self.export_env_var(self.ENV_CONFIG_PARAM_HTTP_PROXY_PORT, mgt_http_proxy_port)
         self.export_env_var(self.ENV_CONFIG_PARAM_HTTPS_PROXY_PORT, mgt_https_proxy_port)
-        
-        # export servlet ports as environment variables.
-        mgt_http_servlet_port = self.read_servlet_port(port_mappings_str, port_offset, self.CONST_PORT_MAPPING_MGT_HTTP_TRANSPORT,
-                                                   self.CONST_PROTOCOL_HTTP)
-        mgt_https_servlet_port = self.read_servlet_port(port_mappings_str, port_offset, self.CONST_PORT_MAPPING_MGT_HTTPS_TRANSPORT,
-                                                    self.CONST_PROTOCOL_HTTPS)
-
-        self.export_env_var(self.ENV_CONFIG_PARAM_HTTP_SERVLET_PORT, mgt_http_servlet_port)
-        self.export_env_var(self.ENV_CONFIG_PARAM_HTTPS_SERVLET_PORT, mgt_https_servlet_port)
 
         # set sub-domain
         sub_domain = None
         if service_type.endswith(self.CONST_MANAGER):
             sub_domain = self.CONST_MGT
-            
+        elif service_type.endswith(self.CONST_WORKER):
+            sub_domain = self.CONST_WORKER
         self.export_env_var(self.ENV_CONFIG_PARAM_SUB_DOMAIN, sub_domain)
 
         # if CONFIG_PARAM_MEMBERSHIP_SCHEME is not set, set the private-paas membership scheme as default one
@@ -145,7 +133,10 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
 
         # start server
         WSO2StartupHandler.log.info("Starting WSO2 %s ..." % self.CONST_PRODUCT)
-        start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start"
+        if service_type.endswith(self.CONST_WORKER):
+            start_command = "exec ${CARBON_HOME}/bin/wso2server.sh -DworkerNode=true start"
+        else:
+            start_command = "exec ${CARBON_HOME}/bin/wso2server.sh start"
         env_var = os.environ.copy()
         p = subprocess.Popen(start_command, env=env_var, shell=True)
         output, errors = p.communicate()
@@ -159,13 +150,19 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         :return: void
         """
         mgt_host_name = None
+        host_name = None
         for service_name in self.SERVICES:
             if service_name.endswith(self.CONST_MANAGER):
                 mgr_cluster = self.get_cluster_of_service(topology, service_name, app_id)
                 if mgr_cluster is not None:
                     mgt_host_name = mgr_cluster.hostnames[0]
+            elif service_name.endswith(self.CONST_WORKER):
+                worker_cluster = self.get_cluster_of_service(topology, service_name, app_id)
+                if worker_cluster is not None:
+                    host_name = worker_cluster.hostnames[0]
 
         self.export_env_var(self.ENV_CONFIG_PARAM_MGT_HOST_NAME, mgt_host_name)
+        self.export_env_var(self.ENV_CONFIG_PARAM_HOST_NAME, host_name)
 
     def export_cluster_ids(self, topology, app_id, service_type, my_cluster_id):
         """
@@ -176,8 +173,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         """
         cluster_ids = []
         cluster_id_of_service = None
-#        if service_type.endswith(self.CONST_MANAGER) or service_type.endswith(self.CONST_WORKER):
-        if service_type.endswith(self.CONST_MANAGER):
+        if service_type.endswith(self.CONST_MANAGER) or service_type.endswith(self.CONST_WORKER):
             for service_name in self.SERVICES:
                 cluster_of_service = self.get_cluster_of_service(topology, service_name, app_id)
                 if cluster_of_service is not None:
@@ -215,7 +211,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
         return cluster_obj
 
     @staticmethod
-    def read_proxy_port(port_mappings_str, port_offset, port_mapping_name, port_mapping_protocol, self):
+    def read_proxy_port(port_mappings_str, port_mapping_name, port_mapping_protocol):
         """
         returns proxy port of the requested port mapping
 
@@ -239,8 +235,7 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
                     proxy_port = name_value_array[3].split(":")[1]
                     # If PROXY_PORT is not set, set PORT as the proxy port (ex:Kubernetes),
                     if proxy_port == '0':
-                        #proxy_port = name_value_array[2].split(":")[1]
-                        proxy_port = self.read_servlet_port(port_mappings_str, port_offset, port_mapping_name, port_mapping_protocol)
+                        proxy_port = name_value_array[2].split(":")[1]
 
                     if name == port_mapping_name and protocol == port_mapping_protocol:
                         return proxy_port
@@ -257,30 +252,3 @@ class WSO2StartupHandler(ICartridgeAgentPlugin):
             WSO2StartupHandler.log.info("Exported environment variable %s: %s" % (variable, value))
         else:
             WSO2StartupHandler.log.warn("Could not export environment variable %s " % variable)
-
-
-    @staticmethod
-    def read_servlet_port(port_mappings_str, port_offset, port_mapping_name, port_mapping_protocol):
-        """
-        returns servlet port of the requested port mapping
-
-        :return: void
-        """
-        if port_mappings_str is not None:
-            port_mappings_array = port_mappings_str.split(";")
-            if port_mappings_array:
-
-                for port_mapping in port_mappings_array:
-                    # WSO2StartupHandler.log.debug("port_mapping: %s" % port_mapping)
-                    name_value_array = port_mapping.split("|")
-                    name = name_value_array[0].split(":")[1]
-                    protocol = name_value_array[1].split(":")[1]
-                    servlet_port = name_value_array[2].split(":")[1]
-
-                    if port_offset is None:
-                        port_offset = 0
-                        
-                    servlet_port = str(int(servlet_port) + int(port_offset))
-
-                    if name == port_mapping_name and protocol == port_mapping_protocol:
-                        return servlet_port

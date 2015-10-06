@@ -1,0 +1,18 @@
+{
+    "artifactRepositories": [
+        {
+            "alias": "wso2bps-350-manager",
+            "privateRepo": false,
+            "repoUrl": "https://github.com/lasinducharith/bps-dep-sync.git",
+            "repoUsername": "",
+            "repoPassword": ""
+        },
+        {
+            "alias": "wso2bps-350-worker",
+            "privateRepo": false,
+            "repoUrl": "https://github.com/lasinducharith/bps-dep-sync.git",
+            "repoUsername": "",
+            "repoPassword": ""
+        }
+    ]
+}

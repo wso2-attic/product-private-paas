@@ -1,12 +1,12 @@
 {
-    "type": "wso2greg-500",
+    "type": "wso2bps-350-worker",
     "category": "framework",
     "provider": "wso2",
-    "host": "greg.wso2.org",
-    "displayName": "WSO2 GREG 5.0.0",
-    "description": "WSO2 GREG 5.0.0 Cartridge",
-    "version": "5.0.0",
-    "multiTenant": false,
+    "host": "bps.wso2.org",
+    "displayName": "WSO2 BPS 3.5.0 Worker",
+    "description": "WSO2 BPS 3.5.0 Worker Cartridge",
+    "version": "3.5.0",
+    "multiTenant": true,
     "loadBalancingIPType": "public",
     "portMapping": [
         {
@@ -14,26 +14,27 @@
             "protocol": "http",
             "port": 9763,
             "proxyPort": 0
-        },
+        }
+    ],
+    "iaasProvider": [
         {
-            "name": "mgt-https",
-            "protocol": "https",
-            "port": 9443,
-            "proxyPort": 0
+            "type": "kubernetes",
+            "imageId": "wso2/as:5.2.1",
+            "networkInterfaces": []
         }
     ],
     "iaasProvider": [
         {
             "type": "openstack",
-            "imageId": "RegionOne/87517c2f-3cb2-47ce-8b58-71e4441828fc",
+            "imageId": "<REGION>/<BASE_IMAGE_ID>",
             "property": [
                 {
                     "name": "instanceType",
-                    "value": "RegionOne/15c3065c-462c-4977-9143-094d63d1c2c7"
+                    "value": "<REGION>/<FLAVOUR_ID>"
                 },
                 {
                     "name": "keyPair",
-                    "value": "anuruddha"
+                    "value": "<KEY_PAIR_NAME>"
                 },
                 {
                     "name": "securityGroups",
@@ -42,23 +43,19 @@
             ],
             "networkInterfaces": [
                 {
-                    "networkUuid": "512e1f54-1e85-4dac-b2e6-f0b30fc552cf"
+                    "networkUuid": "<NETWORK_UUID>"
                 }
             ]
         }
     ],
     "property": [
         {
-            "name": "payload_parameter.CONFIG_PARAM_WORKER_HOST_NAME",
-            "value": "greg.wso2.com"
-        },
-        {
             "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
-            "value": "false"
+            "value": "true"
         },
         {
-            "name": "payload_parameter.CONFIG_PARAM_MEMBERSHIP_SCHEME",
-            "value": "stratos"
+            "name": "payload_parameter.LB_IP",
+            "value": "<LOAD_BALANCER_IP>"
         }
     ]
 }

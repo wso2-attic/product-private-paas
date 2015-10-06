@@ -4,8 +4,8 @@
         <provider>org.wso2.carbon.ndatasource.rdbms.RDBMSDataSourceReader</provider>
     </providers>
   
-  <datasources>
-  		{% if CONFIG_PARAM_BPS_DB_URL is defined -%}
+  <datasources>     
+  		{% if CONFIG_PARAM_BPSDS_DB_URL is defined -%}
   		<datasource>
             <name>BPS_DS</name>
             <description></description>
@@ -14,11 +14,11 @@
             </jndiConfig>
             <definition type="RDBMS">
                 <configuration>
-                    <url>{{CONFIG_PARAM_BPS_DB_URL}}</url>
-                    <username>{{CONFIG_PARAM_BPS_DB_USER_NAME}}</username>
-                    <password>{{CONFIG_PARAM_BPS_DB_PASSWORD}}</password>
-                    <driverClassName>{{CONFIG_PARAM_BPS_DB_DRIVER}}</driverClassName>
-                    <maxActive>50</maxActive>
+                    <url>{{CONFIG_PARAM_BPSDS_DB_URL}}</url>
+                    <username>{{CONFIG_PARAM_BPSDS_DB_USERNAME}}</username>
+                    <password>{{CONFIG_PARAM_BPSDS_DB_PASSWORD}}</password>
+                    <driverClassName>{{CONFIG_PARAM_BPSDS_DB_DRIVER}}</driverClassName>
+                    <maxActive>{{CONFIG_PARAM_BPSDS_DB_MAX_ACTIVE}}</maxActive>
                     <maxWait>60000</maxWait>
                     <testOnBorrow>true</testOnBorrow>
                     <validationQuery>SELECT 1</validationQuery>
@@ -26,7 +26,7 @@
                 </configuration>
             </definition>
         </datasource>
-  		{% else %}
+  		{% else %} 
         <datasource>
             <name>BPS_DS</name>
             <description></description>
@@ -35,7 +35,7 @@
             </jndiConfig>
             <definition type="RDBMS">
                 <configuration>
-                    <url>jdbc:h2:file:repository/database/jpadb;DB_CLOSE_ON_EXIT=FALSE;MVCC=TRUE</url>
+                    <url>jdbc:h2:file:{{CARBON_HOME}}/repository/database/jpadb;DB_CLOSE_ON_EXIT=FALSE;MVCC=TRUE</url>
                     <username>wso2carbon</username>
                     <password>wso2carbon</password>
                     <driverClassName>org.h2.Driver</driverClassName>

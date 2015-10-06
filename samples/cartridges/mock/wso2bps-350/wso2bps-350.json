@@ -1,0 +1,43 @@
+{
+    "type": "wso2bps-350",
+    "provider": "wso2",
+    "category": "framework",
+    "host": "bps.wso2.org",
+    "displayName": "WSO2 BPS 3.5.0",
+    "description": "WSO2 BPS 3.5.0 Cartridge",
+    "version": "3.5.0",
+    "multiTenant": "false",
+    "loadBalancingIPType": "public",
+    "portMapping": [
+        {
+            "name": "mgt-console",
+            "protocol": "https",
+            "port": "9443",
+            "proxyPort": "0"
+        },
+        {
+            "name": "pt-http",
+            "protocol": "http",
+            "port": "8280",
+            "proxyPort": "0"
+        },
+        {
+            "name": "pt-https",
+            "protocol": "https",
+            "port": "8243",
+            "proxyPort": "0"
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "mock",
+            "imageId": "wso2/bps:3.5.0",
+            "networkInterfaces": [
+            ],
+            "property": [
+            ]
+        }
+    ],
+    "property": [
+    ]
+}
