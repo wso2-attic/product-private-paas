@@ -229,52 +229,38 @@ You can configure following in the ***module.ini*** file.
 ---
 
 ## Following are the config parameters used for setting up external database 
-#### Set URL
 
-    CONFIG_PARAM_URL= jdbc:mysql://localhost:3306/
+#### Set URL for registry DB
 
-#### Set Username
+    CONFIG_PARAM_REGISTRY_DB_URL= jdbc:mysql://localhost:3306/registry_db
 
-    CONFIG_PARAM_USER_NAME=root
+#### Set Username for registry DB
 
-#### Set Password
+    CONFIG_PARAM_REGISTRY_DB_USER_NAME=root
+
+#### Set Password for registry DB
 ```
-CONFIG_PARAM_PAMSWORD=root
+    CONFIG_PARAM_REGISTRY_DB_PASSWORD=root
 ```
-#### Set Driver class name
+#### Set Driver class name for registry DB
 
-    CONFIG_PARAM_DRIVER_CLAMS_NAME=com.mysql.jdbc.Driver
+    CONFIG_PARAM_REGISTRY_DB_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
 
-#### Set Max Active
+#### Set URL for user DB
 
-    CONFIG_PARAM_MAX_ACTIVE=50
+    CONFIG_PARAM_USER_MGT_DB_URL= jdbc:mysql://localhost:3306/user_db
 
-#### Set Max Wait
+#### Set Username for user DB
 
-    CONFIG_PARAM_MAX_WAIT=60000
+    CONFIG_PARAM_USER_MGT_DB_USER_NAME=root
 
-#### Set test on borrow
+#### Set Password for user DB
+```
+    CONFIG_PARAM_USER_MGT_DB_PASSWORD=root
+```
+#### Set Driver class name for user DB
 
-    CONFIG_PARAM_TEST_ON_BORROW=true
-
-#### Set validation query
-    CONFIG_PARAM_VALIDATION_QUERY=SELECT 1
-
-#### Set validation interval
-
-    CONFIG_PARAM_VALIDATION_INTERVAL=30000
-
-#### Set Local Registry database
-
-    CONFIG_PARAM_REGISTRY_LOCAL1="jdbc/WSO2CarbonDB:REGISTRY_LOCAL1"
-
-#### Set Registry database
-
-    CONFIG_PARAM_REGISTRY_DB="jdbc/WSO2RegistryDB:REGISTRY_DB"
-
-#### Set datasource and shared user database
-
-    CONFIG_PARAM_USER_DB="jdbc/WSO2UMDB:WSO2_USER_DB"
+    CONFIG_PARAM_USER_MGT_DB_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
 
 ##### Used in 
 

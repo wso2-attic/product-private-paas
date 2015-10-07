@@ -52,7 +52,7 @@ You can configure following in the ***module.ini*** file.
 
 #### Set the path of product directory :
 
-    CARBON_HOME = <AS_HOME>
+    CARBON_HOME = <MB_HOME>
 
 ---
 

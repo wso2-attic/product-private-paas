@@ -20,6 +20,26 @@
             "protocol": "https",
             "port": 9443,
             "proxyPort": 443
+        },
+        {
+            "name": "thrift-tcp",
+            "protocol": "tcp",
+            "port": 7611
+        },
+        {
+            "name": "thrift-ssl",
+            "protocol": "ssl",
+            "port": 7711
+        },
+        {
+            "name": "spark-manager",
+            "protocol": "http",
+            "port": 8081
+        },
+        {
+            "name": "spark-worker",
+            "protocol": "http",
+            "port": 11500
         }
     ],
     "iaasProvider": [
@@ -36,20 +56,68 @@
     ],
     "property": [
         {
-            "name": "payload_parameter.CONFIG_PARAM_WORKER_HOST_NAME",
-            "value": "das.wso2.com"
+            "name": "payload_parameter.CONFIG_PARAM_PROFILE",
+            "value": "default"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_CLUSTERING",
-            "value": "false"
+            "value": "true"
         },
         {
             "name": "payload_parameter.CONFIG_PARAM_MEMBERSHIP_SCHEME",
-            "value": "stratos"
+            "value": "private-paas"
         },
         {
             "name": "payload_parameter.APPLICATION_PATH",
             "value": "/var/www"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_URL",
+            "value": "<ANALYTICS_WSO2_ANALYTICS_FS_DB_URL>"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_USER_NAME",
+            "value": "<ANALYTICS_WSO2_ANALYTICS_FS_DB_USERNAME>"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_PASSWORD",
+            "value": "<ANALYTICS_WSO2_ANALYTICS_FS_DB_PASSWORD>"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WSO2_ANALYTICS_WSO2_ANALYTICS_FS_DB_DRIVER_CLASS_NAME",
+            "value": "<ANALYTICS_WSO2_ANALYTICS_FS_DB_DRIVER_CLASS_NAME>"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_URL",
+            "value": "<ANALYTICS_EVENT_STORE_DB_URL>"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_USER_NAME",
+            "value": "<ANALYTICS_EVENT_STORE_DB_USERNAME>"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_PASSWORD",
+            "value": "<ANALYTICS_EVENT_STORE_DB_PASSWORD>"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_DRIVER_CLASS_NAME",
+            "value": "<ANALYTICS_EVENT_STORE_DB_DRIVER_CLASS_NAME>"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_URL",
+            "value": "<ANALYTICS_PROCESSED_DATA_STORE_DB_URL>"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_USER_NAME",
+            "value": "<ANALYTICS_PROCESSED_DATA_STORE_DB_USERNAME>"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_PASSWORD",
+            "value": "<ANALYTICS_PROCESSED_DATA_STORE_DB_PASSWORD>"
+        },
+        {
+            "name": "payload_parameter.CONFIG_PARAM_WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB_DRIVER_CLASS_NAME",
+            "value": "<ANALYTICS_PROCESSED_DATA_STORE_DB_DRIVER_CLASS_NAME>"
         }
     ]
 }

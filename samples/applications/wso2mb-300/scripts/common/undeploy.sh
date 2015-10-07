@@ -20,8 +20,8 @@
 iaas=$1
 host_ip="localhost"
 host_port=9443
-product_type="as"
-product_version="521"
+product_type="mb"
+product_version="300"
 product="wso2${product_type}-${product_version}"
 set -e
 
