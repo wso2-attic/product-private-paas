@@ -22,6 +22,26 @@
             "port": 9443,
             "proxyPort": 0,
             "kubernetesPortType": "NodePort"
+        },
+        {
+            "name": "thrift-tcp",
+            "protocol": "tcp",
+            "port": 7611
+        },
+        {
+            "name": "thrift-ssl",
+            "protocol": "ssl",
+            "port": 7711
+        },
+        {
+            "name": "spark-manager",
+            "protocol": "http",
+            "port": 8081
+        },
+        {
+            "name": "spark-worker",
+            "protocol": "http",
+            "port": 11500
         }
     ],
     "iaasProvider": [
