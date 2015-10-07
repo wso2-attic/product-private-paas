@@ -635,7 +635,7 @@
 
     <properties>
         <!-- Apache Stratos version -->
-        <stratos.version>4.1.3</stratos.version>
+        <stratos.version>4.1.4-SNAPSHOT</stratos.version>
 
         <!-- ppaas distribution properties -->
         <ppaas.distribution.name>wso2ppaas</ppaas.distribution.name>
