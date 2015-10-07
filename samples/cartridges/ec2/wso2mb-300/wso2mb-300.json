@@ -42,6 +42,18 @@
             "port": 8883
         }
     ],
+    "iaasProvider": [
+        {
+            "type": "ec2",
+            "imageId": "us-west-2/ami-e57362d5",
+            "property": [
+                {
+                    "name": "instanceType",
+                    "value": "t2.medium"
+                }
+            ]
+        }
+    ],
     "property": [
         {
             "name": "payload_parameter.CONFIG_PARAM_WORKER_HOST_NAME",
