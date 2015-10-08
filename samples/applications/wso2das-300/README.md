@@ -42,19 +42,19 @@ samples
   "value": "com.mysql.jdbc.Driver"
 },
 {
-  "name": "payload_parameter.CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_URL",
+  "name": "payload_parameter.CONFIG_PARAM_WSO2_ANALYTICS_EVENT_STORE_DB_URL",
   "value": "jdbc:mysql://'<MYSQL_HOST>'/'<DAS_EVENT_STORE_DB>'"
 },
 {
-  "name": "payload_parameter.CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_USER_NAME",
+  "name": "payload_parameter.CONFIG_PARAM_WSO2_ANALYTICS_EVENT_STORE_DB_USER_NAME",
   "value": "'<DAS_CONFIG_DB_USERNAME>`"
 },
 {
-  "name": "payload_parameter.CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_PASSWORD",
+  "name": "payload_parameter.CONFIG_PARAM_WSO2_ANALYTICS_EVENT_STORE_DB_PASSWORD",
   "value": "`<DAS_CONFIG_DB_PASSWORD>`"
 },
 {
-  "name": "payload_parameter.CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_DRIVER_CLASS_NAME",
+  "name": "payload_parameter.CONFIG_PARAM_WSO2_ANALYTICS_EVENT_STORE_DB_DRIVER_CLASS_NAME",
   "value": "com.mysql.jdbc.Driver"
 },
 {
