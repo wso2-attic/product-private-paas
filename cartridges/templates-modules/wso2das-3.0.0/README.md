@@ -160,19 +160,19 @@ You can configure following in the ***module.ini*** file.
     
 #### Set URL for Event Store DB
 
-    CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_URL= jdbc:mysql://localhost:3306/event_store_db
+    CONFIG_PARAM_WSO2_ANALYTICS_EVENT_STORE_DB_URL= jdbc:mysql://localhost:3306/event_store_db
 
 #### Set Username for Event Store DB
 
-    CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_USER_NAME=root
+    CONFIG_PARAM_WSO2_ANALYTICS_EVENT_STORE_DB_USER_NAME=root
 
 #### Set Password for Event Store DB
 ```
-    CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_PASSWORD=root
+    CONFIG_PARAM_WSO2_ANALYTICS_EVENT_STORE_DB_PASSWORD=root
 ```
 #### Set Driver class name for Event Store DB
 
-    CONFIG_PARAM_WSO2_WSO2_ANALYTICS_EVENT_STORE_DB_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
+    CONFIG_PARAM_WSO2_ANALYTICS_EVENT_STORE_DB_DRIVER_CLASS_NAME=com.mysql.jdbc.Driver
     
 #### Set URL for Processed Data Store DB
 
