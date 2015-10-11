@@ -1,0 +1,10 @@
+## WSO Private PaaS Installer Tool
+
+
+This tool will enable users to install the private-paas.
+
+# Instructions
+
+1. Build the ppaas-migration tool by running the following command
+
+mvn clean install

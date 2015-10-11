@@ -69,9 +69,9 @@ bps_config_db="bps_config"
 
 function help() {
     echo ""
-    echo "This script will install WSO2 Private PaaS 4.0"
+    echo "This script will install WSO2 Private PaaS 4.1.0"
     echo "usage:"
-    echo "boot.sh [ -p | -s | -t ]"
+    echo "boot.sh [-s ]"
     echo "   -s : Silent mode. This will start core services without performing any configuration."
     echo ""
 }
@@ -162,7 +162,7 @@ function read_user_input() {
 
 function setup_apache_stratos() {
     # Configure IaaS properties
-    iaas=$(read_user_input "Enter your IaaS. vCloud, EC2 and OpenStack are the currently supported IaaSs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 and \"os\" for OpenStack: " "" $iaas )
+    iaas=$(read_user_input "Enter your IaaS. vCloud, EC2 and OpenStack are the currently supported IaaSs. Enter \"vcloud\" for vCloud, \"ec2\" for EC2 , \"os\" for OpenStack and  \"kub\" for Kubernetes: " "" $iaas )
 
     if [[ "$iaas" == "os" ]]; then
         echo -e "You selected OpenStack. "
@@ -264,7 +264,7 @@ function  run_setup_sh() {
         cep_port=7614
         cep_port_offset=3
         /bin/bash $setup_path/setup.sh -p "stratos"
-        su - $host_user -c "/bin/bash $setup_path/setup_cep.sh"
+        su - $host_user -c "/bin/bash $setup_path/setup-cep.sh"
     else
     	/bin/bash $setup_path/setup.sh -p "default"
     fi
@@ -272,9 +272,9 @@ function  run_setup_sh() {
 
 
 function get_core_services_confirmations() {
-    bam_needed=$(read_user_input "Do you need to setup WSO2 DAS as a core service? [y/n] " "" $bam_enabled )
+    bam_needed=$(read_user_input "Do you need to setup WSO2 DAS as a core service? [y/n] " "" $das_enabled )
     if [[ $bam_needed =~ ^[Yy]$ ]]; then
-       bam_enabled="true"
+       das_enabled="true"
     fi
 
     wso2_ppaas_needed=$(read_user_input "Do you need to start WSO2 Private PaaS? [y/n] " "" $wso2_ppaas_enabled )
@@ -361,19 +361,11 @@ function start_servers() {
 	profile="stratos"
     fi
 
-    if [[ $bam_enabled = "true" ]]; then
+    if [[ $das_enabled = "true" ]]; then
        # Setup BAM server
        echo "Starting BAM core service..."
-       nohup su - $host_user -c "/bin/bash $setup_path/setup_bam_logging.sh -p $profile" >> wso2bam.log
-       while ! echo exit | nc localhost $BAM_PORT; do sleep $SLEEPTIME; done
-       sleep $SLEEPTIME
-    fi
-
-    if [[ $apim_enabled = "true" ]]; then
-       # Setup Gitblit Server
-       echo "Starting Gitblit core service..."
-       nohup su - $host_user -c "/bin/bash $setup_path/gitblit.sh" >> gitblit.log
-       while ! echo exit | nc localhost $GITBLIT_PORT; do sleep $SLEEPTIME; done
+      # nohup su - $host_user -c "/bin/bash $setup_path/setup-das.sh -p $profile" >> wso2bam.log
+      #  while ! echo exit | nc localhost $BAM_PORT; do sleep $SLEEPTIME; done
        sleep $SLEEPTIME
     fi
 
@@ -409,22 +401,9 @@ function update_hosts_file() {
 
     # update the /etc/hosts file
     echo " " >> /etc/hosts
-    echo $lb_ip  appserver.wso2.com >> /etc/hosts
-    echo $lb_ip  esb.wso2.com >> /etc/hosts
-    echo $lb_ip  greg.wso2.com >> /etc/hosts
-    echo $lb_ip  bps.wso2.com >> /etc/hosts
 
-    if [[ $as_worker_mgt_enabled = "true" ]]; then
-	echo $lb_ip  mgt.appserver.wso2.com >> /etc/hosts
-    fi
+    echo $machine_ip  $stratos_domain >> /etc/hosts
 
-    if [[ $esb_worker_mgt_enabled = "true" ]]; then
-	echo $lb_ip  mgt.esb.wso2.com >> /etc/hosts
-    fi
-
-    if [[ $bps_worker_mgt_enabled = "true" ]]; then
-	echo $lb_ip  mgt.bps.wso2.com >> /etc/hosts
-    fi
 }
 
 # -----------------------
@@ -443,12 +422,6 @@ do
   case $opts in
     s)
         export silent_mode="true"
-        ;;
-    p)
-        export puppet_only="true"
-        ;;
-    t)
-        export deploy_services="false"
         ;;
     h)
         help
@@ -470,22 +443,18 @@ if [[ "$silent_mode" = "true" ]]; then
      start_servers
 else
      # Run main configuration
-     echo -e "Strating ppaas installer"
+     echo -e "Starting WSO2 Private PaaS installer"
+
      init
      # Do the product specific configurations
-
      setup_apache_stratos
 
      # Start core servers
      start_servers
 
-     if [[ "$wso2_ppaas_enabled" = "true" ]]; then
-        # Deploy cartridges to Apache Stratos
-        deploy_wso2_ppaas_services
+     # Update hosts file
+     update_hosts_file
 
-        # Update hosts file
-        update_hosts_file
-     fi
 fi
 
 echo ""

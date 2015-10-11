@@ -28,7 +28,7 @@ export MYSQL_CONNECTOR=mysql-connector-java-5.1.29-bin.jar # Relevant MySQL conn
 # General configuration
 export JAVA_HOME=${JAVA_HOME:-}
 export log_path=/var/log/apache-stratos
-export stratos_domain=""
+export stratos_domain="wso2.com"
 export machine_ip=""
 export host_user=""
 export SLEEPTIME=30

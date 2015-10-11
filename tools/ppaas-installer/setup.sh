@@ -123,20 +123,6 @@ function general_conf_validate() {
         exit 1
     fi
 
-# if [[ $auto_start_servers != "true" ]]; then
-# 	if [[ $profile = "default" ]]; then
-#         read -p "Do you want to configure ActiveMQ [y/n]: " answer
-#         if [[ $answer = y ]] ; then
-#        	mb_ip=$host_ip
-#        else
-#       	echo "Provided mb_ip in conf/setup.conf will be used"
-#       	config_mb="false"
-#        fi
-#	fi
-
-#	copy_mb_client_libs
-# fi
-
 }
 
 # Copy MB client libs
@@ -356,21 +342,6 @@ function sm_related_popup() {
 }
 
 function sm_conf_validate() {
-    if [[ -z $puppet_ip ]]; then
-        echo "Please specify the ip of puppet master"
-        exit 1
-    elif !(valid_ip $puppet_ip); then
-        echo "Please provide valid ip for puppet master"
-        exit 1
-    fi
-    if [[ -z $puppet_hostname ]]; then
-        echo "Please specify the puppet master's hostname"
-        exit 1
-    fi
-    if [[ -z $puppet_environment ]]; then
-        echo "Please specify the relevant puppet environment"
-        exit 1
-    fi
     if [[ ! -f $mysql_connector_jar ]]; then
         echo "Please copy the mysql connector jar to the stratos release pack folder and update the JAR name in conf/setup.conf file"
         exit 1
@@ -533,19 +504,6 @@ if [[ $host_user == "" ]]; then
 fi
 
 echo "user provided in conf/setup.conf is $host_user."
-#if [[ $auto_start_servers != "true" ]]; then
-#    echo "If you want to provide some other user name please specify it at the prompt."
-#    echo "If you want to continue with $host_user just press enter to continue"
-#    read username
-#    if [[ $username != "" ]]; then
-#        host_user=$username
-#    fi
-#    user=`id $host_user`
-#    if [[ $? = 1 ]]; then
-#        echo "User $host_user does not exist. The system will create it."
-#        adduser --home /home/$host_user $host_user
-#    fi
-#fi
 
 export $host_user
 
@@ -568,9 +526,9 @@ elif [[ $profile = "stratos" ]]; then
     sm_conf_validate
 else
     echo "In default profile CEP will be configured."
-    cc_conf_validate
-    as_conf_validate
-    sm_conf_validate
+  #  cc_conf_validate
+  #  as_conf_validate
+  #  sm_conf_validate
 fi
 
 if [[ ! -d $log_path ]]; then
@@ -581,9 +539,7 @@ fi
 if [[ !(-d $stratos_extract_path) ]]; then
     echo "Extracting Apache Stratos"
     unzip -q $stratos_pack_zip -d $stratos_path
-    cp -rf $current_dir/../patches/patch0008/ $stratos_path/apache-stratos-4.0.0-wso2v1/repository/components/patches/
-    cp -rf $current_dir/../themes/theme1/* $stratos_path/apache-stratos-4.0.0-wso2v1/repository/deployment/server/jaggeryapps/console/themes/theme1/
-    mv -f $stratos_path/apache-stratos-4.0.0-wso2v1 $stratos_extract_path
+    mv -f $stratos_path/wso2ppaas-4.1.0-SNAPSHOT $stratos_extract_path
 fi
 
 if [[ ( ($profile = "default" || $profile = "stratos") && $config_mb = "true") ]]; then
@@ -591,6 +547,14 @@ if [[ ( ($profile = "default" || $profile = "stratos") && $config_mb = "true") ]
     tar -xzf $activemq_pack -C $stratos_path
     # disable amqp connector to prevent conflicts with openstack
     sed -r -i -e 's@^(\s*)(<transportConnector name="amqp".*\s*)$@\1<!--\2-->@g' $stratos_path/$ACTIVE_MQ_EXTRACTED/conf/activemq.xml
+fi
+
+if [[ $config_mb = "true" ]]; then
+    echo -e "Starting ActiveMQ server ..."
+    echo "Starting ActiveMQ server ..." >> $LOG
+    $activemq_path/bin/activemq start
+    echo "ActiveMQ server started" >> $LOG
+    sleep 10
 fi
 
 general_setup
