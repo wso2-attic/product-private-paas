@@ -355,3 +355,7 @@ h3.panel-title {
     border-bottom-left-radius: 0;
     border-bottom-right-radius: 0;
 }
+
+.col-md-4.container-memoryConsumption {
+    width: 33%;
+}
