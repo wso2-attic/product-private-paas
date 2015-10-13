@@ -359,3 +359,8 @@ h3.panel-title {
 .col-md-4.container-memoryConsumption {
     width: 33%;
 }
+
+button.show-usage {
+    float: right;
+    margin-bottom: 5px;
+}
