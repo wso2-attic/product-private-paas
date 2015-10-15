@@ -28,7 +28,6 @@
 
     <modules>
         <module>ppaas-migration/4.0.0</module>
-        <module>ppaas-installer</module>
     </modules>
 
     <build>
