@@ -18,16 +18,15 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
-        <groupId>org.wso2.ppaas.cartridges</groupId>
-        <artifactId>activemq-5.10.0-cartridge</artifactId>
+        <groupId>org.wso2.ppaas</groupId>
+        <artifactId>activemq-5.10.0-installer-module</artifactId>
         <version>4.1.0-SNAPSHOT</version>
     </parent>
 
-    <groupId>org.wso2.ppaas.installer</groupId>
-    <artifactId>apache-activemq-5.10.0-template-module</artifactId>
+    <artifactId>apache-activemq-5.10.0-installer-template-module</artifactId>
     <packaging>pom</packaging>
-    <name>Apache ActiveMQ 5.10.0 Template Module</name>
-    <description>Apache ActiveMQ 5.10.0 Template Module</description>
+    <name>Apache ActiveMQ 5.10.0 Installer Template Module</name>
+    <description>Apache ActiveMQ 5.10.0 Installer Template Module</description>
 
 
     <build>
