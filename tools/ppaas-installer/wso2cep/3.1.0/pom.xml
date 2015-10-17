@@ -25,9 +25,9 @@
         <version>4.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>wso2cep-3.1.0-installer-cartridge</artifactId>
+    <artifactId>wso2cep-3.1.0-installer-module</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Complex Event Processor 3.1.0 Installer Cartridge</name>
+    <name>WSO2 Complex Event Processor 3.1.0 Installer Module</name>
 
     <build>
         <plugins>
