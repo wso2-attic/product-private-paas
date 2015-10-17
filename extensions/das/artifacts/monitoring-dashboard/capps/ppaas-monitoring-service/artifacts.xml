@@ -58,5 +58,12 @@
         <dependency artifact="SparkscriptsMemoryUsage" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
         <dependency artifact="SparkscriptsScalingDecision" version="1.0.0" include="true"
                     serverRole="DataAnalyticsServer"/>
+        <dependency artifact="GadgetHealthStatsFilter" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="GadgetInFlightRequest" version="1.0.0" include="true"  serverRole="DataAnalyticsServer"/>
+        <dependency artifact="GadgetLoadAverage" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="GadgetMemoryUsage" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
+        <dependency artifact="GadgetScalingDetails" version="1.0.0" include="true"
+                    serverRole="DataAnalyticsServer"/>
+        <dependency artifact="Dashboard" version="1.0.0" include="true" serverRole="DataAnalyticsServer"/>
     </artifact>
 </artifacts>
