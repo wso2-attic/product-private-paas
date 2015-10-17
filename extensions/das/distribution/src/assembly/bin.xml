@@ -29,6 +29,8 @@
                 <include>metering-dashboard/ues-patch/*.*</include>
                 <include>**/*.sql</include>
                 <include>**/*.md</include>
+                <include>wso2cep-300/**</include>
+                <include>wso2cep-310/**</include>
             </includes>
             <excludes>
                 <exclude>pom.xml</exclude>
