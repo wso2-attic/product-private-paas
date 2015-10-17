@@ -15,10 +15,12 @@
   ~ limitations under the License.
   -->
 
-<outputEventAdaptor name="DASWSO2EventOutputAdaptor"
-  statistics="disable" trace="disable" type="wso2event" xmlns="http://wso2.org/carbon/eventadaptormanager">
-  <property name="username">admin</property>
-  <property name="receiverURL">tcp://localhost:7612</property>
-  <property name="password">admin</property>
-  <property name="authenticatorURL">ssl://localhost:7712</property>
-</outputEventAdaptor>
+<eventFormatter name="AverageLoadAverageDASEventFormatter" statistics="disable"
+                trace="enable" xmlns="http://wso2.org/carbon/eventformatter">
+    <from streamName="average_load_average_stats" version="1.0.0"/>
+    <mapping customMapping="disable" type="wso2event"/>
+    <to eventAdaptorName="DefaultWSO2EventOutputAdaptor" eventAdaptorType="wso2event">
+        <property name="stream">average_load_average_stats</property>
+        <property name="version">1.0.0</property>
+    </to>
+</eventFormatter>
