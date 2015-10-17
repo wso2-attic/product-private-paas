@@ -25,6 +25,8 @@ export JAVA_NAME_EXTRACTED=jdk1.7.0_71 # Extracted JDK folder name
 
 export MYSQL_CONNECTOR=mysql-connector-java-5.1.29-bin.jar # Relevant MySQL connector
 
+export CONFIGURATOR_DOWNLOAD_LOCATION=https://svn.wso2.org/repos/wso2/scratch/PPAAS/wso2ppaas-cartridges-4.1.0/wso2ppaas-configurator-4.1.0.zip
+
 # General configuration
 export JAVA_HOME=${JAVA_HOME:-}
 export log_path=/var/log/apache-stratos

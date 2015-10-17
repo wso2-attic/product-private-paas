@@ -167,7 +167,7 @@ function read_user_input() {
 }
 function setup_apache_stratos_with_configurator() {
     cd install
-    wget https://svn.wso2.org/repos/wso2/scratch/PPAAS/wso2ppaas-cartridges-4.1.0/wso2ppaas-configurator-4.1.0.zip
+    wget $CONFIGURATOR_DOWNLOAD_LOCATION
     unzip wso2ppaas-configurator-4.1.0.zip
     cd ..
     pwd
