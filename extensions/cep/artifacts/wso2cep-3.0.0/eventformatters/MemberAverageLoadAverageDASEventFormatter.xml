@@ -15,12 +15,12 @@
   ~ limitations under the License.
   -->
 
-<eventFormatter name="AverageLoadAverageWSO2EventFormatter" statistics="disable"
+<eventFormatter name="MemberAverageLoadAverageDASEventFormatter" statistics="disable"
                 trace="enable" xmlns="http://wso2.org/carbon/eventformatter">
-    <from streamName="average_load_average_stats" version="1.0.0"/>
-    <mapping customMapping="disable" type="wso2event"/>
-    <to eventAdaptorName="DASWSO2EventOutputAdaptor" eventAdaptorType="wso2event">
-        <property name="stream">average_load_average_stats</property>
-        <property name="version">1.0.0</property>
-    </to>
+<from streamName="member_average_load_average_stats" version="1.0.0"/>
+<mapping customMapping="disable" type="wso2event"/>
+<to eventAdaptorName="DefaultWSO2EventOutputAdaptor" eventAdaptorType="wso2event">
+    <property name="stream">member_average_load_average_stats</property>
+    <property name="version">1.0.0</property>
+</to>
 </eventFormatter>
