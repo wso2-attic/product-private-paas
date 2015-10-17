@@ -511,7 +511,7 @@ var cartridgeBlockTemplate = {
                     "type":"string",
                     "id": "root/subscribableInfo/autoscalingPolicy",
                     "default": "autoscale_policy_1",
-                    "title":"Auto-scaling Policy: ",
+                    "title":"Autoscaling Policy: ",
                     "enum": [],
                     "required":false
                 },
