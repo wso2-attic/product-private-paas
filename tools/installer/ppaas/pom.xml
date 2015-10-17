@@ -25,7 +25,7 @@
 
     <artifactId>ppaas-installer</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 PPaaS 4.1.0 - installer </name>
+    <name>WSO2 PPaaS 4.1.0 - installer</name>
 
     <modules>
         <module>wso2ppaas</module>
