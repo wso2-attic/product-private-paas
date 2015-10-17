@@ -343,7 +343,7 @@
         <dependency>
             <groupId>org.apache.stratos</groupId>
             <artifactId>org.apache.stratos.cep.310.extension</artifactId>
-            <version>4.1.4</version>
+            <version>4.1.4-SNAPSHOT</version>
         </dependency>
     </dependencies>
 </project>
