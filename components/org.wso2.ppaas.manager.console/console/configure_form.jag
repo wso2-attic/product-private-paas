@@ -101,8 +101,8 @@ if(isEdit == false && elements.action != 'new') {
             break;
 
         case "autoscaling-policies":
-            formTitle = "Auto-scaling Policie",
-                    buttonText = "Auto-scaling Policy";
+            formTitle = "Autoscaling Policie",
+                    buttonText = "Autoscaling Policy";
             list_data = util.RESTCalls.getPolicyAutoScales();
             if(list_data.status == 'error'){
                 list_data = null;
@@ -146,7 +146,7 @@ if(isEdit == false && elements.action != 'new') {
             break;
 
         case "application-policies":
-            formTitle = "Application Policy",
+            formTitle = "Application Policie",
                     buttonText = "Application Policy";
             list_data = util.RESTCalls.getApplicationPolicies();
             if (list_data.status == 'error') {

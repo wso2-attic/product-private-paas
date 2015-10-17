@@ -376,7 +376,7 @@ $(document).ready(function(){
             }
         })
             .always(function () {
-                btn.html('Add Signup');
+                btn.html('Add Sign Up');
             });
 
     });

@@ -125,13 +125,13 @@
                                         <button class="btn btn-warning btn-lg hover-remove-signup"
                                                 type="button"
                                                 id="{{applicationId}}"
-                                                data-appid='{{applicationName}}'>Remove Signup
+                                                data-appid='{{applicationName}}'>Remove Sign Up
                                         </button>
                                     {{else}}
                                         <button class="btn btn-warning btn-lg hover-signup disabled"
                                                 type="button"
                                                 id="signup_{{applicationId}}"
-                                                data-url="{{url ""}}/applications/{{applicationId}}/signup">Signup
+                                                data-url="{{url ""}}/applications/{{applicationId}}/signup">Sign Up
                                         </button>
                                     {{/if}}
                                 {{/if}}
@@ -152,14 +152,14 @@
                                             <button class="btn btn-warning btn-lg hover-remove-signup"
                                                     type="button"
                                                     id="{{applicationId}}"
-                                                    data-appid='{{applicationName}}'>Remove Signup
+                                                    data-appid='{{applicationName}}'>Remove Sign Up
                                             </button>
                                         {{else}}
                                             <button class="btn btn-warning btn-lg hover-signup disabled"
                                                     type="button"
                                                     id="signup_{{applicationId}}"
                                                     data-url="{{url ""}}/applications/{{applicationId}}/signup">
-                                                Signup
+                                                Sign Up
                                             </button>
                                         {{/if}}
                                     {{/if}}
@@ -189,7 +189,7 @@
                                                     type="button"
                                                     id="signup_{{applicationId}}"
                                                     data-url="{{url ""}}/applications/{{applicationId}}/signup">
-                                                Signup
+                                                Sign Up
                                             </button>
                                         {{/if}}
                                     {{/if}}
@@ -214,14 +214,14 @@
                                                 <button class="btn btn-warning btn-lg hover-remove-signup"
                                                         type="button"
                                                         id="{{applicationId}}"
-                                                        data-appid='{{applicationName}}'>Remove Signup
+                                                        data-appid='{{applicationName}}'>Remove Sign Up
                                                 </button>
                                             {{else}}
                                                 <button class="btn btn-warning btn-lg hover-signup"
                                                         type="button"
                                                         id="signup_{{applicationId}}"
                                                         data-url="{{url ""}}/applications/{{applicationId}}/signup">
-                                                    Signup
+                                                    Sign Up
                                                 </button>
                                             {{/if}}
                                         {{else}}
@@ -580,7 +580,7 @@ $('.general-table').on('click', '.hover-remove-signup', function (event) {
     noty({
         layout: 'bottomRight',
         type: 'warning',
-        text: 'Are you sure you want to remove signup for application: <strong>'+$(this).attr("id") + "</strong> ?",
+        text: 'Are you sure you want to remove sign up for application: <strong>'+$(this).attr("id") + "</strong> ?",
         buttons: [
             {addClass: 'btn btn-primary', text: 'Yes', onClick: function($noty) {
                 var formtype = 'unsignupapplication';
