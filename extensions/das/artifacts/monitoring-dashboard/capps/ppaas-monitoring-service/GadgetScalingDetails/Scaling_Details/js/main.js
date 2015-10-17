@@ -161,7 +161,7 @@ function drawChart(data) {
     }
     else {
         jQuery("#placeholder").html("");
-        jQuery("#placeholder").append('<div id="noChart"><table><tr><td style="padding:30px 20px 0px 20px"><img src="../../portal/images/noEvents.png" align="left" style="width:24;height:24"/></td><td><br/><b><p><br/>Data is not available for selected application, cluster and time interval</p></b></td></tr></table></div>');
+        jQuery("#placeholder").append('<div id="noChart"><table><tr><td style="padding:30px 20px 0px 20px"><img src="../../portal/images/noEvents.png" align="left" style="width:24;height:24"/></td><td><br/><b><p><br/>Data is not available for selected cluster and time interval</p></b></td></tr></table></div>');
     }
     //releasing the latch so that we can request data again from the backend.
     dataLoaded = true;
