@@ -212,7 +212,7 @@
                 "/permission",
                 "/permission/admin"
             ],
-            "description": "Monitor health statistics of clusters and members here."
+            "description": "Monitor health statistics of clusters and members."
         },
         {
             "link": "https://wso2.org/jira/browse/PAAS",
