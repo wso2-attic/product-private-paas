@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+~ Copyright (c) 2015, WSO2 Inc. (http://www.wso2.org) All Rights Reserved.
+~
+~ WSO2 Inc. licenses this file to you under the Apache License,
+~ Version 2.0 (the "License"); you may not use this file except
+~ in compliance with the License.
+~ You may obtain a copy of the License at
+~
+~    http://www.apache.org/licenses/LICENSE-2.0
+~
+~ Unless required by applicable law or agreed to in writing,
+~ software distributed under the License is distributed on an
+~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+~ KIND, either express or implied.  See the License for the
+~ specific language governing permissions and limitations
+~ under the License.
+-->
+<analytics-dataservice-configuration>
+   <!-- The name of the primary record store -->
+   <primaryRecordStore>EVENT_STORE</primaryRecordStore>
+   <!-- The name of the index staging record store -->
+   <indexStagingRecordStore>INDEX_STAGING_STORE</indexStagingRecordStore>
+   <!-- Analytics File System - properties related to index storage implementation -->
+   <analytics-file-system>
+      <implementation>org.wso2.carbon.analytics.datasource.rdbms.RDBMSAnalyticsFileSystem</implementation>
+      <properties>
+            <!-- the data source name mentioned in data sources configuration -->
+            <property name="datasource">WSO2_ANALYTICS_FS_DB</property>
+            <property name="category">large_dataset_optimized</property>
+      </properties>
+   </analytics-file-system>
+   <!-- Analytics Record Store - properties related to record storage implementation -->
+  {%- if CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE is defined %}
+   <analytics-record-store name="EVENT_STORE">
+
+       {% if CONFIG_PARAM_EVENT_DATA_STORE_IMPL is defined -%}
+        <implementation>{{CONFIG_PARAM_EVENT_DATA_STORE_IMPL}}</implementation>
+       {% else -%}
+       <implementation>org.wso2.carbon.analytics.datasource.rdbms.RDBMSAnalyticsRecordStore</implementation>
+       {% endif -%}
+      
+      <properties>
+       {% if CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE is defined -%}
+        <property  name="datasource" >{{CONFIG_PARAM_WSO2_ANALYTICS_RS_DB_HBASE}}</property>
+       {% else -%}
+        <property  name="datasource">WSO2_ANALYTICS_EVENT_STORE_DB</property>       
+       {% endif -%}
+
+        <property name="category">large_dataset_optimized</property>
+      </properties>
+   </analytics-record-store>
+   {%- else %}
+    <analytics-record-store name="EVENT_STORE">
+        <implementation>org.wso2.carbon.analytics.datasource.rdbms.RDBMSAnalyticsRecordStore</implementation>
+        <properties>
+            <property name="datasource">WSO2_ANALYTICS_EVENT_STORE_DB</property>
+            <property name="category">large_dataset_optimized</property>
+        </properties>
+    </analytics-record-store>
+    {%- endif %}
+
+   <analytics-record-store name="INDEX_STAGING_STORE">
+      <implementation>org.wso2.carbon.analytics.datasource.rdbms.RDBMSAnalyticsRecordStore</implementation>
+      <properties>
+            <property name="datasource">WSO2_ANALYTICS_EVENT_STORE_DB</property>
+            <property name="category">limited_dataset_optimized</property>
+      </properties>
+   </analytics-record-store>
+   <analytics-record-store name = "PROCESSED_DATA_STORE">
+      <implementation>org.wso2.carbon.analytics.datasource.rdbms.RDBMSAnalyticsRecordStore</implementation>
+      <properties>
+            <property name="datasource">WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB</property>
+            <property name="category">large_dataset_optimized</property>
+      </properties>
+   </analytics-record-store>
+   <!-- The data indexing analyzer implementation -->
+   <analytics-lucene-analyzer>
+   	<implementation>org.apache.lucene.analysis.standard.StandardAnalyzer</implementation>
+   </analytics-lucene-analyzer>
+   <!-- The maximum number of threads used for indexing per node, -1 signals to aute detect the optimum value,
+        where it would be equal to (number of CPU cores in the system - 1) -->
+   <indexingThreadCount>-1</indexingThreadCount>
+   <!-- The number of index shards, should be equal or higher to the number of indexing nodes that is going to be working,
+        ideal count being 'number of indexing nodes * [CPU cores used for indexing per node]' -->
+   <shardCount>6</shardCount>
+   <!-- Data purging related configuration -->
+   <analytics-data-purging>
+      <!-- Below entry will indicate purging is enable or not. If user wants to enable data purging for cluster then this property
+       need to be enable in all nodes -->
+      <purging-enable>false</purging-enable>
+      <cron-expression>0 0 0 * * ?</cron-expression>
+      <!-- Tables that need include to purging. Use regex expression to specify the table name that need include to purging.-->
+      <purge-include-table-patterns>
+         <table>.*</table>
+         <!--<table>.*jmx.*</table>-->
+      </purge-include-table-patterns>
+      <!-- All records that insert before the specified retention time will be eligible to purge -->
+      <data-retention-days>365</data-retention-days>
+   </analytics-data-purging>
+   <!-- Receiver/Indexing flow-control configuration -->
+   <analytics-receiver-indexing-flow-control enabled = "true">
+       <!-- maximum number of records that can be in index staging area before receiving is throttled -->
+       <recordReceivingHighThreshold>10000</recordReceivingHighThreshold>
+       <!-- the limit on number of records to be lower than, to reduce throttling -->
+       <recordReceivingLowThreshold>5000</recordReceivingLowThreshold>    
+   </analytics-receiver-indexing-flow-control>
+</analytics-dataservice-configuration>
