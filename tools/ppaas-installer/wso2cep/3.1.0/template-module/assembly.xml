@@ -42,7 +42,7 @@
         </fileSet>
 
         <!-- Apply Kernel Patches-->
-        <fileSet>
+        <!--<fileSet>
             <directory>./target/WSO2-CARBON-PATCH-4.2.0-0001</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/components/patches
             </outputDirectory>
@@ -155,10 +155,10 @@
             <includes>
                 <include>**/patch0012/*.*</include>
             </includes>
-        </fileSet>
+        </fileSet>-->
 
         <!-- Additional configuration for kernel patches -->
-        <fileSet>
+        <!--<fileSet>
             <directory>./target/WSO2-CARBON-PATCH-4.2.0-0001/dbscripts</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/files/dbscripts</outputDirectory>
             <includes>
@@ -200,7 +200,7 @@
             <includes>
                 <include>**/oracle_rac.sql</include>
             </includes>
-        </fileSet>
+        </fileSet>-->
     </fileSets>
 
     <files>
