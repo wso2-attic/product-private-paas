@@ -14,7 +14,8 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.wso2</groupId>
@@ -83,13 +84,56 @@
                                 <exclude>**/.classpath</exclude>
                                 <exclude>**/.git/**/*</exclude>
                                 <exclude>**/README.md</exclude>
+                                <exclude>**/INSTALL.md</exclude>
                                 <exclude>**/MANIFEST.MF</exclude>
-                                <exclude>**/.gitignore</exclude>
+                                <exclude>**/edit_area/**/*</exclude>
+                                <exclude>**/editarea/**/*</exclude>
                                 <exclude>**/jquery/**/*</exclude>
+                                <exclude>**/jquery*</exclude>
                                 <exclude>**/*.iml</exclude>
+                                <exclude>**/*.iws</exclude>
+                                <exclude>**/*.ipr</exclude>
+                                <exclude>**/.gitignore</exclude>
+                                <exclude>**/.gitkeep</exclude>
+                                <exclude>**/.gitmodules</exclude>
+                                <exclude>**/payload/launch-params</exclude>
+                                <exclude>**/*.key</exclude>
+                                <exclude>**/bootstrap*.css</exclude>
+                                <exclude>**/animation.css</exclude>
+                                <exclude>**/fontello*</exclude>
+                                <exclude>**/jaggery.conf</exclude>
+                                <exclude>**/zoo.cfg</exclude>
+                                <exclude>**/scripts/*/customization</exclude>
                                 <exclude>**/siddhi.extension</exclude>
+                                <exclude>**/*.template</exclude>
+                                <exclude>**/templates/*.cfg.template</exclude>
+                                <exclude>**/instrumentation.txt</exclude>
+                                <exclude>**/filters.txt</exclude>
+                                <exclude>**/*.json</exclude>
                                 <exclude>**/.idea/**/*</exclude>
+                                <exclude>**/.idea</exclude>
+                                <exclude>**/tlds/**/*</exclude>
+                                <exclude>**/highlighter/**/*</exclude>
+                                <exclude>**/yui/**/*</exclude>
                                 <exclude>**/jqueryui/**/*</exclude>
+                                <exclude>**/scriptaculous/**/*</exclude>
+                                <exclude>**/prototype-1.6.js</exclude>
+                                <exclude>**/prototype.js</exclude>
+                                <exclude>**/*.log</exclude>
+                                <!-- Added following based on jclouds -->
+                                <exclude>**/src/test/resources/**/*.xml</exclude>
+                                <!-- META-INF/services files -->
+                                <exclude>**/services/*LoggingModule</exclude>
+                                <exclude>**/services/*ApiMetadata</exclude>
+                                <exclude>**/services/*ProviderMetadata</exclude>
+                                <exclude>**/dhtmlHistory.js</exclude>
+                                <!-- for ActivMQ test broker -->
+                                <exclude>**/db.data</exclude>
+                                <!-- WSDLs -->
+                                <exclude>**/*.wsdl</exclude>
+                                <!-- Python CLI config files -->
+                                <exclude>**/*.cfg</exclude>
+                                <exclude>**/*.rst</exclude>
                             </excludes>
                             <excludeSubProjects>false</excludeSubProjects>
                         </configuration>
