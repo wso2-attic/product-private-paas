@@ -33,6 +33,6 @@
     <name>WSO2 Data Analytics Server Installer Parent</name>
 
     <modules>
-        <module>3.1.0</module>
+        <module>3.0.0</module>
     </modules>
 </project>

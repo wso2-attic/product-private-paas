@@ -31,6 +31,6 @@
         <module>ppaas</module>
         <module>activemq</module>
         <module>wso2cep</module>
-        <!--<module>wso2das</module>-->
+        <module>wso2das</module>
     </modules>
 </project>
