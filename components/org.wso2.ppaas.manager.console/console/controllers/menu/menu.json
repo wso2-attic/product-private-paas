@@ -33,7 +33,7 @@
                 "/permission/admin/stratos/kubernetesclusters/manage",
                 "/permission/admin/stratos/kubernetesclusters/view"
             ],
-            "description": "Configure network partitions, policies, cartridges, cartridge groups and kubernetes clusters",
+            "description": "Configure network partitions, policies, cartridges, cartridge groups and kubernetes clusters.",
             "sub-menu": [
                 {
                     "link": "configure/network-partitions/",
@@ -205,8 +205,8 @@
             "link": "https://localhost:9444/portal/dashboards/ppaas-monitoring-dashboard",
             "linkexternal": true,
             "context": "/",
-            "title": "Health Statistics",
-            "icon": "",
+            "title": "Monitoring",
+            "icon": "fa-laptop",
             "block-color":"#f1c40f",
             "permissionPaths": [
                 "/permission",
