@@ -22,17 +22,19 @@
     <includeBaseDirectory>false</includeBaseDirectory>
     <fileSets>
         <fileSet>
-            <directory>./</directory>
-            <outputDirectory>ppaas-installer-${pom.version}</outputDirectory>
+            <directory>templates/</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/templates/</outputDirectory>
             <includes>
-                <include>conf/setup.conf</include>
-                <include>install</include>
-                <include>packs</include>
-                <include>*.sh</include>
+                <include>**/*</include>
             </includes>
-            <excludes>
-                <exclude>**/*.gitkeep</exclude>
-            </excludes>
         </fileSet>
     </fileSets>
+    <files>
+        <file>
+            <source>module.ini</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
+            <filtered>true</filtered>
+            <fileMode>600</fileMode>
+        </file>
+    </files>
 </assembly>

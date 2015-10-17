@@ -432,6 +432,11 @@
                 <artifactId>org.apache.stratos.cep300.extension</artifactId>
                 <version>${stratos.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.cep.310.extension</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
 
             <!-- Automation framework dependencies -->
             <dependency>
@@ -575,6 +580,16 @@
                 <artifactId>org.wso2.carbon.mediator.bridge</artifactId>
                 <version>${carbon.kernel.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.andes.wso2</groupId>
+                <artifactId>andes-client</artifactId>
+                <version>${andes.client.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.geronimo.specs.wso2</groupId>
+                <artifactId>geronimo-jms_1.1_spec</artifactId>
+                <version>${geronimo.jms_1.1_spec.wso2.version}</version>
+            </dependency>
 
             <!-- ActiveMQ -->
             <dependency>
@@ -588,6 +603,11 @@
                 <version>${geronimo.j2ee.management_1.1.spec.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.geronimo.specs</groupId>
+                <artifactId>geronimo-jms_1.1_spec</artifactId>
+                <version>${geronimo.jms_1.1.spec.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.fusesource.hawtbuf</groupId>
                 <artifactId>hawtbuf</artifactId>
                 <version>${hawtbuf.version}</version>
@@ -595,6 +615,11 @@
             <dependency>
                 <groupId>org.apache.activemq</groupId>
                 <artifactId>activemq-client</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-broker</artifactId>
                 <version>${activemq.version}</version>
             </dependency>
             <dependency>
@@ -678,6 +703,8 @@
         <rampart.mar.version>1.6.1-wso2v8</rampart.mar.version>
         <bcprov.version>132</bcprov.version>
         <geronimo.j2ee.management_1.1.spec.version>1.0.1</geronimo.j2ee.management_1.1.spec.version>
+        <geronimo.jms_1.1.spec.version>1.1.1</geronimo.jms_1.1.spec.version>
+        <geronimo.jms_1.1_spec.wso2.version>1.1.0.wso2v1</geronimo.jms_1.1_spec.wso2.version>
         <hawtbuf.version>1.9</hawtbuf.version>
         <mqtt.client.version>0.4.0</mqtt.client.version>
         <geronimo.jta_1.1.spec.version>1.1.1</geronimo.jta_1.1.spec.version>
