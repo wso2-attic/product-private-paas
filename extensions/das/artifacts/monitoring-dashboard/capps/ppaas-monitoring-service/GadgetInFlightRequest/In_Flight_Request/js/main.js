@@ -84,7 +84,7 @@ function fetchData(callback) {
         dataLoaded = false;   //setting the latch to locked position so that we block data fetching until we receive the response from backend
     }else{
         jQuery("#placeholder").html("");
-        jQuery("#placeholder").append('<div id="noChart"><table><tr><td style="padding:30px 20px 0px 20px"><img src="../../portal/images/noEvents.png" align="left" style="width:24;height:24"/></td><td><br/><b><p><br/>In-Flight Request count can be viewed at cluster level. Please Select All Members to  view In-Flight Request count for a cluster.</p></b></td></tr></table></div>');
+        jQuery("#placeholder").append('<div id="noChart"><table><tr><td style="padding:30px 20px 0px 20px"><img src="../../portal/images/noEvents.png" align="left" style="width:24;height:24"/></td><td><br/><b><p><br/>In-Flight Request count can be viewed at cluster level. Please Select All Members to view In-Flight Request count for a cluster.</p></b></td></tr></table></div>');
     }
 }
 
