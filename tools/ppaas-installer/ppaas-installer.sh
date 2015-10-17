@@ -87,6 +87,12 @@ function backup_file() {
     fi
 }
 
+function replace_configurator_module() {
+    #echo "Setting value $2 for property $1 as $2"
+    setp_conf_file=wso2ppaas/4.1.0/template-module/module.ini
+    sed -i s$'\001'"$1"$'\001'"$2"$'\001''g' $setp_conf_file
+}
+
 function replace_setup_conf() {
     #echo "Setting value $2 for property $1 as $2"
     setp_conf_file=$setup_path/conf/setup.conf
@@ -158,6 +164,18 @@ function read_user_input() {
     else
         echo $3
     fi
+}
+function setup_apache_stratos_with_configurator() {
+    cd install
+    wget https://svn.wso2.org/repos/wso2/scratch/PPAAS/wso2ppaas-cartridges-4.1.0/wso2ppaas-configurator-4.1.0.zip
+    unzip wso2ppaas-configurator-4.1.0.zip
+    cd ..
+    pwd
+    cp -avr wso2ppaas/4.1.0/template-module install/ppaas-configurator-4.1.0/template-modules/template-module
+    cd install/ppaas-configurator-4.1.0
+    python configurator.py
+
+
 }
 
 function setup_apache_stratos() {
@@ -447,7 +465,13 @@ else
 
      init
      # Do the product specific configurations
-     setup_apache_stratos
+     configurator_needed=$(read_user_input "Do you need to setup use configurator to set up private paas? [y/n] " "" $configurator_needed )
+     if [[ $configurator_needed =~ ^[Yy]$ ]]; then
+        setup_apache_stratos_with_configurator
+     else
+        setup_apache_stratos
+     fi
+
 
      # Start core servers
      start_servers
