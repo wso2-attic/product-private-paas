@@ -27,6 +27,10 @@
     <packaging>pom</packaging>
     <name>WSO2 PPaaS 4.1.0 - installer </name>
 
+    <modules>
+        <module>wso2cep</module>
+    </modules>
+
     <build>
         <plugins>
             <plugin>
