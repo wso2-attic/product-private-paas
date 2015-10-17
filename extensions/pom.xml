@@ -30,5 +30,6 @@
     <modules>
         <module>carbon</module>
         <module>cep/ppaas-cep-extension/wso2cep-3.0.0</module>
+        <module>cep/ppaas-cep-extension/wso2cep-3.1.0</module>
     </modules>
 </project>
