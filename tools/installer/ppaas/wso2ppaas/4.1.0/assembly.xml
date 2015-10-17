@@ -23,33 +23,6 @@
 
     <fileSets>
         <fileSet>
-            <directory>docker/</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/docker/</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-            <excludes>
-                <exclude>**/*.gitkeep</exclude>
-                <exclude>**/*.gitignore</exclude>
-                <exclude>packages/*/**</exclude>
-                <exclude>plugins/*/**</exclude>
-            </excludes>
-        </fileSet>
-        <fileSet>
-            <directory>plugins/</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/plugins/</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-        </fileSet>
-        <fileSet>
-            <directory>samples/</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/samples/</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-        </fileSet>
-        <fileSet>
             <directory>template-module/</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/template-module/</outputDirectory>
             <includes>
@@ -67,8 +40,8 @@
             </excludes>
         </fileSet>
         <fileSet>
-            <directory>../../common/plugins/</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/plugins/</outputDirectory>
+            <directory>src/main/license</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
@@ -78,11 +51,6 @@
     <files>
         <file>
             <source>README.md</source>
-            <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
-            <filtered>true</filtered>
-        </file>
-        <file>
-            <source>LICENSE</source>
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
             <filtered>true</filtered>
         </file>

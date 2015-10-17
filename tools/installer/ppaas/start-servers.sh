@@ -29,7 +29,7 @@ product_list=$1
 profile="default"
 
 if [[ -f ./conf/setup.conf ]]; then
-    source "./conf/setup.conf"
+    source "conf/setup.conf"
     echo "source it"
 fi
 export LOG=$log_path/stratos.log

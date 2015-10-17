@@ -20,6 +20,16 @@
         <format>zip</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
+    <!--<moduleSets>
+        <moduleSet>
+            <includes>
+                <include>${pom.groupId}:ppaas-installer</include>
+            </includes>
+            <excludes>
+                <exclude>${pom.groupId}:ppaas-cartridges-wso2ppaas-parent</exclude>
+            </excludes>
+        </moduleSet>
+    </moduleSets>-->
     <fileSets>
         <fileSet>
             <directory>./</directory>
