@@ -106,6 +106,26 @@
             <outputDirectory>${pom.artifactId}-${pom.version}</outputDirectory>
             <filtered>true</filtered>
         </file>
+        <file>
+            <source>../../../../../extensions/das/artifacts/metering-dashboard/capps/target/ppaas-metering-service.car</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/deployment/server/carbonapps/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>../../../../../extensions/das/artifacts/monitoring-dashboard/capps/target/ppaas-monitoring-service.car</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/deployment/server/carbonapps/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>../../../../../extensions/das/artifacts/metering-dashboard/metering-mysqlscript.sql</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/files/dbscripts/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>../../../../../extensions/das/artifacts/monitoring-dashboard/monitoring-mysqlscript.sql</source>
+            <outputDirectory>${pom.artifactId}-${pom.version}/files/dbscripts/</outputDirectory>
+            <filtered>true</filtered>
+        </file>
     </files>
 
     <!-- Copy dependencies -->
