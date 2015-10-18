@@ -41,28 +41,28 @@
         is not necessary [0..1]. But you can use this section to avoid specifying
         same property over and over again. -->
     <iaasProviders>
-        < iaasProvider type="openstack" name="Openstack">
+        <iaasProvider type="openstack" name="Openstack">
             <className>org.apache.stratos.cloud.controller.iaases.openstack.OpenstackIaas</className>
             <provider>openstack-nova</provider>
             <identity svns:secretAlias="cloud.controller.openstack.identity">project:username</identity>
             <credential svns:secretAlias="cloud.controller.openstack.credential">credential</credential>
-            <property name="jclouds.endpoint" value={{CONFIG_OS_END_POINT}} />
+            <property name="jclouds.endpoint" value="{{CONFIG_OS_END_POINT}}" />
             <property name="jclouds.openstack-nova.auto-create-floating-ips" value="false"/>
             <property name="jclouds.api-version" value="2.0/" />
             <property name="openstack.networking.provider" value="nova" />
-            <property name="keyPair" value={{CONFIG_OS_KEYPAIR}} />
-            <property name="securityGroups" value={{CONFIG_OS_SECURITY_GROUP}} />
+            <property name="keyPair" value="{{CONFIG_OS_KEYPAIR}}" />
+            <property name="securityGroups" value="{{CONFIG_OS_SECURITY_GROUP}}" />
         </iaasProvider>
-        < iaasProvider type="ec2" name="Amazon EC2">
+        <iaasProvider type="ec2" name="Amazon EC2">
             <className>org.apache.stratos.cloud.controller.iaases.ec2.EC2Iaas</className>
             <provider>aws-ec2</provider>
             <identity svns:secretAlias="cloud.controller.ec2.identity">{{CONFIG_EC2_IDENTITY}}</identity>
             <credential svns:secretAlias="cloud.controller.ec2.credential">{{CONFIG_EC2_CREDENTIAL}}</credential>
             <property name="jclouds.ec2.ami-query" value="owner-id=owner-id;state=available;image-type=machine"/>
-            <property name="availabilityZone" value={{CONFIG_EC2_AVAILABILITYZONE}}/>
-            <property name="securityGroups" value={{CONFIG_EC2_SECURITY_GROUP}}/>
+            <property name="availabilityZone" value="{{CONFIG_EC2_AVAILABILITYZONE}}"/>
+            <property name="securityGroups" value="{{CONFIG_EC2_SECURITY_GROUP}}"/>
             <property name="autoAssignIp" value="true" />
-            <property name="keyPair" value={{CONFIG_EC2_KEYPAIR}}/>
+            <property name="keyPair" value="{{CONFIG_EC2_KEYPAIR}}"/>
         </iaasProvider>
         <iaasProvider type="kubernetes" name="Kubernetes">
             <className>org.apache.stratos.cloud.controller.iaases.kubernetes.KubernetesIaas</className>
