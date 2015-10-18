@@ -30,7 +30,7 @@
 
     <artifactId>ppaas-installer-activemq-parent</artifactId>
     <packaging>pom</packaging>
-    <name>Apache ActiveMQ Installer Parent</name>
+    <name>WSO2 PPaaS - Apache ActiveMQ Installer Parent</name>
 
     <modules>
         <module>5.10.0</module>

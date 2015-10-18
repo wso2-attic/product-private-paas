@@ -25,7 +25,7 @@
 
     <artifactId>ppaas-installer-parent</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 PPaaS Installer Parent</name>
+    <name>WSO2 PPaaS - Installer Parent</name>
     <description>WSO2 Private PaaS Installer Parent</description>
 
     <modules>

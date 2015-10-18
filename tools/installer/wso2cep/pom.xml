@@ -30,7 +30,7 @@
 
     <artifactId>ppaas-installer-wso2cep-parent</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Complex Event Processor Installer Parent</name>
+    <name>WSO2 PPaaS - CEP Installer Parent</name>
 
     <modules>
         <module>3.1.0</module>

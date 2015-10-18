@@ -27,7 +27,7 @@
 
     <artifactId>activemq-5.10.0-installer-module</artifactId>
     <packaging>pom</packaging>
-    <name>Apache ActiveMQ 5.10.0 Installer Module</name>
+    <name>WSO2 PPaaS - Apache ActiveMQ 5.10.0 Installer Module</name>
 
     <build>
         <plugins>

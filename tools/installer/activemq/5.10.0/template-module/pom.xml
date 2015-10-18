@@ -25,8 +25,8 @@
 
     <artifactId>apache-activemq-5.10.0-installer-template-module</artifactId>
     <packaging>pom</packaging>
-    <name>Apache ActiveMQ 5.10.0 Installer Template Module</name>
-    <description>Apache ActiveMQ 5.10.0 Installer Template Module</description>
+    <name>WSO2 PPaaS - Apache ActiveMQ 5.10.0 Installer Template Module</name>
+    <description>WSO2 PPaaS Apache ActiveMQ 5.10.0 Installer Template Module</description>
 
 
     <build>

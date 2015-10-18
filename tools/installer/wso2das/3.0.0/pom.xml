@@ -27,7 +27,7 @@
 
     <artifactId>wso2das-3.0.0-installer-module</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 DAS 3.0.0 Installer Module</name>
+    <name>WSO2 PPaaS - DAS 3.0.0 Installer Module</name>
 
     <build>
         <plugins>

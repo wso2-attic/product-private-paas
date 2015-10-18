@@ -25,7 +25,7 @@
 
     <artifactId>wso2das-3.0.0-installer-template-module</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 DAS 3.0.0 Installer Template Module</name>
+    <name>WSO2 PPaaS - DAS 3.0.0 Installer Template Module</name>
     <description>WSO2 Data Analytics Server 3.0.0 Installer Template Module</description>
 
     <build>

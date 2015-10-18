@@ -27,7 +27,7 @@
 
     <artifactId>wso2cep-3.1.0-installer-module</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Complex Event Processor 3.1.0 Installer Module</name>
+    <name>WSO2 PPaaS - CEP 3.1.0 Installer Module</name>
 
     <build>
         <plugins>

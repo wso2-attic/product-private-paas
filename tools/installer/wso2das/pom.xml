@@ -30,7 +30,7 @@
 
     <artifactId>ppaas-installer-wso2das-parent</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Data Analytics Server Installer Parent</name>
+    <name>WSO2 PPaaS - DAS Installer Parent</name>
 
     <modules>
         <module>3.0.0</module>

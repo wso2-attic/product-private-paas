@@ -27,7 +27,7 @@
 
     <artifactId>ppaas-installer-wso2ppaas-parent</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Private PaaS Cartridge Parent</name>
+    <name>WSO2 PPaaS - Installer Private PaaS Parent</name>
 
     <modules>
         <module>4.1.0</module>

@@ -27,7 +27,7 @@
 
     <artifactId>wso2ppaas-4.1.0-installer-module</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Private PaaS 4.1.0 Cartridge</name>
+    <name>WSO2 PPaaS - PPaaS 4.1.x Cartridge</name>
 
     <build>
         <plugins>

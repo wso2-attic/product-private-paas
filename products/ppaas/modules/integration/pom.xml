@@ -24,7 +24,7 @@
     </parent>
 
     <artifactId>ppaas-integration</artifactId>
-    <name>WSO2 Private PaaS - Integration Tests</name>
+    <name>WSO2 PPaaS - Integration Tests</name>
     <packaging>pom</packaging>
 
     <modules>

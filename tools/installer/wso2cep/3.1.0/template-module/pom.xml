@@ -25,8 +25,8 @@
 
     <artifactId>wso2cep-3.1.0-installer-template-module</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 CEP 3.1.0 Installer Template Module</name>
-    <description>WSO2 Complex Event Processor 3.1.0 Installer Template Module</description>
+    <name>WSO2 PPaaS - CEP 3.1.0 Installer Template Module</name>
+    <description>WSO2 PPaaS CEP 3.1.0 Installer Template Module</description>
 
     <build>
         <plugins>

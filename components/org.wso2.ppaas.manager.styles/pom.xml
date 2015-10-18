@@ -24,7 +24,7 @@
 
     <artifactId>org.wso2.ppaas.manager.styles</artifactId>
     <packaging>bundle</packaging>
-    <name>WSO2 PPAAS - UI styles</name>
+    <name>WSO2 PPaaS - UI styles</name>
 
     <build>
         <plugins>
