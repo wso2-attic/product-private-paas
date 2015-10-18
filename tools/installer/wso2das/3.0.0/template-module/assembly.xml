@@ -148,17 +148,5 @@
                 <include>org.apache.stratos:org.apache.stratos.messaging:jar</include>
             </includes>
         </dependencySet>
-        <!--<dependencySet>
-            <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/deployment/server/carbonapps</outputDirectory>
-            <includes>
-                <include>org.wso2.ppaas:org.wso2.ppaas.metering.service.capp:zip</include>
-            </includes>
-        </dependencySet>
-        <dependencySet>
-            <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/deployment/server/carbonapps</outputDirectory>
-            <includes>
-                <include>org.wso2.ppaas:org.wso2.ppaas.monitoring.service.capp:zip</include>
-            </includes>
-        </dependencySet>-->
     </dependencySets>
 </assembly>
