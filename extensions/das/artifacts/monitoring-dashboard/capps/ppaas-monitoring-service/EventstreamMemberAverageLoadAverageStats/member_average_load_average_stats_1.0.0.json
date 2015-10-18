@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "payloadData": [
     {
-      "name": "timestamp",
-      "type": "LONG"
-    },
-    {
       "name": "member_id",
       "type": "STRING"
     },
@@ -25,6 +21,10 @@
     {
       "name": "member_average_load_average",
       "type": "DOUBLE"
+    },
+    {
+      "name": "timestamp",
+      "type": "LONG"
     }
   ]
 }
