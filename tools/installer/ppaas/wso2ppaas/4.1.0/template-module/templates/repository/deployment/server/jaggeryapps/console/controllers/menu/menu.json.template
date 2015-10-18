@@ -272,9 +272,10 @@
       "icon": "fa-book",
       "description": "Read documentation to get more information."
     }
+    {% if DAS_STATS_PUBLISHER_ENABLE is defined -%}
       {% if DAS_STATS_PUBLISHER_ENABLE == 'true' -%}
          ,{
-             "link": {{DAS_PORTAL_LINK}},
+             "link": "{{DAS_PORTAL_LINK}}",
              "linkexternal": true,
              "context": "/",
              "title": "Monitoring",
@@ -289,5 +290,8 @@
         {% else -%}
 
       {% endif -%}
+     {%  else -%}
+
+     {%  endif -%}
   ]
 }
