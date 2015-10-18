@@ -20,58 +20,11 @@
         <format>zip</format>
     </formats>
     <includeBaseDirectory>false</includeBaseDirectory>
+
     <fileSets>
         <fileSet>
             <directory>files/</directory>
             <outputDirectory>${pom.artifactId}-${pom.version}/files/</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-            <excludes>
-                <exclude>**/*.gitkeep</exclude>
-                <exclude>**/*.gitignore</exclude>
-            </excludes>
-        </fileSet>
-        <fileSet>
-            <directory>../../../../../extensions/das/artifacts/metering-dashboard/jaggery-files/</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/deployment/server/jaggeryapps/portal/controllers/apis/</outputDirectory>
-            <includes>
-                <include>**/*</include>
-            </includes>
-            <excludes>
-                <exclude>**/*.gitkeep</exclude>
-                <exclude>**/*.gitignore</exclude>
-            </excludes>
-        </fileSet>
-        <fileSet>
-            <directory>../../../../../extensions/das/artifacts/metering-dashboard/ues-patch/</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/deployment/server/jaggeryapps/portal/js/</outputDirectory>
-            <includes>
-                <include>**/*.js</include>
-            </includes>
-            <excludes>
-                <exclude>**/*.gitkeep</exclude>
-                <exclude>**/*.gitignore</exclude>
-                <exclude>**/*.jag</exclude>
-                <exclude>**/*.md</exclude>
-            </excludes>
-        </fileSet>
-        <fileSet>
-            <directory>../../../../../extensions/das/artifacts/metering-dashboard/ues-patch/</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/deployment/server/jaggeryapps/portal/theme/templates/</outputDirectory>
-            <includes>
-                <include>**/*.jag</include>
-            </includes>
-            <excludes>
-                <exclude>**/*.gitkeep</exclude>
-                <exclude>**/*.gitignore</exclude>
-                <exclude>**/*.js</exclude>
-                <exclude>**/*.md</exclude>
-            </excludes>
-        </fileSet>
-        <fileSet>
-            <directory>../../../../../extensions/das/artifacts/monitoring-dashboard/jaggery-files/</directory>
-            <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/deployment/server/jaggeryapps/portal/controllers/apis/</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
@@ -86,6 +39,17 @@
             <includes>
                 <include>**/*</include>
             </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../../../../extensions/das/artifacts/wso2cep-310/eventformatters</directory>
+            <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/deployment/server/eventformatters</outputDirectory>
+            <includes>
+                <include>**/*.xml</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.gitkeep</exclude>
+                <exclude>**/*.gitignore</exclude>
+            </excludes>
         </fileSet>
     </fileSets>
 
@@ -114,11 +78,13 @@
             <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/components/lib</outputDirectory>
             <includes>
                 <include>org.apache.activemq:activemq-client:jar</include>
+                <include>org.apache.activemq:activemq-broker:jar</include>
                 <include>org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:jar</include>
+                <include>org.apache.geronimo.specs:geronimo-jms_1.1_spec-1.1.1:jar</include>
                 <include>org.fusesource.hawtbuf:hawtbuf:jar</include>
                 <include>mysql:mysql-connector-java:jar</include>
                 <include>org.apache.commons:commons-lang3:jar</include>
-                <include>org.wso2.ppaas:org.wso2.ppaas.das.extension:jar</include>
+                <include>org.apache.stratos:org.apache.stratos.cep.310.extension:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>
@@ -126,19 +92,10 @@
             <includes>
                 <include>org.apache.stratos:org.apache.stratos.common:jar</include>
                 <include>org.apache.stratos:org.apache.stratos.messaging:jar</include>
+                <include>org.wso2.ppaas:ppaas-membership-scheme:jar</include>
+                <include>org.wso2.andes.wso2:andes-client:jar</include>
+                <include>org.apache.geronimo.specs.wso2:geronimo-jms_1.1_spec:jar</include>
             </includes>
         </dependencySet>
-        <!--<dependencySet>
-            <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/deployment/server/carbonapps</outputDirectory>
-            <includes>
-                <include>org.wso2.ppaas:org.wso2.ppaas.metering.service.capp:zip</include>
-            </includes>
-        </dependencySet>
-        <dependencySet>
-            <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/deployment/server/carbonapps</outputDirectory>
-            <includes>
-                <include>org.wso2.ppaas:org.wso2.ppaas.monitoring.service.capp:zip</include>
-            </includes>
-        </dependencySet>-->
     </dependencySets>
 </assembly>

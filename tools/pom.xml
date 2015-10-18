@@ -25,6 +25,7 @@
     <artifactId>tools</artifactId>
     <packaging>pom</packaging>
     <name>WSO2 PPaaS - Tools</name>
+    <description>WSO2 PPaaS - Tools</description>
 
     <modules>
         <module>ppaas-migration/4.0.0</module>

@@ -81,5 +81,17 @@
             <groupId>org.apache.stratos</groupId>
             <artifactId>org.apache.stratos.messaging</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.wso2.ppaas</groupId>
+            <artifactId>org.wso2.ppaas.das.extension</artifactId>
+        </dependency>
+<!--        <dependency>
+            <groupId>org.wso2.ppaas</groupId>
+            <artifactId>org.wso2.ppaas.metering.service.capps</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wso2.ppaas</groupId>
+            <artifactId>org.wso2.ppaas.monitoring.service.capps</artifactId>
+        </dependency>-->
     </dependencies>
 </project>

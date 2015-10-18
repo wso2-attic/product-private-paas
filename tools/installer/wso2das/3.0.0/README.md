@@ -1,4 +1,4 @@
-## WSO2 Data Analytics Server 3.1.0 Cartridge
+## WSO2 Data Analytics Server 3.0.0 Cartridge
 
 ### Profiles
 

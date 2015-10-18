@@ -33,5 +33,6 @@
         <module>activemq</module>
         <module>wso2cep</module>
         <module>wso2das</module>
+        <module>wso2cep-monitoring</module>
     </modules>
 </project>
