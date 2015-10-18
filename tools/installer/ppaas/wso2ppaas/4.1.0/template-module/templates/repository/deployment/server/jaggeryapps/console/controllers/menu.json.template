@@ -272,5 +272,22 @@
       "icon": "fa-book",
       "description": "Read documentation to get more information."
     }
+      {% if DAS_STATS_PUBLISHER_ENABLE == 'true' -%}
+         ,{
+             "link": {{DAS_PORTAL_LINK}},
+             "linkexternal": true,
+             "context": "/",
+             "title": "Monitoring",
+             "icon": "fa-laptop",
+             "block-color":"#f1c40f",
+             "permissionPaths": [
+                 "/permission",
+                 "/permission/admin"
+             ],
+             "description": "Monitor health statistics of clusters and members."
+          }
+        {% else -%}
+
+      {% endif -%}
   ]
 }
