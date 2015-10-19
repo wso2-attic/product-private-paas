@@ -229,7 +229,7 @@
             <includes>
                 <include>org.apache.stratos:org.apache.stratos.common:jar</include>
                 <include>org.apache.stratos:org.apache.stratos.messaging:jar</include>
-                <include>org.wso2.ppaas:ppaas-membership-scheme:jar</include>
+                <include>org.wso2.ppaas:wso2ppaas-membership-scheme:jar</include>
             </includes>
         </dependencySet>
     </dependencySets>

@@ -318,7 +318,7 @@
         </dependency>
         <dependency>
             <groupId>org.wso2.ppaas</groupId>
-            <artifactId>ppaas-membership-scheme</artifactId>
+            <artifactId>wso2ppaas-membership-scheme</artifactId>
         </dependency>
     </dependencies>
 </project>
