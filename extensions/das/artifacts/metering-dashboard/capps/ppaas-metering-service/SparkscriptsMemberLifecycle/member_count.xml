@@ -43,7 +43,7 @@
         create temporary table member_status_new
         using CarbonJDBC options (dataSource "WSO2_ANALYTICS_PROCESSED_DATA_STORE_DB", tableName "MEMBER_STATUS");
 
-        INSERT INTO TABLE member_status_new select timestamp, application_id, cluster_alias, member_id,
+        INSERT OVERWRITE TABLE member_status_new select timestamp, application_id, cluster_alias, member_id,
         member_status from memberstatus;
     </Script>
     <CronExpression>0/10 * * * * ?</CronExpression>
