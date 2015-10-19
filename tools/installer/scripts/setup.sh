@@ -542,7 +542,7 @@ if [[ !(-d $stratos_extract_path) ]]; then
     mv -f $stratos_path/wso2ppaas-4.1.0-SNAPSHOT $stratos_extract_path
 fi
 
-if [[ ( ($profile = "default" || $profile = "stratos") && $config_mb = "true") ]]; then
+if [[ $config_mb = "true" ]]; then
     echo "Extracting ActiveMQ"
     tar -xzf $activemq_pack -C $stratos_path
     # disable amqp connector to prevent conflicts with openstack

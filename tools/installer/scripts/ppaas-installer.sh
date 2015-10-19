@@ -464,6 +464,7 @@ else
      echo -e "Starting WSO2 Private PaaS installer"
 
      init
+     run_setup_sh
      # Do the product specific configurations
      configurator_needed=$(read_user_input "Do you need to setup use configurator to set up private paas? [y/n] " "" $configurator_needed )
      if [[ $configurator_needed =~ ^[Yy]$ ]]; then
