@@ -67,4 +67,13 @@
             <fileMode>644</fileMode>
         </file>
     </files>
+
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>${project.artifactId}-${project.version}/lib</outputDirectory>
+            <includes>
+                <include>org.wso2.ppaas:org.wso2.ppaas.das.extension:jar</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
 </assembly>

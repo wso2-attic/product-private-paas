@@ -60,4 +60,11 @@
             </build>
         </profile>
     </profiles>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wso2.ppaas</groupId>
+            <artifactId>org.wso2.ppaas.das.extension</artifactId>
+        </dependency>
+    </dependencies>
 </project>

@@ -33,7 +33,7 @@
         <module>cep/ppaas-cep-extension/wso2cep-3.1.0</module>
         <module>das/artifacts/metering-dashboard/capps</module>
         <module>das/artifacts/monitoring-dashboard/capps</module>
-        <module>das/distribution</module>
         <module>das/ppaas-das-extension</module>
+        <module>das/distribution</module>
     </modules>
 </project>
