@@ -5,11 +5,11 @@ This tool will enable users to install the private-paas.
 
 # Instructions
 
-1. Build the ppaas-integration tool by running the following command
+1. Build the ppaas-installer script by running the following command
 
 mvn clean install
 
-2. Configuration file
+2. Unzip the distribution and change the setup.conf configuration as required
 
 conf/setup.conf
 
