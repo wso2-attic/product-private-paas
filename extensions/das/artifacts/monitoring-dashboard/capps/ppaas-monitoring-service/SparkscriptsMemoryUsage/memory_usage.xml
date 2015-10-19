@@ -24,7 +24,7 @@
         create temporary table average_memory_consumption_stats_new
         using CarbonJDBC options (dataSource "WSO2_ANALYTICS_EVENT_STORE_DB", tableName "AVERAGE_MEMORY_CONSUMPTION_STATS");
 
-        INSERT INTO TABLE average_memory_consumption_stats_new select timestamp, cluster_id, cluster_instance_id,
+        INSERT OVERWRITE TABLE average_memory_consumption_stats_new select timestamp, cluster_id, cluster_instance_id,
         network_partition_id, average_memory_consumption from average_memory_consumption_stats;
 
         CREATE TEMPORARY TABLE member_average_memory_consumption_stats
@@ -34,7 +34,7 @@
         create temporary table member_average_memory_consumption_stats_new
         using CarbonJDBC options (dataSource "WSO2_ANALYTICS_EVENT_STORE_DB", tableName "MEMBER_AVERAGE_MEMORY_CONSUMPTION_STATS");
 
-        INSERT INTO TABLE member_average_memory_consumption_stats_new select timestamp, member_id, cluster_id, cluster_instance_id,
+        INSERT OVERWRITE TABLE member_average_memory_consumption_stats_new select timestamp, member_id, cluster_id, cluster_instance_id,
         network_partition_id, member_average_memory_consumption from member_average_memory_consumption_stats;
     </Script>
     <CronExpression>0/15 * * * * ?</CronExpression>
