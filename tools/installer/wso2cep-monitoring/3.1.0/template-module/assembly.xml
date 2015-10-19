@@ -71,31 +71,4 @@
             <filtered>true</filtered>
         </file>
     </files>
-
-    <!-- Copy dependencies -->
-    <dependencySets>
-        <dependencySet>
-            <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/components/lib</outputDirectory>
-            <includes>
-                <include>org.apache.activemq:activemq-client:jar</include>
-                <include>org.apache.activemq:activemq-broker:jar</include>
-                <include>org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:jar</include>
-                <include>org.apache.geronimo.specs:geronimo-jms_1.1_spec-1.1.1:jar</include>
-                <include>org.fusesource.hawtbuf:hawtbuf:jar</include>
-                <include>mysql:mysql-connector-java:jar</include>
-                <include>org.apache.commons:commons-lang3:jar</include>
-                <include>org.apache.stratos:org.apache.stratos.cep.310.extension:jar</include>
-            </includes>
-        </dependencySet>
-        <dependencySet>
-            <outputDirectory>${pom.artifactId}-${pom.version}/files/repository/components/dropins</outputDirectory>
-            <includes>
-                <include>org.apache.stratos:org.apache.stratos.common:jar</include>
-                <include>org.apache.stratos:org.apache.stratos.messaging:jar</include>
-                <include>org.wso2.ppaas:wso2ppaas-membership-scheme:jar</include>
-                <include>org.wso2.andes.wso2:andes-client:jar</include>
-                <include>org.apache.geronimo.specs.wso2:geronimo-jms_1.1_spec:jar</include>
-            </includes>
-        </dependencySet>
-    </dependencySets>
 </assembly>
