@@ -61,12 +61,6 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>src/main/notice/NOTICE</source>
-            <outputDirectory>${project.artifactId}-${project.version}</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
             <source>src/main/license/LICENSE</source>
             <outputDirectory>${project.artifactId}-${project.version}</outputDirectory>
             <filtered>true</filtered>

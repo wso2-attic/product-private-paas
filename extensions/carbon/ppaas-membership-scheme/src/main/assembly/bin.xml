@@ -35,11 +35,6 @@
             <outputDirectory>/</outputDirectory>
             <fileMode>0600</fileMode>
         </fileSet>
-        <fileSet>
-            <directory>${project.basedir}/src/main/notice</directory>
-            <outputDirectory>/</outputDirectory>
-            <fileMode>0600</fileMode>
-        </fileSet>
     </fileSets>
     <dependencySets>
         <dependencySet>

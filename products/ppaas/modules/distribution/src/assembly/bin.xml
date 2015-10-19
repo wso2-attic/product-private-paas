@@ -721,12 +721,6 @@
             <fileMode>644</fileMode>
         </file>
         <file>
-            <source>src/main/notice/NOTICE</source>
-            <outputDirectory>${ppaas.distribution.name}-${project.version}</outputDirectory>
-            <filtered>true</filtered>
-            <fileMode>644</fileMode>
-        </file>
-        <file>
             <source>src/main/license/LICENSE</source>
             <outputDirectory>${ppaas.distribution.name}-${project.version}</outputDirectory>
             <filtered>true</filtered>
