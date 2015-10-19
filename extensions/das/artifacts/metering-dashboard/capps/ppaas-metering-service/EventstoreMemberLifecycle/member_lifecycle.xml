@@ -19,7 +19,7 @@
         <ColumnDefinition>
             <Name>timestamp</Name>
             <EnableIndexing>false</EnableIndexing>
-            <IsPrimaryKey>false</IsPrimaryKey>
+            <IsPrimaryKey>true</IsPrimaryKey>
             <EnableScoreParam>false</EnableScoreParam>
             <Type>LONG</Type>
         </ColumnDefinition>
@@ -75,7 +75,7 @@
         <ColumnDefinition>
             <Name>member_id</Name>
             <EnableIndexing>false</EnableIndexing>
-            <IsPrimaryKey>false</IsPrimaryKey>
+            <IsPrimaryKey>true</IsPrimaryKey>
             <EnableScoreParam>false</EnableScoreParam>
             <Type>STRING</Type>
         </ColumnDefinition>
