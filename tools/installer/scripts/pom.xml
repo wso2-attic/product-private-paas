@@ -23,13 +23,9 @@
         <version>4.1.0-SNAPSHOT</version>
     </parent>
 
-    <artifactId>ppaas-installer</artifactId>
+    <artifactId>ppaas-installer-scripts</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 PPaaS - 4.1.x Installer</name>
-
-    <modules>
-        <module>wso2ppaas</module>
-    </modules>
+    <name>WSO2 PPaaS - Installer scripts</name>
 
     <build>
         <plugins>

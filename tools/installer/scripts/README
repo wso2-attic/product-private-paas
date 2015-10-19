@@ -1,0 +1,29 @@
+## WSO Private PaaS Installer Tool
+
+
+This tool will enable users to install the private-paas.
+
+# Instructions
+
+1. Build the ppaas-integration tool by running the following command
+
+mvn clean install
+
+2. Configuration file
+
+conf/setup.conf
+
+3. Put the following artifacts under the pack folder
+     1. PPaaS distribution
+     2. ActiveMQ distribution
+     3. Copy the template-module folder to the into the packs/wso2ppaas/4.1.0/
+     4. Change the module.ini of the template module as required
+
+4. Change the conf/setup.conf based on the versions of the above artifacts.
+
+5. run ppaas-installer.sh and provide the addition information required
+
+
+
+
+

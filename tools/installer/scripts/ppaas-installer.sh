@@ -171,7 +171,7 @@ function setup_apache_stratos_with_configurator() {
     unzip wso2ppaas-configurator-4.1.0.zip
     cd ..
     pwd
-    cp -avr wso2ppaas/4.1.0/template-module install/ppaas-configurator-4.1.0/template-modules/template-module
+    cp -avr packs/wso2ppaas/4.1.0/template-module install/ppaas-configurator-4.1.0/template-modules/template-module
     cd install/ppaas-configurator-4.1.0
     python configurator.py
 

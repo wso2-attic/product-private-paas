@@ -29,10 +29,11 @@
     <description>WSO2 Private PaaS Installer Parent</description>
 
     <modules>
-        <module>ppaas</module>
+        <module>wso2ppaas</module>
         <module>activemq</module>
         <module>wso2cep</module>
         <module>wso2das</module>
         <module>wso2cep-monitoring</module>
+        <module>scripts</module>
     </modules>
 </project>
