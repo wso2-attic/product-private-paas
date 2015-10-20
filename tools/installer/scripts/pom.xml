@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.ppaas</groupId>
         <artifactId>ppaas-installer-parent</artifactId>
-        <version>4.1.1-SNAPSHOT</version>
+        <version>4.1.0</version>
     </parent>
 
     <artifactId>ppaas-installer-scripts</artifactId>
