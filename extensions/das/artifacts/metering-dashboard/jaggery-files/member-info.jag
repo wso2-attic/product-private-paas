@@ -17,7 +17,6 @@
 (function () {
     var log = new Log();
 
-    var HTTP_INTERNAL_ERROR = 500;
     var HTTPS_TRANSPORT = "https";
     var AUTHORIZATION_HEADER = "Authorization";
     var ANALYTICS_SERVICE = "/services/AnalyticsWebService";
