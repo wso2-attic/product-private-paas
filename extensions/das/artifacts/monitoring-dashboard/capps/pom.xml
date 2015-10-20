@@ -26,8 +26,8 @@
     <modelVersion>4.0.0</modelVersion>
 
     <artifactId>org.wso2.ppaas.monitoring.service.capps</artifactId>
-    <name>WSO2 PPaaS - Monitoring Service Composite Applications</name>
-    <description>WSO2 PPaaS Monitoing Service Composite Applications</description>
+    <name>WSO2 PPaaS - Monitoring Service CApps</name>
+    <description>WSO2 PPaaS Monitoring Service CApps</description>
     <packaging>pom</packaging>
 
     <build>
