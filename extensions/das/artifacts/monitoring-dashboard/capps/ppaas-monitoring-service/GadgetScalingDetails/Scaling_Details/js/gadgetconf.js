@@ -16,7 +16,6 @@
 var gadgetConfig = {
     "id": "Scaling_Details",
     "title": "Cluster Instances",
-    "datasource": "SCALING_DETAILS",
     "type": "batch",
     "columns": [
         {
