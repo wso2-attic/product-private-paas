@@ -16,7 +16,6 @@
 var gadgetConfig = {
     "id": "Memory_Usage",
     "title": "Memory_Usage",
-    "datasource": "AVERAGE_MEMORY_CONSUMPTION_STATS",
     "type": "batch",
     "columns": [
         {

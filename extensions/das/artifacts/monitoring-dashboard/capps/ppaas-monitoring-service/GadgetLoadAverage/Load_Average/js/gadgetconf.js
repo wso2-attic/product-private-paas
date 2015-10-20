@@ -16,7 +16,6 @@
 var gadgetConfig = {
     "id": "Load_Average",
     "title": "Load Average",
-    "datasource": "AVERAGE_LOAD_AVERAGE_STATS",
     "type": "batch",
     "columns": [
         {
