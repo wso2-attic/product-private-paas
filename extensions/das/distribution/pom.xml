@@ -47,7 +47,7 @@
                                     <goal>attached</goal>
                                 </goals>
                                 <configuration>
-                                    <finalName>${artifactId}-${project.version}</finalName>
+                                    <finalName>${project.artifactId}-${project.version}</finalName>
                                     <descriptors>
                                         <descriptor>${basedir}/src/assembly/bin.xml</descriptor>
                                     </descriptors>
