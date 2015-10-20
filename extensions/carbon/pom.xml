@@ -19,7 +19,7 @@
     <parent>
         <groupId>org.wso2.ppaas</groupId>
         <artifactId>ppaas-extensions</artifactId>
-        <version>4.1.0</version>
+        <version>4.1.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>carbon-extensions</artifactId>
