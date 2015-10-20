@@ -25,7 +25,7 @@ Giving you all the power of cloud, WSO2 Private PaaS is built on top of the Apac
 - Pluggable architecture support for cartridges
 - Automated cluster discovery for WSO2 products
 - Cartridge automation using Puppet
-- Support for third party load balancers (nginx, haproxy, LVS, EC2 & GCE)
+- Support for third party load balancers (nginx, haproxy, LVS, AWS & GCE)
 - Artifact distribution coordination
 - WSO2 Private PaaS Console
 - WSO2 Private PaaS REST API
