@@ -14,8 +14,7 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.wso2</groupId>
@@ -26,7 +25,7 @@
     <groupId>org.wso2.ppaas</groupId>
     <artifactId>ppaas-parent</artifactId>
     <packaging>pom</packaging>
-    <version>4.1.0-SNAPSHOT</version>
+    <version>4.1.0</version>
     <name>WSO2 PPaaS - Parent</name>
     <description>WSO2 Private PaaS is an open source Platform as a Service (PaaS) solution.</description>
     <url>http://wso2.com/cloud/private-paas</url>
@@ -61,7 +60,7 @@
         <url>https://github.com/wso2/product-private-paas.git</url>
         <developerConnection>scm:git:https://github.com/wso2/product-private-paas.git</developerConnection>
         <connection>scm:git:https://github.com/wso2/product-private-paas.git</connection>
-        <tag>HEAD</tag>
+        <tag>v4.1.0-rc1</tag>
     </scm>
 
     <profiles>
