@@ -539,7 +539,7 @@ fi
 if [[ !(-d $stratos_extract_path) ]]; then
     echo "Extracting Apache Stratos"
     unzip -q $stratos_pack_zip -d $stratos_path
-    mv -f $stratos_path/wso2ppaas-4.1.0-SNAPSHOT $stratos_extract_path
+    mv -f $stratos_path/wso2ppaas-4.1.0 $stratos_extract_path
 fi
 
 if [[ $config_mb = "true" ]]; then
