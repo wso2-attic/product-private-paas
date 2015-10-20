@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2005-2015 WSO2, Inc. (http://wso2.com)
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<assembly>
+    <id>bin</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+
+    <fileSets>
+        <!-- scripts -->
+        <fileSet>
+            <directory>../scripts</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/scripts</outputDirectory>
+            <includes>
+                <include>conf/setup.conf</include>
+                <include>install</include>
+                <include>packs</include>
+                <include>*.sh</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.gitkeep</exclude>
+            </excludes>
+            <fileMode>0755</fileMode>
+            <directoryMode>0755</directoryMode>
+        </fileSet>
+
+        <!-- ppaas -->
+        <fileSet>
+            <directory>../wso2ppaas/4.1.0/template-module/files/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/wso2ppaas-template-module/files/</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.gitkeep</exclude>
+                <exclude>**/*.gitignore</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../wso2ppaas/4.1.0/template-module/templates/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/wso2ppaas-template-module/templates/
+            </outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../wso2ppaas/4.1.0/template-module/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/wso2ppaas-template-module</outputDirectory>
+            <includes>
+                <include>module.ini</include>
+                <include>README.md</include>
+            </includes>
+            <filtered>true</filtered>
+            <fileMode>600</fileMode>
+        </fileSet>
+
+        <!-- cep -->
+        <fileSet>
+            <directory>../wso2cep/3.1.0/template-module/files/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/wso2cep-template-module/files/</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.gitkeep</exclude>
+                <exclude>**/*.gitignore</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../../../extensions/cep/artifacts/wso2cep-3.1.0/</directory>
+            <outputDirectory>
+                ${project.artifactId}-${project.version}/wso2cep-template-module/files/repository/deployment/server/
+            </outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.gitkeep</exclude>
+                <exclude>**/*.gitignore</exclude>
+                <exclude>**/streamdefinitions/**</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../wso2cep/3.1.0/template-module/templates/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/wso2cep-template-module/templates/
+            </outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.gitkeep</exclude>
+                <exclude>**/*.gitignore</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../wso2cep/3.1.0/template-module/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/wso2cep-template-module</outputDirectory>
+            <includes>
+                <include>module.ini</include>
+                <include>README.md</include>
+            </includes>
+            <filtered>true</filtered>
+            <fileMode>600</fileMode>
+        </fileSet>
+
+
+        <!-- activemq -->
+        <fileSet>
+            <directory>../activemq/5.10.0/template-module/templates/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/activemq-template-module/templates/
+            </outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../activemq/5.10.0/template-module/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/activemq-template-module</outputDirectory>
+            <includes>
+                <include>module.ini</include>
+                <include>README.md</include>
+            </includes>
+            <filtered>true</filtered>
+            <fileMode>600</fileMode>
+        </fileSet>
+
+
+        <!-- wso2das -->
+        <fileSet>
+            <directory>../wso2das/3.0.0/template-module/files/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/wso2das-template-module/files/</outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.gitkeep</exclude>
+                <exclude>**/*.gitignore</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../../../extensions/das/artifacts/metering-dashboard/jaggery-files/</directory>
+            <outputDirectory>
+                ${project.artifactId}-${project.version}/wso2das-template-module/files/repository/deployment/server/jaggeryapps/portal/controllers/apis/
+            </outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.gitkeep</exclude>
+                <exclude>**/*.gitignore</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../../../extensions/das/artifacts/metering-dashboard/ues-patch/</directory>
+            <outputDirectory>
+                ${project.artifactId}-${project.version}/wso2das-template-module/files/repository/deployment/server/jaggeryapps/portal/js/
+            </outputDirectory>
+            <includes>
+                <include>**/*.js</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.gitkeep</exclude>
+                <exclude>**/*.gitignore</exclude>
+                <exclude>**/*.jag</exclude>
+                <exclude>**/*.md</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../../../extensions/das/artifacts/metering-dashboard/ues-patch/</directory>
+            <outputDirectory>
+                ${project.artifactId}-${project.version}/wso2das-template-module/files/repository/deployment/server/jaggeryapps/portal/theme/templates/
+            </outputDirectory>
+            <includes>
+                <include>**/*.jag</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.gitkeep</exclude>
+                <exclude>**/*.gitignore</exclude>
+                <exclude>**/*.js</exclude>
+                <exclude>**/*.md</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../../../extensions/das/artifacts/monitoring-dashboard/jaggery-files/</directory>
+            <outputDirectory>
+                ${project.artifactId}-${project.version}/wso2das-template-module/files/repository/deployment/server/jaggeryapps/portal/controllers/apis/
+            </outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.gitkeep</exclude>
+                <exclude>**/*.gitignore</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../wso2das/3.0.0/template-module/templates/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/wso2das-template-module/templates/
+            </outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../wso2das/3.0.0/template-module/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/wso2das-template-module/</outputDirectory>
+            <includes>
+                <include>module.ini</include>
+                <include>README.md</include>
+
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../../extensions/das/artifacts/metering-dashboard/capps/target/</directory>
+            <outputDirectory>
+                ${project.artifactId}-${project.version}/wso2das-template-module/files/repository/deployment/server/carbonapps/
+            </outputDirectory>
+            <includes>
+                <include>ppaas-metering-service.car</include>
+                <include>ppaas-monitoring-service.car</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../../extensions/das/artifacts/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/wso2das-template-module/files/dbscripts/
+            </outputDirectory>
+            <includes>
+                <include>metering-dashboard/metering-mysqlscript.sql</include>
+                <include>monitoring-dashboard/monitoring-mysqlscript.sql</include>
+            </includes>
+        </fileSet>
+
+        <!-- wso2cep monitoring -->
+        <fileSet>
+            <directory>../wso2cep-monitoring/3.1.0/template-module/files/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/wso2cep-monitoring-template-module/files/
+            </outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.gitkeep</exclude>
+                <exclude>**/*.gitignore</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../wso2cep-monitoring/3.1.0/template-module/templates/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/wso2cep-monitoring-template-module/templates/
+            </outputDirectory>
+            <includes>
+                <include>**/*</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>../../../extensions/das/artifacts/wso2cep-310/eventformatters</directory>
+            <outputDirectory>
+                ${project.artifactId}-${project.version}/wso2cep-monitoring-template-module/files/repository/deployment/server/eventformatters
+            </outputDirectory>
+            <includes>
+                <include>**/*.xml</include>
+            </includes>
+            <excludes>
+                <exclude>**/*.gitkeep</exclude>
+                <exclude>**/*.gitignore</exclude>
+            </excludes>
+        </fileSet>
+        <fileSet>
+            <directory>../wso2cep-monitoring/3.1.0/template-module/</directory>
+            <outputDirectory>${project.artifactId}-${project.version}/wso2cep-monitoring-template-module/
+            </outputDirectory>
+            <includes>
+                <include>module.ini</include>
+                <include>README.md</include>
+            </includes>
+            <filtered>true</filtered>
+            <fileMode>600</fileMode>
+        </fileSet>
+    </fileSets>
+
+
+    <files>
+        <file>
+            <source>../README.md</source>
+            <outputDirectory>${project.artifactId}-${project.version}</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+        <file>
+            <source>../../../LICENSE</source>
+            <outputDirectory>${project.artifactId}-${project.version}</outputDirectory>
+            <filtered>true</filtered>
+        </file>
+    </files>
+
+    <!-- Copy dependencies -->
+    <dependencySets>
+        <!-- wso2cep -->
+        <dependencySet>
+            <outputDirectory>
+                ${project.artifactId}-${project.version}/wso2cep-template-module/files/repository/components/lib
+            </outputDirectory>
+            <includes>
+                <include>org.apache.activemq:activemq-client:jar</include>
+                <include>org.apache.activemq:activemq-broker:jar</include>
+                <include>org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:jar</include>
+                <include>org.apache.geronimo.specs:geronimo-jms_1.1_spec-1.1.1:jar</include>
+                <include>org.fusesource.hawtbuf:hawtbuf:jar</include>
+                <include>mysql:mysql-connector-java:jar</include>
+                <include>org.apache.commons:commons-lang3:jar</include>
+                <include>org.wso2.ppaas:org.wso2.ppaas.cep310.extension:jar</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>
+                ${project.artifactId}-${project.version}/wso2cep-template-module/files/repository/components/dropins
+            </outputDirectory>
+            <includes>
+                <include>org.apache.stratos:org.apache.stratos.common:jar</include>
+                <include>org.apache.stratos:org.apache.stratos.messaging:jar</include>
+                <include>org.wso2.andes.wso2:andes-client:jar</include>
+                <include>org.apache.geronimo.specs.wso2:geronimo-jms_1.1_spec:jar</include>
+            </includes>
+        </dependencySet>
+
+        <!-- wso2das -->
+        <dependencySet>
+            <outputDirectory>
+                ${project.artifactId}-${project.version}/wso2das-template-module/files/repository/components/lib
+            </outputDirectory>
+            <includes>
+                <include>org.apache.activemq:activemq-client:jar</include>
+                <include>org.apache.geronimo.specs:geronimo-j2ee-management_1.1_spec:jar</include>
+                <include>org.fusesource.hawtbuf:hawtbuf:jar</include>
+                <include>mysql:mysql-connector-java:jar</include>
+                <include>org.apache.commons:commons-lang3:jar</include>
+                <include>org.wso2.ppaas:org.wso2.ppaas.das.extension:jar</include>
+            </includes>
+        </dependencySet>
+        <dependencySet>
+            <outputDirectory>
+                ${project.artifactId}-${project.version}/wso2das-template-module/files/repository/components/dropins
+            </outputDirectory>
+            <includes>
+                <include>org.apache.stratos:org.apache.stratos.common:jar</include>
+                <include>org.apache.stratos:org.apache.stratos.messaging:jar</include>
+            </includes>
+        </dependencySet>
+    </dependencySets>
+</assembly>

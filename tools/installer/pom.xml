@@ -35,5 +35,6 @@
         <module>wso2das</module>
         <module>wso2cep-monitoring</module>
         <module>scripts</module>
+        <module>distribution</module>
     </modules>
 </project>
