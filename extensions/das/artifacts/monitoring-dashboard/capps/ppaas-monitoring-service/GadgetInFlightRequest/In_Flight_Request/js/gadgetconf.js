@@ -16,7 +16,6 @@
 var gadgetConfig = {
     "id": "In_Flight_Request",
     "title": "In-Flight Request",
-    "datasource": "AVERAGE_IN_FLIGHT_REQUESTS",
     "type": "batch",
     "columns": [
         {

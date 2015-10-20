@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-var datasource, type, columns, filter, maxUpdateValue;
+var type, columns, maxUpdateValue;
 
 var REFRESH_INTERVAL = 5000;
 var dataLoaded = true;
@@ -22,8 +22,6 @@ var clusterId = '';
 var memberId = '';
 
 //loading gadget configuration
-datasource = gadgetConfig.datasource;
-filter = gadgetConfig.filter;
 type = gadgetConfig.type;
 var counter = 0;
 maxUpdateValue = gadgetConfig.maxUpdateValue;

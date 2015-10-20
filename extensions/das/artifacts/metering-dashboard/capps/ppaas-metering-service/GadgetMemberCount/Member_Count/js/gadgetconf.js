@@ -16,7 +16,6 @@
 var gadgetConfig = {
     "id": "Member_Count",
     "title": "Member_Count",
-    "datasource": "MEMBER_COUNT",
     "type": "batch",
     "columns": [
         {
