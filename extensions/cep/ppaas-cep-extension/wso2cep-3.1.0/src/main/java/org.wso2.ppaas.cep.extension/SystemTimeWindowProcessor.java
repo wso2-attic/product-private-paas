@@ -16,14 +16,20 @@
  * under the License.
  */
 package org.wso2.ppaas.cep.extension;
+
 import org.wso2.siddhi.core.config.SiddhiContext;
 import org.wso2.siddhi.core.executor.function.FunctionExecutor;
 import org.wso2.siddhi.query.api.definition.Attribute;
 import org.wso2.siddhi.query.api.extension.annotation.SiddhiExtension;
 
-@SiddhiExtension(namespace = "stratos", function = "now")
+/**
+ * CEP window processor to get system timestamp
+ */
+@SiddhiExtension(namespace = "stratos",
+                 function = "now")
 public class SystemTimeWindowProcessor extends FunctionExecutor {
     Attribute.Type returnType = Attribute.Type.LONG;
+
     @Override
     public void init(Attribute.Type[] types, SiddhiContext siddhiContext) {
     }
