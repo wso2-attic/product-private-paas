@@ -262,14 +262,13 @@ function update(source) {
             } else if (d.type == 'applicationInstances') {
                 div_html = "<strong>Instance Id: </strong>" + d.name + "<br/>" +
                     "<strong>Status: </strong>" + d.status + "<br/>";
-                if (dasStatsPublisherEnabled) {
-                    div_html += "<button class='btn btn-info show-usage' id=" + d.name + " name='appUsage' onClick='showApplicationUsage(this.id)'>Show Usage</button>";
-                }
 
             } else {
                 div_html = "<strong>Alias: </strong>" + d.name + "<br/>" +
-                    "<strong>Status: </strong>" + d.status;
-
+                    "<strong>Status: </strong>" + d.status + "<br/>";
+                if (dasStatsPublisherEnabled) {
+                    div_html += "<button class='btn btn-info show-usage' id=" + d.name + " name='appUsage' onClick='showApplicationUsage()'>Show Usage</button>";
+                }
             }
             return div_html;
         });
@@ -622,7 +621,7 @@ $("a[href='#application']").on('shown.bs.tab', function (e) {
     }
 });
 
-function showApplicationUsage(id) {
+function showApplicationUsage() {
     window.location = encodeURI(meteringDashboardUrl + '?applicationId=' + applicationId);
 }
 
