@@ -52,7 +52,6 @@
                     "description": "This notifies cancellation of state selection"
                   }
                 },
-                "options": {},
                 "locale_titles": {
                   "en-US": ""
                 },

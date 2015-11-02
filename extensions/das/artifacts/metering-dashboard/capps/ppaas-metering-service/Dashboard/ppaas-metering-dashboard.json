@@ -3,7 +3,9 @@
   "title": "Private PaaS Metering Dashboard",
   "description": "This dashboard is to show metering data.",
   "permissions": {
-    "viewers": [],
+    "viewers": [
+      "Internal/everyone"
+    ],
     "editors": [
       "Internal/everyone"
     ]
@@ -50,7 +52,6 @@
                     "description": "This notifies cancellation of state selection"
                   }
                 },
-                "options": {},
                 "settings": {}
               }
             }
@@ -176,7 +177,6 @@
                   "type": "boolean",
                   "description": "This notifies cancellation of state selection"
                 },
-                "options": {},
                 "settings": {}
               }
             }
