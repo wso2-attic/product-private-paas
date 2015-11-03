@@ -1,9 +1,9 @@
-##WSO2 Private PaaS 4.1.0 New UXD Implemantation##
+##WSO2 Private PaaS - UXD Implemantation##
 ====================================
 
 Initial version with improved UXDesigns.
 
-### New Features ###
+### Features ###
 
 1. json-schema support for all form definitions (www.json-schema.org)  [STRATOS-944]
 2. JSON Hyper-Schema based UI form implementation

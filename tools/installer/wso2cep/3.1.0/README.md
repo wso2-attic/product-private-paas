@@ -8,7 +8,7 @@
 
 ### Compatibility
 
-WSO2 Private PaaS 4.1.0
+WSO2 Private PaaS 4.1.0 or higher
 
 ### Special Notes
 

@@ -41,4 +41,4 @@ Cartridges for WSO2 products can be found at [WSO2 Private PaaS Cartridges GitHu
 
 ## Documentation
 
-[WSO2 Private PaaS 4.1.0 Documentation](https://docs.wso2.com/display/PP410)
+[WSO2 Private PaaS 4.1.1 Documentation](https://docs.wso2.com/display/PP411)

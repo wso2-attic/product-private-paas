@@ -1,6 +1,6 @@
 ## WSO2 Complex Event Processor 3.1.0 Installer for Monitoring
 
-WSO2 Private PaaS 4.1.0
+WSO2 Private PaaS 4.1.0 or higher
 
 ### Special Notes
 
