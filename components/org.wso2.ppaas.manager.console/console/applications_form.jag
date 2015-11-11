@@ -33,7 +33,7 @@ var log = new Log("apachestratos.applications_form"),
         editorDeploymentPolicies = applicationPolicyData = applicationJSON = '',
         isEdit = isForm = false,
         userPermissions = session.get('PERMISSIONS'),
-        dasStatsPublisherEnabled = session.get('DAS_STATS_PUBLISHER_ENABLED'),
+        dasStatsPublisherEnabled = application.get("dasStatsPublisherEnabled"),
         meteringDashboardUrl = '';
 
 //create left menu
@@ -109,7 +109,7 @@ switch (formtype) {
 }
 
 if (dasStatsPublisherEnabled) {
-    meteringDashboardUrl = session.get('METERING_DASHBOARD_URL');
+    meteringDashboardUrl = application.get("meteringDashboardUrl");
 }
 
 var caramelData = {
