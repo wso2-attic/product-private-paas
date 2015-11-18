@@ -23,6 +23,7 @@ autoscaler.service.url=https://localhost:9443/services/AutoscalerService/
 cloud.controller.service.url=https://localhost:9443/services/CloudControllerService/
 stratos.manager.service.url=https://localhost:9443/services/StratosManagerService/
 das.metering.dashboard.url={{CONFIG_METERING_DASHBOARD_URL}}
+das.monitoring.dashboard.url={{CONFIG_MONITORING_DASHBOARD_URL}}
 puppet.ip=127.0.0.1
 puppet.hostname=puppet.apache.stratos.org
 puppet.dns.available=false
