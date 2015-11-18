@@ -486,6 +486,26 @@
                 <artifactId>org.apache.stratos.cep300.extension</artifactId>
                 <version>${stratos.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.cep.310.extension</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.das.extension</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.metering.service.capps</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.monitoring.service.capps</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
 
             <!-- Automation framework dependencies -->
             <dependency>
@@ -703,33 +723,13 @@
                 <artifactId>wso2ppaas-membership-scheme</artifactId>
                 <version>${project.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.das.extension</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.metering.service.capps</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.monitoring.service.capps</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.cep310.extension</artifactId>
-                <version>${project.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
 
     <properties>
         <!-- Apache Stratos version -->
-        <stratos.version>4.1.4</stratos.version>
+        <stratos.version>4.1.5-SNAPSHOT</stratos.version>
 
         <!-- ppaas distribution properties -->
         <ppaas.distribution.name>wso2ppaas</ppaas.distribution.name>
