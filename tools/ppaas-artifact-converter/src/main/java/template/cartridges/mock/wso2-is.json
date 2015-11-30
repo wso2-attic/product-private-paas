@@ -1,0 +1,28 @@
+{
+    "type": "wso2is",
+    "provider": "wso2",
+    "host": "wso2is.stratos.org",
+    "category": "framework",
+    "displayName": "WSO2 IS 5.0.0",
+    "description": "WSO2 IS 5.0.0 Cartridge",
+    "version": "7",
+    "multiTenant": "false",
+    "portMapping": [
+        {
+            "name": "http-9443",
+            "protocol": "http",
+            "port": "9443",
+            "proxyPort": "8280"
+        }
+    ],
+    "iaasProvider": [
+        {
+            "type": "mock",
+            "imageId": "not-needed",
+            "networkInterfaces": [
+            ],
+            "property": [
+            ]
+        }
+    ]
+}

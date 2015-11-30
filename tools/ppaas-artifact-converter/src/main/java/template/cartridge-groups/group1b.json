@@ -1,0 +1,19 @@
+{
+    "name": "group2",
+    "cartridges": [
+        "c2",
+        "c3"
+    ],
+    "dependencies": {
+        "startupOrders": [
+            {
+                "aliases": [
+                    "cartridge.my-c3",
+                    "cartridge.my-c2"
+                ]
+            }
+        ],
+        "terminationBehaviour": "terminate-all"
+    }
+}
+

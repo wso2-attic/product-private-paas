@@ -1,0 +1,19 @@
+{
+    "name": "group8",
+    "groups": [
+        {
+            "name": "group9",
+            "cartridges": [
+                "tomcat1"
+            ]
+        }
+    ],
+    "cartridges": [
+        "tomcat2",
+        "tomcat1"
+    ],
+    "dependencies": {
+        "terminationBehaviour": "terminate-all"
+    }
+}
+

@@ -1,0 +1,17 @@
+{
+
+    "id": "autoscaling-policy-1",
+    "displayName": "displayName",
+    "description": "description",
+    "loadThresholds": {
+        "requestsInFlight": {
+            "threshold": 20
+        },
+        "memoryConsumption": {
+            "threshold": 70
+        },
+        "loadAverage": {
+            "threshold": 70
+        }
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "name": "group6",
+    "cartridges": [
+        "tomcat2",
+        "tomcat1"
+    ],
+    "dependencies": {
+        "startupOrders": [
+            {
+                "aliases": [
+                    "cartridge.tomcat2",
+                    "cartridge.tomcat1"
+                ]
+            }
+        ],
+        "terminationBehaviour": "terminate-all"
+    }
+}
+

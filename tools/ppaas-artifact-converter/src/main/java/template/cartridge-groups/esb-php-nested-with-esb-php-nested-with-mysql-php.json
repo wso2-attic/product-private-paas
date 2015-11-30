@@ -1,0 +1,26 @@
+{
+    "name": "esb-php-nested-with-esb-php-nested-with-mysql-php",
+    "groups": [
+        {
+            "name": "esb-php-nested-with-mysql-php",
+            "groups": [
+                {
+                    "name": "mysql-php",
+                    "cartridges": [
+                        "mysql",
+                        "php"
+                    ]
+                }
+            ],
+            "cartridges": [
+                "esb",
+                "php"
+            ]
+        }
+    ],
+    "cartridges": [
+        "esb",
+        "php"
+    ]
+}
+

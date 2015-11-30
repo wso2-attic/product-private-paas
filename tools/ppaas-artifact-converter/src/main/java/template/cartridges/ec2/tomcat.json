@@ -1,0 +1,40 @@
+{
+    "type": "tomcat",
+    "provider": "apache",
+    "category": "framework",
+    "host": "tomcat.stratos.org",
+    "displayName": "tomcat",
+    "description": "tomcat Cartridge",
+    "version": "7",
+    "multiTenant": "false",
+    "portMapping": [
+        {
+            "name": "http-22",
+            "protocol": "http",
+            "port": "22",
+            "proxyPort": "8280"
+        }
+    ],
+    "deployment": {
+    },
+    "iaasProvider": [
+        {
+            "type": "ec2",
+            "imageId": "ap-southeast-1/ami-3c0f5d6e",
+            "property": [
+                {
+                    "name": "instanceType",
+                    "value": "m1.medium"
+                },
+                {
+                    "name": "keyPair",
+                    "value": "manula"
+                },
+                {
+                    "name": "securityGroups",
+                    "value": "s2-2.0.0-rc1"
+                }
+            ]
+        }
+    ]
+}
