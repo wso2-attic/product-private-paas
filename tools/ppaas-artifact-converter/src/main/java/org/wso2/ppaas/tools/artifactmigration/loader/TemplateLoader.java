@@ -18,13 +18,7 @@
 package org.wso2.ppaas.tools.artifactmigration.loader;
 
 import com.google.gson.Gson;
-import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
-import org.apache.stratos.common.beans.application.ApplicationBean;
-import org.apache.stratos.common.beans.partition.NetworkPartitionBean;
-import org.apache.stratos.common.beans.policy.autoscale.AutoscalePolicyBean;
-import org.apache.stratos.common.beans.policy.deployment.DeploymentPolicyBean;
-import org.wso2.ppaas.tools.artifactmigration.config.Configuration;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -36,16 +30,17 @@ import java.io.IOException;
  */
 public class TemplateLoader {
 
-    private static final Logger logger = Logger.getLogger(TemplateLoader.class);
+
     private static TemplateLoader instance = null;
+    BufferedReader br;
 
     private TemplateLoader() {
     }
 
     public static TemplateLoader getInstance() {
-        if (instance == null){
-            synchronized (TemplateLoader.class){
-                if (instance == null){
+        if (instance == null) {
+            synchronized (TemplateLoader.class) {
+                if (instance == null) {
                     instance = new TemplateLoader();
                 }
             }
@@ -54,76 +49,24 @@ public class TemplateLoader {
         return instance;
     }
 
+    /**
+     *Method to fetch template
+     * @param filePath the path of the file to fetch
+     * @param typeOfClass the type of the class
+     * @param <T> Generic class
+     * @return the generic instance
+     * @throws IOException
+     */
+    public <T> T fetchTemplate(String filePath, Class<T> typeOfClass) throws IOException {
 
-    public NetworkPartitionBean fetchNetworkPartitionTemplate() {
+        T newInstance = null;
 
-        NetworkPartitionBean networkPartition = null;
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new FileReader(
-                    Configuration.ROOT_TEMPLATE_DIRECTORY + Configuration.DIRECTORY_TEMPLATE_NETWORK_PARTITION));
-            networkPartition = new Gson().fromJson(br, NetworkPartitionBean.class);
-            br.close();
-        } catch (FileNotFoundException e) {
-            logger.log(Level.ERROR, e.getMessage());
-        } catch (IOException e) {
-            logger.log(Level.ERROR, e.getMessage());
-        }
-        return networkPartition;
-    }
 
-    public AutoscalePolicyBean fetchAutoscalePolicy() {
+        br = new BufferedReader(new FileReader(filePath));
+        newInstance = new Gson().fromJson(br, typeOfClass);
+        br.close();
 
-        AutoscalePolicyBean autoscalePolicy = null;
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new FileReader(
-                    Configuration.ROOT_TEMPLATE_DIRECTORY + Configuration.DIRECTORY_TEMPLATE_POLICY_AUTOSCALE));
-            autoscalePolicy = new Gson().fromJson(br, AutoscalePolicyBean.class);
-            br.close();
-        } catch (FileNotFoundException e) {
-            logger.log(Level.ERROR, e.getMessage());
-        } catch (IOException e) {
-            logger.log(Level.ERROR, e.getMessage());
-        }
-        return autoscalePolicy;
-
-    }
-
-    //Method to fetch DeploymentPolicy
-    public DeploymentPolicyBean fetchDeploymentPolicy() {
-
-        DeploymentPolicyBean deploymentPolicy = null;
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new FileReader(
-                    Configuration.ROOT_TEMPLATE_DIRECTORY + Configuration.DIRECTORY_TEMPLATE_POLICY_DEPLOYMENT));
-            deploymentPolicy = new Gson().fromJson(br, DeploymentPolicyBean.class);
-            br.close();
-        } catch (FileNotFoundException e) {
-            logger.log(Level.ERROR, e.getMessage());
-        } catch (IOException e) {
-            logger.log(Level.ERROR, e.getMessage());
-        }
-        return deploymentPolicy;
-
-    }
-
-    public ApplicationBean fetchApplication() {
-
-        ApplicationBean application = null;
-        BufferedReader br;
-        try {
-            br = new BufferedReader(new FileReader(
-                    Configuration.ROOT_TEMPLATE_DIRECTORY + Configuration.DIRECTORY_TEMPLATE_APPLICATION));
-            application = new Gson().fromJson(br, ApplicationBean.class);
-            br.close();
-        } catch (FileNotFoundException e) {
-            logger.log(Level.ERROR, e.getMessage());
-        } catch (IOException e) {
-            logger.log(Level.ERROR, e.getMessage());
-        }
-        return application;
+        return newInstance;
     }
 
 }

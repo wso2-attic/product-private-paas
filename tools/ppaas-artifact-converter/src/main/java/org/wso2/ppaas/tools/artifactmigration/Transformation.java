@@ -17,25 +17,29 @@
  */
 package org.wso2.ppaas.tools.artifactmigration;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.stratos.common.Properties;
+import com.google.gson.JsonSyntaxException;
 import org.apache.stratos.common.beans.application.ApplicationBean;
 import org.apache.stratos.common.beans.application.ComponentBean;
 import org.apache.stratos.common.beans.application.SubscribableInfo;
-import org.apache.stratos.common.beans.cartridge.CartridgeReferenceBean;
+import org.apache.stratos.common.beans.cartridge.*;
 import org.apache.stratos.common.beans.partition.NetworkPartitionBean;
 import org.apache.stratos.common.beans.partition.NetworkPartitionReferenceBean;
 import org.apache.stratos.common.beans.partition.PartitionReferenceBean;
 import org.apache.stratos.common.beans.policy.autoscale.AutoscalePolicyBean;
 import org.apache.stratos.common.beans.policy.deployment.DeploymentPolicyBean;
+import org.apache.stratos.manager.dao.PortMapping;
 import org.apache.stratos.manager.dto.Cartridge;
+import org.apache.stratos.manager.dto.Persistence;
+import org.apache.stratos.manager.dto.Volume;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.PartitionGroup;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.AutoscalePolicy;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment.DeploymentPolicy;
-import org.wso2.ppaas.tools.artifactmigration.config.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.wso2.ppaas.tools.artifactmigration.loader.Constants;
 import org.wso2.ppaas.tools.artifactmigration.loader.OldArtifactLoader;
 import org.wso2.ppaas.tools.artifactmigration.loader.TemplateLoader;
 
@@ -50,7 +54,9 @@ import java.util.List;
  */
 public class Transformation {
 
-    private static final Logger logger = Logger.getLogger(Transformation.class);
+
+    private static final Logger log = LoggerFactory.getLogger(Transformation.class);
+
     private static Transformation instance = null;
 
     private Transformation() {
@@ -69,205 +75,325 @@ public class Transformation {
         return instance;
     }
 
+    /**
+     * Method to transform Auto Scale Policies
+     */
     public void transformAutoscalePolicyList() {
 
-        List<AutoscalePolicy> autoscalePolicy400 = null;
-        AutoscalePolicyBean autoscalePolicy410 = null;
+        List<AutoscalePolicy> autoscalePolicy400List;
+        AutoscalePolicyBean autoscalePolicy410Template;
 
-        //Retrieving Json files of PPaaS 4.0.0
         try {
-            autoscalePolicy400 = OldArtifactLoader.getInstance().fetchAutoscalePolicyList();
-        } catch (Exception e) {
-            //TODO:logger.error();
-            logger.log(Level.ERROR, e.getMessage());
+
+            //Retrieving Json files of PPaaS 4.0.0
+            //autoscalePolicy400List = OldArtifactLoader.getInstance().fetchJSON(Constants.BASE_URL+Constants.URL_POLICY_AUTOSCALE,AutoscalePolicy.class);
+            autoscalePolicy400List = OldArtifactLoader.getInstance().fetchAutoscalePolicyList();
+            log.info("Fetched Auto Scale Policy from PPaaS 4.0.0");
+
+            //Retrieving the template
+            autoscalePolicy410Template = TemplateLoader.getInstance().fetchTemplate(Constants.ROOT_TEMPLATE_DIRECTORY+Constants.DIRECTORY_TEMPLATE_POLICY_AUTOSCALE,AutoscalePolicyBean.class);
+            log.info("Fetched Auto Scale Policy Template");
+
+
+            //Modifying the template according to the values of PPaaS 4.0.0
+
+            File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_AUTOSCALE);
+
+            for(AutoscalePolicy autoscalePolicy : autoscalePolicy400List){
+
+                autoscalePolicy410Template.setId(autoscalePolicy.getId());
+
+                String json = new GsonBuilder().setPrettyPrinting().create().toJson(autoscalePolicy410Template);
+                String fileName = autoscalePolicy410Template.getId();
+
+                writeFile(directoryName, fileName, json);
+            }
+            log.info("Created Auto Scale Policy 4.1.0 artifacts");
+
+
+        } catch (JsonSyntaxException e) {
+            log.error(e.getMessage(),e);
+        } catch (IOException e){
+            log.error(e.getMessage(),e);
         }
-
-        //Retrieving the template
-        try {
-            autoscalePolicy410 = TemplateLoader.getInstance().fetchAutoscalePolicy();
-        } catch (Exception e) {
-            logger.log(Level.ERROR, e.getMessage());
-        }
-
-        //Modifying the template according to the values of PPaaS 4.0.0
-        for (int j = 0; j < autoscalePolicy400.size(); j++) {
-
-            autoscalePolicy410.setId(autoscalePolicy400.get(j).getId());
-
-            String json = new GsonBuilder().setPrettyPrinting().create().toJson(autoscalePolicy410);
-            String fileName = "autoscaling-policy-" + (j + 1);
-            File directoryName = new File(Configuration.ROOT_DIRECTORY + Configuration.DIRECTORY_POLICY_AUTOSCALE);
-
-            writeFile(directoryName, fileName, json);
-
-        }
-
     }
 
     //Method to transform newtork partitions
     public void transformNetworkPartitionList() {
 
-        List<Partition> networkPartition400 = null;
-        NetworkPartitionBean networkPartition410 = null;
+        List<Partition> networkPartition400List;
+        NetworkPartitionBean networkPartition410Template;
 
-        //Retrieving Json files of PPaaS 4.0.0
         try {
-            networkPartition400 = OldArtifactLoader.getInstance().fetchPartitionList();
-        } catch (Exception e) {
-            logger.log(Level.ERROR, e.getMessage());
-        }
+            //Retrieving Json files of PPaaS 4.0.0
+           // networkPartition400List = OldArtifactLoader.getInstance().fetchJSON(Constants.BASE_URL + Constants.URL_PARTITION, Partition.class);
+            networkPartition400List = OldArtifactLoader.getInstance().fetchPartitionList();
+            log.info("Fetched Newtork Partition List from PPaaS 4.0.0");
 
-        //Retrieving the template
-        try {
-            networkPartition410 = TemplateLoader.getInstance().fetchNetworkPartitionTemplate();
-        } catch (Exception e) {
-            logger.log(Level.ERROR, e.getMessage());
-        }
 
-        //Modifying the template according to the values of PPaaS 4.0.0
-        for (int j = 0; j < networkPartition400.size(); j++) {
 
-            networkPartition410.setId(networkPartition400.get(j).id);
-            networkPartition410.setProvider(networkPartition400.get(j).provider);
+            //Retrieving the template
+            networkPartition410Template = TemplateLoader.getInstance().fetchTemplate(Constants.ROOT_TEMPLATE_DIRECTORY + Constants.DIRECTORY_TEMPLATE_NETWORK_PARTITION,NetworkPartitionBean.class);
+            log.info("Fetched NetworkPartitionList Template");
 
-            List<org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean> property400 = networkPartition400
-                    .get(j).property;
-            List<org.apache.stratos.common.beans.PropertyBean> property410 = new ArrayList<org.apache.stratos.common.beans.PropertyBean>();
 
-            Properties properties = new Properties();
-            for (int i = 0; i < property400.size(); i++) {
-                org.apache.stratos.common.beans.PropertyBean property = new org.apache.stratos.common.beans.PropertyBean();
-                property.setName(property400.get(i).name);
-                property.setValue(property400.get(i).value);
-                property410.add(property);
+            //Modifying the template according to the values of PPaaS 4.0.0
+            for(Partition networkPartition400 : networkPartition400List){
+
+
+                networkPartition410Template.setId(networkPartition400.id);
+                networkPartition410Template.setProvider(networkPartition400.provider);
+
+                List<org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean> property400List = networkPartition400.property;
+                List<org.apache.stratos.common.beans.PropertyBean> property410List = new ArrayList<org.apache.stratos.common.beans.PropertyBean>();
+
+
+                for (org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean temp : property400List) {
+                    org.apache.stratos.common.beans.PropertyBean property = new org.apache.stratos.common.beans.PropertyBean();
+                    property.setName(temp.name);
+                    property.setValue(temp.value);
+                    property410List.add(property);
+                }
+
+
+                networkPartition410Template.setProperties(property410List);
+
+                String json = getGson().toJson(networkPartition410Template);
+                String fileName = networkPartition410Template.getId();
+                File directoryName = new File(
+                        Constants.ROOT_DIRECTORY + Constants.DIRECTORY_NETWORK_PARTITION + File.separator + networkPartition400.provider);
+
+                writeFile(directoryName, fileName, json);
+
             }
 
-            networkPartition410.setProperties(property410);
+            log.info("Created Network Partition List 4.1.0 artifacts");
 
-            String json = new GsonBuilder().setPrettyPrinting().create().toJson(networkPartition410);
-            String fileName = "network-partition-" + (j + 1);
-            File directoryName = new File(
-                    Configuration.ROOT_DIRECTORY + Configuration.DIRECTORY_NETWORK_PARTITION + "/" + networkPartition400
-                            .get(j).provider);
-
-            writeFile(directoryName, fileName, json);
-
+        } catch (JsonSyntaxException e) {
+            log.error(e.getMessage(),e);
+        } catch (IOException e){
+            log.error(e.getMessage(),e);
         }
+
 
     }
 
-    //Method to transform DeploymentPolicy
+    /**
+     * Method to transform DeploymentPolicy
+     */
     public void transformDeploymentPolicyList() {
 
-        List<DeploymentPolicy> deploymentPolicy400 = null;
-        DeploymentPolicyBean deploymentPolicy410 = null;
+        List<DeploymentPolicy> deploymentPolicy400List;
+        DeploymentPolicyBean deploymentPolicy410Template;
 
-        //Retrieving Json files of PPaaS 4.0.0
         try {
-            deploymentPolicy400 = OldArtifactLoader.getInstance().fetchDeploymentPolicyList();
-        } catch (Exception e) {
-            logger.log(Level.ERROR, e.getMessage());
+
+            //Retrieving Json files of PPaaS 4.0.0
+            //deploymentPolicy400List = OldArtifactLoader.getInstance().fetchJSON(Constants.BASE_URL+Constants.URL_POLICY_DEPLOYMENT,DeploymentPolicy.class);
+            deploymentPolicy400List = OldArtifactLoader.getInstance().fetchDeploymentPolicyList();
+            log.info("Fetched Deployment Policy from PPaaS 4.0.0");
+
+
+            deploymentPolicy410Template = TemplateLoader.getInstance().fetchTemplate(Constants.ROOT_TEMPLATE_DIRECTORY+Constants.DIRECTORY_TEMPLATE_POLICY_DEPLOYMENT,DeploymentPolicyBean.class);
+            log.info("Fetched Deployment Policy Template");
+
+
+            File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_DEPLOYMENT);
+            for(DeploymentPolicy deploymentPolicy : deploymentPolicy400List ){
+
+                deploymentPolicy410Template.setId(deploymentPolicy.id);
+
+                List<PartitionGroup> partitionGroup400List = deploymentPolicy.partitionGroup;
+                List<NetworkPartitionReferenceBean> networkPartitions410List = new ArrayList<NetworkPartitionReferenceBean>();
+
+                int a =0;
+                for(PartitionGroup partitionGroup : partitionGroup400List){
+
+                    NetworkPartitionReferenceBean tempNetworkPartition = new NetworkPartitionReferenceBean();
+
+                    tempNetworkPartition.setId(partitionGroup.id);
+                    tempNetworkPartition.setPartitionAlgo(partitionGroup.partitionAlgo);
+                    networkPartitions410List.add(a, tempNetworkPartition);
+
+                    List<Partition> partition400List = partitionGroup.partition;
+                    List<PartitionReferenceBean> partitions410List = new ArrayList<PartitionReferenceBean>();
+
+                    int b =0;
+                    for(Partition partition :partition400List ){
+
+                        PartitionReferenceBean tempPartition = new PartitionReferenceBean();
+                        tempPartition.setId(partition.id);
+
+                        partitions410List.add(b++, tempPartition);
+                    }
+
+                    networkPartitions410List.get(a).setPartitions(partitions410List);
+                    a++;
+                }
+
+
+                deploymentPolicy410Template.setNetworkPartitions(networkPartitions410List);
+
+                //writing to JSON file
+                String json = new GsonBuilder().setPrettyPrinting().create().toJson(deploymentPolicy410Template);
+                String fileName = deploymentPolicy410Template.getId();
+
+                writeFile(directoryName, fileName, json);
+            }
+            log.info("Created Deployment Policy 4.1.0 artifacts");
+
+
+        } catch (JsonSyntaxException e) {
+            log.error(e.getMessage(),e);
+        } catch (IOException e){
+            log.error(e.getMessage(),e);
         }
 
-        //Retrieving the template
+
+    }
+
+    /**
+     * Method to transform cartridge list
+     */
+    public void transformCartridgeList() {
+
+        List<Cartridge> cartridge400List;
+        ApplicationBean application410Template;
+        CartridgeBean cartridge410Template;
+
+
         try {
-            deploymentPolicy410 = TemplateLoader.getInstance().fetchDeploymentPolicy();
-        } catch (Exception e) {
-            logger.log(Level.ERROR, e.getMessage());
-        }
+            //Retrieving Json files of PPaaS 4.0.0
+            //cartridge400List = OldArtifactLoader.getInstance().fetchJSON(Constants.BASE_URL+Constants.URL_CARTRIDGE,Cartridge.class);
+            cartridge400List = OldArtifactLoader.getInstance().fetchCartridgeList();
+            log.info("Fetched Cartridge List from PPaaS 4.0.0");
 
-        for (int j = 0; j < deploymentPolicy400.size(); j++) {
 
-            deploymentPolicy410.setId(deploymentPolicy400.get(j).id);
+            //Retrieving the template
+            application410Template = TemplateLoader.getInstance().fetchTemplate(Constants.ROOT_TEMPLATE_DIRECTORY+Constants.DIRECTORY_TEMPLATE_APPLICATION,ApplicationBean.class);
+            log.info("Fetched Application Template");
 
-            List<PartitionGroup> partitionGroup400 = deploymentPolicy400.get(j).partitionGroup;
-            List<NetworkPartitionReferenceBean> networkPartitions410 = new ArrayList<NetworkPartitionReferenceBean>();
+            //Retrieving the template
+            cartridge410Template = TemplateLoader.getInstance().fetchTemplate(Constants.ROOT_TEMPLATE_DIRECTORY+Constants.DIRECTORY_TEMPLATE_CARTRIDGE,CartridgeBean.class);
+            log.info("Fetched Cartridge List Template");
 
-            for (int a = 0; a < partitionGroup400.size(); a++) {
 
-                NetworkPartitionReferenceBean tempNetworkPartition = new NetworkPartitionReferenceBean();
+            //Creating Applications
+            File outputDirectoryNameApp = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_APPLICATION);
 
-                tempNetworkPartition.setId(partitionGroup400.get(a).id);
-                tempNetworkPartition.setPartitionAlgo(partitionGroup400.get(a).partitionAlgo);
-                networkPartitions410.add(a, tempNetworkPartition);
+            //Creating CartridgesAPPLICATION
+            File outputDirectoryNameCartridge = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_CARTRIDGE);
 
-                List<Partition> partition400 = partitionGroup400.get(a).partition;
-                List<PartitionReferenceBean> partitions410 = new ArrayList<PartitionReferenceBean>();
+            for(Cartridge cartridge : cartridge400List){
 
-                for (int b = 0; b < partition400.size(); b++) {
+                ComponentBean components = new ComponentBean();
+                List<CartridgeReferenceBean> cartridges = new ArrayList<CartridgeReferenceBean>();
+                CartridgeReferenceBean cartridge410 = new CartridgeReferenceBean();
+                SubscribableInfo subscribableInfo = new SubscribableInfo();
 
-                    PartitionReferenceBean tempPartition = new PartitionReferenceBean();
-                    tempPartition.setId(partition400.get(b).id);
+                subscribableInfo.setAlias(cartridge.getCartridgeAlias());
+                subscribableInfo.setAutoscalingPolicy(cartridge.getDefaultAutoscalingPolicy());
 
-                    partitions410.add(b, tempPartition);
+                cartridge410.setSubscribableInfo(subscribableInfo);
+                cartridge410.setType(cartridge.getCartridgeType());
+
+                cartridges.add(0, cartridge410);
+                components.setCartridges(cartridges);
+                application410Template.setComponents(components);
+                application410Template.setName(cartridge.getDisplayName());
+                application410Template.setDescription(cartridge.getDescription());
+
+                //writing to JSON file
+                String json = getGson().toJson(application410Template);
+                String fileName = application410Template.getName();
+                writeFile(outputDirectoryNameApp, fileName, json);
+
+
+
+                cartridge410Template.setType(cartridge.getCartridgeType());
+                cartridge410Template.setProvider(cartridge.getProvider());
+                cartridge410Template.setHost(cartridge.getHostName());
+                cartridge410Template.setDisplayName(cartridge.getDisplayName());
+                cartridge410Template.setDescription(cartridge.getDescription());
+                cartridge410Template.setVersion(cartridge.getVersion());
+                cartridge410Template.setMultiTenant(cartridge.isMultiTenant());
+
+                List<PortMapping> portMapping400List = new ArrayList<PortMapping>();
+                List<PortMappingBean> portMapping410List = new ArrayList<PortMappingBean>();
+
+                int a=0;
+                for(PortMapping portMapping : portMapping400List){
+
+                    PortMappingBean portMappingBeanTemp = new PortMappingBean();
+                    portMappingBeanTemp.setPort(Integer.parseInt(portMapping.getPrimaryPort()));
+                    portMappingBeanTemp.setProxyPort(Integer.parseInt(portMapping.getProxyPort()));
+
+                    portMapping410List.add(a++,portMappingBeanTemp);
 
                 }
 
-                networkPartitions410.get(a).setPartitions(partitions410);
+                cartridge410Template.setPortMapping(portMapping410List);
+
+                Persistence persistence400 = new Persistence();
+                PersistenceBean persistenceBean410 = new PersistenceBean();
+                persistenceBean410.setRequired(persistence400.isRequired());
+
+                List<Volume> volume400List = new ArrayList<Volume>();
+                List<VolumeBean> volumeBean410List = new ArrayList<VolumeBean>();
+
+                int b=0;
+                for(Volume volume : volume400List){
+
+                    VolumeBean volumeBeanTemp = new VolumeBean();
+                    volumeBeanTemp.setSize(String.valueOf(volume.getSize()));
+                    volumeBeanTemp.setMappingPath(volume.getMappingPath());
+                    volumeBeanTemp.setDevice(volume.getDevice());
+                    volumeBeanTemp.setRemoveOnTermination(volume.isRemoveOnTermination());
+
+                    volumeBean410List.add(b++,volumeBeanTemp);
+
+                }
+
+                persistenceBean410.setVolume(volumeBean410List);
+                cartridge410Template.setPersistence(persistenceBean410);
+
+                //writing to JSON file
+                String jsonCart = getGson().toJson(application410Template);
+                String fileNamejsonCart = cartridge410Template.getDisplayName();
+                writeFile(outputDirectoryNameCartridge, fileNamejsonCart, jsonCart);
+
 
             }
-            deploymentPolicy410.setNetworkPartitions(networkPartitions410);
 
-            //writing to JSON file
-            String json = new GsonBuilder().setPrettyPrinting().create().toJson(deploymentPolicy410);
-            String fileName = "deployment-policy-" + (j + 1);
-            File directoryName = new File(Configuration.ROOT_DIRECTORY + Configuration.DIRECTORY_POLICY_DEPLOYMENT);
+            log.info("Created Cartridge List 4.1.0 artifacts");
+            log.info("Created Application List 4.1.0 artifacts");
 
-            writeFile(directoryName, fileName, json);
 
+
+        } catch (JsonSyntaxException e) {
+            log.error(e.getMessage(),e);
+        } catch (IOException e){
+            log.error(e.getMessage(),e);
         }
+
+
 
     }
 
-    public void transformCartridgeList() {
-
-        List<Cartridge> cartridge400 = null;
-        ApplicationBean application410 = null;
-
-        //Retrieving Json files of PPaaS 4.0.0
-        try {
-            cartridge400 = OldArtifactLoader.getInstance().fetchCartridgeList();
-        } catch (Exception e) {
-            logger.log(Level.ERROR, e.getMessage());
-        }
-
-        //Retrieving the template
-        try {
-            application410 = TemplateLoader.getInstance().fetchApplication();
-        } catch (Exception e) {
-            logger.log(Level.ERROR, e.getMessage());
-        }
-
-        for (int j = 0; j < cartridge400.size(); j++) {
-
-            ApplicationBean application = new ApplicationBean();
-            ComponentBean components = new ComponentBean();
-            List<CartridgeReferenceBean> cartridges = new ArrayList<CartridgeReferenceBean>();
-            CartridgeReferenceBean cartridge410 = new CartridgeReferenceBean();
-            SubscribableInfo subscribableInfo = new SubscribableInfo();
-
-            subscribableInfo.setAlias(cartridge400.get(j).getCartridgeAlias());
-            subscribableInfo.setAutoscalingPolicy(cartridge400.get(j).getDefaultAutoscalingPolicy());
-
-            cartridge410.setSubscribableInfo(subscribableInfo);
-            cartridge410.setType(cartridge400.get(j).getCartridgeType());
-            cartridges.add(0, cartridge410);
-            components.setCartridges(cartridges);
-            application.setComponents(components);
-            application.setName(cartridge400.get(j).getDisplayName());
-            application.setDescription(cartridge400.get(j).getDescription());
-
-            //writing to JSON file
-            String json = new GsonBuilder().setPrettyPrinting().create().toJson(application);
-            String fileName = "application-" + (j + 1);
-
-            File directoryName = new File(Configuration.ROOT_DIRECTORY + Configuration.DIRECTORY_APPLICATION);
-            writeFile(directoryName, fileName, json);
-
-        }
-
+    /**
+     * Method to get Gson
+     */
+    public Gson getGson() {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+        return gsonBuilder.setPrettyPrinting().create();
     }
 
+    /**
+     * Method to write to a file
+     * @param directoryName Output directory name
+     * @param fileName file name
+     * @param json json string
+     */
     public void writeFile(File directoryName, String fileName, String json) {
         try {
 
@@ -275,13 +401,13 @@ public class Transformation {
                 directoryName.mkdirs();
             }
 
-            FileWriter writer = new FileWriter(new File(directoryName.getPath() + "/" + fileName), false);
+            FileWriter writer = new FileWriter(new File(directoryName.getPath() + File.separator + fileName), false);
 
             writer.write(json);
             writer.close();
 
         } catch (IOException e) {
-            logger.log(Level.ERROR, e.getMessage());
+            log.error(e.getMessage(),e);
         }
 
     }

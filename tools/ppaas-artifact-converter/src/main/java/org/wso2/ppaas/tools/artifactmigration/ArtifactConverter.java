@@ -17,18 +17,83 @@
  */
 package org.wso2.ppaas.tools.artifactmigration;
 
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.wso2.ppaas.tools.artifactmigration.loader.Constants;
+
+
+import java.io.Console;
+
 /**
+ *  Main entry point of the tool
  *
  */
 public class ArtifactConverter {
 
-    public static void main(String[] args) throws Exception {
+    private static final Logger log = LoggerFactory.getLogger(ArtifactConverter.class);
+
+    public static void main(String[] args) {
 
 
-        Transformation.getInstance().transformNetworkPartitionList();
-        Transformation.getInstance().transformAutoscalePolicyList();
-        Transformation.getInstance().transformDeploymentPolicyList();
-        Transformation.getInstance().transformCartridgeList();
+            Console console = System.console();
+
+            System.out.println("Enter the Base URL : ");
+            Constants.BASE_URL= console.readLine();
+
+            System.out.println("Enter the User name : ");
+            Constants.USER_NAME= console.readLine();
+
+            System.out.println("Enter the Password : ");
+            char[] passwordChars = console.readPassword();
+            Constants.PASSWORD = new String(passwordChars);
+
+
+
+
+        boolean isSuccess = true;
+        try {
+            Transformation.getInstance().transformNetworkPartitionList();
+        } catch (Exception ex) {
+            isSuccess =false;
+            ex.printStackTrace();
+            log.error("Error while converting NetworkPartition artifacts ",ex);
+            System.out.println("Error while transforming NetworkPartition list.see log for more details.");
+        }
+
+        try {
+            Transformation.getInstance().transformAutoscalePolicyList();
+        } catch (Exception ex) {
+            isSuccess =false;
+            ex.printStackTrace();
+            log.error("Error while converting AutoscalePolicy artifacts ",ex);
+            System.out.println("Error while transforming Auto Scaling Policy.see log for more details.");
+        }
+
+        try {
+            Transformation.getInstance().transformDeploymentPolicyList();
+        } catch (Exception ex) {
+            isSuccess = false;
+            ex.printStackTrace();
+            log.error("Error while converting DeploymentPolicy artifacts ",ex);
+            System.out.println("Error while transforming Deployment Policy.see log for more details.");
+
+        }
+
+        try {
+            Transformation.getInstance().transformCartridgeList();
+        } catch (Exception ex) {
+            isSuccess = false;
+            log.error("Error while converting Cartridge artifacts ",ex);
+            System.out.println("Error while transforming Cartridge.see log for more details.");
+
+        }
+
+        if (isSuccess)
+            System.out.println("Convertion completed succesfully");
+        else
+            System.out.println("Errors Occured while converting. Conversion Failed");
+
 
     }
 

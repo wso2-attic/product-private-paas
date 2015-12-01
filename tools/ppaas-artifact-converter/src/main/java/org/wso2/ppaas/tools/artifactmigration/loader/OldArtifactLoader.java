@@ -18,15 +18,20 @@
 package org.wso2.ppaas.tools.artifactmigration.loader;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
 import org.apache.stratos.manager.dto.Cartridge;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.AutoscalePolicy;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment.DeploymentPolicy;
-import org.wso2.ppaas.tools.artifactmigration.config.Configuration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import org.apache.commons.httpclient.HttpClient;
+import org.apache.commons.httpclient.UsernamePasswordCredentials;
+import org.apache.commons.httpclient.auth.AuthScope;
+import org.apache.commons.httpclient.methods.GetMethod;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -41,19 +46,22 @@ import java.util.List;
  */
 public class OldArtifactLoader {
 
-    private static final Logger logger = Logger.getLogger(TemplateLoader.class);
+    private static final Logger log = LoggerFactory.getLogger(OldArtifactLoader.class);
+
+
     private static OldArtifactLoader instance = null;
-    private String username = Configuration.USER_NAME;
-    private String password = Configuration.PASSWORD;
+    private String username = Constants.USER_NAME;
+    private String password = Constants.PASSWORD;
+    private Gson gson = new Gson();
 
     private OldArtifactLoader() {
     }
 
-    public static OldArtifactLoader getInstance() {
+    public static synchronized OldArtifactLoader getInstance() {
 
-        if (instance == null){
-            synchronized (OldArtifactLoader.class){
-                if (instance == null){
+        if (instance == null) {
+            synchronized (OldArtifactLoader.class) {
+                if (instance == null) {
                     instance = new OldArtifactLoader();
                 }
             }
@@ -63,52 +71,68 @@ public class OldArtifactLoader {
 
     }
 
-    public List<Partition> fetchPartitionList() throws Exception {
+    /**
+     * Method to fetch Partition Lists
+     * @return
+     * @throws JsonSyntaxException
+     */
+    public List<Partition> fetchPartitionList() throws JsonSyntaxException {
 
-        return new Gson().fromJson(readUrl(Configuration.BASE_URL + Configuration.URL_PARTITION),
-                new TypeToken<List<Partition>>() {
-                }.getType());
-
-    }
-
-    public List<AutoscalePolicy> fetchAutoscalePolicyList() throws Exception {
-        return new Gson().fromJson(readUrl(Configuration.BASE_URL + Configuration.URL_POLICY_AUTOSCALE),
-                new TypeToken<List<AutoscalePolicy>>() {
-                }.getType());
+        return gson.fromJson(readUrl(Constants.BASE_URL + Constants.URL_PARTITION), new TypeToken<List<Partition>>() {
+        }.getType());
 
     }
 
-    public List<DeploymentPolicy> fetchDeploymentPolicyList() throws Exception {
-        return new Gson().fromJson(readUrl(Configuration.BASE_URL + Configuration.URL_POLICY_DEPLOYMENT),
-                new TypeToken<List<DeploymentPolicy>>() {
-                }.getType());
+    /**
+     * Method to fetch Auto Scale Policy
+     * @return
+     * @throws JsonSyntaxException
+     */
+    public List<AutoscalePolicy> fetchAutoscalePolicyList() throws JsonSyntaxException {
+        return gson.fromJson(readUrl(Constants.BASE_URL + Constants.URL_POLICY_AUTOSCALE), new TypeToken<List<AutoscalePolicy>>() {
+        }.getType());
 
     }
 
-    public List<Cartridge> fetchCartridgeList() throws Exception {
-        return new Gson().fromJson(readUrl(Configuration.BASE_URL + Configuration.URL_CARTRIDGE),
-                new TypeToken<List<Cartridge>>() {
-                }.getType());
+    /**
+     * Method to fetch Deployment Policy
+     * @return
+     * @throws JsonSyntaxException
+     */
+    public List<DeploymentPolicy> fetchDeploymentPolicyList() throws JsonSyntaxException {
+        return gson.fromJson(readUrl(Constants.BASE_URL + Constants.URL_POLICY_DEPLOYMENT), new TypeToken<List<DeploymentPolicy>>() {
+        }.getType());
 
     }
 
-    //Method to get read URL
+    /**
+     * Method to fetch Cartridges
+     * @return
+     * @throws JsonSyntaxException
+     */
+    public List<Cartridge> fetchCartridgeList() throws JsonSyntaxException {
+        return gson.fromJson(readUrl(Constants.BASE_URL + Constants.URL_CARTRIDGE), new TypeToken<List<Cartridge>>() {
+        }.getType());
+
+    }
+
+
+    public <T> List<T> fetchJSON(String url, Class<T> typeofClass) throws JsonSyntaxException{
+        return gson.fromJson(readUrl(url), new TypeToken<List<T>>() {}.getType());
+    }
+
+    /**
+     * Method to connect to the REST endpoint
+     * @param serviceEndpoint the endpoint to connect with
+     * @return
+     */
     private String readUrl(String serviceEndpoint) {
 
-//        RestClient restClient = new RestClient(Configuration.BASE_URL,Configuration.USER_NAME,Configuration.PASSWORD);
-//        String s = null;
-//        try {
-//            s = restClient.executeGet(serviceEndpoint);
-//        } catch (Exception e) {
-//            logger.log(Level.ERROR, e.getMessage());
-//        }
-//
-//        return s;
 
-                String resultString = null;
+        String resultString = null;
         try {
 
-            String authString = Configuration.USER_NAME + ":" + Configuration.PASSWORD;
+            String authString = Constants.USER_NAME + ":" + Constants.PASSWORD;
             byte[] authEncBytes = Base64.encodeBase64(authString.getBytes());
             String authStringEnc = new String(authEncBytes);
 
@@ -127,15 +151,13 @@ public class OldArtifactLoader {
             resultString = sb.toString();
 
         } catch (MalformedURLException e) {
-            logger.log(Level.ERROR, e.getMessage());
+            log.error(e.getMessage(),e);
         } catch (IOException e) {
-            logger.log(Level.ERROR, e.getMessage());
+            log.error(e.getMessage(),e);
         }
         return resultString;
 
     }
-
-
 
     public String getUsername() {
 

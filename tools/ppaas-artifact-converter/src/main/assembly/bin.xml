@@ -43,8 +43,8 @@
         </fileSet>
 
         <fileSet>
-            <directory>${project.basedir}/src/main/java/template</directory>
-            <outputDirectory>/templates</outputDirectory>
+            <directory>${project.basedir}/src/main/resources/template</directory>
+            <outputDirectory>/template</outputDirectory>
             <fileMode>0600</fileMode>
 
         </fileSet>
