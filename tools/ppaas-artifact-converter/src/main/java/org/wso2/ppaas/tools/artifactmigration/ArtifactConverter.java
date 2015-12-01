@@ -35,18 +35,20 @@ public class ArtifactConverter {
 
     public static void main(String[] args) {
 
+        System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
 
-            Console console = System.console();
 
-            System.out.println("Enter the Base URL : ");
-            Constants.BASE_URL= console.readLine();
+        Console console = System.console();
 
-            System.out.println("Enter the User name : ");
-            Constants.USER_NAME= console.readLine();
+        System.out.println("Enter the Base URL : ");
+        Constants.BASE_URL= console.readLine();
 
-            System.out.println("Enter the Password : ");
-            char[] passwordChars = console.readPassword();
-            Constants.PASSWORD = new String(passwordChars);
+        System.out.println("Enter the User name : ");
+        Constants.USER_NAME= console.readLine();
+
+        System.out.println("Enter the Password : ");
+        char[] passwordChars = console.readPassword();
+        Constants.PASSWORD = new String(passwordChars);
 
 
 

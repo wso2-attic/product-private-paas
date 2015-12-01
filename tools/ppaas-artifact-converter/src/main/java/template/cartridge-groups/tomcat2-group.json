@@ -1,9 +1,0 @@
-{
-    "name": "tomcat2-group",
-    "cartridges": [
-        "tomcat2"
-    ],
-    "dependencies": {
-        "terminationBehaviour": "terminate-all"
-    }
-}

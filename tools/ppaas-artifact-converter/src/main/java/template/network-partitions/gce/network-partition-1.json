@@ -1,17 +1,0 @@
-{
-    "id": "network-partition-1",
-    "provider": "gce",
-    "partitionAlgo": "partitionAlgo",
-    "partitions": [
-        {
-            "id": "partition-1",
-            "description ": "description ",
-            "property": [
-                {
-                    "name": "region",
-                    "value": "default"
-                }
-            ]
-        }
-    ]
-}

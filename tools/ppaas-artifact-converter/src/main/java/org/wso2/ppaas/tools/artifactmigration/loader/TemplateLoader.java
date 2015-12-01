@@ -61,7 +61,6 @@ public class TemplateLoader {
 
         T newInstance = null;
 
-
         br = new BufferedReader(new FileReader(filePath));
         newInstance = new Gson().fromJson(br, typeOfClass);
         br.close();
