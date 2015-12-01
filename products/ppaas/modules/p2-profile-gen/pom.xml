@@ -849,14 +849,6 @@
 
                                 <!-- Apache Stratos features -->
                                 <feature>
-                                    <id>org.apache.stratos.metadata.service.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.apache.stratos.metadata.client.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.apache.stratos.common.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
@@ -963,11 +955,7 @@
                                     <version>${stratos.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.apache.stratos.metadata.service.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.apache.stratos.metadata.client.feature.group</id>
+                                    <id>org.apache.stratos.messaging.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
                             </features>
@@ -1243,10 +1231,6 @@
                                     <version>${stratos.version}</version>
                                 </feature>
                                 <feature>
-                                    <id>org.apache.stratos.metadata.client.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
                                     <id>org.apache.stratos.custom.handlers.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
@@ -1512,10 +1496,6 @@
                                 </feature>
                                 <feature>
                                     <id>org.apache.stratos.cloud.controller.feature.group</id>
-                                    <version>${stratos.version}</version>
-                                </feature>
-                                <feature>
-                                    <id>org.apache.stratos.metadata.client.feature.group</id>
                                     <version>${stratos.version}</version>
                                 </feature>
                                 <feature>
