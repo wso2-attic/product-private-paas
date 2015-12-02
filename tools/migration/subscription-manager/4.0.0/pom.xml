@@ -20,7 +20,7 @@
         <groupId>org.wso2.ppaas</groupId>
         <artifactId>tools</artifactId>
         <version>4.1.1-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
+        <relativePath>../../../pom.xml</relativePath>
     </parent>
 
     <artifactId>ppaas-400-migration</artifactId>

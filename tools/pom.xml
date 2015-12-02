@@ -28,7 +28,7 @@
     <description>WSO2 PPaaS - Tools</description>
 
     <modules>
-        <module>ppaas-migration/4.0.0</module>
+        <module>migration/subscription-manager/4.0.0</module>
         <module>installer</module>
     </modules>
 
