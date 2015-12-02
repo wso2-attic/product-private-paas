@@ -17,4 +17,4 @@ mvn package
 
 2. Add the default values to the templates folder, if needed.
 
-4. run the run.sh in bin folder
+4. Run the run.sh in bin folder
