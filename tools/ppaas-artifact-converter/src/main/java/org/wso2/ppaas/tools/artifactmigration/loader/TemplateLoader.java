@@ -50,7 +50,7 @@ public class TemplateLoader {
     }
 
     /**
-     *Method to fetch template
+     *Generic Method to fetch template
      * @param filePath the path of the file to fetch
      * @param typeOfClass the type of the class
      * @param <T> Generic class

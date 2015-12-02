@@ -20,18 +20,12 @@ package org.wso2.ppaas.tools.artifactmigration.loader;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
 import org.apache.commons.httpclient.HttpStatus;
 import org.apache.commons.httpclient.methods.GetMethod;
 import org.apache.commons.httpclient.params.HttpMethodParams;
-import org.apache.http.HttpHeaders;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.stratos.manager.dto.Cartridge;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.AutoscalePolicy;
@@ -40,8 +34,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
 import java.util.List;
 
 /**
@@ -52,11 +44,15 @@ public class OldArtifactLoader {
     private static final Logger log = LoggerFactory.getLogger(OldArtifactLoader.class);
 
     private static OldArtifactLoader instance = null;
-    private String username = Constants.USER_NAME;
-    private String password = Constants.PASSWORD;
-    private Gson gson = new Gson();
+    private String username;
+    private String password;
+    private Gson gson;
 
     private OldArtifactLoader() {
+
+        gson = new Gson();
+        this.setUsername(Constants.USER_NAME);
+        this.setPassword(Constants.PASSWORD);
     }
 
     public static synchronized OldArtifactLoader getInstance() {
@@ -76,7 +72,7 @@ public class OldArtifactLoader {
     /**
      * Method to fetch Partition Lists
      *
-     * @return
+     * @return Partition List
      * @throws JsonSyntaxException
      */
     public List<Partition> fetchPartitionList() throws JsonSyntaxException {
@@ -89,7 +85,7 @@ public class OldArtifactLoader {
     /**
      * Method to fetch Auto Scale Policy
      *
-     * @return
+     * @return Auto Scale Policy List
      * @throws JsonSyntaxException
      */
     public List<AutoscalePolicy> fetchAutoscalePolicyList() throws JsonSyntaxException {
@@ -102,7 +98,7 @@ public class OldArtifactLoader {
     /**
      * Method to fetch Deployment Policy
      *
-     * @return
+     * @return Deployment Policy List
      * @throws JsonSyntaxException
      */
     public List<DeploymentPolicy> fetchDeploymentPolicyList() throws JsonSyntaxException {
@@ -115,7 +111,7 @@ public class OldArtifactLoader {
     /**
      * Method to fetch Cartridges
      *
-     * @return
+     * @return Cartridges List
      * @throws JsonSyntaxException
      */
     public List<Cartridge> fetchCartridgeList() throws JsonSyntaxException {
@@ -124,39 +120,29 @@ public class OldArtifactLoader {
 
     }
 
-    public <T> List<T> fetchJSON(String url, Class<T> typeofClass) throws JsonSyntaxException {
-        return gson.fromJson(readUrl(url), new TypeToken<List<T>>() {
-        }.getType());
-    }
-
     /**
-     * Method to connect to the REST endpoint
+     * Method to connect to the REST endpoint without authorization
      *
      * @param serviceEndpoint the endpoint to connect with
-     * @return
+     * @return JSON string
      */
     private String readUrl(String serviceEndpoint) {
 
         String result = "";
 
-        // Create an instance of HttpClient.
         HttpClient client = new HttpClient();
-
-        // Create a method instance.
         GetMethod method = new GetMethod(serviceEndpoint);
 
-        // Provide custom retry handler
         method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
 
         try {
-            // Execute the method.
+
             int statusCode = client.executeMethod(method);
 
             if (statusCode != HttpStatus.SC_OK) {
                 System.err.println("Method failed: " + method.getStatusLine());
             }
 
-            // Read the response body.
             byte[] responseBody = method.getResponseBody();
 
             result = new String(responseBody);
@@ -166,7 +152,6 @@ public class OldArtifactLoader {
         } catch (IOException e) {
             log.error("IO exception in connecting to the endpoints " + e);
         } finally {
-            // Release the connection.
             method.releaseConnection();
         }
 
@@ -174,51 +159,9 @@ public class OldArtifactLoader {
 
     }
 
-    private String readUrlAuth(String urlString) {
-        String url = urlString;
-        String resultString = null;
-
-        HttpGet request = new HttpGet(url);
-        String auth = Constants.USER_NAME + ":" + Constants.PASSWORD;
-        byte[] encodedAuth = Base64.encodeBase64(auth.getBytes(Charset.forName("ISO-8859-1")));
-        String authHeader = "Basic " + new String(encodedAuth);
-        request.setHeader(HttpHeaders.AUTHORIZATION, authHeader);
-
-        CloseableHttpClient client = HttpClientBuilder.create().build();
-        HttpResponse response = null;
-        try {
-            response = client.execute(request);
-            InputStreamReader isr = new InputStreamReader(response.getEntity().getContent());
-            int numCharsRead;
-            char[] charArray = new char[1024];
-            StringBuffer sb = new StringBuffer();
-            while ((numCharsRead = isr.read(charArray)) > 0) {
-                sb.append(charArray, 0, numCharsRead);
-            }
-            resultString = sb.toString();
-
-        } catch (HttpException e) {
-            log.error("HTTP exception in connecting to the endpoints" + e);
-        } catch (IOException e) {
-            log.error("IO exception in connecting to the endpoints " + e);
-        }
-
-        return resultString;
-    }
-
-    public String getUsername() {
-
-        return username;
-    }
-
     public void setUsername(String username) {
 
         this.username = username;
-    }
-
-    public String getPassword() {
-
-        return password;
     }
 
     public void setPassword(String password) {
