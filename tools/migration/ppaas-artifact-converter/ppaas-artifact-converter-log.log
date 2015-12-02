@@ -1,0 +1,44 @@
+2015-11-26 23:45:03 ERROR NewArtifactLoader:45 - /home/nishadi/ppaas/ppaasArtifact/../templates/network-partitions/gce/network-partition-1.json (No such file or directory)
+2015-11-26 23:47:46 ERROR NewArtifactLoader:45 - /home/nishadi/ppaas/ppaasArtifact/templates/network-partitions/gce/network-partition-1.json (No such file or directory)
+2015-11-26 23:49:47 ERROR NewArtifactLoader:45 - /home/nishadi/ppaas/ppaasArtifact/templates/network-partitions/gce/network-partition-1.json (No such file or directory)
+2015-11-26 23:50:55 ERROR NewArtifactLoader:45 - /home/nishadi/ppaas/ppaasArtifacttarget/ppaasArtifact-1.0-SNAPSHOT/templates/network-partitions/gce/network-partition-1.json (No such file or directory)
+2015-11-27 12:04:32 ERROR NewArtifactLoader:110 - Connection refused
+2015-11-27 12:04:32 ERROR NewArtifactLoader:45 - /home/nishadi/ppaas/ppaasArtifact/target/ppaasArtifact-1.0-SNAPSHOT/templates/network-partitions/gce/network-partition-1.json (No such file or directory)
+2015-11-30 22:44:55 ERROR TemplateLoader:68 - /home/nishadi/ppaas-artifact-converter/../../resources/templates/network-partitions/gce/network-partition-1.json (No such file or directory)
+2015-11-30 22:44:56 ERROR ArtifactConverter:39 - java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap cannot be cast to org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition
+2015-11-30 22:44:56 ERROR TemplateLoader:88 - /home/nishadi/ppaas-artifact-converter/../../resources/templates/autoscaling-policies/autoscaling-policy-1.json (No such file or directory)
+2015-11-30 22:44:56 ERROR ArtifactConverter:48 - java.lang.NullPointerException
+2015-11-30 22:44:57 ERROR TemplateLoader:107 - /home/nishadi/ppaas-artifact-converter/../../resources/templates/deployment-policies/deployment-policy-1.json (No such file or directory)
+2015-11-30 22:44:57 ERROR ArtifactConverter:58 - java.lang.NullPointerException
+2015-11-30 22:44:57 ERROR TemplateLoader:125 - /home/nishadi/ppaas-artifact-converter/../../resources/templates/applications/simple/single-cartridge-app/artifacts/application.json (No such file or directory)
+2015-11-30 22:44:57 ERROR ArtifactConverter:66 - java.lang.NullPointerException
+2015-11-30 22:50:29 ERROR TemplateLoader:68 - /home/nishadi/ppaas-artifact-converter/../../resources/templates/network-partitions/gce/network-partition-1.json (No such file or directory)
+2015-11-30 22:50:29 ERROR ArtifactConverter:39 - java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap cannot be cast to org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition
+2015-11-30 22:50:29 ERROR TemplateLoader:88 - /home/nishadi/ppaas-artifact-converter/../../resources/templates/autoscaling-policies/autoscaling-policy-1.json (No such file or directory)
+2015-11-30 22:50:29 ERROR ArtifactConverter:48 - java.lang.NullPointerException
+2015-11-30 22:50:30 ERROR TemplateLoader:107 - /home/nishadi/ppaas-artifact-converter/../../resources/templates/deployment-policies/deployment-policy-1.json (No such file or directory)
+2015-11-30 22:50:30 ERROR ArtifactConverter:58 - java.lang.NullPointerException
+2015-11-30 22:50:30 ERROR TemplateLoader:125 - /home/nishadi/ppaas-artifact-converter/../../resources/templates/applications/simple/single-cartridge-app/artifacts/application.json (No such file or directory)
+2015-11-30 23:12:40 ERROR TemplateLoader:144 - java.io.FileNotFoundException: /home/nishadi/ppaas-artifact-converter/main/resources/templates/applications/simple/single-cartridge-app/artifacts/application.json (No such file or directory)
+2015-11-30 23:12:40 ERROR ArtifactConverter:39 - java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap cannot be cast to org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition
+2015-11-30 23:14:21 ERROR TemplateLoader:144 - java.io.FileNotFoundException: /home/nishadi/ppaas-artifact-converter/../../resources/templates/applications/simple/single-cartridge-app/artifacts/application.json (No such file or directory)
+2015-11-30 23:14:21 ERROR ArtifactConverter:39 - java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap cannot be cast to org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition
+2015-11-30 23:18:18 ERROR TemplateLoader:145 - java.io.FileNotFoundException: /home/nishadi/ppaas-artifact-converter/main/resources/template/network-partitions/gce/network-partition-1.json (No such file or directory)
+2015-11-30 23:18:18 ERROR ArtifactConverter:39 - java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap cannot be cast to org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition
+2015-11-30 23:20:40 ERROR ArtifactConverter:39 - java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap cannot be cast to org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition
+2015-11-30 23:23:54 ERROR TemplateLoader:145 - java.io.FileNotFoundException: /home/nishadi/ppaas-artifact-convertersrc/main/resources/templates/network-partitions/gce/network-partition-1.json (No such file or directory)
+2015-11-30 23:23:54 ERROR ArtifactConverter:39 - java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap cannot be cast to org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition
+2015-11-30 23:24:04 ERROR TemplateLoader:145 - java.io.FileNotFoundException: /home/nishadi/ppaas-artifact-converter/resources/templates/network-partitions/gce/network-partition-1.json (No such file or directory)
+2015-11-30 23:24:04 ERROR ArtifactConverter:39 - java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap cannot be cast to org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition
+2015-11-30 23:24:42 ERROR TemplateLoader:145 - java.io.FileNotFoundException: /home/nishadi/ppaas-artifact-convertersrc/main/resources/templates/network-partitions/gce/network-partition-1.json (No such file or directory)
+2015-11-30 23:24:42 ERROR ArtifactConverter:39 - java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap cannot be cast to org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition
+2015-11-30 23:25:17 ERROR ArtifactConverter:39 - java.lang.ClassCastException: com.google.gson.internal.LinkedTreeMap cannot be cast to org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition
+2015-12-01 06:33:42 ERROR Transformation:157 - /home/nishadi/ppaas-artifact-converter/src/main/resources/template/network-partitions/gce/network-partition-1.json
+java.io.FileNotFoundException: /home/nishadi/ppaas-artifact-converter/src/main/resources/template/network-partitions/gce/network-partition-1.json
+	at java.io.FileInputStream.open(Native Method)
+	at java.io.FileInputStream.<init>(FileInputStream.java:146)
+	at java.io.FileInputStream.<init>(FileInputStream.java:101)
+	at java.io.FileReader.<init>(FileReader.java:58)
+	at org.wso2.ppaas.tools.artifactmigration.loader.TemplateLoader.fetchTemplate(TemplateLoader.java:57)
+	at org.wso2.ppaas.tools.artifactmigration.Transformation.transformNetworkPartitionList(Transformation.java:123)
+	at org.wso2.ppaas.tools.artifactmigration.ArtifactConverter.main(ArtifactConverter.java:36)
