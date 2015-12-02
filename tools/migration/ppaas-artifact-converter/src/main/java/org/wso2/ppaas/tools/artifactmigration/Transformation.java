@@ -59,7 +59,6 @@ public class Transformation {
     private static Transformation instance = null;
 
     private Transformation() {
-
     }
 
     public static Transformation getInstance() {
@@ -70,14 +69,13 @@ public class Transformation {
                 }
             }
         }
-
         return instance;
     }
 
     /**
      * Method to transform Auto Scale Policies
      */
-    public void transformAutoscalePolicyList() {
+    public void transformAutoscalePolicyList() throws TransformationException {
 
         List<AutoscalePolicy> autoscalePolicy400List;
         AutoscalePolicyBean autoscalePolicy410Template;
@@ -109,16 +107,20 @@ public class Transformation {
             log.info("Created Auto Scale Policy 4.1.0 artifacts");
 
         } catch (JsonSyntaxException e) {
-            log.error("JSON syntax exception in fetching auto scale policies", e);
+            String msg = "JSON syntax exception in fetching auto scale policies";
+            log.error(msg, e);
+            throw new TransformationException(msg, e);
         } catch (IOException e) {
-            log.error("IO exception in fetching auto scale policies", e);
+            String msg = "IO exception in fetching auto scale policies";
+            log.error(msg, e);
+            throw new TransformationException(msg, e);
         }
     }
 
     /**
      * Method to transform newtork partitions
      */
-    public void transformNetworkPartitionList() {
+    public void transformNetworkPartitionList() throws TransformationException {
 
         List<Partition> networkPartition400List;
         NetworkPartitionBean networkPartition410Template;
@@ -143,7 +145,6 @@ public class Transformation {
                 List<org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean> property400List = networkPartition400.property;
                 List<org.apache.stratos.common.beans.PropertyBean> property410List = new ArrayList<org.apache.stratos.common.beans.PropertyBean>();
 
-                
                 for (org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean temp : property400List) {
                     org.apache.stratos.common.beans.PropertyBean property = new org.apache.stratos.common.beans.PropertyBean();
                     property.setName(temp.name);
@@ -166,9 +167,13 @@ public class Transformation {
             log.info("Created Network Partition List 4.1.0 artifacts");
 
         } catch (JsonSyntaxException e) {
-            log.error("JSON syntax exception in fetching network partition lists", e);
+            String msg = "JSON syntax exception in fetching network partition lists";
+            log.error(msg, e);
+            throw new TransformationException(msg, e);
         } catch (IOException e) {
-            log.error("IO exception in fetching network partition lists", e);
+            String msg = "IO exception in fetching network partition lists";
+            log.error(msg, e);
+            throw new TransformationException(msg, e);
         }
 
     }
@@ -176,7 +181,7 @@ public class Transformation {
     /**
      * Method to transform DeploymentPolicy
      */
-    public void transformDeploymentPolicyList() {
+    public void transformDeploymentPolicyList() throws TransformationException {
 
         List<DeploymentPolicy> deploymentPolicy400List;
         DeploymentPolicyBean deploymentPolicy410Template;
@@ -236,9 +241,14 @@ public class Transformation {
             log.info("Created Deployment Policy 4.1.0 artifacts");
 
         } catch (JsonSyntaxException e) {
-            log.error("JSON syntax exception in fetching deployment policies", e);
+            String msg = "JSON syntax exception in fetching deployment policies";
+            log.error(msg, e);
+            throw new TransformationException(msg, e);
+
         } catch (IOException e) {
-            log.error("IO exception in fetching deployment policies", e);
+            String msg = "IO exception in fetching deployment policies";
+            log.error(msg, e);
+            throw new TransformationException(msg, e);
         }
 
     }
@@ -246,7 +256,7 @@ public class Transformation {
     /**
      * Method to transform cartridge list
      */
-    public void transformCartridgeList() {
+    public void transformCartridgeList() throws TransformationException {
 
         List<Cartridge> cartridge400List;
         ApplicationBean application410Template;
@@ -357,11 +367,14 @@ public class Transformation {
             log.info("Created Application List 4.1.0 artifacts");
 
         } catch (JsonSyntaxException e) {
-            log.error("JSON syntax exception in fetching cartridges", e);
+            String msg = "JSON syntax exception in fetching cartridges";
+            log.error(msg, e);
+            throw new TransformationException(msg, e);
         } catch (IOException e) {
-            log.error("IO exception in fetching cartridges", e);
+            String msg = "IO exception in fetching cartridges";
+            log.error(msg, e);
+            throw new TransformationException(msg, e);
         }
-
     }
 
     /**

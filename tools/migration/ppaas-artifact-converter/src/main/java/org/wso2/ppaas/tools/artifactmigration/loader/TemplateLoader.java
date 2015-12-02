@@ -18,10 +18,10 @@
 package org.wso2.ppaas.tools.artifactmigration.loader;
 
 import com.google.gson.Gson;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 
@@ -30,7 +30,7 @@ import java.io.IOException;
  */
 public class TemplateLoader {
 
-
+    private static final Logger log = LoggerFactory.getLogger(OldArtifactLoader.class);
     private static TemplateLoader instance = null;
     BufferedReader br;
 
@@ -45,15 +45,15 @@ public class TemplateLoader {
                 }
             }
         }
-
         return instance;
     }
 
     /**
-     *Generic Method to fetch template
-     * @param filePath the path of the file to fetch
+     * Generic Method to fetch template
+     *
+     * @param filePath    the path of the file to fetch
      * @param typeOfClass the type of the class
-     * @param <T> Generic class
+     * @param <T>         Generic class
      * @return the generic instance
      * @throws IOException
      */
@@ -61,11 +61,16 @@ public class TemplateLoader {
 
         T newInstance = null;
 
-        br = new BufferedReader(new FileReader(filePath));
-        newInstance = new Gson().fromJson(br, typeOfClass);
-        br.close();
-
+        try {
+            br = new BufferedReader(new FileReader(filePath));
+            newInstance = new Gson().fromJson(br, typeOfClass);
+        } catch (IOException e) {
+            String msg = "JSON syntax exception in fetching cartridges";
+            log.error(msg, e);
+            throw new IOException(msg, e);
+        } finally {
+            br.close();
+        }
         return newInstance;
     }
-
 }
