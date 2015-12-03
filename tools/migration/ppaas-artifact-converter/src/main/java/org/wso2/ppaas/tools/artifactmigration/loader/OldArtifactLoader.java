@@ -20,6 +20,7 @@ package org.wso2.ppaas.tools.artifactmigration.loader;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.HttpException;
@@ -34,6 +35,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.List;
 
 /**
@@ -75,8 +81,9 @@ public class OldArtifactLoader {
      * @throws JsonSyntaxException
      */
     public List<Partition> fetchPartitionList() throws JsonSyntaxException {
-
-        return gson.fromJson(readUrl(Constants.BASE_URL + Constants.URL_PARTITION), new TypeToken<List<Partition>>() {
+        String partitionString = readUrl(Constants.BASE_URL + Constants.URL_PARTITION);
+        String partitionListString = partitionString.substring(partitionString.indexOf('['),(partitionString.lastIndexOf(']') + 1));
+        return gson.fromJson(partitionListString, new TypeToken<List<Partition>>() {
         }.getType());
 
     }
@@ -88,9 +95,11 @@ public class OldArtifactLoader {
      * @throws JsonSyntaxException
      */
     public List<AutoscalePolicy> fetchAutoscalePolicyList() throws JsonSyntaxException {
-        return gson.fromJson(readUrl(Constants.BASE_URL + Constants.URL_POLICY_AUTOSCALE),
-                new TypeToken<List<AutoscalePolicy>>() {
-                }.getType());
+        String autoscalePolicyString = readUrl(Constants.BASE_URL + Constants.URL_POLICY_AUTOSCALE);
+        String autoscalePolicyListString= autoscalePolicyString.substring(autoscalePolicyString.indexOf('['),(autoscalePolicyString.lastIndexOf(']') + 1));
+        return gson.fromJson(autoscalePolicyListString, new TypeToken<List<AutoscalePolicy>>() {
+        }.getType());
+
 
     }
 
@@ -101,10 +110,10 @@ public class OldArtifactLoader {
      * @throws JsonSyntaxException
      */
     public List<DeploymentPolicy> fetchDeploymentPolicyList() throws JsonSyntaxException {
-        return gson.fromJson(readUrl(Constants.BASE_URL + Constants.URL_POLICY_DEPLOYMENT),
-                new TypeToken<List<DeploymentPolicy>>() {
-                }.getType());
-
+        String deploymentPolicyString = readUrl(Constants.BASE_URL + Constants.URL_POLICY_DEPLOYMENT);
+        String deploymentPolicyListString= deploymentPolicyString.substring(deploymentPolicyString.indexOf('['),(deploymentPolicyString.lastIndexOf(']') + 1));
+        return gson.fromJson(deploymentPolicyListString, new TypeToken<List<DeploymentPolicy>>() {
+        }.getType());
     }
 
     /**
@@ -114,9 +123,10 @@ public class OldArtifactLoader {
      * @throws JsonSyntaxException
      */
     public List<Cartridge> fetchCartridgeList() throws JsonSyntaxException {
-        return gson.fromJson(readUrl(Constants.BASE_URL + Constants.URL_CARTRIDGE), new TypeToken<List<Cartridge>>() {
+        String cartridgeString = readUrl(Constants.BASE_URL + Constants.URL_CARTRIDGE);
+        String cartridgeListString= cartridgeString.substring(cartridgeString.indexOf('['),(cartridgeString.lastIndexOf(']') + 1));
+        return gson.fromJson(cartridgeListString, new TypeToken<List<Cartridge>>() {
         }.getType());
-
     }
 
     /**
@@ -127,34 +137,40 @@ public class OldArtifactLoader {
      */
     private String readUrl(String serviceEndpoint) {
 
-        String result = "";
-
-        HttpClient client = new HttpClient();
-        GetMethod method = new GetMethod(serviceEndpoint);
-
-        method.getParams().setParameter(HttpMethodParams.RETRY_HANDLER, new DefaultHttpMethodRetryHandler(3, false));
-
+        String url = serviceEndpoint;
+        String resultString = null;
         try {
+            String webPage = url;
+            String name = Constants.USER_NAME;
+            String password = Constants.PASSWORD;
 
-            int statusCode = client.executeMethod(method);
+            String authString = name + ":" + password;
+            byte[] authEncBytes = Base64.encodeBase64(authString.getBytes());
+            String authStringEnc = new String(authEncBytes);
 
-            if (statusCode != HttpStatus.SC_OK) {
-                System.err.println("Method failed: " + method.getStatusLine());
+            URL absoluteURL = new URL(webPage);
+            URLConnection urlConnection = absoluteURL.openConnection();
+            urlConnection.setRequestProperty("Authorization", "Basic " + authStringEnc);
+            InputStream is = urlConnection.getInputStream();
+            InputStreamReader isr = new InputStreamReader(is);
+
+            int numCharsRead;
+            char[] charArray = new char[1024];
+            StringBuffer sb = new StringBuffer();
+            while ((numCharsRead = isr.read(charArray)) > 0) {
+                sb.append(charArray, 0, numCharsRead);
             }
+            resultString = sb.toString();
 
-            byte[] responseBody = method.getResponseBody();
-
-            result = new String(responseBody);
-
-        } catch (HttpException e) {
-            log.error("HTTP exception in connecting to the endpoints" + e);
+        } catch (MalformedURLException e) {
+            String msg = "malformed URL has occurred in connecting to rest end point";
+            log.error(msg, e);
         } catch (IOException e) {
-            log.error("IO exception in connecting to the endpoints " + e);
-        } finally {
-            method.releaseConnection();
+            String msg = "IO exception has occured in connecting to rest end point";
+            log.error(msg, e);
         }
 
-        return result;
+        return resultString;
 
     }
 
