@@ -19,21 +19,41 @@
 
 package org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment;
 
-
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.PartitionGroup;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement
-public class DeploymentPolicy {
+@XmlRootElement public class DeploymentPolicy {
 
-    public String id;
-
+    private String id;
     //partition groups
-    public List<PartitionGroup> partitionGroup;
-
+    private List<PartitionGroup> partitionGroup;
     //partitions
-    public List<Partition> partition;
+    private List<Partition> partition;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public List<PartitionGroup> getPartitionGroup() {
+        return partitionGroup;
+    }
+
+    public void setPartitionGroup(List<PartitionGroup> partitionGroup) {
+        this.partitionGroup = partitionGroup;
+    }
+
+    public List<Partition> getPartition() {
+        return partition;
+    }
+
+    public void setPartition(List<Partition> partition) {
+        this.partition = partition;
+    }
 }

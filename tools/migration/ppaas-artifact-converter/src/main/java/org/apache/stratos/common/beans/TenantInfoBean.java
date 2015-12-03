@@ -25,8 +25,7 @@ import java.util.Calendar;
 /**
  * Bean class for Tenant Information
  */
-@XmlRootElement
-public class TenantInfoBean {
+@XmlRootElement public class TenantInfoBean {
 
     private String admin; //admin's user name
     private String firstname;
@@ -37,12 +36,12 @@ public class TenantInfoBean {
     private String email;
     private boolean active;
     private String successKey;
-    Calendar createdDate;
+    private Calendar createdDate;
     private String originatedService;
     private String usagePlan;
 
-
-    public TenantInfoBean(){}
+    public TenantInfoBean() {
+    }
 
     /*copy constructor*/
     public TenantInfoBean(TenantInfoBean tenantInfoBean) {
@@ -55,7 +54,7 @@ public class TenantInfoBean {
         this.email = tenantInfoBean.email;
         this.active = tenantInfoBean.active;
         this.successKey = tenantInfoBean.successKey;
-        this.createdDate = (Calendar)tenantInfoBean.createdDate.clone();
+        this.createdDate = (Calendar) tenantInfoBean.createdDate.clone();
         this.originatedService = tenantInfoBean.originatedService;
         this.usagePlan = tenantInfoBean.usagePlan;
     }

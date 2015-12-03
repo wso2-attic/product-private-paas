@@ -1,5 +1,4 @@
 /*
- *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -18,12 +17,12 @@
  * under the License.
  *
  */
+
 package org.apache.stratos.rest.endpoint.bean;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "error")
-public class Error {
+@XmlRootElement(name = "error") public class Error {
     private int errorCode;
     private String errorMessage;
 

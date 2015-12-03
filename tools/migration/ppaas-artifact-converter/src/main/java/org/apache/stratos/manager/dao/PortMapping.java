@@ -20,40 +20,40 @@
 package org.apache.stratos.manager.dao;
 
 public class PortMapping {
-	private int id;
-	private String type;
-	private String primaryPort;
-	private String proxyPort;
+    private int id;
+    private String type;
+    private String primaryPort;
+    private String proxyPort;
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	public void setId(int id) {
-		this.id = id;
-	}
+    public void setId(int id) {
+        this.id = id;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public String getType() {
+        return type;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	public String getPrimaryPort() {
-		return primaryPort;
-	}
+    public String getPrimaryPort() {
+        return primaryPort;
+    }
 
-	public void setPrimaryPort(String primaryPort) {
-		this.primaryPort = primaryPort;
-	}
+    public void setPrimaryPort(String primaryPort) {
+        this.primaryPort = primaryPort;
+    }
 
-	public String getProxyPort() {
-		return proxyPort;
-	}
+    public String getProxyPort() {
+        return proxyPort;
+    }
 
-	public void setProxyPort(String proxyPort) {
-		this.proxyPort = proxyPort;
-	}
+    public void setProxyPort(String proxyPort) {
+        this.proxyPort = proxyPort;
+    }
 }

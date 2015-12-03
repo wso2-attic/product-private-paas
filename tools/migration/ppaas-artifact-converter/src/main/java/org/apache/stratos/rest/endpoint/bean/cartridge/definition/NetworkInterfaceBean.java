@@ -19,33 +19,53 @@
 
 package org.apache.stratos.rest.endpoint.bean.cartridge.definition;
 
-/**
- * @author Jeffrey Nguyen
- *
- */
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement (name = "networkInterfaces")
-public class NetworkInterfaceBean {
-	public String networkUuid;
-	public String fixedIp;
-	public String portUuid;
-    public String toString () {
-    	StringBuilder sb = new StringBuilder('{');
-    	String delimeter = "";
-    	if (networkUuid != null) {
-    		sb.append(delimeter).append("networkUuid : ").append(networkUuid);
-    		delimeter = ", ";
-    	}
-    	if (fixedIp != null) {
-    		sb.append(delimeter).append("fixedIp : ").append(fixedIp);
-    		delimeter = ", ";
-    	}
-    	if (portUuid != null) {
-    		sb.append(delimeter).append("portUuid : ").append(portUuid);
-    		delimeter = ", ";
-    	}
-    	sb.append('}');
+@XmlRootElement(name = "networkInterfaces") public class NetworkInterfaceBean {
+    private String networkUuid;
+    private String fixedIp;
+    private String portUuid;
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder('{');
+        String delimeter = "";
+        if (networkUuid != null) {
+            sb.append(delimeter).append("networkUuid : ").append(networkUuid);
+            delimeter = ", ";
+        }
+        if (fixedIp != null) {
+            sb.append(delimeter).append("fixedIp : ").append(fixedIp);
+            delimeter = ", ";
+        }
+        if (portUuid != null) {
+            sb.append(delimeter).append("portUuid : ").append(portUuid);
+            delimeter = ", ";
+        }
+        sb.append('}');
         return sb.toString();
+    }
+
+    public String getNetworkUuid() {
+        return networkUuid;
+    }
+
+    public void setNetworkUuid(String networkUuid) {
+        this.networkUuid = networkUuid;
+    }
+
+    public String getFixedIp() {
+        return fixedIp;
+    }
+
+    public void setFixedIp(String fixedIp) {
+        this.fixedIp = fixedIp;
+    }
+
+    public String getPortUuid() {
+        return portUuid;
+    }
+
+    public void setPortUuid(String portUuid) {
+        this.portUuid = portUuid;
     }
 }

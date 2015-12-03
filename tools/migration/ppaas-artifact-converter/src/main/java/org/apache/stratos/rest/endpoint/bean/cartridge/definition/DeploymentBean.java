@@ -22,25 +22,39 @@ package org.apache.stratos.rest.endpoint.bean.cartridge.definition;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement(name = "deployment")
-public class DeploymentBean {
+@XmlRootElement(name = "deployment") public class DeploymentBean {
 
-    public String baseDir;
+    private String baseDir;
+    private List<String> dir;
 
-    public List<String> dir;
-
-    public String toString () {
-         return " Base Directory: " + baseDir + " Directories: " + getDirectories();
+    public String toString() {
+        return " Base Directory: " + baseDir + " Directories: " + getDirectories();
     }
 
-    private String getDirectories () {
+    private String getDirectories() {
 
         StringBuilder directoryBuilder = new StringBuilder();
-        if(dir != null) {
-            for(String directory : dir) {
+        if (dir != null) {
+            for (String directory : dir) {
                 directoryBuilder.append(directory + " | ");
             }
         }
         return directoryBuilder.toString();
+    }
+
+    public String getBaseDir() {
+        return baseDir;
+    }
+
+    public void setBaseDir(String baseDir) {
+        this.baseDir = baseDir;
+    }
+
+    public List<String> getDir() {
+        return dir;
+    }
+
+    public void setDir(List<String> dir) {
+        this.dir = dir;
     }
 }

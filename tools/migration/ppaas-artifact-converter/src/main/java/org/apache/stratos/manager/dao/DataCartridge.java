@@ -21,35 +21,42 @@ package org.apache.stratos.manager.dao;
 
 public class DataCartridge {
 
-	private int id;
-	private String dataCartridgeType;
+    private int id;
+    private String dataCartridgeType;
     private String host;
-	private String userName;
-	private String password;
+    private String userName;
+    private String password;
 
-	public int getId() {
-    	return id;
+    public int getId() {
+        return id;
     }
-	public void setId(int id) {
-    	this.id = id;
+
+    public void setId(int id) {
+        this.id = id;
     }
-	public String getDataCartridgeType() {
-    	return dataCartridgeType;
+
+    public String getDataCartridgeType() {
+        return dataCartridgeType;
     }
-	public void setDataCartridgeType(String dataCartridgeType) {
-    	this.dataCartridgeType = dataCartridgeType;
+
+    public void setDataCartridgeType(String dataCartridgeType) {
+        this.dataCartridgeType = dataCartridgeType;
     }
-	public String getUserName() {
-    	return userName;
+
+    public String getUserName() {
+        return userName;
     }
-	public void setUserName(String userName) {
-    	this.userName = userName;
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
-	public String getPassword() {
-    	return password;
+
+    public String getPassword() {
+        return password;
     }
-	public void setPassword(String password) {
-    	this.password = password;
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public String getHost() {

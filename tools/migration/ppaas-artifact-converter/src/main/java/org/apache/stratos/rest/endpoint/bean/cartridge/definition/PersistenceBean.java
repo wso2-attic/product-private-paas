@@ -22,25 +22,39 @@ package org.apache.stratos.rest.endpoint.bean.cartridge.definition;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement
-public class PersistenceBean {
+@XmlRootElement public class PersistenceBean {
 
-    public boolean isRequired;
+    private boolean isRequired;
+    private List<VolumeBean> volume;
 
-    public List<VolumeBean> volume;
-
-    public String toString () {
-        return " [ Persistence Required : " +isRequired  + "\n" +
+    public String toString() {
+        return " [ Persistence Required : " + isRequired + "\n" +
                 "volume: " + getVolumes() + "] ";
     }
 
     private String getVolumes() {
         StringBuilder volumeBuilder = new StringBuilder();
-        if(volume != null && !volume.isEmpty()) {
-            for(VolumeBean volumeBean : volume) {
+        if (volume != null && !volume.isEmpty()) {
+            for (VolumeBean volumeBean : volume) {
                 volumeBuilder.append(volumeBean.toString());
             }
         }
         return volumeBuilder.toString();
+    }
+
+    public boolean isRequired() {
+        return isRequired;
+    }
+
+    public void setRequired(boolean required) {
+        isRequired = required;
+    }
+
+    public List<VolumeBean> getVolume() {
+        return volume;
+    }
+
+    public void setVolume(List<VolumeBean> volume) {
+        this.volume = volume;
     }
 }

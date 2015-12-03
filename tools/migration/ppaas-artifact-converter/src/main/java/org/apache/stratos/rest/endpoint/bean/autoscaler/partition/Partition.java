@@ -24,16 +24,51 @@ import org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement
-public class Partition {
+@XmlRootElement public class Partition {
 
-    public String id;
+    private String id;
+    private int partitionMin;
+    private int partitionMax;
+    private String provider;
+    private List<PropertyBean> property;
 
-    public int partitionMin;
+    public String getId() {
+        return id;
+    }
 
-    public int partitionMax;
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String provider;
+    public int getPartitionMin() {
+        return partitionMin;
+    }
 
-    public List<PropertyBean> property;
+    public void setPartitionMin(int partitionMin) {
+        this.partitionMin = partitionMin;
+    }
+
+    public int getPartitionMax() {
+        return partitionMax;
+    }
+
+    public void setPartitionMax(int partitionMax) {
+        this.partitionMax = partitionMax;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public List<PropertyBean> getProperty() {
+        return property;
+    }
+
+    public void setProperty(List<PropertyBean> property) {
+        this.property = property;
+    }
 }

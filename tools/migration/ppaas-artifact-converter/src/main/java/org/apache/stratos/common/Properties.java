@@ -16,9 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.stratos.common;
 
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -33,9 +35,8 @@ import java.util.List;
 public class Properties implements Serializable {
 
     private static final long serialVersionUID = -9094584151615076171L;
-    //private static final Log log = LogFactory.getLog(Properties.class);
-
-    public List<Property> properties;
+    private static final Logger log = LoggerFactory.getLogger(Properties.class);
+    private List<Property> properties;
 
     public Properties() {
         this.properties = new ArrayList<Property>();
@@ -49,7 +50,8 @@ public class Properties implements Serializable {
         try {
             this.properties.add((Property) property.clone());
         } catch (CloneNotSupportedException e) {
-            //log.error(e);
+            String msg = "JSON syntax exception in fetching auto scale policies";
+            log.error(msg, e);
         }
     }
 
@@ -67,21 +69,18 @@ public class Properties implements Serializable {
         Collections.addAll(this.properties, properties.clone());
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "Properties [properties=" + properties + "]";
     }
 
-    @Override
-    public int hashCode() {
+    @Override public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((properties == null) ? 0 : properties.hashCode());
         return result;
     }
 
-    @Override
-    public boolean equals(Object obj) {
+    @Override public boolean equals(Object obj) {
         if (this == obj)
             return true;
         if (obj == null)

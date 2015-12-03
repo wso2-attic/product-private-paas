@@ -21,16 +21,52 @@ package org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
-public class LoadAverage {
+@XmlRootElement public class LoadAverage {
 
-    public float average;
+    private float average;
+    private float secondDerivative;
+    private float gradient;
+    private float scaleDownMarginOfGradient;
+    private float scaleDownMarginOfSecondDerivative;
 
-    public float secondDerivative;
+    public void setAverage(float average) {
+        this.average = average;
+    }
 
-    public float gradient;
+    public float getAverage() {
+        return average;
+    }
 
-    public float scaleDownMarginOfGradient;
+    public void setSecondDerivative(float secondDerivative) {
+        this.secondDerivative = secondDerivative;
+    }
 
-    public float scaleDownMarginOfSecondDerivative;
+    public float getSecondDerivative() {
+        return secondDerivative;
+    }
+
+    public void setGradient(float gradient) {
+        this.gradient = gradient;
+    }
+
+    public float getGradient() {
+        return gradient;
+    }
+
+    public void setScaleDownMarginOfGradient(float scaleDownMarginOfGradient) {
+        this.scaleDownMarginOfGradient = scaleDownMarginOfGradient;
+    }
+
+    public float getScaleDownMarginOfGradient() {
+        return scaleDownMarginOfGradient;
+    }
+
+    public void setScaleDownMarginOfSecondDerivative(float scaleDownMarginOfSecondDerivative) {
+        this.scaleDownMarginOfSecondDerivative = scaleDownMarginOfSecondDerivative;
+    }
+
+    public float getScaleDownMarginOfSecondDerivative() {
+        return scaleDownMarginOfSecondDerivative;
+    }
+
 }

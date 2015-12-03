@@ -22,13 +22,34 @@ package org.apache.stratos.rest.endpoint.bean.autoscaler.partition;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement
-public class PartitionGroup {
+@XmlRootElement public class PartitionGroup {
 
-    public String id;
-
-    public String partitionAlgo;
-
+    private String id;
+    private String partitionAlgo;
     //partition Ids
-    public List<Partition> partition;
+    private List<Partition> partition;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getPartitionAlgo() {
+        return partitionAlgo;
+    }
+
+    public void setPartitionAlgo(String partitionAlgo) {
+        this.partitionAlgo = partitionAlgo;
+    }
+
+    public List<Partition> getPartition() {
+        return partition;
+    }
+
+    public void setPartition(List<Partition> partition) {
+        this.partition = partition;
+    }
 }

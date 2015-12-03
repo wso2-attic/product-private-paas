@@ -16,6 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
+
 package org.apache.stratos.common;
 
 import java.io.Serializable;
@@ -26,7 +27,6 @@ import java.io.Serializable;
 public class Property implements Serializable, Cloneable {
 
     private static final long serialVersionUID = -2191782657999410197L;
-
     private String name;
     private String value;
 
@@ -54,21 +54,18 @@ public class Property implements Serializable, Cloneable {
         this.value = value;
     }
 
-    @Override
-    protected Object clone() throws CloneNotSupportedException {
+    @Override protected Object clone() throws CloneNotSupportedException {
         Property clone = new Property();
         clone.setName(this.getName());
         clone.setValue(this.getValue());
         return clone;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "Property [name=" + name + ", value=" + value + "]";
     }
 
-    @Override
-    public boolean equals(Object anObject) {
+    @Override public boolean equals(Object anObject) {
         if (anObject == null) {
             return false;
         }
@@ -97,8 +94,7 @@ public class Property implements Serializable, Cloneable {
         return true;
     }
 
-    @Override
-    public int hashCode() {
+    @Override public int hashCode() {
         final int prime = 31;
         int result = 1;
         result = prime * result + ((this.name == null) ? 0 : this.name.hashCode());

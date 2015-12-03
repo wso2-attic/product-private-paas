@@ -139,16 +139,17 @@ public class Transformation {
             //Modifying the template according to the values of PPaaS 4.0.0
             for (Partition networkPartition400 : networkPartition400List) {
 
-                networkPartition410Template.setId(networkPartition400.id);
-                networkPartition410Template.setProvider(networkPartition400.provider);
+                networkPartition410Template.setId(networkPartition400.getId());
+                networkPartition410Template.setProvider(networkPartition400.getProvider());
 
-                List<org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean> property400List = networkPartition400.property;
+                List<org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean> property400List = networkPartition400
+                        .getProperty();
                 List<org.apache.stratos.common.beans.PropertyBean> property410List = new ArrayList<org.apache.stratos.common.beans.PropertyBean>();
 
                 for (org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean temp : property400List) {
                     org.apache.stratos.common.beans.PropertyBean property = new org.apache.stratos.common.beans.PropertyBean();
-                    property.setName(temp.name);
-                    property.setValue(temp.value);
+                    property.setName(temp.getName());
+                    property.setValue(temp.getValue());
                     property410List.add(property);
                 }
 
@@ -158,7 +159,7 @@ public class Transformation {
                 String fileName = networkPartition410Template.getId();
                 File directoryName = new File(
                         Constants.ROOT_DIRECTORY + Constants.DIRECTORY_NETWORK_PARTITION + File.separator
-                                + networkPartition400.provider);
+                                + networkPartition400.getProvider());
 
                 writeFile(directoryName, fileName, json);
 
@@ -200,9 +201,9 @@ public class Transformation {
             File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_DEPLOYMENT);
             for (DeploymentPolicy deploymentPolicy : deploymentPolicy400List) {
 
-                deploymentPolicy410Template.setId(deploymentPolicy.id);
+                deploymentPolicy410Template.setId(deploymentPolicy.getId());
 
-                List<PartitionGroup> partitionGroup400List = deploymentPolicy.partitionGroup;
+                List<PartitionGroup> partitionGroup400List = deploymentPolicy.getPartitionGroup();
                 List<NetworkPartitionReferenceBean> networkPartitions410List = new ArrayList<NetworkPartitionReferenceBean>();
 
                 int a = 0;
@@ -210,18 +211,18 @@ public class Transformation {
 
                     NetworkPartitionReferenceBean tempNetworkPartition = new NetworkPartitionReferenceBean();
 
-                    tempNetworkPartition.setId(partitionGroup.id);
-                    tempNetworkPartition.setPartitionAlgo(partitionGroup.partitionAlgo);
+                    tempNetworkPartition.setId(partitionGroup.getId());
+                    tempNetworkPartition.setPartitionAlgo(partitionGroup.getPartitionAlgo());
                     networkPartitions410List.add(a, tempNetworkPartition);
 
-                    List<Partition> partition400List = partitionGroup.partition;
+                    List<Partition> partition400List = partitionGroup.getPartition();
                     List<PartitionReferenceBean> partitions410List = new ArrayList<PartitionReferenceBean>();
 
                     int b = 0;
                     for (Partition partition : partition400List) {
 
                         PartitionReferenceBean tempPartition = new PartitionReferenceBean();
-                        tempPartition.setId(partition.id);
+                        tempPartition.setId(partition.getId());
 
                         partitions410List.add(b++, tempPartition);
                     }
