@@ -17,6 +17,7 @@
  * under the License.
  */
 var log = new Log("controller.menu_generator");
+var monitoringMenuTitle = "Monitoring";
 
 /**
  * This will use to generate menu with permissions
@@ -36,7 +37,7 @@ function menuGenerator(context, jsonobject, permissions) {
                     hasPermission = intersection(jsonPermission.permissionPaths, permissions);
 
             if (hasPermission.length > 0) {
-                if (jsonPermission.title == "Monitoring") {
+                if (jsonPermission.title == monitoringMenuTitle) {
                     if (jsonPermission.linkexternal) {
                         target = "_blank";
                     }
@@ -113,7 +114,7 @@ function metroGenerator(context, jsonobject, permissions) {
                     hasPermission = intersection(jsonPermission.permissionPaths, permissions);
 
             if (hasPermission.length > 0 && jsonPermission.context == context) {
-                if (jsonPermission.title == "Monitoring") {
+                if (jsonPermission.title == monitoringMenuTitle) {
                     if (application.get("dasStatsPublisherEnabled") == true) {
                         jsonPermission.link = application.get("monitoringDashboardUrl");
                         jsonPermission.enabled = true;
