@@ -379,6 +379,10 @@ a.btn-action {
     color: #fff;
 }
 
+.content-menu-warning i {
+    font-size: 1em;
+}
+
 .content-menu-block i:hover {
     color: #EBEBEB;
 }
