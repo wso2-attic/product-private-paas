@@ -55,7 +55,6 @@ import java.util.List;
 public class Transformation {
 
     private static final Logger log = LoggerFactory.getLogger(Transformation.class);
-
     private static Transformation instance = null;
 
     private Transformation() {
@@ -81,7 +80,6 @@ public class Transformation {
         AutoscalePolicyBean autoscalePolicy410Template;
 
         try {
-
             //Retrieving Json files of PPaaS 4.0.0
             autoscalePolicy400List = OldArtifactLoader.getInstance().fetchAutoscalePolicyList();
             log.info("Fetched Auto Scale Policy from PPaaS 4.0.0");
@@ -108,17 +106,17 @@ public class Transformation {
 
         } catch (JsonSyntaxException e) {
             String msg = "JSON syntax exception in fetching auto scale policies";
-            log.error(msg, e);
+            log.error(msg);
             throw new TransformationException(msg, e);
         } catch (IOException e) {
             String msg = "IO exception in fetching auto scale policies";
-            log.error(msg, e);
+            log.error(msg);
             throw new TransformationException(msg, e);
         }
     }
 
     /**
-     * Method to transform newtork partitions
+     * Method to transform network partitions
      */
     public void transformNetworkPartitionList() throws TransformationException {
 
@@ -128,7 +126,7 @@ public class Transformation {
         try {
             //Retrieving Json files of PPaaS 4.0.0
             networkPartition400List = OldArtifactLoader.getInstance().fetchPartitionList();
-            log.info("Fetched Newtork Partition List from PPaaS 4.0.0");
+            log.info("Fetched Network Partition List from PPaaS 4.0.0");
 
             //Retrieving the template
             networkPartition410Template = TemplateLoader.getInstance()
@@ -164,19 +162,17 @@ public class Transformation {
                 writeFile(directoryName, fileName, json);
 
             }
-
             log.info("Created Network Partition List 4.1.0 artifacts");
 
         } catch (JsonSyntaxException e) {
             String msg = "JSON syntax exception in fetching network partition lists";
-            log.error(msg, e);
+            log.error(msg);
             throw new TransformationException(msg, e);
         } catch (IOException e) {
             String msg = "IO exception in fetching network partition lists";
-            log.error(msg, e);
+            log.error(msg);
             throw new TransformationException(msg, e);
         }
-
     }
 
     /**
@@ -188,7 +184,6 @@ public class Transformation {
         DeploymentPolicyBean deploymentPolicy410Template;
 
         try {
-
             //Retrieving Json files of PPaaS 4.0.0
             deploymentPolicy400List = OldArtifactLoader.getInstance().fetchDeploymentPolicyList();
             log.info("Fetched Deployment Policy from PPaaS 4.0.0");
@@ -240,18 +235,16 @@ public class Transformation {
                 writeFile(directoryName, fileName, json);
             }
             log.info("Created Deployment Policy 4.1.0 artifacts");
-
         } catch (JsonSyntaxException e) {
             String msg = "JSON syntax exception in fetching deployment policies";
-            log.error(msg, e);
+            log.error(msg);
             throw new TransformationException(msg, e);
 
         } catch (IOException e) {
             String msg = "IO exception in fetching deployment policies";
-            log.error(msg, e);
+            log.error(msg);
             throw new TransformationException(msg, e);
         }
-
     }
 
     /**
@@ -329,7 +322,6 @@ public class Transformation {
                     portMappingBeanTemp.setProxyPort(Integer.parseInt(portMapping.getProxyPort()));
 
                     portMapping410List.add(a++, portMappingBeanTemp);
-
                 }
 
                 cartridge410Template.setPortMapping(portMapping410List);
@@ -351,7 +343,6 @@ public class Transformation {
                     volumeBeanTemp.setRemoveOnTermination(volume.isRemoveOnTermination());
 
                     volumeBean410List.add(b++, volumeBeanTemp);
-
                 }
 
                 persistenceBean410.setVolume(volumeBean410List);
@@ -361,19 +352,17 @@ public class Transformation {
                 String jsonCart = getGson().toJson(application410Template);
                 String fileNamejsonCart = cartridge410Template.getDisplayName();
                 writeFile(outputDirectoryNameCartridge, fileNamejsonCart, jsonCart);
-
             }
-
             log.info("Created Cartridge List 4.1.0 artifacts");
             log.info("Created Application List 4.1.0 artifacts");
 
         } catch (JsonSyntaxException e) {
             String msg = "JSON syntax exception in fetching cartridges";
-            log.error(msg, e);
+            log.error(msg);
             throw new TransformationException(msg, e);
         } catch (IOException e) {
             String msg = "IO exception in fetching cartridges";
-            log.error(msg, e);
+            log.error(msg);
             throw new TransformationException(msg, e);
         }
     }
@@ -395,19 +384,14 @@ public class Transformation {
      */
     public void writeFile(File directoryName, String fileName, String json) {
         try {
-
             if (!directoryName.exists()) {
                 directoryName.mkdirs();
             }
-
             FileWriter writer = new FileWriter(new File(directoryName.getPath() + File.separator + fileName), false);
-
             writer.write(json);
             writer.close();
-
         } catch (IOException e) {
             log.error("IO exception in writing to JSON files", e);
         }
-
     }
 }

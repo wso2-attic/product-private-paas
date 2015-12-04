@@ -18,15 +18,8 @@
 package org.wso2.ppaas.tools.artifactmigration.loader;
 
 import com.google.gson.Gson;
-import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.httpclient.DefaultHttpMethodRetryHandler;
-import org.apache.commons.httpclient.HttpClient;
-import org.apache.commons.httpclient.HttpException;
-import org.apache.commons.httpclient.HttpStatus;
-import org.apache.commons.httpclient.methods.GetMethod;
-import org.apache.commons.httpclient.params.HttpMethodParams;
 import org.apache.stratos.manager.dto.Cartridge;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.AutoscalePolicy;
@@ -50,19 +43,13 @@ public class OldArtifactLoader {
     private static final Logger log = LoggerFactory.getLogger(OldArtifactLoader.class);
 
     private static OldArtifactLoader instance = null;
-    private String username;
-    private String password;
     private Gson gson;
 
     private OldArtifactLoader() {
-
         gson = new Gson();
-        this.setUsername(Constants.USER_NAME);
-        this.setPassword(Constants.PASSWORD);
     }
 
     public static synchronized OldArtifactLoader getInstance() {
-
         if (instance == null) {
             synchronized (OldArtifactLoader.class) {
                 if (instance == null) {
@@ -71,62 +58,82 @@ public class OldArtifactLoader {
             }
         }
         return instance;
-
     }
 
     /**
      * Method to fetch Partition Lists
      *
      * @return Partition List
-     * @throws JsonSyntaxException
+     * @throws IOException
      */
-    public List<Partition> fetchPartitionList() throws JsonSyntaxException {
-        String partitionString = readUrl(Constants.BASE_URL + Constants.URL_PARTITION);
-        String partitionListString = partitionString.substring(partitionString.indexOf('['),(partitionString.lastIndexOf(']') + 1));
-        return gson.fromJson(partitionListString, new TypeToken<List<Partition>>() {
-        }.getType());
-
+    public List<Partition> fetchPartitionList() throws IOException {
+        try {
+            String partitionString = readUrl(Constants.BASE_URL + Constants.URL_PARTITION);
+            String partitionListString = partitionString
+                    .substring(partitionString.indexOf('['), (partitionString.lastIndexOf(']') + 1));
+            return gson.fromJson(partitionListString, new TypeToken<List<Partition>>() {
+            }.getType());
+        } catch (IOException e) {
+            log.error("IOException in fetching partition list");
+            throw e;
+        }
     }
 
     /**
      * Method to fetch Auto Scale Policy
      *
      * @return Auto Scale Policy List
-     * @throws JsonSyntaxException
+     * @throws IOException
      */
-    public List<AutoscalePolicy> fetchAutoscalePolicyList() throws JsonSyntaxException {
-        String autoscalePolicyString = readUrl(Constants.BASE_URL + Constants.URL_POLICY_AUTOSCALE);
-        String autoscalePolicyListString= autoscalePolicyString.substring(autoscalePolicyString.indexOf('['),(autoscalePolicyString.lastIndexOf(']') + 1));
-        return gson.fromJson(autoscalePolicyListString, new TypeToken<List<AutoscalePolicy>>() {
-        }.getType());
-
-
+    public List<AutoscalePolicy> fetchAutoscalePolicyList() throws IOException {
+        try {
+            String autoscalePolicyString = readUrl(Constants.BASE_URL + Constants.URL_POLICY_AUTOSCALE);
+            String autoscalePolicyListString = autoscalePolicyString
+                    .substring(autoscalePolicyString.indexOf('['), (autoscalePolicyString.lastIndexOf(']') + 1));
+            return gson.fromJson(autoscalePolicyListString, new TypeToken<List<AutoscalePolicy>>() {
+            }.getType());
+        } catch (IOException e) {
+            log.error("IOException in fetching auto scale policy list");
+            throw e;
+        }
     }
 
     /**
      * Method to fetch Deployment Policy
      *
      * @return Deployment Policy List
-     * @throws JsonSyntaxException
+     * @throws IOException
      */
-    public List<DeploymentPolicy> fetchDeploymentPolicyList() throws JsonSyntaxException {
-        String deploymentPolicyString = readUrl(Constants.BASE_URL + Constants.URL_POLICY_DEPLOYMENT);
-        String deploymentPolicyListString= deploymentPolicyString.substring(deploymentPolicyString.indexOf('['),(deploymentPolicyString.lastIndexOf(']') + 1));
-        return gson.fromJson(deploymentPolicyListString, new TypeToken<List<DeploymentPolicy>>() {
-        }.getType());
+    public List<DeploymentPolicy> fetchDeploymentPolicyList() throws IOException {
+        try {
+            String deploymentPolicyString = readUrl(Constants.BASE_URL + Constants.URL_POLICY_DEPLOYMENT);
+            String deploymentPolicyListString = deploymentPolicyString
+                    .substring(deploymentPolicyString.indexOf('['), (deploymentPolicyString.lastIndexOf(']') + 1));
+            return gson.fromJson(deploymentPolicyListString, new TypeToken<List<DeploymentPolicy>>() {
+            }.getType());
+        } catch (IOException e) {
+            log.error("IOException in fetching deployment policy list");
+            throw e;
+        }
     }
 
     /**
      * Method to fetch Cartridges
      *
      * @return Cartridges List
-     * @throws JsonSyntaxException
+     * @throws IOException
      */
-    public List<Cartridge> fetchCartridgeList() throws JsonSyntaxException {
-        String cartridgeString = readUrl(Constants.BASE_URL + Constants.URL_CARTRIDGE);
-        String cartridgeListString= cartridgeString.substring(cartridgeString.indexOf('['),(cartridgeString.lastIndexOf(']') + 1));
-        return gson.fromJson(cartridgeListString, new TypeToken<List<Cartridge>>() {
-        }.getType());
+    public List<Cartridge> fetchCartridgeList() throws IOException {
+        try {
+            String cartridgeString = readUrl(Constants.BASE_URL + Constants.URL_CARTRIDGE);
+            String cartridgeListString = cartridgeString
+                    .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
+            return gson.fromJson(cartridgeListString, new TypeToken<List<Cartridge>>() {
+            }.getType());
+        } catch (IOException e) {
+            log.error("IOException in fetching cartridge list");
+            throw e;
+        }
     }
 
     /**
@@ -134,21 +141,15 @@ public class OldArtifactLoader {
      *
      * @param serviceEndpoint the endpoint to connect with
      * @return JSON string
+     * @throws IOException in connecting to REST endpoint
      */
-    private String readUrl(String serviceEndpoint) {
-
-        String url = serviceEndpoint;
-        String resultString = null;
+    private String readUrl(String serviceEndpoint) throws IOException {
         try {
-            String webPage = url;
-            String name = Constants.USER_NAME;
-            String password = Constants.PASSWORD;
-
-            String authString = name + ":" + password;
+            String authString = Constants.USER_NAME + ":" + Constants.PASSWORD;
             byte[] authEncBytes = Base64.encodeBase64(authString.getBytes());
             String authStringEnc = new String(authEncBytes);
 
-            URL absoluteURL = new URL(webPage);
+            URL absoluteURL = new URL(serviceEndpoint);
             URLConnection urlConnection = absoluteURL.openConnection();
             urlConnection.setRequestProperty("Authorization", "Basic " + authStringEnc);
             InputStream is = urlConnection.getInputStream();
@@ -160,27 +161,15 @@ public class OldArtifactLoader {
             while ((numCharsRead = isr.read(charArray)) > 0) {
                 sb.append(charArray, 0, numCharsRead);
             }
-            resultString = sb.toString();
-
+            return sb.toString();
         } catch (MalformedURLException e) {
-            String msg = "malformed URL has occurred in connecting to rest end point";
-            log.error(msg, e);
+            String msg = "Malformed URL has occurred in connecting to REST endpoint";
+            log.error(msg);
+            throw e;
         } catch (IOException e) {
-            String msg = "IO exception has occured in connecting to rest end point";
-            log.error(msg, e);
+            String msg = "IO exception has occurred in connecting to REST endpoint";
+            log.error(msg);
+            throw e;
         }
-
-        return resultString;
-
-    }
-
-    public void setUsername(String username) {
-
-        this.username = username;
-    }
-
-    public void setPassword(String password) {
-
-        this.password = password;
     }
 }
