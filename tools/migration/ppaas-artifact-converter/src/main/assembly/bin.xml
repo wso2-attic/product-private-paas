@@ -41,13 +41,6 @@
                 <include>log4j.properties</include>
             </includes>
         </fileSet>
-
-        <fileSet>
-            <directory>${project.basedir}/src/main/resources/template</directory>
-            <outputDirectory>/template</outputDirectory>
-            <fileMode>0600</fileMode>
-
-        </fileSet>
     </fileSets>
     <dependencySets>
 
