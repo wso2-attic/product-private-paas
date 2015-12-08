@@ -265,7 +265,7 @@ public class StratosAuthorizingHandler implements RequestHandler {
 
     private String getAuthorizationActions(Annotation[] annotations, String authorizationAnnotationClassName) {
         for (Annotation ann : annotations) {
-            if (ann.annotationType().getName().equals(authorizationAnnotationClassName)) {
+            if (ann.annotationType().getSimpleName().equals(authorizationAnnotationClassName)) {
                 try {
                     Method valueMethod = ann.annotationType().getMethod("value");
                     String[] permissions = (String[]) valueMethod.invoke(ann);
