@@ -27,14 +27,14 @@ import org.apache.cxf.jaxrs.model.ClassResourceInfo;
 import org.apache.cxf.message.Message;
 import org.apache.cxf.service.Service;
 import org.apache.cxf.service.model.BindingOperationInfo;
-import org.wso2.ppaas.rest.endpoint.Utils;
-import org.wso2.ppaas.rest.endpoint.context.AuthenticationContext;
 import org.wso2.carbon.context.CarbonContext;
 import org.wso2.carbon.context.PrivilegedCarbonContext;
 import org.wso2.carbon.user.api.AuthorizationManager;
 import org.wso2.carbon.user.api.UserRealm;
 import org.wso2.carbon.user.api.UserStoreException;
 import org.wso2.carbon.utils.multitenancy.MultitenantConstants;
+import org.wso2.ppaas.rest.endpoint.Utils;
+import org.wso2.ppaas.rest.endpoint.context.AuthenticationContext;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -50,7 +50,6 @@ import java.util.*;
 public class StratosAuthorizingHandler implements RequestHandler {
     private Log log = LogFactory.getLog(StratosAuthorizingHandler.class);
 
-    private static String SUPPORTED_AUTHENTICATION_TYPE = "Basic";
     private static final String AUTHORIZATION_ANNOTATION_CLASS_NAME = "AuthorizationAction";
     private static final String TENANT_ANNOTATION_CLASS_NAME = "SuperTenantService";
     private static final String ACTION_ON_RESOURCE = "ui.execute";
@@ -60,12 +59,8 @@ public class StratosAuthorizingHandler implements RequestHandler {
 
     static {
         SKIP_METHODS = new HashSet<String>();
-        SKIP_METHODS.addAll(Arrays.asList(
-                new String[]{"wait", "notify", "notifyAll",
-                        "equals", "toString", "hashCode"}));
+        SKIP_METHODS.addAll(Arrays.asList("wait", "notify", "notifyAll", "equals", "toString", "hashCode"));
     }
-
-
 
     public Response handleRequest(Message message, ClassResourceInfo resourceClass) {
         try {
@@ -73,55 +68,54 @@ public class StratosAuthorizingHandler implements RequestHandler {
             String userName = CarbonContext.getThreadLocalCarbonContext().getUsername();
             String tenantDomain = CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
             int tenantId = CarbonContext.getThreadLocalCarbonContext().getTenantId();
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug("authorizing the action using" + StratosAuthorizingHandler.class.getName());
-                log.debug("username :"+ userName);
+                log.debug("username :" + userName);
                 log.debug("tenantDomain" + tenantDomain);
-                log.debug("tenantId :"+ tenantId);
+                log.debug("tenantId :" + tenantId);
             }
             Method targetMethod = getTargetMethod(message);
-            if (!authorize(userName,tenantDomain,tenantId,targetMethod)) {
-               log.warn("User :"+ userName + "trying to perform unauthrorized action" +
-                       " against the resource :"+ targetMethod);
-               return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).
-                       entity(Utils.buildMessage("The user does not have required permissions to " +
-                               "perform this operation")).build();
+            if (!authorize(userName, tenantDomain, tenantId, targetMethod)) {
+                log.warn("User :" + userName + "trying to perform unauthrorized action" +
+                        " against the resource :" + targetMethod);
+                return Response.status(Response.Status.FORBIDDEN).type(MediaType.APPLICATION_JSON).
+                        entity(Utils.buildMessage(
+                                "The user does not have required permissions to " + "perform this operation")).build();
             }
             return null;
 
         } catch (Exception exception) {
-            log.error("Unexpected error occured while REST api, authorization process",exception);
+            log.error("Unexpected error occured while REST api, authorization process", exception);
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON).
                     entity(Utils.buildMessage("Unexpected error. Please contact the system admin")).build();
         }
     }
 
-    private boolean authorize(String userName, String tenantDomain,int tenantId, Method targetMethod) throws Exception{
-            // first we try to see whether this is a super.tenant only operation
-            if (superTenantServiceSet.contains(targetMethod.getName()) && !isCurrentUserSuperTenant(tenantDomain, tenantId)) {
-                return false;
-            }
-            // authorize using permissionString given as annotation in the service class
-            String permissionString = authorizationActionMap.get(targetMethod.getName());
+    private boolean authorize(String userName, String tenantDomain, int tenantId, Method targetMethod)
+            throws Exception {
+        // first we try to see whether this is a super.tenant only operation
+        if (superTenantServiceSet.contains(targetMethod.getName()) && !isCurrentUserSuperTenant(tenantDomain,
+                tenantId)) {
+            return false;
+        }
+        // authorize using permissionString given as annotation in the service class
+        String permissionString = authorizationActionMap.get(targetMethod.getName());
 
-            // get the authorization manager for this tenant..
-            UserRealm userRealm = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm();
-            AuthorizationManager authorizationManager = userRealm.getAuthorizationManager();
+        // get the authorization manager for this tenant..
+        UserRealm userRealm = PrivilegedCarbonContext.getThreadLocalCarbonContext().getUserRealm();
+        AuthorizationManager authorizationManager = userRealm.getAuthorizationManager();
 
-            boolean isAuthorized = isAuthorized(authorizationManager, userName, permissionString, ACTION_ON_RESOURCE);
-            return isAuthorized;
+        return isAuthorized(authorizationManager, userName, permissionString, ACTION_ON_RESOURCE);
 
     }
 
     private boolean isCurrentUserSuperTenant(String tenantDomain, int tenantId) {
-        if (MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain) && MultitenantConstants.SUPER_TENANT_ID == tenantId) {
-            return true;
-        }
-        return false;
+        return MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(tenantDomain)
+                && MultitenantConstants.SUPER_TENANT_ID == tenantId;
     }
 
-    private boolean isAuthorized(AuthorizationManager authorizationManager, String username,
-                                 String permissionString, String action) throws UserStoreException {
+    private boolean isAuthorized(AuthorizationManager authorizationManager, String username, String permissionString,
+            String action) throws UserStoreException {
         boolean isAuthorized = false;
         String[] resourceIds = permissionString.trim().split(",");
         for (String resourceId : resourceIds) {
@@ -136,14 +130,15 @@ public class StratosAuthorizingHandler implements RequestHandler {
     /**
      * Here we are getting the target invocation method. The method get set as a property in the
      * message by the {@link org.apache.cxf.jaxrs.interceptor.JAXRSInInterceptor}
-     * @param message   incoming message
-     * @return
+     *
+     * @param message incoming message
+     * @return target method
      */
     protected Method getTargetMethod(Message message) {
         BindingOperationInfo bop = message.getExchange().get(BindingOperationInfo.class);
         if (bop != null) {
-            MethodDispatcher md = (MethodDispatcher)
-                    message.getExchange().get(Service.class).get(MethodDispatcher.class.getName());
+            MethodDispatcher md = (MethodDispatcher) message.getExchange().get(Service.class)
+                    .get(MethodDispatcher.class.getName());
             return md.getMethod(bop);
         }
         Method method = (Method) message.get("org.apache.cxf.resource.method");
@@ -156,7 +151,8 @@ public class StratosAuthorizingHandler implements RequestHandler {
 
     /**
      * The instance of the secured bean get injected by the IOC framework
-     * @param securedObject
+     *
+     * @param securedObject secured bean object
      */
     public void setSecuredObject(Object securedObject) {
         Class<?> clazz = ClassHelper.getRealClass(securedObject);
@@ -180,20 +176,25 @@ public class StratosAuthorizingHandler implements RequestHandler {
     /**
      * Goes through the class hierarchy and find the authorization annotations attached to a certain
      * method.
-     * @param clazz   class to be scanned
-     * @param authorizationActionMap    the map to be populated
+     *
+     * @param clazz                  class to be scanned
+     * @param authorizationActionMap the map to be populated
      */
     private void findAuthorizationActions(Class<?> clazz, Map<String, String> authorizationActionMap) {
         if (clazz == null || clazz == Object.class) {
             return;
         }
-        String classAuthorizationActionsAllowed = getAuthorizationActions(clazz.getAnnotations(), AUTHORIZATION_ANNOTATION_CLASS_NAME);
+        String classAuthorizationActionsAllowed = getAuthorizationActions(clazz.getAnnotations(),
+                AUTHORIZATION_ANNOTATION_CLASS_NAME);
         for (Method m : clazz.getMethods()) {
             if (SKIP_METHODS.contains(m.getName())) {
                 continue;
             }
-            String methodAuthorizationActionsAllowed = getAuthorizationActions(m.getAnnotations(), AUTHORIZATION_ANNOTATION_CLASS_NAME);
-            String authorizationActions = methodAuthorizationActionsAllowed != null ? methodAuthorizationActionsAllowed : classAuthorizationActionsAllowed;
+            String methodAuthorizationActionsAllowed = getAuthorizationActions(m.getAnnotations(),
+                    AUTHORIZATION_ANNOTATION_CLASS_NAME);
+            String authorizationActions = methodAuthorizationActionsAllowed != null ?
+                    methodAuthorizationActionsAllowed :
+                    classAuthorizationActionsAllowed;
             if (authorizationActions != null) {
                 authorizationActionMap.put(m.getName(), authorizationActions);
             }
@@ -215,8 +216,9 @@ public class StratosAuthorizingHandler implements RequestHandler {
 
     /**
      * Goes through the class hierarchy and figure out the supertenant annotations coupled with operations/methods.
-     * @param clazz
-     * @param superTenantServiceSet
+     *
+     * @param clazz                 class to be scanned
+     * @param superTenantServiceSet set of super tenant services
      */
     private void findSuperTenantServices(Class<?> clazz, Set<String> superTenantServiceSet) {
         if (clazz == null || clazz == Object.class) {
@@ -250,9 +252,8 @@ public class StratosAuthorizingHandler implements RequestHandler {
         for (Annotation ann : annotations) {
             if (ann.annotationType().getName().equals(tenantAnnotationClassName)) {
                 try {
-                    Method valueMethod = ann.annotationType().getMethod("value", new Class[]{});
-                    boolean isSuperTenantService = (Boolean) valueMethod.invoke(ann, new Object[]{});
-                    return isSuperTenantService;
+                    Method valueMethod = ann.annotationType().getMethod("value");
+                    return (Boolean) valueMethod.invoke(ann);
                 } catch (Exception ex) {
                     // ignore
                 }
@@ -262,13 +263,12 @@ public class StratosAuthorizingHandler implements RequestHandler {
         return false;
     }
 
-
     private String getAuthorizationActions(Annotation[] annotations, String authorizationAnnotationClassName) {
         for (Annotation ann : annotations) {
             if (ann.annotationType().getName().equals(authorizationAnnotationClassName)) {
                 try {
-                    Method valueMethod = ann.annotationType().getMethod("value", new Class[]{});
-                    String[] permissions = (String[]) valueMethod.invoke(ann, new Object[]{});
+                    Method valueMethod = ann.annotationType().getMethod("value");
+                    String[] permissions = (String[]) valueMethod.invoke(ann);
                     StringBuilder sb = new StringBuilder();
                     for (int i = 0; i < permissions.length; i++) {
                         sb.append(permissions[i]);
