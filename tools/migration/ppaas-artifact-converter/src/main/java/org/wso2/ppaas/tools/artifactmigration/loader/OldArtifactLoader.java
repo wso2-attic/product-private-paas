@@ -20,12 +20,13 @@ package org.wso2.ppaas.tools.artifactmigration.loader;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
 import org.apache.stratos.manager.dto.Cartridge;
+import org.apache.stratos.rest.endpoint.bean.CartridgeInfoBean;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.AutoscalePolicy;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment.DeploymentPolicy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.wso2.ppaas.tools.artifactmigration.exception.ArtifactLoadingException;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -40,7 +41,7 @@ import java.util.List;
  */
 public class OldArtifactLoader {
 
-    private static final Logger log = LoggerFactory.getLogger(OldArtifactLoader.class);
+    private static final Logger log = Logger.getLogger(OldArtifactLoader.class);
 
     private static OldArtifactLoader instance = null;
     private Gson gson;
@@ -64,9 +65,9 @@ public class OldArtifactLoader {
      * Method to fetch Partition Lists
      *
      * @return Partition List
-     * @throws IOException
+     * @throws ArtifactLoadingException
      */
-    public List<Partition> fetchPartitionList() throws IOException {
+    public List<Partition> fetchPartitionList() throws ArtifactLoadingException {
         try {
             String partitionString = readUrl(Constants.BASE_URL + Constants.URL_PARTITION);
             String partitionListString = partitionString
@@ -74,8 +75,9 @@ public class OldArtifactLoader {
             return gson.fromJson(partitionListString, new TypeToken<List<Partition>>() {
             }.getType());
         } catch (IOException e) {
-            log.error("IOException in fetching partition list");
-            throw e;
+            String msg = "IOException in fetching partition list";
+            log.error(msg);
+            throw new ArtifactLoadingException(msg, e);
         }
     }
 
@@ -83,9 +85,9 @@ public class OldArtifactLoader {
      * Method to fetch Auto Scale Policy
      *
      * @return Auto Scale Policy List
-     * @throws IOException
+     * @throws ArtifactLoadingException
      */
-    public List<AutoscalePolicy> fetchAutoscalePolicyList() throws IOException {
+    public List<AutoscalePolicy> fetchAutoscalePolicyList() throws ArtifactLoadingException {
         try {
             String autoscalePolicyString = readUrl(Constants.BASE_URL + Constants.URL_POLICY_AUTOSCALE);
             String autoscalePolicyListString = autoscalePolicyString
@@ -93,8 +95,9 @@ public class OldArtifactLoader {
             return gson.fromJson(autoscalePolicyListString, new TypeToken<List<AutoscalePolicy>>() {
             }.getType());
         } catch (IOException e) {
-            log.error("IOException in fetching auto scale policy list");
-            throw e;
+            String msg = "IOException in fetching auto scale policy list";
+            log.error(msg);
+            throw new ArtifactLoadingException(msg, e);
         }
     }
 
@@ -102,9 +105,9 @@ public class OldArtifactLoader {
      * Method to fetch Deployment Policy
      *
      * @return Deployment Policy List
-     * @throws IOException
+     * @throws ArtifactLoadingException
      */
-    public List<DeploymentPolicy> fetchDeploymentPolicyList() throws IOException {
+    public List<DeploymentPolicy> fetchDeploymentPolicyList() throws ArtifactLoadingException {
         try {
             String deploymentPolicyString = readUrl(Constants.BASE_URL + Constants.URL_POLICY_DEPLOYMENT);
             String deploymentPolicyListString = deploymentPolicyString
@@ -112,8 +115,9 @@ public class OldArtifactLoader {
             return gson.fromJson(deploymentPolicyListString, new TypeToken<List<DeploymentPolicy>>() {
             }.getType());
         } catch (IOException e) {
-            log.error("IOException in fetching deployment policy list");
-            throw e;
+            String msg = "IOException in fetching deployment policy list";
+            log.error(msg);
+            throw new ArtifactLoadingException(msg, e);
         }
     }
 
@@ -121,9 +125,9 @@ public class OldArtifactLoader {
      * Method to fetch Cartridges
      *
      * @return Cartridges List
-     * @throws IOException
+     * @throws ArtifactLoadingException
      */
-    public List<Cartridge> fetchCartridgeList() throws IOException {
+    public List<Cartridge> fetchCartridgeList() throws ArtifactLoadingException {
         try {
             String cartridgeString = readUrl(Constants.BASE_URL + Constants.URL_CARTRIDGE);
             String cartridgeListString = cartridgeString
@@ -131,9 +135,33 @@ public class OldArtifactLoader {
             return gson.fromJson(cartridgeListString, new TypeToken<List<Cartridge>>() {
             }.getType());
         } catch (IOException e) {
-            log.error("IOException in fetching cartridge list");
-            throw e;
+            String msg = "IOException in fetching cartridge list";
+            log.error(msg);
+            throw new ArtifactLoadingException(msg, e);
         }
+    }
+
+    /**
+     * Method to fetch Cartridges
+     *
+     * @return Cartridges List
+     * @throws ArtifactLoadingException
+     */
+    public List<CartridgeInfoBean> fetchSubscriptionDataList() throws ArtifactLoadingException {
+        try {
+            String cartridgeString = readUrl(Constants.BASE_URL + Constants.URL_SUBSCRIPTION);
+            String cartridgeListString = cartridgeString
+                    .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
+
+            return gson.fromJson(cartridgeListString, new TypeToken<List<CartridgeInfoBean>>() {
+            }.getType());
+
+        } catch (IOException e) {
+            String msg = "IOException in fetching subscription list";
+            log.error(msg);
+            throw new ArtifactLoadingException(msg, e);
+        }
+
     }
 
     /**
@@ -163,11 +191,11 @@ public class OldArtifactLoader {
             }
             return sb.toString();
         } catch (MalformedURLException e) {
-            String msg = "Malformed URL has occurred in connecting to REST endpoint";
+            String msg = "Invalid URL in connecting to REST endpoint";
             log.error(msg);
             throw e;
         } catch (IOException e) {
-            String msg = "IO exception has occurred in connecting to REST endpoint";
+            String msg = "IO error in connecting to REST endpoint";
             log.error(msg);
             throw e;
         }

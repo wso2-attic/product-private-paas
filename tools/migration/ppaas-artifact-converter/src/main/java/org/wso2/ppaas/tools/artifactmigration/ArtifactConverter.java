@@ -17,8 +17,7 @@
  */
 package org.wso2.ppaas.tools.artifactmigration;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.log4j.Logger;
 import org.wso2.ppaas.tools.artifactmigration.loader.Constants;
 
 import java.io.Console;
@@ -28,21 +27,19 @@ import java.io.Console;
  */
 public class ArtifactConverter {
 
-    private static final Logger log = LoggerFactory.getLogger(ArtifactConverter.class);
+    private static final Logger log = Logger.getLogger(ArtifactConverter.class);
 
     public static void main(String[] args) {
 
-        System.setProperty("org.apache.commons.logging.Log", "org.apache.commons.logging.impl.NoOpLog");
-
         Console console = System.console();
 
-        System.out.println("Enter the Base URL : ");
+        System.out.println("Enter the Base URL: ");
         Constants.BASE_URL = console.readLine();
 
-        System.out.println("Enter the User name : ");
+        System.out.println("Enter the User name: ");
         Constants.USER_NAME = console.readLine();
 
-        System.out.println("Enter the Password : ");
+        System.out.println("Enter the Password: ");
         char[] passwordChars = console.readPassword();
         Constants.PASSWORD = new String(passwordChars);
 
@@ -53,16 +50,15 @@ public class ArtifactConverter {
             Transformation.getInstance().transformAutoscalePolicyList();
             Transformation.getInstance().transformDeploymentPolicyList();
             Transformation.getInstance().transformCartridgeList();
+            //Transformation.getInstance().transformSubscriptionList();
 
         } catch (Exception ex) {
             isSuccess = false;
             log.error("Error while converting the artifacts ", ex);
-            System.out.println("Error while transforming NetworkPartition list.see log for more details.");
+            System.out.println("Error while transforming NetworkPartition list. See log for more details.");
         }
-
         if (isSuccess)
-            System.out.println("Convertion completed succesfully");
-
+            System.out.println("Conversion completed successfully");
     }
 
 }

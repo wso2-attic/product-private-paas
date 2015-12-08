@@ -20,15 +20,13 @@ package org.wso2.ppaas.tools.artifactmigration;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import org.apache.log4j.Logger;
 import org.apache.stratos.common.beans.application.ApplicationBean;
 import org.apache.stratos.common.beans.application.ComponentBean;
 import org.apache.stratos.common.beans.application.SubscribableInfo;
-import org.apache.stratos.common.beans.cartridge.CartridgeBean;
-import org.apache.stratos.common.beans.cartridge.CartridgeReferenceBean;
+import org.apache.stratos.common.beans.artifact.repository.ArtifactRepositoryBean;
+import org.apache.stratos.common.beans.cartridge.*;
 import org.apache.stratos.common.beans.partition.NetworkPartitionBean;
-import org.apache.stratos.common.beans.cartridge.PortMappingBean;
-import org.apache.stratos.common.beans.cartridge.VolumeBean;
-import org.apache.stratos.common.beans.cartridge.PersistenceBean;
 import org.apache.stratos.common.beans.partition.NetworkPartitionReferenceBean;
 import org.apache.stratos.common.beans.partition.PartitionReferenceBean;
 import org.apache.stratos.common.beans.policy.autoscale.AutoscalePolicyBean;
@@ -37,12 +35,13 @@ import org.apache.stratos.manager.dao.PortMapping;
 import org.apache.stratos.manager.dto.Cartridge;
 import org.apache.stratos.manager.dto.Persistence;
 import org.apache.stratos.manager.dto.Volume;
+import org.apache.stratos.rest.endpoint.bean.CartridgeInfoBean;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.PartitionGroup;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.AutoscalePolicy;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment.DeploymentPolicy;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.wso2.ppaas.tools.artifactmigration.exception.ArtifactLoadingException;
+import org.wso2.ppaas.tools.artifactmigration.exception.TransformationException;
 import org.wso2.ppaas.tools.artifactmigration.loader.Constants;
 import org.wso2.ppaas.tools.artifactmigration.loader.OldArtifactLoader;
 
@@ -57,7 +56,7 @@ import java.util.List;
  */
 public class Transformation {
 
-    private static final Logger log = LoggerFactory.getLogger(Transformation.class);
+    private static final Logger log = Logger.getLogger(Transformation.class);
     private static Transformation instance = null;
 
     private Transformation() {
@@ -83,30 +82,23 @@ public class Transformation {
         AutoscalePolicyBean autoscalePolicy410 = new AutoscalePolicyBean();
 
         try {
-            //Retrieving Json files of PPaaS 4.0.0
             autoscalePolicy400List = OldArtifactLoader.getInstance().fetchAutoscalePolicyList();
             log.info("Fetched Auto Scale Policy from PPaaS 4.0.0");
 
-            //Creating JSON files according to the values of PPaaS 4.0.0
             File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_AUTOSCALE);
 
             for (AutoscalePolicy autoscalePolicy : autoscalePolicy400List) {
-
                 autoscalePolicy410.setId(autoscalePolicy.getId());
-
-                String json = new GsonBuilder().setPrettyPrinting().create().toJson(autoscalePolicy410);
-                String fileName = autoscalePolicy410.getId();
-
-                writeFile(directoryName, fileName, json);
+                writeFile(directoryName, autoscalePolicy410.getId(), getGson().toJson(autoscalePolicy410));
             }
             log.info("Created Auto Scale Policy 4.1.0 artifacts");
 
         } catch (JsonSyntaxException e) {
-            String msg = "JSON syntax exception in fetching auto scale policies";
+            String msg = "JSON syntax error in retrieving auto scale policies";
             log.error(msg);
             throw new TransformationException(msg, e);
-        } catch (IOException e) {
-            String msg = "IO exception in fetching auto scale policies";
+        } catch (ArtifactLoadingException e) {
+            String msg = "Artifact Loading error in fetching auto scale policies";
             log.error(msg);
             throw new TransformationException(msg, e);
         }
@@ -118,14 +110,12 @@ public class Transformation {
     public void transformNetworkPartitionList() throws TransformationException {
 
         List<Partition> networkPartition400List;
-        NetworkPartitionBean networkPartition410= new NetworkPartitionBean();
+        NetworkPartitionBean networkPartition410 = new NetworkPartitionBean();
 
         try {
-            //Retrieving Json files of PPaaS 4.0.0
             networkPartition400List = OldArtifactLoader.getInstance().fetchPartitionList();
             log.info("Fetched Network Partition List from PPaaS 4.0.0");
 
-            //Creating JSON files according to the values of PPaaS 4.0.0
             for (Partition networkPartition400 : networkPartition400List) {
 
                 networkPartition410.setId(networkPartition400.getId());
@@ -133,7 +123,7 @@ public class Transformation {
 
                 List<org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean> property400List = networkPartition400
                         .getProperty();
-                List<org.apache.stratos.common.beans.PropertyBean> property410List = new ArrayList<org.apache.stratos.common.beans.PropertyBean>();
+                List<org.apache.stratos.common.beans.PropertyBean> property410List = new ArrayList<>();
 
                 for (org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean temp : property400List) {
                     org.apache.stratos.common.beans.PropertyBean property = new org.apache.stratos.common.beans.PropertyBean();
@@ -144,25 +134,24 @@ public class Transformation {
 
                 networkPartition410.setProperties(property410List);
 
-                String json = getGson().toJson(networkPartition410);
-                String fileName = networkPartition410.getId();
                 File directoryName = new File(
                         Constants.ROOT_DIRECTORY + Constants.DIRECTORY_NETWORK_PARTITION + File.separator
                                 + networkPartition400.getProvider());
 
-                writeFile(directoryName, fileName, json);
+                writeFile(directoryName, networkPartition410.getId(), getGson().toJson(networkPartition410));
 
             }
             log.info("Created Network Partition List 4.1.0 artifacts");
 
         } catch (JsonSyntaxException e) {
-            String msg = "JSON syntax exception in fetching network partition lists";
+            String msg = "JSON syntax error in retrieving network partition lists";
             log.error(msg);
             throw new TransformationException(msg, e);
-        } catch (IOException e) {
-            String msg = "IO exception in fetching network partition lists";
+        } catch (ArtifactLoadingException e) {
+            String msg = "Artifact loading error in fetching network partition lists";
             log.error(msg);
             throw new TransformationException(msg, e);
+
         }
     }
 
@@ -175,18 +164,16 @@ public class Transformation {
         DeploymentPolicyBean deploymentPolicy410 = new DeploymentPolicyBean();
 
         try {
-            //Retrieving Json files of PPaaS 4.0.0
             deploymentPolicy400List = OldArtifactLoader.getInstance().fetchDeploymentPolicyList();
             log.info("Fetched Deployment Policy from PPaaS 4.0.0");
 
-            //Creating JSON files according to the values of PPaaS 4.0.0
             File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_DEPLOYMENT);
             for (DeploymentPolicy deploymentPolicy : deploymentPolicy400List) {
 
                 deploymentPolicy410.setId(deploymentPolicy.getId());
 
                 List<PartitionGroup> partitionGroup400List = deploymentPolicy.getPartitionGroup();
-                List<NetworkPartitionReferenceBean> networkPartitions410List = new ArrayList<NetworkPartitionReferenceBean>();
+                List<NetworkPartitionReferenceBean> networkPartitions410List = new ArrayList<>();
 
                 int a = 0;
                 for (PartitionGroup partitionGroup : partitionGroup400List) {
@@ -198,7 +185,7 @@ public class Transformation {
                     networkPartitions410List.add(a, tempNetworkPartition);
 
                     List<Partition> partition400List = partitionGroup.getPartition();
-                    List<PartitionReferenceBean> partitions410List = new ArrayList<PartitionReferenceBean>();
+                    List<PartitionReferenceBean> partitions410List = new ArrayList<>();
 
                     int b = 0;
                     for (Partition partition : partition400List) {
@@ -212,23 +199,18 @@ public class Transformation {
                     networkPartitions410List.get(a).setPartitions(partitions410List);
                     a++;
                 }
-
                 deploymentPolicy410.setNetworkPartitions(networkPartitions410List);
 
-                //writing to JSON file
-                String json = new GsonBuilder().setPrettyPrinting().create().toJson(deploymentPolicy410);
-                String fileName = deploymentPolicy410.getId();
-
-                writeFile(directoryName, fileName, json);
+                writeFile(directoryName, deploymentPolicy410.getId(), getGson().toJson(deploymentPolicy410));
             }
             log.info("Created Deployment Policy 4.1.0 artifacts");
         } catch (JsonSyntaxException e) {
-            String msg = "JSON syntax exception in fetching deployment policies";
+            String msg = "JSON syntax error in retrieving deployment policies";
             log.error(msg);
             throw new TransformationException(msg, e);
 
-        } catch (IOException e) {
-            String msg = "IO exception in fetching deployment policies";
+        } catch (ArtifactLoadingException e) {
+            String msg = "Artifact Loading error in fetching deployment policies";
             log.error(msg);
             throw new TransformationException(msg, e);
         }
@@ -240,25 +222,20 @@ public class Transformation {
     public void transformCartridgeList() throws TransformationException {
 
         List<Cartridge> cartridge400List;
-        ApplicationBean application410= new  ApplicationBean();
-        CartridgeBean cartridge410= new CartridgeBean();
+        ApplicationBean application410 = new ApplicationBean();
+        CartridgeBean cartridge410 = new CartridgeBean();
 
         try {
-            //Retrieving Json files of PPaaS 4.0.0
             cartridge400List = OldArtifactLoader.getInstance().fetchCartridgeList();
             log.info("Fetched Cartridge List from PPaaS 4.0.0");
 
-            //Creating Applications
             File outputDirectoryNameApp = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_APPLICATION);
-
-            //Creating CartridgesAPPLICATION
             File outputDirectoryNameCartridge = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_CARTRIDGE);
 
-            //Creating JSON files according to the values of PPaaS 4.0.0
             for (Cartridge cartridge : cartridge400List) {
 
                 ComponentBean components = new ComponentBean();
-                List<CartridgeReferenceBean> cartridges = new ArrayList<CartridgeReferenceBean>();
+                List<CartridgeReferenceBean> cartridges = new ArrayList<>();
                 CartridgeReferenceBean cartridgeReference410 = new CartridgeReferenceBean();
                 SubscribableInfo subscribableInfo = new SubscribableInfo();
 
@@ -274,10 +251,7 @@ public class Transformation {
                 application410.setName(cartridge.getDisplayName());
                 application410.setDescription(cartridge.getDescription());
 
-                //writing to JSON file
-                String json = getGson().toJson(application410);
-                String fileName = application410.getName();
-                writeFile(outputDirectoryNameApp, fileName, json);
+                writeFile(outputDirectoryNameApp, application410.getName(), getGson().toJson(application410));
 
                 cartridge410.setType(cartridge.getCartridgeType());
                 cartridge410.setProvider(cartridge.getProvider());
@@ -287,8 +261,8 @@ public class Transformation {
                 cartridge410.setVersion(cartridge.getVersion());
                 cartridge410.setMultiTenant(cartridge.isMultiTenant());
 
-                List<PortMapping> portMapping400List = new ArrayList<PortMapping>();
-                List<PortMappingBean> portMapping410List = new ArrayList<PortMappingBean>();
+                List<PortMapping> portMapping400List = new ArrayList<>();
+                List<PortMappingBean> portMapping410List = new ArrayList<>();
 
                 int a = 0;
                 for (PortMapping portMapping : portMapping400List) {
@@ -306,8 +280,8 @@ public class Transformation {
                 PersistenceBean persistenceBean410 = new PersistenceBean();
                 persistenceBean410.setRequired(persistence400.isRequired());
 
-                List<Volume> volume400List = new ArrayList<Volume>();
-                List<VolumeBean> volumeBean410List = new ArrayList<VolumeBean>();
+                List<Volume> volume400List = new ArrayList<>();
+                List<VolumeBean> volumeBean410List = new ArrayList<>();
 
                 int b = 0;
                 for (Volume volume : volume400List) {
@@ -324,20 +298,52 @@ public class Transformation {
                 persistenceBean410.setVolume(volumeBean410List);
                 cartridge410.setPersistence(persistenceBean410);
 
-                //writing to JSON file
-                String jsonCart = getGson().toJson(application410);
-                String fileNamejsonCart = cartridge410.getDisplayName();
-                writeFile(outputDirectoryNameCartridge, fileNamejsonCart, jsonCart);
+                writeFile(outputDirectoryNameCartridge, cartridge410.getDisplayName(),
+                        getGson().toJson(application410));
             }
             log.info("Created Cartridge List 4.1.0 artifacts");
             log.info("Created Application List 4.1.0 artifacts");
 
         } catch (JsonSyntaxException e) {
-            String msg = "JSON syntax exception in fetching cartridges";
+            String msg = "JSON syntax error in retrieving cartridges";
             log.error(msg);
             throw new TransformationException(msg, e);
-        } catch (IOException e) {
-            String msg = "IO exception in fetching cartridges";
+        } catch (ArtifactLoadingException e) {
+            String msg = "Artifact loading error in fetching cartridges";
+            log.error(msg);
+            throw new TransformationException(msg, e);
+        }
+    }
+
+    public void transformSubscriptionList() throws TransformationException {
+
+        List<CartridgeInfoBean> subscription400List;
+
+        try {
+            subscription400List = OldArtifactLoader.getInstance().fetchSubscriptionDataList();
+            log.info("Fetched Subscription List");
+
+            File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_APPLICATION_SIGNUP);
+            List<ArtifactRepositoryBean> artifactRepositoriesList = new ArrayList<>();
+            int a = 0;
+            for (CartridgeInfoBean subscription : subscription400List) {
+
+                ArtifactRepositoryBean artifactRepository = new ArtifactRepositoryBean();
+
+                artifactRepository.setAlias(subscription.getAlias());
+                artifactRepository.setPrivateRepo(subscription.isPrivateRepo());
+                artifactRepository.setRepoUrl(subscription.getRepoURL());
+                artifactRepository.setRepoUsername(subscription.getRepoUsername());
+                artifactRepository.setRepoPassword(subscription.getRepoPassword());
+
+                artifactRepositoriesList.add(a++, artifactRepository);
+
+            }
+
+            writeFile(directoryName, Constants.DIRECTORY_APPLICATION_SIGNUP,
+                    getGson().toJson(artifactRepositoriesList));
+        } catch (ArtifactLoadingException e) {
+            String msg = "Artifact loading error in retrieving cartridges";
             log.error(msg);
             throw new TransformationException(msg, e);
         }
@@ -367,7 +373,7 @@ public class Transformation {
             writer.write(json);
             writer.close();
         } catch (IOException e) {
-            log.error("IO exception in writing to JSON files", e);
+            log.error("Error in writing to JSON files", e);
         }
     }
 }
