@@ -16,67 +16,68 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.stratos.manager.dto;
 
 import java.io.Serializable;
 
 public class PolicyDefinition implements Serializable {
 
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
 
-    private String name;
-    private String description;
-    private boolean defaultPolicy;
+	private String name;
+	private String description;
+	private boolean defaultPolicy;
 
-    public PolicyDefinition() {
-    }
+	public PolicyDefinition() {
+	}
 
-    public String getName() {
-        return name;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public String getDescription() {
-        return description;
-    }
+	public String getDescription() {
+		return description;
+	}
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-    public boolean isDefaultPolicy() {
-        return defaultPolicy;
-    }
+	public boolean isDefaultPolicy() {
+		return defaultPolicy;
+	}
 
-    public void setDefaultPolicy(boolean defaultPolicy) {
-        this.defaultPolicy = defaultPolicy;
-    }
+	public void setDefaultPolicy(boolean defaultPolicy) {
+		this.defaultPolicy = defaultPolicy;
+	}
 
-    @Override public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((name == null) ? 0 : name.hashCode());
-        return result;
-    }
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
 
-    @Override public boolean equals(Object obj) {
-        if (this == obj)
-            return true;
-        if (obj == null)
-            return false;
-        if (!(obj instanceof PolicyDefinition))
-            return false;
-        PolicyDefinition other = (PolicyDefinition) obj;
-        if (name == null) {
-            if (other.name != null)
-                return false;
-        } else if (!name.equals(other.name))
-            return false;
-        return true;
-    }
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (!(obj instanceof PolicyDefinition))
+			return false;
+		PolicyDefinition other = (PolicyDefinition) obj;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
+	}
 
 }

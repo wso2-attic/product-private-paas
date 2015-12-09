@@ -41,13 +41,18 @@
                 <include>log4j.properties</include>
             </includes>
         </fileSet>
-    </fileSets>
-    <dependencySets>
+        <fileSet>
+            <directory>${project.basedir}/src/main/resources/scripts</directory>
+            <outputDirectory>/scripts</outputDirectory>
+            <fileMode>0600</fileMode>
+        </fileSet>
+</fileSets>
+<dependencySets>
 
-        <dependencySet>
-            <outputDirectory>/lib</outputDirectory>
-            <useProjectArtifact>true</useProjectArtifact>
-            <scope>runtime</scope>
-        </dependencySet>
-    </dependencySets>
-</assembly>
+<dependencySet>
+    <outputDirectory>/lib</outputDirectory>
+    <useProjectArtifact>true</useProjectArtifact>
+    <scope>runtime</scope>
+</dependencySet>
+</dependencySets>
+        </assembly>

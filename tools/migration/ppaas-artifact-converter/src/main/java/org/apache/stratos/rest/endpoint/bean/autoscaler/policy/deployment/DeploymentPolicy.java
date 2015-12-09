@@ -16,21 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment;
 
-import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.PartitionGroup;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
-
+import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.PartitionGroup;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement public class DeploymentPolicy {
+@XmlRootElement
+public class DeploymentPolicy {
 
     private String id;
-    //partition groups
     private List<PartitionGroup> partitionGroup;
-    //partitions
     private List<Partition> partition;
 
     public String getId() {

@@ -21,34 +21,12 @@ package org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement public class LoadThresholds {
+@XmlRootElement
+public class LoadThresholds {
 
-    private RequestsInFlight requestsInFlight;
-    private MemoryConsumption memoryConsumption;
-    private LoadAverage loadAverage;
+    public RequestsInFlightThresholds requestsInFlight;
 
-    public void setRequestsInFlight(RequestsInFlight requestsInFlight) {
-        this.requestsInFlight = requestsInFlight;
-    }
+    public MemoryConsumptionThresholds memoryConsumption;
 
-    public RequestsInFlight getRequestsInFlight() {
-        return requestsInFlight;
-    }
-
-    public void setMemoryConsumption(MemoryConsumption memoryConsumption) {
-        this.memoryConsumption = memoryConsumption;
-    }
-
-    public MemoryConsumption getMemoryConsumption() {
-        return memoryConsumption;
-    }
-
-    public void setLoadAverage(LoadAverage requestsInFlight) {
-        this.loadAverage = loadAverage;
-    }
-
-    public LoadAverage getLoadAverage() {
-        return loadAverage;
-    }
-
+    public LoadAverageThresholds loadAverage;
 }

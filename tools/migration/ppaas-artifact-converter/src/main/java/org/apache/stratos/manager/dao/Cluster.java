@@ -1,4 +1,5 @@
 /*
+ *
  * Licensed to the Apache Software Foundation (ASF) under one
  * or more contributor license agreements.  See the NOTICE file
  * distributed with this work for additional information
@@ -17,7 +18,6 @@
  * under the License.
  *
  */
-
 package org.apache.stratos.manager.dao;
 
 import java.io.Serializable;
@@ -75,9 +75,9 @@ public class Cluster implements Serializable {
         this.hostName = hostName;
     }
 
-    public int getId() {
-        return id;
-    }
+    //public int getId() {
+    //    return id;
+    //}
 
     public void setId(int id) {
         this.id = id;
@@ -91,7 +91,7 @@ public class Cluster implements Serializable {
         this.serviceStatus = serviceStatus;
     }
 
-    public String toString() {
+    public String toString () {
         return clusterDomain;
     }
 }

@@ -30,7 +30,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>org.wso2.ppaas.tools.artifactmigration.ArtifactConverter</mainClass>
+                            <mainClass>org.wso2.ppaas.tools.artifactmigration.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>

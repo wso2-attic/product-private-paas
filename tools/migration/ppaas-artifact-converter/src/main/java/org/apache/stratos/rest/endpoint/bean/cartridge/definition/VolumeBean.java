@@ -16,53 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.stratos.rest.endpoint.bean.cartridge.definition;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement public class VolumeBean {
+@XmlRootElement
+public class VolumeBean {
 
-    private String size;
-    private String device;
-    private boolean removeOnTermination;
-    private String mappingPath;
+    public String size;
 
-    public String toString() {
+    public String device;
+
+    public boolean removeOnTermination;
+
+    public String mappingPath;
+
+    public String toString () {
         return " [ Persistence Required : " + ", Size: " + size + ", device: " +
                 device + " remove on termination " + removeOnTermination +
                 ", mappingPath : " + mappingPath + "] ";
-    }
-
-    public String getSize() {
-        return size;
-    }
-
-    public void setSize(String size) {
-        this.size = size;
-    }
-
-    public String getDevice() {
-        return device;
-    }
-
-    public void setDevice(String device) {
-        this.device = device;
-    }
-
-    public boolean isRemoveOnTermination() {
-        return removeOnTermination;
-    }
-
-    public void setRemoveOnTermination(boolean removeOnTermination) {
-        this.removeOnTermination = removeOnTermination;
-    }
-
-    public String getMappingPath() {
-        return mappingPath;
-    }
-
-    public void setMappingPath(String mappingPath) {
-        this.mappingPath = mappingPath;
     }
 }

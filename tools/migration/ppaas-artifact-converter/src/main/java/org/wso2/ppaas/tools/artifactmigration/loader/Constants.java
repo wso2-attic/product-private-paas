@@ -44,8 +44,12 @@ public class Constants {
     public static final String DIRECTORY_POLICY_AUTOSCALE = "autoscaling-policies";
     public static final String DIRECTORY_NETWORK_PARTITION = "network-partitions";
     public static final String DIRECTORY_POLICY_DEPLOYMENT = "deployment-policies";
-    public static final String DIRECTORY_APPLICATION = "applications";
+    public static final String DIRECTORY_APPLICATION = "applications"+ File.separator + "simple"+ File.separator + "single-cartridge-app"+ File.separator + "artifacts";
     public static final String DIRECTORY_CARTRIDGE = "cartridges";
     public static final String DIRECTORY_APPLICATION_SIGNUP = "application-signup";
+
+    public static final String DIRECTORY_OUTPUT_SCRIPT  = "applications"+ File.separator + "simple"+ File.separator + "single-cartridge-app";
+    public static final String DIRECTORY_SOURCE_SCRIPT = System.getProperty("user.dir") + File.separator + ".."+ File.separator +"scripts";
+
 
 }

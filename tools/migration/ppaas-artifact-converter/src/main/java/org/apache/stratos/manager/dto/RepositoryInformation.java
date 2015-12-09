@@ -16,31 +16,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.stratos.manager.dto;
 
 import java.io.Serializable;
 
 public class RepositoryInformation implements Serializable {
 
-    private static final long serialVersionUID = 1L;
-    private String repoURL;
-    private String[] refName;
+	private static final long serialVersionUID = 1L;
 
-    public String getRepoURL() {
-        return repoURL;
-    }
+	private String repoURL;
+	private String[] refName;
 
-    public void setRepoURL(String repoURL) {
-        this.repoURL = repoURL;
-    }
+	public String getRepoURL() {
+		return repoURL;
+	}
 
-    public String[] getRefName() {
-        return refName;
-    }
+	public void setRepoURL(String repoURL) {
+		this.repoURL = repoURL;
+	}
 
-    public void setRefName(String[] refName) {
-        this.refName = refName;
-    }
+	public String[] getRefName() {
+		return refName;
+	}
+
+	public void setRefName(String[] refName) {
+		this.refName = refName;
+	}
 
 }

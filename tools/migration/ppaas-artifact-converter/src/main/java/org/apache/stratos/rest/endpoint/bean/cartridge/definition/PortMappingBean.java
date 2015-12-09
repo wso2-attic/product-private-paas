@@ -21,37 +21,16 @@ package org.apache.stratos.rest.endpoint.bean.cartridge.definition;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "portMapping") public class PortMappingBean {
+@XmlRootElement(name = "portMapping")
+public class PortMappingBean {
 
-    private String protocol;
-    private int port;
-    private int proxyPort;
+    public String protocol;
 
-    public String toString() {
+    public int port;
+
+    public int proxyPort;
+
+    public String toString () {
         return " [ Protocol: " + protocol + ", Port: " + port + ", Proxy port: " + proxyPort + "] ";
-    }
-
-    public String getProtocol() {
-        return protocol;
-    }
-
-    public void setProtocol(String protocol) {
-        this.protocol = protocol;
-    }
-
-    public int getPort() {
-        return port;
-    }
-
-    public void setPort(int port) {
-        this.port = port;
-    }
-
-    public int getProxyPort() {
-        return proxyPort;
-    }
-
-    public void setProxyPort(int proxyPort) {
-        this.proxyPort = proxyPort;
     }
 }

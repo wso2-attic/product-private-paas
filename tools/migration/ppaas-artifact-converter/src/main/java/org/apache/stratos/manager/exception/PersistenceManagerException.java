@@ -7,7 +7,7 @@
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
+ *  http://www.apache.org/licenses/LICENSE-2.0
  *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
@@ -15,30 +15,35 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
- *
-*/
+ */
 
-package org.apache.stratos.manager.dto;
+package org.apache.stratos.manager.exception;
 
-import java.util.List;
+public class PersistenceManagerException extends Exception {
 
-public class Persistence {
-    private boolean isRequired;
-    private List<Volume> volume;
+    private static final long serialVersionUID = 1L;
 
-    public boolean isRequired() {
-        return isRequired;
+    private String message;
+
+    public PersistenceManagerException() {
+        super();
     }
 
-    public void setRequired(boolean required) {
-        isRequired = required;
+    public PersistenceManagerException(String message, Throwable cause) {
+        super(message, cause);
+        this.message = message;
     }
 
-    public List<Volume> getVolume() {
-        return volume;
+    public PersistenceManagerException(String message) {
+        super(message);
+        this.message = message;
     }
 
-    public void setVolume(List<Volume> volume) {
-        this.volume = volume;
+    public PersistenceManagerException(Throwable cause) {
+        super(cause);
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

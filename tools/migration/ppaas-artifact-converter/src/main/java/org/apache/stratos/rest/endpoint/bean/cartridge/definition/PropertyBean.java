@@ -21,7 +21,8 @@ package org.apache.stratos.rest.endpoint.bean.cartridge.definition;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "property") public class PropertyBean {
+@XmlRootElement(name = "property")
+public class PropertyBean {
 
     private String name;
     private String value;

@@ -22,55 +22,27 @@ package org.apache.stratos.rest.endpoint.bean.cartridge.definition;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement(name = "loadBalancer") public class LoadBalancerBean {
+@XmlRootElement(name = "loadBalancer")
+public class LoadBalancerBean {
 
-    private String type;
-    private String deploymentPolicy;
-    private String autoscalingPolicy;
-    private List<PropertyBean> property;
+    public String type;
+    
+    public String deploymentPolicy;
+    
+    public String autoscalingPolicy;
 
-    public String toString() {
+    public List<PropertyBean> property;
+
+    public String toString () {
 
         StringBuilder lbBuilder = new StringBuilder();
         lbBuilder.append(" Type: " + type);
-        if (property != null && !property.isEmpty()) {
+        if(property != null && !property.isEmpty()) {
             lbBuilder.append(" Properties: ");
-            for (PropertyBean propertyBean : property) {
+            for(PropertyBean propertyBean : property) {
                 lbBuilder.append(propertyBean.getName() + " : " + propertyBean.getValue() + " | ");
             }
         }
         return lbBuilder.toString();
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public String getDeploymentPolicy() {
-        return deploymentPolicy;
-    }
-
-    public void setDeploymentPolicy(String deploymentPolicy) {
-        this.deploymentPolicy = deploymentPolicy;
-    }
-
-    public String getAutoscalingPolicy() {
-        return autoscalingPolicy;
-    }
-
-    public void setAutoscalingPolicy(String autoscalingPolicy) {
-        this.autoscalingPolicy = autoscalingPolicy;
-    }
-
-    public List<PropertyBean> getProperty() {
-        return property;
-    }
-
-    public void setProperty(List<PropertyBean> property) {
-        this.property = property;
     }
 }

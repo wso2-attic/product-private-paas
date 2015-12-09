@@ -1,43 +1,55 @@
-/*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
- * to you under the Apache License, Version 2.0 (the
- * "License"); you may not use this file except in compliance
- * with the License.  You may obtain a copy of the License at
- *
- *  http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing,
- * software distributed under the License is distributed on an
- * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- * KIND, either express or implied.  See the License for the
- * specific language governing permissions and limitations
- * under the License.
- */
+/**
+ *  Licensed to the Apache Software Foundation (ASF) under one
+ *  or more contributor license agreements.  See the NOTICE file
+ *  distributed with this work for additional information
+ *  regarding copyright ownership.  The ASF licenses this file
+ *  to you under the Apache License, Version 2.0 (the
+ *  "License"); you may not use this file except in compliance
+ *  with the License.  You may obtain a copy of the License at
 
+ *  http://www.apache.org/licenses/LICENSE-2.0
+
+ *  Unless required by applicable law or agreed to in writing,
+ *  software distributed under the License is distributed on an
+ *  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ *  KIND, either express or implied.  See the License for the
+ *  specific language governing permissions and limitations
+ *  under the License.
+ */
 package org.apache.stratos.rest.endpoint.bean;
 
 import javax.xml.bind.annotation.XmlRootElement;
+import java.util.ArrayList;
+import java.util.List;
 
-@XmlRootElement public class CartridgeInfoBean {
-    private String cartridgeType;
-    private String alias;
-    private String autoscalePolicy;
-    private String deploymentPolicy;
-    private String repoURL;
-    private boolean privateRepo;
-    private String repoUsername;
-    private String repoPassword;
-    private String dataCartridgeType;
-    private String dataCartridgeAlias;
-    private boolean commitsEnabled;
+@XmlRootElement
+public class CartridgeInfoBean {
+    String cartridgeType;
+    String alias;
+    String autoscalePolicy;
+    String deploymentPolicy;
+    String repoURL;
+    boolean privateRepo;
+    String repoUsername;
+    String repoPassword;
+    String dataCartridgeType;
+    String dataCartridgeAlias;
+    boolean commitsEnabled;
 
     private boolean persistanceRequired;
     private String size;
     private boolean removeOnTermination;
     private String serviceGroup;
+    private List<String> domains;
+
+    // this parameter is used when super tenant forcefully subscribes
+    // a particular tenant to a cartridge. This is used to denote the
+    // subscribing tenant's domain
+    private String subscribingTenantDomain;
+
+    public CartridgeInfoBean() {
+        this.domains = new ArrayList<String>();
+    }
 
     public String getCartridgeType() {
         return cartridgeType;
@@ -143,20 +155,31 @@ import javax.xml.bind.annotation.XmlRootElement;
         this.removeOnTermination = removeOnTermination;
     }
 
-    public boolean isCommitsEnabled() {
-        return commitsEnabled;
+	public boolean isCommitsEnabled() {
+		return commitsEnabled;
+	}
+
+	public void setCommitsEnabled(boolean commitsEnabled) {
+		this.commitsEnabled = commitsEnabled;
+	}
+
+	public String getServiceGroup() {
+		return serviceGroup;
+	}
+
+	public void setServiceGroup(String serviceGroup) {
+		this.serviceGroup = serviceGroup;
+	}
+    
+    public List<String> getDomains() { return domains; }
+
+    public void setDomains(List<String> domains) { this.domains = domains; }
+
+    public String getSubscribingTenantDomain() {
+        return subscribingTenantDomain;
     }
 
-    public void setCommitsEnabled(boolean commitsEnabled) {
-        this.commitsEnabled = commitsEnabled;
+    public void setSubscribingTenantDomain(String subscribingTenantDomain) {
+        this.subscribingTenantDomain = subscribingTenantDomain;
     }
-
-    public String getServiceGroup() {
-        return serviceGroup;
-    }
-
-    public void setServiceGroup(String serviceGroup) {
-        this.serviceGroup = serviceGroup;
-    }
-
 }
