@@ -596,7 +596,7 @@
             <filtered>true</filtered>
         </file>
         <file>
-            <source>../../../../extensions/cep/artifacts/wso2cep-3.0.0/streamdefinitions/stream-manager-config.xml</source>
+            <source>src/main/conf/stream-manager-config.xml</source>
             <outputDirectory>${ppaas.distribution.name}-${project.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>

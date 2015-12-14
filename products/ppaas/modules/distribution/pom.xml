@@ -58,12 +58,7 @@
             <groupId>org.apache.stratos</groupId>
             <artifactId>org.apache.stratos.cep300.extension</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.wso2.ppaas</groupId>
-            <artifactId>org.wso2.ppaas.cep300.extension</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
+         <dependency>
             <groupId>org.eclipse.paho</groupId>
             <artifactId>mqtt-client</artifactId>
         </dependency>

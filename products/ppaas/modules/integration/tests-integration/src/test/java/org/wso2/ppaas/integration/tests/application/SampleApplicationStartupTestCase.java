@@ -38,6 +38,7 @@ import static org.testng.AssertJUnit.assertTrue;
  * Deploy a sample application on mock IaaS and assert whether application instance, cluster instance, member instances
  * are getting activated. Kill the mock instance and check whether
  */
+@Test(groups = { "disabled" })
 public class SampleApplicationStartupTestCase extends PPaaSIntegrationTest {
     private static final Log log = LogFactory.getLog(SampleApplicationStartupTestCase.class);
     private static final String RESOURCES_PATH = "/sample-application-startup-test";

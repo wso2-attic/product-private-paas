@@ -322,7 +322,7 @@
                 <include>org.fusesource.hawtbuf:hawtbuf:jar</include>
                 <include>mysql:mysql-connector-java:jar</include>
                 <include>org.apache.commons:commons-lang3:jar</include>
-                <include>org.wso2.ppaas:org.wso2.ppaas.cep310.extension:jar</include>
+                <include>org.apache.stratos:org.apache.stratos.cep310.extension:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>
@@ -348,7 +348,7 @@
                 <include>org.fusesource.hawtbuf:hawtbuf:jar</include>
                 <include>mysql:mysql-connector-java:jar</include>
                 <include>org.apache.commons:commons-lang3:jar</include>
-                <include>org.wso2.ppaas:org.wso2.ppaas.das.extension:jar</include>
+                <include>org.apache.stratos:org.apache.stratos.das.extension:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>
