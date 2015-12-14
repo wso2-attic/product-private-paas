@@ -513,12 +513,6 @@
             </includes>
         </dependencySet>
         <dependencySet>
-            <outputDirectory>${ppaas.distribution.name}-${project.version}/repository/components/lib</outputDirectory>
-            <includes>
-                <include>org.wso2.ppaas:org.wso2.ppaas.cep300.extension:jar</include>
-            </includes>
-        </dependencySet>
-        <dependencySet>
             <outputDirectory>${ppaas.distribution.name}-${project.version}/lib/endorsed</outputDirectory>
             <includes>
                 <include>org.apache.geronimo.specs:geronimo-jta_1.1_spec:jar</include>
