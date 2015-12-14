@@ -18,35 +18,35 @@
  */
 package org.apache.stratos.manager.dto;
 
+import org.wso2.carbon.utils.Pageable;
+
 import java.util.Arrays;
 import java.util.List;
-
-import org.wso2.carbon.utils.Pageable;
 
 /**
  * This class holds paginated information about cartridges
  */
 public final class CartridgeWrapper implements Pageable {
 
-	private Cartridge[] cartridges;
-	private int numberOfPages;
+    private Cartridge[] cartridges;
+    private int numberOfPages;
 
-	public CartridgeWrapper() {
-	}
+    public CartridgeWrapper() {
+    }
 
-	public int getNumberOfPages() {
-		return numberOfPages;
-	}
+    public int getNumberOfPages() {
+        return numberOfPages;
+    }
 
-	public void setNumberOfPages(int numberOfPages) {
-		this.numberOfPages = numberOfPages;
-	}
+    public void setNumberOfPages(int numberOfPages) {
+        this.numberOfPages = numberOfPages;
+    }
 
-	public <T> void set(List<T> items) {
-		this.cartridges = items.toArray(new Cartridge[items.size()]);
-	}
+    public <T> void set(List<T> items) {
+        this.cartridges = items.toArray(new Cartridge[items.size()]);
+    }
 
-	public Cartridge[] getCartridges() {
-		return cartridges != null ? Arrays.copyOf(cartridges, cartridges.length) : null;
-	}
+    public Cartridge[] getCartridges() {
+        return cartridges != null ? Arrays.copyOf(cartridges, cartridges.length) : null;
+    }
 }

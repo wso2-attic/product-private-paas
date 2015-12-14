@@ -20,37 +20,35 @@ package org.apache.stratos.manager.exception;
 
 public class DuplicateCartridgeAliasException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    private final String message;
+    private final String cartridgeType;
+    private final String cartridgeAlias;
 
-	private final String message;
+    public DuplicateCartridgeAliasException(String message, String cartridgeType, String cartridgeAlias,
+            Throwable cause) {
+        super(message, cause);
+        this.message = message;
+        this.cartridgeType = cartridgeType;
+        this.cartridgeAlias = cartridgeAlias;
+    }
 
-	private final String cartridgeType;
+    public DuplicateCartridgeAliasException(String message, String cartridgeType, String cartridgeAlias) {
+        super(message);
+        this.message = message;
+        this.cartridgeType = cartridgeType;
+        this.cartridgeAlias = cartridgeAlias;
+    }
 
-	private final String cartridgeAlias;
+    public String getMessage() {
+        return message;
+    }
 
-	public DuplicateCartridgeAliasException(String message, String cartridgeType, String cartridgeAlias, Throwable cause) {
-		super(message, cause);
-		this.message = message;
-		this.cartridgeType = cartridgeType;
-		this.cartridgeAlias = cartridgeAlias;
-	}
+    public String getCartridgeType() {
+        return cartridgeType;
+    }
 
-	public DuplicateCartridgeAliasException(String message, String cartridgeType, String cartridgeAlias) {
-		super(message);
-		this.message = message;
-		this.cartridgeType = cartridgeType;
-		this.cartridgeAlias = cartridgeAlias;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public String getCartridgeType() {
-		return cartridgeType;
-	}
-
-	public String getCartridgeAlias() {
-		return cartridgeAlias;
-	}
+    public String getCartridgeAlias() {
+        return cartridgeAlias;
+    }
 }

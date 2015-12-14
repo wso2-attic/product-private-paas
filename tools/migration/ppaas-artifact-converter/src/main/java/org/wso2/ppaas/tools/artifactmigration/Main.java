@@ -24,6 +24,5 @@ public class Main {
     public static void main(String[] args) {
         ConversionTool.getInstance().handleConsoleInputs();
         ConversionTool.getInstance().startTransformation();
-        ConversionTool.getInstance().addScriptDirectory();
     }
 }

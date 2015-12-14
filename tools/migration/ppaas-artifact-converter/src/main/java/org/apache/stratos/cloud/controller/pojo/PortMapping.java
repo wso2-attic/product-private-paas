@@ -20,49 +20,47 @@ package org.apache.stratos.cloud.controller.pojo;
 
 import java.io.Serializable;
 
-public class PortMapping implements Serializable{
-	
+public class PortMapping implements Serializable {
+
     private static final long serialVersionUID = -5387564414633460306L;
-	private String protocol;
-	private String port;
-	private String proxyPort;
-	
-	public PortMapping(){
-		
-	}
-	
-	public PortMapping(String protocol, String port, String proxyPort){
-		this.protocol = protocol;
-		this.port = port;
-		this.proxyPort = proxyPort;
-	}
+    private String protocol;
+    private String port;
+    private String proxyPort;
 
-	public String getProtocol() {
-    	return protocol;
+    public PortMapping() {
     }
 
-	public void setProtocol(String protocol) {
-    	this.protocol = protocol;
+    public PortMapping(String protocol, String port, String proxyPort) {
+        this.protocol = protocol;
+        this.port = port;
+        this.proxyPort = proxyPort;
     }
 
-	public String getPort() {
-    	return port;
+    public String getProtocol() {
+        return protocol;
     }
 
-	public void setPort(String port) {
-    	this.port = port;
+    public void setProtocol(String protocol) {
+        this.protocol = protocol;
     }
 
-	public String getProxyPort() {
-    	return proxyPort;
+    public String getPort() {
+        return port;
     }
 
-	public void setProxyPort(String proxyPort) {
-    	this.proxyPort = proxyPort;
+    public void setPort(String port) {
+        this.port = port;
     }
 
-    public String toString () {
+    public String getProxyPort() {
+        return proxyPort;
+    }
 
+    public void setProxyPort(String proxyPort) {
+        this.proxyPort = proxyPort;
+    }
+
+    public String toString() {
         return "Protocol: " + protocol + ", Port: " + port + ", Proxy Port: " + proxyPort;
     }
 

@@ -16,7 +16,6 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.stratos.cloud.controller.pojo;
 
 import java.io.Serializable;
@@ -151,7 +150,6 @@ public class IaasConfig implements Serializable {
         }
         return iaasPropertyBuilder.toString();
     }
-
     /**
      * @return the networkInterfaces
      */
@@ -165,5 +163,4 @@ public class IaasConfig implements Serializable {
     public void setNetworkInterfaces(NetworkInterfaces networkInterfaces) {
         this.networkInterfaces = networkInterfaces;
     }
-
 }

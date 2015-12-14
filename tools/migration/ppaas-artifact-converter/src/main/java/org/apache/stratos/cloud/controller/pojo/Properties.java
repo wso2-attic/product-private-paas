@@ -22,10 +22,10 @@ import java.io.Serializable;
 import java.util.Arrays;
 
 /**
- * Had to wrap {@link Property} array using a class, since there's a bug in current 
+ * Had to wrap {@link Property} array using a class, since there's a bug in current
  * stub generation.
  */
-public class Properties implements Serializable{
+public class Properties implements Serializable {
 
     private static final long serialVersionUID = 1986895299288322592L;
     private Property[] properties;
@@ -38,9 +38,8 @@ public class Properties implements Serializable{
         this.properties = properties;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "Properties [properties=" + Arrays.toString(properties) + "]";
     }
-    
+
 }

@@ -41,10 +41,10 @@ public class ConversionTool {
 
         System.out.println("Enter the Password: ");
         char[] passwordChars = console.readPassword();
-        Constants.PASSWORD = new String(passwordChars);;
+        Constants.PASSWORD = new String(passwordChars);
     }
 
-    public void startTransformation(){
+    public void startTransformation() {
 
         if (log.isInfoEnabled()) {
             log.info("Artifact Migration started...");
@@ -55,8 +55,6 @@ public class ConversionTool {
             Transformation.getInstance().transformAutoscalePolicyList();
             Transformation.getInstance().transformDeploymentPolicyList();
             Transformation.getInstance().transformCartridgeList();
-            //Transformation.getInstance().transformSubscriptionList();
-
         } catch (Exception e) {
             isSuccess = false;
             log.error("Error while converting the artifacts ", e);
@@ -65,11 +63,12 @@ public class ConversionTool {
         if (isSuccess)
             System.out.println("Conversion completed successfully");
     }
-    public void addScriptDirectory(){
-        File sourceLocation= new File(Constants.DIRECTORY_SOURCE_SCRIPT);
-        File targetLocation= new File(Constants.ROOT_DIRECTORY+Constants.DIRECTORY_OUTPUT_SCRIPT);
+
+    public void addScriptDirectory(String outputLocation) {
+        File sourceLocation = new File(Constants.DIRECTORY_SOURCE_SCRIPT);
+        File targetLocation = new File(outputLocation);
         try {
-            FileUtils.copyDirectoryToDirectory( sourceLocation,targetLocation);
+            FileUtils.copyDirectoryToDirectory(sourceLocation, targetLocation);
         } catch (IOException e) {
             log.error("Error in copying scripts directory ", e);
         }

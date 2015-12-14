@@ -26,11 +26,14 @@ import org.apache.stratos.rest.endpoint.bean.CartridgeInfoBean;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.AutoscalePolicy;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment.DeploymentPolicy;
+import org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean;
 import org.wso2.ppaas.tools.artifactmigration.exception.ArtifactLoadingException;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -70,8 +73,11 @@ public class OldArtifactLoader {
     public List<Partition> fetchPartitionList() throws ArtifactLoadingException {
         try {
             String partitionString = readUrl(Constants.BASE_URL + Constants.URL_PARTITION);
-            String partitionListString = partitionString
-                    .substring(partitionString.indexOf('['), (partitionString.lastIndexOf(']') + 1));
+            String partitionListString = null;
+            if(partitionString!=null){
+                partitionListString = partitionString
+                        .substring(partitionString.indexOf('['), (partitionString.lastIndexOf(']') + 1));
+            }
             return gson.fromJson(partitionListString, new TypeToken<List<Partition>>() {
             }.getType());
         } catch (IOException e) {
@@ -140,7 +146,6 @@ public class OldArtifactLoader {
             throw new ArtifactLoadingException(msg, e);
         }
     }
-
     /**
      * Method to fetch Cartridges
      *
@@ -150,14 +155,36 @@ public class OldArtifactLoader {
     public List<CartridgeInfoBean> fetchSubscriptionDataList() throws ArtifactLoadingException {
         try {
             String cartridgeString = readUrl(Constants.BASE_URL + Constants.URL_SUBSCRIPTION);
+
             String cartridgeListString = cartridgeString
                     .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
-
             return gson.fromJson(cartridgeListString, new TypeToken<List<CartridgeInfoBean>>() {
             }.getType());
 
         } catch (IOException e) {
             String msg = "IOException in fetching subscription list";
+            log.error(msg);
+            throw new ArtifactLoadingException(msg, e);
+        }
+    }
+
+    public List<SubscriptionDomainBean> fetchDomainMappingList(String cartridgeType, String subscriptionAlias)
+            throws ArtifactLoadingException {
+        try {
+            String domainString = readUrl(
+                    Constants.BASE_URL + Constants.STRATOS + "cartridge" + File.separator + cartridgeType
+                            + File.separator + "subscription" + File.separator + subscriptionAlias + File.separator
+                            + "domains");
+            String domainListString = null;
+            if (domainString != null) {
+                domainListString = domainString
+                        .substring(domainString.indexOf('['), (domainString.lastIndexOf(']') + 1));
+            }
+            return gson.fromJson(domainListString, new TypeToken<List<SubscriptionDomainBean>>() {
+            }.getType());
+
+        } catch (IOException e) {
+            String msg = "IOException in fetching domain mapping list";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
@@ -179,17 +206,41 @@ public class OldArtifactLoader {
 
             URL absoluteURL = new URL(serviceEndpoint);
             URLConnection urlConnection = absoluteURL.openConnection();
-            urlConnection.setRequestProperty("Authorization", "Basic " + authStringEnc);
-            InputStream is = urlConnection.getInputStream();
-            InputStreamReader isr = new InputStreamReader(is);
+            if (urlConnection instanceof HttpURLConnection) {
+                HttpURLConnection httpConnection = (HttpURLConnection) urlConnection;
+                httpConnection.setRequestMethod("GET");
+                httpConnection.setRequestProperty("Authorization", "Basic " + authStringEnc);
+                httpConnection.setRequestProperty("Content-Type", "application/json");
+                httpConnection.setRequestProperty("Accept", "*/*"); // FIXME: 12/12/15 This is required
 
-            int numCharsRead;
-            char[] charArray = new char[1024];
-            StringBuffer sb = new StringBuffer();
-            while ((numCharsRead = isr.read(charArray)) > 0) {
-                sb.append(charArray, 0, numCharsRead);
+                if (httpConnection.getResponseCode() == 200 || httpConnection.getResponseCode() == 301) {
+                    InputStream is = httpConnection.getInputStream();
+                    InputStreamReader isr = new InputStreamReader(is);
+                    int numCharsRead;
+                    char[] charArray = new char[1024];
+                    StringBuffer sb = new StringBuffer();
+                    while ((numCharsRead = isr.read(charArray)) > 0) {
+                        sb.append(charArray, 0, numCharsRead);
+                    }
+                    return sb.toString();
+                } else {
+                    InputStream is = httpConnection.getErrorStream();
+                    InputStreamReader isr = new InputStreamReader(is);
+
+                    int numCharsRead;
+                    char[] charArray = new char[1024];
+                    StringBuffer sb = new StringBuffer();
+                    while ((numCharsRead = isr.read(charArray)) > 0) {
+                        sb.append(charArray, 0, numCharsRead);
+                    }
+                    System.out.println(sb.toString());
+                    log.error(sb.toString());
+                    throw new RuntimeException(sb.toString());
+                }
+
             }
-            return sb.toString();
+            return null;
+
         } catch (MalformedURLException e) {
             String msg = "Invalid URL in connecting to REST endpoint";
             log.error(msg);

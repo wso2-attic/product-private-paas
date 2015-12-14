@@ -20,29 +20,26 @@ package org.apache.stratos.manager.exception;
 
 public class DomainMappingExistsException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    private final String message;
+    private final String domain;
 
-	private final String message;
+    public DomainMappingExistsException(String message, String domain, Throwable cause) {
+        super(message, cause);
+        this.message = message;
+        this.domain = domain;
+    }
+    public DomainMappingExistsException(String message, String domain) {
+        super(message);
+        this.message = message;
+        this.domain = domain;
+    }
 
-	private final String domain;
+    public String getMessage() {
+        return message;
+    }
 
-	public DomainMappingExistsException(String message, String domain, Throwable cause) {
-		super(message, cause);
-		this.message = message;
-		this.domain = domain;
-	}
-
-	public DomainMappingExistsException(String message, String domain) {
-		super(message);
-		this.message = message;
-		this.domain = domain;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public String getDomain() {
-		return domain;
-	}
+    public String getDomain() {
+        return domain;
+    }
 }

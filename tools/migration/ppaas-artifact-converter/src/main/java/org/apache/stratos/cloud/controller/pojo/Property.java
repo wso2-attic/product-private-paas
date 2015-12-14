@@ -20,24 +20,19 @@ package org.apache.stratos.cloud.controller.pojo;
 
 import java.io.Serializable;
 
-/**
- * Holds a property 
- */
-public class Property implements Serializable{
-    
+public class Property implements Serializable {
+
     private static final long serialVersionUID = -2191782657999410197L;
     private String name;
     private String value;
-    
-    public Property(){
-        
+
+    public Property() {
     }
-    
-    public Property(String name, String value){
+
+    public Property(String name, String value) {
         this.setName(name);
         this.setValue(value);
     }
-
     public String getName() {
         return name;
     }
@@ -54,8 +49,7 @@ public class Property implements Serializable{
         this.value = value;
     }
 
-    @Override
-    public String toString() {
+    @Override public String toString() {
         return "Property [name=" + name + ", value=" + value + "]";
     }
 

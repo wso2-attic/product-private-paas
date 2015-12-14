@@ -20,171 +20,168 @@ package org.apache.stratos.manager.dto;
 
 import org.apache.stratos.cloud.controller.pojo.Persistence;
 import org.apache.stratos.cloud.controller.pojo.PortMapping;
+
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
-public class Cartridge implements Comparable<Cartridge> {
+@XmlRootElement public class Cartridge implements Comparable<Cartridge> {
 
     private String displayName;
     private String description;
-	private String cartridgeAlias;
-	private String cartridgeType;
-	private int activeInstances;
-	private String status;
-	private String provider;
-	private String version;
-	private boolean multiTenant;
+    private String cartridgeAlias;
+    private String cartridgeType;
+    private int activeInstances;
+    private String status;
+    private String provider;
+    private String version;
+    private boolean multiTenant;
     private boolean isLoadBalancer;
-	private String hostName;
-	private String repoURL;
-	private String mappedDomain;
+    private String hostName;
+    private String repoURL;
+    private String mappedDomain;
 
-    //DB specific
     private String dbHost;
     private String dbUserName;
     private String password;
 
-    //LB cluster id
     private String lbClusterId;
-	private String[] accessURLs;
-	private PortMapping[] portMappings;
+    private String[] accessURLs;
+    private PortMapping[] portMappings;
     private String defaultAutoscalingPolicy;
     private String defaultDeploymentPolicy;
     private boolean isPersistance;
     private Persistence persistence;
     private String serviceGroup;
 
-	public String getDisplayName() {
-		return displayName;
-	}
-
-	public void setDisplayName(String displayName) {
-		this.displayName = displayName;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
-	}
-
-	public String getCartridgeAlias() {
-		return cartridgeAlias;
-	}
-
-	public void setCartridgeAlias(String cartridgeAlias) {
-		this.cartridgeAlias = cartridgeAlias;
-	}
-
-	public String getCartridgeType() {
-		return cartridgeType;
-	}
-
-	public void setCartridgeType(String cartridgeType) {
-		this.cartridgeType = cartridgeType;
-	}
-
-	public int getActiveInstances() {
-		return activeInstances;
-	}
-
-	public void setActiveInstances(int activeInstances) {
-		this.activeInstances = activeInstances;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public String getPassword() {
-		return password;
-	}
-
-	public void setPassword(String password) {
-		this.password = password;
-	}
-
-	public String getProvider() {
-    	return provider;
+    public String getDisplayName() {
+        return displayName;
     }
 
-	public void setProvider(String provider) {
-    	this.provider = provider;
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
     }
 
-	public String getVersion() {
-    	return version;
+    public String getDescription() {
+        return description;
     }
 
-	public void setVersion(String version) {
-    	this.version = version;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-	public boolean isMultiTenant() {
-		return multiTenant;
-	}
-
-	public void setMultiTenant(boolean multiTenant) {
-		this.multiTenant = multiTenant;
-	}
-
-	public String getHostName() {
-    	return hostName;
+    public String getCartridgeAlias() {
+        return cartridgeAlias;
     }
 
-	public void setHostName(String hostName) {
-    	this.hostName = hostName;
+    public void setCartridgeAlias(String cartridgeAlias) {
+        this.cartridgeAlias = cartridgeAlias;
     }
 
-	public String getRepoURL() {
-    	return repoURL;
+    public String getCartridgeType() {
+        return cartridgeType;
     }
 
-	public void setRepoURL(String repoURL) {
-    	this.repoURL = repoURL;
+    public void setCartridgeType(String cartridgeType) {
+        this.cartridgeType = cartridgeType;
     }
 
-	public String getDbUserName() {
-    	return dbUserName;
+    public int getActiveInstances() {
+        return activeInstances;
     }
 
-	public String[] getAccessURLs() {
-		return accessURLs;
-	}
-
-	public void setAccessURLs(String[] accessURLs) {
-		this.accessURLs = accessURLs;
-	}
-
-	public void setDbUserName(String dbUserName) {
-    	this.dbUserName = dbUserName;
+    public void setActiveInstances(int activeInstances) {
+        this.activeInstances = activeInstances;
     }
 
-	public String getMappedDomain() {
-		return mappedDomain;
-	}
+    public String getStatus() {
+        return status;
+    }
 
-	public void setMappedDomain(String mappedDomain) {
-		this.mappedDomain = mappedDomain;
-	}
+    public void setStatus(String status) {
+        this.status = status;
+    }
 
-	@Override
-	public int compareTo(Cartridge o) {
-		int compare = 0;
-		if (cartridgeAlias != null && o.cartridgeAlias != null) {
-			compare = cartridgeAlias.compareTo(o.cartridgeAlias);
-		}
-		if (compare == 0 && cartridgeType != null && o.cartridgeType != null) {
-			compare = cartridgeType.compareTo(o.cartridgeType);
-		}
-		return compare;
-	}
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public boolean isMultiTenant() {
+        return multiTenant;
+    }
+
+    public void setMultiTenant(boolean multiTenant) {
+        this.multiTenant = multiTenant;
+    }
+
+    public String getHostName() {
+        return hostName;
+    }
+
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
+
+    public String getRepoURL() {
+        return repoURL;
+    }
+
+    public void setRepoURL(String repoURL) {
+        this.repoURL = repoURL;
+    }
+
+    public String getDbUserName() {
+        return dbUserName;
+    }
+
+    public String[] getAccessURLs() {
+        return accessURLs;
+    }
+
+    public void setAccessURLs(String[] accessURLs) {
+        this.accessURLs = accessURLs;
+    }
+
+    public void setDbUserName(String dbUserName) {
+        this.dbUserName = dbUserName;
+    }
+
+    public String getMappedDomain() {
+        return mappedDomain;
+    }
+
+    public void setMappedDomain(String mappedDomain) {
+        this.mappedDomain = mappedDomain;
+    }
+
+    @Override public int compareTo(Cartridge o) {
+        int compare = 0;
+        if (cartridgeAlias != null && o.cartridgeAlias != null) {
+            compare = cartridgeAlias.compareTo(o.cartridgeAlias);
+        }
+        if (compare == 0 && cartridgeType != null && o.cartridgeType != null) {
+            compare = cartridgeType.compareTo(o.cartridgeType);
+        }
+        return compare;
+    }
 
     public String getDbHost() {
         return dbHost;
@@ -194,13 +191,13 @@ public class Cartridge implements Comparable<Cartridge> {
         this.dbHost = dbHost;
     }
 
-	public PortMapping[] getPortMappings() {
-		return portMappings;
-	}
+    public PortMapping[] getPortMappings() {
+        return portMappings;
+    }
 
-	public void setPortMappings(PortMapping[] portMappings) {
-		this.portMappings = portMappings;
-	}
+    public void setPortMappings(PortMapping[] portMappings) {
+        this.portMappings = portMappings;
+    }
 
     public String getLbClusterId() {
         return lbClusterId;
@@ -215,7 +212,7 @@ public class Cartridge implements Comparable<Cartridge> {
     }
 
     public void setLoadBalancer(boolean loadBalancer) {
-        this.isLoadBalancer = loadBalancer ;
+        this.isLoadBalancer = loadBalancer;
     }
 
     public String getDefaultAutoscalingPolicy() {
@@ -232,7 +229,7 @@ public class Cartridge implements Comparable<Cartridge> {
 
     public void setDefaultDeploymentPolicy(String defaultDeploymentPolicy) {
         this.defaultDeploymentPolicy = defaultDeploymentPolicy;
-}
+    }
 
     public boolean isPersistance() {
         return isPersistance;
@@ -250,11 +247,11 @@ public class Cartridge implements Comparable<Cartridge> {
         this.persistence = persistence;
     }
 
-	public String getServiceGroup() {
-		return serviceGroup;
-	}
+    public String getServiceGroup() {
+        return serviceGroup;
+    }
 
-	public void setServiceGroup(String serviceGroup) {
-		this.serviceGroup = serviceGroup;
-	}
+    public void setServiceGroup(String serviceGroup) {
+        this.serviceGroup = serviceGroup;
+    }
 }

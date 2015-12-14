@@ -20,82 +20,79 @@ package org.apache.stratos.cloud.controller.pojo;
 
 import java.io.Serializable;
 
-/**
- * @author Jeffrey Nguyen
- *
- */
 public class NetworkInterface implements Serializable {
+    private static final long serialVersionUID = 3979879787250775211L;
+    private String networkUuid;
+    private String fixedIp;
+    private String portUuid;
 
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3979879787250775211L;
-	private String networkUuid;
-	private String fixedIp;
-	private String portUuid;
-	
-	public NetworkInterface() {
-	}
-	
-	public NetworkInterface(String networkUuid, String fixedIp, String portUuid) {
-		this.networkUuid = networkUuid;
-		this.fixedIp = fixedIp;
-		this.portUuid = portUuid;
-	}
+    public NetworkInterface() {
+    }
 
-	/**
-	 * @return the networkUuid
-	 */
-	public String getNetworkUuid() {
-		return networkUuid;
-	}
-	/**
-	 * @param networkUuid the networkUuid to set
-	 */
-	public void setNetworkUuid(String networkUuid) {
-		this.networkUuid = networkUuid;
-	}
-	/**
-	 * @return the fixedIp
-	 */
-	public String getFixedIp() {
-		return fixedIp;
-	}
-	/**
-	 * @param fixedIp the fixedIp to set
-	 */
-	public void setFixedIp(String fixedIp) {
-		this.fixedIp = fixedIp;
-	}
-	/**
-	 * @return the portUuid
-	 */
-	public String getPortUuid() {
-		return portUuid;
-	}
-	/**
-	 * @param portUuid the portUuid to set
-	 */
-	public void setPortUuid(String portUuid) {
-		this.portUuid = portUuid;
-	}
-	
-	public String toString() {
-    	StringBuilder sb = new StringBuilder('{');
-    	String delimeter = "";
-    	if (networkUuid != null) {
-    		sb.append(delimeter).append("networkUuid : ").append(networkUuid);
-    		delimeter = ", ";
-    	}
-    	if (fixedIp != null) {
-    		sb.append(delimeter).append("fixedIp : ").append(fixedIp);
-    		delimeter = ", ";
-    	}
-    	if (portUuid != null) {
-    		sb.append(delimeter).append("portUuid : ").append(portUuid);
-    		delimeter = ", ";
-    	}
-    	sb.append('}');
+    public NetworkInterface(String networkUuid, String fixedIp, String portUuid) {
+        this.networkUuid = networkUuid;
+        this.fixedIp = fixedIp;
+        this.portUuid = portUuid;
+    }
+
+    /**
+     * @return the networkUuid
+     */
+    public String getNetworkUuid() {
+        return networkUuid;
+    }
+
+    /**
+     * @param networkUuid the networkUuid to set
+     */
+    public void setNetworkUuid(String networkUuid) {
+        this.networkUuid = networkUuid;
+    }
+
+    /**
+     * @return the fixedIp
+     */
+    public String getFixedIp() {
+        return fixedIp;
+    }
+
+    /**
+     * @param fixedIp the fixedIp to set
+     */
+    public void setFixedIp(String fixedIp) {
+        this.fixedIp = fixedIp;
+    }
+
+    /**
+     * @return the portUuid
+     */
+    public String getPortUuid() {
+        return portUuid;
+    }
+
+    /**
+     * @param portUuid the portUuid to set
+     */
+    public void setPortUuid(String portUuid) {
+        this.portUuid = portUuid;
+    }
+
+    public String toString() {
+        StringBuilder sb = new StringBuilder('{');
+        String delimeter = "";
+        if (networkUuid != null) {
+            sb.append(delimeter).append("networkUuid : ").append(networkUuid);
+            delimeter = ", ";
+        }
+        if (fixedIp != null) {
+            sb.append(delimeter).append("fixedIp : ").append(fixedIp);
+            delimeter = ", ";
+        }
+        if (portUuid != null) {
+            sb.append(delimeter).append("portUuid : ").append(portUuid);
+            delimeter = ", ";
+        }
+        sb.append('}');
         return sb.toString();
-	}
+    }
 }

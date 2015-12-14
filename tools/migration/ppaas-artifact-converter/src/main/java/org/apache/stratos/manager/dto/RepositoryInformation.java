@@ -22,25 +22,25 @@ import java.io.Serializable;
 
 public class RepositoryInformation implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String repoURL;
-	private String[] refName;
+    private String repoURL;
+    private String[] refName;
 
-	public String getRepoURL() {
-		return repoURL;
-	}
+    public String getRepoURL() {
+        return repoURL;
+    }
 
-	public void setRepoURL(String repoURL) {
-		this.repoURL = repoURL;
-	}
+    public void setRepoURL(String repoURL) {
+        this.repoURL = repoURL;
+    }
 
-	public String[] getRefName() {
-		return refName;
-	}
+    public String[] getRefName() {
+        return refName;
+    }
 
-	public void setRefName(String[] refName) {
-		this.refName = refName;
-	}
+    public void setRefName(String[] refName) {
+        this.refName = refName;
+    }
 
 }

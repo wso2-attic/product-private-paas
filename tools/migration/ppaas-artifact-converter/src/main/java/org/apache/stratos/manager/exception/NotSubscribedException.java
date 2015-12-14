@@ -20,30 +20,28 @@ package org.apache.stratos.manager.exception;
 
 public class NotSubscribedException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    private final String message;
+    private final String cartridgeAlias;
 
-	private final String message;
+    public NotSubscribedException(String message, String cartridgeAlias, Throwable cause) {
+        super(message, cause);
+        this.message = message;
+        this.cartridgeAlias = cartridgeAlias;
+    }
 
-	private final String cartridgeAlias;
+    public NotSubscribedException(String message, String cartridgeAlias) {
+        super(message);
+        this.message = message;
+        this.cartridgeAlias = cartridgeAlias;
+    }
 
-	public NotSubscribedException(String message, String cartridgeAlias, Throwable cause) {
-		super(message, cause);
-		this.message = message;
-		this.cartridgeAlias = cartridgeAlias;
-	}
+    public String getMessage() {
+        return message;
+    }
 
-	public NotSubscribedException(String message, String cartridgeAlias) {
-		super(message);
-		this.message = message;
-		this.cartridgeAlias = cartridgeAlias;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public String getCartridgeAlias() {
-		return cartridgeAlias;
-	}
+    public String getCartridgeAlias() {
+        return cartridgeAlias;
+    }
 
 }

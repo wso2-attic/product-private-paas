@@ -20,30 +20,30 @@ package org.apache.stratos.manager.exception;
 
 public class ADCException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String message;
+    private String message;
 
-	public ADCException() {
-		super();
-	}
+    public ADCException() {
+        super();
+    }
 
-	public ADCException(String message, Throwable cause) {
-		super(message, cause);
-		this.message = message;
-	}
+    public ADCException(String message, Throwable cause) {
+        super(message, cause);
+        this.message = message;
+    }
 
-	public ADCException(String message) {
-		super(message);
-		this.message = message;
-	}
+    public ADCException(String message) {
+        super(message);
+        this.message = message;
+    }
 
-	public ADCException(Throwable cause) {
-		super(cause);
-	}
+    public ADCException(Throwable cause) {
+        super(cause);
+    }
 
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 
 }

@@ -40,7 +40,15 @@ public class CartridgeInfoBean {
     private String size;
     private boolean removeOnTermination;
     private String serviceGroup;
-    private List<String> domains;
+    private String domains;
+
+    public String getDomains() {
+        return domains;
+    }
+
+    public void setDomains(String domains) {
+        this.domains = domains;
+    }
 
     // this parameter is used when super tenant forcefully subscribes
     // a particular tenant to a cartridge. This is used to denote the
@@ -48,7 +56,8 @@ public class CartridgeInfoBean {
     private String subscribingTenantDomain;
 
     public CartridgeInfoBean() {
-        this.domains = new ArrayList<String>();
+
+        //this.domains = new ArrayList<String>();
     }
 
     public String getCartridgeType() {
@@ -171,9 +180,9 @@ public class CartridgeInfoBean {
 		this.serviceGroup = serviceGroup;
 	}
     
-    public List<String> getDomains() { return domains; }
-
-    public void setDomains(List<String> domains) { this.domains = domains; }
+//    public List<String> getDomains() { return domains; }
+//
+//    public void setDomains(List<String> domains) { this.domains = domains; }
 
     public String getSubscribingTenantDomain() {
         return subscribingTenantDomain;

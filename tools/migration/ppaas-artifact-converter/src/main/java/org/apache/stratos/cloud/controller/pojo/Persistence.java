@@ -20,13 +20,13 @@ package org.apache.stratos.cloud.controller.pojo;
 
 import java.io.Serializable;
 
-public class Persistence implements Serializable{
-	
-	private static final long serialVersionUID = 3455721979991902731L;
-	private boolean persistanceRequired;
-	private Volume[] volumes;
+public class Persistence implements Serializable {
 
-    public String toString () {
+    private static final long serialVersionUID = 3455721979991902731L;
+    private boolean persistanceRequired;
+    private Volume[] volumes;
+
+    public String toString() {
         return "Persistence Required: " + isPersistanceRequired();
     }
 

@@ -20,16 +20,15 @@ package org.apache.stratos.manager.exception;
 
 public class InvalidRepositoryException extends Exception {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
+    private String message;
 
-	private String message;
+    public InvalidRepositoryException(String message, Throwable cause) {
+        super(message, cause);
+        this.message = message;
+    }
 
-	public InvalidRepositoryException(String message, Throwable cause) {
-		super(message, cause);
-		this.message = message;
-	}
-
-	public String getMessage() {
-		return message;
-	}
+    public String getMessage() {
+        return message;
+    }
 }

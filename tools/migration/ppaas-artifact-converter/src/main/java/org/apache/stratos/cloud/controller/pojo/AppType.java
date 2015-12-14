@@ -56,5 +56,4 @@ public class AppType implements Serializable {
     public void setAppSpecificMapping(boolean appSpecificMapping) {
         this.appSpecificMapping = appSpecificMapping;
     }
-
 }

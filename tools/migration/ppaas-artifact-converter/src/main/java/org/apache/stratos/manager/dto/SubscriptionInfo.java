@@ -21,28 +21,27 @@ package org.apache.stratos.manager.dto;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
-@XmlRootElement
-public class SubscriptionInfo implements Serializable {
+@XmlRootElement public class SubscriptionInfo implements Serializable {
 
-	private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 1L;
 
-	private String hostname;
-	private String repositoryURL;
+    private String hostname;
+    private String repositoryURL;
 
-	public String getHostname() {
-		return hostname;
-	}
+    public String getHostname() {
+        return hostname;
+    }
 
-	public void setHostname(String hostname) {
-		this.hostname = hostname;
-	}
+    public void setHostname(String hostname) {
+        this.hostname = hostname;
+    }
 
-	public String getRepositoryURL() {
-		return repositoryURL;
-	}
+    public String getRepositoryURL() {
+        return repositoryURL;
+    }
 
-	public void setRepositoryURL(String repositoryURL) {
-		this.repositoryURL = repositoryURL;
-	}
+    public void setRepositoryURL(String repositoryURL) {
+        this.repositoryURL = repositoryURL;
+    }
 
 }
