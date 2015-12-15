@@ -43,8 +43,12 @@ class LogPublisher(Thread):
         self.member_id = member_id
 
         self.terminated = False
+        self.setName("LogPublisherThread")
+        self.setDaemon(True)
+        self.log.debug("Created a LogPublisher thread")
 
     def run(self):
+        self.log.debug("Starting the LogPublisher threads")
         if os.path.isfile(self.file_path) and os.access(self.file_path, os.R_OK):
             self.log.info("Starting log publisher for file: " + self.file_path + ", thread: " + str(current_thread()))
             # open file and keep reading for new entries
@@ -132,6 +136,7 @@ class LogPublisherManager(Thread):
 
     def __init__(self, logfile_paths):
         Thread.__init__(self)
+        self.setDaemon(True)
 
         self.log = LogFactory().get_log(__name__)
 
@@ -158,8 +163,11 @@ class LogPublisherManager(Thread):
         self.date_time = LogPublisherManager.get_current_date()
 
         self.stream_definition = self.define_stream(self.tenant_id, self.alias, self.date_time)
+        self.setName("LogPublisherManagerThread")
+        self.log.debug("Created a LogPublisherManager thread")
 
     def run(self):
+        self.log.debug("Starting the LogPublisherManager thread")
         if self.logfile_paths is not None and len(self.logfile_paths):
             for log_path in self.logfile_paths:
                 # thread for each log file

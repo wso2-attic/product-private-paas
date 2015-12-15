@@ -21,8 +21,8 @@ package org.wso2.ppaas.python.cartridge.agent.integration.tests;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.stratos.messaging.domain.topology.ServiceType;
-import org.apache.stratos.messaging.domain.topology.Topology;
+import org.apache.stratos.common.domain.LoadBalancingIPType;
+import org.apache.stratos.messaging.domain.topology.*;
 import org.apache.stratos.messaging.event.instance.notifier.ArtifactUpdatedEvent;
 import org.apache.stratos.messaging.event.topology.CompleteTopologyEvent;
 import org.apache.stratos.messaging.event.topology.MemberInitializedEvent;
@@ -30,58 +30,83 @@ import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 /**
- * Test to verify backward compatibility of the Python Cartridge Agent agains
- * older configuration options.
+ * To test the agent termination flow by terminator.txt file
  */
-public class AgentConfBackwardCompatibilityTestCase extends PythonAgentIntegrationTest {
-    public AgentConfBackwardCompatibilityTestCase() throws IOException {
+public class AgentTerminationTestCase extends PythonAgentIntegrationTest {
+    public AgentTerminationTestCase() throws IOException {
     }
-
-    private static final Log log = LogFactory.getLog(AgentConfBackwardCompatibilityTestCase.class);
-    private static final int TIMEOUT = 5 * 60000;
-    private static final String CLUSTER_ID = "php.php.domain";
-    private static final String APPLICATION_PATH = "/tmp/AgentConfBackwardCompatibilityTestCase";
-    private static final String DEPLOYMENT_POLICY_NAME = "deployment-policy-1";
-    private static final String AUTOSCALING_POLICY_NAME = "autoscaling-policy-1";
-    private static final String APP_ID = "application-1";
-    private static final String MEMBER_ID = "php.member-1";
-    private static final String INSTANCE_ID = "instance-1";
-    private static final String CLUSTER_INSTANCE_ID = "cluster-1-instance-1";
-    private static final String NETWORK_PARTITION_ID = "network-partition-1";
-    private static final String PARTITION_ID = "partition-1";
-    private static final String TENANT_ID = "-1234";
-    private static final String SERVICE_NAME = "php";
 
     @Override
     protected String getClassName() {
         return this.getClass().getSimpleName();
     }
 
+    private static final Log log = LogFactory.getLog(AgentTerminationTestCase.class);
+    private static final int TIMEOUT = 300000;
+    private static final String CLUSTER_ID = "tomcat.domain";
+    private static final String APPLICATION_PATH = "/tmp/AgentTerminationTestCase";
+    private static final String DEPLOYMENT_POLICY_NAME = "deployment-policy-6";
+    private static final String AUTOSCALING_POLICY_NAME = "autoscaling-policy-6";
+    private static final String APP_ID = "application-6";
+    private static final String MEMBER_ID = "tomcat.member-1";
+    private static final String INSTANCE_ID = "instance-1";
+    private static final String CLUSTER_INSTANCE_ID = "cluster-1-instance-1";
+    private static final String NETWORK_PARTITION_ID = "network-partition-1";
+    private static final String PARTITION_ID = "partition-1";
+    private static final String TENANT_ID = "6";
+    private static final String SERVICE_NAME = "tomcat";
+
+
     @BeforeMethod(alwaysRun = true)
-    public void setupCompatibilityTest() throws Exception {
+    public void setup() throws Exception {
         System.setProperty("jndi.properties.dir", getCommonResourcesPath());
-
-        // start Python agent with configurations provided in resource path
         super.setup(TIMEOUT);
-
-        // Simulate server socket
         startServerSocket(8080);
     }
-
+    
     @AfterMethod(alwaysRun = true)
-    public void tearDownCompatibilityTest(){
+    public void tearDownAgentTerminationTest(){
         tearDown(APPLICATION_PATH);
     }
 
-    @Test(timeOut = TIMEOUT, groups = { "smoke" })
-    public void testConfigCompatibility(){
+    @Test(groups = {"smoke"})
+    public void testAgentTerminationByFile() throws IOException {
         startCommunicatorThread();
         assertAgentActivation();
+        sleep(5000);
+
+        String terminatorFilePath = agentPath + PATH_SEP + "terminator.txt";
+        log.info("Writing termination flag to " + terminatorFilePath);
+        File terminatorFile = new File(terminatorFilePath);
+        String msg = "true";
+        Files.write(Paths.get(terminatorFile.getAbsolutePath()), msg.getBytes());
+
+        log.info("Waiting until agent reads termination flag");
+        sleep(50000);
+
+        List<String> outputLines = new ArrayList<>();
+        boolean exit = false;
+        while (!exit) {
+            List<String> newLines = getNewLines(outputLines, outputStream.toString());
+            if (newLines.size() > 0) {
+                for (String line : newLines) {
+                    if (line.contains("Shutting down Stratos cartridge agent...")) {
+                        log.info("Cartridge agent shutdown successfully");
+                        exit = true;
+                    }
+                }
+            }
+            sleep(1000);
+        }
     }
 
     private void assertAgentActivation() {
@@ -144,7 +169,7 @@ public class AgentConfBackwardCompatibilityTestCase extends PythonAgentIntegrati
         }
     }
 
-    public static ArtifactUpdatedEvent getArtifactUpdatedEventForPublicRepo() {
+    private ArtifactUpdatedEvent getArtifactUpdatedEventForPublicRepo() {
         ArtifactUpdatedEvent publicRepoEvent = createTestArtifactUpdatedEvent();
         publicRepoEvent.setRepoURL("https://bitbucket.org/testapache2211/opentestrepo1.git");
         return publicRepoEvent;
@@ -163,5 +188,34 @@ public class AgentConfBackwardCompatibilityTestCase extends PythonAgentIntegrati
         artifactUpdatedEvent.setClusterId(CLUSTER_ID);
         artifactUpdatedEvent.setTenantId(TENANT_ID);
         return artifactUpdatedEvent;
+    }
+
+    /**
+     * Create test topology
+     *
+     * @return
+     */
+    private Topology createTestTopology() {
+        Topology topology = new Topology();
+        Service service = new Service(SERVICE_NAME, ServiceType.SingleTenant);
+        topology.addService(service);
+
+        Cluster cluster = new Cluster(service.getServiceName(), CLUSTER_ID, DEPLOYMENT_POLICY_NAME,
+                AUTOSCALING_POLICY_NAME, APP_ID);
+        service.addCluster(cluster);
+
+        Member member = new Member(service.getServiceName(), cluster.getClusterId(), MEMBER_ID,
+                CLUSTER_INSTANCE_ID, NETWORK_PARTITION_ID, PARTITION_ID, LoadBalancingIPType.Private,
+                System.currentTimeMillis());
+
+        member.setDefaultPrivateIP("10.0.0.1");
+        member.setDefaultPublicIP("20.0.0.1");
+        Properties properties = new Properties();
+        properties.setProperty("prop1", "value1");
+        member.setProperties(properties);
+        member.setStatus(MemberStatus.Created);
+        cluster.addMember(member);
+
+        return topology;
     }
 }
