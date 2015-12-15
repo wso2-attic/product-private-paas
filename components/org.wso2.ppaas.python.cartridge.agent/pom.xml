@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.wso2.ppaas</groupId>
         <artifactId>ppaas-component-parent</artifactId>
-        <version>4.1.1-SNAPSHOT</version>
+        <version>4.1.1</version>
     </parent>
 
     <artifactId>org.wso2.ppaas.python.cartridge.agent</artifactId>
