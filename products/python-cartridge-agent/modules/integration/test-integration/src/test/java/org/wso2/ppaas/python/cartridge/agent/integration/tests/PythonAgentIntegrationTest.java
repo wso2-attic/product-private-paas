@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.apache.stratos.python.cartridge.agent.integration.tests;
+package org.wso2.ppaas.python.cartridge.agent.integration.tests;
 
 import org.apache.activemq.broker.BrokerPlugin;
 import org.apache.activemq.broker.BrokerService;
@@ -40,7 +40,7 @@ import org.apache.stratos.messaging.message.receiver.initializer.InitializerEven
 import org.apache.stratos.messaging.message.receiver.instance.status.InstanceStatusEventReceiver;
 import org.apache.stratos.messaging.message.receiver.topology.TopologyEventReceiver;
 import org.apache.stratos.messaging.util.MessagingUtil;
-import org.apache.stratos.python.cartridge.agent.integration.common.ThriftTestServer;
+import org.wso2.ppaas.python.cartridge.agent.integration.common.ThriftTestServer;
 
 import java.io.*;
 import java.net.ServerSocket;

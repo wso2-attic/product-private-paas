@@ -17,11 +17,10 @@
  * under the License.
  */
 
-package org.apache.stratos.python.cartridge.agent.integration.tests;
+package org.wso2.ppaas.python.cartridge.agent.integration.tests;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.stratos.common.domain.LoadBalancingIPType;
 import org.apache.stratos.messaging.domain.topology.*;
 import org.apache.stratos.messaging.event.instance.notifier.ArtifactUpdatedEvent;
 import org.apache.stratos.messaging.event.topology.CompleteTopologyEvent;
@@ -36,7 +35,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.UUID;
 
 import static junit.framework.Assert.assertTrue;

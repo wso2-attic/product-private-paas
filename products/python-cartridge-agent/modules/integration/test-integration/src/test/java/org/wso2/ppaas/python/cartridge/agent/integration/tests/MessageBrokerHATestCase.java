@@ -17,11 +17,10 @@
  * under the License.
  */
 
-package org.apache.stratos.python.cartridge.agent.integration.tests;
+package org.wso2.ppaas.python.cartridge.agent.integration.tests;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.stratos.common.domain.LoadBalancingIPType;
 import org.apache.stratos.messaging.domain.topology.*;
 import org.apache.stratos.messaging.event.instance.notifier.InstanceCleanupMemberEvent;
 import org.apache.stratos.messaging.event.topology.CompleteTopologyEvent;
@@ -33,7 +32,6 @@ import org.testng.annotations.Test;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 /**
  * Test case to test the message broker connection resilience in the Python Cartridge Agent

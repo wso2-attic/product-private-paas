@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.stratos.python.cartridge.agent.integration.tests;
+package org.wso2.ppaas.python.cartridge.agent.integration.tests;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -41,7 +41,6 @@ import org.wso2.carbon.databridge.core.AgentCallback;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
 public class AgentStartupTestCase extends PythonAgentIntegrationTest {
     private static final Log log = LogFactory.getLog(AgentStartupTestCase.class);

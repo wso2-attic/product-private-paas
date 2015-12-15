@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.stratos.python.cartridge.agent.integration.tests;
+package org.wso2.ppaas.python.cartridge.agent.integration.tests;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

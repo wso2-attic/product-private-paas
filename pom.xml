@@ -769,6 +769,8 @@
         <!-- ppaas distribution properties -->
         <ppaas.distribution.name>wso2ppaas</ppaas.distribution.name>
         <configurator.distribution.name>ppaas-configurator</configurator.distribution.name>
+        <python.cartridge.agent.distribution.name>apache-stratos-python-cartridge-agent
+        </python.cartridge.agent.distribution.name>
 
         <!-- Carbon related versions -->
         <carbon.kernel.version>4.2.0</carbon.kernel.version>

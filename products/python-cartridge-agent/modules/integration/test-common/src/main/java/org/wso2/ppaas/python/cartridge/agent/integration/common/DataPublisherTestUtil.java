@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.stratos.python.cartridge.agent.integration.common;
+package org.wso2.ppaas.python.cartridge.agent.integration.common;
 
 import java.io.File;
 

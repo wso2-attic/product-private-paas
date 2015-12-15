@@ -17,7 +17,7 @@
  * under the License.
  */
 
-package org.apache.stratos.python.cartridge.agent.integration.common;
+package org.wso2.ppaas.python.cartridge.agent.integration.common;
 
 import org.apache.log4j.Logger;
 import org.wso2.carbon.databridge.commons.Credentials;
