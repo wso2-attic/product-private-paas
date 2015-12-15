@@ -15,16 +15,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.ppaas.tools.artifactmigration;
 
-/**
- * Main entry point of the tool
- */
-public class Main {
-    public static void main(String[] args) {
+package org.wso2.ppaas.tools.artifactmigration.exception;
 
-        ConversionTool.getInstance().getPropValues();
-        ConversionTool.getInstance().startTransformation();
-
+public class RestClientException extends Exception{
+    public RestClientException(String message, Throwable throwable) {
+        super(message, throwable);
     }
 }

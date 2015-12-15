@@ -28,9 +28,10 @@ import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment.Deploy
 import org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean;
 import org.wso2.ppaas.tools.artifactmigration.RestClient;
 import org.wso2.ppaas.tools.artifactmigration.exception.ArtifactLoadingException;
+import org.wso2.ppaas.tools.artifactmigration.exception.RestClientException;
 
 import java.io.File;
-import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
 
@@ -65,9 +66,9 @@ public class OldArtifactLoader {
      * @return Partition List
      * @throws ArtifactLoadingException
      */
-    public List<Partition> fetchPartitionList() throws Exception {
+    public List<Partition> fetchPartitionList() throws ArtifactLoadingException {
         try {
-            String partitionString = readUrl(Constants.BASE_URL + Constants.URL_PARTITION);
+            String partitionString = readUrl(System.getProperty("baseUrl") + Constants.URL_PARTITION);
             String partitionListString = null;
             if (partitionString != null) {
                 partitionListString = partitionString
@@ -75,8 +76,8 @@ public class OldArtifactLoader {
             }
             return gson.fromJson(partitionListString, new TypeToken<List<Partition>>() {
             }.getType());
-        } catch (IOException e) {
-            String msg = "IOException in fetching partition list";
+        } catch (RestClientException e) {
+            String msg = "Rest endpoint connection in fetching partition list";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
@@ -88,15 +89,22 @@ public class OldArtifactLoader {
      * @return Auto Scale Policy List
      * @throws ArtifactLoadingException
      */
-    public List<AutoscalePolicy> fetchAutoscalePolicyList() throws Exception {
+    public List<AutoscalePolicy> fetchAutoscalePolicyList() throws ArtifactLoadingException {
         try {
-            String autoscalePolicyString = readUrl(Constants.BASE_URL + Constants.URL_POLICY_AUTOSCALE);
-            String autoscalePolicyListString = autoscalePolicyString
-                    .substring(autoscalePolicyString.indexOf('['), (autoscalePolicyString.lastIndexOf(']') + 1));
+            String autoscalePolicyString = readUrl(System.getProperty("baseUrl") + Constants.URL_POLICY_AUTOSCALE);
+            String autoscalePolicyListString;
+            if (autoscalePolicyString != null) {
+                autoscalePolicyListString = autoscalePolicyString
+                        .substring(autoscalePolicyString.indexOf('['), (autoscalePolicyString.lastIndexOf(']') + 1));
+            } else {
+                String msg = "Error while fetching autoscaling policies";
+                log.error(msg);
+                throw new ArtifactLoadingException(msg);
+            }
             return gson.fromJson(autoscalePolicyListString, new TypeToken<List<AutoscalePolicy>>() {
             }.getType());
-        } catch (IOException e) {
-            String msg = "IOException in fetching auto scale policy list";
+        } catch (RestClientException e) {
+            String msg = "Rest endpoint connection in fetching autoscaling policy list";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
@@ -108,15 +116,22 @@ public class OldArtifactLoader {
      * @return Deployment Policy List
      * @throws ArtifactLoadingException
      */
-    public List<DeploymentPolicy> fetchDeploymentPolicyList() throws Exception {
+    public List<DeploymentPolicy> fetchDeploymentPolicyList() throws ArtifactLoadingException {
         try {
-            String deploymentPolicyString = readUrl(Constants.BASE_URL + Constants.URL_POLICY_DEPLOYMENT);
-            String deploymentPolicyListString = deploymentPolicyString
-                    .substring(deploymentPolicyString.indexOf('['), (deploymentPolicyString.lastIndexOf(']') + 1));
+            String deploymentPolicyString = readUrl(System.getProperty("baseUrl") + Constants.URL_POLICY_DEPLOYMENT);
+            String deploymentPolicyListString;
+            if (deploymentPolicyString != null) {
+                deploymentPolicyListString = deploymentPolicyString
+                        .substring(deploymentPolicyString.indexOf('['), (deploymentPolicyString.lastIndexOf(']') + 1));
+            } else {
+                String msg = "Error while fetching deployment policies";
+                log.error(msg);
+                throw new ArtifactLoadingException(msg);
+            }
             return gson.fromJson(deploymentPolicyListString, new TypeToken<List<DeploymentPolicy>>() {
             }.getType());
-        } catch (IOException e) {
-            String msg = "IOException in fetching deployment policy list";
+        } catch (RestClientException e) {
+            String msg = "Rest endpoint connection in fetching deployment policy list";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
@@ -128,15 +143,22 @@ public class OldArtifactLoader {
      * @return Cartridges List
      * @throws ArtifactLoadingException
      */
-    public List<Cartridge> fetchCartridgeList() throws Exception {
+    public List<Cartridge> fetchCartridgeList() throws ArtifactLoadingException {
         try {
-            String cartridgeString = readUrl(Constants.BASE_URL + Constants.URL_CARTRIDGE);
-            String cartridgeListString = cartridgeString
-                    .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
+            String cartridgeString = readUrl(System.getProperty("baseUrl") + Constants.URL_CARTRIDGE);
+            String cartridgeListString;
+            if (cartridgeString != null) {
+                cartridgeListString = cartridgeString
+                        .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
+            } else {
+                String msg = "Error while fetching cartridge lists";
+                log.error(msg);
+                throw new ArtifactLoadingException(msg);
+            }
             return gson.fromJson(cartridgeListString, new TypeToken<List<Cartridge>>() {
             }.getType());
-        } catch (IOException e) {
-            String msg = "IOException in fetching cartridge list";
+        } catch (RestClientException e) {
+            String msg = "Rest endpoint connection in fetching deployment policy list";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
@@ -148,43 +170,51 @@ public class OldArtifactLoader {
      * @return Cartridges List
      * @throws ArtifactLoadingException
      */
-    public List<CartridgeInfoBean> fetchSubscriptionDataList() throws Exception {
+    public List<CartridgeInfoBean> fetchSubscriptionDataList() throws ArtifactLoadingException {
         try {
-            String cartridgeString = readUrl(Constants.BASE_URL + Constants.URL_SUBSCRIPTION);
-
-            String cartridgeListString = cartridgeString
-                    .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
+            String cartridgeString = readUrl(System.getProperty("baseUrl") + Constants.URL_SUBSCRIPTION);
+            String cartridgeListString;
+            if (cartridgeString != null) {
+                cartridgeListString = cartridgeString
+                        .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
+            } else {
+                String msg = "Error while fetching subscription data list";
+                log.error(msg);
+                throw new ArtifactLoadingException(msg);
+            }
             return gson.fromJson(cartridgeListString, new TypeToken<List<CartridgeInfoBean>>() {
             }.getType());
 
-        } catch (IOException e) {
-            String msg = "IOException in fetching subscription list";
+        } catch (RestClientException e) {
+            String msg = "Rest endpoint connection in fetching deployment policy list";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
     }
 
     public List<SubscriptionDomainBean> fetchDomainMappingList(String cartridgeType, String subscriptionAlias)
-            throws Exception {
+            throws ArtifactLoadingException {
         try {
             String domainString = readUrl(
-                    Constants.BASE_URL + Constants.STRATOS + "cartridge" + File.separator + cartridgeType
+                    System.getProperty("baseUrl") + Constants.STRATOS + "cartridge" + File.separator + cartridgeType
                             + File.separator + "subscription" + File.separator + subscriptionAlias + File.separator
                             + "domains");
-            String domainListString = null;
+            String domainListString;
             if (domainString != null) {
                 domainListString = domainString
                         .substring(domainString.indexOf('['), (domainString.lastIndexOf(']') + 1));
+            } else {
+                String msg = "Error while fetching domain mapping lists";
+                log.error(msg);
+                throw new ArtifactLoadingException(msg);
             }
             return gson.fromJson(domainListString, new TypeToken<List<SubscriptionDomainBean>>() {
             }.getType());
-
-        } catch (IOException e) {
-            String msg = "IOException in fetching domain mapping list";
+        } catch (RestClientException e) {
+            String msg = "Rest endpoint connection in fetching deployment policy list";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
-
     }
 
     /**
@@ -194,8 +224,16 @@ public class OldArtifactLoader {
      * @return JSON string
      * @throws Exception in connecting to REST endpoint
      */
-    private String readUrl(String serviceEndpoint) throws Exception {
-        RestClient restclient = new RestClient(Constants.USER_NAME, Constants.PASSWORD);
-        return restclient.doGet(new URL(serviceEndpoint));
+
+    private String readUrl(String serviceEndpoint) throws RestClientException {
+        RestClient restclient = new RestClient(System.getProperty("userName"), System.getProperty("password"));
+        try {
+            return restclient.doGet(new URL(serviceEndpoint));
+        } catch (MalformedURLException e) {
+            String msg = "Error in parsing the URL correctly";
+            log.error(msg);
+            throw new RestClientException(msg, e);
+        }
+
     }
 }

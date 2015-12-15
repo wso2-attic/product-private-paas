@@ -46,13 +46,20 @@
             <outputDirectory>/resources</outputDirectory>
             <fileMode>0600</fileMode>
         </fileSet>
-</fileSets>
-<dependencySets>
-
-<dependencySet>
-    <outputDirectory>/lib</outputDirectory>
-    <useProjectArtifact>true</useProjectArtifact>
-    <scope>runtime</scope>
-</dependencySet>
-</dependencySets>
-        </assembly>
+        <fileSet>
+            <directory>${project.basedir}/src/main/conf</directory>
+            <outputDirectory>/conf</outputDirectory>
+            <fileMode>0600</fileMode>
+            <includes>
+                <include>config.properties</include>
+            </includes>
+        </fileSet>
+    </fileSets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/lib</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+</assembly>
