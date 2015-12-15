@@ -7,8 +7,9 @@ logic required for configuring the server.
 
 Why PCA has been forked?
 ------------------------
-- PCA message broker HA support has broken backward compatibility of cartridges in [Apache Stratos 4.1.5 release](https://issues.apache.org/jira/browse/STRATOS-1645)
+- PCA message broker HA support has broken backward compatibility of cartridges in [Apache Stratos 4.1.5 release](https://issues.apache.org/jira/browse/STRATOS-1645).
 - [High CPU usage issue](https://issues.apache.org/jira/browse/STRATOS-1644) was fixed in WSO2 Private PaaS and still not merged to Apache Stratos and released.
+- Once above fixes are moved to Apache Stratos this fork will be removed.
 
 How to run Live Tests?
 ----------------------
