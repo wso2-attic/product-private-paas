@@ -45,7 +45,7 @@
                             <goal>attached</goal>
                         </goals>
                         <configuration>
-                            <finalName>${python.cartridge.agent.distribution.name}-${project.version}</finalName>
+                            <finalName>${python.cartridge.agent.distribution.name}-${python.cartridge.agent.version}</finalName>
                             <descriptors>
                                 <descriptor>src/main/assembly/bin.xml</descriptor>
                             </descriptors>
