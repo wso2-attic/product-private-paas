@@ -19,6 +19,8 @@ from Queue import Queue
 import threading
 import paho.mqtt.client as mqtt
 
+from config import Config
+
 from modules.util.log import LogFactory
 from modules.util.asyncscheduledtask import *
 from modules.util.cartridgeagentutils import IncrementalCeilingListIterator
@@ -76,6 +78,10 @@ class EventSubscriber(threading.Thread):
             self.__mb_client, connected_mb_ip, connected_mb_port = \
                 EventSubscriber.failover(self.__urls, self.__mb_client)
 
+            # update connected MB details in the config for the plugins to use
+            Config.mb_ip = connected_mb_ip
+            Config.mb_port = connected_mb_port
+
             EventSubscriber.log.info(
                 "Connected to the message broker with address %r:%r" % (connected_mb_ip, connected_mb_port))
 
@@ -98,7 +104,8 @@ class EventSubscriber(threading.Thread):
             # Disconnected when the heart beat checker detected an offline message broker
             self.__subscribed = False
             heartbeat_job.terminate()
-            EventSubscriber.log.debug("Disconnected from the message broker %s:%s. Reconnecting..." % (connected_mb_ip, connected_mb_port))
+            EventSubscriber.log.debug("Disconnected from the message broker %s:%s. Reconnecting..."
+                                      % (connected_mb_ip, connected_mb_port))
 
     def register_handler(self, event, handler):
         """
