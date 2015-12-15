@@ -55,7 +55,6 @@ public class ConversionTool {
             log.info("CLI started...");
         }
         Console console = System.console();
-
         if (System.getProperty("baseUrl").isEmpty()) {
             System.out.println("Enter the Base URL: ");
             System.setProperty("baseUrl", console.readLine());
@@ -163,7 +162,6 @@ public class ConversionTool {
         }
         addIaasScriptDirectories(outputLocation + File.separator + "scripts");
     }
-
     /**
      * Method to get configuration details
      */

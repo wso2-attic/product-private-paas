@@ -24,9 +24,6 @@ import java.io.File;
  */
 public class Constants {
     // 4.0.0 constants
-//    public static String BASE_URL = "http://192.168.30.227:9763/";
-//    public static String USER_NAME = "admin";
-//    public static String PASSWORD = "admin";
 
     public static String STRATOS = "stratos" + File.separator + "admin" + File.separator;
     public static String MIGRATION = "migration" + File.separator + "admin" + File.separator;
@@ -54,7 +51,8 @@ public class Constants {
 
     public static final String DIRECTORY_OUTPUT_SCRIPT = "applications";
     public static final String DIRECTORY_SOURCE_SCRIPT =
-            System.getProperty("user.dir") + File.separator + ".." + File.separator + "scripts";
+            System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources" + File.separator
+                    + "scripts";
 
     //Default values for the application policy
     public static final String APPLICATION_POLICY_ID = "autoscaling-policy-1";

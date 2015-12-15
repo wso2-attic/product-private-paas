@@ -80,7 +80,7 @@ public class Transformation {
     /**
      * Method to transform Auto Scale Policies
      */
-    public void transformAutoscalePolicyList() throws TransformationException {
+    public void transformAutoscalePolicyList() throws Exception {
 
         List<AutoscalePolicy> autoscalePolicy400List;
         AutoscalePolicyBean autoscalePolicy410 = new AutoscalePolicyBean();
@@ -110,7 +110,7 @@ public class Transformation {
     /**
      * Method to transform network partitions
      */
-    public void transformNetworkPartitionList() throws TransformationException {
+    public void transformNetworkPartitionList() throws Exception {
 
         List<Partition> networkPartition400List;
         NetworkPartitionBean networkPartition410 = new NetworkPartitionBean();
@@ -162,7 +162,7 @@ public class Transformation {
     /**
      * Method to transform DeploymentPolicy
      */
-    public void transformDeploymentPolicyList() throws TransformationException {
+    public void transformDeploymentPolicyList() throws Exception {
 
         List<DeploymentPolicy> deploymentPolicy400List;
         DeploymentPolicyBean deploymentPolicy410 = new DeploymentPolicyBean();
@@ -233,7 +233,7 @@ public class Transformation {
     /**
      * Method to transform cartridge list
      */
-    public void transformCartridgeList() throws TransformationException {
+    public void transformCartridgeList() throws Exception {
         List<Cartridge> cartridge400List;
         List<CartridgeInfoBean> subscription400List;
         ApplicationBean application410 = new ApplicationBean();
@@ -387,11 +387,10 @@ public class Transformation {
 
         applicationPolicyBean.setId(Constants.APPLICATION_POLICY_ID);
         applicationPolicyBean.setAlgorithm(Constants.APPLICATION_POLICY_ALGO);
-        String[] networkPartitions = {networkPartition};
+        String[] networkPartitions = { networkPartition };
         applicationPolicyBean.setNetworkPartitions(networkPartitions);
 
         File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_APPLICATION);
-
         writeFile(directoryName, applicationPolicyBean.getId()+".json",
                 getGson().toJson(applicationPolicyBean));
 

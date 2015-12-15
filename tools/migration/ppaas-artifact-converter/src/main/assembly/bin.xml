@@ -42,6 +42,11 @@
             </includes>
         </fileSet>
         <fileSet>
+            <directory>${project.basedir}/src/main/resources</directory>
+            <outputDirectory>/resources</outputDirectory>
+            <fileMode>0600</fileMode>
+        </fileSet>
+        <fileSet>
             <directory>${project.basedir}/src/main/conf</directory>
             <outputDirectory>/conf</outputDirectory>
             <fileMode>0600</fileMode>
@@ -49,18 +54,12 @@
                 <include>config.properties</include>
             </includes>
         </fileSet>
-        <fileSet>
-            <directory>${project.basedir}/src/main/resources/scripts</directory>
-            <outputDirectory>/scripts</outputDirectory>
-            <fileMode>0600</fileMode>
-        </fileSet>
-</fileSets>
-<dependencySets>
-
-<dependencySet>
-    <outputDirectory>/lib</outputDirectory>
-    <useProjectArtifact>true</useProjectArtifact>
-    <scope>runtime</scope>
-</dependencySet>
-</dependencySets>
-        </assembly>
+    </fileSets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/lib</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <scope>runtime</scope>
+        </dependencySet>
+    </dependencySets>
+</assembly>

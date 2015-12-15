@@ -19,7 +19,6 @@ package org.wso2.ppaas.tools.artifactmigration.loader;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.apache.stratos.manager.dto.Cartridge;
 import org.apache.stratos.rest.endpoint.bean.CartridgeInfoBean;
@@ -27,15 +26,13 @@ import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.AutoscalePolicy;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment.DeploymentPolicy;
 import org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean;
+import org.wso2.ppaas.tools.artifactmigration.RestClient;
 import org.wso2.ppaas.tools.artifactmigration.exception.ArtifactLoadingException;
+import org.wso2.ppaas.tools.artifactmigration.exception.RestClientException;
+
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 
 /**
@@ -62,6 +59,7 @@ public class OldArtifactLoader {
         }
         return instance;
     }
+
     /**
      * Method to fetch Partition Lists
      *
@@ -78,12 +76,13 @@ public class OldArtifactLoader {
             }
             return gson.fromJson(partitionListString, new TypeToken<List<Partition>>() {
             }.getType());
-        } catch (IOException e) {
-            String msg = "IOException in fetching partition list";
+        } catch (RestClientException e) {
+            String msg = "Rest endpoint connection in fetching partition list";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
     }
+
     /**
      * Method to fetch Auto Scale Policy
      *
@@ -104,12 +103,13 @@ public class OldArtifactLoader {
             }
             return gson.fromJson(autoscalePolicyListString, new TypeToken<List<AutoscalePolicy>>() {
             }.getType());
-        } catch (IOException e) {
-            String msg = "Failed fetching autoscaling policy list due to IOException";
+        } catch (RestClientException e) {
+            String msg = "Rest endpoint connection in fetching autoscaling policy list";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
     }
+
     /**
      * Method to fetch Deployment Policy
      *
@@ -130,12 +130,13 @@ public class OldArtifactLoader {
             }
             return gson.fromJson(deploymentPolicyListString, new TypeToken<List<DeploymentPolicy>>() {
             }.getType());
-        } catch (IOException e) {
-            String msg = "Failed fetching deployment policy list due to IOException";
+        } catch (RestClientException e) {
+            String msg = "Rest endpoint connection in fetching deployment policy list";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
     }
+
     /**
      * Method to fetch Cartridges
      *
@@ -156,12 +157,13 @@ public class OldArtifactLoader {
             }
             return gson.fromJson(cartridgeListString, new TypeToken<List<Cartridge>>() {
             }.getType());
-        } catch (IOException e) {
-            String msg = "Failed fetching deployment policy list due to IOException";
+        } catch (RestClientException e) {
+            String msg = "Rest endpoint connection in fetching deployment policy list";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
     }
+
     /**
      * Method to fetch Cartridges
      *
@@ -183,8 +185,8 @@ public class OldArtifactLoader {
             return gson.fromJson(cartridgeListString, new TypeToken<List<CartridgeInfoBean>>() {
             }.getType());
 
-        } catch (IOException e) {
-            String msg = "Failed fetching deployment policy list due to IOException";
+        } catch (RestClientException e) {
+            String msg = "Rest endpoint connection in fetching deployment policy list";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
@@ -208,8 +210,8 @@ public class OldArtifactLoader {
             }
             return gson.fromJson(domainListString, new TypeToken<List<SubscriptionDomainBean>>() {
             }.getType());
-        } catch (IOException e) {
-            String msg = "Failed fetching deployment policy list due to IOException";
+        } catch (RestClientException e) {
+            String msg = "Rest endpoint connection in fetching deployment policy list";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
@@ -220,59 +222,18 @@ public class OldArtifactLoader {
      *
      * @param serviceEndpoint the endpoint to connect with
      * @return JSON string
-     * @throws IOException in connecting to REST endpoint
+     * @throws Exception in connecting to REST endpoint
      */
-    private String readUrl(String serviceEndpoint) throws IOException {
+
+    private String readUrl(String serviceEndpoint) throws RestClientException {
+        RestClient restclient = new RestClient(System.getProperty("userName"), System.getProperty("password"));
         try {
-            String authString = System.getProperty("userName") + ":" + System.getProperty("password");
-            byte[] authEncBytes = Base64.encodeBase64(authString.getBytes());
-            String authStringEnc = new String(authEncBytes);
-
-            URL absoluteURL = new URL(serviceEndpoint);
-            URLConnection urlConnection = absoluteURL.openConnection();
-            if (urlConnection instanceof HttpURLConnection) {
-                HttpURLConnection httpConnection = (HttpURLConnection) urlConnection;
-                httpConnection.setRequestMethod("GET");
-                httpConnection.setRequestProperty("Authorization", "Basic " + authStringEnc);
-                httpConnection.setRequestProperty("Content-Type", "application/json");
-                httpConnection.setRequestProperty("Accept", "*/*");
-
-                if (httpConnection.getResponseCode() == 200 || httpConnection.getResponseCode() == 301) {
-                    InputStream is = httpConnection.getInputStream();
-                    InputStreamReader isr = new InputStreamReader(is);
-                    int numCharsRead;
-                    char[] charArray = new char[1024];
-                    StringBuilder sb = new StringBuilder();
-                    while ((numCharsRead = isr.read(charArray)) > 0) {
-                        sb.append(charArray, 0, numCharsRead);
-                    }
-                    return sb.toString();
-                } else {
-                    InputStream is = httpConnection.getErrorStream();
-                    InputStreamReader isr = new InputStreamReader(is);
-
-                    int numCharsRead;
-                    char[] charArray = new char[1024];
-                    StringBuilder sb = new StringBuilder();
-                    while ((numCharsRead = isr.read(charArray)) > 0) {
-                        sb.append(charArray, 0, numCharsRead);
-                    }
-                    System.out.println(sb.toString());
-                    log.error(sb.toString());
-                    throw new RuntimeException(sb.toString());
-                }
-
-            }
-            return null;
-
+            return restclient.doGet(new URL(serviceEndpoint));
         } catch (MalformedURLException e) {
-            String msg = "Invalid URL in connecting to REST endpoint";
+            String msg = "Error in parsing the URL correctly";
             log.error(msg);
-            throw e;
-        } catch (IOException e) {
-            String msg = "IO error in connecting to REST endpoint";
-            log.error(msg);
-            throw e;
+            throw new RestClientException(msg, e);
         }
+
     }
 }
