@@ -25,7 +25,7 @@ import java.io.File;
 public class Constants {
 
     // 4.0.0 constants
-    public static String BASE_URL = "http://192.168.30.227:9763/";
+    public static String BASE_URL = "https://192.168.30.227:9443/";
     public static String USER_NAME = "admin";
     public static String PASSWORD = "admin";
 
@@ -55,6 +55,6 @@ public class Constants {
 
     public static final String DIRECTORY_OUTPUT_SCRIPT = "applications";
     public static final String DIRECTORY_SOURCE_SCRIPT =
-            System.getProperty("user.dir") + File.separator + ".." + File.separator + "scripts";
+            System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources"+ File.separator + "scripts";
 
 }

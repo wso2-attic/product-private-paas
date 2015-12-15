@@ -19,7 +19,6 @@ package org.wso2.ppaas.tools.artifactmigration.loader;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.apache.stratos.manager.dto.Cartridge;
 import org.apache.stratos.rest.endpoint.bean.CartridgeInfoBean;
@@ -27,16 +26,12 @@ import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.AutoscalePolicy;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment.DeploymentPolicy;
 import org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean;
+import org.wso2.ppaas.tools.artifactmigration.RestClient;
 import org.wso2.ppaas.tools.artifactmigration.exception.ArtifactLoadingException;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLConnection;
 import java.util.List;
 
 /**
@@ -70,11 +65,11 @@ public class OldArtifactLoader {
      * @return Partition List
      * @throws ArtifactLoadingException
      */
-    public List<Partition> fetchPartitionList() throws ArtifactLoadingException {
+    public List<Partition> fetchPartitionList() throws Exception {
         try {
             String partitionString = readUrl(Constants.BASE_URL + Constants.URL_PARTITION);
             String partitionListString = null;
-            if(partitionString!=null){
+            if (partitionString != null) {
                 partitionListString = partitionString
                         .substring(partitionString.indexOf('['), (partitionString.lastIndexOf(']') + 1));
             }
@@ -93,7 +88,7 @@ public class OldArtifactLoader {
      * @return Auto Scale Policy List
      * @throws ArtifactLoadingException
      */
-    public List<AutoscalePolicy> fetchAutoscalePolicyList() throws ArtifactLoadingException {
+    public List<AutoscalePolicy> fetchAutoscalePolicyList() throws Exception {
         try {
             String autoscalePolicyString = readUrl(Constants.BASE_URL + Constants.URL_POLICY_AUTOSCALE);
             String autoscalePolicyListString = autoscalePolicyString
@@ -113,7 +108,7 @@ public class OldArtifactLoader {
      * @return Deployment Policy List
      * @throws ArtifactLoadingException
      */
-    public List<DeploymentPolicy> fetchDeploymentPolicyList() throws ArtifactLoadingException {
+    public List<DeploymentPolicy> fetchDeploymentPolicyList() throws Exception {
         try {
             String deploymentPolicyString = readUrl(Constants.BASE_URL + Constants.URL_POLICY_DEPLOYMENT);
             String deploymentPolicyListString = deploymentPolicyString
@@ -133,7 +128,7 @@ public class OldArtifactLoader {
      * @return Cartridges List
      * @throws ArtifactLoadingException
      */
-    public List<Cartridge> fetchCartridgeList() throws ArtifactLoadingException {
+    public List<Cartridge> fetchCartridgeList() throws Exception {
         try {
             String cartridgeString = readUrl(Constants.BASE_URL + Constants.URL_CARTRIDGE);
             String cartridgeListString = cartridgeString
@@ -146,13 +141,14 @@ public class OldArtifactLoader {
             throw new ArtifactLoadingException(msg, e);
         }
     }
+
     /**
      * Method to fetch Cartridges
      *
      * @return Cartridges List
      * @throws ArtifactLoadingException
      */
-    public List<CartridgeInfoBean> fetchSubscriptionDataList() throws ArtifactLoadingException {
+    public List<CartridgeInfoBean> fetchSubscriptionDataList() throws Exception {
         try {
             String cartridgeString = readUrl(Constants.BASE_URL + Constants.URL_SUBSCRIPTION);
 
@@ -169,7 +165,7 @@ public class OldArtifactLoader {
     }
 
     public List<SubscriptionDomainBean> fetchDomainMappingList(String cartridgeType, String subscriptionAlias)
-            throws ArtifactLoadingException {
+            throws Exception {
         try {
             String domainString = readUrl(
                     Constants.BASE_URL + Constants.STRATOS + "cartridge" + File.separator + cartridgeType
@@ -196,59 +192,10 @@ public class OldArtifactLoader {
      *
      * @param serviceEndpoint the endpoint to connect with
      * @return JSON string
-     * @throws IOException in connecting to REST endpoint
+     * @throws Exception in connecting to REST endpoint
      */
-    private String readUrl(String serviceEndpoint) throws IOException {
-        try {
-            String authString = Constants.USER_NAME + ":" + Constants.PASSWORD;
-            byte[] authEncBytes = Base64.encodeBase64(authString.getBytes());
-            String authStringEnc = new String(authEncBytes);
-
-            URL absoluteURL = new URL(serviceEndpoint);
-            URLConnection urlConnection = absoluteURL.openConnection();
-            if (urlConnection instanceof HttpURLConnection) {
-                HttpURLConnection httpConnection = (HttpURLConnection) urlConnection;
-                httpConnection.setRequestMethod("GET");
-                httpConnection.setRequestProperty("Authorization", "Basic " + authStringEnc);
-                httpConnection.setRequestProperty("Content-Type", "application/json");
-                httpConnection.setRequestProperty("Accept", "*/*"); // FIXME: 12/12/15 This is required
-
-                if (httpConnection.getResponseCode() == 200 || httpConnection.getResponseCode() == 301) {
-                    InputStream is = httpConnection.getInputStream();
-                    InputStreamReader isr = new InputStreamReader(is);
-                    int numCharsRead;
-                    char[] charArray = new char[1024];
-                    StringBuffer sb = new StringBuffer();
-                    while ((numCharsRead = isr.read(charArray)) > 0) {
-                        sb.append(charArray, 0, numCharsRead);
-                    }
-                    return sb.toString();
-                } else {
-                    InputStream is = httpConnection.getErrorStream();
-                    InputStreamReader isr = new InputStreamReader(is);
-
-                    int numCharsRead;
-                    char[] charArray = new char[1024];
-                    StringBuffer sb = new StringBuffer();
-                    while ((numCharsRead = isr.read(charArray)) > 0) {
-                        sb.append(charArray, 0, numCharsRead);
-                    }
-                    System.out.println(sb.toString());
-                    log.error(sb.toString());
-                    throw new RuntimeException(sb.toString());
-                }
-
-            }
-            return null;
-
-        } catch (MalformedURLException e) {
-            String msg = "Invalid URL in connecting to REST endpoint";
-            log.error(msg);
-            throw e;
-        } catch (IOException e) {
-            String msg = "IO error in connecting to REST endpoint";
-            log.error(msg);
-            throw e;
-        }
+    private String readUrl(String serviceEndpoint) throws Exception {
+        RestClient restclient = new RestClient(Constants.USER_NAME, Constants.PASSWORD);
+        return restclient.doGet(new URL(serviceEndpoint));
     }
 }
