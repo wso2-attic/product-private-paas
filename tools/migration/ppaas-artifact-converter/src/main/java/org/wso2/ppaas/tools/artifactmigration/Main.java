@@ -17,18 +17,15 @@
  */
 package org.wso2.ppaas.tools.artifactmigration;
 
-import java.io.IOException;
-
 /**
  * Main entry point of the tool
  */
 public class Main {
     public static void main(String[] args) {
 
-
-            ConversionTool.getInstance().getPropValues();
-            ConversionTool.getInstance().startTransformation();
-
+        ConversionTool.getInstance().getPropValues();
+        ConversionTool.getInstance().handleConsoleInputs();
+        ConversionTool.getInstance().startTransformation();
 
     }
 }

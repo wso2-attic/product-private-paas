@@ -24,7 +24,9 @@ import org.wso2.ppaas.tools.artifactmigration.loader.Constants;
 
 import java.io.*;
 import java.util.Properties;
-
+/*
+Class for conversion
+ */
 public class ConversionTool {
 
     private static final Logger log = Logger.getLogger(Transformation.class);
@@ -44,23 +46,36 @@ public class ConversionTool {
         return instance;
     }
 
+    /**
+     * Method to handle console inputs
+     */
     public void handleConsoleInputs() {
+
         if (log.isInfoEnabled()) {
             log.info("CLI started...");
         }
         Console console = System.console();
 
-        System.out.println("Enter the Base URL: ");
-        System.setProperty("baseUrl",console.readLine());
+        if (System.getProperty("baseUrl").isEmpty()) {
+            System.out.println("Enter the Base URL: ");
+            System.setProperty("baseUrl", console.readLine());
+        }
 
-        System.out.println("Enter the User name: ");
-        System.setProperty("userName",console.readLine());
+        if (System.getProperty("userName").isEmpty()) {
+            System.out.println("Enter the User name: ");
+            System.setProperty("userName", console.readLine());
+        }
 
-        System.out.println("Enter the Password: ");
-        char[] passwordChars = console.readPassword();
-        System.setProperty("password",new String(passwordChars));
+        if (System.getProperty("password").isEmpty()) {
+            System.out.println("Enter the Password: ");
+            char[] passwordChars = console.readPassword();
+            System.setProperty("password", new String(passwordChars));
+        }
     }
 
+    /**
+     * Method to start transformation
+     */
     public void startTransformation() {
 
         if (log.isInfoEnabled()) {
@@ -81,6 +96,10 @@ public class ConversionTool {
             System.out.println("Conversion completed successfully");
     }
 
+    /**
+     * Method to add script directories specific to each IaaS
+     * @param outputLocation output location of the script directories
+     */
     public void addIaasScriptDirectories(String outputLocation) {
         File sourceLocationEc2 = new File(Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "ec2");
         File sourceLocationGce = new File(Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "gce");
@@ -99,13 +118,19 @@ public class ConversionTool {
         }
     }
 
+    /**
+     * Method to add common deploying script
+     * @param outputLocation output location of the script
+     * @param subscribableInfo subscribable inforation
+     * @param cartridgeName cartridge name
+     */
     public void addDeployingScript(String outputLocation, SubscribableInfo subscribableInfo, String cartridgeName) {
         try {
             File file = new File(Constants.DIRECTORY_SOURCE_SCRIPT + "/common/deploy.sh");
             BufferedReader reader = new BufferedReader(new FileReader(file));
             String line, oldText = "";
             while ((line = reader.readLine()) != null) {
-                oldText += line + "\r\n";
+                oldText += line + "\n";
             }
             reader.close();
 
@@ -136,16 +161,19 @@ public class ConversionTool {
         } catch (IOException e) {
             log.error("Error in copying scripts directory ", e);
         }
-
         addIaasScriptDirectories(outputLocation + File.separator + "scripts");
     }
+
+    /**
+     * Method to get configuration details
+     */
     public void getPropValues() {
-
         InputStream inputStream = null;
-
         try {
             Properties prop = new Properties();
-            String propFileName = System.getProperty("user.dir")+File.separator +".." + File.separator + "conf"+ File.separator +"config.properties";
+            String propFileName =
+                    System.getProperty("user.dir") + File.separator + ".." + File.separator + "conf" + File.separator
+                            + "config.properties";
 
             inputStream = new FileInputStream(propFileName);
             if (inputStream != null) {
@@ -153,17 +181,19 @@ public class ConversionTool {
             } else {
                 throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
             }
-            System.setProperty("baseUrl",prop.getProperty("base_url"));
-            System.setProperty("userName",prop.getProperty("user_name"));
-            System.setProperty("password",prop.getProperty("password"));
+            System.setProperty("baseUrl", prop.getProperty("base_url"));
+            System.setProperty("userName", prop.getProperty("user_name"));
+            System.setProperty("password", prop.getProperty("password"));
 
-        } catch (Exception e) {
-            log.error(e);
+        } catch (IOException e) {
+            String msg = "IO error in getting configuration details";
+            log.error(msg,e);
         } finally {
             try {
                 inputStream.close();
             } catch (IOException e) {
-                log.error(e);
+                String msg = "IO error in getting configuration details";
+                log.error(msg,e);
             }
         }
     }

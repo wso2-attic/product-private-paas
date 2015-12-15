@@ -296,6 +296,7 @@ public class Transformation {
                 cartridges.add(0, cartridgeReference410);
                 components.setCartridges(cartridges);
                 application410.setComponents(components);
+                application410.setAlias(cartridgeReference410.getSubscribableInfo().getAlias());
                 application410.setName(cartridge.getDisplayName());
                 application410.setApplicationId(cartridge.getDisplayName());
                 application410.setDescription(cartridge.getDescription());
@@ -361,7 +362,7 @@ public class Transformation {
                     cartridge410.setPersistence(persistenceBean410);
                 }
                 writeFile(outputDirectoryNameCartridge, cartridge410.getDisplayName() + ".json",
-                        getGson().toJson(application410));
+                        getGson().toJson(cartridge410));
             }
             log.info("Created Cartridge List 4.1.0 artifacts");
             log.info("Created Application List 4.1.0 artifacts");
@@ -377,6 +378,10 @@ public class Transformation {
         }
     }
 
+    /**
+     * Method to add default application policies
+     * @param networkPartition
+     */
     public void addDefaultApplicationPolcies(String networkPartition){
         ApplicationPolicyBean applicationPolicyBean = new ApplicationPolicyBean();
 
@@ -387,11 +392,10 @@ public class Transformation {
 
         File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_APPLICATION);
 
-        writeFile(directoryName, applicationPolicyBean.getId(),
+        writeFile(directoryName, applicationPolicyBean.getId()+".json",
                 getGson().toJson(applicationPolicyBean));
 
     }
-
     /**
      * Method to get Gson
      */
