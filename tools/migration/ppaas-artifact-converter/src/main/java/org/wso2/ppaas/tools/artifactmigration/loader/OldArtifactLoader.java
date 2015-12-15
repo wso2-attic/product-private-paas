@@ -28,7 +28,6 @@ import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.Autosca
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment.DeploymentPolicy;
 import org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean;
 import org.wso2.ppaas.tools.artifactmigration.exception.ArtifactLoadingException;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -63,7 +62,6 @@ public class OldArtifactLoader {
         }
         return instance;
     }
-
     /**
      * Method to fetch Partition Lists
      *
@@ -72,9 +70,9 @@ public class OldArtifactLoader {
      */
     public List<Partition> fetchPartitionList() throws ArtifactLoadingException {
         try {
-            String partitionString = readUrl(Constants.BASE_URL + Constants.URL_PARTITION);
+            String partitionString = readUrl(System.getProperty("baseUrl") + Constants.URL_PARTITION);
             String partitionListString = null;
-            if(partitionString!=null){
+            if (partitionString != null) {
                 partitionListString = partitionString
                         .substring(partitionString.indexOf('['), (partitionString.lastIndexOf(']') + 1));
             }
@@ -86,7 +84,6 @@ public class OldArtifactLoader {
             throw new ArtifactLoadingException(msg, e);
         }
     }
-
     /**
      * Method to fetch Auto Scale Policy
      *
@@ -95,18 +92,24 @@ public class OldArtifactLoader {
      */
     public List<AutoscalePolicy> fetchAutoscalePolicyList() throws ArtifactLoadingException {
         try {
-            String autoscalePolicyString = readUrl(Constants.BASE_URL + Constants.URL_POLICY_AUTOSCALE);
-            String autoscalePolicyListString = autoscalePolicyString
-                    .substring(autoscalePolicyString.indexOf('['), (autoscalePolicyString.lastIndexOf(']') + 1));
+            String autoscalePolicyString = readUrl(System.getProperty("baseUrl") + Constants.URL_POLICY_AUTOSCALE);
+            String autoscalePolicyListString;
+            if (autoscalePolicyString != null) {
+                autoscalePolicyListString = autoscalePolicyString
+                        .substring(autoscalePolicyString.indexOf('['), (autoscalePolicyString.lastIndexOf(']') + 1));
+            } else {
+                String msg = "Error while fetching autoscaling policies";
+                log.error(msg);
+                throw new ArtifactLoadingException(msg);
+            }
             return gson.fromJson(autoscalePolicyListString, new TypeToken<List<AutoscalePolicy>>() {
             }.getType());
         } catch (IOException e) {
-            String msg = "IOException in fetching auto scale policy list";
+            String msg = "Failed fetching autoscaling policy list due to IOException";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
     }
-
     /**
      * Method to fetch Deployment Policy
      *
@@ -115,18 +118,24 @@ public class OldArtifactLoader {
      */
     public List<DeploymentPolicy> fetchDeploymentPolicyList() throws ArtifactLoadingException {
         try {
-            String deploymentPolicyString = readUrl(Constants.BASE_URL + Constants.URL_POLICY_DEPLOYMENT);
-            String deploymentPolicyListString = deploymentPolicyString
-                    .substring(deploymentPolicyString.indexOf('['), (deploymentPolicyString.lastIndexOf(']') + 1));
+            String deploymentPolicyString = readUrl(System.getProperty("baseUrl") + Constants.URL_POLICY_DEPLOYMENT);
+            String deploymentPolicyListString;
+            if (deploymentPolicyString != null) {
+                deploymentPolicyListString = deploymentPolicyString
+                        .substring(deploymentPolicyString.indexOf('['), (deploymentPolicyString.lastIndexOf(']') + 1));
+            } else {
+                String msg = "Error while fetching deployment policies";
+                log.error(msg);
+                throw new ArtifactLoadingException(msg);
+            }
             return gson.fromJson(deploymentPolicyListString, new TypeToken<List<DeploymentPolicy>>() {
             }.getType());
         } catch (IOException e) {
-            String msg = "IOException in fetching deployment policy list";
+            String msg = "Failed fetching deployment policy list due to IOException";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
     }
-
     /**
      * Method to fetch Cartridges
      *
@@ -135,13 +144,20 @@ public class OldArtifactLoader {
      */
     public List<Cartridge> fetchCartridgeList() throws ArtifactLoadingException {
         try {
-            String cartridgeString = readUrl(Constants.BASE_URL + Constants.URL_CARTRIDGE);
-            String cartridgeListString = cartridgeString
-                    .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
+            String cartridgeString = readUrl(System.getProperty("baseUrl") + Constants.URL_CARTRIDGE);
+            String cartridgeListString;
+            if (cartridgeString != null) {
+                cartridgeListString = cartridgeString
+                        .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
+            } else {
+                String msg = "Error while fetching cartridge lists";
+                log.error(msg);
+                throw new ArtifactLoadingException(msg);
+            }
             return gson.fromJson(cartridgeListString, new TypeToken<List<Cartridge>>() {
             }.getType());
         } catch (IOException e) {
-            String msg = "IOException in fetching cartridge list";
+            String msg = "Failed fetching deployment policy list due to IOException";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
@@ -154,15 +170,21 @@ public class OldArtifactLoader {
      */
     public List<CartridgeInfoBean> fetchSubscriptionDataList() throws ArtifactLoadingException {
         try {
-            String cartridgeString = readUrl(Constants.BASE_URL + Constants.URL_SUBSCRIPTION);
-
-            String cartridgeListString = cartridgeString
-                    .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
+            String cartridgeString = readUrl(System.getProperty("baseUrl") + Constants.URL_SUBSCRIPTION);
+            String cartridgeListString;
+            if (cartridgeString != null) {
+                cartridgeListString = cartridgeString
+                        .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
+            } else {
+                String msg = "Error while fetching subscription data list";
+                log.error(msg);
+                throw new ArtifactLoadingException(msg);
+            }
             return gson.fromJson(cartridgeListString, new TypeToken<List<CartridgeInfoBean>>() {
             }.getType());
 
         } catch (IOException e) {
-            String msg = "IOException in fetching subscription list";
+            String msg = "Failed fetching deployment policy list due to IOException";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
@@ -172,23 +194,25 @@ public class OldArtifactLoader {
             throws ArtifactLoadingException {
         try {
             String domainString = readUrl(
-                    Constants.BASE_URL + Constants.STRATOS + "cartridge" + File.separator + cartridgeType
+                    System.getProperty("baseUrl") + Constants.STRATOS + "cartridge" + File.separator + cartridgeType
                             + File.separator + "subscription" + File.separator + subscriptionAlias + File.separator
                             + "domains");
-            String domainListString = null;
+            String domainListString;
             if (domainString != null) {
                 domainListString = domainString
                         .substring(domainString.indexOf('['), (domainString.lastIndexOf(']') + 1));
+            } else {
+                String msg = "Error while fetching domain mapping lists";
+                log.error(msg);
+                throw new ArtifactLoadingException(msg);
             }
             return gson.fromJson(domainListString, new TypeToken<List<SubscriptionDomainBean>>() {
             }.getType());
-
         } catch (IOException e) {
-            String msg = "IOException in fetching domain mapping list";
+            String msg = "Failed fetching deployment policy list due to IOException";
             log.error(msg);
             throw new ArtifactLoadingException(msg, e);
         }
-
     }
 
     /**
@@ -200,7 +224,7 @@ public class OldArtifactLoader {
      */
     private String readUrl(String serviceEndpoint) throws IOException {
         try {
-            String authString = Constants.USER_NAME + ":" + Constants.PASSWORD;
+            String authString = System.getProperty("userName") + ":" + System.getProperty("password");
             byte[] authEncBytes = Base64.encodeBase64(authString.getBytes());
             String authStringEnc = new String(authEncBytes);
 
@@ -211,14 +235,14 @@ public class OldArtifactLoader {
                 httpConnection.setRequestMethod("GET");
                 httpConnection.setRequestProperty("Authorization", "Basic " + authStringEnc);
                 httpConnection.setRequestProperty("Content-Type", "application/json");
-                httpConnection.setRequestProperty("Accept", "*/*"); // FIXME: 12/12/15 This is required
+                httpConnection.setRequestProperty("Accept", "*/*");
 
                 if (httpConnection.getResponseCode() == 200 || httpConnection.getResponseCode() == 301) {
                     InputStream is = httpConnection.getInputStream();
                     InputStreamReader isr = new InputStreamReader(is);
                     int numCharsRead;
                     char[] charArray = new char[1024];
-                    StringBuffer sb = new StringBuffer();
+                    StringBuilder sb = new StringBuilder();
                     while ((numCharsRead = isr.read(charArray)) > 0) {
                         sb.append(charArray, 0, numCharsRead);
                     }
@@ -229,7 +253,7 @@ public class OldArtifactLoader {
 
                     int numCharsRead;
                     char[] charArray = new char[1024];
-                    StringBuffer sb = new StringBuffer();
+                    StringBuilder sb = new StringBuilder();
                     while ((numCharsRead = isr.read(charArray)) > 0) {
                         sb.append(charArray, 0, numCharsRead);
                     }

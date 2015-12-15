@@ -34,6 +34,7 @@ import org.apache.stratos.common.beans.partition.NetworkPartitionBean;
 import org.apache.stratos.common.beans.partition.NetworkPartitionReferenceBean;
 import org.apache.stratos.common.beans.partition.PartitionReferenceBean;
 import org.apache.stratos.common.beans.policy.autoscale.AutoscalePolicyBean;
+import org.apache.stratos.common.beans.policy.deployment.ApplicationPolicyBean;
 import org.apache.stratos.common.beans.policy.deployment.DeploymentPolicyBean;
 import org.apache.stratos.manager.dto.Cartridge;
 import org.apache.stratos.rest.endpoint.bean.CartridgeInfoBean;
@@ -114,6 +115,7 @@ public class Transformation {
         List<Partition> networkPartition400List;
         NetworkPartitionBean networkPartition410 = new NetworkPartitionBean();
         File directoryName;
+        String networkPartitionProvider;
         try {
             networkPartition400List = OldArtifactLoader.getInstance().fetchPartitionList();
             log.info("Fetched Network Partition List from PPaaS 4.0.0");
@@ -122,6 +124,8 @@ public class Transformation {
 
                 networkPartition410.setId(networkPartition400.getId());
                 networkPartition410.setProvider(networkPartition400.getProvider());
+
+                networkPartitionProvider = networkPartition400.getProvider();
 
                 if (networkPartition400.getProperty() != null) {
                     List<org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean> property400List = networkPartition400
@@ -140,6 +144,8 @@ public class Transformation {
                         Constants.ROOT_DIRECTORY + Constants.DIRECTORY_NETWORK_PARTITION + File.separator
                                 + networkPartition400.getProvider());
                 writeFile(directoryName, networkPartition410.getId() + ".json", getGson().toJson(networkPartition410));
+
+                addDefaultApplicationPolcies(networkPartitionProvider);
             }
             log.info("Created Network Partition List 4.1.0 artifacts");
         } catch (JsonSyntaxException e) {
@@ -291,17 +297,19 @@ public class Transformation {
                 components.setCartridges(cartridges);
                 application410.setComponents(components);
                 application410.setName(cartridge.getDisplayName());
+                application410.setApplicationId(cartridge.getDisplayName());
                 application410.setDescription(cartridge.getDescription());
 
                 File outputDirectoryNameApp = new File(
                         Constants.ROOT_DIRECTORY + Constants.DIRECTORY_APPLICATION + File.separator + application410
                                 .getName() + File.separator + "artifacts");
                 writeFile(outputDirectoryNameApp, application410.getName() + ".json", getGson().toJson(application410));
-                ConversionTool.getInstance().addScriptDirectory(
-                        Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator + application410
-                                .getName());
                 writeFile(outputDirectoryNameApp, "application-signup.json", getGson().toJson(signup410List));
                 writeFile(outputDirectoryNameApp, "domain-mapping.json", getGson().toJson(domainMapping410List));
+
+                ConversionTool.getInstance().addDeployingScript(
+                        Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator + application410
+                                .getName(), subscribableInfo, cartridge.getDisplayName());
 
                 cartridge410.setDisplayName(cartridge.getDisplayName());
                 cartridge410.setDescription(cartridge.getDescription());
@@ -367,6 +375,21 @@ public class Transformation {
             log.error(msg);
             throw new TransformationException(msg, e);
         }
+    }
+
+    public void addDefaultApplicationPolcies(String networkPartition){
+        ApplicationPolicyBean applicationPolicyBean = new ApplicationPolicyBean();
+
+        applicationPolicyBean.setId(Constants.APPLICATION_POLICY_ID);
+        applicationPolicyBean.setAlgorithm(Constants.APPLICATION_POLICY_ALGO);
+        String[] networkPartitions = {networkPartition};
+        applicationPolicyBean.setNetworkPartitions(networkPartitions);
+
+        File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_APPLICATION);
+
+        writeFile(directoryName, applicationPolicyBean.getId(),
+                getGson().toJson(applicationPolicyBean));
+
     }
 
     /**

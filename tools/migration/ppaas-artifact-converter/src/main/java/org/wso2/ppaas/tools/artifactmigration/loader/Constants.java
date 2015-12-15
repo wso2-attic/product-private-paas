@@ -23,11 +23,10 @@ import java.io.File;
  * Constants Details
  */
 public class Constants {
-
     // 4.0.0 constants
-    public static String BASE_URL = "http://192.168.30.227:9763/";
-    public static String USER_NAME = "admin";
-    public static String PASSWORD = "admin";
+//    public static String BASE_URL = "http://192.168.30.227:9763/";
+//    public static String USER_NAME = "admin";
+//    public static String PASSWORD = "admin";
 
     public static String STRATOS = "stratos" + File.separator + "admin" + File.separator;
     public static String MIGRATION = "migration" + File.separator + "admin" + File.separator;
@@ -39,9 +38,9 @@ public class Constants {
 
     // Do not use forward slash at the beginning instead use it in the base url.
     public static final String URL_PARTITION = STRATOS + "partition";
-    public static final String URL_POLICY_AUTOSCALE = STRATOS +"policy" + File.separator + "autoscale";
-    public static final String URL_CARTRIDGE = STRATOS +"cartridge" + File.separator + "list";
-    public static final String URL_POLICY_DEPLOYMENT = STRATOS +"policy" + File.separator + "deployment";
+    public static final String URL_POLICY_AUTOSCALE = STRATOS + "policy" + File.separator + "autoscale";
+    public static final String URL_CARTRIDGE = STRATOS + "cartridge" + File.separator + "list";
+    public static final String URL_POLICY_DEPLOYMENT = STRATOS + "policy" + File.separator + "deployment";
     public static final String URL_SUBSCRIPTION =
             MIGRATION + "cartridge" + File.separator + "list" + File.separator + "subscribed" + File.separator + "all";
 
@@ -51,10 +50,18 @@ public class Constants {
     public static final String DIRECTORY_POLICY_DEPLOYMENT = "deployment-policies";
     public static final String DIRECTORY_APPLICATION = "applications";
     public static final String DIRECTORY_CARTRIDGE = "cartridges";
-    public static final String DIRECTORY_APPLICATION_SIGNUP = "application-signup";
+    public static final String DIRECTORY_POLICY_APPLICATION = "application-policies";
 
     public static final String DIRECTORY_OUTPUT_SCRIPT = "applications";
     public static final String DIRECTORY_SOURCE_SCRIPT =
             System.getProperty("user.dir") + File.separator + ".." + File.separator + "scripts";
+
+    //Default values for the application policy
+    public static final String APPLICATION_POLICY_ID = "autoscaling-policy-1";
+    public static final String APPLICATION_POLICY_ALGO = "one-after-another";
+
+    //Authentication details of PPaaS 4.1.0
+    public static final String USER_NAME410 = "admin";
+    public static final String PASSWORD410 = "admin";
 
 }
