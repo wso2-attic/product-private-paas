@@ -5,8 +5,13 @@ Cartridge agent manages cartridge instance lifecycle and publishes its health st
 to Complex Event Processor (CEP). It provides a set of extension points for implementing
 logic required for configuring the server.
 
-How to run Live Tests
----------------------
+Why PCA has been forked?
+------------------------
+- PCA message broker HA support has broken backward compatibility of cartridges in (Apache Stratos 4.1.5 release) [https://issues.apache.org/jira/browse/STRATOS-1645]
+- (High CPU usage issue)[https://issues.apache.org/jira/browse/STRATOS-1644] was fixed in WSO2 Private PaaS and still not released in Apache Stratos.
+
+How to run Live Tests?
+----------------------
 1. Install following packages
 
    apt-get install -y git python python-pip python-dev gcc zip 
