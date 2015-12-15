@@ -28,6 +28,7 @@
 
     <modules>
         <module>org.wso2.ppaas.manager.styles</module>
+        <module>org.wso2.ppaas.python.cartridge.agent</module>
     </modules>
 
     <build>

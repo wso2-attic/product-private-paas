@@ -532,6 +532,11 @@
                 <artifactId>org.jacoco.agent</artifactId>
                 <version>${jacoco.agent.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.user.api</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
 
             <!-- Misc -->
             <dependency>
@@ -672,6 +677,16 @@
                 <version>${activemq.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-jaas</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-mqtt</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.eclipse.paho</groupId>
                 <artifactId>mqtt-client</artifactId>
                 <version>${mqtt.client.version}</version>
@@ -741,6 +756,7 @@
         <carbon.deployment.version>4.2.3</carbon.deployment.version>
         <carbon.automation.version>4.4.2</carbon.automation.version>
         <carbon.automationutils.version>4.4.2</carbon.automationutils.version>
+        <carbon.analytics.common.version>5.0.0</carbon.analytics.common.version>
         <axis2.osgi.version>1.6.1.wso2v10</axis2.osgi.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
         <version.axis2>1.6.1-wso2v10</version.axis2>

@@ -29,5 +29,6 @@
 
     <modules>
         <module>ppaas</module>
+        <module>python-cartridge-agent</module>
     </modules>
 </project>
