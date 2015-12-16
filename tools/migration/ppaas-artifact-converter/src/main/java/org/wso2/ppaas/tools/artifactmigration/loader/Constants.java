@@ -17,6 +17,8 @@
  */
 package org.wso2.ppaas.tools.artifactmigration.loader;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.File;
 
 /**
@@ -62,4 +64,8 @@ public class Constants {
     public static final String USER_NAME410 = "admin";
     public static final String PASSWORD410 = "admin";
 
+    //Rest client class configuration variables
+    public static final String CERTIFICATE_PATH = StringUtils.removeEnd(System.getProperty("user.dir") +File.separator +".."+File.separator + "resources", File.separator)+ "/wso2carbon.jks";
+    public static final char[] CERTIFICATE_PASSWORD = "wso2carbon".toCharArray();
+    public static final boolean ENABLE_SELF_CERTIFIED= true;
 }
