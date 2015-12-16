@@ -24,6 +24,7 @@ public class Main {
     public static void main(String[] args) {
 
         ConversionTool.getInstance().getPropValues();
+        ConversionTool.getInstance().handleConsoleInputs();
         ConversionTool.getInstance().startTransformation();
 
     }
