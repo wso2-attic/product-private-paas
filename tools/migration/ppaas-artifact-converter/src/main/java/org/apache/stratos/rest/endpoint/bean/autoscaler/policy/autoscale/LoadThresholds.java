@@ -24,9 +24,31 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class LoadThresholds {
 
-    public RequestsInFlightThresholds requestsInFlight;
+    private RequestsInFlightThresholds requestsInFlight;
+    private MemoryConsumptionThresholds memoryConsumption;
+    private LoadAverageThresholds loadAverage;
 
-    public MemoryConsumptionThresholds memoryConsumption;
+    public RequestsInFlightThresholds getRequestsInFlight() {
+        return requestsInFlight;
+    }
 
-    public LoadAverageThresholds loadAverage;
+    public void setRequestsInFlight(RequestsInFlightThresholds requestsInFlight) {
+        this.requestsInFlight = requestsInFlight;
+    }
+
+    public MemoryConsumptionThresholds getMemoryConsumption() {
+        return memoryConsumption;
+    }
+
+    public void setMemoryConsumption(MemoryConsumptionThresholds memoryConsumption) {
+        this.memoryConsumption = memoryConsumption;
+    }
+
+    public LoadAverageThresholds getLoadAverage() {
+        return loadAverage;
+    }
+
+    public void setLoadAverage(LoadAverageThresholds loadAverage) {
+        this.loadAverage = loadAverage;
+    }
 }

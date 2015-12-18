@@ -21,9 +21,9 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import org.apache.log4j.Logger;
-import org.apache.stratos.cloud.controller.pojo.Persistence;
-import org.apache.stratos.cloud.controller.pojo.PortMapping;
-import org.apache.stratos.cloud.controller.pojo.Volume;
+import org.apache.stratos.cloud.controller.stub.pojo.PortMapping;
+import org.apache.stratos.cloud.controller.stub.pojo.Persistence;
+import org.apache.stratos.cloud.controller.stub.pojo.Volume;
 import org.apache.stratos.common.beans.application.ApplicationBean;
 import org.apache.stratos.common.beans.application.ComponentBean;
 import org.apache.stratos.common.beans.application.SubscribableInfo;
@@ -33,7 +33,7 @@ import org.apache.stratos.common.beans.cartridge.*;
 import org.apache.stratos.common.beans.partition.NetworkPartitionBean;
 import org.apache.stratos.common.beans.partition.NetworkPartitionReferenceBean;
 import org.apache.stratos.common.beans.partition.PartitionReferenceBean;
-import org.apache.stratos.common.beans.policy.autoscale.AutoscalePolicyBean;
+import org.apache.stratos.common.beans.policy.autoscale.*;
 import org.apache.stratos.common.beans.policy.deployment.ApplicationPolicyBean;
 import org.apache.stratos.common.beans.policy.deployment.DeploymentPolicyBean;
 import org.apache.stratos.manager.dto.Cartridge;
@@ -63,36 +63,40 @@ public class Transformation {
     private static final Logger log = Logger.getLogger(Transformation.class);
     private static Transformation instance = null;
 
-    private Transformation() {
-    }
-
-    public static Transformation getInstance() {
-        if (instance == null) {
-            synchronized (Transformation.class) {
-                if (instance == null) {
-                    instance = new Transformation();
-                }
-            }
-        }
-        return instance;
-    }
-
     /**
      * Method to transform Auto Scale Policies
      */
-    public void transformAutoscalePolicyList() throws Exception {
+    public static void transformAutoscalePolicyList() throws TransformationException {
 
         List<AutoscalePolicy> autoscalePolicy400List;
         AutoscalePolicyBean autoscalePolicy410 = new AutoscalePolicyBean();
         try {
-            autoscalePolicy400List = OldArtifactLoader.getInstance().fetchAutoscalePolicyList();
+            autoscalePolicy400List = OldArtifactLoader.fetchAutoscalePolicyList();
             log.info("Fetched Auto Scale Policy from PPaaS 4.0.0");
 
             File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_AUTOSCALE);
 
-            for (AutoscalePolicy autoscalePolicy : autoscalePolicy400List) {
-                autoscalePolicy410.setId(autoscalePolicy.getId());
-                writeFile(directoryName, autoscalePolicy410.getId() + ".json", getGson().toJson(autoscalePolicy410));
+            for (AutoscalePolicy autoscalePolicy400 : autoscalePolicy400List) {
+
+                autoscalePolicy410.setId(autoscalePolicy400.getId());
+
+                //PPaaS 4.1.0 artifacts
+                LoadThresholdsBean loadThresholds410 = new LoadThresholdsBean();
+                RequestsInFlightThresholdsBean requestsInFlight410 = new RequestsInFlightThresholdsBean();
+                MemoryConsumptionThresholdsBean memoryConsumption410 = new MemoryConsumptionThresholdsBean();
+                LoadAverageThresholdsBean loadAverage410 = new LoadAverageThresholdsBean();
+
+                requestsInFlight410.setThreshold(autoscalePolicy400.getLoadThresholds().getRequestsInFlight().getUpperLimit());
+                memoryConsumption410.setThreshold(autoscalePolicy400.getLoadThresholds().getMemoryConsumption().getUpperLimit());
+                loadAverage410.setThreshold(autoscalePolicy400.getLoadThresholds().getLoadAverage().getUpperLimit());
+
+                loadThresholds410.setRequestsInFlight(requestsInFlight410);
+                loadThresholds410.setLoadAverage(loadAverage410);
+                loadThresholds410.setMemoryConsumption(memoryConsumption410);
+
+                autoscalePolicy410.setLoadThresholds(loadThresholds410);
+
+                writeFile(directoryName, autoscalePolicy410.getId() + Constants.JSON_EXTENSION, getGson().toJson(autoscalePolicy410));
             }
             log.info("Created Auto Scale Policy 4.1.0 artifacts");
 
@@ -106,25 +110,24 @@ public class Transformation {
             throw new TransformationException(msg, e);
         }
     }
-
     /**
      * Method to transform network partitions
      */
-    public void transformNetworkPartitionList() throws Exception {
+    public static void transformNetworkPartitionList() throws TransformationException {
 
         List<Partition> networkPartition400List;
         NetworkPartitionBean networkPartition410 = new NetworkPartitionBean();
         File directoryName;
         String networkPartitionProvider;
         try {
-            networkPartition400List = OldArtifactLoader.getInstance().fetchPartitionList();
+            networkPartition400List = OldArtifactLoader.fetchPartitionList();
             log.info("Fetched Network Partition List from PPaaS 4.0.0");
 
             for (Partition networkPartition400 : networkPartition400List) {
 
                 networkPartition410.setId(networkPartition400.getId());
                 networkPartition410.setProvider(networkPartition400.getProvider());
-
+                //TODO:check thisssssssssss
                 networkPartitionProvider = networkPartition400.getProvider();
 
                 if (networkPartition400.getProperty() != null) {
@@ -143,9 +146,8 @@ public class Transformation {
                 directoryName = new File(
                         Constants.ROOT_DIRECTORY + Constants.DIRECTORY_NETWORK_PARTITION + File.separator
                                 + networkPartition400.getProvider());
-                writeFile(directoryName, networkPartition410.getId() + ".json", getGson().toJson(networkPartition410));
-
-                addDefaultApplicationPolcies(networkPartitionProvider);
+                writeFile(directoryName, networkPartition410.getId() + Constants.JSON_EXTENSION, getGson().toJson(networkPartition410));
+                addDefaultApplicationPolicies(networkPartitionProvider);
             }
             log.info("Created Network Partition List 4.1.0 artifacts");
         } catch (JsonSyntaxException e) {
@@ -162,12 +164,12 @@ public class Transformation {
     /**
      * Method to transform DeploymentPolicy
      */
-    public void transformDeploymentPolicyList() throws Exception {
+    public static void transformDeploymentPolicyList() throws TransformationException {
 
         List<DeploymentPolicy> deploymentPolicy400List;
         DeploymentPolicyBean deploymentPolicy410 = new DeploymentPolicyBean();
         try {
-            deploymentPolicy400List = OldArtifactLoader.getInstance().fetchDeploymentPolicyList();
+            deploymentPolicy400List = OldArtifactLoader.fetchDeploymentPolicyList();
             log.info("Fetched Deployment Policy from PPaaS 4.0.0");
 
             File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_DEPLOYMENT);
@@ -215,7 +217,7 @@ public class Transformation {
                 }
                 deploymentPolicy410.setNetworkPartitions(networkPartitions410List);
 
-                writeFile(directoryName, deploymentPolicy410.getId() + ".json", getGson().toJson(deploymentPolicy410));
+                writeFile(directoryName, deploymentPolicy410.getId() + Constants.JSON_EXTENSION, getGson().toJson(deploymentPolicy410));
             }
             log.info("Created Deployment Policy 4.1.0 artifacts");
         } catch (JsonSyntaxException e) {
@@ -233,17 +235,17 @@ public class Transformation {
     /**
      * Method to transform cartridge list
      */
-    public void transformCartridgeList() throws Exception {
+    public static void transformCartridgeList() throws TransformationException {
         List<Cartridge> cartridge400List;
         List<CartridgeInfoBean> subscription400List;
         ApplicationBean application410 = new ApplicationBean();
         CartridgeBean cartridge410 = new CartridgeBean();
 
         try {
-            cartridge400List = OldArtifactLoader.getInstance().fetchCartridgeList();
+            cartridge400List = OldArtifactLoader.fetchCartridgeList();
             log.info("Fetched Cartridge List from PPaaS 4.0.0");
 
-            subscription400List = OldArtifactLoader.getInstance().fetchSubscriptionDataList();
+            subscription400List = OldArtifactLoader.fetchSubscriptionDataList();
             log.info("Fetched Subscription List");
 
             File outputDirectoryNameCartridge = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_CARTRIDGE);
@@ -278,7 +280,7 @@ public class Transformation {
 
                         signup410List.add(a++, artifactRepository);
 
-                        List<SubscriptionDomainBean> domainMapping400 = OldArtifactLoader.getInstance()
+                        List<SubscriptionDomainBean> domainMapping400 = OldArtifactLoader
                                 .fetchDomainMappingList(cartridge.getCartridgeType(), subscription.getAlias());
 
                         for (SubscriptionDomainBean domainMapping : domainMapping400) {
@@ -304,9 +306,9 @@ public class Transformation {
                 File outputDirectoryNameApp = new File(
                         Constants.ROOT_DIRECTORY + Constants.DIRECTORY_APPLICATION + File.separator + application410
                                 .getName() + File.separator + "artifacts");
-                writeFile(outputDirectoryNameApp, application410.getName() + ".json", getGson().toJson(application410));
-                writeFile(outputDirectoryNameApp, "application-signup.json", getGson().toJson(signup410List));
-                writeFile(outputDirectoryNameApp, "domain-mapping.json", getGson().toJson(domainMapping410List));
+                writeFile(outputDirectoryNameApp, application410.getName() + Constants.JSON_EXTENSION, getGson().toJson(application410));
+                writeFile(outputDirectoryNameApp, Constants.FILENAME_APPLICATION_SIGNUP, getGson().toJson(signup410List));
+                writeFile(outputDirectoryNameApp, Constants.FILENAME_DOMAIN_MAPPING, getGson().toJson(domainMapping410List));
 
                 ConversionTool.getInstance().addDeployingScript(
                         Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator + application410
@@ -321,7 +323,6 @@ public class Transformation {
                 cartridge410.setMultiTenant(cartridge.isMultiTenant());
 
                 if (cartridge.getPortMappings() != null) {
-
                     PortMapping[] portMapping400List = cartridge.getPortMappings();
                     List<PortMappingBean> portMapping410List = new ArrayList<>();
 
@@ -340,8 +341,8 @@ public class Transformation {
                 if (cartridge.getPersistence() != null) {
                     Persistence persistence400 = cartridge.getPersistence();
                     PersistenceBean persistenceBean410 = new PersistenceBean();
-
-                    persistenceBean410.setRequired(persistence400.isPersistanceRequired());
+                    //TODO:check ths
+                    persistenceBean410.setRequired(persistence400.getPersistanceRequired());
 
                     Volume[] volume400Array = persistence400.getVolumes();
                     List<VolumeBean> volumeBean410List = new ArrayList<>();
@@ -354,14 +355,14 @@ public class Transformation {
                         volumeBeanTemp.setSize(String.valueOf(volume.getSize()));
                         volumeBeanTemp.setMappingPath(volume.getMappingPath());
                         volumeBeanTemp.setDevice(volume.getDevice());
-                        volumeBeanTemp.setRemoveOnTermination(volume.isRemoveOntermination());
+                        volumeBeanTemp.setRemoveOnTermination(volume.isRemoveOnterminationSpecified());
 
                         volumeBean410List.add(b++, volumeBeanTemp);
                     }
                     persistenceBean410.setVolume(volumeBean410List);
                     cartridge410.setPersistence(persistenceBean410);
                 }
-                writeFile(outputDirectoryNameCartridge, cartridge410.getDisplayName() + ".json",
+                writeFile(outputDirectoryNameCartridge, cartridge410.getDisplayName() + Constants.JSON_EXTENSION,
                         getGson().toJson(cartridge410));
             }
             log.info("Created Cartridge List 4.1.0 artifacts");
@@ -380,9 +381,8 @@ public class Transformation {
 
     /**
      * Method to add default application policies
-     * @param networkPartition
      */
-    public void addDefaultApplicationPolcies(String networkPartition){
+    private static void addDefaultApplicationPolicies(String networkPartition) {
         ApplicationPolicyBean applicationPolicyBean = new ApplicationPolicyBean();
 
         applicationPolicyBean.setId(Constants.APPLICATION_POLICY_ID);
@@ -391,14 +391,14 @@ public class Transformation {
         applicationPolicyBean.setNetworkPartitions(networkPartitions);
 
         File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_APPLICATION);
-        writeFile(directoryName, applicationPolicyBean.getId()+".json",
-                getGson().toJson(applicationPolicyBean));
+        writeFile(directoryName, applicationPolicyBean.getId() + Constants.JSON_EXTENSION, getGson().toJson(applicationPolicyBean));
 
     }
+
     /**
      * Method to get Gson
      */
-    public Gson getGson() {
+    private static Gson getGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         return gsonBuilder.setPrettyPrinting().create();
     }
@@ -410,7 +410,7 @@ public class Transformation {
      * @param fileName      file name
      * @param json          json string
      */
-    public void writeFile(File directoryName, String fileName, String json) {
+    private static void writeFile(File directoryName, String fileName, String json) {
         try {
             if (!directoryName.exists()) {
                 directoryName.mkdirs();

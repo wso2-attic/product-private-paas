@@ -22,8 +22,7 @@ package org.apache.stratos.rest.endpoint.bean;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "error")
-public class Error {
+@XmlRootElement(name = "error") class Error {
     private int errorCode;
     private String errorMessage;
 

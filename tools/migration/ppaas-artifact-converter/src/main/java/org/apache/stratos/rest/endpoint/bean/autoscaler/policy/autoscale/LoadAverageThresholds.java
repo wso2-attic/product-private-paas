@@ -24,7 +24,22 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class LoadAverageThresholds {
 
-	public float upperLimit;
+	private float upperLimit;
+    private float lowerLimit;
 
-    public float lowerLimit;
+    public float getUpperLimit() {
+        return upperLimit;
+    }
+
+    public void setUpperLimit(float upperLimit) {
+        this.upperLimit = upperLimit;
+    }
+
+    public float getLowerLimit() {
+        return lowerLimit;
+    }
+
+    public void setLowerLimit(float lowerLimit) {
+        this.lowerLimit = lowerLimit;
+    }
 }

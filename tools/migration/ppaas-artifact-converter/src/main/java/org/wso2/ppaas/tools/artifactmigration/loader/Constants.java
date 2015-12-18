@@ -23,13 +23,12 @@ import java.io.File;
  * Constants Details
  */
 public class Constants {
-    // 4.0.0 constants
 
-    public static String STRATOS = "stratos" + File.separator + "admin" + File.separator;
-    public static String MIGRATION = "migration" + File.separator + "admin" + File.separator;
+    public static final String STRATOS = "stratos" + File.separator + "admin" + File.separator;
+    private static final String MIGRATION = "migration" + File.separator + "admin" + File.separator;
 
     // 4.1.0 constants outputs
-    public static String ROOT_DIRECTORY =
+    public static final String ROOT_DIRECTORY =
             System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
                     + File.separator;
 
@@ -49,17 +48,36 @@ public class Constants {
     public static final String DIRECTORY_CARTRIDGE = "cartridges";
     public static final String DIRECTORY_POLICY_APPLICATION = "application-policies";
 
-    public static final String DIRECTORY_OUTPUT_SCRIPT = "applications";
-    public static final String DIRECTORY_SOURCE_SCRIPT =
+    private static final String DIRECTORY_SOURCE_SCRIPT =
             System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources" + File.separator
                     + "scripts";
+    public static final String DIRECTORY_SOURCE_SCRIPT_DEPLOY = Constants.DIRECTORY_SOURCE_SCRIPT + File.separator+ "common"+ File.separator+ "deploy.sh";
+    public static final String DIRECTORY_SOURCE_SCRIPT_EC2 = Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "ec2";
+    public static final String DIRECTORY_SOURCE_SCRIPT_GCE = Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "gce";
+    public static final String DIRECTORY_SOURCE_SCRIPT_KUBERNETES = Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "kubernetes";
+    public static final String DIRECTORY_SOURCE_SCRIPT_MOCK = Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "mock";
+    public static final String DIRECTORY_SOURCE_SCRIPT_OPENSTACK = Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "openstack";
+
+    public static final String DIRECTORY_OUTPUT_SCRIPT = "applications";
+    public static final String DIRECTORY_OUTPUT_SCRIPT_DEPLOY = File.separator + "scripts" + File.separator + "common";
+    public static final String FILE_SOURCE_SCRIPT_DEPLOY= File.separator + "deploy.sh";
 
     //Default values for the application policy
     public static final String APPLICATION_POLICY_ID = "autoscaling-policy-1";
     public static final String APPLICATION_POLICY_ALGO = "one-after-another";
 
-    //Authentication details of PPaaS 4.1.0
-    public static final String USER_NAME410 = "admin";
-    public static final String PASSWORD410 = "admin";
+    //Default file names for application policy jsons
+    public static final String FILENAME_APPLICATION_SIGNUP = "application-signup.json";
+    public static final String FILENAME_DOMAIN_MAPPING = "domain-mapping.json";
+
+
+    //configuration details
+    public static final String BASE_URL400 = "baseUrl400";
+    public static final String USERNAME400 = "userName400";
+    public static final String PASSWORD400 = "password400";
+    public static final String USERNAME410 = "userName410";
+    public static final String PASSWORD410 = "password410";
+
+    public static final String JSON_EXTENSION  = ".json";
 
 }

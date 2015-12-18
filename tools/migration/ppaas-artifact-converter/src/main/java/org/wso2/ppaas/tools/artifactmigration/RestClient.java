@@ -23,12 +23,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.wso2.ppaas.tools.artifactmigration.exception.RestClientException;
 
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLSession;
+import javax.net.ssl.*;
 import java.io.*;
 import java.net.URL;
 import java.security.KeyManagementException;
@@ -42,7 +37,13 @@ public class RestClient {
     private SSLSocketFactory sslSocketFactory;
     private String authStringEnc;
 
-    public RestClient(String username,String password) throws RestClientException{
+    /**
+     * Constructor of Rest Client
+     * @param username user name
+     * @param password password
+     * @throws RestClientException
+     */
+    public RestClient(String username, String password) throws RestClientException {
         try {
             InputStream fs = new FileInputStream(new File(getResourcesFolderPath() + "/wso2carbon.jks"));
             KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
@@ -83,12 +84,22 @@ public class RestClient {
 
     }
 
+    /**
+     * Method to get resources folder path
+     * @return resources folder path
+     */
     private static String getResourcesFolderPath() {
-        String path = System.getProperty("user.dir") +File.separator + ".." +File.separator + "resources";
+        String path = System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources";
         return StringUtils.removeEnd(path, File.separator);
     }
 
-    public String doGet(URL resourcePath) throws RestClientException{
+    /**
+     * Method to get JSON files from PPaaS 4.0.0
+     * @param resourcePath resource path
+     * @return JSON string
+     * @throws RestClientException
+     */
+    public String doGet(URL resourcePath) throws RestClientException {
         try {
             HttpsURLConnection con = (HttpsURLConnection) resourcePath.openConnection();
             con.setRequestMethod("GET");
@@ -111,18 +122,12 @@ public class RestClient {
             log.error(msg);
             throw new RestClientException(msg, e);
         }
-
-
-
     }
-
     static {
         HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
             @Override public boolean verify(String s, SSLSession sslSession) {
-                System.out.println();
                 return true;
             }
         });
     }
-
 }

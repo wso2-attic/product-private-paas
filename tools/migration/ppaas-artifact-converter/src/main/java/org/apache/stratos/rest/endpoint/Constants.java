@@ -21,7 +21,7 @@ package org.apache.stratos.rest.endpoint;
 /**
  * Global constants used in this module
  */
-public class Constants {
+class Constants {
 
     public static final String SUPER_TENANT_SERVICE = "super.tenant.service";
     

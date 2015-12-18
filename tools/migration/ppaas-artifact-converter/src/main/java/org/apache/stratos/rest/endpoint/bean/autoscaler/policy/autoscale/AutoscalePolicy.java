@@ -25,11 +25,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class AutoscalePolicy {
 
     private String id;
-
     private String displayName;
-
     private String description;
-
     private LoadThresholds loadThresholds;
 
     public String getId() {

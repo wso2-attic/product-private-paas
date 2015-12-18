@@ -19,23 +19,20 @@
 package org.apache.stratos.rest.endpoint.bean;
 
 import javax.xml.bind.annotation.XmlRootElement;
-import java.util.ArrayList;
-import java.util.List;
 
 @XmlRootElement
 public class CartridgeInfoBean {
-    String cartridgeType;
-    String alias;
-    String autoscalePolicy;
-    String deploymentPolicy;
-    String repoURL;
-    boolean privateRepo;
-    String repoUsername;
-    String repoPassword;
-    String dataCartridgeType;
-    String dataCartridgeAlias;
-    boolean commitsEnabled;
-
+    private String cartridgeType;
+    private String alias;
+    private String autoscalePolicy;
+    private String deploymentPolicy;
+    private String repoURL;
+    private boolean privateRepo;
+    private String repoUsername;
+    private String repoPassword;
+    private String dataCartridgeType;
+    private String dataCartridgeAlias;
+    private boolean commitsEnabled;
     private boolean persistanceRequired;
     private String size;
     private boolean removeOnTermination;
@@ -56,8 +53,6 @@ public class CartridgeInfoBean {
     private String subscribingTenantDomain;
 
     public CartridgeInfoBean() {
-
-        //this.domains = new ArrayList<String>();
     }
 
     public String getCartridgeType() {
@@ -179,10 +174,6 @@ public class CartridgeInfoBean {
 	public void setServiceGroup(String serviceGroup) {
 		this.serviceGroup = serviceGroup;
 	}
-    
-//    public List<String> getDomains() { return domains; }
-//
-//    public void setDomains(List<String> domains) { this.domains = domains; }
 
     public String getSubscribingTenantDomain() {
         return subscribingTenantDomain;

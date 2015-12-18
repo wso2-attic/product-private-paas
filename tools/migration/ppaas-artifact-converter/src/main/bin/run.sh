@@ -14,7 +14,6 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
-
 echo "-------------------------------------------------------"
 echo "Starting PPaaS Artifact Migration Tool (4.0.0 to 4.0.1)"
 echo "-------------------------------------------------------"
@@ -23,6 +22,7 @@ lib_path=${script_path}/../lib/
 class_path=`echo ${lib_path}/*.jar | tr ' ' ':'`
 
 properties="-Dlog4j.configuration=file://${script_path}/../conf/log4j.properties
-            -Dlog4jfile=${script_path}/../log/ppaas-artifact-converter-log.log"
+            -Dlog4jfile=${script_path}/../log/ppaas-artifact-converter-log.log
+            -Dconfig.configuration=${script_path}/../conf/config.properties"
 
 java -cp "${class_path}" ${properties} org.wso2.ppaas.tools.artifactmigration.Main$*

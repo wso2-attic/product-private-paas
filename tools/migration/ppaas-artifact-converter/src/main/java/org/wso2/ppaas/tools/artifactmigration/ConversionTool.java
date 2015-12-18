@@ -24,6 +24,7 @@ import org.wso2.ppaas.tools.artifactmigration.loader.Constants;
 
 import java.io.*;
 import java.util.Properties;
+
 /*
 Class for conversion
  */
@@ -55,20 +56,31 @@ public class ConversionTool {
             log.info("CLI started...");
         }
         Console console = System.console();
-        if (System.getProperty("baseUrl").isEmpty()) {
-            System.out.println("Enter the Base URL: ");
-            System.setProperty("baseUrl", console.readLine());
+        if (System.getProperty(Constants.BASE_URL400) == null || System.getProperty(Constants.BASE_URL400).isEmpty()) {
+            System.out.println("Enter the Base URL of PPaaS 4.0.0:");
+            System.setProperty(Constants.BASE_URL400, console.readLine());
         }
 
-        if (System.getProperty("userName").isEmpty()) {
-            System.out.println("Enter the User name: ");
-            System.setProperty("userName", console.readLine());
+        if (System.getProperty(Constants.USERNAME400) == null || System.getProperty(Constants.USERNAME400).isEmpty()) {
+            System.out.println("Enter the User name of PPaaS 4.0.0:");
+            System.setProperty(Constants.USERNAME400, console.readLine());
         }
 
-        if (System.getProperty("password").isEmpty()) {
-            System.out.println("Enter the Password: ");
+        if (System.getProperty(Constants.PASSWORD400) == null || System.getProperty(Constants.PASSWORD400).isEmpty()) {
+            System.out.println("Enter the Password of PPaaS 4.0.0:");
             char[] passwordChars = console.readPassword();
-            System.setProperty("password", new String(passwordChars));
+            System.setProperty(Constants.PASSWORD400, new String(passwordChars));
+        }
+
+        if (System.getProperty(Constants.USERNAME410) == null || System.getProperty(Constants.USERNAME410).isEmpty()) {
+            System.out.println("Enter the User name of PPaaS 4.1.0:");
+            System.setProperty(Constants.USERNAME410, console.readLine());
+        }
+
+        if (System.getProperty(Constants.PASSWORD410) == null || System.getProperty(Constants.PASSWORD410).isEmpty()) {
+            System.out.println("Enter the Password of PPaaS 4.1.0:");
+            char[] passwordChars = console.readPassword();
+            System.setProperty(Constants.PASSWORD410, new String(passwordChars));
         }
     }
 
@@ -77,34 +89,31 @@ public class ConversionTool {
      */
     public void startTransformation() {
 
-        if (log.isInfoEnabled()) {
-            log.info("Artifact Migration started...");
-        }
-        boolean isSuccess = true;
+        log.info("Artifact Migration started...");
         try {
-            Transformation.getInstance().transformNetworkPartitionList();
-            Transformation.getInstance().transformAutoscalePolicyList();
-            Transformation.getInstance().transformDeploymentPolicyList();
-            Transformation.getInstance().transformCartridgeList();
+            Transformation.transformNetworkPartitionList();
+            Transformation.transformAutoscalePolicyList();
+            Transformation.transformDeploymentPolicyList();
+            Transformation.transformCartridgeList();
+            System.out.println("Conversion completed successfully");
         } catch (Exception e) {
-            isSuccess = false;
             log.error("Error while converting the artifacts ", e);
             System.out.println("Error while transforming NetworkPartition list. See log for more details.");
         }
-        if (isSuccess)
-            System.out.println("Conversion completed successfully");
     }
 
     /**
      * Method to add script directories specific to each IaaS
+     *
      * @param outputLocation output location of the script directories
      */
-    public void addIaasScriptDirectories(String outputLocation) {
-        File sourceLocationEc2 = new File(Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "ec2");
-        File sourceLocationGce = new File(Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "gce");
-        File sourceLocationKub = new File(Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "kubernetes");
-        File sourceLocationMock = new File(Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "mock");
-        File sourceLocationOS = new File(Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "openstack");
+    private void addIaasScriptDirectories(String outputLocation) {
+
+        File sourceLocationEc2 = new File(Constants.DIRECTORY_SOURCE_SCRIPT_EC2);
+        File sourceLocationGce = new File(Constants.DIRECTORY_SOURCE_SCRIPT_GCE);
+        File sourceLocationKub = new File(Constants.DIRECTORY_SOURCE_SCRIPT_KUBERNETES);
+        File sourceLocationMock = new File(Constants.DIRECTORY_SOURCE_SCRIPT_MOCK);
+        File sourceLocationOS = new File(Constants.DIRECTORY_SOURCE_SCRIPT_OPENSTACK);
         File targetLocation = new File(outputLocation);
         try {
             FileUtils.copyDirectoryToDirectory(sourceLocationEc2, targetLocation);
@@ -119,79 +128,104 @@ public class ConversionTool {
 
     /**
      * Method to add common deploying script
-     * @param outputLocation output location of the script
-     * @param subscribableInfo subscribable inforation
-     * @param cartridgeName cartridge name
+     *
+     * @param outputLocation   output location of the script
+     * @param subscribableInfo subscribable information
+     * @param cartridgeName    cartridge name
      */
     public void addDeployingScript(String outputLocation, SubscribableInfo subscribableInfo, String cartridgeName) {
+        BufferedReader reader = null;
+        FileWriter writer = null;
         try {
-            File file = new File(Constants.DIRECTORY_SOURCE_SCRIPT + "/common/deploy.sh");
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String line, oldText = "";
+            File file = new File(Constants.DIRECTORY_SOURCE_SCRIPT_DEPLOY);
+            reader = new BufferedReader(new FileReader(file));
+            String line,oldText = "";
             while ((line = reader.readLine()) != null) {
                 oldText += line + "\n";
             }
-            reader.close();
-
-            String newText = oldText;
+            //String newText = oldText;
             if (subscribableInfo.getDeploymentPolicy() != null) {
-                newText = newText.replaceAll("deployment-policy_name", subscribableInfo.getDeploymentPolicy());
+                oldText = oldText.replaceAll("deployment-policy_name", subscribableInfo.getDeploymentPolicy());
             }
             if (subscribableInfo.getAutoscalingPolicy() != null) {
-                newText = newText.replaceAll("autoscaling-policy_name", subscribableInfo.getAutoscalingPolicy());
+                oldText = oldText.replaceAll("autoscaling-policy_name", subscribableInfo.getAutoscalingPolicy());
             }
             if (cartridgeName != null) {
-                newText = newText.replaceAll("cartridge_name", cartridgeName);
-                newText = newText.replaceAll("application_name", cartridgeName);
+                oldText = oldText.replaceAll("cartridge_name", cartridgeName);
+                oldText = oldText.replaceAll("application_name", cartridgeName);
             }
-            newText = newText.replaceAll("uname", Constants.USER_NAME410);
-            newText = newText.replaceAll("pword", Constants.PASSWORD410);
+            oldText = oldText.replaceAll("uname", System.getProperty(Constants.USERNAME410));
+            oldText = oldText.replaceAll("pword", System.getProperty(Constants.PASSWORD410));
 
-            File outputDirectory = new File(outputLocation + File.separator + "scripts" + File.separator + "common");
+            File outputDirectory = new File(outputLocation + Constants.DIRECTORY_OUTPUT_SCRIPT_DEPLOY);
 
             if (!outputDirectory.exists()) {
                 outputDirectory.mkdirs();
             }
-            FileWriter writer = new FileWriter(new File(outputDirectory.getPath() + File.separator + "deploy.sh"),
+            writer = new FileWriter(new File(outputDirectory.getPath() + Constants.FILE_SOURCE_SCRIPT_DEPLOY),
                     false);
-            writer.write(newText);
-            writer.close();
+            writer.write(oldText);
+
 
         } catch (IOException e) {
             log.error("Error in copying scripts directory ", e);
+        } finally {
+            try {
+                assert reader != null;
+                    reader.close();
+                assert writer != null;
+                    writer.close();
+            } catch (IOException ignore) {
+            }
         }
         addIaasScriptDirectories(outputLocation + File.separator + "scripts");
     }
+
     /**
      * Method to get configuration details
      */
-    public void getPropValues() {
+    public void readInitialConfiguration() {
+
+        //        String propFileName = System.getProperty("user.dir") + File.separator + ".." + File.separator + "conf" + File.separator
+        //                + "config.properties";
+        //        PropertiesConfiguration propsConfig;
+        //        try {
+        //           propsConfig = new PropertiesConfiguration(
+        //                    ArtifactLoaderConfiguration.class.getResource(propFileName));
+        //
+        //        } catch (Exception e) {
+        //            throw new RuntimeException("Failed to load config file: " + propFileName, e);
+        //        }
+        //        SystemConfiguration.setSystemProperties(propsConfig);
         InputStream inputStream = null;
         try {
-            Properties prop = new Properties();
+            Properties properties = new Properties();
             String propFileName =
                     System.getProperty("user.dir") + File.separator + ".." + File.separator + "conf" + File.separator
                             + "config.properties";
 
             inputStream = new FileInputStream(propFileName);
-            if (inputStream != null) {
-                prop.load(inputStream);
-            } else {
-                throw new FileNotFoundException("property file '" + propFileName + "' not found in the classpath");
-            }
-            System.setProperty("baseUrl", prop.getProperty("base_url"));
-            System.setProperty("userName", prop.getProperty("user_name"));
-            System.setProperty("password", prop.getProperty("password"));
+            properties.load(inputStream);
+
+            if (properties.getProperty(Constants.BASE_URL400) != null)
+                System.setProperty(Constants.BASE_URL400, properties.getProperty(Constants.BASE_URL400));
+            if (properties.getProperty(Constants.USERNAME400) != null)
+                System.setProperty(Constants.USERNAME400, properties.getProperty(Constants.USERNAME400));
+            if (properties.getProperty(Constants.PASSWORD400) != null)
+                System.setProperty(Constants.PASSWORD400, properties.getProperty(Constants.PASSWORD400));
+            if (properties.getProperty(Constants.USERNAME410) != null)
+                System.setProperty(Constants.USERNAME410, properties.getProperty(Constants.USERNAME410));
+            if (properties.getProperty(Constants.PASSWORD410) != null)
+                System.setProperty(Constants.PASSWORD410, properties.getProperty(Constants.PASSWORD410));
 
         } catch (IOException e) {
             String msg = "IO error in getting configuration details";
-            log.error(msg,e);
+            log.error(msg, e);
         } finally {
             try {
-                inputStream.close();
-            } catch (IOException e) {
-                String msg = "IO error in getting configuration details";
-                log.error(msg,e);
+                assert inputStream != null;
+                    inputStream.close();
+            } catch (IOException ignore) {
             }
         }
     }
