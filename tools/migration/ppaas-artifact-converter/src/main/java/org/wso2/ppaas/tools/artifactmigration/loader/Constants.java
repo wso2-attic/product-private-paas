@@ -17,6 +17,8 @@
  */
 package org.wso2.ppaas.tools.artifactmigration.loader;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.File;
 
 /**
@@ -70,8 +72,7 @@ public class Constants {
     public static final String FILENAME_APPLICATION_SIGNUP = "application-signup.json";
     public static final String FILENAME_DOMAIN_MAPPING = "domain-mapping.json";
 
-
-    //configuration details
+    //Configuration details
     public static final String BASE_URL400 = "baseUrl400";
     public static final String USERNAME400 = "userName400";
     public static final String PASSWORD400 = "password400";
@@ -80,4 +81,8 @@ public class Constants {
 
     public static final String JSON_EXTENSION  = ".json";
 
+    //Rest client class configuration variables
+    public static final String CERTIFICATE_PATH = StringUtils.removeEnd(System.getProperty("user.dir") +File.separator +".."+File.separator + "resources", File.separator)+ "/wso2carbon.jks";
+    public static final char[] CERTIFICATE_PASSWORD = "wso2carbon".toCharArray();
+    public static final boolean ENABLE_SELF_CERTIFIED= true;
 }

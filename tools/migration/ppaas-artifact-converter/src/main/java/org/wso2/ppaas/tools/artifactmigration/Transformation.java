@@ -61,7 +61,6 @@ import java.util.List;
 public class Transformation {
 
     private static final Logger log = Logger.getLogger(Transformation.class);
-    private static Transformation instance = null;
 
     /**
      * Method to transform Auto Scale Policies
@@ -127,7 +126,6 @@ public class Transformation {
 
                 networkPartition410.setId(networkPartition400.getId());
                 networkPartition410.setProvider(networkPartition400.getProvider());
-                //TODO:check thisssssssssss
                 networkPartitionProvider = networkPartition400.getProvider();
 
                 if (networkPartition400.getProperty() != null) {
@@ -310,7 +308,7 @@ public class Transformation {
                 writeFile(outputDirectoryNameApp, Constants.FILENAME_APPLICATION_SIGNUP, getGson().toJson(signup410List));
                 writeFile(outputDirectoryNameApp, Constants.FILENAME_DOMAIN_MAPPING, getGson().toJson(domainMapping410List));
 
-                ConversionTool.getInstance().addDeployingScript(
+                ConversionTool.addDeployingScript(
                         Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator + application410
                                 .getName(), subscribableInfo, cartridge.getDisplayName());
 
@@ -341,7 +339,6 @@ public class Transformation {
                 if (cartridge.getPersistence() != null) {
                     Persistence persistence400 = cartridge.getPersistence();
                     PersistenceBean persistenceBean410 = new PersistenceBean();
-                    //TODO:check ths
                     persistenceBean410.setRequired(persistence400.getPersistanceRequired());
 
                     Volume[] volume400Array = persistence400.getVolumes();

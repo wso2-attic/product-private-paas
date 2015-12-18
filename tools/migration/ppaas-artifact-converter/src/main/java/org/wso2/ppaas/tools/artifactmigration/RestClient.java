@@ -15,14 +15,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.ppaas.tools.artifactmigration;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.wso2.ppaas.tools.artifactmigration.exception.RestClientException;
-
+import org.wso2.ppaas.tools.artifactmigration.loader.Constants;
 import javax.net.ssl.*;
 import java.io.*;
 import java.net.URL;
@@ -38,16 +36,31 @@ public class RestClient {
     private String authStringEnc;
 
     /**
-     * Constructor of Rest Client
-     * @param username user name
+     * Override the default host name verifier to allow any certificate. (Constants.ENABLE_SELF_CERTIFIED have
+     * to be disabled when in normal use.)
+     */
+    static {
+        if (Constants.ENABLE_SELF_CERTIFIED) {
+            HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+                @Override public boolean verify(String s, SSLSession sslSession) {
+                    return true;
+                }
+            });
+        }
+    }
+
+    /**
+     * Constructor to verify the certificate and connect to the rest endpoint
+     *
+     * @param username username
      * @param password password
      * @throws RestClientException
      */
     public RestClient(String username, String password) throws RestClientException {
         try {
-            InputStream fs = new FileInputStream(new File(getResourcesFolderPath() + "/wso2carbon.jks"));
+            InputStream fs = new FileInputStream(new File(Constants.CERTIFICATE_PATH));
             KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
-            keyStore.load(fs, new String("wso2carbon").toCharArray());
+            keyStore.load(fs, Constants.CERTIFICATE_PASSWORD);
             TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
             tmf.init(keyStore);
             SSLContext ctx = SSLContext.getInstance("TLS");
@@ -85,17 +98,9 @@ public class RestClient {
     }
 
     /**
-     * Method to get resources folder path
-     * @return resources folder path
-     */
-    private static String getResourcesFolderPath() {
-        String path = System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources";
-        return StringUtils.removeEnd(path, File.separator);
-    }
-
-    /**
-     * Method to get JSON files from PPaaS 4.0.0
-     * @param resourcePath resource path
+     * Method to get the JSON file
+     *
+     * @param resourcePath path of the resource
      * @return JSON string
      * @throws RestClientException
      */
@@ -112,7 +117,7 @@ public class RestClient {
 
             int numCharsRead;
             char[] charArray = new char[1024];
-            StringBuffer sb = new StringBuffer();
+            StringBuilder sb = new StringBuilder();
             while ((numCharsRead = isr.read(charArray)) > 0) {
                 sb.append(charArray, 0, numCharsRead);
             }
@@ -122,12 +127,5 @@ public class RestClient {
             log.error(msg);
             throw new RestClientException(msg, e);
         }
-    }
-    static {
-        HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-            @Override public boolean verify(String s, SSLSession sslSession) {
-                return true;
-            }
-        });
     }
 }

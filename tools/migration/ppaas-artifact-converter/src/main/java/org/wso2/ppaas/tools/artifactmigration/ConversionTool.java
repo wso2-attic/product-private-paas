@@ -21,36 +21,19 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.stratos.common.beans.application.SubscribableInfo;
 import org.wso2.ppaas.tools.artifactmigration.loader.Constants;
-
 import java.io.*;
 import java.util.Properties;
-
 /*
 Class for conversion
  */
 public class ConversionTool {
 
     private static final Logger log = Logger.getLogger(Transformation.class);
-    private static ConversionTool instance = null;
-
-    private ConversionTool() {
-    }
-
-    public static ConversionTool getInstance() {
-        if (instance == null) {
-            synchronized (Transformation.class) {
-                if (instance == null) {
-                    instance = new ConversionTool();
-                }
-            }
-        }
-        return instance;
-    }
 
     /**
      * Method to handle console inputs
      */
-    public void handleConsoleInputs() {
+    public static void handleConsoleInputs() {
 
         if (log.isInfoEnabled()) {
             log.info("CLI started...");
@@ -87,7 +70,7 @@ public class ConversionTool {
     /**
      * Method to start transformation
      */
-    public void startTransformation() {
+    public static void startTransformation() {
 
         log.info("Artifact Migration started...");
         try {
@@ -107,7 +90,7 @@ public class ConversionTool {
      *
      * @param outputLocation output location of the script directories
      */
-    private void addIaasScriptDirectories(String outputLocation) {
+    private static void addIaasScriptDirectories(String outputLocation) {
 
         File sourceLocationEc2 = new File(Constants.DIRECTORY_SOURCE_SCRIPT_EC2);
         File sourceLocationGce = new File(Constants.DIRECTORY_SOURCE_SCRIPT_GCE);
@@ -133,7 +116,7 @@ public class ConversionTool {
      * @param subscribableInfo subscribable information
      * @param cartridgeName    cartridge name
      */
-    public void addDeployingScript(String outputLocation, SubscribableInfo subscribableInfo, String cartridgeName) {
+    public static void addDeployingScript(String outputLocation, SubscribableInfo subscribableInfo, String cartridgeName) {
         BufferedReader reader = null;
         FileWriter writer = null;
         try {
@@ -184,19 +167,7 @@ public class ConversionTool {
     /**
      * Method to get configuration details
      */
-    public void readInitialConfiguration() {
-
-        //        String propFileName = System.getProperty("user.dir") + File.separator + ".." + File.separator + "conf" + File.separator
-        //                + "config.properties";
-        //        PropertiesConfiguration propsConfig;
-        //        try {
-        //           propsConfig = new PropertiesConfiguration(
-        //                    ArtifactLoaderConfiguration.class.getResource(propFileName));
-        //
-        //        } catch (Exception e) {
-        //            throw new RuntimeException("Failed to load config file: " + propFileName, e);
-        //        }
-        //        SystemConfiguration.setSystemProperties(propsConfig);
+    public static void readInitialConfiguration() {
         InputStream inputStream = null;
         try {
             Properties properties = new Properties();

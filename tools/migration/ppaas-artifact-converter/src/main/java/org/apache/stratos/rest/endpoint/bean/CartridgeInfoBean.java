@@ -38,21 +38,15 @@ public class CartridgeInfoBean {
     private boolean removeOnTermination;
     private String serviceGroup;
     private String domains;
+    private String subscribingTenantDomain;
 
+    public CartridgeInfoBean() {}
     public String getDomains() {
         return domains;
     }
 
     public void setDomains(String domains) {
         this.domains = domains;
-    }
-
-    // this parameter is used when super tenant forcefully subscribes
-    // a particular tenant to a cartridge. This is used to denote the
-    // subscribing tenant's domain
-    private String subscribingTenantDomain;
-
-    public CartridgeInfoBean() {
     }
 
     public String getCartridgeType() {

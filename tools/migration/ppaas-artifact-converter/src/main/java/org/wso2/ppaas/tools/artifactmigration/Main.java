@@ -22,8 +22,8 @@ package org.wso2.ppaas.tools.artifactmigration;
  */
 public class Main {
     public static void main(String[] args) {
-        ConversionTool.getInstance().readInitialConfiguration();
-        ConversionTool.getInstance().handleConsoleInputs();
-        ConversionTool.getInstance().startTransformation();
+        ConversionTool.readInitialConfiguration();
+        ConversionTool.handleConsoleInputs();
+        ConversionTool.startTransformation();
     }
 }
