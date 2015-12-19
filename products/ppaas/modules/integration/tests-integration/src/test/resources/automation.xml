@@ -195,7 +195,7 @@
         <platformExecutionManager>
             <extentionClasses>
                 <class>
-                    <name>org.apache.stratos.integration.common.extensions.StratosServerExtension</name>
+                    <name>org.wso2.ppaas.integration.common.extensions.PPaaSServerExtension</name>
                     <parameter name="-DportOffset" value="1400"/>
                     <parameter name="activemq.bind.address" value="tcp://localhost:63016"/>
                     <!--<parameter name="cmdArg" value="debug 5005" />-->
