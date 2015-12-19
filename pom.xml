@@ -796,7 +796,8 @@
         <!-- ppaas distribution properties -->
         <ppaas.distribution.name>wso2ppaas</ppaas.distribution.name>
         <configurator.distribution.name>ppaas-configurator</configurator.distribution.name>
-        <python.cartridge.agent.distribution.name>apache-stratos-python-cartridge-agent
+        <python.cartridge.agent.distribution.name>
+            apache-stratos-python-cartridge-agent
         </python.cartridge.agent.distribution.name>
 
         <!-- Carbon related versions -->
@@ -823,7 +824,6 @@
         <carbon.event.version>1.0.0</carbon.event.version>
         <wso2.stratos.common.version>2.2.2</wso2.stratos.common.version>
         <commons.lang.version>2.6.0.wso2v1</commons.lang.version>
-        <python.cartridge.agent.distribution.name>apache-stratos-python-cartridge-agent</python.cartridge.agent.distribution.name>
         <python.cartridge.agent.version>4.1.1.wso2v1</python.cartridge.agent.version>
 
         <!-- Jaggery versions -->
