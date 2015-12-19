@@ -137,7 +137,6 @@
         <dependency>
             <groupId>org.apache.stratos</groupId>
             <artifactId>org.apache.stratos.integration.common</artifactId>
-            <version>${stratos.version}</version>
         </dependency>
     </dependencies>
 

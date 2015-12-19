@@ -460,6 +460,48 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- PPaaS -->
+            <dependency>
+                <groupId>org.wso2.ppaas</groupId>
+                <artifactId>org.wso2.ppaas.integration.common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ppaas</groupId>
+                <artifactId>org.wso2.ppaas.python.cartridge.agent.integration.common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ppaas</groupId>
+                <artifactId>wso2ppaas-membership-scheme</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.das.extension</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ppaas</groupId>
+                <artifactId>org.wso2.ppaas.metering.service.capps</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ppaas</groupId>
+                <artifactId>org.wso2.ppaas.monitoring.service.capps</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.cep310.extension</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.integration.common</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
+
             <!-- Apache Stratos dependencies -->
             <dependency>
                 <groupId>org.apache.stratos</groupId>
@@ -485,6 +527,28 @@
                 <groupId>org.apache.stratos</groupId>
                 <artifactId>org.apache.stratos.cep300.extension</artifactId>
                 <version>${stratos.version}</version>
+            </dependency>
+
+            <!-- Analytics dependencies -->
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.receiver.thrift</artifactId>
+                <version>${carbon.analytics.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.receiver.binary</artifactId>
+                <version>${carbon.analytics.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.core</artifactId>
+                <version>${carbon.analytics.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.commons</artifactId>
+                <version>${carbon.analytics.common.version}</version>
             </dependency>
 
             <!-- Automation framework dependencies -->
@@ -720,43 +784,6 @@
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons.lang3.version}</version>
-            </dependency>
-
-            <!-- PPaaS -->
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.integration.common</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.python.cartridge.agent.integration.common</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>wso2ppaas-membership-scheme</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.stratos</groupId>
-                <artifactId>org.apache.stratos.das.extension</artifactId>
-                <version>${stratos.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.metering.service.capps</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.monitoring.service.capps</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.stratos</groupId>
-                <artifactId>org.apache.stratos.cep310.extension</artifactId>
-                <version>${stratos.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
