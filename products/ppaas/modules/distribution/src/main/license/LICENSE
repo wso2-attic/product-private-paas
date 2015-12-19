@@ -542,7 +542,6 @@ org.wso2.carbon.webapp.mgt.stub_4.2.3.jar                                       
 org.wso2.carbon.webapp.mgt.ui_4.2.3.jar                                         bundle         apache2   3890      
 org.wso2.carbon.webapp.mgt_4.2.3.jar                                            bundle         apache2   3889      
 org.wso2.ciphertool-1.0.0-wso2v2.jar                                            bundle         apache2   666       
-org.wso2.ppaas.cep300.extension-4.1.1.jar                                       bundle         apache2   5715
 org.wso2.ppaas.manager.styles_4.1.1.jar                                         bundle         apache2   5719
 org.wso2.securevault_1.0.0.wso2v2.jar                                           bundle         apache2   768       
 org.wso2.store.admin.styles_1.0.1.jar                                           bundle         apache2   3041      
