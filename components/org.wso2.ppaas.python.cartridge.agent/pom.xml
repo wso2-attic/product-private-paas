@@ -28,7 +28,7 @@
 
     <artifactId>org.wso2.ppaas.python.cartridge.agent</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Privat PaaS - Python Cartridge Agent</name>
+    <name>WSO2 PPaaS - Python Cartridge Agent</name>
 
     <profiles>
         <profile>
