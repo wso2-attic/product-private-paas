@@ -28,7 +28,7 @@
 
     <artifactId>python-cartridge-agent-parent</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Private PaaS - Python Cartridge Agent Product</name>
+    <name>WSO2 PPaaS - Python Cartridge Agent Product</name>
     <description>WSO2 Private PaaS Python Cartridge Agent Product</description>
 
     <modules>

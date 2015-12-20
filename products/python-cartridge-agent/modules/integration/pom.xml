@@ -29,7 +29,7 @@
 
     <artifactId>python-cartridge-agent-integration</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Private PaaS - Python Cartridge Agent Integration Aggregator</name>
+    <name>WSO2 PPaaS - Python Cartridge Agent Integration Aggregator</name>
     <description>WSO2 Private PaaS Python Cartridge Agent Integration Aggregator</description>
 
     <modules>

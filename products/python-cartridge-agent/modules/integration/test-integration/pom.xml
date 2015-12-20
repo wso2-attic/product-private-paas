@@ -28,7 +28,7 @@
 
     <artifactId>python-agent-test-integration</artifactId>
     <packaging>jar</packaging>
-    <name>WSO2 Private PaaS - PCA - Integration Tests</name>
+    <name>WSO2 PPaaS - PCA - Integration Tests</name>
 
     <build>
         <resources>

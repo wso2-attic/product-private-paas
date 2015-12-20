@@ -29,7 +29,7 @@
 
     <artifactId>python-cartridge-agent-distribution</artifactId>
     <packaging>pom</packaging>
-    <name>WSO2 Private PaaS - Python Cartridge Agent</name>
+    <name>WSO2 PPaaS - Python Cartridge Agent</name>
     <description>WSO2 Private PaaS Python Cartridge Agent Distribution</description>
 
     <build>
