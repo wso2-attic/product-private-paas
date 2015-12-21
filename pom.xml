@@ -482,16 +482,6 @@
                 <version>${stratos.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.metering.service.capps</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.monitoring.service.capps</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
                 <groupId>org.apache.stratos</groupId>
                 <artifactId>org.apache.stratos.cep310.extension</artifactId>
                 <version>${stratos.version}</version>
