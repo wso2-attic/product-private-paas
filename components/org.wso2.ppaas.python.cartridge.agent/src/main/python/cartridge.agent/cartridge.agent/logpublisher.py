@@ -106,6 +106,9 @@ class LogPublisherManager(Thread):
     def define_stream(tenant_id, alias, date_time):
         """
         Creates a stream definition for Log Publishing
+        :param date_time:
+        :param alias:
+        :param tenant_id:
         :return: A StreamDefinition object with the required attributes added
         :rtype : StreamDefinition
         """
@@ -136,10 +139,9 @@ class LogPublisherManager(Thread):
 
     def __init__(self, logfile_paths):
         Thread.__init__(self)
-        self.setDaemon(True)
 
         self.log = LogFactory().get_log(__name__)
-
+        self.setDaemon(True)
         self.logfile_paths = logfile_paths
         self.publishers = {}
         self.ports = []
@@ -178,6 +180,7 @@ class LogPublisherManager(Thread):
     def get_publisher(self, log_path):
         """
         Retrieve the publisher for the specified log file path. Creates a new LogPublisher if one is not available
+        :param log_path:
         :return: The LogPublisher object
         :rtype : LogPublisher
         """
@@ -196,6 +199,7 @@ class LogPublisherManager(Thread):
     def terminate_publisher(self, log_path):
         """
         Terminates the LogPublisher thread associated with the specified log file
+        :param log_path:
         """
         if log_path in self.publishers:
             self.publishers[log_path].terminate()

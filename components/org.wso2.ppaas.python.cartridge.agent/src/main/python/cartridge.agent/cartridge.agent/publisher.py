@@ -94,6 +94,7 @@ def publish_instance_activated_event():
 
             publisher = get_publisher(constants.INSTANCE_STATUS_TOPIC + constants.INSTANCE_ACTIVATED_EVENT)
             publisher.publish(instance_activated_event)
+            log.info("Instance activated event published")
 
             health_stat_publishing_enabled = Config.read_property(constants.CEP_PUBLISHER_ENABLED, True)
 

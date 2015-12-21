@@ -197,7 +197,7 @@ def on_complete_topology_event(complete_topology_event):
                 "Member initialized [member id] %s, [cluster-id] %s, [service] %s"
                 % (member_id_in_payload, cluster_id_in_payload, service_name_in_payload))
         else:
-            log.info("Member not initialized in topology.......")
+            log.info("Member not initialized in topology.")
 
     topology = complete_topology_event.get_topology()
     service = topology.get_service(service_name_in_payload)
@@ -454,7 +454,7 @@ def execute_extension_for_event(event, extension_values):
         if Config.extension_executor is not None:
             log.debug("Executing extension for event [%s]" % event)
             extension_thread = PluginExecutor(Config.extension_executor, extension_values)
-            extension_thread.setName("ExtensionExecutorThreadForExtension%s" % event)
+            extension_thread.setName("ExtensionExecutorThreadForExtension%s" % event.__class__.__name__)
             log.debug("Starting a PluginExecutor Thread for event extension %s" % event.__class__.__name__)
             extension_thread.start()
 
@@ -544,6 +544,7 @@ def is_member_initialized_in_topology(service_name, cluster_id, member_id):
 
 
 def member_exists_in_topology(service_name, cluster_id, member_id):
+    log.debug("Checking if member exists in topology : %s, %s, %s, " % (service_name, cluster_id, member_id))
     topology = TopologyContext.get_topology()
     service = topology.get_service(service_name)
     if service is None:
@@ -687,10 +688,10 @@ class PluginExecutor(Thread):
 
     def __init__(self, plugin_info, values):
         Thread.__init__(self)
-        self.setDaemon(True)
         self.__plugin_info = plugin_info
         self.__values = values
         self.__log = LogFactory().get_log(__name__)
+        self.setDaemon(True)
 
     def run(self):
         self.__log.debug("Starting the PluginExecutor thread")

@@ -14,6 +14,7 @@
 # KIND, either express or implied.  See the License for the
 # specific language governing permissions and limitations
 # under the License.
+
 from Queue import Queue
 
 import threading
@@ -94,7 +95,7 @@ class EventSubscriber(threading.Thread):
             # Start blocking loop method
             self.__mb_client.loop_forever()
 
-            # Disconnected when the heart beat checker detected an offline message broker
+            # Disconnected when the on_disconnect calls disconnect() on the client
             self.__subscribed = False
             EventSubscriber.log.debug("Disconnected from the message broker %s:%s. Reconnecting..."
                                       % (connected_mb_ip, connected_mb_port))
@@ -167,9 +168,9 @@ class EventSubscriber(threading.Thread):
                     return mb_client, mb_ip, mb_port
                 except:
                     # The message broker didn't respond well
-                    EventSubscriber.log.debug("Could not connect to the message broker at %s:%s." % (mb_ip, mb_port))
+                    EventSubscriber.log.info("Could not connect to the message broker at %s:%s." % (mb_ip, mb_port))
 
-            EventSubscriber.log.debug(
+            EventSubscriber.log.error(
                 "Could not connect to any of the message brokers provided. Retrying in %s seconds." % retry_interval)
 
             time.sleep(retry_interval)

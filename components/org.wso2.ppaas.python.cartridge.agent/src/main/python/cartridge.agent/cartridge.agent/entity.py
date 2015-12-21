@@ -18,6 +18,7 @@
 import constants
 import json
 
+
 class Topology:
     """
     Represents the topology provided by the Cloud Controller
