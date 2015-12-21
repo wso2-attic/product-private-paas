@@ -1,7 +1,7 @@
 ## WSO Private PaaS Installer Tool
 
 
-This tool will enable users to install the private-paas.
+This tool will enable users to install the private-paas with embedded CEP 3.0.0
 
 # Instructions
 
@@ -22,6 +22,8 @@ conf/setup.conf
 4. Change the conf/setup.conf based on the versions of the above artifacts.
 
 5. run ppaas-installer.sh and provide the addition information required
+
+6. If user needs the metering and monitoring feature, user needs to set up the DAS manually.
 
 
 
