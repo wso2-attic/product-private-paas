@@ -23,6 +23,6 @@ class_path=`echo ${lib_path}/*.jar | tr ' ' ':'`
 
 properties="-Dlog4j.configuration=file://${script_path}/../conf/log4j.properties
             -Dlog4jfile=${script_path}/../log/ppaas-artifact-converter-log.log
-            -Dconfig.configuration=${script_path}/../conf/config.properties"
+            -Dconfig=${script_path}/../conf/config.properties"
 
 java -cp "${class_path}" ${properties} org.wso2.ppaas.tools.artifactmigration.Main$*

@@ -21,8 +21,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import org.apache.log4j.Logger;
-import org.apache.stratos.cloud.controller.stub.pojo.PortMapping;
 import org.apache.stratos.cloud.controller.stub.pojo.Persistence;
+import org.apache.stratos.cloud.controller.stub.pojo.PortMapping;
 import org.apache.stratos.cloud.controller.stub.pojo.Volume;
 import org.apache.stratos.common.beans.application.ApplicationBean;
 import org.apache.stratos.common.beans.application.ComponentBean;
@@ -32,6 +32,7 @@ import org.apache.stratos.common.beans.artifact.repository.ArtifactRepositoryBea
 import org.apache.stratos.common.beans.cartridge.*;
 import org.apache.stratos.common.beans.partition.NetworkPartitionBean;
 import org.apache.stratos.common.beans.partition.NetworkPartitionReferenceBean;
+import org.apache.stratos.common.beans.partition.PartitionBean;
 import org.apache.stratos.common.beans.partition.PartitionReferenceBean;
 import org.apache.stratos.common.beans.policy.autoscale.*;
 import org.apache.stratos.common.beans.policy.deployment.ApplicationPolicyBean;
@@ -46,12 +47,9 @@ import org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean;
 import org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean;
 import org.wso2.ppaas.tools.artifactmigration.exception.ArtifactLoadingException;
 import org.wso2.ppaas.tools.artifactmigration.exception.TransformationException;
-import org.wso2.ppaas.tools.artifactmigration.loader.Constants;
 import org.wso2.ppaas.tools.artifactmigration.loader.OldArtifactLoader;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -73,7 +71,7 @@ public class Transformation {
             autoscalePolicy400List = OldArtifactLoader.fetchAutoscalePolicyList();
             log.info("Fetched Auto Scale Policy from PPaaS 4.0.0");
 
-            File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_AUTOSCALE);
+            File directoryName = new File(Constants.DIRECTORY_POLICY_AUTOSCALE);
 
             for (AutoscalePolicy autoscalePolicy400 : autoscalePolicy400List) {
 
@@ -85,8 +83,10 @@ public class Transformation {
                 MemoryConsumptionThresholdsBean memoryConsumption410 = new MemoryConsumptionThresholdsBean();
                 LoadAverageThresholdsBean loadAverage410 = new LoadAverageThresholdsBean();
 
-                requestsInFlight410.setThreshold(autoscalePolicy400.getLoadThresholds().getRequestsInFlight().getUpperLimit());
-                memoryConsumption410.setThreshold(autoscalePolicy400.getLoadThresholds().getMemoryConsumption().getUpperLimit());
+                requestsInFlight410
+                        .setThreshold(autoscalePolicy400.getLoadThresholds().getRequestsInFlight().getUpperLimit());
+                memoryConsumption410
+                        .setThreshold(autoscalePolicy400.getLoadThresholds().getMemoryConsumption().getUpperLimit());
                 loadAverage410.setThreshold(autoscalePolicy400.getLoadThresholds().getLoadAverage().getUpperLimit());
 
                 loadThresholds410.setRequestsInFlight(requestsInFlight410);
@@ -95,10 +95,10 @@ public class Transformation {
 
                 autoscalePolicy410.setLoadThresholds(loadThresholds410);
 
-                writeFile(directoryName, autoscalePolicy410.getId() + Constants.JSON_EXTENSION, getGson().toJson(autoscalePolicy410));
+                JsonWriter.writeFile(directoryName, autoscalePolicy410.getId() + Constants.JSON_EXTENSION,
+                        getGson().toJson(autoscalePolicy410));
             }
             log.info("Created Auto Scale Policy 4.1.0 artifacts");
-
         } catch (JsonSyntaxException e) {
             String msg = "JSON syntax error in retrieving auto scale policies";
             log.error(msg);
@@ -109,6 +109,7 @@ public class Transformation {
             throw new TransformationException(msg, e);
         }
     }
+
     /**
      * Method to transform network partitions
      */
@@ -123,11 +124,11 @@ public class Transformation {
             log.info("Fetched Network Partition List from PPaaS 4.0.0");
 
             for (Partition networkPartition400 : networkPartition400List) {
-
                 networkPartition410.setId(networkPartition400.getId());
                 networkPartition410.setProvider(networkPartition400.getProvider());
                 networkPartitionProvider = networkPartition400.getProvider();
-
+                List<PartitionBean> partitionsList410 = new ArrayList<>();
+                PartitionBean partition410 = new PartitionBean();
                 if (networkPartition400.getProperty() != null) {
                     List<org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean> property400List = networkPartition400
                             .getProperty();
@@ -139,12 +140,14 @@ public class Transformation {
                         property.setValue(property400.getValue());
                         property410List.add(property);
                     }
-                    networkPartition410.setProperties(property410List);
+                    partition410.setProperty(property410List);
+                    partitionsList410.add(0, partition410);
+                    networkPartition410.setPartitions(partitionsList410);
                 }
                 directoryName = new File(
-                        Constants.ROOT_DIRECTORY + Constants.DIRECTORY_NETWORK_PARTITION + File.separator
-                                + networkPartition400.getProvider());
-                writeFile(directoryName, networkPartition410.getId() + Constants.JSON_EXTENSION, getGson().toJson(networkPartition410));
+                        Constants.DIRECTORY_NETWORK_PARTITION + File.separator + networkPartition400.getProvider());
+                JsonWriter.writeFile(directoryName, networkPartition410.getId() + Constants.JSON_EXTENSION,
+                        getGson().toJson(networkPartition410));
                 addDefaultApplicationPolicies(networkPartitionProvider);
             }
             log.info("Created Network Partition List 4.1.0 artifacts");
@@ -169,8 +172,7 @@ public class Transformation {
         try {
             deploymentPolicy400List = OldArtifactLoader.fetchDeploymentPolicyList();
             log.info("Fetched Deployment Policy from PPaaS 4.0.0");
-
-            File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_DEPLOYMENT);
+            File directoryName = new File(Constants.DIRECTORY_POLICY_DEPLOYMENT);
 
             for (DeploymentPolicy deploymentPolicy : deploymentPolicy400List) {
 
@@ -215,7 +217,8 @@ public class Transformation {
                 }
                 deploymentPolicy410.setNetworkPartitions(networkPartitions410List);
 
-                writeFile(directoryName, deploymentPolicy410.getId() + Constants.JSON_EXTENSION, getGson().toJson(deploymentPolicy410));
+                JsonWriter.writeFile(directoryName, deploymentPolicy410.getId() + Constants.JSON_EXTENSION,
+                        getGson().toJson(deploymentPolicy410));
             }
             log.info("Created Deployment Policy 4.1.0 artifacts");
         } catch (JsonSyntaxException e) {
@@ -246,7 +249,7 @@ public class Transformation {
             subscription400List = OldArtifactLoader.fetchSubscriptionDataList();
             log.info("Fetched Subscription List");
 
-            File outputDirectoryNameCartridge = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_CARTRIDGE);
+            File outputDirectoryNameCartridge = new File(Constants.DIRECTORY_CARTRIDGE);
 
             for (Cartridge cartridge : cartridge400List) {
 
@@ -302,24 +305,40 @@ public class Transformation {
                 application410.setDescription(cartridge.getDescription());
 
                 File outputDirectoryNameApp = new File(
-                        Constants.ROOT_DIRECTORY + Constants.DIRECTORY_APPLICATION + File.separator + application410
-                                .getName() + File.separator + "artifacts");
-                writeFile(outputDirectoryNameApp, application410.getName() + Constants.JSON_EXTENSION, getGson().toJson(application410));
-                writeFile(outputDirectoryNameApp, Constants.FILENAME_APPLICATION_SIGNUP, getGson().toJson(signup410List));
-                writeFile(outputDirectoryNameApp, Constants.FILENAME_DOMAIN_MAPPING, getGson().toJson(domainMapping410List));
+                        Constants.DIRECTORY_APPLICATION + File.separator + application410.getName() + File.separator
+                                + "artifacts");
+                JsonWriter.writeFile(outputDirectoryNameApp, application410.getName() + Constants.JSON_EXTENSION,
+                        getGson().toJson(application410));
+                JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_APPLICATION_SIGNUP,
+                        getGson().toJson(signup410List));
+                JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_DOMAIN_MAPPING,
+                        getGson().toJson(domainMapping410List));
 
                 ConversionTool.addDeployingScript(
-                        Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator + application410
-                                .getName(), subscribableInfo, cartridge.getDisplayName());
+                        Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator + application410.getName(), subscribableInfo,
+                        cartridge.getDisplayName());
 
                 cartridge410.setDisplayName(cartridge.getDisplayName());
                 cartridge410.setDescription(cartridge.getDescription());
+                cartridge410.setCategory(Constants.CARTRIDGE_CATEGORY);
                 cartridge410.setType(cartridge.getCartridgeType());
                 cartridge410.setProvider(cartridge.getProvider());
                 cartridge410.setVersion(cartridge.getVersion());
                 cartridge410.setHost(cartridge.getHostName());
                 cartridge410.setMultiTenant(cartridge.isMultiTenant());
 
+                //Setting the port mappings details
+                //Use of default values in port mappings
+                List<PortMappingBean> portMappingList = new ArrayList<>();
+                PortMappingBean portMappingBean = new PortMappingBean();
+                portMappingBean.setPort(Integer.parseInt(System.getProperty("port")));
+                portMappingBean.setProxyPort(Integer.parseInt(System.getProperty("proxyPort")));
+                portMappingBean.setProtocol(System.getProperty("protocol"));
+                portMappingList.add(0, portMappingBean);
+
+                cartridge410.setPortMapping(portMappingList);
+
+                //Overwrite the default mappings if port mappings exist
                 if (cartridge.getPortMappings() != null) {
                     PortMapping[] portMapping400List = cartridge.getPortMappings();
                     List<PortMappingBean> portMapping410List = new ArrayList<>();
@@ -336,6 +355,7 @@ public class Transformation {
                     }
                     cartridge410.setPortMapping(portMapping410List);
                 }
+
                 if (cartridge.getPersistence() != null) {
                     Persistence persistence400 = cartridge.getPersistence();
                     PersistenceBean persistenceBean410 = new PersistenceBean();
@@ -359,8 +379,17 @@ public class Transformation {
                     persistenceBean410.setVolume(volumeBean410List);
                     cartridge410.setPersistence(persistenceBean410);
                 }
-                writeFile(outputDirectoryNameCartridge, cartridge410.getDisplayName() + Constants.JSON_EXTENSION,
-                        getGson().toJson(cartridge410));
+
+                //Setting IaaS provider details
+                List<IaasProviderBean> iaasProviderList = new ArrayList<>();
+                IaasProviderBean iaasProvider = new IaasProviderBean();
+                iaasProvider.setType(System.getProperty("iaas"));
+
+                iaasProviderList.add(0, iaasProvider);
+                cartridge410.setIaasProvider(iaasProviderList);
+
+                JsonWriter.writeFile(outputDirectoryNameCartridge,
+                        cartridge410.getDisplayName() + Constants.JSON_EXTENSION, getGson().toJson(cartridge410));
             }
             log.info("Created Cartridge List 4.1.0 artifacts");
             log.info("Created Application List 4.1.0 artifacts");
@@ -387,11 +416,10 @@ public class Transformation {
         String[] networkPartitions = { networkPartition };
         applicationPolicyBean.setNetworkPartitions(networkPartitions);
 
-        File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_APPLICATION);
-        writeFile(directoryName, applicationPolicyBean.getId() + Constants.JSON_EXTENSION, getGson().toJson(applicationPolicyBean));
-
+        File directoryName = new File(Constants.DIRECTORY_POLICY_APPLICATION);
+        JsonWriter.writeFile(directoryName, applicationPolicyBean.getId() + Constants.JSON_EXTENSION,
+                getGson().toJson(applicationPolicyBean));
     }
-
     /**
      * Method to get Gson
      */
@@ -400,23 +428,4 @@ public class Transformation {
         return gsonBuilder.setPrettyPrinting().create();
     }
 
-    /**
-     * Method to write to a file
-     *
-     * @param directoryName Output directory name
-     * @param fileName      file name
-     * @param json          json string
-     */
-    private static void writeFile(File directoryName, String fileName, String json) {
-        try {
-            if (!directoryName.exists()) {
-                directoryName.mkdirs();
-            }
-            FileWriter writer = new FileWriter(new File(directoryName.getPath() + File.separator + fileName), false);
-            writer.write(json);
-            writer.close();
-        } catch (IOException e) {
-            log.error("Error in writing to JSON files", e);
-        }
-    }
 }

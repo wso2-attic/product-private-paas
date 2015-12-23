@@ -15,7 +15,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.wso2.ppaas.tools.artifactmigration.loader;
+package org.wso2.ppaas.tools.artifactmigration;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -26,14 +26,9 @@ import java.io.File;
  */
 public class Constants {
 
+    //PPaaS 4.0.0 REST API endpoints
     public static final String STRATOS = "stratos" + File.separator + "admin" + File.separator;
     private static final String MIGRATION = "migration" + File.separator + "admin" + File.separator;
-
-    // 4.1.0 constants outputs
-    public static final String ROOT_DIRECTORY =
-            System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
-                    + File.separator;
-
     // Do not use forward slash at the beginning instead use it in the base url.
     public static final String URL_PARTITION = STRATOS + "partition";
     public static final String URL_POLICY_AUTOSCALE = STRATOS + "policy" + File.separator + "autoscale";
@@ -42,27 +37,36 @@ public class Constants {
     public static final String URL_SUBSCRIPTION =
             MIGRATION + "cartridge" + File.separator + "list" + File.separator + "subscribed" + File.separator + "all";
 
+    //PPaaS 4.1.0 directories
+    // 4.1.0 outputs root directory
+    private static final String ROOT_DIRECTORY =
+            System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
+                    + File.separator;
     // Do not use forward slash at the beginning instead use it in the root directory.
-    public static final String DIRECTORY_POLICY_AUTOSCALE = "autoscaling-policies";
-    public static final String DIRECTORY_NETWORK_PARTITION = "network-partitions";
-    public static final String DIRECTORY_POLICY_DEPLOYMENT = "deployment-policies";
-    public static final String DIRECTORY_APPLICATION = "applications";
-    public static final String DIRECTORY_CARTRIDGE = "cartridges";
-    public static final String DIRECTORY_POLICY_APPLICATION = "application-policies";
+    public static final String DIRECTORY_POLICY_AUTOSCALE = ROOT_DIRECTORY + "autoscaling-policies";
+    public static final String DIRECTORY_NETWORK_PARTITION = ROOT_DIRECTORY + "network-partitions";
+    public static final String DIRECTORY_POLICY_DEPLOYMENT = ROOT_DIRECTORY + "deployment-policies";
+    public static final String DIRECTORY_APPLICATION = ROOT_DIRECTORY + "applications";
+    public static final String DIRECTORY_CARTRIDGE = ROOT_DIRECTORY + "cartridges";
+    public static final String DIRECTORY_POLICY_APPLICATION = ROOT_DIRECTORY + "application-policies";
 
     private static final String DIRECTORY_SOURCE_SCRIPT =
             System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources" + File.separator
                     + "scripts";
-    public static final String DIRECTORY_SOURCE_SCRIPT_DEPLOY = Constants.DIRECTORY_SOURCE_SCRIPT + File.separator+ "common"+ File.separator+ "deploy.sh";
+    public static final String DIRECTORY_SOURCE_SCRIPT_DEPLOY =
+            Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "common" + File.separator + "deploy.sh";
     public static final String DIRECTORY_SOURCE_SCRIPT_EC2 = Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "ec2";
     public static final String DIRECTORY_SOURCE_SCRIPT_GCE = Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "gce";
-    public static final String DIRECTORY_SOURCE_SCRIPT_KUBERNETES = Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "kubernetes";
-    public static final String DIRECTORY_SOURCE_SCRIPT_MOCK = Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "mock";
-    public static final String DIRECTORY_SOURCE_SCRIPT_OPENSTACK = Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "openstack";
+    public static final String DIRECTORY_SOURCE_SCRIPT_KUBERNETES =
+            Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "kubernetes";
+    public static final String DIRECTORY_SOURCE_SCRIPT_MOCK =
+            Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "mock";
+    public static final String DIRECTORY_SOURCE_SCRIPT_OPENSTACK =
+            Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "openstack";
 
-    public static final String DIRECTORY_OUTPUT_SCRIPT = "applications";
+    public static final String DIRECTORY_OUTPUT_SCRIPT = ROOT_DIRECTORY + "applications";
     public static final String DIRECTORY_OUTPUT_SCRIPT_DEPLOY = File.separator + "scripts" + File.separator + "common";
-    public static final String FILE_SOURCE_SCRIPT_DEPLOY= File.separator + "deploy.sh";
+    public static final String FILE_SOURCE_SCRIPT_DEPLOY = File.separator + "deploy.sh";
 
     //Default values for the application policy
     public static final String APPLICATION_POLICY_ID = "autoscaling-policy-1";
@@ -78,11 +82,16 @@ public class Constants {
     public static final String PASSWORD400 = "password400";
     public static final String USERNAME410 = "userName410";
     public static final String PASSWORD410 = "password410";
-
-    public static final String JSON_EXTENSION  = ".json";
-
-    //Rest client class configuration variables
-    public static final String CERTIFICATE_PATH = StringUtils.removeEnd(System.getProperty("user.dir") +File.separator +".."+File.separator + "resources", File.separator)+ "/wso2carbon.jks";
+    //Rest client configurations
+    public static final String CERTIFICATE_PATH = StringUtils
+            .removeEnd(System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources",
+                    File.separator) + "/wso2carbon.jks";
     public static final char[] CERTIFICATE_PASSWORD = "wso2carbon".toCharArray();
-    public static final boolean ENABLE_SELF_CERTIFIED= true;
+    public static final boolean ENABLE_SELF_CERTIFIED = true;
+    public static final String BASIC_AUTH = "Basic ";
+
+    public static final String JSON_EXTENSION = ".json";
+
+    //Default value constants
+    public static final String CARTRIDGE_CATEGORY = "default";
 }

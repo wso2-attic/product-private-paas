@@ -20,8 +20,11 @@ package org.wso2.ppaas.tools.artifactmigration;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.wso2.ppaas.tools.artifactmigration.exception.RestClientException;
-import org.wso2.ppaas.tools.artifactmigration.loader.Constants;
+
 import javax.net.ssl.*;
+import javax.ws.rs.HttpMethod;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 import java.io.*;
 import java.net.URL;
 import java.security.KeyManagementException;
@@ -94,7 +97,6 @@ public class RestClient {
             log.error(msg);
             throw new RestClientException(msg, e);
         }
-
     }
 
     /**
@@ -107,11 +109,11 @@ public class RestClient {
     public String doGet(URL resourcePath) throws RestClientException {
         try {
             HttpsURLConnection con = (HttpsURLConnection) resourcePath.openConnection();
-            con.setRequestMethod("GET");
-            con.setRequestProperty("Authorization", "Basic " + authStringEnc);
+            con.setRequestMethod(HttpMethod.GET);
+            con.setRequestProperty(HttpHeaders.AUTHORIZATION, Constants.BASIC_AUTH + authStringEnc);
             con.setSSLSocketFactory(sslSocketFactory);
-            con.setRequestProperty("Content-Type", "application/json");
-            con.setRequestProperty("Accept", "*/*");
+            con.setRequestProperty(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON);
+            con.setRequestProperty(HttpHeaders.ACCEPT, MediaType.WILDCARD);
             InputStream is = con.getInputStream();
             InputStreamReader isr = new InputStreamReader(is);
 

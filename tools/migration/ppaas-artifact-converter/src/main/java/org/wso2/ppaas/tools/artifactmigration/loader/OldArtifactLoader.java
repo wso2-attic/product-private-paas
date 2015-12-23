@@ -26,6 +26,7 @@ import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.AutoscalePolicy;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment.DeploymentPolicy;
 import org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean;
+import org.wso2.ppaas.tools.artifactmigration.Constants;
 import org.wso2.ppaas.tools.artifactmigration.RestClient;
 import org.wso2.ppaas.tools.artifactmigration.exception.ArtifactLoadingException;
 import org.wso2.ppaas.tools.artifactmigration.exception.RestClientException;
@@ -221,6 +222,5 @@ public class OldArtifactLoader {
             log.error(msg);
             throw new RestClientException(msg, e);
         }
-
     }
 }

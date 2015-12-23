@@ -17,12 +17,14 @@
  */
 package org.wso2.ppaas.tools.artifactmigration;
 
+import org.apache.commons.configuration.PropertiesConfiguration;
+import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.stratos.common.beans.application.SubscribableInfo;
-import org.wso2.ppaas.tools.artifactmigration.loader.Constants;
+
 import java.io.*;
-import java.util.Properties;
+
 /*
 Class for conversion
  */
@@ -35,31 +37,25 @@ public class ConversionTool {
      */
     public static void handleConsoleInputs() {
 
-        if (log.isInfoEnabled()) {
-            log.info("CLI started...");
-        }
+        log.info("CLI started...");
         Console console = System.console();
         if (System.getProperty(Constants.BASE_URL400) == null || System.getProperty(Constants.BASE_URL400).isEmpty()) {
             System.out.println("Enter the Base URL of PPaaS 4.0.0:");
             System.setProperty(Constants.BASE_URL400, console.readLine());
         }
-
         if (System.getProperty(Constants.USERNAME400) == null || System.getProperty(Constants.USERNAME400).isEmpty()) {
             System.out.println("Enter the User name of PPaaS 4.0.0:");
             System.setProperty(Constants.USERNAME400, console.readLine());
         }
-
         if (System.getProperty(Constants.PASSWORD400) == null || System.getProperty(Constants.PASSWORD400).isEmpty()) {
             System.out.println("Enter the Password of PPaaS 4.0.0:");
             char[] passwordChars = console.readPassword();
             System.setProperty(Constants.PASSWORD400, new String(passwordChars));
         }
-
         if (System.getProperty(Constants.USERNAME410) == null || System.getProperty(Constants.USERNAME410).isEmpty()) {
             System.out.println("Enter the User name of PPaaS 4.1.0:");
             System.setProperty(Constants.USERNAME410, console.readLine());
         }
-
         if (System.getProperty(Constants.PASSWORD410) == null || System.getProperty(Constants.PASSWORD410).isEmpty()) {
             System.out.println("Enter the Password of PPaaS 4.1.0:");
             char[] passwordChars = console.readPassword();
@@ -116,17 +112,17 @@ public class ConversionTool {
      * @param subscribableInfo subscribable information
      * @param cartridgeName    cartridge name
      */
-    public static void addDeployingScript(String outputLocation, SubscribableInfo subscribableInfo, String cartridgeName) {
+    public static void addDeployingScript(String outputLocation, SubscribableInfo subscribableInfo,
+            String cartridgeName) {
         BufferedReader reader = null;
         FileWriter writer = null;
         try {
             File file = new File(Constants.DIRECTORY_SOURCE_SCRIPT_DEPLOY);
             reader = new BufferedReader(new FileReader(file));
-            String line,oldText = "";
+            String line, oldText = "";
             while ((line = reader.readLine()) != null) {
                 oldText += line + "\n";
             }
-            //String newText = oldText;
             if (subscribableInfo.getDeploymentPolicy() != null) {
                 oldText = oldText.replaceAll("deployment-policy_name", subscribableInfo.getDeploymentPolicy());
             }
@@ -145,19 +141,17 @@ public class ConversionTool {
             if (!outputDirectory.exists()) {
                 outputDirectory.mkdirs();
             }
-            writer = new FileWriter(new File(outputDirectory.getPath() + Constants.FILE_SOURCE_SCRIPT_DEPLOY),
-                    false);
+            writer = new FileWriter(new File(outputDirectory.getPath() + Constants.FILE_SOURCE_SCRIPT_DEPLOY), false);
             writer.write(oldText);
-
 
         } catch (IOException e) {
             log.error("Error in copying scripts directory ", e);
         } finally {
             try {
                 assert reader != null;
-                    reader.close();
+                reader.close();
                 assert writer != null;
-                    writer.close();
+                writer.close();
             } catch (IOException ignore) {
             }
         }
@@ -168,36 +162,11 @@ public class ConversionTool {
      * Method to get configuration details
      */
     public static void readInitialConfiguration() {
-        InputStream inputStream = null;
         try {
-            Properties properties = new Properties();
-            String propFileName =
-                    System.getProperty("user.dir") + File.separator + ".." + File.separator + "conf" + File.separator
-                            + "config.properties";
-
-            inputStream = new FileInputStream(propFileName);
-            properties.load(inputStream);
-
-            if (properties.getProperty(Constants.BASE_URL400) != null)
-                System.setProperty(Constants.BASE_URL400, properties.getProperty(Constants.BASE_URL400));
-            if (properties.getProperty(Constants.USERNAME400) != null)
-                System.setProperty(Constants.USERNAME400, properties.getProperty(Constants.USERNAME400));
-            if (properties.getProperty(Constants.PASSWORD400) != null)
-                System.setProperty(Constants.PASSWORD400, properties.getProperty(Constants.PASSWORD400));
-            if (properties.getProperty(Constants.USERNAME410) != null)
-                System.setProperty(Constants.USERNAME410, properties.getProperty(Constants.USERNAME410));
-            if (properties.getProperty(Constants.PASSWORD410) != null)
-                System.setProperty(Constants.PASSWORD410, properties.getProperty(Constants.PASSWORD410));
-
-        } catch (IOException e) {
-            String msg = "IO error in getting configuration details";
-            log.error(msg, e);
-        } finally {
-            try {
-                assert inputStream != null;
-                    inputStream.close();
-            } catch (IOException ignore) {
-            }
+            final PropertiesConfiguration propsConfig = new PropertiesConfiguration(System.getProperty("config"));
+            SystemConfiguration.setSystemProperties(propsConfig);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load config file: " + e);
         }
     }
 }
