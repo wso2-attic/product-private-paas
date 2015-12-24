@@ -16,4 +16,4 @@ This tool will enable users to import artifact JSON files from PPaaS 4.0.0 and c
 # Configurations
 
 Default values, that have been used for the port mappings of the cartridges can be updated in conf/config.properties file.
-If specific port mappings are needed for each cartridge, it is needed to update the generated artifact jsons of cartridges in output-artifacts folder. 
+If specific port mappings are needed for each cartridge, it is needed to update the generated artifact jsons of cartridges in output-artifacts folder.
