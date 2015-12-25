@@ -16,13 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
-public class RequestsInFlightThresholds {
+@XmlRootElement public class RequestsInFlightThresholds {
 
     private float upperLimit;
     private float lowerLimit;

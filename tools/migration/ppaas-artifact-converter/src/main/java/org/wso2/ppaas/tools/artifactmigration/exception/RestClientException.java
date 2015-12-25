@@ -15,10 +15,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.wso2.ppaas.tools.artifactmigration.exception;
 
-public class RestClientException extends Exception{
+public class RestClientException extends Exception {
     public RestClientException(String message, Throwable throwable) {
         super(message, throwable);
     }

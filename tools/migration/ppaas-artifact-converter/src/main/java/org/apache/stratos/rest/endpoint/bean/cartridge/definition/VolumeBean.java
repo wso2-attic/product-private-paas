@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     private boolean removeOnTermination;
     private String mappingPath;
 
-    public String toString () {
+    public String toString() {
         return " [ Persistence Required : " + ", Size: " + size + ", device: " +
                 device + " remove on termination " + removeOnTermination +
                 ", mappingPath : " + mappingPath + "] ";

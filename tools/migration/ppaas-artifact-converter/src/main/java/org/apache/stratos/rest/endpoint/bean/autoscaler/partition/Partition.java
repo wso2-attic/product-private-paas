@@ -16,15 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-
 package org.apache.stratos.rest.endpoint.bean.autoscaler.partition;
 
 import org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement
-public class Partition {
+@XmlRootElement public class Partition {
 
     private String id;
     private int partitionMin;

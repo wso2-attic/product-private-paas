@@ -38,9 +38,9 @@ import java.util.List;
 /**
  * Fetches the JSON files from PPaaS 4.0.0
  */
-public class OldArtifactLoader {
+public class ArtifactLoader400 {
 
-    private static final Logger log = Logger.getLogger(OldArtifactLoader.class);
+    private static final Logger log = Logger.getLogger(ArtifactLoader400.class);
     private static final Gson gson = new Gson();
 
     /**
@@ -65,7 +65,6 @@ public class OldArtifactLoader {
             throw new ArtifactLoadingException(msg, e);
         }
     }
-
     /**
      * Method to fetch Auto Scale Policy from PPaaS 4.0.0. API endpoint
      *

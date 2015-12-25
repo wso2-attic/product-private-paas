@@ -28,9 +28,9 @@ import java.io.*;
 /*
 Class for conversion
  */
-public class ConversionTool {
+class ConversionTool {
 
-    private static final Logger log = Logger.getLogger(Transformation.class);
+    private static final Logger log = Logger.getLogger(ConversionTool.class);
 
     /**
      * Method to handle console inputs
@@ -70,10 +70,10 @@ public class ConversionTool {
 
         log.info("Artifact Migration started...");
         try {
-            Transformation.transformNetworkPartitionList();
-            Transformation.transformAutoscalePolicyList();
-            Transformation.transformDeploymentPolicyList();
-            Transformation.transformCartridgeList();
+            Transformer.transformNetworkPartitionList();
+            Transformer.transformAutoscalePolicyList();
+            Transformer.transformDeploymentPolicyList();
+            Transformer.transformCartridgeList();
             System.out.println("Conversion completed successfully");
         } catch (Exception e) {
             log.error("Error while converting the artifacts ", e);
@@ -138,8 +138,9 @@ public class ConversionTool {
 
             File outputDirectory = new File(outputLocation + Constants.DIRECTORY_OUTPUT_SCRIPT_DEPLOY);
 
-            if (!outputDirectory.exists()) {
-                outputDirectory.mkdirs();
+            boolean hasCreated = outputDirectory.mkdirs();
+            if (!outputDirectory.exists() && !hasCreated) {
+                throw new IOException("Error in creating the output directory");
             }
             writer = new FileWriter(new File(outputDirectory.getPath() + Constants.FILE_SOURCE_SCRIPT_DEPLOY), false);
             writer.write(oldText);

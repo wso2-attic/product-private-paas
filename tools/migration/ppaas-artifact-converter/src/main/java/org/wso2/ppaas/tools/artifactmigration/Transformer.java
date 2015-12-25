@@ -47,7 +47,7 @@ import org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean;
 import org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean;
 import org.wso2.ppaas.tools.artifactmigration.exception.ArtifactLoadingException;
 import org.wso2.ppaas.tools.artifactmigration.exception.TransformationException;
-import org.wso2.ppaas.tools.artifactmigration.loader.OldArtifactLoader;
+import org.wso2.ppaas.tools.artifactmigration.loader.ArtifactLoader400;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -56,9 +56,9 @@ import java.util.List;
 /**
  * Transforms the artifacts from PPaaS 4.0.0 to 4.1.0
  */
-public class Transformation {
+class Transformer {
 
-    private static final Logger log = Logger.getLogger(Transformation.class);
+    private static final Logger log = Logger.getLogger(Transformer.class);
 
     /**
      * Method to transform Auto Scale Policies
@@ -68,7 +68,7 @@ public class Transformation {
         List<AutoscalePolicy> autoscalePolicy400List;
         AutoscalePolicyBean autoscalePolicy410 = new AutoscalePolicyBean();
         try {
-            autoscalePolicy400List = OldArtifactLoader.fetchAutoscalePolicyList();
+            autoscalePolicy400List = ArtifactLoader400.fetchAutoscalePolicyList();
             log.info("Fetched Auto Scale Policy from PPaaS 4.0.0");
 
             File directoryName = new File(Constants.DIRECTORY_POLICY_AUTOSCALE);
@@ -120,9 +120,10 @@ public class Transformation {
         File directoryName;
         String networkPartitionProvider;
         try {
-            networkPartition400List = OldArtifactLoader.fetchPartitionList();
+            networkPartition400List = ArtifactLoader400.fetchPartitionList();
             log.info("Fetched Network Partition List from PPaaS 4.0.0");
 
+            int networkPartitionIterator = 0;
             for (Partition networkPartition400 : networkPartition400List) {
                 networkPartition410.setId(networkPartition400.getId());
                 networkPartition410.setProvider(networkPartition400.getProvider());
@@ -146,7 +147,8 @@ public class Transformation {
                 }
                 directoryName = new File(
                         Constants.DIRECTORY_NETWORK_PARTITION + File.separator + networkPartition400.getProvider());
-                JsonWriter.writeFile(directoryName, networkPartition410.getId() + Constants.JSON_EXTENSION,
+                JsonWriter.writeFile(directoryName,
+                        "network-partition-" + (networkPartitionIterator++) + Constants.JSON_EXTENSION,
                         getGson().toJson(networkPartition410));
                 addDefaultApplicationPolicies(networkPartitionProvider);
             }
@@ -170,7 +172,7 @@ public class Transformation {
         List<DeploymentPolicy> deploymentPolicy400List;
         DeploymentPolicyBean deploymentPolicy410 = new DeploymentPolicyBean();
         try {
-            deploymentPolicy400List = OldArtifactLoader.fetchDeploymentPolicyList();
+            deploymentPolicy400List = ArtifactLoader400.fetchDeploymentPolicyList();
             log.info("Fetched Deployment Policy from PPaaS 4.0.0");
             File directoryName = new File(Constants.DIRECTORY_POLICY_DEPLOYMENT);
 
@@ -243,10 +245,10 @@ public class Transformation {
         CartridgeBean cartridge410 = new CartridgeBean();
 
         try {
-            cartridge400List = OldArtifactLoader.fetchCartridgeList();
+            cartridge400List = ArtifactLoader400.fetchCartridgeList();
             log.info("Fetched Cartridge List from PPaaS 4.0.0");
 
-            subscription400List = OldArtifactLoader.fetchSubscriptionDataList();
+            subscription400List = ArtifactLoader400.fetchSubscriptionDataList();
             log.info("Fetched Subscription List");
 
             File outputDirectoryNameCartridge = new File(Constants.DIRECTORY_CARTRIDGE);
@@ -281,12 +283,12 @@ public class Transformation {
 
                         signup410List.add(a++, artifactRepository);
 
-                        List<SubscriptionDomainBean> domainMapping400 = OldArtifactLoader
+                        List<SubscriptionDomainBean> domainMapping400 = ArtifactLoader400
                                 .fetchDomainMappingList(cartridge.getCartridgeType(), subscription.getAlias());
 
                         for (SubscriptionDomainBean domainMapping : domainMapping400) {
                             DomainMappingBean domainMappingBean = new DomainMappingBean();
-                            domainMappingBean.setCartridgeAlias(cartridge.getCartridgeAlias());
+                            domainMappingBean.setCartridgeAlias(subscription.getAlias());
                             domainMappingBean.setDomainName(domainMapping.getDomainName());
                             domainMappingBean.setContextPath(domainMapping.getApplicationContext());
                             domainMapping410List.add(domainMappingIterator++, domainMappingBean);
@@ -420,6 +422,7 @@ public class Transformation {
         JsonWriter.writeFile(directoryName, applicationPolicyBean.getId() + Constants.JSON_EXTENSION,
                 getGson().toJson(applicationPolicyBean));
     }
+
     /**
      * Method to get Gson
      */

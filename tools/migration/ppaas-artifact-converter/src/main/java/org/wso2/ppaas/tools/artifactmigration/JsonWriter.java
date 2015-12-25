@@ -18,16 +18,18 @@
 package org.wso2.ppaas.tools.artifactmigration;
 
 import org.apache.log4j.Logger;
+
 import java.io.File;
 import java.io.IOException;
+
 import org.apache.commons.io.FileUtils;
 
 /**
  * Class to write JSON strings to files
  */
-public class JsonWriter {
+class JsonWriter {
 
-    private static final Logger log = Logger.getLogger(Transformation.class);
+    private static final Logger log = Logger.getLogger(JsonWriter.class);
 
     /**
      * Method to write to a file
@@ -38,8 +40,9 @@ public class JsonWriter {
      */
     public static void writeFile(File directoryName, String fileName, String json) {
         try {
-            if (!directoryName.exists()) {
-                directoryName.mkdirs();
+            boolean hasCreated = directoryName.mkdirs();
+            if (!directoryName.exists() && !hasCreated) {
+                throw new IOException("Error in creating the output directory");
             }
             File file = new File(directoryName.getPath() + File.separator + fileName);
             FileUtils.writeStringToFile(file, json);
