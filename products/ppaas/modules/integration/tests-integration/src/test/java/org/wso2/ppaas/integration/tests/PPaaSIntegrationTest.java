@@ -18,10 +18,10 @@ package org.wso2.ppaas.integration.tests;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.apache.stratos.integration.common.rest.IntegrationMockClient;
+import org.apache.stratos.integration.common.rest.RestClient;
 import org.wso2.carbon.automation.engine.context.AutomationContext;
 import org.wso2.carbon.automation.engine.context.TestUserMode;
-import org.wso2.ppaas.integration.common.rest.IntegrationMockClient;
-import org.wso2.ppaas.integration.common.rest.RestClient;
 
 public class PPaaSIntegrationTest {
     private static final Log log = LogFactory.getLog(PPaaSIntegrationTest.class);
@@ -33,12 +33,12 @@ public class PPaaSIntegrationTest {
 
     public PPaaSIntegrationTest() throws Exception {
         ppaasAutomationCtx = new AutomationContext("PPAAS", "ppaas-001", TestUserMode.SUPER_TENANT_ADMIN);
-        adminUsername = ppaasAutomationCtx.getConfigurationValue
-                ("/automation/userManagement/superTenant/tenant/admin/user/userName");
-        adminPassword = ppaasAutomationCtx.getConfigurationValue
-                ("/automation/userManagement/superTenant/tenant/admin/user/password");
-        restClient =
-                new RestClient(ppaasAutomationCtx.getContextUrls().getWebAppURL(), adminUsername, adminPassword);
+        adminUsername = ppaasAutomationCtx
+                .getConfigurationValue("/automation/userManagement/superTenant/tenant/admin/user/userName");
+        adminPassword = ppaasAutomationCtx
+                .getConfigurationValue("/automation/userManagement/superTenant/tenant/admin/user/password");
+        restClient = new RestClient(ppaasAutomationCtx.getContextUrls().getWebAppURL(),
+                ppaasAutomationCtx.getContextUrls().getWebAppURLHttps(), adminUsername, adminPassword);
         String mockIaaSEndpoint = ppaasAutomationCtx.getContextUrls().getWebAppURL() + "/mock-iaas/api";
         mockIaasApiClient = new IntegrationMockClient(mockIaaSEndpoint);
         log.info("Mock IaaS endpoint URL: " + mockIaaSEndpoint);

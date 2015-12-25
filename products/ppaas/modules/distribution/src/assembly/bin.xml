@@ -430,35 +430,37 @@
         <!-- cep -->
         <!--creating an empty input event adaptors directory-->
         <fileSet>
-            <directory>../../../../extensions/cep/artifacts/wso2cep-3.0.0/inputeventadaptors</directory>
+            <directory>target/apache-stratos-cep-extension-${stratos.version}/wso2cep-3.0.0/inputeventadaptors</directory>
             <outputDirectory>
                 ${ppaas.distribution.name}-${project.version}/repository/deployment/server/inputeventadaptors
             </outputDirectory>
         </fileSet>
         <!--creating an empty output event adaptors directory-->
         <fileSet>
-            <directory>../../../../extensions/cep/artifacts/wso2cep-3.0.0/outputeventadaptors</directory>
+            <directory>target/apache-stratos-cep-extension-${stratos.version}/wso2cep-3.0.0/outputeventadaptors</directory>
             <outputDirectory>
                 ${ppaas.distribution.name}-${project.version}/repository/deployment/server/outputeventadaptors
             </outputDirectory>
         </fileSet>
         <!--creating an empty event builders directory-->
         <fileSet>
-            <directory>../../../../extensions/cep/artifacts/wso2cep-3.0.0/eventbuilders</directory>
-            <outputDirectory>${ppaas.distribution.name}-${project.version}/repository/deployment/server/eventbuilders
+            <directory>target/apache-stratos-cep-extension-${stratos.version}/wso2cep-3.0.0/eventbuilders</directory>
+            <outputDirectory>
+                ${ppaas.distribution.name}-${project.version}/repository/deployment/server/eventbuilders
             </outputDirectory>
         </fileSet>
         <!--creating an empty event formatters directory-->
         <fileSet>
-            <directory>../../../../extensions/cep/artifacts/wso2cep-3.0.0/eventformatters</directory>
+            <directory>target/apache-stratos-cep-extension-${stratos.version}/wso2cep-3.0.0/eventformatters</directory>
             <outputDirectory>
                 ${ppaas.distribution.name}-${project.version}/repository/deployment/server/eventformatters
             </outputDirectory>
         </fileSet>
         <!--creating an empty execution plans directory-->
         <fileSet>
-            <directory>../../../../extensions/cep/artifacts/wso2cep-3.0.0/executionplans</directory>
-            <outputDirectory>${ppaas.distribution.name}-${project.version}/repository/deployment/server/executionplans
+            <directory>target/apache-stratos-cep-extension-${stratos.version}/wso2cep-3.0.0/executionplans</directory>
+            <outputDirectory>
+                ${ppaas.distribution.name}-${project.version}/repository/deployment/server/executionplans
             </outputDirectory>
         </fileSet>
         <!--customization scripts-->
@@ -510,12 +512,6 @@
             <outputDirectory>${ppaas.distribution.name}-${project.version}/repository/components/lib</outputDirectory>
             <includes>
                 <include>org.apache.stratos:org.apache.stratos.cep300.extension:jar</include>
-            </includes>
-        </dependencySet>
-        <dependencySet>
-            <outputDirectory>${ppaas.distribution.name}-${project.version}/repository/components/lib</outputDirectory>
-            <includes>
-                <include>org.wso2.ppaas:org.wso2.ppaas.cep300.extension:jar</include>
             </includes>
         </dependencySet>
         <dependencySet>
@@ -602,7 +598,7 @@
             <filtered>true</filtered>
         </file>
         <file>
-            <source>../../../../extensions/cep/artifacts/wso2cep-3.0.0/streamdefinitions/stream-manager-config.xml</source>
+            <source>src/main/conf/stream-manager-config.xml</source>
             <outputDirectory>${ppaas.distribution.name}-${project.version}/repository/conf/</outputDirectory>
             <filtered>true</filtered>
         </file>

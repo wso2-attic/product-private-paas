@@ -90,8 +90,8 @@
             <artifactId>org.apache.stratos.messaging</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.ppaas</groupId>
-            <artifactId>org.wso2.ppaas.das.extension</artifactId>
+            <groupId>org.apache.stratos</groupId>
+            <artifactId>org.apache.stratos.das.extension</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
@@ -102,8 +102,8 @@
             <artifactId>andes-client</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.wso2.ppaas</groupId>
-            <artifactId>org.wso2.ppaas.cep310.extension</artifactId>
+            <groupId>org.apache.stratos</groupId>
+            <artifactId>org.apache.stratos.cep310.extension</artifactId>
         </dependency>
     </dependencies>
 </project>

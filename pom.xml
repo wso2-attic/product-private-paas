@@ -460,6 +460,38 @@
 
     <dependencyManagement>
         <dependencies>
+            <!-- PPaaS -->
+            <dependency>
+                <groupId>org.wso2.ppaas</groupId>
+                <artifactId>org.wso2.ppaas.integration.common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ppaas</groupId>
+                <artifactId>org.wso2.ppaas.python.cartridge.agent.integration.common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.ppaas</groupId>
+                <artifactId>wso2ppaas-membership-scheme</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.das.extension</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.cep310.extension</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.stratos</groupId>
+                <artifactId>org.apache.stratos.integration.common</artifactId>
+                <version>${stratos.version}</version>
+            </dependency>
+
             <!-- Apache Stratos dependencies -->
             <dependency>
                 <groupId>org.apache.stratos</groupId>
@@ -485,6 +517,28 @@
                 <groupId>org.apache.stratos</groupId>
                 <artifactId>org.apache.stratos.cep300.extension</artifactId>
                 <version>${stratos.version}</version>
+            </dependency>
+
+            <!-- Analytics dependencies -->
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.receiver.thrift</artifactId>
+                <version>${carbon.analytics.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.receiver.binary</artifactId>
+                <version>${carbon.analytics.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.core</artifactId>
+                <version>${carbon.analytics.common.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon.analytics-common</groupId>
+                <artifactId>org.wso2.carbon.databridge.commons</artifactId>
+                <version>${carbon.analytics.common.version}</version>
             </dependency>
 
             <!-- Automation framework dependencies -->
@@ -532,6 +586,16 @@
                 <artifactId>org.jacoco.agent</artifactId>
                 <version>${jacoco.agent.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.user.api</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wso2.carbon</groupId>
+                <artifactId>org.wso2.carbon.logging</artifactId>
+                <version>${carbon.kernel.version}</version>
+            </dependency>
 
             <!-- Misc -->
             <dependency>
@@ -549,6 +613,16 @@
                 <groupId>org.apache.axis2.wso2</groupId>
                 <artifactId>axis2</artifactId>
                 <version>${axis2.osgi.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-lang.wso2</groupId>
+                <artifactId>commons-lang</artifactId>
+                <version>${commons.lang.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.axis2.wso2</groupId>
@@ -672,6 +746,16 @@
                 <version>${activemq.version}</version>
             </dependency>
             <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-jaas</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.activemq</groupId>
+                <artifactId>activemq-mqtt</artifactId>
+                <version>${activemq.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.eclipse.paho</groupId>
                 <artifactId>mqtt-client</artifactId>
                 <version>${mqtt.client.version}</version>
@@ -691,49 +775,20 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons.lang3.version}</version>
             </dependency>
-
-            <!-- PPaaS -->
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.integration.common</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>wso2ppaas-membership-scheme</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.das.extension</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.metering.service.capps</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.monitoring.service.capps</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.wso2.ppaas</groupId>
-                <artifactId>org.wso2.ppaas.cep310.extension</artifactId>
-                <version>${project.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
 
     <properties>
         <!-- Apache Stratos version -->
-        <stratos.version>4.1.4</stratos.version>
+        <stratos.version>4.1.5</stratos.version>
 
         <!-- ppaas distribution properties -->
         <ppaas.distribution.name>wso2ppaas</ppaas.distribution.name>
         <configurator.distribution.name>ppaas-configurator</configurator.distribution.name>
+        <python.cartridge.agent.distribution.name>
+            apache-stratos-python-cartridge-agent
+        </python.cartridge.agent.distribution.name>
 
         <!-- Carbon related versions -->
         <carbon.kernel.version>4.2.0</carbon.kernel.version>
@@ -741,6 +796,7 @@
         <carbon.deployment.version>4.2.3</carbon.deployment.version>
         <carbon.automation.version>4.4.2</carbon.automation.version>
         <carbon.automationutils.version>4.4.2</carbon.automationutils.version>
+        <carbon.analytics.common.version>5.0.0</carbon.analytics.common.version>
         <axis2.osgi.version>1.6.1.wso2v10</axis2.osgi.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
         <version.axis2>1.6.1-wso2v10</version.axis2>
@@ -757,6 +813,8 @@
         <carbon.logaggregator.version>1.0.0</carbon.logaggregator.version>
         <carbon.event.version>1.0.0</carbon.event.version>
         <wso2.stratos.common.version>2.2.2</wso2.stratos.common.version>
+        <commons.lang.version>2.6.0.wso2v1</commons.lang.version>
+        <python.cartridge.agent.version>4.1.1.wso2v1</python.cartridge.agent.version>
 
         <!-- Jaggery versions -->
         <jaggery.version>0.9.0.ALPHA4.wso2v3</jaggery.version>
@@ -791,6 +849,7 @@
         <testng.version>6.1.1</testng.version>
         <mysql.connector.java.version>5.1.36</mysql.connector.java.version>
         <commons.lang3.version>3.1</commons.lang3.version>
+        <junit.version>4.11</junit.version>
 
         <!-- Maven plugin versions -->
         <maven.incremental.plugin.version>1.3</maven.incremental.plugin.version>
