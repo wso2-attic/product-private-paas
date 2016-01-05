@@ -182,12 +182,10 @@ public class Transformer {
                 deploymentPolicy410.setId(deploymentPolicy400.getId());
                 List<PartitionGroup> partitionGroup400List = deploymentPolicy400.getPartitionGroup();
                 List<NetworkPartitionReferenceBean> networkPartitions410List = new ArrayList<>();
+
                 int a = 0;
                 for (PartitionGroup partitionGroup : partitionGroup400List) {
-
                     NetworkPartitionReferenceBean tempNetworkPartition = new NetworkPartitionReferenceBean();
-
-
                     tempNetworkPartition.setPartitionAlgo(partitionGroup.getPartitionAlgo());
 
                     List<Partition> partition400List = partitionGroup.getPartition();
@@ -197,10 +195,8 @@ public class Transformer {
                     for (Partition partition : partition400List) {
 
                         tempNetworkPartition.setId(partition.getId());
-
-
                         PartitionReferenceBean tempPartition = new PartitionReferenceBean();
-                        tempPartition.setId("partition-1");
+                        tempPartition.setId(Constants.NETWORK_PARTITION_ID);
                         tempPartition.setPartitionMax(partition.getPartitionMax());
 
                         if (partition.getProperty() != null) {
@@ -212,7 +208,6 @@ public class Transformer {
 
                                 tempPropertyBean410.setName(propertyBean400.getName());
                                 tempPropertyBean410.setValue(propertyBean400.getValue());
-
                                 property410List.add(c++, tempPropertyBean410);
                             }
                             tempPartition.setProperty(property410List);
@@ -421,7 +416,7 @@ public class Transformer {
 
         applicationPolicyBean.setId(Constants.APPLICATION_POLICY_ID);
         applicationPolicyBean.setAlgorithm(Constants.APPLICATION_POLICY_ALGO);
-       // String networkPartition = Constants.NETWORK_PARTITION_NAME +"1";
+        // String networkPartition = Constants.NETWORK_PARTITION_NAME +"1";
         String[] networkPartitions = { networkPartition };
         applicationPolicyBean.setNetworkPartitions(networkPartitions);
 

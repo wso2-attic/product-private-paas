@@ -30,6 +30,7 @@ import org.wso2.ppaas.tools.artifactmigration.Constants;
 import org.wso2.ppaas.tools.artifactmigration.RestClient;
 import org.wso2.ppaas.tools.artifactmigration.exception.ArtifactLoadingException;
 import org.wso2.ppaas.tools.artifactmigration.exception.RestClientException;
+
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -65,6 +66,7 @@ public class ArtifactLoader400 {
             throw new ArtifactLoadingException(msg, e);
         }
     }
+
     /**
      * Method to fetch Auto Scale Policy from PPaaS 4.0.0. API endpoint
      *
@@ -73,7 +75,8 @@ public class ArtifactLoader400 {
      */
     public static List<AutoscalePolicy> fetchAutoscalePolicyList() throws ArtifactLoadingException {
         try {
-            String autoscalePolicyString = readUrl(System.getProperty(Constants.BASE_URL400) + Constants.URL_POLICY_AUTOSCALE);
+            String autoscalePolicyString = readUrl(
+                    System.getProperty(Constants.BASE_URL400) + Constants.URL_POLICY_AUTOSCALE);
             String autoscalePolicyListString;
             if (autoscalePolicyString != null) {
                 autoscalePolicyListString = autoscalePolicyString
@@ -100,7 +103,8 @@ public class ArtifactLoader400 {
      */
     public static List<DeploymentPolicy> fetchDeploymentPolicyList() throws ArtifactLoadingException {
         try {
-            String deploymentPolicyString = readUrl(System.getProperty(Constants.BASE_URL400) + Constants.URL_POLICY_DEPLOYMENT);
+            String deploymentPolicyString = readUrl(
+                    System.getProperty(Constants.BASE_URL400) + Constants.URL_POLICY_DEPLOYMENT);
             String deploymentPolicyListString;
             if (deploymentPolicyString != null) {
                 deploymentPolicyListString = deploymentPolicyString
@@ -177,7 +181,7 @@ public class ArtifactLoader400 {
     /**
      * Method to fetch domain mapping list from PPaaS 4.0.0. API endpoint
      *
-     * @param cartridgeType cartridge type
+     * @param cartridgeType     cartridge type
      * @param subscriptionAlias subscription alias
      * @return domain mapping
      * @throws ArtifactLoadingException
@@ -186,9 +190,9 @@ public class ArtifactLoader400 {
             throws ArtifactLoadingException {
         try {
             String domainString = readUrl(
-                    System.getProperty(Constants.BASE_URL400) + Constants.STRATOS + "cartridge" + File.separator + cartridgeType
-                            + File.separator + "subscription" + File.separator + subscriptionAlias + File.separator
-                            + "domains");
+                    System.getProperty(Constants.BASE_URL400) + Constants.STRATOS + "cartridge" + File.separator
+                            + cartridgeType + File.separator + "subscription" + File.separator + subscriptionAlias
+                            + File.separator + "domains");
             String domainListString;
             if (domainString != null) {
                 domainListString = domainString
@@ -206,6 +210,7 @@ public class ArtifactLoader400 {
             throw new ArtifactLoadingException(msg, e);
         }
     }
+
     /**
      * Method to connect to the REST endpoint with authorization
      *
@@ -213,7 +218,8 @@ public class ArtifactLoader400 {
      * @return JSON string
      */
     private static String readUrl(String serviceEndpoint) throws RestClientException {
-        RestClient restclient = new RestClient(System.getProperty(Constants.USERNAME400), System.getProperty(Constants.PASSWORD400));
+        RestClient restclient = new RestClient(System.getProperty(Constants.USERNAME400),
+                System.getProperty(Constants.PASSWORD400));
         try {
             return restclient.doGet(new URL(serviceEndpoint));
         } catch (MalformedURLException e) {

@@ -44,6 +44,7 @@ public class Constants {
 
     //Default value for network partition
     public static final String NETWORK_PARTITION_NAME = "network-partition-";
+    public static final String NETWORK_PARTITION_ID = "partition-1";
 
     //Default file names for application policy jsons
     public static final String FILENAME_APPLICATION_SIGNUP = "application-signup.json";
@@ -59,7 +60,7 @@ public class Constants {
     public static final String PASSWORD410 = "password410";
     //Port mapping configuration strings
     public static final String PORT = "port";
-    public static final String PROXY_PORT= "proxyPort";
+    public static final String PROXY_PORT = "proxyPort";
     public static final String PROTOCOL = "protocol";
     //IaaS provider configuration
     public static final String IAAS = "iaas";
@@ -92,7 +93,7 @@ public class Constants {
     public static final String DIRECTORY_CARTRIDGE = ROOT_DIRECTORY + "cartridges";
     public static final String DIRECTORY_POLICY_APPLICATION = ROOT_DIRECTORY + "application-policies";
     public static final String DIRECTORY_OUTPUT_SCRIPT = ROOT_DIRECTORY + "applications";
-    public static final String DIRECTORY_SOURCE_SCRIPT =
+    private static final String DIRECTORY_SOURCE_SCRIPT =
             System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources" + File.separator
                     + "scripts";
     public static final String DIRECTORY_SOURCE_SCRIPT_DEPLOY =
