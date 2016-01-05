@@ -118,18 +118,17 @@ class Transformer {
         List<Partition> networkPartition400List;
         NetworkPartitionBean networkPartition410 = new NetworkPartitionBean();
         File directoryName;
-        String networkPartitionProvider;
         try {
             networkPartition400List = ArtifactLoader400.fetchPartitionList();
             log.info("Fetched Network Partition List from PPaaS 4.0.0");
 
-            int networkPartitionIterator = 0;
+            int networkPartitionIterator = 1;
             for (Partition networkPartition400 : networkPartition400List) {
                 networkPartition410.setId(networkPartition400.getId());
                 networkPartition410.setProvider(networkPartition400.getProvider());
-                networkPartitionProvider = networkPartition400.getProvider();
                 List<PartitionBean> partitionsList410 = new ArrayList<>();
                 PartitionBean partition410 = new PartitionBean();
+                partition410.setId("partition-1");
                 if (networkPartition400.getProperty() != null) {
                     List<org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean> property400List = networkPartition400
                             .getProperty();
@@ -148,9 +147,11 @@ class Transformer {
                 directoryName = new File(
                         Constants.DIRECTORY_NETWORK_PARTITION + File.separator + networkPartition400.getProvider());
                 JsonWriter.writeFile(directoryName,
-                        "network-partition-" + (networkPartitionIterator++) + Constants.JSON_EXTENSION,
+                        Constants.NETWORK_PARTITION_NAME + (networkPartitionIterator++) + Constants.JSON_EXTENSION,
                         getGson().toJson(networkPartition410));
-                addDefaultApplicationPolicies(networkPartitionProvider);
+
+                //Setting network partition ID as a system property to be used for application policies
+                System.setProperty("defaultNetworkPartitionId", networkPartition400.getId());
             }
             log.info("Created Network Partition List 4.1.0 artifacts");
         } catch (JsonSyntaxException e) {
@@ -176,17 +177,17 @@ class Transformer {
             log.info("Fetched Deployment Policy from PPaaS 4.0.0");
             File directoryName = new File(Constants.DIRECTORY_POLICY_DEPLOYMENT);
 
-            for (DeploymentPolicy deploymentPolicy : deploymentPolicy400List) {
+            for (DeploymentPolicy deploymentPolicy400 : deploymentPolicy400List) {
 
-                deploymentPolicy410.setId(deploymentPolicy.getId());
-                List<PartitionGroup> partitionGroup400List = deploymentPolicy.getPartitionGroup();
+                deploymentPolicy410.setId(deploymentPolicy400.getId());
+                List<PartitionGroup> partitionGroup400List = deploymentPolicy400.getPartitionGroup();
                 List<NetworkPartitionReferenceBean> networkPartitions410List = new ArrayList<>();
                 int a = 0;
                 for (PartitionGroup partitionGroup : partitionGroup400List) {
 
                     NetworkPartitionReferenceBean tempNetworkPartition = new NetworkPartitionReferenceBean();
 
-                    tempNetworkPartition.setId(partitionGroup.getId());
+
                     tempNetworkPartition.setPartitionAlgo(partitionGroup.getPartitionAlgo());
 
                     List<Partition> partition400List = partitionGroup.getPartition();
@@ -194,8 +195,12 @@ class Transformer {
 
                     int b = 0;
                     for (Partition partition : partition400List) {
+
+                        tempNetworkPartition.setId(partition.getId());
+
+
                         PartitionReferenceBean tempPartition = new PartitionReferenceBean();
-                        tempPartition.setId(partition.getId());
+                        tempPartition.setId("partition-1");
                         tempPartition.setPartitionMax(partition.getPartitionMax());
 
                         if (partition.getProperty() != null) {
@@ -308,7 +313,7 @@ class Transformer {
 
                 File outputDirectoryNameApp = new File(
                         Constants.DIRECTORY_APPLICATION + File.separator + application410.getName() + File.separator
-                                + "artifacts");
+                                + Constants.DIRECTORY_ARTIFACTS);
                 JsonWriter.writeFile(outputDirectoryNameApp, application410.getName() + Constants.JSON_EXTENSION,
                         getGson().toJson(application410));
                 JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_APPLICATION_SIGNUP,
@@ -333,9 +338,9 @@ class Transformer {
                 //Use of default values in port mappings
                 List<PortMappingBean> portMappingList = new ArrayList<>();
                 PortMappingBean portMappingBean = new PortMappingBean();
-                portMappingBean.setPort(Integer.parseInt(System.getProperty("port")));
-                portMappingBean.setProxyPort(Integer.parseInt(System.getProperty("proxyPort")));
-                portMappingBean.setProtocol(System.getProperty("protocol"));
+                portMappingBean.setPort(Integer.parseInt(System.getProperty(Constants.PORT)));
+                portMappingBean.setProxyPort(Integer.parseInt(System.getProperty(Constants.PROXY_PORT)));
+                portMappingBean.setProtocol(System.getProperty(Constants.PROTOCOL));
                 portMappingList.add(0, portMappingBean);
 
                 cartridge410.setPortMapping(portMappingList);
@@ -385,7 +390,8 @@ class Transformer {
                 //Setting IaaS provider details
                 List<IaasProviderBean> iaasProviderList = new ArrayList<>();
                 IaasProviderBean iaasProvider = new IaasProviderBean();
-                iaasProvider.setType(System.getProperty("iaas"));
+                iaasProvider.setType(System.getProperty(Constants.IAAS));
+                iaasProvider.setImageId(System.getProperty(Constants.IAAS_IMAGE_ID));
 
                 iaasProviderList.add(0, iaasProvider);
                 cartridge410.setIaasProvider(iaasProviderList);
@@ -410,16 +416,17 @@ class Transformer {
     /**
      * Method to add default application policies
      */
-    private static void addDefaultApplicationPolicies(String networkPartition) {
+    public static void addDefaultApplicationPolicies(String networkPartition) {
         ApplicationPolicyBean applicationPolicyBean = new ApplicationPolicyBean();
 
         applicationPolicyBean.setId(Constants.APPLICATION_POLICY_ID);
         applicationPolicyBean.setAlgorithm(Constants.APPLICATION_POLICY_ALGO);
+       // String networkPartition = Constants.NETWORK_PARTITION_NAME +"1";
         String[] networkPartitions = { networkPartition };
         applicationPolicyBean.setNetworkPartitions(networkPartitions);
 
         File directoryName = new File(Constants.DIRECTORY_POLICY_APPLICATION);
-        JsonWriter.writeFile(directoryName, applicationPolicyBean.getId() + Constants.JSON_EXTENSION,
+        JsonWriter.writeFile(directoryName, Constants.APPLICATION_POLICY_ID + Constants.JSON_EXTENSION,
                 getGson().toJson(applicationPolicyBean));
     }
 
@@ -430,5 +437,4 @@ class Transformer {
         GsonBuilder gsonBuilder = new GsonBuilder();
         return gsonBuilder.setPrettyPrinting().create();
     }
-
 }

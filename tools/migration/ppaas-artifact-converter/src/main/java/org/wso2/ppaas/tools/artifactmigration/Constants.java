@@ -28,25 +28,43 @@ public class Constants {
 
     //PPaaS 4.0.0 REST API endpoints
     public static final String STRATOS = "stratos" + File.separator + "admin" + File.separator;
+
     // Do not use forward slash at the beginning instead use it in the base url.
     public static final String URL_PARTITION = STRATOS + "partition";
     public static final String URL_POLICY_AUTOSCALE = STRATOS + "policy" + File.separator + "autoscale";
     public static final String URL_CARTRIDGE = STRATOS + "cartridge" + File.separator + "list";
     public static final String URL_POLICY_DEPLOYMENT = STRATOS + "policy" + File.separator + "deployment";
     public static final String DIRECTORY_OUTPUT_SCRIPT_DEPLOY = File.separator + "scripts" + File.separator + "common";
+    public static final String DIRECTORY_ARTIFACTS = "artifacts";
     public static final String FILE_SOURCE_SCRIPT_DEPLOY = File.separator + "deploy.sh";
+
     //Default values for the application policy
-    public static final String APPLICATION_POLICY_ID = "autoscaling-policy-1";
+    public static final String APPLICATION_POLICY_ID = "application-policy-1";
     public static final String APPLICATION_POLICY_ALGO = "one-after-another";
+
+    //Default value for network partition
+    public static final String NETWORK_PARTITION_NAME = "network-partition-";
+
     //Default file names for application policy jsons
     public static final String FILENAME_APPLICATION_SIGNUP = "application-signup.json";
     public static final String FILENAME_DOMAIN_MAPPING = "domain-mapping.json";
-    //Configuration details
+
+    //Configuration strings
+    //Login credentials configuration strings
     public static final String BASE_URL400 = "baseUrl400";
     public static final String USERNAME400 = "userName400";
     public static final String PASSWORD400 = "password400";
+    public static final String BASE_URL410 = "baseUrl410";
     public static final String USERNAME410 = "userName410";
     public static final String PASSWORD410 = "password410";
+    //Port mapping configuration strings
+    public static final String PORT = "port";
+    public static final String PROXY_PORT= "proxyPort";
+    public static final String PROTOCOL = "protocol";
+    //IaaS provider configuration
+    public static final String IAAS = "iaas";
+    public static final String IAAS_IMAGE_ID = "iaasImageId";
+
     //Rest client configurations
     public static final String CERTIFICATE_PATH = StringUtils
             .removeEnd(System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources",
@@ -60,6 +78,7 @@ public class Constants {
     private static final String MIGRATION = "migration" + File.separator + "admin" + File.separator;
     public static final String URL_SUBSCRIPTION =
             MIGRATION + "cartridge" + File.separator + "list" + File.separator + "subscribed" + File.separator + "all";
+
     //PPaaS 4.1.0 directories
     // 4.1.0 outputs root directory
     private static final String ROOT_DIRECTORY =

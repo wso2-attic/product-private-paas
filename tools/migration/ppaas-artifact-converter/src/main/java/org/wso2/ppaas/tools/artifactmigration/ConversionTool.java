@@ -52,6 +52,10 @@ class ConversionTool {
             char[] passwordChars = console.readPassword();
             System.setProperty(Constants.PASSWORD400, new String(passwordChars));
         }
+        if (System.getProperty(Constants.BASE_URL410) == null || System.getProperty(Constants.BASE_URL410).isEmpty()) {
+            System.out.println("Enter the Base URL of PPaaS 4.1.0:");
+            System.setProperty(Constants.BASE_URL410, console.readLine());
+        }
         if (System.getProperty(Constants.USERNAME410) == null || System.getProperty(Constants.USERNAME410).isEmpty()) {
             System.out.println("Enter the User name of PPaaS 4.1.0:");
             System.setProperty(Constants.USERNAME410, console.readLine());
@@ -74,6 +78,7 @@ class ConversionTool {
             Transformer.transformAutoscalePolicyList();
             Transformer.transformDeploymentPolicyList();
             Transformer.transformCartridgeList();
+            Transformer.addDefaultApplicationPolicies(System.getProperty("defaultNetworkPartitionId"));
             System.out.println("Conversion completed successfully");
         } catch (Exception e) {
             log.error("Error while converting the artifacts ", e);
@@ -135,6 +140,8 @@ class ConversionTool {
             }
             oldText = oldText.replaceAll("uname", System.getProperty(Constants.USERNAME410));
             oldText = oldText.replaceAll("pword", System.getProperty(Constants.PASSWORD410));
+
+            oldText = oldText.replaceAll("base-url", System.getProperty(Constants.BASE_URL410));
 
             File outputDirectory = new File(outputLocation + Constants.DIRECTORY_OUTPUT_SCRIPT_DEPLOY);
 

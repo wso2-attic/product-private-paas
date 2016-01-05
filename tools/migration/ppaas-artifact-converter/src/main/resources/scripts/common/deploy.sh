@@ -21,8 +21,7 @@
 # --------------------------------------------------------------
 #
 iaas=$1
-host_ip="localhost"
-host_port=9443
+var_base_url=base-url
 var_username="uname"
 var_password="pword"
 script_path=`pwd`
@@ -34,21 +33,22 @@ deployment_policies_path="${script_path}/../../../../deployment-policies"
 application_policies_path="${script_path}/../../../../application-policies"
 echo ${autoscaling_policies_path}/autoscaling-policy-1.json
 echo "Adding autoscale policy..."
-curl -X POST -H "Content-Type: application/json" -d "@${autoscaling_policies_path}/autoscaling-policy_name.json" -k -v -u ${var_username}:${var_password} https://${host_ip}:${host_port}/api/autoscalingPolicies
+curl -X POST -H "Content-Type: application/json" -d "@${autoscaling_policies_path}/autoscaling-policy_name.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/autoscalingPolicies
 echo "Adding network partitions..."
-curl -X POST -H "Content-Type: application/json" -d "@${network_partitions_path}/network-partition-1.json" -k -v -u ${var_username}:${var_password} https://${host_ip}:${host_port}/api/networkPartitions
+curl -X POST -H "Content-Type: application/json" -d "@${network_partitions_path}/network-partition-1.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions
+curl -X POST -H "Content-Type: application/json" -d "@${network_partitions_path}/network-partition-2.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions
 echo "Adding deployment policy..."
-curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/deployment-policy_name.json" -k -v -u ${var_username}:${var_password} https://${host_ip}:${host_port}/api/deploymentPolicies
+curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/deployment-policy_name.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/deploymentPolicies
 echo "Adding cartridge..."
-curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/cartridge_name.json" -k -v -u ${var_username}:${var_password} https://${host_ip}:${host_port}/api/cartridges
+curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/cartridge_name.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/cartridges
 sleep 1
 echo "Adding application policy..."
-curl -X POST -H "Content-Type: application/json" -d "@${application_policies_path}/application-policy-1.json" -k -v -u ${var_username}:${var_password} https://${host_ip}:${host_port}/api/applicationPolicies
+curl -X POST -H "Content-Type: application/json" -d "@${application_policies_path}/application-policy-1.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applicationPolicies
 sleep 1
 echo "Adding application..."
-curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/application_name.json" -k -v -u ${var_username}:${var_password} https://${host_ip}:${host_port}/api/applications
+curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/application_name.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications
 sleep 1
 echo "Deploying application..."
-curl -X POST -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} https://${host_ip}:${host_port}/api/applications/cartridgeName/deploy/application-policy-1
+curl -X POST -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications/cartridge_name/deploy/application-policy-1
 echo "Adding domain mappings..."
-curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/domain-mapping.json" -k -u ${var_username}:${var_password} https://${host_ip}:${host_port}/api/applications/application_name/domainMappings
+curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/domain-mapping.json" -k -u ${var_username}:${var_password} ${var_base_url}api/applications/application_name/domainMappings
