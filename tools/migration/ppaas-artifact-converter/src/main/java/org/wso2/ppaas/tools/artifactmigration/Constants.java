@@ -92,7 +92,7 @@ public class Constants {
     public static final String DIRECTORY_CARTRIDGE = ROOT_DIRECTORY + "cartridges";
     public static final String DIRECTORY_POLICY_APPLICATION = ROOT_DIRECTORY + "application-policies";
     public static final String DIRECTORY_OUTPUT_SCRIPT = ROOT_DIRECTORY + "applications";
-    public static final String DIRECTORY_SOURCE_SCRIPT =
+    private static final String DIRECTORY_SOURCE_SCRIPT =
             System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources" + File.separator
                     + "scripts";
     public static final String DIRECTORY_SOURCE_SCRIPT_DEPLOY =

@@ -28,11 +28,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class StratosV400MockServelet2 extends HttpServlet {
-    public static final String SUBSCRIPTION_PATH= "/cartridge/list/subscribed/all";
-    public static final String TEST_ARTIFACTS_PATH = "test_artifacts";
+    private static final String SUBSCRIPTION_PATH = "/cartridge/list/subscribed/all";
+    private static final String TEST_ARTIFACTS_PATH = "test_artifacts";
     private static final Log log = LogFactory.getLog(StratosV400MockServelet2.class);
 
     private static String getResourcesFolderPath() {
@@ -45,10 +46,16 @@ public class StratosV400MockServelet2 extends HttpServlet {
         if (SUBSCRIPTION_PATH.equals(req.getPathInfo())) {
             File file = new File(getResourcesFolderPath() + File.separator + TEST_ARTIFACTS_PATH + File.separator
                     + "test_subscription.json");
-            FileInputStream fis = new FileInputStream(file);
-            String str = IOUtils.toString(fis, "UTF-8");
-            resp.getWriter().print(str);
-            resp.getWriter().flush();
+            try {
+                FileInputStream fis = new FileInputStream(file);
+                String str = IOUtils.toString(fis, "UTF-8");
+                resp.getWriter().print(str);
+                resp.getWriter().flush();
+            } catch (FileNotFoundException e) {
+                log.error("Error in getting the partition test file", e);
+            } catch (IOException e) {
+                log.error("Error in sending the partition list as the response", e);
+            }
         }
     }
 }

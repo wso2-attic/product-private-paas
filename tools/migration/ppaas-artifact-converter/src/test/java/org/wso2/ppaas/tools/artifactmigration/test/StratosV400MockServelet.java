@@ -28,15 +28,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class StratosV400MockServelet extends HttpServlet {
 
-    public static final String PARTITION_PATH = "/partition";
-    public static final String AUTOSCALE_POLICY_PATH= "/policy/autoscale";
-    public static final String DEPLOYMENT_POLICY_PATH= "/policy/deployment";
-    public static final String CARTRIDGE_PATH= "/cartridge/list";
-    public static final String TEST_ARTIFACTS_PATH = "test_artifacts";
+    private static final String PARTITION_PATH = "/partition";
+    private static final String AUTOSCALE_POLICY_PATH = "/policy/autoscale";
+    private static final String DEPLOYMENT_POLICY_PATH = "/policy/deployment";
+    private static final String CARTRIDGE_PATH = "/cartridge/list";
+    private static final String TEST_ARTIFACTS_PATH = "test_artifacts";
     private static final Log log = LogFactory.getLog(StratosV400MockServelet.class);
 
     private static String getResourcesFolderPath() {
@@ -44,39 +45,63 @@ public class StratosV400MockServelet extends HttpServlet {
         return StringUtils.removeEnd(path, File.separator);
     }
 
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
         if (PARTITION_PATH.equals(req.getPathInfo())) {
             File file = new File(getResourcesFolderPath() + File.separator + TEST_ARTIFACTS_PATH + File.separator
                     + "test_partition_P1.json");
-            FileInputStream fis = new FileInputStream(file);
-            String str = IOUtils.toString(fis, "UTF-8");
-            resp.getWriter().print(str);
-            resp.getWriter().flush();
+            try {
+                FileInputStream fis = new FileInputStream(file);
+                String str = IOUtils.toString(fis, "UTF-8");
+                resp.getWriter().print(str);
+                resp.getWriter().flush();
+            } catch (FileNotFoundException e) {
+                log.error("Error in getting the partition test file", e);
+            } catch (IOException e) {
+                log.error("Error in sending the partition list as the response", e);
+            }
         }
         if (AUTOSCALE_POLICY_PATH.equals(req.getPathInfo())) {
             File file = new File(getResourcesFolderPath() + File.separator + TEST_ARTIFACTS_PATH + File.separator
                     + "test_AutoscalePolicy.json");
-            FileInputStream fis = new FileInputStream(file);
-            String str = IOUtils.toString(fis, "UTF-8");
-            resp.getWriter().print(str);
-            resp.getWriter().flush();
+            try {
+                FileInputStream fis = new FileInputStream(file);
+                String str = IOUtils.toString(fis, "UTF-8");
+                resp.getWriter().print(str);
+                resp.getWriter().flush();
+            } catch (FileNotFoundException e) {
+                log.error("Error in getting the partition test file", e);
+            } catch (IOException e) {
+                log.error("Error in sending the partition list as the response", e);
+            }
         }
         if (DEPLOYMENT_POLICY_PATH.equals(req.getPathInfo())) {
             File file = new File(getResourcesFolderPath() + File.separator + TEST_ARTIFACTS_PATH + File.separator
                     + "test_DeploymentPolicy.json");
-            FileInputStream fis = new FileInputStream(file);
-            String str = IOUtils.toString(fis, "UTF-8");
-            resp.getWriter().print(str);
-            resp.getWriter().flush();
+            try {
+                FileInputStream fis = new FileInputStream(file);
+                String str = IOUtils.toString(fis, "UTF-8");
+                resp.getWriter().print(str);
+                resp.getWriter().flush();
+            } catch (FileNotFoundException e) {
+                log.error("Error in getting the partition test file", e);
+            } catch (IOException e) {
+                log.error("Error in sending the partition list as the response", e);
+            }
         }
         if (CARTRIDGE_PATH.equals(req.getPathInfo())) {
             File file = new File(getResourcesFolderPath() + File.separator + TEST_ARTIFACTS_PATH + File.separator
                     + "test_PHP_cartridges.json");
-            FileInputStream fis = new FileInputStream(file);
-            String str = IOUtils.toString(fis, "UTF-8");
-            resp.getWriter().print(str);
-            resp.getWriter().flush();
+            try {
+                FileInputStream fis = new FileInputStream(file);
+                String str = IOUtils.toString(fis, "UTF-8");
+                resp.getWriter().print(str);
+                resp.getWriter().flush();
+            } catch (FileNotFoundException e) {
+                log.error("Error in getting the partition test file", e);
+            } catch (IOException e) {
+                log.error("Error in sending the partition list as the response", e);
+            }
         }
     }
 }
