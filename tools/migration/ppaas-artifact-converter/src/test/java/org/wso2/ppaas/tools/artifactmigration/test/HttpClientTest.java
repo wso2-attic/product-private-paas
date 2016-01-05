@@ -17,11 +17,8 @@
  */
 package org.wso2.ppaas.tools.artifactmigration.test;
 
-import com.google.gson.Gson;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -37,23 +34,21 @@ import java.io.File;
 import java.net.URL;
 
 import static org.junit.Assert.assertTrue;
+
 public class HttpClientTest {
-    public static final String ENDPOINT = System.getProperty("endpoint");
-    public static final int BUFFER_SIZE = 32768;
-    public static final int IDLE_TIMEOUT = 300000;
-    public static final String SERVLET_CONTEXT_PATH = "/stratos/admin";
-    public static final String SERVLET_CONTEXT_PATH2= "/migration/admin";
-    private static final Log log = LogFactory.getLog(HttpClientTest.class);
+    private static final String ENDPOINT = System.getProperty("endpoint");
+    private static final int BUFFER_SIZE = 32768;
+    private static final int IDLE_TIMEOUT = 300000;
+    private static final String SERVLET_CONTEXT_PATH = "/stratos/admin";
+    private static final String SERVLET_CONTEXT_PATH2 = "/migration/admin";
     private static RestClient artifactConverterRestClient;
-    private static Gson gson = new Gson();
 
     private static String getResourcesFolderPath() {
         String path = HttpClientTest.class.getResource("/").getPath();
         return StringUtils.removeEnd(path, File.separator);
     }
 
-    @BeforeClass
-    public static void setUp() throws Exception {
+    @BeforeClass public static void setUp() throws Exception {
         // Create Server
         Server server = new Server(Integer.getInteger("http.port"));
         ServletContextHandler context = new ServletContextHandler();
@@ -102,40 +97,47 @@ public class HttpClientTest {
         server.start();
 
         //set certificate path for test cases
-        Constants.CERTIFICATE_PATH= System.getProperty("user.dir")+ File.separator + "target/test-classes"+ File.separator + "wso2carbon.jks";
-        System.setProperty("baseUrl400",ENDPOINT+ File.separator);
+        Constants.CERTIFICATE_PATH =
+                System.getProperty("user.dir") + File.separator + "target/test-classes" + File.separator
+                        + "wso2carbon.jks";
+        System.setProperty("baseUrl400", ENDPOINT + File.separator);
 
-        artifactConverterRestClient = new RestClient(System.getProperty("username"),
-                System.getProperty("password"));
+        artifactConverterRestClient = new RestClient(System.getProperty("username"), System.getProperty("password"));
     }
 
-    @Test(timeout = 60000)
-    public void testArtifactConverterClient() throws Exception {
+    @Test(timeout = 60000) public void testArtifactConverterClient() throws Exception {
         artifactConverterRestClient.doGet(new URL(ENDPOINT + SERVLET_CONTEXT_PATH));
     }
 
-    @Test(timeout = 60000)
-    public void transformNetworkPartitionListTest() throws Exception {
+    @Test(timeout = 60000) public void transformNetworkPartitionListTest() throws Exception {
         Transformer.transformNetworkPartitionList();
-        File partitionfile1= new File(System.getProperty("user.dir") + File.separator + ".."+File.separator + "output-artifacts"+File.separator + "network-partitions"+ File.separator + "openstack"+File.separator + "network-partition-1.json");
-        File partitionfile2= new File(getResourcesFolderPath() + File.separator + "test-outputs" + File.separator+ "network-partition-1.json");
+        File partitionfile1 = new File(
+                System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
+                        + File.separator + "network-partitions" + File.separator + "openstack" + File.separator
+                        + "network-partition-1.json");
+        File partitionfile2 = new File(getResourcesFolderPath() + File.separator + "test-outputs" + File.separator
+                + "network-partition-1.json");
         assertTrue(FileUtils.contentEquals(partitionfile1, partitionfile2));
 
     }
 
-    @Test(timeout = 60000)
-    public void transformAutoscalePolicyListTest() throws Exception {
+    @Test(timeout = 60000) public void transformAutoscalePolicyListTest() throws Exception {
         Transformer.transformAutoscalePolicyList();
-        File autoscalefile1= new File(System.getProperty("user.dir") + File.separator + ".."+File.separator + "output-artifacts"+File.separator + "autoscaling-policies"+ File.separator + "simpleAutoscalePolicy.json");
-        File autoscalefile2= new File(getResourcesFolderPath() + File.separator + "test-outputs" + File.separator+ "simpleAutoscalePolicy.json");
+        File autoscalefile1 = new File(
+                System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
+                        + File.separator + "autoscaling-policies" + File.separator + "simpleAutoscalePolicy.json");
+        File autoscalefile2 = new File(getResourcesFolderPath() + File.separator + "test-outputs" + File.separator
+                + "simpleAutoscalePolicy.json");
         assertTrue(FileUtils.contentEquals(autoscalefile1, autoscalefile2));
     }
 
-    @Test(timeout = 60000)
-    public void transformDeploymentPolicyList() throws Exception {
-       Transformer.transformDeploymentPolicyList();
-        File deploymentfile1= new File((System.getProperty("user.dir") + File.separator + ".."+File.separator + "output-artifacts"+File.separator + "deployment-policies"+ File.separator + "economyDeployment.json"));
-        File deploymentfile2= new File(getResourcesFolderPath() + File.separator + "test-outputs" + File.separator+ "economyDeployment.json");
+    @Test(timeout = 60000) public void transformDeploymentPolicyList() throws Exception {
+        Transformer.transformDeploymentPolicyList();
+        File deploymentfile1 = new File(
+                (System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
+                        + File.separator + "deployment-policies" + File.separator + "economyDeployment.json"));
+        File deploymentfile2 = new File(
+                getResourcesFolderPath() + File.separator + "test-outputs" + File.separator + "economyDeployment.json");
         assertTrue(FileUtils.contentEquals(deploymentfile1, deploymentfile2));
     }
 }
