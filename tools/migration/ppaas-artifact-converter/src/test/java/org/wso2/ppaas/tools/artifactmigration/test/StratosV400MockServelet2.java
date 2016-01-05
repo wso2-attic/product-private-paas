@@ -18,7 +18,6 @@
 package org.wso2.ppaas.tools.artifactmigration.test;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -35,25 +34,18 @@ public class StratosV400MockServelet2 extends HttpServlet {
 
     private static final Log log = LogFactory.getLog(StratosV400MockServelet2.class);
 
-    private static String getResourcesFolderPath() {
-        String path = HttpClientTest.class.getResource("/").getPath();
-        return StringUtils.removeEnd(path, File.separator);
-    }
-
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
         if (TestConstants.SUBSCRIPTION_PATH.equals(req.getPathInfo())) {
-            File file = new File(getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH2 + File.separator
-                    + "test_subscription.json");
+            File file = new File(TestConstants.SUBSCRIPTION_TEST_INPUT);
             try {
                 FileInputStream fis = new FileInputStream(file);
                 String str = IOUtils.toString(fis, "UTF-8");
                 resp.getWriter().print(str);
                 resp.getWriter().flush();
             } catch (FileNotFoundException e) {
-                log.error("Error in getting the partition test file", e);
+                log.error("Error in getting the subscription data test file", e);
             } catch (IOException e) {
-                log.error("Error in sending the partition list as the response", e);
+                log.error("Error in sending the subscription data list as the response", e);
             }
         }
     }

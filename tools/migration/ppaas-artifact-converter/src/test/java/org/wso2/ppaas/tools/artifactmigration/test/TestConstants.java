@@ -17,6 +17,8 @@
  */
 package org.wso2.ppaas.tools.artifactmigration.test;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.File;
 
 /**
@@ -30,16 +32,62 @@ class TestConstants {
     public static final int IDLE_TIMEOUT = 300000;
     public static final String SERVLET_CONTEXT_PATH = "/stratos/admin";
     public static final String SERVLET_CONTEXT_PATH2 = "/migration/admin";
+    public static final String KEYSTORE_PATH = getResourcesFolderPath() + File.separator + "wso2carbon.jks";
 
     //Configuration StratosV400MockServelet Test
     public static final String PARTITION_PATH = "/partition";
     public static final String AUTOSCALE_POLICY_PATH = "/policy/autoscale";
     public static final String DEPLOYMENT_POLICY_PATH = "/policy/deployment";
     public static final String CARTRIDGE_PATH = "/cartridge/list";
-    public static final String TEST_ARTIFACTS_PATH = "test_artifacts";
+    private static final String TEST_ARTIFACTS_PATH = "test_artifacts";
 
     //Configuration StratosV400MockServelet2 Test
     public static final String SUBSCRIPTION_PATH = "/cartridge/list/subscribed/all";
-    public static final String TEST_ARTIFACTS_PATH2 = "test_artifacts";
+    private static final String TEST_ARTIFACTS_PATH2 = "test_artifacts";
 
+    //Configuration output test file paths
+    public static final String CREATED_PARTITION_TEST =
+            System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
+                    + File.separator + "network-partitions" + File.separator + "openstack" + File.separator
+                    + "network-partition-1.json";
+    public static final String PARTITION_TEST_WITH =
+            getResourcesFolderPath() + File.separator + "test-outputs" + File.separator + "network-partition-1.json";
+
+    public static final String CREATED_AUTOSCALE_TEST =
+            System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
+                    + File.separator + "autoscaling-policies" + File.separator + "simpleAutoscalePolicy.json";
+    public static final String AUTOSCALE_TEST_WITH =
+            getResourcesFolderPath() + File.separator + "test-outputs" + File.separator + "simpleAutoscalePolicy.json";
+
+    public static final String CREATED_DEPLOYMENT_TEST =
+            System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
+                    + File.separator + "deployment-policies" + File.separator + "economyDeployment.json";
+    public static final String DEPLOYMENT_TEST_WITH =
+            getResourcesFolderPath() + File.separator + "test-outputs" + File.separator + "economyDeployment.json";
+
+    //Configuration input test file paths
+    public static final String PARTITION_TEST_INPUT =
+            getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator
+                    + "test_partition_P1.json";
+    public static final String AUTOSCALE_TEST_INPUT =
+            getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator
+                    + "test_AutoscalePolicy.json";
+    public static final String DEPLOYMENT_TEST_INPUT =
+            getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator
+                    + "test_DeploymentPolicy.json";
+    public static final String CARTRIDGE_TEST_INPUT =
+            getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator
+                    + "test_PHP_cartridges.json";
+    public static final String SUBSCRIPTION_TEST_INPUT =
+            getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH2 + File.separator
+                    + "test_subscription.json";
+
+    //Certificate path for test cases
+    public static final String TEST_CERTIFICATE =
+            System.getProperty("user.dir") + File.separator + "target/test-classes" + File.separator + "wso2carbon.jks";
+
+    private static String getResourcesFolderPath() {
+        String path = HttpClientTest.class.getResource("/").getPath();
+        return StringUtils.removeEnd(path, File.separator);
+    }
 }
