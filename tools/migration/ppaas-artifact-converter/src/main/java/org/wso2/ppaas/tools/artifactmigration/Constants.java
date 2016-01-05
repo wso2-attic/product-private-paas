@@ -66,7 +66,7 @@ public class Constants {
     public static final String IAAS_IMAGE_ID = "iaasImageId";
 
     //Rest client configurations
-    public static final String CERTIFICATE_PATH = StringUtils
+    public static String CERTIFICATE_PATH = StringUtils
             .removeEnd(System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources",
                     File.separator) + "/wso2carbon.jks";
     public static final char[] CERTIFICATE_PASSWORD = "wso2carbon".toCharArray();
@@ -92,7 +92,7 @@ public class Constants {
     public static final String DIRECTORY_CARTRIDGE = ROOT_DIRECTORY + "cartridges";
     public static final String DIRECTORY_POLICY_APPLICATION = ROOT_DIRECTORY + "application-policies";
     public static final String DIRECTORY_OUTPUT_SCRIPT = ROOT_DIRECTORY + "applications";
-    private static final String DIRECTORY_SOURCE_SCRIPT =
+    public static final String DIRECTORY_SOURCE_SCRIPT =
             System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources" + File.separator
                     + "scripts";
     public static final String DIRECTORY_SOURCE_SCRIPT_DEPLOY =

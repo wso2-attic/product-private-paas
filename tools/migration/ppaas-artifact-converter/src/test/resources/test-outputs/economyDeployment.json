@@ -1,0 +1,29 @@
+{
+  "id": "economyDeployment",
+  "networkPartitions": [
+    {
+      "id": "region-1",
+      "partitions": [
+        {
+          "id": "partition-1",
+          "partitionMax": 6
+        }
+      ],
+      "partitionAlgo": "round-robin"
+    },
+    {
+      "id": "zone-2",
+      "partitions": [
+        {
+          "id": "partition-1",
+          "partitionMax": 3
+        },
+        {
+          "id": "partition-1",
+          "partitionMax": 5
+        }
+      ],
+      "partitionAlgo": "one-after-another"
+    }
+  ]
+}

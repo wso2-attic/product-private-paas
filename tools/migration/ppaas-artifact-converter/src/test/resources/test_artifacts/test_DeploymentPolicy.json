@@ -1,0 +1,32 @@
+[{
+  "id": "economyDeployment",
+  "partitionGroup": [
+    {
+      "id": "ec2-region1",
+      "partitionAlgo": "one-after-another",
+      "partition": [
+        {
+          "id": "zone-1",
+          "partitionMax": "3",
+          "partitionMin": "1"
+        },
+        {
+          "id": "zone-2",
+          "partitionMax": "5",
+          "partitionMin": "1"
+        }
+      ]
+    },
+    {
+      "id": "ec2-region2",
+      "partitionAlgo": "round-robin",
+      "partition": [
+        {
+          "id": "region-1",
+          "partitionMax": "6",
+          "partitionMin": "2"
+        }
+      ]
+    }
+  ]
+}]

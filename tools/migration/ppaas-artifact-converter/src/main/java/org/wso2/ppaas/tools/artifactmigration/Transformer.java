@@ -56,7 +56,7 @@ import java.util.List;
 /**
  * Transforms the artifacts from PPaaS 4.0.0 to 4.1.0
  */
-class Transformer {
+public class Transformer {
 
     private static final Logger log = Logger.getLogger(Transformer.class);
 
