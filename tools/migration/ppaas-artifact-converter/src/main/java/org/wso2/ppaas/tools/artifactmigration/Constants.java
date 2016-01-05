@@ -42,13 +42,13 @@ public class Constants {
     public static final String FILENAME_APPLICATION_SIGNUP = "application-signup.json";
     public static final String FILENAME_DOMAIN_MAPPING = "domain-mapping.json";
     //Configuration details
-    public static final String BASE_URL400 = "baseUrl400";
+    public static String BASE_URL400 = "baseUrl400";
     public static final String USERNAME400 = "userName400";
     public static final String PASSWORD400 = "password400";
     public static final String USERNAME410 = "userName410";
     public static final String PASSWORD410 = "password410";
     //Rest client configurations
-    public static final String CERTIFICATE_PATH = StringUtils
+    public static String CERTIFICATE_PATH = StringUtils
             .removeEnd(System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources",
                     File.separator) + "/wso2carbon.jks";
     public static final char[] CERTIFICATE_PASSWORD = "wso2carbon".toCharArray();
@@ -73,7 +73,7 @@ public class Constants {
     public static final String DIRECTORY_CARTRIDGE = ROOT_DIRECTORY + "cartridges";
     public static final String DIRECTORY_POLICY_APPLICATION = ROOT_DIRECTORY + "application-policies";
     public static final String DIRECTORY_OUTPUT_SCRIPT = ROOT_DIRECTORY + "applications";
-    private static final String DIRECTORY_SOURCE_SCRIPT =
+    public static final String DIRECTORY_SOURCE_SCRIPT =
             System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources" + File.separator
                     + "scripts";
     public static final String DIRECTORY_SOURCE_SCRIPT_DEPLOY =

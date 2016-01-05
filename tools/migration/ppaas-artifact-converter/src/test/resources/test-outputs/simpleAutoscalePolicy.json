@@ -1,0 +1,14 @@
+{
+  "id": "simpleAutoscalePolicy",
+  "loadThresholds": {
+    "requestsInFlight": {
+      "threshold": 0.0
+    },
+    "memoryConsumption": {
+      "threshold": 0.0
+    },
+    "loadAverage": {
+      "threshold": 0.0
+    }
+  }
+}
