@@ -36,11 +36,7 @@ import java.net.URL;
 import static org.junit.Assert.assertTrue;
 
 public class HttpClientTest {
-    private static final String ENDPOINT = System.getProperty("endpoint");
-    private static final int BUFFER_SIZE = 32768;
-    private static final int IDLE_TIMEOUT = 300000;
-    private static final String SERVLET_CONTEXT_PATH = "/stratos/admin";
-    private static final String SERVLET_CONTEXT_PATH2 = "/migration/admin";
+
     private static RestClient artifactConverterRestClient;
 
     private static String getResourcesFolderPath() {
@@ -57,24 +53,24 @@ public class HttpClientTest {
         defaultServ.setInitParameter("resourceBase", System.getProperty("user.dir"));
         defaultServ.setInitParameter("dirAllowed", "true");
         defaultServ.setServlet(new StratosV400MockServelet());
-        context.addServlet(defaultServ, SERVLET_CONTEXT_PATH + "/*");
+        context.addServlet(defaultServ, TestConstants.SERVLET_CONTEXT_PATH + "/*");
 
         ServletHolder defaultServ2 = new ServletHolder("default2", StratosV400MockServelet2.class);
         defaultServ2.setInitParameter("resourceBase", System.getProperty("user.dir"));
         defaultServ2.setInitParameter("dirAllowed", "true");
         defaultServ2.setServlet(new StratosV400MockServelet2());
-        context.addServlet(defaultServ2, SERVLET_CONTEXT_PATH2 + "/*");
+        context.addServlet(defaultServ2, TestConstants.SERVLET_CONTEXT_PATH2 + "/*");
 
         server.setHandler(context);
 
         HttpConfiguration http_config = new HttpConfiguration();
         http_config.setSecureScheme("https");
         http_config.setSecurePort(Integer.getInteger("https.port"));
-        http_config.setOutputBufferSize(BUFFER_SIZE);
+        http_config.setOutputBufferSize(TestConstants.BUFFER_SIZE);
 
         ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(http_config));
         http.setPort(Integer.getInteger("http.port"));
-        http.setIdleTimeout(IDLE_TIMEOUT);
+        http.setIdleTimeout(TestConstants.IDLE_TIMEOUT);
 
         SslContextFactory sslContextFactory = new SslContextFactory();
         sslContextFactory.setKeyStorePath(getResourcesFolderPath() + File.separator + "wso2carbon.jks");
@@ -88,11 +84,10 @@ public class HttpClientTest {
                 new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),
                 new HttpConnectionFactory(https_config));
         https.setPort(Integer.getInteger("https.port"));
-        https.setIdleTimeout(IDLE_TIMEOUT);
+        https.setIdleTimeout(TestConstants.IDLE_TIMEOUT);
 
         // Set the connectors
         server.setConnectors(new Connector[] { http, https });
-
         // Start Server
         server.start();
 
@@ -100,13 +95,13 @@ public class HttpClientTest {
         Constants.CERTIFICATE_PATH =
                 System.getProperty("user.dir") + File.separator + "target/test-classes" + File.separator
                         + "wso2carbon.jks";
-        System.setProperty("baseUrl400", ENDPOINT + File.separator);
+        System.setProperty("baseUrl400", TestConstants.ENDPOINT + File.separator);
 
         artifactConverterRestClient = new RestClient(System.getProperty("username"), System.getProperty("password"));
     }
 
     @Test(timeout = 60000) public void testArtifactConverterClient() throws Exception {
-        artifactConverterRestClient.doGet(new URL(ENDPOINT + SERVLET_CONTEXT_PATH));
+        artifactConverterRestClient.doGet(new URL(TestConstants.ENDPOINT + TestConstants.SERVLET_CONTEXT_PATH));
     }
 
     @Test(timeout = 60000) public void transformNetworkPartitionListTest() throws Exception {

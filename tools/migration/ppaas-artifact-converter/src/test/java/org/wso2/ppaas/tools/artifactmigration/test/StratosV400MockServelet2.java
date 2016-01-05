@@ -32,8 +32,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class StratosV400MockServelet2 extends HttpServlet {
-    private static final String SUBSCRIPTION_PATH = "/cartridge/list/subscribed/all";
-    private static final String TEST_ARTIFACTS_PATH = "test_artifacts";
+
     private static final Log log = LogFactory.getLog(StratosV400MockServelet2.class);
 
     private static String getResourcesFolderPath() {
@@ -43,8 +42,8 @@ public class StratosV400MockServelet2 extends HttpServlet {
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        if (SUBSCRIPTION_PATH.equals(req.getPathInfo())) {
-            File file = new File(getResourcesFolderPath() + File.separator + TEST_ARTIFACTS_PATH + File.separator
+        if (TestConstants.SUBSCRIPTION_PATH.equals(req.getPathInfo())) {
+            File file = new File(getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH2 + File.separator
                     + "test_subscription.json");
             try {
                 FileInputStream fis = new FileInputStream(file);

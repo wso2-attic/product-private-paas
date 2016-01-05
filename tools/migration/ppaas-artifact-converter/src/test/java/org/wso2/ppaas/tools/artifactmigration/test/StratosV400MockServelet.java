@@ -33,11 +33,7 @@ import java.io.IOException;
 
 public class StratosV400MockServelet extends HttpServlet {
 
-    private static final String PARTITION_PATH = "/partition";
-    private static final String AUTOSCALE_POLICY_PATH = "/policy/autoscale";
-    private static final String DEPLOYMENT_POLICY_PATH = "/policy/deployment";
-    private static final String CARTRIDGE_PATH = "/cartridge/list";
-    private static final String TEST_ARTIFACTS_PATH = "test_artifacts";
+
     private static final Log log = LogFactory.getLog(StratosV400MockServelet.class);
 
     private static String getResourcesFolderPath() {
@@ -47,8 +43,8 @@ public class StratosV400MockServelet extends HttpServlet {
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
-        if (PARTITION_PATH.equals(req.getPathInfo())) {
-            File file = new File(getResourcesFolderPath() + File.separator + TEST_ARTIFACTS_PATH + File.separator
+        if (TestConstants.PARTITION_PATH.equals(req.getPathInfo())) {
+            File file = new File(getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator
                     + "test_partition_P1.json");
             try {
                 FileInputStream fis = new FileInputStream(file);
@@ -61,8 +57,8 @@ public class StratosV400MockServelet extends HttpServlet {
                 log.error("Error in sending the partition list as the response", e);
             }
         }
-        if (AUTOSCALE_POLICY_PATH.equals(req.getPathInfo())) {
-            File file = new File(getResourcesFolderPath() + File.separator + TEST_ARTIFACTS_PATH + File.separator
+        if (TestConstants.AUTOSCALE_POLICY_PATH.equals(req.getPathInfo())) {
+            File file = new File(getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator
                     + "test_AutoscalePolicy.json");
             try {
                 FileInputStream fis = new FileInputStream(file);
@@ -75,8 +71,8 @@ public class StratosV400MockServelet extends HttpServlet {
                 log.error("Error in sending the partition list as the response", e);
             }
         }
-        if (DEPLOYMENT_POLICY_PATH.equals(req.getPathInfo())) {
-            File file = new File(getResourcesFolderPath() + File.separator + TEST_ARTIFACTS_PATH + File.separator
+        if (TestConstants.DEPLOYMENT_POLICY_PATH.equals(req.getPathInfo())) {
+            File file = new File(getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator
                     + "test_DeploymentPolicy.json");
             try {
                 FileInputStream fis = new FileInputStream(file);
@@ -89,8 +85,8 @@ public class StratosV400MockServelet extends HttpServlet {
                 log.error("Error in sending the partition list as the response", e);
             }
         }
-        if (CARTRIDGE_PATH.equals(req.getPathInfo())) {
-            File file = new File(getResourcesFolderPath() + File.separator + TEST_ARTIFACTS_PATH + File.separator
+        if (TestConstants.CARTRIDGE_PATH.equals(req.getPathInfo())) {
+            File file = new File(getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator
                     + "test_PHP_cartridges.json");
             try {
                 FileInputStream fis = new FileInputStream(file);
