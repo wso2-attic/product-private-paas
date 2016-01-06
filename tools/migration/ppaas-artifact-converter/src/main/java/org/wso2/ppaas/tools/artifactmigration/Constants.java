@@ -66,6 +66,9 @@ public class Constants {
     public static final String IAAS = "iaas";
     public static final String IAAS_IMAGE_ID = "iaasImageId";
 
+    //Network partition configuration strings
+    public static final String NO_OF_NETWORK_PARTITION ="numOfNetworkPartitions";
+
     //Rest client configurations
     public static String CERTIFICATE_PATH = StringUtils
             .removeEnd(System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources",

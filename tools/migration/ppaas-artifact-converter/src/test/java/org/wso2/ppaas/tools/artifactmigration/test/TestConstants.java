@@ -17,8 +17,6 @@
  */
 package org.wso2.ppaas.tools.artifactmigration.test;
 
-import java.io.File;
-
 /**
  * Constants for test class
  */

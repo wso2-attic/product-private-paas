@@ -65,6 +65,14 @@ class ConversionTool {
             char[] passwordChars = console.readPassword();
             System.setProperty(Constants.PASSWORD410, new String(passwordChars));
         }
+        if (System.getProperty(Constants.IAAS) == null || System.getProperty(Constants.IAAS).isEmpty()) {
+            System.out.println("Enter the IaaS provider name:");
+            System.setProperty(Constants.IAAS, console.readLine());
+        }
+        if (System.getProperty(Constants.IAAS_IMAGE_ID) == null || System.getProperty(Constants.IAAS_IMAGE_ID).isEmpty()) {
+            System.out.println("Enter the IaaS image id:");
+            System.setProperty(Constants.IAAS_IMAGE_ID, console.readLine());
+        }
     }
 
     /**
@@ -117,31 +125,40 @@ class ConversionTool {
      * @param subscribableInfo subscribable information
      * @param cartridgeName    cartridge name
      */
-    public static void addDeployingScript(String outputLocation, SubscribableInfo subscribableInfo,
+    public static void addCommonDeployingScript(String outputLocation, SubscribableInfo subscribableInfo,
             String cartridgeName) {
         BufferedReader reader = null;
         FileWriter writer = null;
         try {
             File file = new File(Constants.DIRECTORY_SOURCE_SCRIPT_DEPLOY);
             reader = new BufferedReader(new FileReader(file));
-            String line, oldText = "";
+            String line, scriptText = "";
             while ((line = reader.readLine()) != null) {
-                oldText += line + "\n";
+                scriptText += line + System.getProperty("line.separator");
             }
             if (subscribableInfo.getDeploymentPolicy() != null) {
-                oldText = oldText.replaceAll("deployment-policy_name", subscribableInfo.getDeploymentPolicy());
+                scriptText = scriptText.replaceAll("deployment-policy_name", subscribableInfo.getDeploymentPolicy());
             }
             if (subscribableInfo.getAutoscalingPolicy() != null) {
-                oldText = oldText.replaceAll("autoscaling-policy_name", subscribableInfo.getAutoscalingPolicy());
+                scriptText = scriptText.replaceAll("autoscaling-policy_name", subscribableInfo.getAutoscalingPolicy());
             }
             if (cartridgeName != null) {
-                oldText = oldText.replaceAll("cartridge_name", cartridgeName);
-                oldText = oldText.replaceAll("application_name", cartridgeName);
+                scriptText = scriptText.replaceAll("cartridge_name", cartridgeName);
+                scriptText = scriptText.replaceAll("application_name", cartridgeName);
             }
-            oldText = oldText.replaceAll("uname", System.getProperty(Constants.USERNAME410));
-            oldText = oldText.replaceAll("pword", System.getProperty(Constants.PASSWORD410));
+            scriptText = scriptText.replaceAll("uname", System.getProperty(Constants.USERNAME410));
+            scriptText = scriptText.replaceAll("pword", System.getProperty(Constants.PASSWORD410));
+            scriptText = scriptText.replaceAll("base-url", System.getProperty(Constants.BASE_URL410));
 
-            oldText = oldText.replaceAll("base-url", System.getProperty(Constants.BASE_URL410));
+            //Updating network partitions deploying commands
+            String beginScriptText = scriptText.substring(0,scriptText.indexOf('*')+2);
+            String endScriptText = scriptText.substring(scriptText.indexOf('*')+2);
+
+            String modifiedScriptText = beginScriptText;
+            for(int i=1;i<=Integer.parseInt(System.getProperty(Constants.NO_OF_NETWORK_PARTITION));i++){
+                modifiedScriptText += System.getProperty("line.separator")+"curl -X POST -H \"Content-Type: application/json\" -d \"@${network_partitions_path}/network-partition-"+i+".json\" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions";
+            }
+            modifiedScriptText +=endScriptText;
 
             File outputDirectory = new File(outputLocation + Constants.DIRECTORY_OUTPUT_SCRIPT_DEPLOY);
 
@@ -150,15 +167,15 @@ class ConversionTool {
                 throw new IOException("Error in creating the output directory");
             }
             writer = new FileWriter(new File(outputDirectory.getPath() + Constants.FILE_SOURCE_SCRIPT_DEPLOY), false);
-            writer.write(oldText);
+            writer.write(modifiedScriptText);
 
         } catch (IOException e) {
             log.error("Error in copying scripts directory ", e);
         } finally {
             try {
-                assert reader != null;
+                if(reader!=null)
                 reader.close();
-                assert writer != null;
+                if(writer!=null)
                 writer.close();
             } catch (IOException ignore) {
             }

@@ -88,13 +88,11 @@ public class Transformer {
                 memoryConsumption410
                         .setThreshold(autoscalePolicy400.getLoadThresholds().getMemoryConsumption().getUpperLimit());
                 loadAverage410.setThreshold(autoscalePolicy400.getLoadThresholds().getLoadAverage().getUpperLimit());
-
                 loadThresholds410.setRequestsInFlight(requestsInFlight410);
                 loadThresholds410.setLoadAverage(loadAverage410);
                 loadThresholds410.setMemoryConsumption(memoryConsumption410);
 
                 autoscalePolicy410.setLoadThresholds(loadThresholds410);
-
                 JsonWriter.writeFile(directoryName, autoscalePolicy410.getId() + Constants.JSON_EXTENSION,
                         getGson().toJson(autoscalePolicy410));
             }
@@ -153,6 +151,8 @@ public class Transformer {
                 //Setting network partition ID as a system property to be used for application policies
                 System.setProperty("defaultNetworkPartitionId", networkPartition400.getId());
             }
+            //Setting number of network partitions as a system property to be used for deploying scripts
+            System.setProperty(Constants.NO_OF_NETWORK_PARTITION,(Integer.toString(networkPartitionIterator-1)));
             log.info("Created Network Partition List 4.1.0 artifacts");
         } catch (JsonSyntaxException e) {
             String msg = "JSON syntax error in retrieving network partition lists";
@@ -313,10 +313,12 @@ public class Transformer {
                         getGson().toJson(application410));
                 JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_APPLICATION_SIGNUP,
                         getGson().toJson(signup410List));
-                JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_DOMAIN_MAPPING,
-                        getGson().toJson(domainMapping410List));
 
-                ConversionTool.addDeployingScript(
+                //Converting domain mapping list string to the standard format
+                String domainMappingJsonString = "{\"domainMappings\":"+getGson().toJson(domainMapping410List)+"}";
+                JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_DOMAIN_MAPPING,domainMappingJsonString);
+
+                ConversionTool.addCommonDeployingScript(
                         Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator + application410.getName(), subscribableInfo,
                         cartridge.getDisplayName());
 

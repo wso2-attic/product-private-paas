@@ -34,9 +34,7 @@ application_policies_path="${script_path}/../../../../application-policies"
 echo ${autoscaling_policies_path}/autoscaling-policy-1.json
 echo "Adding autoscale policy..."
 curl -X POST -H "Content-Type: application/json" -d "@${autoscaling_policies_path}/autoscaling-policy_name.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/autoscalingPolicies
-echo "Adding network partitions..."
-curl -X POST -H "Content-Type: application/json" -d "@${network_partitions_path}/network-partition-1.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions
-curl -X POST -H "Content-Type: application/json" -d "@${network_partitions_path}/network-partition-2.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions
+echo "Adding network partitions...*"
 echo "Adding deployment policy..."
 curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/deployment-policy_name.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/deploymentPolicies
 echo "Adding cartridge..."
