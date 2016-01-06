@@ -24,7 +24,7 @@
         <relativePath>../../pom.xml</relativePath>
         <version>4.1.1-SNAPSHOT</version>
     </parent>
-    
+
     <artifactId>artifact-converter</artifactId>
     <build>
         <plugins>
@@ -81,6 +81,30 @@
                         <property>
                             <name>password</name>
                             <value>admin</value>
+                        </property>
+                        <property>
+                            <name>baseUrl410</name>
+                            <value>https://192.168.30.142:9443/</value>
+                        </property>
+                        <property>
+                            <name>userName410</name>
+                            <value>admin</value>
+                        </property>
+                        <property>
+                            <name>password410</name>
+                            <value>admin</value>
+                        </property>
+                        <property>
+                            <name>port</name>
+                            <value>22</value>
+                        </property>
+                        <property>
+                            <name>proxyPort</name>
+                            <value>8280</value>
+                        </property>
+                        <property>
+                            <name>protocol</name>
+                            <value>http</value>
                         </property>
                     </systemProperties>
                 </configuration>

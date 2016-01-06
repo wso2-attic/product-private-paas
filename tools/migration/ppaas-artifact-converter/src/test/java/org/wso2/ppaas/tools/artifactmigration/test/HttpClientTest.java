@@ -84,8 +84,10 @@ public class HttpClientTest {
         // Start Server
         server.start();
 
-        //set certificate path for test cases
+        //Config paths for test cases
         Constants.CERTIFICATE_PATH = TestConstants.TEST_CERTIFICATE;
+        Constants.DIRECTORY_SOURCE_SCRIPT = TestConstants.TEST_DIRECTORY_SOURCE_SCRIPT;
+        Constants.ROOT_DIRECTORY = TestConstants.OUTPUT_DIRECTORY;
         System.setProperty("baseUrl400", TestConstants.ENDPOINT + File.separator);
 
         artifactConverterRestClient = new RestClient(System.getProperty("username"), System.getProperty("password"));
@@ -114,5 +116,13 @@ public class HttpClientTest {
         File deploymentfile1 = new File(TestConstants.CREATED_DEPLOYMENT_TEST);
         File deploymentfile2 = new File(TestConstants.DEPLOYMENT_TEST_WITH);
         assertTrue(FileUtils.contentEquals(deploymentfile1, deploymentfile2));
+    }
+
+    @Test(timeout = 60000) public void transformCartridgeList() throws Exception {
+        Transformer.transformCartridgeList();
+        File cartridgefile1 = new File(TestConstants.CREATED_CARTRIDGE_TEST);
+        File cartridgefile2 = new File(TestConstants.CARTRIDGE_TEST_WITH);
+        assertTrue(FileUtils.contentEquals(cartridgefile1, cartridgefile2));
+
     }
 }

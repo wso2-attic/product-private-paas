@@ -1,0 +1,20 @@
+{
+  "type": "php",
+  "provider": "apache",
+  "category": "default",
+  "host": "apachestratos.org",
+  "displayName": "PHP",
+  "description": "PHP Cartridge",
+  "version": "5",
+  "multiTenant": false,
+  "portMapping": [
+    {
+      "protocol": "http",
+      "port": 22,
+      "proxyPort": 8280
+    }
+  ],
+  "iaasProvider": [
+    {}
+  ]
+}

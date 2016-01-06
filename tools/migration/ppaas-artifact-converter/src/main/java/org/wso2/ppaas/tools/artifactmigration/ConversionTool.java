@@ -93,11 +93,13 @@ class ConversionTool {
      */
     private static void addIaasScriptDirectories(String outputLocation) {
 
-        File sourceLocationEc2 = new File(Constants.DIRECTORY_SOURCE_SCRIPT_EC2);
-        File sourceLocationGce = new File(Constants.DIRECTORY_SOURCE_SCRIPT_GCE);
-        File sourceLocationKub = new File(Constants.DIRECTORY_SOURCE_SCRIPT_KUBERNETES);
-        File sourceLocationMock = new File(Constants.DIRECTORY_SOURCE_SCRIPT_MOCK);
-        File sourceLocationOS = new File(Constants.DIRECTORY_SOURCE_SCRIPT_OPENSTACK);
+        File sourceLocationEc2 = new File(Constants.DIRECTORY_SOURCE_SCRIPT + Constants.DIRECTORY_SOURCE_SCRIPT_EC2);
+        File sourceLocationGce = new File(Constants.DIRECTORY_SOURCE_SCRIPT + Constants.DIRECTORY_SOURCE_SCRIPT_GCE);
+        File sourceLocationKub = new File(
+                Constants.DIRECTORY_SOURCE_SCRIPT + Constants.DIRECTORY_SOURCE_SCRIPT_KUBERNETES);
+        File sourceLocationMock = new File(Constants.DIRECTORY_SOURCE_SCRIPT + Constants.DIRECTORY_SOURCE_SCRIPT_MOCK);
+        File sourceLocationOS = new File(
+                Constants.DIRECTORY_SOURCE_SCRIPT + Constants.DIRECTORY_SOURCE_SCRIPT_OPENSTACK);
         File targetLocation = new File(outputLocation);
         try {
             FileUtils.copyDirectoryToDirectory(sourceLocationEc2, targetLocation);
@@ -122,12 +124,13 @@ class ConversionTool {
         BufferedReader reader = null;
         FileWriter writer = null;
         try {
-            File file = new File(Constants.DIRECTORY_SOURCE_SCRIPT_DEPLOY);
+            File file = new File(Constants.DIRECTORY_SOURCE_SCRIPT + Constants.DIRECTORY_SOURCE_SCRIPT_DEPLOY);
             reader = new BufferedReader(new FileReader(file));
             String line, oldText = "";
             while ((line = reader.readLine()) != null) {
                 oldText += line + "\n";
             }
+
             if (subscribableInfo.getDeploymentPolicy() != null) {
                 oldText = oldText.replaceAll("deployment-policy_name", subscribableInfo.getDeploymentPolicy());
             }
@@ -142,7 +145,6 @@ class ConversionTool {
             oldText = oldText.replaceAll("pword", System.getProperty(Constants.PASSWORD410));
 
             oldText = oldText.replaceAll("base-url", System.getProperty(Constants.BASE_URL410));
-
             File outputDirectory = new File(outputLocation + Constants.DIRECTORY_OUTPUT_SCRIPT_DEPLOY);
 
             boolean hasCreated = outputDirectory.mkdirs();
@@ -156,10 +158,10 @@ class ConversionTool {
             log.error("Error in copying scripts directory ", e);
         } finally {
             try {
-                assert reader != null;
-                reader.close();
-                assert writer != null;
-                writer.close();
+                if (reader != null)
+                    reader.close();
+                if (writer != null)
+                    writer.close();
             } catch (IOException ignore) {
             }
         }

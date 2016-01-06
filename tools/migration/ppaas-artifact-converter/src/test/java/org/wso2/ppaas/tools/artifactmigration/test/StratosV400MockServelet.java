@@ -87,5 +87,18 @@ public class StratosV400MockServelet extends HttpServlet {
                 log.error("Error in sending the cartridge list as the response", e);
             }
         }
+        if (TestConstants.DOMAIN_PATH.equals(req.getPathInfo())) {
+            File file = new File(TestConstants.DOMAINMAPPING_TEST_INPUT);
+            try {
+                FileInputStream fis = new FileInputStream(file);
+                String str = IOUtils.toString(fis, "UTF-8");
+                resp.getWriter().print(str);
+                resp.getWriter().flush();
+            } catch (FileNotFoundException e) {
+                log.error("Error in getting the domain mapping test file", e);
+            } catch (IOException e) {
+                log.error("Error in sending the domain mapping list as the response", e);
+            }
+        }
     }
 }
