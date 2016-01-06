@@ -67,7 +67,9 @@ public class Constants {
     public static final String IAAS_IMAGE_ID = "iaasImageId";
 
     //Network partition configuration strings
-    public static final String NO_OF_NETWORK_PARTITION ="numOfNetworkPartitions";
+    public static final String NO_OF_NETWORK_PARTITION = "numOfNetworkPartitions";
+    public static final String NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART1 = "curl -X POST -H \"Content-Type: application/json\" -d \"@${network_partitions_path}/network-partition-";
+    public static final String NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART2 = ".json\" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions";
 
     //Rest client configurations
     public static String CERTIFICATE_PATH = StringUtils
@@ -85,28 +87,24 @@ public class Constants {
 
     //PPaaS 4.1.0 directories
     // 4.1.0 outputs root directory
-    private static final String ROOT_DIRECTORY =
+    public static String ROOT_DIRECTORY =
             System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
                     + File.separator;
     // Do not use forward slash at the beginning instead use it in the root directory.
-    public static final String DIRECTORY_POLICY_AUTOSCALE = ROOT_DIRECTORY + "autoscaling-policies";
-    public static final String DIRECTORY_NETWORK_PARTITION = ROOT_DIRECTORY + "network-partitions";
-    public static final String DIRECTORY_POLICY_DEPLOYMENT = ROOT_DIRECTORY + "deployment-policies";
-    public static final String DIRECTORY_APPLICATION = ROOT_DIRECTORY + "applications";
-    public static final String DIRECTORY_CARTRIDGE = ROOT_DIRECTORY + "cartridges";
-    public static final String DIRECTORY_POLICY_APPLICATION = ROOT_DIRECTORY + "application-policies";
-    public static final String DIRECTORY_OUTPUT_SCRIPT = ROOT_DIRECTORY + "applications";
-    private static final String DIRECTORY_SOURCE_SCRIPT =
+    public static final String DIRECTORY_POLICY_AUTOSCALE = "autoscaling-policies";
+    public static final String DIRECTORY_NETWORK_PARTITION = "network-partitions";
+    public static final String DIRECTORY_POLICY_DEPLOYMENT = "deployment-policies";
+    public static final String DIRECTORY_APPLICATION = "applications";
+    public static final String DIRECTORY_CARTRIDGE = "cartridges";
+    public static final String DIRECTORY_POLICY_APPLICATION = "application-policies";
+    public static final String DIRECTORY_OUTPUT_SCRIPT = "applications";
+    public static String DIRECTORY_SOURCE_SCRIPT =
             System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources" + File.separator
-                    + "scripts";
-    public static final String DIRECTORY_SOURCE_SCRIPT_DEPLOY =
-            Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "common" + File.separator + "deploy.sh";
-    public static final String DIRECTORY_SOURCE_SCRIPT_EC2 = Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "ec2";
-    public static final String DIRECTORY_SOURCE_SCRIPT_GCE = Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "gce";
-    public static final String DIRECTORY_SOURCE_SCRIPT_KUBERNETES =
-            Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "kubernetes";
-    public static final String DIRECTORY_SOURCE_SCRIPT_MOCK =
-            Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "mock";
-    public static final String DIRECTORY_SOURCE_SCRIPT_OPENSTACK =
-            Constants.DIRECTORY_SOURCE_SCRIPT + File.separator + "openstack";
+                    + "scripts" + File.separator;
+    public static final String DIRECTORY_SOURCE_SCRIPT_DEPLOY = "common" + File.separator + "deploy.sh";
+    public static final String DIRECTORY_SOURCE_SCRIPT_EC2 = "ec2";
+    public static final String DIRECTORY_SOURCE_SCRIPT_GCE = "gce";
+    public static final String DIRECTORY_SOURCE_SCRIPT_KUBERNETES = "kubernetes";
+    public static final String DIRECTORY_SOURCE_SCRIPT_MOCK = "mock";
+    public static final String DIRECTORY_SOURCE_SCRIPT_OPENSTACK = "openstack";
 }

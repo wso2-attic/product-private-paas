@@ -69,7 +69,8 @@ class ConversionTool {
             System.out.println("Enter the IaaS provider name:");
             System.setProperty(Constants.IAAS, console.readLine());
         }
-        if (System.getProperty(Constants.IAAS_IMAGE_ID) == null || System.getProperty(Constants.IAAS_IMAGE_ID).isEmpty()) {
+        if (System.getProperty(Constants.IAAS_IMAGE_ID) == null || System.getProperty(Constants.IAAS_IMAGE_ID)
+                .isEmpty()) {
             System.out.println("Enter the IaaS image id:");
             System.setProperty(Constants.IAAS_IMAGE_ID, console.readLine());
         }
@@ -88,6 +89,8 @@ class ConversionTool {
             Transformer.transformCartridgeList();
             Transformer.addDefaultApplicationPolicies(System.getProperty("defaultNetworkPartitionId"));
             System.out.println("Conversion completed successfully");
+            System.out.println(
+                    "Default values have been used for the port mappings of the cartridges and can be updated in conf/config.properties file.");
         } catch (Exception e) {
             log.error("Error while converting the artifacts ", e);
             System.out.println("Error while transforming NetworkPartition list. See log for more details.");
@@ -101,11 +104,13 @@ class ConversionTool {
      */
     private static void addIaasScriptDirectories(String outputLocation) {
 
-        File sourceLocationEc2 = new File(Constants.DIRECTORY_SOURCE_SCRIPT_EC2);
-        File sourceLocationGce = new File(Constants.DIRECTORY_SOURCE_SCRIPT_GCE);
-        File sourceLocationKub = new File(Constants.DIRECTORY_SOURCE_SCRIPT_KUBERNETES);
-        File sourceLocationMock = new File(Constants.DIRECTORY_SOURCE_SCRIPT_MOCK);
-        File sourceLocationOS = new File(Constants.DIRECTORY_SOURCE_SCRIPT_OPENSTACK);
+        File sourceLocationEc2 = new File(Constants.DIRECTORY_SOURCE_SCRIPT + Constants.DIRECTORY_SOURCE_SCRIPT_EC2);
+        File sourceLocationGce = new File(Constants.DIRECTORY_SOURCE_SCRIPT + Constants.DIRECTORY_SOURCE_SCRIPT_GCE);
+        File sourceLocationKub = new File(
+                Constants.DIRECTORY_SOURCE_SCRIPT + Constants.DIRECTORY_SOURCE_SCRIPT_KUBERNETES);
+        File sourceLocationMock = new File(Constants.DIRECTORY_SOURCE_SCRIPT + Constants.DIRECTORY_SOURCE_SCRIPT_MOCK);
+        File sourceLocationOS = new File(
+                Constants.DIRECTORY_SOURCE_SCRIPT + Constants.DIRECTORY_SOURCE_SCRIPT_OPENSTACK);
         File targetLocation = new File(outputLocation);
         try {
             FileUtils.copyDirectoryToDirectory(sourceLocationEc2, targetLocation);
@@ -130,12 +135,13 @@ class ConversionTool {
         BufferedReader reader = null;
         FileWriter writer = null;
         try {
-            File file = new File(Constants.DIRECTORY_SOURCE_SCRIPT_DEPLOY);
+            File file = new File(Constants.DIRECTORY_SOURCE_SCRIPT + Constants.DIRECTORY_SOURCE_SCRIPT_DEPLOY);
             reader = new BufferedReader(new FileReader(file));
             String line, scriptText = "";
             while ((line = reader.readLine()) != null) {
                 scriptText += line + System.getProperty("line.separator");
             }
+
             if (subscribableInfo.getDeploymentPolicy() != null) {
                 scriptText = scriptText.replaceAll("deployment-policy_name", subscribableInfo.getDeploymentPolicy());
             }
@@ -151,15 +157,16 @@ class ConversionTool {
             scriptText = scriptText.replaceAll("base-url", System.getProperty(Constants.BASE_URL410));
 
             //Updating network partitions deploying commands
-            String beginScriptText = scriptText.substring(0,scriptText.indexOf('*')+2);
-            String endScriptText = scriptText.substring(scriptText.indexOf('*')+2);
+            String beginScriptText = scriptText.substring(0, scriptText.indexOf('*') + 2);
+            String endScriptText = scriptText.substring(scriptText.indexOf('*') + 2);
 
             String modifiedScriptText = beginScriptText;
-            for(int i=1;i<=Integer.parseInt(System.getProperty(Constants.NO_OF_NETWORK_PARTITION));i++){
-                modifiedScriptText += System.getProperty("line.separator")+"curl -X POST -H \"Content-Type: application/json\" -d \"@${network_partitions_path}/network-partition-"+i+".json\" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions";
+            for (int i = 1; i <= Integer.parseInt(System.getProperty(Constants.NO_OF_NETWORK_PARTITION)); i++) {
+                modifiedScriptText +=
+                        System.getProperty("line.separator") + Constants.NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART1 + i
+                                + Constants.NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART2;
             }
-            modifiedScriptText +=endScriptText;
-
+            modifiedScriptText += endScriptText;
             File outputDirectory = new File(outputLocation + Constants.DIRECTORY_OUTPUT_SCRIPT_DEPLOY);
 
             boolean hasCreated = outputDirectory.mkdirs();
@@ -173,10 +180,10 @@ class ConversionTool {
             log.error("Error in copying scripts directory ", e);
         } finally {
             try {
-                if(reader!=null)
-                reader.close();
-                if(writer!=null)
-                writer.close();
+                if (reader != null)
+                    reader.close();
+                if (writer != null)
+                    writer.close();
             } catch (IOException ignore) {
             }
         }

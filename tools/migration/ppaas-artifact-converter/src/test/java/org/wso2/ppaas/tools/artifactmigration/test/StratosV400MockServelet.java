@@ -18,7 +18,6 @@
 package org.wso2.ppaas.tools.artifactmigration.test;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
@@ -32,20 +31,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 public class StratosV400MockServelet extends HttpServlet {
-
-
     private static final Log log = LogFactory.getLog(StratosV400MockServelet.class);
-
-    private static String getResourcesFolderPath() {
-        String path = HttpClientTest.class.getResource("/").getPath();
-        return StringUtils.removeEnd(path, File.separator);
-    }
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException {
 
         if (TestConstants.PARTITION_PATH.equals(req.getPathInfo())) {
-            File file = new File(getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator
-                    + "test_partition_P1.json");
+            File file = new File(TestConstants.PARTITION_TEST_INPUT);
             try {
                 FileInputStream fis = new FileInputStream(file);
                 String str = IOUtils.toString(fis, "UTF-8");
@@ -58,45 +49,55 @@ public class StratosV400MockServelet extends HttpServlet {
             }
         }
         if (TestConstants.AUTOSCALE_POLICY_PATH.equals(req.getPathInfo())) {
-            File file = new File(getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator
-                    + "test_AutoscalePolicy.json");
+            File file = new File(TestConstants.AUTOSCALE_TEST_INPUT);
             try {
                 FileInputStream fis = new FileInputStream(file);
                 String str = IOUtils.toString(fis, "UTF-8");
                 resp.getWriter().print(str);
                 resp.getWriter().flush();
             } catch (FileNotFoundException e) {
-                log.error("Error in getting the partition test file", e);
+                log.error("Error in getting the autoscale policy test file", e);
             } catch (IOException e) {
-                log.error("Error in sending the partition list as the response", e);
+                log.error("Error in sending the autoscale policy list as the response", e);
             }
         }
         if (TestConstants.DEPLOYMENT_POLICY_PATH.equals(req.getPathInfo())) {
-            File file = new File(getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator
-                    + "test_DeploymentPolicy.json");
+            File file = new File(TestConstants.DEPLOYMENT_TEST_INPUT);
             try {
                 FileInputStream fis = new FileInputStream(file);
                 String str = IOUtils.toString(fis, "UTF-8");
                 resp.getWriter().print(str);
                 resp.getWriter().flush();
             } catch (FileNotFoundException e) {
-                log.error("Error in getting the partition test file", e);
+                log.error("Error in getting the deployment policy test file", e);
             } catch (IOException e) {
-                log.error("Error in sending the partition list as the response", e);
+                log.error("Error in sending the deployment policy list as the response", e);
             }
         }
         if (TestConstants.CARTRIDGE_PATH.equals(req.getPathInfo())) {
-            File file = new File(getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator
-                    + "test_PHP_cartridges.json");
+            File file = new File(TestConstants.CARTRIDGE_TEST_INPUT);
             try {
                 FileInputStream fis = new FileInputStream(file);
                 String str = IOUtils.toString(fis, "UTF-8");
                 resp.getWriter().print(str);
                 resp.getWriter().flush();
             } catch (FileNotFoundException e) {
-                log.error("Error in getting the partition test file", e);
+                log.error("Error in getting the cartridge test file", e);
             } catch (IOException e) {
-                log.error("Error in sending the partition list as the response", e);
+                log.error("Error in sending the cartridge list as the response", e);
+            }
+        }
+        if (TestConstants.DOMAIN_PATH.equals(req.getPathInfo())) {
+            File file = new File(TestConstants.DOMAIN_MAPPING_TEST_INPUT);
+            try {
+                FileInputStream fis = new FileInputStream(file);
+                String str = IOUtils.toString(fis, "UTF-8");
+                resp.getWriter().print(str);
+                resp.getWriter().flush();
+            } catch (FileNotFoundException e) {
+                log.error("Error in getting the domain mapping test file", e);
+            } catch (IOException e) {
+                log.error("Error in sending the domain mapping list as the response", e);
             }
         }
     }

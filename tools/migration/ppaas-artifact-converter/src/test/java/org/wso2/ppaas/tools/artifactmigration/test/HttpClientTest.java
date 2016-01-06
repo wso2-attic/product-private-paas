@@ -18,7 +18,6 @@
 package org.wso2.ppaas.tools.artifactmigration.test;
 
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.StringUtils;
 import org.eclipse.jetty.http.HttpVersion;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.servlet.ServletContextHandler;
@@ -36,13 +35,7 @@ import java.net.URL;
 import static org.junit.Assert.assertTrue;
 
 public class HttpClientTest {
-
     private static RestClient artifactConverterRestClient;
-
-    private static String getResourcesFolderPath() {
-        String path = HttpClientTest.class.getResource("/").getPath();
-        return StringUtils.removeEnd(path, File.separator);
-    }
 
     @BeforeClass public static void setUp() throws Exception {
         // Create Server
@@ -73,7 +66,7 @@ public class HttpClientTest {
         http.setIdleTimeout(TestConstants.IDLE_TIMEOUT);
 
         SslContextFactory sslContextFactory = new SslContextFactory();
-        sslContextFactory.setKeyStorePath(getResourcesFolderPath() + File.separator + "wso2carbon.jks");
+        sslContextFactory.setKeyStorePath(TestConstants.KEYSTORE_PATH);
         sslContextFactory.setKeyStorePassword("wso2carbon");
         sslContextFactory.setKeyManagerPassword("wso2carbon");
 
@@ -91,10 +84,10 @@ public class HttpClientTest {
         // Start Server
         server.start();
 
-        //set certificate path for test cases
-        Constants.CERTIFICATE_PATH =
-                System.getProperty("user.dir") + File.separator + "target/test-classes" + File.separator
-                        + "wso2carbon.jks";
+        //Config paths for test cases
+        Constants.CERTIFICATE_PATH = TestConstants.TEST_CERTIFICATE;
+        Constants.DIRECTORY_SOURCE_SCRIPT = TestConstants.TEST_DIRECTORY_SOURCE_SCRIPT;
+        Constants.ROOT_DIRECTORY = TestConstants.OUTPUT_DIRECTORY;
         System.setProperty("baseUrl400", TestConstants.ENDPOINT + File.separator);
 
         artifactConverterRestClient = new RestClient(System.getProperty("username"), System.getProperty("password"));
@@ -106,33 +99,30 @@ public class HttpClientTest {
 
     @Test(timeout = 60000) public void transformNetworkPartitionListTest() throws Exception {
         Transformer.transformNetworkPartitionList();
-        File partitionfile1 = new File(
-                System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
-                        + File.separator + "network-partitions" + File.separator + "openstack" + File.separator
-                        + "network-partition-1.json");
-        File partitionfile2 = new File(getResourcesFolderPath() + File.separator + "test-outputs" + File.separator
-                + "network-partition-1.json");
+        File partitionfile1 = new File(TestConstants.CREATED_PARTITION_TEST);
+        File partitionfile2 = new File(TestConstants.PARTITION_TEST_WITH);
         assertTrue(FileUtils.contentEquals(partitionfile1, partitionfile2));
-
     }
 
     @Test(timeout = 60000) public void transformAutoscalePolicyListTest() throws Exception {
         Transformer.transformAutoscalePolicyList();
-        File autoscalefile1 = new File(
-                System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
-                        + File.separator + "autoscaling-policies" + File.separator + "simpleAutoscalePolicy.json");
-        File autoscalefile2 = new File(getResourcesFolderPath() + File.separator + "test-outputs" + File.separator
-                + "simpleAutoscalePolicy.json");
+        File autoscalefile1 = new File(TestConstants.CREATED_AUTOSCALE_TEST);
+        File autoscalefile2 = new File(TestConstants.AUTOSCALE_TEST_WITH);
         assertTrue(FileUtils.contentEquals(autoscalefile1, autoscalefile2));
     }
 
     @Test(timeout = 60000) public void transformDeploymentPolicyList() throws Exception {
         Transformer.transformDeploymentPolicyList();
-        File deploymentfile1 = new File(
-                (System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
-                        + File.separator + "deployment-policies" + File.separator + "economyDeployment.json"));
-        File deploymentfile2 = new File(
-                getResourcesFolderPath() + File.separator + "test-outputs" + File.separator + "economyDeployment.json");
+        File deploymentfile1 = new File(TestConstants.CREATED_DEPLOYMENT_TEST);
+        File deploymentfile2 = new File(TestConstants.DEPLOYMENT_TEST_WITH);
         assertTrue(FileUtils.contentEquals(deploymentfile1, deploymentfile2));
+    }
+
+    @Test(timeout = 60000) public void transformCartridgeList() throws Exception {
+        Transformer.transformCartridgeList();
+        File cartridgefile1 = new File(TestConstants.CREATED_CARTRIDGE_TEST);
+        File cartridgefile2 = new File(TestConstants.CARTRIDGE_TEST_WITH);
+        assertTrue(FileUtils.contentEquals(cartridgefile1, cartridgefile2));
+
     }
 }

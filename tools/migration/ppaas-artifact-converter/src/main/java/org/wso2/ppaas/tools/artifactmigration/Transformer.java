@@ -71,7 +71,7 @@ public class Transformer {
             autoscalePolicy400List = ArtifactLoader400.fetchAutoscalePolicyList();
             log.info("Fetched Auto Scale Policy from PPaaS 4.0.0");
 
-            File directoryName = new File(Constants.DIRECTORY_POLICY_AUTOSCALE);
+            File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_AUTOSCALE);
 
             for (AutoscalePolicy autoscalePolicy400 : autoscalePolicy400List) {
 
@@ -143,7 +143,8 @@ public class Transformer {
                     networkPartition410.setPartitions(partitionsList410);
                 }
                 directoryName = new File(
-                        Constants.DIRECTORY_NETWORK_PARTITION + File.separator + networkPartition400.getProvider());
+                        Constants.ROOT_DIRECTORY + Constants.DIRECTORY_NETWORK_PARTITION + File.separator
+                                + networkPartition400.getProvider());
                 JsonWriter.writeFile(directoryName,
                         Constants.NETWORK_PARTITION_NAME + (networkPartitionIterator++) + Constants.JSON_EXTENSION,
                         getGson().toJson(networkPartition410));
@@ -152,7 +153,7 @@ public class Transformer {
                 System.setProperty("defaultNetworkPartitionId", networkPartition400.getId());
             }
             //Setting number of network partitions as a system property to be used for deploying scripts
-            System.setProperty(Constants.NO_OF_NETWORK_PARTITION,(Integer.toString(networkPartitionIterator-1)));
+            System.setProperty(Constants.NO_OF_NETWORK_PARTITION, (Integer.toString(networkPartitionIterator - 1)));
             log.info("Created Network Partition List 4.1.0 artifacts");
         } catch (JsonSyntaxException e) {
             String msg = "JSON syntax error in retrieving network partition lists";
@@ -175,7 +176,7 @@ public class Transformer {
         try {
             deploymentPolicy400List = ArtifactLoader400.fetchDeploymentPolicyList();
             log.info("Fetched Deployment Policy from PPaaS 4.0.0");
-            File directoryName = new File(Constants.DIRECTORY_POLICY_DEPLOYMENT);
+            File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_DEPLOYMENT);
 
             for (DeploymentPolicy deploymentPolicy400 : deploymentPolicy400List) {
 
@@ -251,7 +252,7 @@ public class Transformer {
             subscription400List = ArtifactLoader400.fetchSubscriptionDataList();
             log.info("Fetched Subscription List");
 
-            File outputDirectoryNameCartridge = new File(Constants.DIRECTORY_CARTRIDGE);
+            File outputDirectoryNameCartridge = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_CARTRIDGE);
 
             for (Cartridge cartridge : cartridge400List) {
 
@@ -307,20 +308,21 @@ public class Transformer {
                 application410.setDescription(cartridge.getDescription());
 
                 File outputDirectoryNameApp = new File(
-                        Constants.DIRECTORY_APPLICATION + File.separator + application410.getName() + File.separator
-                                + Constants.DIRECTORY_ARTIFACTS);
+                        Constants.ROOT_DIRECTORY + Constants.DIRECTORY_APPLICATION + File.separator + application410
+                                .getName() + File.separator + Constants.DIRECTORY_ARTIFACTS);
                 JsonWriter.writeFile(outputDirectoryNameApp, application410.getName() + Constants.JSON_EXTENSION,
                         getGson().toJson(application410));
                 JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_APPLICATION_SIGNUP,
                         getGson().toJson(signup410List));
 
                 //Converting domain mapping list string to the standard format
-                String domainMappingJsonString = "{\"domainMappings\":"+getGson().toJson(domainMapping410List)+"}";
-                JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_DOMAIN_MAPPING,domainMappingJsonString);
+                String domainMappingJsonString = "{\"domainMappings\":" + getGson().toJson(domainMapping410List) + "}";
+                JsonWriter
+                        .writeFile(outputDirectoryNameApp, Constants.FILENAME_DOMAIN_MAPPING, domainMappingJsonString);
 
                 ConversionTool.addCommonDeployingScript(
-                        Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator + application410.getName(), subscribableInfo,
-                        cartridge.getDisplayName());
+                        Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator + application410
+                                .getName(), subscribableInfo, cartridge.getDisplayName());
 
                 cartridge410.setDisplayName(cartridge.getDisplayName());
                 cartridge410.setDescription(cartridge.getDescription());
@@ -422,7 +424,7 @@ public class Transformer {
         String[] networkPartitions = { networkPartition };
         applicationPolicyBean.setNetworkPartitions(networkPartitions);
 
-        File directoryName = new File(Constants.DIRECTORY_POLICY_APPLICATION);
+        File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_APPLICATION);
         JsonWriter.writeFile(directoryName, Constants.APPLICATION_POLICY_ID + Constants.JSON_EXTENSION,
                 getGson().toJson(applicationPolicyBean));
     }
