@@ -53,10 +53,10 @@ public class Constants {
     //Configuration strings
     //Login credentials configuration strings
     public static final String BASE_URL400 = "baseUrl400";
-    public static final String USERNAME400 = "userName400";
+    public static final String USERNAME400 = "username400";
     public static final String PASSWORD400 = "password400";
     public static final String BASE_URL410 = "baseUrl410";
-    public static final String USERNAME410 = "userName410";
+    public static final String USERNAME410 = "username410";
     public static final String PASSWORD410 = "password410";
     //Port mapping configuration strings
     public static final String PORT = "port";

@@ -126,7 +126,7 @@ public class Transformer {
                 networkPartition410.setProvider(networkPartition400.getProvider());
                 List<PartitionBean> partitionsList410 = new ArrayList<>();
                 PartitionBean partition410 = new PartitionBean();
-                partition410.setId("partition-1");
+                partition410.setId(Constants.NETWORK_PARTITION_ID);
                 if (networkPartition400.getProperty() != null) {
                     List<org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean> property400List = networkPartition400
                             .getProperty();
