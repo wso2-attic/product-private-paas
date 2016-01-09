@@ -59,9 +59,9 @@ public class Constants {
     public static final String USERNAME410 = "username410";
     public static final String PASSWORD410 = "password410";
     //Port mapping configuration strings
-    public static final String PORT = "port";
-    public static final String PROXY_PORT = "proxyPort";
-    public static final String PROTOCOL = "protocol";
+    public static final String PORT = "defaultPort";
+    public static final String PROXY_PORT = "defaultProxyPort";
+    public static final String PROTOCOL = "defaultProtocol";
     //IaaS provider configuration
     public static final String IAAS = "iaas";
     public static final String IAAS_IMAGE_ID = "iaasImageId";
@@ -72,9 +72,7 @@ public class Constants {
     public static final String NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART2 = ".json\" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions";
 
     //Rest client configurations
-    public static String CERTIFICATE_PATH = StringUtils
-            .removeEnd(System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources",
-                    File.separator) + "/wso2carbon.jks";
+    public static final String CERTIFICATE_PATH = StringUtils.removeEnd(System.getProperty("user.dir"),File.separator) + System.getProperty("certificatePath");
     public static final char[] CERTIFICATE_PASSWORD = "wso2carbon".toCharArray();
     public static final boolean ENABLE_SELF_CERTIFIED = true;
     public static final String BASIC_AUTH = "Basic ";
@@ -87,9 +85,7 @@ public class Constants {
 
     //PPaaS 4.1.0 directories
     // 4.1.0 outputs root directory
-    public static String ROOT_DIRECTORY =
-            System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
-                    + File.separator;
+    public static final String ROOT_DIRECTORY =System.getProperty("user.dir") +System.getProperty("outputPath");
     // Do not use forward slash at the beginning instead use it in the root directory.
     public static final String DIRECTORY_POLICY_AUTOSCALE = "autoscaling-policies";
     public static final String DIRECTORY_NETWORK_PARTITION = "network-partitions";
@@ -98,9 +94,7 @@ public class Constants {
     public static final String DIRECTORY_CARTRIDGE = "cartridges";
     public static final String DIRECTORY_POLICY_APPLICATION = "application-policies";
     public static final String DIRECTORY_OUTPUT_SCRIPT = "applications";
-    public static String DIRECTORY_SOURCE_SCRIPT =
-            System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources" + File.separator
-                    + "scripts" + File.separator;
+    public static final String DIRECTORY_SOURCE_SCRIPT =System.getProperty("user.dir") +System.getProperty("sourceScriptsPath");
     public static final String DIRECTORY_SOURCE_SCRIPT_DEPLOY = "common" + File.separator + "deploy.sh";
     public static final String DIRECTORY_SOURCE_SCRIPT_EC2 = "ec2";
     public static final String DIRECTORY_SOURCE_SCRIPT_GCE = "gce";

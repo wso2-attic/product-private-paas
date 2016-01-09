@@ -78,11 +78,6 @@ class TestConstants {
     public static final String SUBSCRIPTION_TEST_INPUT = TEST_INPUTS + "test_subscription.json";
     public static final String DOMAIN_MAPPING_TEST_INPUT = TEST_INPUTS + "test_domainMappings_PHP.json";
 
-    //Certificate path for test cases
-    public static final String TEST_CERTIFICATE =
-            System.getProperty("user.dir") + File.separator + "target" + File.separator + "test-classes"
-                    + File.separator + "wso2carbon.jks";
-
     //Configuration of paths for deploying scripts
     public static final String TEST_DIRECTORY_SOURCE_SCRIPT =
             getResourcesFolderPath() + File.separator + "scripts" + File.separator;

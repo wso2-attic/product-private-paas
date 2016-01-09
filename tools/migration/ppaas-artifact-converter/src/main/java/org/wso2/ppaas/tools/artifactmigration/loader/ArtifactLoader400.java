@@ -53,10 +53,14 @@ public class ArtifactLoader400 {
     public static List<Partition> fetchPartitionList() throws ArtifactLoadingException {
         try {
             String partitionString = readUrl(System.getProperty(Constants.BASE_URL400) + Constants.URL_PARTITION);
-            String partitionListString = null;
+            String partitionListString;
             if (partitionString != null) {
                 partitionListString = partitionString
                         .substring(partitionString.indexOf('['), (partitionString.lastIndexOf(']') + 1));
+            } else {
+                String msg = "Error while fetching partitions";
+                log.error(msg);
+                throw new ArtifactLoadingException(msg);
             }
             return gson.fromJson(partitionListString, new TypeToken<List<Partition>>() {
             }.getType());

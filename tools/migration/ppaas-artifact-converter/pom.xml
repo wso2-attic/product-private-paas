@@ -31,7 +31,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>2.3.2</version>
+                <version>3.3</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
@@ -63,6 +63,10 @@
                 <configuration>
                     <systemProperties>
                         <property>
+                            <name>baseUrl400</name>
+                            <value>https://localhost:8443/</value>
+                        </property>
+                        <property>
                             <name>endpoint</name>
                             <value>https://localhost:8443</value>
                         </property>
@@ -83,11 +87,7 @@
                             <value>admin</value>
                         </property>
                         <property>
-                            <name>baseUrl410</name>
-                            <value>https://192.168.30.142:9443/</value>
-                        </property>
-                        <property>
-                            <name>userName410</name>
+                            <name>username410</name>
                             <value>admin</value>
                         </property>
                         <property>
@@ -95,16 +95,28 @@
                             <value>admin</value>
                         </property>
                         <property>
-                            <name>port</name>
+                            <name>defaultPort</name>
                             <value>22</value>
                         </property>
                         <property>
-                            <name>proxyPort</name>
+                            <name>defaultProxyPort</name>
                             <value>8280</value>
                         </property>
                         <property>
-                            <name>protocol</name>
+                            <name>defaultProtocol</name>
                             <value>http</value>
+                        </property>
+                        <property>
+                            <name>certificatePath</name>
+                            <value>/target/test-classes/wso2carbon.jks</value>
+                        </property>
+                        <property>
+                            <name>outputPath</name>
+                            <value>/target/test-classes/output-artifacts/</value>
+                        </property>
+                        <property>
+                            <name>sourceScriptsPath</name>
+                            <value>/target/test-classes/scripts/</value>
                         </property>
                     </systemProperties>
                 </configuration>
@@ -147,22 +159,6 @@
                 <exclusion>
                     <groupId>slf4j.wso2</groupId>
                     <artifactId>slf4j</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents.wso2</groupId>
-                    <artifactId>httpclient</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents.wso2</groupId>
-                    <artifactId>httpcore</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.axis2.wso2</groupId>
-                    <artifactId>axis2-client</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-httpclient.wso2</groupId>
-                    <artifactId>commons-httpclient</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -213,16 +209,6 @@
             <artifactId>jetty-servlet</artifactId>
             <version>9.1.3.v20140225</version>
             <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.1</version>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version>4.4.4</version>
         </dependency>
     </dependencies>
 </project>

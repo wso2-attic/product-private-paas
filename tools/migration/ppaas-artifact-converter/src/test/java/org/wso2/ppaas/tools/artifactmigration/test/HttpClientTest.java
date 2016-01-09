@@ -25,7 +25,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.wso2.ppaas.tools.artifactmigration.Constants;
 import org.wso2.ppaas.tools.artifactmigration.RestClient;
 import org.wso2.ppaas.tools.artifactmigration.Transformer;
 
@@ -83,13 +82,6 @@ public class HttpClientTest {
         server.setConnectors(new Connector[] { http, https });
         // Start Server
         server.start();
-
-        //Config paths for test cases
-        Constants.CERTIFICATE_PATH = TestConstants.TEST_CERTIFICATE;
-        Constants.DIRECTORY_SOURCE_SCRIPT = TestConstants.TEST_DIRECTORY_SOURCE_SCRIPT;
-        Constants.ROOT_DIRECTORY = TestConstants.OUTPUT_DIRECTORY;
-        System.setProperty("baseUrl400", TestConstants.ENDPOINT + File.separator);
-
         artifactConverterRestClient = new RestClient(System.getProperty("username"), System.getProperty("password"));
     }
 

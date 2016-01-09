@@ -39,20 +39,13 @@
             <fileMode>0600</fileMode>
             <includes>
                 <include>log4j.properties</include>
+                <include>config.properties</include>
             </includes>
         </fileSet>
         <fileSet>
             <directory>${project.basedir}/src/main/resources</directory>
             <outputDirectory>/resources</outputDirectory>
             <fileMode>0600</fileMode>
-        </fileSet>
-        <fileSet>
-            <directory>${project.basedir}/src/main/conf</directory>
-            <outputDirectory>/conf</outputDirectory>
-            <fileMode>0600</fileMode>
-            <includes>
-                <include>config.properties</include>
-            </includes>
         </fileSet>
     </fileSets>
     <dependencySets>
