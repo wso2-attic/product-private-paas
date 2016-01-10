@@ -29,30 +29,26 @@ import org.wso2.ppaas.tools.artifactmigration.RestClient;
 import org.wso2.ppaas.tools.artifactmigration.Transformer;
 
 import java.io.File;
-import java.net.URL;
 
 import static org.junit.Assert.assertTrue;
 
 public class HttpClientTest {
-    private static RestClient artifactConverterRestClient;
 
     @BeforeClass public static void setUp() throws Exception {
         // Create Server
         Server server = new Server(Integer.getInteger("http.port"));
         ServletContextHandler context = new ServletContextHandler();
-
-        ServletHolder defaultServ = new ServletHolder("default", StratosV400MockServelet.class);
-        defaultServ.setInitParameter("resourceBase", System.getProperty("user.dir"));
-        defaultServ.setInitParameter("dirAllowed", "true");
-        defaultServ.setServlet(new StratosV400MockServelet());
-        context.addServlet(defaultServ, TestConstants.SERVLET_CONTEXT_PATH + "/*");
-
-        ServletHolder defaultServ2 = new ServletHolder("default2", StratosV400MockServelet2.class);
-        defaultServ2.setInitParameter("resourceBase", System.getProperty("user.dir"));
-        defaultServ2.setInitParameter("dirAllowed", "true");
-        defaultServ2.setServlet(new StratosV400MockServelet2());
-        context.addServlet(defaultServ2, TestConstants.SERVLET_CONTEXT_PATH2 + "/*");
-
+        server.setHandler(context);
+        ServletHolder jerseyServlet = context
+                .addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/stratos/*");
+        jerseyServlet.setInitOrder(0);
+        jerseyServlet
+                .setInitParameter("jersey.config.server.provider.classnames", StratosV400Mock.class.getCanonicalName());
+        ServletHolder jerseyServlet2 = context
+                .addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/migration/*");
+        jerseyServlet2.setInitOrder(0);
+        jerseyServlet2
+                .setInitParameter("jersey.config.server.provider.classnames", StratosV400Mock.class.getCanonicalName());
         server.setHandler(context);
 
         HttpConfiguration http_config = new HttpConfiguration();
@@ -82,11 +78,8 @@ public class HttpClientTest {
         server.setConnectors(new Connector[] { http, https });
         // Start Server
         server.start();
-        artifactConverterRestClient = new RestClient(System.getProperty("username"), System.getProperty("password"));
-    }
-
-    @Test(timeout = 60000) public void testArtifactConverterClient() throws Exception {
-        artifactConverterRestClient.doGet(new URL(TestConstants.ENDPOINT + TestConstants.SERVLET_CONTEXT_PATH));
+        RestClient artifactConverterRestClient = new RestClient(System.getProperty("username"),
+                System.getProperty("password"));
     }
 
     @Test(timeout = 60000) public void transformNetworkPartitionListTest() throws Exception {

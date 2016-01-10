@@ -18,37 +18,24 @@
 package org.wso2.ppaas.tools.artifactmigration.test;
 
 import org.apache.commons.lang.StringUtils;
+
 import java.io.File;
+
 /**
  * Constants for test class
  */
 class TestConstants {
 
     //Configuration HTTP Client Test
-    public static final String ENDPOINT = System.getProperty("endpoint");
     public static final int BUFFER_SIZE = 32768;
     public static final int IDLE_TIMEOUT = 300000;
-    public static final String SERVLET_CONTEXT_PATH = File.separator + "stratos" + File.separator + "admin";
-    public static final String SERVLET_CONTEXT_PATH2 = File.separator + "migration" + File.separator + "admin";
     public static final String KEYSTORE_PATH = getResourcesFolderPath() + File.separator + "wso2carbon.jks";
 
     //Configuration StratosV400MockServelet Test
-    public static final String PARTITION_PATH = File.separator + "partition";
-    public static final String AUTOSCALE_POLICY_PATH = File.separator + "policy" + File.separator + "autoscale";
-    public static final String DEPLOYMENT_POLICY_PATH = File.separator + "policy" + File.separator + "deployment";
-    public static final String CARTRIDGE_PATH = File.separator + "cartridge" + File.separator + "list";
-    public static final String DOMAIN_PATH=File.separator +"cartridge" + File.separator
-    + "PHP" + File.separator + "subscription" + File.separator + "myphp"
-    + File.separator + "domains";
     private static final String TEST_ARTIFACTS_PATH = "test_artifacts";
 
-    //Configuration StratosV400MockServelet2 Test
-    public static final String SUBSCRIPTION_PATH =
-            File.separator + "cartridge" + File.separator + "list" + File.separator + "subscribed" + File.separator
-                    + "all";
-
     //Configuration of paths of the output files created
-    public static final String OUTPUT_DIRECTORY =
+    private static final String OUTPUT_DIRECTORY =
             System.getProperty("user.dir") + File.separator + "target" + File.separator + "test-classes"
                     + File.separator + "output-artifacts" + File.separator;
     public static final String CREATED_PARTITION_TEST =
@@ -77,10 +64,6 @@ class TestConstants {
     public static final String CARTRIDGE_TEST_INPUT = TEST_INPUTS + "test_PHP_cartridges.json";
     public static final String SUBSCRIPTION_TEST_INPUT = TEST_INPUTS + "test_subscription.json";
     public static final String DOMAIN_MAPPING_TEST_INPUT = TEST_INPUTS + "test_domainMappings_PHP.json";
-
-    //Configuration of paths for deploying scripts
-    public static final String TEST_DIRECTORY_SOURCE_SCRIPT =
-            getResourcesFolderPath() + File.separator + "scripts" + File.separator;
 
     private static String getResourcesFolderPath() {
         String path = HttpClientTest.class.getResource("/").getPath();

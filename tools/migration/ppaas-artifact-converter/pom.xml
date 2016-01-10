@@ -95,27 +95,27 @@
                             <value>admin</value>
                         </property>
                         <property>
-                            <name>defaultPort</name>
+                            <name>default.port</name>
                             <value>22</value>
                         </property>
                         <property>
-                            <name>defaultProxyPort</name>
+                            <name>default.proxy.port</name>
                             <value>8280</value>
                         </property>
                         <property>
-                            <name>defaultProtocol</name>
+                            <name>default.protocol</name>
                             <value>http</value>
                         </property>
                         <property>
-                            <name>certificatePath</name>
+                            <name>certificate.path</name>
                             <value>/target/test-classes/wso2carbon.jks</value>
                         </property>
                         <property>
-                            <name>outputPath</name>
+                            <name>output.path</name>
                             <value>/target/test-classes/output-artifacts/</value>
                         </property>
                         <property>
-                            <name>sourceScriptsPath</name>
+                            <name>sourcescripts.path</name>
                             <value>/target/test-classes/scripts/</value>
                         </property>
                     </systemProperties>
@@ -178,6 +178,11 @@
             <version>1.7.7</version>
         </dependency>
         <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.stratos</groupId>
             <artifactId>org.apache.stratos.cloud.controller</artifactId>
             <version>4.0.0</version>
@@ -208,6 +213,12 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-servlet</artifactId>
             <version>9.1.3.v20140225</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet-core</artifactId>
+            <version>2.22.1</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
