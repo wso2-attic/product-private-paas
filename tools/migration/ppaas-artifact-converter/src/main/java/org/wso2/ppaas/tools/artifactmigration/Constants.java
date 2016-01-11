@@ -44,7 +44,7 @@ public class Constants {
 
     //Default value for network partition
     public static final String NETWORK_PARTITION_NAME = "network-partition-";
-    public static final String NETWORK_PARTITION_ID = "partition-1";
+    public static final String NETWORK_PARTITION_ID = "partition-";
 
     //Default file names for application policy jsons
     public static final String FILENAME_APPLICATION_SIGNUP = "application-signup.json";

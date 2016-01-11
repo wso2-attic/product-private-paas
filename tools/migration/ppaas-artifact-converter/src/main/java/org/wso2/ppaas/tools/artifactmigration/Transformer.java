@@ -126,7 +126,7 @@ public class Transformer {
                 networkPartition410.setProvider(networkPartition400.getProvider());
                 List<PartitionBean> partitionsList410 = new ArrayList<>();
                 PartitionBean partition410 = new PartitionBean();
-                partition410.setId(Constants.NETWORK_PARTITION_ID);
+                partition410.setId(Constants.NETWORK_PARTITION_ID+networkPartitionIterator);
                 if (networkPartition400.getProperty() != null) {
                     List<org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean> property400List = networkPartition400
                             .getProperty();
@@ -192,12 +192,12 @@ public class Transformer {
                     List<Partition> partition400List = partitionGroup.getPartition();
                     List<PartitionReferenceBean> partitions410List = new ArrayList<>();
 
-                    int b = 0;
+                    int partitionIterator = 0;
                     for (Partition partition : partition400List) {
 
                         tempNetworkPartition.setId(partition.getId());
                         PartitionReferenceBean tempPartition = new PartitionReferenceBean();
-                        tempPartition.setId(Constants.NETWORK_PARTITION_ID);
+                        tempPartition.setId(Constants.NETWORK_PARTITION_ID+ (partitionIterator+1));
                         tempPartition.setPartitionMax(partition.getPartitionMax());
 
                         if (partition.getProperty() != null) {
@@ -213,7 +213,7 @@ public class Transformer {
                             }
                             tempPartition.setProperty(property410List);
                         }
-                        partitions410List.add(b++, tempPartition);
+                        partitions410List.add(partitionIterator++, tempPartition);
                     }
                     tempNetworkPartition.setPartitions(partitions410List);
                     networkPartitions410List.add(a, tempNetworkPartition);

@@ -44,7 +44,7 @@ class TestConstants {
     public static final String CREATED_AUTOSCALE_TEST =
             OUTPUT_DIRECTORY + "autoscaling-policies" + File.separator + "simpleAutoscalePolicy.json";
     public static final String CREATED_DEPLOYMENT_TEST =
-            OUTPUT_DIRECTORY + "deployment-policies" + File.separator + "economyDeployment.json";
+            OUTPUT_DIRECTORY + "deployment-policies" + File.separator + "economyDeploymentPolicy.json";
     public static final String CREATED_CARTRIDGE_TEST = OUTPUT_DIRECTORY + "cartridges" + File.separator + "PHP.json";
 
     //Configuration of paths of the output testing files
