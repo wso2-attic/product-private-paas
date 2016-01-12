@@ -58,6 +58,8 @@ public class Constants {
     public static final String BASE_URL410 = "baseUrl410";
     public static final String USERNAME410 = "username410";
     public static final String PASSWORD410 = "password410";
+    public static final String HOSTNAME = "hostname";
+
     //Port mapping configuration strings
     public static final String PORT = "default.port";
     public static final String PROXY_PORT = "default.proxy.port";
@@ -73,7 +75,7 @@ public class Constants {
 
     //Rest client configurations
     public static final String CERTIFICATE_PATH = StringUtils.removeEnd(System.getProperty("user.dir"),File.separator) + System.getProperty("certificate.path");
-    public static final char[] CERTIFICATE_PASSWORD = "wso2carbon".toCharArray();
+    public static final String CERTIFICATE_PASSWORD = "wso2carbon";
     public static final boolean ENABLE_SELF_CERTIFIED = true;
     public static final String BASIC_AUTH = "Basic ";
     public static final String JSON_EXTENSION = ".json";

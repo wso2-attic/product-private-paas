@@ -25,7 +25,6 @@ import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.wso2.ppaas.tools.artifactmigration.RestClient;
 import org.wso2.ppaas.tools.artifactmigration.Transformer;
 
 import java.io.File;
@@ -78,8 +77,6 @@ public class HttpClientTest {
         server.setConnectors(new Connector[] { http, https });
         // Start Server
         server.start();
-        RestClient artifactConverterRestClient = new RestClient(System.getProperty("username"),
-                System.getProperty("password"));
     }
 
     @Test(timeout = 60000) public void transformNetworkPartitionListTest() throws Exception {

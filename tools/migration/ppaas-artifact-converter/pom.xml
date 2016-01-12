@@ -52,7 +52,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-
                 <executions>
                     <execution>
                         <phase>test</phase>
@@ -69,6 +68,10 @@
                             <value>https://localhost:8443/</value>
                         </property>
                         <property>
+                            <name>hostname</name>
+                            <value>localhost</value>
+                        </property>
+                        <property>
                             <name>endpoint</name>
                             <value>https://localhost:8443</value>
                         </property>
@@ -81,11 +84,11 @@
                             <value>8443</value>
                         </property>
                         <property>
-                            <name>username</name>
+                            <name>username400</name>
                             <value>admin</value>
                         </property>
                         <property>
-                            <name>password</name>
+                            <name>password400</name>
                             <value>admin</value>
                         </property>
                         <property>
@@ -204,6 +207,11 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>2.22.1</version>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
