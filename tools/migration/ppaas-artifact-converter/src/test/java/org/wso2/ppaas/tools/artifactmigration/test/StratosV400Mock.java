@@ -16,92 +16,45 @@ import java.io.IOException;
 @Path("/admin") public class StratosV400Mock {
     private static final Log log = LogFactory.getLog(StratosV400Mock.class);
 
+    public String readJSON(String FileName){
+        File file = new File(FileName);
+        String str = null;
+        try {
+            FileInputStream fis = new FileInputStream(file);
+            str = IOUtils.toString(fis);
+        } catch (FileNotFoundException e) {
+            log.error("Error in getting the test file", e);
+        } catch (IOException e) {
+            log.error("Error in converting JSONs to a String ", e);
+        }
+        if(str!=null)
+        return str;
+        else
+            return TestConstants.ERROR_MSG;
+    }
+
     @GET @Path("/partition") @Produces(MediaType.APPLICATION_JSON) public String partition() {
-        File file = new File(TestConstants.PARTITION_TEST_INPUT);
-        String str = null;
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            str = IOUtils.toString(fis, "UTF-8");
-
-        } catch (FileNotFoundException e) {
-            log.error("Error in getting the partition test file", e);
-        } catch (IOException e) {
-            log.error("Error in sending the partition list as the response", e);
-        }
-        return str;
+        return readJSON(TestConstants.PARTITION_TEST_INPUT);
     }
 
-    @GET @Path("/policy/autoscale") @Produces(MediaType.APPLICATION_JSON) public String autoscale() throws IOException {
-        File file = new File(TestConstants.AUTOSCALE_TEST_INPUT);
-        String str = null;
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            str = IOUtils.toString(fis, "UTF-8");
-        } catch (FileNotFoundException e) {
-            log.error("Error in getting the autoscale policy test file", e);
-        } catch (IOException e) {
-            log.error("Error in sending the autoscale policy list as the response", e);
-        }
-        return str;
+    @GET @Path("/policy/autoscale") @Produces(MediaType.APPLICATION_JSON) public String autoscale() {
+        return readJSON(TestConstants.AUTOSCALE_TEST_INPUT);
     }
 
-    @GET @Path("/policy/deployment") @Produces(MediaType.APPLICATION_JSON) public String deployment()
-            throws IOException {
-        File file = new File(TestConstants.DEPLOYMENT_TEST_INPUT);
-        String str = null;
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            str = IOUtils.toString(fis, "UTF-8");
-        } catch (FileNotFoundException e) {
-            log.error("Error in getting the deployment policy test file", e);
-        } catch (IOException e) {
-            log.error("Error in sending the deployment policy list as the response", e);
-        }
-        return str;
+    @GET @Path("/policy/deployment") @Produces(MediaType.APPLICATION_JSON) public String deployment() {
+        return readJSON(TestConstants.DEPLOYMENT_TEST_INPUT);
     }
 
-    @GET @Path("/cartridge/list") @Produces(MediaType.APPLICATION_JSON) public String cartridge() throws IOException {
-        File file = new File(TestConstants.CARTRIDGE_TEST_INPUT);
-        String str = null;
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            str = IOUtils.toString(fis, "UTF-8");
-        } catch (FileNotFoundException e) {
-            log.error("Error in getting the cartridge test file", e);
-        } catch (IOException e) {
-            log.error("Error in sending the cartridge list as the response", e);
-        }
-        return str;
+    @GET @Path("/cartridge/list") @Produces(MediaType.APPLICATION_JSON) public String cartridge() {
+        return readJSON(TestConstants.CARTRIDGE_TEST_INPUT);
     }
 
-    @GET @Path("/cartridge/PHP/subscription/myphp/domains") @Produces(MediaType.APPLICATION_JSON) public String domain()
-            throws IOException {
-        File file = new File(TestConstants.DOMAIN_MAPPING_TEST_INPUT);
-        String str = null;
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            str = IOUtils.toString(fis, "UTF-8");
-        } catch (FileNotFoundException e) {
-            log.error("Error in getting the domain mapping test file", e);
-        } catch (IOException e) {
-            log.error("Error in sending the domain mapping list as the response", e);
-        }
-        return str;
+    @GET @Path("/cartridge/PHP/subscription/myphp/domains") @Produces(MediaType.APPLICATION_JSON) public String domain() {
+        return readJSON(TestConstants.DOMAIN_MAPPING_TEST_INPUT);
     }
 
-    @GET @Path("/cartridge/list/subscribed/all") @Produces(MediaType.APPLICATION_JSON) public String subscription()
-            throws IOException {
-        File file = new File(TestConstants.SUBSCRIPTION_TEST_INPUT);
-        String str = null;
-        try {
-            FileInputStream fis = new FileInputStream(file);
-            str = IOUtils.toString(fis, "UTF-8");
-        } catch (FileNotFoundException e) {
-            log.error("Error in getting the subscription data test file", e);
-        } catch (IOException e) {
-            log.error("Error in sending the subscription data list as the response", e);
-        }
-        return str;
+    @GET @Path("/cartridge/list/subscribed/all") @Produces(MediaType.APPLICATION_JSON) public String subscription() {
+        return readJSON(TestConstants.SUBSCRIPTION_TEST_INPUT);
     }
 
 }

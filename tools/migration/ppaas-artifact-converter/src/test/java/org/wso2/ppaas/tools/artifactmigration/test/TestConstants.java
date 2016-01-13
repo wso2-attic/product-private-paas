@@ -58,13 +58,14 @@ class TestConstants {
     //Configuration input test file paths
     private static final String TEST_INPUTS =
             getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator;
-    public static final String PARTITION_TEST_INPUT = TEST_INPUTS + "test_partition_P1.json";
-    public static final String AUTOSCALE_TEST_INPUT = TEST_INPUTS + "test_AutoscalePolicy.json";
-    public static final String DEPLOYMENT_TEST_INPUT = TEST_INPUTS + "test_DeploymentPolicy.json";
-    public static final String CARTRIDGE_TEST_INPUT = TEST_INPUTS + "test_PHP_cartridges.json";
+    public static final String PARTITION_TEST_INPUT = TEST_INPUTS + "test_partitions.json";
+    public static final String AUTOSCALE_TEST_INPUT = TEST_INPUTS + "test_autoscalepolicies.json";
+    public static final String DEPLOYMENT_TEST_INPUT = TEST_INPUTS + "test_deploymentpolicies.json";
+    public static final String CARTRIDGE_TEST_INPUT = TEST_INPUTS + "test_cartridges.json";
     public static final String SUBSCRIPTION_TEST_INPUT = TEST_INPUTS + "test_subscription.json";
-    public static final String DOMAIN_MAPPING_TEST_INPUT = TEST_INPUTS + "test_domainMappings_PHP.json";
+    public static final String DOMAIN_MAPPING_TEST_INPUT = TEST_INPUTS + "test_domainmappings.json";
 
+    public static final String ERROR_MSG="{\"Error\":{ \"errorCode\": \" -1234\", \"errorMessage\": \" Unexpected error. Returned JSON String is a null. Please check the test cases \"}}";
     private static String getResourcesFolderPath() {
         String path = HttpClientTest.class.getResource("/").getPath();
         return StringUtils.removeEnd(path, File.separator);

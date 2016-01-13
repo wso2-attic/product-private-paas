@@ -17,68 +17,25 @@
  */
 package org.wso2.ppaas.tools.artifactmigration.test;
 
+
 import org.apache.commons.io.FileUtils;
-import org.eclipse.jetty.http.HttpVersion;
-import org.eclipse.jetty.server.*;
-import org.eclipse.jetty.servlet.ServletContextHandler;
-import org.eclipse.jetty.servlet.ServletHolder;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.wso2.ppaas.tools.artifactmigration.Transformer;
-
 import java.io.File;
-
 import static org.junit.Assert.assertTrue;
 
 public class HttpClientTest {
-
-    @BeforeClass public static void setUp() throws Exception {
-        // Create Server
-        Server server = new Server(Integer.getInteger("http.port"));
-        ServletContextHandler context = new ServletContextHandler();
-        server.setHandler(context);
-        ServletHolder jerseyServlet = context
-                .addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/stratos/*");
-        jerseyServlet.setInitOrder(0);
-        jerseyServlet
-                .setInitParameter("jersey.config.server.provider.classnames", StratosV400Mock.class.getCanonicalName());
-        ServletHolder jerseyServlet2 = context
-                .addServlet(org.glassfish.jersey.servlet.ServletContainer.class, "/migration/*");
-        jerseyServlet2.setInitOrder(0);
-        jerseyServlet2
-                .setInitParameter("jersey.config.server.provider.classnames", StratosV400Mock.class.getCanonicalName());
-        server.setHandler(context);
-
-        HttpConfiguration http_config = new HttpConfiguration();
-        http_config.setSecureScheme("https");
-        http_config.setSecurePort(Integer.getInteger("https.port"));
-        http_config.setOutputBufferSize(TestConstants.BUFFER_SIZE);
-
-        ServerConnector http = new ServerConnector(server, new HttpConnectionFactory(http_config));
-        http.setPort(Integer.getInteger("http.port"));
-        http.setIdleTimeout(TestConstants.IDLE_TIMEOUT);
-
-        SslContextFactory sslContextFactory = new SslContextFactory();
-        sslContextFactory.setKeyStorePath(TestConstants.KEYSTORE_PATH);
-        sslContextFactory.setKeyStorePassword("wso2carbon");
-        sslContextFactory.setKeyManagerPassword("wso2carbon");
-
-        HttpConfiguration https_config = new HttpConfiguration(http_config);
-        https_config.addCustomizer(new SecureRequestCustomizer());
-
-        ServerConnector https = new ServerConnector(server,
-                new SslConnectionFactory(sslContextFactory, HttpVersion.HTTP_1_1.asString()),
-                new HttpConnectionFactory(https_config));
-        https.setPort(Integer.getInteger("https.port"));
-        https.setIdleTimeout(TestConstants.IDLE_TIMEOUT);
-
-        // Set the connectors
-        server.setConnectors(new Connector[] { http, https });
-        // Start Server
-        server.start();
+    private static final Logger log = Logger.getLogger(HttpClientTest.class);
+    @BeforeClass public static void startClient(){
+        try {
+            HttpClientSetUp Client= new HttpClientSetUp();
+            Client.startServer();
+        } catch (Exception e) {
+            log.error("Error while starting the server", e);
+        }
     }
-
     @Test(timeout = 60000) public void transformNetworkPartitionListTest() throws Exception {
         Transformer.transformNetworkPartitionList();
         File partitionfile1 = new File(TestConstants.CREATED_PARTITION_TEST);
