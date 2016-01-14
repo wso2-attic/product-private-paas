@@ -30,6 +30,7 @@ import javax.ws.rs.client.ClientBuilder;
 
 public class RestClient {
     final private Client client;
+
     /**
      * Override the default host name verifier to allow any certificate. (Constants.ENABLE_SELF_CERTIFIED have
      * to be disabled when in normal use.)
@@ -51,14 +52,13 @@ public class RestClient {
      *
      * @throws RestClientException
      */
-    public RestClient(String username,String password) {
+    public RestClient(String username, String password) {
         SslConfigurator sslConfig = SslConfigurator.newInstance().trustStoreFile(Constants.CERTIFICATE_PATH)
                 .trustStorePassword(Constants.CERTIFICATE_PASSWORD).keyStoreFile(Constants.CERTIFICATE_PATH)
                 .keyPassword(Constants.CERTIFICATE_PASSWORD);
         SSLContext sslContext = sslConfig.createSSLContext();
         client = ClientBuilder.newBuilder().sslContext(sslContext).build();
-        HttpAuthenticationFeature feature = HttpAuthenticationFeature
-                .basic(username, password);
+        HttpAuthenticationFeature feature = HttpAuthenticationFeature.basic(username, password);
         client.register(feature);
     }
 

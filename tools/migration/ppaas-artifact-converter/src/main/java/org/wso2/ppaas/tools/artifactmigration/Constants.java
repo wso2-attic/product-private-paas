@@ -74,7 +74,9 @@ public class Constants {
     public static final String NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART2 = ".json\" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions";
 
     //Rest client configurations
-    public static final String CERTIFICATE_PATH = StringUtils.removeEnd(System.getProperty("user.dir"),File.separator) + System.getProperty("certificate.path");
+    public static final String CERTIFICATE_PATH =
+            StringUtils.removeEnd(System.getProperty("user.dir"), File.separator) + System
+                    .getProperty("certificate.path");
     public static final String CERTIFICATE_PASSWORD = "wso2carbon";
     public static final boolean ENABLE_SELF_CERTIFIED = true;
     public static final String BASIC_AUTH = "Basic ";
@@ -87,7 +89,7 @@ public class Constants {
 
     //PPaaS 4.1.0 directories
     // 4.1.0 outputs root directory
-    public static final String ROOT_DIRECTORY =System.getProperty("user.dir") +System.getProperty("output.path");
+    public static final String ROOT_DIRECTORY = System.getProperty("user.dir") + System.getProperty("output.path");
     // Do not use forward slash at the beginning instead use it in the root directory.
     public static final String DIRECTORY_POLICY_AUTOSCALE = "autoscaling-policies";
     public static final String DIRECTORY_NETWORK_PARTITION = "network-partitions";
@@ -96,7 +98,8 @@ public class Constants {
     public static final String DIRECTORY_CARTRIDGE = "cartridges";
     public static final String DIRECTORY_POLICY_APPLICATION = "application-policies";
     public static final String DIRECTORY_OUTPUT_SCRIPT = "applications";
-    public static final String DIRECTORY_SOURCE_SCRIPT =System.getProperty("user.dir") +System.getProperty("sourcescripts.path");
+    public static final String DIRECTORY_SOURCE_SCRIPT =
+            System.getProperty("user.dir") + System.getProperty("sourcescripts.path");
     public static final String DIRECTORY_SOURCE_SCRIPT_DEPLOY = "common" + File.separator + "deploy.sh";
     public static final String DIRECTORY_SOURCE_SCRIPT_EC2 = "ec2";
     public static final String DIRECTORY_SOURCE_SCRIPT_GCE = "gce";

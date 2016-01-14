@@ -3,7 +3,6 @@ package org.wso2.ppaas.tools.artifactmigration.test;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -15,7 +14,6 @@ import java.io.IOException;
 
 @Path("/admin") public class StratosV400Mock {
     private static final Log log = LogFactory.getLog(StratosV400Mock.class);
-
     public String readJSON(String FileName){
         File file = new File(FileName);
         String str = null;
@@ -49,7 +47,19 @@ import java.io.IOException;
         return readJSON(TestConstants.CARTRIDGE_TEST_INPUT);
     }
 
-    @GET @Path("/cartridge/PHP/subscription/myphp/domains") @Produces(MediaType.APPLICATION_JSON) public String domain() {
+    @GET @Path("/cartridge/php/subscription/myphp/domains") @Produces(MediaType.APPLICATION_JSON) public String domainmyphp() {
+        return readJSON(TestConstants.DOMAIN_MAPPING_TEST_INPUT);
+    }
+
+    @GET @Path("/cartridge/php/subscription/newphp/domains") @Produces(MediaType.APPLICATION_JSON) public String domainnewphp() {
+        return readJSON(TestConstants.DOMAIN_MAPPING_TEST_INPUT);
+    }
+
+    @GET @Path("/cartridge/tomcat/subscription/mytomcat/domains") @Produces(MediaType.APPLICATION_JSON) public String domainmytomcat() {
+        return readJSON(TestConstants.DOMAIN_MAPPING_TEST_INPUT);
+    }
+
+    @GET @Path("/cartridge/tomcat/subscription/newtomcat/domains") @Produces(MediaType.APPLICATION_JSON) public String domainnewtomcat() {
         return readJSON(TestConstants.DOMAIN_MAPPING_TEST_INPUT);
     }
 

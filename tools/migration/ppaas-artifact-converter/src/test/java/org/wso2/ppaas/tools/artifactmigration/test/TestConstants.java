@@ -34,36 +34,30 @@ class TestConstants {
     //Configuration StratosV400MockServelet Test
     private static final String TEST_ARTIFACTS_PATH = "test_artifacts";
 
-    //Configuration of paths of the output files created
-    private static final String OUTPUT_DIRECTORY =
+    //Configuration of path for the folder of the output files created
+    public static final String OUTPUT_DIRECTORY =
             System.getProperty("user.dir") + File.separator + "target" + File.separator + "test-classes"
                     + File.separator + "output-artifacts" + File.separator;
-    public static final String CREATED_PARTITION_TEST =
-            OUTPUT_DIRECTORY + "network-partitions" + File.separator + "openstack" + File.separator
-                    + "network-partition-1.json";
-    public static final String CREATED_AUTOSCALE_TEST =
-            OUTPUT_DIRECTORY + "autoscaling-policies" + File.separator + "simpleAutoscalePolicy.json";
-    public static final String CREATED_DEPLOYMENT_TEST =
-            OUTPUT_DIRECTORY + "deployment-policies" + File.separator + "economyDeploymentPolicy.json";
-    public static final String CREATED_CARTRIDGE_TEST = OUTPUT_DIRECTORY + "cartridges" + File.separator + "PHP.json";
 
-    //Configuration of paths of the output testing files
-    private static final String TEST_OUTPUTS =
+    //Configuration of path for the folder of the output testing files
+    public static final String TEST_OUTPUTS =
             getResourcesFolderPath() + File.separator + "test-outputs" + File.separator;
-    public static final String PARTITION_TEST_WITH = TEST_OUTPUTS + "network-partition-1.json";
-    public static final String AUTOSCALE_TEST_WITH = TEST_OUTPUTS + "simpleAutoscalePolicy.json";
-    public static final String DEPLOYMENT_TEST_WITH = TEST_OUTPUTS + "economyDeployment.json";
-    public static final String CARTRIDGE_TEST_WITH = TEST_OUTPUTS + "PHP.json";
+
+    public static final String OUTPUT_PARTITION = "network-partitions" + File.separator + "openstack" + File.separator
+            + "network-partition-1.json";
+    public static final String OUTPUT_AUTOSCALE = "autoscaling-policies" + File.separator + "simpleAutoscalePolicy.json";
+    public static final String OUTPUT_DEPLOYMENT = "deployment-policies" + File.separator + "economyDeploymentPolicy.json";
+    public static final String OUTPUT_CARTRIDGE = "cartridges" + File.separator + "PHP.json";
 
     //Configuration input test file paths
-    private static final String TEST_INPUTS =
+    public static final String TEST_INPUTS =
             getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator;
-    public static final String PARTITION_TEST_INPUT = TEST_INPUTS + "test_partitions.json";
-    public static final String AUTOSCALE_TEST_INPUT = TEST_INPUTS + "test_autoscalepolicies.json";
-    public static final String DEPLOYMENT_TEST_INPUT = TEST_INPUTS + "test_deploymentpolicies.json";
-    public static final String CARTRIDGE_TEST_INPUT = TEST_INPUTS + "test_cartridges.json";
-    public static final String SUBSCRIPTION_TEST_INPUT = TEST_INPUTS + "test_subscription.json";
-    public static final String DOMAIN_MAPPING_TEST_INPUT = TEST_INPUTS + "test_domainmappings.json";
+    public static String PARTITION_TEST_INPUT= TEST_INPUTS+ File.separator+"test_partitions.json";
+    public static String AUTOSCALE_TEST_INPUT=TEST_INPUTS+ File.separator+"test_autoscalepolicies.json";
+    public static String DEPLOYMENT_TEST_INPUT=TEST_INPUTS+ File.separator+"test_deploymentpolicies.json";
+    public static String CARTRIDGE_TEST_INPUT=TEST_INPUTS+ File.separator+"test_cartridges.json";
+    public static String SUBSCRIPTION_TEST_INPUT=TEST_INPUTS+ File.separator+"test_subscription.json";
+    public static String DOMAIN_MAPPING_TEST_INPUT=TEST_INPUTS+ File.separator+"test_domainmappings.json";
 
     public static final String ERROR_MSG="{\"Error\":{ \"errorCode\": \" -1234\", \"errorMessage\": \" Unexpected error. Returned JSON String is a null. Please check the test cases \"}}";
     private static String getResourcesFolderPath() {

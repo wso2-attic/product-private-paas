@@ -49,18 +49,18 @@ public class ArtifactLoader400 {
      */
     public static List<Partition> fetchPartitionList() throws ArtifactLoadingException {
 
-            String partitionString = readUrl(System.getProperty(Constants.BASE_URL400) + Constants.URL_PARTITION);
-            String partitionListString;
-            if (partitionString != null) {
-                partitionListString = partitionString
-                        .substring(partitionString.indexOf('['), (partitionString.lastIndexOf(']') + 1));
-            } else {
-                String msg = "Error while fetching partitions";
-                log.error(msg);
-                throw new ArtifactLoadingException(msg);
-            }
-            return gson.fromJson(partitionListString, new TypeToken<List<Partition>>() {
-            }.getType());
+        String partitionString = readUrl(System.getProperty(Constants.BASE_URL400) + Constants.URL_PARTITION);
+        String partitionListString;
+        if (partitionString != null) {
+            partitionListString = partitionString
+                    .substring(partitionString.indexOf('['), (partitionString.lastIndexOf(']') + 1));
+        } else {
+            String msg = "Error while fetching partitions";
+            log.error(msg);
+            throw new ArtifactLoadingException(msg);
+        }
+        return gson.fromJson(partitionListString, new TypeToken<List<Partition>>() {
+        }.getType());
 
     }
 
@@ -72,19 +72,19 @@ public class ArtifactLoader400 {
      */
     public static List<AutoscalePolicy> fetchAutoscalePolicyList() throws ArtifactLoadingException {
 
-            String autoscalePolicyString = readUrl(
-                    System.getProperty(Constants.BASE_URL400) + Constants.URL_POLICY_AUTOSCALE);
-            String autoscalePolicyListString;
-            if (autoscalePolicyString != null) {
-                autoscalePolicyListString = autoscalePolicyString
-                        .substring(autoscalePolicyString.indexOf('['), (autoscalePolicyString.lastIndexOf(']') + 1));
-            } else {
-                String msg = "Error while fetching autoscaling policies";
-                log.error(msg);
-                throw new ArtifactLoadingException(msg);
-            }
-            return gson.fromJson(autoscalePolicyListString, new TypeToken<List<AutoscalePolicy>>() {
-            }.getType());
+        String autoscalePolicyString = readUrl(
+                System.getProperty(Constants.BASE_URL400) + Constants.URL_POLICY_AUTOSCALE);
+        String autoscalePolicyListString;
+        if (autoscalePolicyString != null) {
+            autoscalePolicyListString = autoscalePolicyString
+                    .substring(autoscalePolicyString.indexOf('['), (autoscalePolicyString.lastIndexOf(']') + 1));
+        } else {
+            String msg = "Error while fetching autoscaling policies";
+            log.error(msg);
+            throw new ArtifactLoadingException(msg);
+        }
+        return gson.fromJson(autoscalePolicyListString, new TypeToken<List<AutoscalePolicy>>() {
+        }.getType());
 
     }
 
@@ -96,19 +96,19 @@ public class ArtifactLoader400 {
      */
     public static List<DeploymentPolicy> fetchDeploymentPolicyList() throws ArtifactLoadingException {
 
-            String deploymentPolicyString = readUrl(
-                    System.getProperty(Constants.BASE_URL400) + Constants.URL_POLICY_DEPLOYMENT);
-            String deploymentPolicyListString;
-            if (deploymentPolicyString != null) {
-                deploymentPolicyListString = deploymentPolicyString
-                        .substring(deploymentPolicyString.indexOf('['), (deploymentPolicyString.lastIndexOf(']') + 1));
-            } else {
-                String msg = "Error while fetching deployment policies";
-                log.error(msg);
-                throw new ArtifactLoadingException(msg);
-            }
-            return gson.fromJson(deploymentPolicyListString, new TypeToken<List<DeploymentPolicy>>() {
-            }.getType());
+        String deploymentPolicyString = readUrl(
+                System.getProperty(Constants.BASE_URL400) + Constants.URL_POLICY_DEPLOYMENT);
+        String deploymentPolicyListString;
+        if (deploymentPolicyString != null) {
+            deploymentPolicyListString = deploymentPolicyString
+                    .substring(deploymentPolicyString.indexOf('['), (deploymentPolicyString.lastIndexOf(']') + 1));
+        } else {
+            String msg = "Error while fetching deployment policies";
+            log.error(msg);
+            throw new ArtifactLoadingException(msg);
+        }
+        return gson.fromJson(deploymentPolicyListString, new TypeToken<List<DeploymentPolicy>>() {
+        }.getType());
 
     }
 
@@ -120,18 +120,18 @@ public class ArtifactLoader400 {
      */
     public static List<Cartridge> fetchCartridgeList() throws ArtifactLoadingException {
 
-            String cartridgeString = readUrl(System.getProperty(Constants.BASE_URL400) + Constants.URL_CARTRIDGE);
-            String cartridgeListString;
-            if (cartridgeString != null) {
-                cartridgeListString = cartridgeString
-                        .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
-            } else {
-                String msg = "Error while fetching cartridge lists";
-                log.error(msg);
-                throw new ArtifactLoadingException(msg);
-            }
-            return gson.fromJson(cartridgeListString, new TypeToken<List<Cartridge>>() {
-            }.getType());
+        String cartridgeString = readUrl(System.getProperty(Constants.BASE_URL400) + Constants.URL_CARTRIDGE);
+        String cartridgeListString;
+        if (cartridgeString != null) {
+            cartridgeListString = cartridgeString
+                    .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
+        } else {
+            String msg = "Error while fetching cartridge lists";
+            log.error(msg);
+            throw new ArtifactLoadingException(msg);
+        }
+        return gson.fromJson(cartridgeListString, new TypeToken<List<Cartridge>>() {
+        }.getType());
 
     }
 
@@ -143,19 +143,19 @@ public class ArtifactLoader400 {
      */
     public static List<CartridgeInfoBean> fetchSubscriptionDataList() throws ArtifactLoadingException {
 
-            String cartridgeString = readUrl(System.getProperty(Constants.BASE_URL400) + Constants.URL_SUBSCRIPTION);
-            String cartridgeListString;
-            if (cartridgeString != null) {
-                cartridgeListString = cartridgeString
-                        .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
-            } else {
-                String msg = "Error while fetching subscription data list";
-                log.error(msg);
-                throw new ArtifactLoadingException(msg);
-            }
-            return gson.fromJson(cartridgeListString, new TypeToken<List<CartridgeInfoBean>>() {
-            }.getType());
+        String cartridgeString = readUrl(System.getProperty(Constants.BASE_URL400) + Constants.URL_SUBSCRIPTION);
 
+        String cartridgeListString;
+        if (cartridgeString != null) {
+            cartridgeListString = cartridgeString
+                    .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
+        } else {
+            String msg = "Error while fetching subscription data list";
+            log.error(msg);
+            throw new ArtifactLoadingException(msg);
+        }
+        return gson.fromJson(cartridgeListString, new TypeToken<List<CartridgeInfoBean>>() {
+        }.getType());
 
     }
 
@@ -169,22 +169,21 @@ public class ArtifactLoader400 {
      */
     public static List<SubscriptionDomainBean> fetchDomainMappingList(String cartridgeType, String subscriptionAlias)
             throws ArtifactLoadingException {
-            String domainString = readUrl(
-                    System.getProperty(Constants.BASE_URL400) + Constants.STRATOS + "cartridge" + File.separator
-                            + cartridgeType + File.separator + "subscription" + File.separator + subscriptionAlias
-                            + File.separator + "domains");
-            String domainListString;
-            if (domainString != null) {
-                domainListString = domainString
-                        .substring(domainString.indexOf('['), (domainString.lastIndexOf(']') + 1));
-            } else {
-                String msg = "Error while fetching domain mapping lists";
-                log.error(msg);
-                throw new ArtifactLoadingException(msg);
-            }
-            return gson.fromJson(domainListString, new TypeToken<List<SubscriptionDomainBean>>() {
-            }.getType());
+        String domainString = readUrl(
+                System.getProperty(Constants.BASE_URL400) + Constants.STRATOS + "cartridge" + File.separator
+                        + cartridgeType + File.separator + "subscription" + File.separator + subscriptionAlias
+                        + File.separator + "domains");
+        String domainListString;
+        if (domainString != null) {
+            domainListString = domainString.substring(domainString.indexOf('['), (domainString.lastIndexOf(']') + 1));
+        } else {
+            String msg = "Error while fetching domain mapping lists";
+            log.error(msg);
+            throw new ArtifactLoadingException(msg);
         }
+        return gson.fromJson(domainListString, new TypeToken<List<SubscriptionDomainBean>>() {
+        }.getType());
+    }
 
     /**
      * Method to connect to the REST endpoint with authorization
@@ -193,7 +192,8 @@ public class ArtifactLoader400 {
      * @return JSON string
      */
     private static String readUrl(String serviceEndpoint) {
-        RestClient restclient = new RestClient(System.getProperty(Constants.USERNAME400), System.getProperty(Constants.PASSWORD400));
+        RestClient restclient = new RestClient(System.getProperty(Constants.USERNAME400),
+                System.getProperty(Constants.PASSWORD400));
         return restclient.doGet(serviceEndpoint);
     }
 }

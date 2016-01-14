@@ -126,7 +126,7 @@ public class Transformer {
                 networkPartition410.setProvider(networkPartition400.getProvider());
                 List<PartitionBean> partitionsList410 = new ArrayList<>();
                 PartitionBean partition410 = new PartitionBean();
-                partition410.setId(Constants.NETWORK_PARTITION_ID+networkPartitionIterator);
+                partition410.setId(Constants.NETWORK_PARTITION_ID + networkPartitionIterator);
                 if (networkPartition400.getProperty() != null) {
                     List<org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean> property400List = networkPartition400
                             .getProperty();
@@ -179,7 +179,6 @@ public class Transformer {
             File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_DEPLOYMENT);
 
             for (DeploymentPolicy deploymentPolicy400 : deploymentPolicy400List) {
-
                 deploymentPolicy410.setId(deploymentPolicy400.getId());
                 List<PartitionGroup> partitionGroup400List = deploymentPolicy400.getPartitionGroup();
                 List<NetworkPartitionReferenceBean> networkPartitions410List = new ArrayList<>();
@@ -197,7 +196,7 @@ public class Transformer {
 
                         tempNetworkPartition.setId(partition.getId());
                         PartitionReferenceBean tempPartition = new PartitionReferenceBean();
-                        tempPartition.setId(Constants.NETWORK_PARTITION_ID+ (partitionIterator+1));
+                        tempPartition.setId(Constants.NETWORK_PARTITION_ID + (partitionIterator + 1));
                         tempPartition.setPartitionMax(partition.getPartitionMax());
 
                         if (partition.getProperty() != null) {
@@ -253,151 +252,160 @@ public class Transformer {
             log.info("Fetched Subscription List");
 
             File outputDirectoryNameCartridge = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_CARTRIDGE);
+            if (cartridge400List != null) {
+                for (Cartridge cartridge : cartridge400List) {
 
-            for (Cartridge cartridge : cartridge400List) {
+                    ComponentBean components = new ComponentBean();
+                    List<CartridgeReferenceBean> cartridges = new ArrayList<>();
+                    CartridgeReferenceBean cartridgeReference410 = new CartridgeReferenceBean();
+                    SubscribableInfo subscribableInfo = new SubscribableInfo();
 
-                ComponentBean components = new ComponentBean();
-                List<CartridgeReferenceBean> cartridges = new ArrayList<>();
-                CartridgeReferenceBean cartridgeReference410 = new CartridgeReferenceBean();
-                SubscribableInfo subscribableInfo = new SubscribableInfo();
+                    //Getting corresponding subscription data
+                    List<ArtifactRepositoryBean> signup410List = new ArrayList<>();
+                    List<DomainMappingBean> domainMapping410List = new ArrayList<>();
+                    int domainMappingIterator = 0;
+                    int a = 0;
+                    if (subscription400List != null) {
+                        for (CartridgeInfoBean subscription : subscription400List) {
+                            if (cartridge.getCartridgeType().equalsIgnoreCase(subscription.getCartridgeType())) {
 
-                //Getting corresponding subscription data
-                List<ArtifactRepositoryBean> signup410List = new ArrayList<>();
-                List<DomainMappingBean> domainMapping410List = new ArrayList<>();
-                int domainMappingIterator = 0;
-                int a = 0;
-                for (CartridgeInfoBean subscription : subscription400List) {
+                                subscribableInfo.setAutoscalingPolicy(subscription.getAutoscalePolicy());
+                                subscribableInfo.setDeploymentPolicy(subscription.getDeploymentPolicy());
+                                subscribableInfo.setAlias(subscription.getAlias());
 
-                    if (cartridge.getCartridgeType().equalsIgnoreCase(subscription.getCartridgeType())) {
+                                ArtifactRepositoryBean artifactRepository = new ArtifactRepositoryBean();
 
-                        subscribableInfo.setAutoscalingPolicy(subscription.getAutoscalePolicy());
-                        subscribableInfo.setDeploymentPolicy(subscription.getDeploymentPolicy());
-                        subscribableInfo.setAlias(subscription.getAlias());
+                                artifactRepository.setAlias(subscription.getAlias());
+                                artifactRepository.setPrivateRepo(subscription.isPrivateRepo());
+                                artifactRepository.setRepoUrl(subscription.getRepoURL());
+                                artifactRepository.setRepoUsername(subscription.getRepoUsername());
+                                artifactRepository.setRepoPassword(subscription.getRepoPassword());
 
-                        ArtifactRepositoryBean artifactRepository = new ArtifactRepositoryBean();
+                                signup410List.add(a++, artifactRepository);
 
-                        artifactRepository.setAlias(subscription.getAlias());
-                        artifactRepository.setPrivateRepo(subscription.isPrivateRepo());
-                        artifactRepository.setRepoUrl(subscription.getRepoURL());
-                        artifactRepository.setRepoUsername(subscription.getRepoUsername());
-                        artifactRepository.setRepoPassword(subscription.getRepoPassword());
+                                List<SubscriptionDomainBean> domainMapping400 = ArtifactLoader400
+                                        .fetchDomainMappingList(cartridge.getCartridgeType(), subscription.getAlias());
 
-                        signup410List.add(a++, artifactRepository);
+                                for (SubscriptionDomainBean domainMapping : domainMapping400) {
+                                    DomainMappingBean domainMappingBean = new DomainMappingBean();
+                                    domainMappingBean.setCartridgeAlias(subscription.getAlias());
+                                    domainMappingBean.setDomainName(domainMapping.getDomainName());
+                                    domainMappingBean.setContextPath(domainMapping.getApplicationContext());
+                                    domainMapping410List.add(domainMappingIterator++, domainMappingBean);
+                                }
 
-                        List<SubscriptionDomainBean> domainMapping400 = ArtifactLoader400
-                                .fetchDomainMappingList(cartridge.getCartridgeType(), subscription.getAlias());
+                                cartridgeReference410.setSubscribableInfo(subscribableInfo);
+                                cartridgeReference410.setType(cartridge.getCartridgeType());
 
-                        for (SubscriptionDomainBean domainMapping : domainMapping400) {
-                            DomainMappingBean domainMappingBean = new DomainMappingBean();
-                            domainMappingBean.setCartridgeAlias(subscription.getAlias());
-                            domainMappingBean.setDomainName(domainMapping.getDomainName());
-                            domainMappingBean.setContextPath(domainMapping.getApplicationContext());
-                            domainMapping410List.add(domainMappingIterator++, domainMappingBean);
+                                cartridges.add(0, cartridgeReference410);
+                                components.setCartridges(cartridges);
+                                application410.setComponents(components);
+                                application410.setAlias(cartridgeReference410.getSubscribableInfo().getAlias());
+                                application410.setName(subscription.getAlias());
+                                application410.setApplicationId(cartridge.getDisplayName());
+                                application410.setDescription(cartridge.getDescription());
+
+                                File outputDirectoryNameApp = new File(
+                                        Constants.ROOT_DIRECTORY + Constants.DIRECTORY_APPLICATION + File.separator
+                                                + application410.getName() + File.separator
+                                                + Constants.DIRECTORY_ARTIFACTS);
+                                JsonWriter.writeFile(outputDirectoryNameApp,
+                                        application410.getName() + Constants.JSON_EXTENSION,
+                                        getGson().toJson(application410));
+                                JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_APPLICATION_SIGNUP,
+                                        getGson().toJson(signup410List));
+
+                                //Converting domain mapping list string to the standard format
+                                String domainMappingJsonString =
+                                        "{\"domainMappings\":" + getGson().toJson(domainMapping410List) + "}";
+                                JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_DOMAIN_MAPPING,
+                                        domainMappingJsonString);
+
+                                ConversionTool.addCommonDeployingScript(
+                                        Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator
+                                                + application410.getName(), subscribableInfo,
+                                        cartridge.getDisplayName());
+                            }
                         }
+                    } else
+                        log.info("No subscriptions are returned");
+
+                    cartridge410.setDisplayName(cartridge.getDisplayName());
+                    cartridge410.setDescription(cartridge.getDescription());
+                    cartridge410.setCategory(Constants.CARTRIDGE_CATEGORY);
+                    cartridge410.setType(cartridge.getCartridgeType());
+                    cartridge410.setProvider(cartridge.getProvider());
+                    cartridge410.setVersion(cartridge.getVersion());
+                    cartridge410.setHost(cartridge.getHostName());
+                    cartridge410.setMultiTenant(cartridge.isMultiTenant());
+
+                    //Setting the port mappings details
+                    //Use of default values in port mappings
+                    List<PortMappingBean> portMappingList = new ArrayList<>();
+                    PortMappingBean portMappingBean = new PortMappingBean();
+                    portMappingBean.setPort(Integer.parseInt(System.getProperty(Constants.PORT)));
+                    portMappingBean.setProxyPort(Integer.parseInt(System.getProperty(Constants.PROXY_PORT)));
+                    portMappingBean.setProtocol(System.getProperty(Constants.PROTOCOL));
+                    portMappingList.add(0, portMappingBean);
+
+                    cartridge410.setPortMapping(portMappingList);
+
+                    //Overwrite the default mappings if port mappings exist
+                    if (cartridge.getPortMappings() != null) {
+                        PortMapping[] portMapping400List = cartridge.getPortMappings();
+                        List<PortMappingBean> portMapping410List = new ArrayList<>();
+
+                        int b = 0;
+                        for (PortMapping portMapping : portMapping400List) {
+
+                            PortMappingBean portMappingBeanTemp = new PortMappingBean();
+                            portMappingBeanTemp.setPort(Integer.parseInt(portMapping.getPort()));
+                            portMappingBeanTemp.setProtocol(portMapping.getProtocol());
+                            portMappingBeanTemp.setProxyPort(Integer.parseInt(portMapping.getProxyPort()));
+
+                            portMapping410List.add(b++, portMappingBeanTemp);
+                        }
+                        cartridge410.setPortMapping(portMapping410List);
                     }
-                }
-                cartridgeReference410.setSubscribableInfo(subscribableInfo);
-                cartridgeReference410.setType(cartridge.getCartridgeType());
 
-                cartridges.add(0, cartridgeReference410);
-                components.setCartridges(cartridges);
-                application410.setComponents(components);
-                application410.setAlias(cartridgeReference410.getSubscribableInfo().getAlias());
-                application410.setName(cartridge.getDisplayName());
-                application410.setApplicationId(cartridge.getDisplayName());
-                application410.setDescription(cartridge.getDescription());
+                    if (cartridge.getPersistence() != null) {
+                        Persistence persistence400 = cartridge.getPersistence();
+                        PersistenceBean persistenceBean410 = new PersistenceBean();
+                        persistenceBean410.setRequired(persistence400.getPersistanceRequired());
 
-                File outputDirectoryNameApp = new File(
-                        Constants.ROOT_DIRECTORY + Constants.DIRECTORY_APPLICATION + File.separator + application410
-                                .getName() + File.separator + Constants.DIRECTORY_ARTIFACTS);
-                JsonWriter.writeFile(outputDirectoryNameApp, application410.getName() + Constants.JSON_EXTENSION,
-                        getGson().toJson(application410));
-                JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_APPLICATION_SIGNUP,
-                        getGson().toJson(signup410List));
+                        Volume[] volume400Array = persistence400.getVolumes();
+                        List<VolumeBean> volumeBean410List = new ArrayList<>();
 
-                //Converting domain mapping list string to the standard format
-                String domainMappingJsonString = "{\"domainMappings\":" + getGson().toJson(domainMapping410List) + "}";
-                JsonWriter
-                        .writeFile(outputDirectoryNameApp, Constants.FILENAME_DOMAIN_MAPPING, domainMappingJsonString);
+                        int b = 0;
+                        for (Volume volume : volume400Array) {
 
-                ConversionTool.addCommonDeployingScript(
-                        Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator + application410
-                                .getName(), subscribableInfo, cartridge.getDisplayName());
+                            VolumeBean volumeBeanTemp = new VolumeBean();
+                            volumeBeanTemp.setId(volume.getId());
+                            volumeBeanTemp.setSize(String.valueOf(volume.getSize()));
+                            volumeBeanTemp.setMappingPath(volume.getMappingPath());
+                            volumeBeanTemp.setDevice(volume.getDevice());
+                            volumeBeanTemp.setRemoveOnTermination(volume.isRemoveOnterminationSpecified());
 
-                cartridge410.setDisplayName(cartridge.getDisplayName());
-                cartridge410.setDescription(cartridge.getDescription());
-                cartridge410.setCategory(Constants.CARTRIDGE_CATEGORY);
-                cartridge410.setType(cartridge.getCartridgeType());
-                cartridge410.setProvider(cartridge.getProvider());
-                cartridge410.setVersion(cartridge.getVersion());
-                cartridge410.setHost(cartridge.getHostName());
-                cartridge410.setMultiTenant(cartridge.isMultiTenant());
-
-                //Setting the port mappings details
-                //Use of default values in port mappings
-                List<PortMappingBean> portMappingList = new ArrayList<>();
-                PortMappingBean portMappingBean = new PortMappingBean();
-                portMappingBean.setPort(Integer.parseInt(System.getProperty(Constants.PORT)));
-                portMappingBean.setProxyPort(Integer.parseInt(System.getProperty(Constants.PROXY_PORT)));
-                portMappingBean.setProtocol(System.getProperty(Constants.PROTOCOL));
-                portMappingList.add(0, portMappingBean);
-
-                cartridge410.setPortMapping(portMappingList);
-
-                //Overwrite the default mappings if port mappings exist
-                if (cartridge.getPortMappings() != null) {
-                    PortMapping[] portMapping400List = cartridge.getPortMappings();
-                    List<PortMappingBean> portMapping410List = new ArrayList<>();
-
-                    int b = 0;
-                    for (PortMapping portMapping : portMapping400List) {
-
-                        PortMappingBean portMappingBeanTemp = new PortMappingBean();
-                        portMappingBeanTemp.setPort(Integer.parseInt(portMapping.getPort()));
-                        portMappingBeanTemp.setProtocol(portMapping.getProtocol());
-                        portMappingBeanTemp.setProxyPort(Integer.parseInt(portMapping.getProxyPort()));
-
-                        portMapping410List.add(b++, portMappingBeanTemp);
+                            volumeBean410List.add(b++, volumeBeanTemp);
+                        }
+                        persistenceBean410.setVolume(volumeBean410List);
+                        cartridge410.setPersistence(persistenceBean410);
                     }
-                    cartridge410.setPortMapping(portMapping410List);
+
+                    //Setting IaaS provider details
+                    List<IaasProviderBean> iaasProviderList = new ArrayList<>();
+                    IaasProviderBean iaasProvider = new IaasProviderBean();
+                    iaasProvider.setType(System.getProperty(Constants.IAAS));
+                    iaasProvider.setImageId(System.getProperty(Constants.IAAS_IMAGE_ID));
+
+                    iaasProviderList.add(0, iaasProvider);
+                    cartridge410.setIaasProvider(iaasProviderList);
+
+                    JsonWriter.writeFile(outputDirectoryNameCartridge,
+                            cartridge410.getDisplayName() + Constants.JSON_EXTENSION, getGson().toJson(cartridge410));
                 }
-
-                if (cartridge.getPersistence() != null) {
-                    Persistence persistence400 = cartridge.getPersistence();
-                    PersistenceBean persistenceBean410 = new PersistenceBean();
-                    persistenceBean410.setRequired(persistence400.getPersistanceRequired());
-
-                    Volume[] volume400Array = persistence400.getVolumes();
-                    List<VolumeBean> volumeBean410List = new ArrayList<>();
-
-                    int b = 0;
-                    for (Volume volume : volume400Array) {
-
-                        VolumeBean volumeBeanTemp = new VolumeBean();
-                        volumeBeanTemp.setId(volume.getId());
-                        volumeBeanTemp.setSize(String.valueOf(volume.getSize()));
-                        volumeBeanTemp.setMappingPath(volume.getMappingPath());
-                        volumeBeanTemp.setDevice(volume.getDevice());
-                        volumeBeanTemp.setRemoveOnTermination(volume.isRemoveOnterminationSpecified());
-
-                        volumeBean410List.add(b++, volumeBeanTemp);
-                    }
-                    persistenceBean410.setVolume(volumeBean410List);
-                    cartridge410.setPersistence(persistenceBean410);
-                }
-
-                //Setting IaaS provider details
-                List<IaasProviderBean> iaasProviderList = new ArrayList<>();
-                IaasProviderBean iaasProvider = new IaasProviderBean();
-                iaasProvider.setType(System.getProperty(Constants.IAAS));
-                iaasProvider.setImageId(System.getProperty(Constants.IAAS_IMAGE_ID));
-
-                iaasProviderList.add(0, iaasProvider);
-                cartridge410.setIaasProvider(iaasProviderList);
-
-                JsonWriter.writeFile(outputDirectoryNameCartridge,
-                        cartridge410.getDisplayName() + Constants.JSON_EXTENSION, getGson().toJson(cartridge410));
-            }
+            } else
+                log.info("No cartrideges are returned");
             log.info("Created Cartridge List 4.1.0 artifacts");
             log.info("Created Application List 4.1.0 artifacts");
 
@@ -420,7 +428,6 @@ public class Transformer {
 
         applicationPolicyBean.setId(Constants.APPLICATION_POLICY_ID);
         applicationPolicyBean.setAlgorithm(Constants.APPLICATION_POLICY_ALGO);
-        // String networkPartition = Constants.NETWORK_PARTITION_NAME +"1";
         String[] networkPartitions = { networkPartition };
         applicationPolicyBean.setNetworkPartitions(networkPartitions);
 

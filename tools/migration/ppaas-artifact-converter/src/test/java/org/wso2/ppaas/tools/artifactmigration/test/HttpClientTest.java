@@ -16,14 +16,14 @@
  * under the License.
  */
 package org.wso2.ppaas.tools.artifactmigration.test;
-
-
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.wso2.ppaas.tools.artifactmigration.Transformer;
+
 import java.io.File;
+
 import static org.junit.Assert.assertTrue;
 
 public class HttpClientTest {
@@ -38,29 +38,29 @@ public class HttpClientTest {
     }
     @Test(timeout = 60000) public void transformNetworkPartitionListTest() throws Exception {
         Transformer.transformNetworkPartitionList();
-        File partitionfile1 = new File(TestConstants.CREATED_PARTITION_TEST);
-        File partitionfile2 = new File(TestConstants.PARTITION_TEST_WITH);
+        File partitionfile1 = new File(TestConstants.OUTPUT_DIRECTORY+TestConstants.OUTPUT_PARTITION);
+        File partitionfile2 = new File(TestConstants.TEST_OUTPUTS+TestConstants.OUTPUT_PARTITION);
         assertTrue(FileUtils.contentEquals(partitionfile1, partitionfile2));
     }
 
     @Test(timeout = 60000) public void transformAutoscalePolicyListTest() throws Exception {
         Transformer.transformAutoscalePolicyList();
-        File autoscalefile1 = new File(TestConstants.CREATED_AUTOSCALE_TEST);
-        File autoscalefile2 = new File(TestConstants.AUTOSCALE_TEST_WITH);
+        File autoscalefile1 = new File(TestConstants.OUTPUT_DIRECTORY+TestConstants.OUTPUT_AUTOSCALE);
+        File autoscalefile2 = new File(TestConstants.TEST_OUTPUTS+TestConstants.OUTPUT_AUTOSCALE);
         assertTrue(FileUtils.contentEquals(autoscalefile1, autoscalefile2));
     }
 
     @Test(timeout = 60000) public void transformDeploymentPolicyList() throws Exception {
         Transformer.transformDeploymentPolicyList();
-        File deploymentfile1 = new File(TestConstants.CREATED_DEPLOYMENT_TEST);
-        File deploymentfile2 = new File(TestConstants.DEPLOYMENT_TEST_WITH);
+        File deploymentfile1 = new File(TestConstants.OUTPUT_DIRECTORY+TestConstants.OUTPUT_DEPLOYMENT);
+        File deploymentfile2 = new File(TestConstants.TEST_OUTPUTS+TestConstants.OUTPUT_DEPLOYMENT);
         assertTrue(FileUtils.contentEquals(deploymentfile1, deploymentfile2));
     }
 
     @Test(timeout = 60000) public void transformCartridgeList() throws Exception {
         Transformer.transformCartridgeList();
-        File cartridgefile1 = new File(TestConstants.CREATED_CARTRIDGE_TEST);
-        File cartridgefile2 = new File(TestConstants.CARTRIDGE_TEST_WITH);
+        File cartridgefile1 = new File(TestConstants.OUTPUT_DIRECTORY+TestConstants.OUTPUT_CARTRIDGE);
+        File cartridgefile2 = new File(TestConstants.TEST_OUTPUTS+TestConstants.OUTPUT_CARTRIDGE);
         assertTrue(FileUtils.contentEquals(cartridgefile1, cartridgefile2));
 
     }

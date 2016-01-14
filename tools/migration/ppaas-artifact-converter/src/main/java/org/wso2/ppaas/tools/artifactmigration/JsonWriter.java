@@ -17,12 +17,11 @@
  */
 package org.wso2.ppaas.tools.artifactmigration;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
 
 /**
  * Class to write JSON strings to files
