@@ -1,7 +1,0 @@
-{"domainMappings":[
-  {
-    "cartridgeAlias": "myphp",
-    "domainName": "wso2.com",
-    "contextPath": "/wso2as/"
-  }
-]}
