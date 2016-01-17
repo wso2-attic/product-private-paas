@@ -211,7 +211,6 @@ public class Transformer {
 
                         tempNetworkPartition.setId(partition.getId());
                         PartitionReferenceBean tempPartition = new PartitionReferenceBean();
-                        //                        tempPartition.setId(Constants.NETWORK_PARTITION_ID + (partitionIterator+1));
                         tempPartition.setId(Constants.NETWORK_PARTITION_ID);
                         tempPartition.setPartitionMax(partition.getPartitionMax());
 
@@ -327,27 +326,29 @@ public class Transformer {
                         application410.setDescription(cartridge.getDescription());
 
                         File outputDirectoryNameApp = new File(
-                                Constants.ROOT_DIRECTORY + Constants.DIRECTORY_APPLICATION + File.separator + application410
-                                        .getName() + File.separator + Constants.DIRECTORY_ARTIFACTS);
-                        JsonWriter.writeFile(outputDirectoryNameApp, application410.getName() + Constants.JSON_EXTENSION,
-                                getGson().toJson(application410));
+                                Constants.ROOT_DIRECTORY + Constants.DIRECTORY_APPLICATION + File.separator
+                                        + application410.getName() + File.separator + Constants.DIRECTORY_ARTIFACTS);
+                        JsonWriter
+                                .writeFile(outputDirectoryNameApp, application410.getName() + Constants.JSON_EXTENSION,
+                                        getGson().toJson(application410));
                         JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_APPLICATION_SIGNUP,
                                 getGson().toJson(signup410List));
 
                         //Converting domain mapping list string to the standard format
-                        String domainMappingJsonString = "{\"domainMappings\":" + getGson().toJson(domainMapping410List) + "}";
-                        JsonWriter
-                                .writeFile(outputDirectoryNameApp, Constants.FILENAME_DOMAIN_MAPPING, domainMappingJsonString);
+                        String domainMappingJsonString =
+                                "{\"domainMappings\":" + getGson().toJson(domainMapping410List) + "}";
+                        JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_DOMAIN_MAPPING,
+                                domainMappingJsonString);
 
                         ConversionTool.addCommonDeployingScript(
-                                Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator + application410
-                                        .getName(), subscribableInfo, cartridge.getDisplayName());
+                                Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator
+                                        + application410.getName(), subscribableInfo, cartridge.getDisplayName());
                         ConversionTool.addCommonUndeployingScript(
-                                Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator + application410
-                                        .getName(), subscribableInfo, cartridge.getDisplayName(), cartridge.getCartridgeType());
+                                Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator
+                                        + application410.getName(), subscribableInfo, cartridge.getDisplayName(),
+                                cartridge.getCartridgeType());
                     }
                 }
-
 
                 cartridge410.setDisplayName(cartridge.getDisplayName());
                 cartridge410.setDescription(cartridge.getDescription());
@@ -463,15 +464,6 @@ public class Transformer {
                     Constants.APPLICATION_POLICY_ID + deploymentPolicyID + Constants.JSON_EXTENSION,
                     getGson().toJson(applicationPolicyBean));
         }
-
-        //        ApplicationPolicyBean applicationPolicyBean = new ApplicationPolicyBean();
-        //
-        //        applicationPolicyBean.setId(Constants.APPLICATION_POLICY_ID);
-        //        applicationPolicyBean.setAlgorithm(Constants.APPLICATION_POLICY_ALGO);
-        //        // String networkPartition = Constants.NETWORK_PARTITION_NAME +"1";
-        //        String[] networkPartitions = { networkPartition };
-        //        applicationPolicyBean.setNetworkPartitions(networkPartitions);
-
     }
 
     /**

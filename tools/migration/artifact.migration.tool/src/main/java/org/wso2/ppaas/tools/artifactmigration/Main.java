@@ -19,6 +19,7 @@ package org.wso2.ppaas.tools.artifactmigration;
 
 import org.apache.commons.configuration.ConfigurationException;
 import org.apache.log4j.Logger;
+import org.wso2.ppaas.tools.artifactmigration.exception.TransformationException;
 
 /**
  * Main entry point of the tool
@@ -33,7 +34,8 @@ public class Main {
             ConversionTool.startTransformation();
         } catch (ConfigurationException e) {
             log.error("Error in reading initial configuration  ", e);
+        } catch (TransformationException e) {
+            log.error("Error in artifact transformation  ", e);
         }
-
     }
 }

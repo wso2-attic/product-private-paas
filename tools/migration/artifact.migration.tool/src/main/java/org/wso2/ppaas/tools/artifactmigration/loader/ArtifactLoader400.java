@@ -190,9 +190,9 @@ public class ArtifactLoader400 {
             throws ArtifactLoadingException {
         try {
             String domainString = readUrl(
-                    System.getProperty(Constants.BASE_URL400) + Constants.STRATOS + "cartridge" + File.separator
-                            + cartridgeType + File.separator + "subscription" + File.separator + subscriptionAlias
-                            + File.separator + "domains");
+                    System.getProperty(Constants.BASE_URL400) + Constants.STRATOS_API_PATH + "cartridge"
+                            + File.separator + cartridgeType + File.separator + "subscription" + File.separator
+                            + subscriptionAlias + File.separator + "domains");
             String domainListString;
             if (domainString != null) {
                 domainListString = domainString

@@ -36,6 +36,14 @@ public class DataInsertionAndRetrievalManager {
     // TODO: use a global object
     private static PersistenceManager persistenceManager = new RegistryBasedPersistenceManager();
 
+    public static PersistenceManager getPersistenceManager() {
+        return persistenceManager;
+    }
+
+    public static void setPersistenceManager(PersistenceManager persistenceManager) {
+        DataInsertionAndRetrievalManager.persistenceManager = persistenceManager;
+    }
+
     public void cacheAndPersistSubcription(CartridgeSubscription cartridgeSubscription)
             throws PersistenceManagerException {
 
@@ -50,22 +58,20 @@ public class DataInsertionAndRetrievalManager {
                 // store in Persistence Manager
                 persistenceManager.persistCartridgeSubscription(cartridgeSubscription);
 
-            }
-            catch (PersistenceManagerException e) {
+            } catch (PersistenceManagerException e) {
                 String errorMsg = "Error in persisting CartridgeSubscription in Persistence Manager";
                 log.error(errorMsg, e);
                 // remove from the in memory model since persisting failed
                 LookupDataHolder.getInstance().removeSubscription(cartridgeSubscription.getSubscriber().getTenantId(),
-                        cartridgeSubscription.getType(),
-                        cartridgeSubscription.getAlias(), cartridgeSubscription.getClusterDomain(),
-                        cartridgeSubscription.getRepository() != null ? cartridgeSubscription.getRepository().getUrl() :
+                        cartridgeSubscription.getType(), cartridgeSubscription.getAlias(),
+                        cartridgeSubscription.getClusterDomain(), cartridgeSubscription.getRepository() != null ?
+                                cartridgeSubscription.getRepository().getUrl() :
                                 null);
 
                 throw e;
             }
 
-        }
-        finally {
+        } finally {
             // release the write lock
             LookupDataHolder.getInstance().releaseWriteLock();
         }
@@ -85,15 +91,13 @@ public class DataInsertionAndRetrievalManager {
                 // store in Persistence Manager
                 persistenceManager.persistCartridgeSubscription(cartridgeSubscription);
 
-            }
-            catch (PersistenceManagerException e) {
+            } catch (PersistenceManagerException e) {
                 String errorMsg = "Error in updating cartridge subscription in persistence manager";
                 log.error(errorMsg, e);
                 throw e;
             }
 
-        }
-        finally {
+        } finally {
             // release the write lock
             LookupDataHolder.getInstance().releaseWriteLock();
         }
@@ -121,8 +125,7 @@ public class DataInsertionAndRetrievalManager {
             try {
                 persistenceManager.removeCartridgeSubscription(tenantId, cartridgeType, subscriptionAlias);
 
-            }
-            catch (PersistenceManagerException e) {
+            } catch (PersistenceManagerException e) {
                 String errorMsg = "Error in removing CartridgeSubscription from Persistence Manager";
                 log.error(errorMsg, e);
                 throw e;
@@ -130,11 +133,11 @@ public class DataInsertionAndRetrievalManager {
 
             // remove from cache
             LookupDataHolder.getInstance().removeSubscription(tenantId, cartridgeType, subscriptionAlias, clusterId,
-                    cartridgeSubscription.getRepository() != null ? cartridgeSubscription.getRepository().getUrl() :
+                    cartridgeSubscription.getRepository() != null ?
+                            cartridgeSubscription.getRepository().getUrl() :
                             null);
 
-        }
-        finally {
+        } finally {
             LookupDataHolder.getInstance().releaseWriteLock();
         }
     }
@@ -150,8 +153,7 @@ public class DataInsertionAndRetrievalManager {
             try {
                 cartridgeSubscriptions = persistenceManager.getCartridgeSubscriptions();
 
-            }
-            catch (PersistenceManagerException e) {
+            } catch (PersistenceManagerException e) {
                 String errorMsg = "Error in retrieving CartridgeSubscriptions from Persistence Manager";
                 log.error(errorMsg, e);
                 throw e;
@@ -165,8 +167,7 @@ public class DataInsertionAndRetrievalManager {
             }
             cacheSubscriptions(cartridgeSubscriptions);
 
-        }
-        finally {
+        } finally {
             // release the write lock
             LookupDataHolder.getInstance().releaseWriteLock();
         }
@@ -183,8 +184,7 @@ public class DataInsertionAndRetrievalManager {
             try {
                 cartridgeSubscriptions = persistenceManager.getCartridgeSubscriptions(tenantId);
 
-            }
-            catch (PersistenceManagerException e) {
+            } catch (PersistenceManagerException e) {
                 String errorMsg = "Error in retrieving CartridgeSubscriptions from Persistence Manager";
                 log.error(errorMsg, e);
                 throw e;
@@ -198,8 +198,7 @@ public class DataInsertionAndRetrievalManager {
             }
             cacheSubscriptions(cartridgeSubscriptions);
 
-        }
-        finally {
+        } finally {
             // release the write lock
             LookupDataHolder.getInstance().releaseWriteLock();
         }
@@ -213,8 +212,7 @@ public class DataInsertionAndRetrievalManager {
         try {
             cacheSubscriptions(cartridgeSubscriptions);
 
-        }
-        finally {
+        } finally {
             // release the write lock
             LookupDataHolder.getInstance().releaseWriteLock();
         }
@@ -239,11 +237,11 @@ public class DataInsertionAndRetrievalManager {
         try {
             // remove from cache
             LookupDataHolder.getInstance().removeSubscription(tenantId, cartridgeType, subscriptionAlias, clusterId,
-                    cartridgeSubscription.getRepository() != null ? cartridgeSubscription.getRepository().getUrl() :
+                    cartridgeSubscription.getRepository() != null ?
+                            cartridgeSubscription.getRepository().getUrl() :
                             null);
 
-        }
-        finally {
+        } finally {
             LookupDataHolder.getInstance().releaseWriteLock();
         }
     }
@@ -254,8 +252,8 @@ public class DataInsertionAndRetrievalManager {
         for (CartridgeSubscription cartridgeSubscription : cartridgeSubscriptions) {
             LookupDataHolder.getInstance().putSubscription(cartridgeSubscription);
             if (log.isDebugEnabled()) {
-                log.debug("Updated the in memory cache with the CartridgeSubscription: " +
-                        cartridgeSubscription.toString());
+                log.debug("Updated the in memory cache with the CartridgeSubscription: " + cartridgeSubscription
+                        .toString());
             }
         }
     }
@@ -288,8 +286,7 @@ public class DataInsertionAndRetrievalManager {
         try {
             return LookupDataHolder.getInstance().getSubscriptions(cartridgeType);
 
-        }
-        finally {
+        } finally {
             // release read lock
             LookupDataHolder.getInstance().releaseReadLock();
         }
@@ -303,8 +300,7 @@ public class DataInsertionAndRetrievalManager {
         try {
             return LookupDataHolder.getInstance().getSubscriptionForAlias(tenantId, subscriptionAlias);
 
-        }
-        finally {
+        } finally {
             // release read lock
             LookupDataHolder.getInstance().releaseReadLock();
         }
@@ -318,8 +314,7 @@ public class DataInsertionAndRetrievalManager {
         try {
             return LookupDataHolder.getInstance().getSubscription(clusterId);
 
-        }
-        finally {
+        } finally {
             // release read lock
             LookupDataHolder.getInstance().releaseReadLock();
         }
@@ -333,8 +328,7 @@ public class DataInsertionAndRetrievalManager {
         try {
             return LookupDataHolder.getInstance().getSubscriptionsForRepoUrl(repoUrl);
 
-        }
-        finally {
+        } finally {
             // release read lock
             LookupDataHolder.getInstance().releaseReadLock();
         }
@@ -348,8 +342,7 @@ public class DataInsertionAndRetrievalManager {
         try {
             return LookupDataHolder.getInstance().getSubscriptions(tenantId);
 
-        }
-        finally {
+        } finally {
             // release read lock
             LookupDataHolder.getInstance().releaseReadLock();
         }
@@ -363,8 +356,7 @@ public class DataInsertionAndRetrievalManager {
         try {
             return LookupDataHolder.getInstance().getSubscriptionForType(tenantId, cartridgeType);
 
-        }
-        finally {
+        } finally {
             // release read lock
             LookupDataHolder.getInstance().releaseReadLock();
         }
@@ -379,18 +371,9 @@ public class DataInsertionAndRetrievalManager {
         try {
             return LookupDataHolder.getInstance().getSubscriptionForAlias(subscriptionAlias);
 
-        }
-        finally {
+        } finally {
             // release read lock
             LookupDataHolder.getInstance().releaseReadLock();
         }
-    }
-
-    public static PersistenceManager getPersistenceManager() {
-        return persistenceManager;
-    }
-
-    public static void setPersistenceManager(PersistenceManager persistenceManager) {
-        DataInsertionAndRetrievalManager.persistenceManager = persistenceManager;
     }
 }

@@ -37,18 +37,12 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
 
-@Path("/admin/")
-public class MigrationAdmin extends AbstractAdmin {
+@Path("/admin/") public class MigrationAdmin extends AbstractAdmin {
     private static Log log = LogFactory.getLog(MigrationAdmin.class);
-    @Context
-    HttpServletRequest httpServletRequest;
+    @Context HttpServletRequest httpServletRequest;
 
-    @POST
-    @Path("/init")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    public StratosAdminResponse initialize()
+    @POST @Path("/init") @AuthorizationAction("/permission/protected/manage/monitor/tenants") public StratosAdminResponse initialize()
             throws RestAPIException {
-
 
         StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
         stratosAdminResponse.setMessage("Successfully logged in");
@@ -61,12 +55,7 @@ public class MigrationAdmin extends AbstractAdmin {
     Once the authenticated call received, the method creates a session.
 
      */
-    @GET
-    @Path("/cookie")
-    @Produces("application/json")
-    @Consumes("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    public Response getCookie() {
+    @GET @Path("/cookie") @Produces("application/json") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") public Response getCookie() {
         HttpSession httpSession = httpServletRequest.getSession(true);//create session if not found
         PrivilegedCarbonContext carbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
         httpSession.setAttribute("userName", carbonContext.getUsername());
@@ -78,84 +67,50 @@ public class MigrationAdmin extends AbstractAdmin {
                 entity(Utils.buildAuthenticationSuccessMessage(sessionId)).build();
     }
 
-
-    @GET
-    @Path("/cartridge/list/subscribed")
-    @Produces("application/json")
-    @Consumes("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    public Cartridge[] getSubscribedCartridges() throws RestAPIException {
+    @GET @Path("/cartridge/list/subscribed") @Produces("application/json") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") public Cartridge[] getSubscribedCartridges()
+            throws RestAPIException {
         List<Cartridge> cartridgeList = ServiceUtils.getSubscriptions(null, null, getConfigContext());
         // Following is very important when working with axis2
         return cartridgeList.isEmpty() ? new Cartridge[0] : cartridgeList.toArray(new Cartridge[cartridgeList.size()]);
     }
 
-    @GET
-    @Path("/cartridge/list/subscribed/all")
-    @Produces("application/json")
-    @Consumes("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    @SuperTenantService(true)
-    public CartridgeInfoBean[] getAllSubscriptions() throws RestAPIException {
+    @GET @Path("/cartridge/list/subscribed/all") @Produces("application/json") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") @SuperTenantService(true) public CartridgeInfoBean[] getAllSubscriptions()
+            throws RestAPIException {
         List<CartridgeInfoBean> cartridgeList = ServiceUtils.getAllSubscriptions();
         // Following is very important when working with axis2
-        return cartridgeList.isEmpty() ? new CartridgeInfoBean[0] :
+        return cartridgeList.isEmpty() ?
+                new CartridgeInfoBean[0] :
                 cartridgeList.toArray(new CartridgeInfoBean[cartridgeList.size()]);
     }
 
-    @POST
-    @Path("/cartridge/subscribe")
-    @Produces("application/json")
-    @Consumes("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    public SubscriptionInfo subscribe(CartridgeInfoBean cartridgeInfoBean) throws RestAPIException {
+    @POST @Path("/cartridge/subscribe") @Produces("application/json") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") public SubscriptionInfo subscribe(
+            CartridgeInfoBean cartridgeInfoBean) throws RestAPIException {
 
-        return ServiceUtils.subscribeToCartridge(cartridgeInfoBean,
-                getConfigContext(),
-                getUsername(),
-                getTenantDomain());
+        return ServiceUtils
+                .subscribeToCartridge(cartridgeInfoBean, getConfigContext(), getUsername(), getTenantDomain());
     }
 
-    @POST
-    @Path("/cartridge/subscribe/bulk")
-    @Produces("application/json")
-    @Consumes("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    @SuperTenantService(true)
+    @POST @Path("/cartridge/subscribe/bulk") @Produces("application/json") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") @SuperTenantService(true)
     // allow super tenant to bulk subscribe
     public SubscriptionInfo[] bulkSubscribe(CartridgeInfoBeanWrapper subscriptionWrapper) throws RestAPIException {
 
         return ServiceUtils.bulkSubscribe(subscriptionWrapper.getCartridgeInfoBean());
     }
 
-
-    @POST
-    @Path("/cartridge/subscribe/tenant")
-    @Produces("application/json")
-    @Consumes("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    @SuperTenantService(true)
+    @POST @Path("/cartridge/subscribe/tenant") @Produces("application/json") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") @SuperTenantService(true)
     // allow super tenant to subscribe a tenant to a cartridge forcefully
     public SubscriptionInfo subscribeTenantToCartridge(CartridgeInfoBean cartridgeInfoBean) throws RestAPIException {
 
         return ServiceUtils.subscribeTenantToCartridge(cartridgeInfoBean);
     }
 
-    @POST
-    @Path("/cartridge/unsubscribe")
-    @Consumes("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    public StratosAdminResponse unsubscribe(String alias) throws RestAPIException {
+    @POST @Path("/cartridge/unsubscribe") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") public StratosAdminResponse unsubscribe(
+            String alias) throws RestAPIException {
         return ServiceUtils.unsubscribe(alias, getTenantDomain());
     }
 
-
-    @DELETE
-    @Path("/cartridge/unsubscribe/all")
-    @Consumes("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    @SuperTenantService(true)
-    public StratosAdminResponse bulkUnsubscribe() throws RestAPIException {
+    @DELETE @Path("/cartridge/unsubscribe/all") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") @SuperTenantService(true) public StratosAdminResponse bulkUnsubscribe()
+            throws RestAPIException {
 
         if (log.isDebugEnabled()) {
             log.debug("Unsubscribing all tenants from all cartridges");
@@ -163,14 +118,8 @@ public class MigrationAdmin extends AbstractAdmin {
         return ServiceUtils.bulkUnsubscribe();
     }
 
-
-    @POST
-    @Path("/cartridge/unsubscribe/tenant/{tenantDomain}/{alias}")
-    @Consumes("application/json")
-    @Produces("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    public StratosAdminResponse unsubscribeTenant(@PathParam("alias") String alias,
-                                                  @PathParam("tenantDomain") String unsubscribingTenantDomain)
+    @POST @Path("/cartridge/unsubscribe/tenant/{tenantDomain}/{alias}") @Consumes("application/json") @Produces("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") public StratosAdminResponse unsubscribeTenant(
+            @PathParam("alias") String alias, @PathParam("tenantDomain") String unsubscribingTenantDomain)
             throws RestAPIException {
 
         if (log.isDebugEnabled()) {
@@ -180,42 +129,29 @@ public class MigrationAdmin extends AbstractAdmin {
         return ServiceUtils.unsubsribeForTenant(alias, getTenantDomain(), unsubscribingTenantDomain);
     }
 
-    @POST
-    @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domains")
-    @Consumes("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    public Response addSubscriptionDomains(@PathParam("cartridgeType") String cartridgeType,
-                                           @PathParam("subscriptionAlias") String subscriptionAlias,
-                                           SubscriptionDomainRequest request) throws RestAPIException {
+    @POST @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domains") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") public Response addSubscriptionDomains(
+            @PathParam("cartridgeType") String cartridgeType, @PathParam("subscriptionAlias") String subscriptionAlias,
+            SubscriptionDomainRequest request) throws RestAPIException {
 
-        StratosAdminResponse stratosAdminResponse =
-                ServiceUtils.addSubscriptionDomains(getConfigContext(), cartridgeType, subscriptionAlias, request);
+        StratosAdminResponse stratosAdminResponse = ServiceUtils
+                .addSubscriptionDomains(getConfigContext(), cartridgeType, subscriptionAlias, request);
         return Response.ok().entity(stratosAdminResponse).build();
     }
 
-    @POST
-    @Path("/cartridge/subscription/domains/bulk")
-    @Consumes("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    public Response bulkAddSubscriptionDomains(BulkSubscriptionDomainsWrapper bulkSubscriptionDomainsWrapper)
-            throws RestAPIException {
+    @POST @Path("/cartridge/subscription/domains/bulk") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") public Response bulkAddSubscriptionDomains(
+            BulkSubscriptionDomainsWrapper bulkSubscriptionDomainsWrapper) throws RestAPIException {
 
-        StratosAdminResponse stratosAdminResponse =
-                ServiceUtils.bulkAddSubscriptionDomains(
-                        bulkSubscriptionDomainsWrapper.getSubscriptionDomainWrapperList());
+        StratosAdminResponse stratosAdminResponse = ServiceUtils
+                .bulkAddSubscriptionDomains(bulkSubscriptionDomainsWrapper.getSubscriptionDomainWrapperList());
         return Response.ok().entity(stratosAdminResponse).build();
     }
 
-    @GET
-    @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domains")
-    @Consumes("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    public Response getSubscriptionDomains(@PathParam("cartridgeType") String cartridgeType,
-                                           @PathParam("subscriptionAlias") String subscriptionAlias)
+    @GET @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domains") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") public Response getSubscriptionDomains(
+            @PathParam("cartridgeType") String cartridgeType, @PathParam("subscriptionAlias") String subscriptionAlias)
             throws RestAPIException {
-        SubscriptionDomainBean[] subscriptionDomainBean =
-                ServiceUtils.getSubscriptionDomains(getConfigContext(), cartridgeType, subscriptionAlias)
-                        .toArray(new SubscriptionDomainBean[0]);
+        SubscriptionDomainBean[] subscriptionDomainBean = ServiceUtils
+                .getSubscriptionDomains(getConfigContext(), cartridgeType, subscriptionAlias)
+                .toArray(new SubscriptionDomainBean[0]);
 
         if (subscriptionDomainBean.length == 0) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -224,14 +160,10 @@ public class MigrationAdmin extends AbstractAdmin {
         }
     }
 
-    @GET
-    @Path("/cartridge/subscription/domains/all")
-    @Consumes("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    @SuperTenantService(true)
-    public Response getAllSubscriptionDomains() throws RestAPIException {
-        SubscriptionDomainBean[] subscriptionDomainBean =
-                ServiceUtils.getAllSubscriptionDomains().toArray(new SubscriptionDomainBean[0]);
+    @GET @Path("/cartridge/subscription/domains/all") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") @SuperTenantService(true) public Response getAllSubscriptionDomains()
+            throws RestAPIException {
+        SubscriptionDomainBean[] subscriptionDomainBean = ServiceUtils.getAllSubscriptionDomains()
+                .toArray(new SubscriptionDomainBean[0]);
 
         if (subscriptionDomainBean.length == 0) {
             return Response.status(Response.Status.NOT_FOUND).build();
@@ -240,15 +172,11 @@ public class MigrationAdmin extends AbstractAdmin {
         }
     }
 
-    @GET
-    @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domains/{domainName}")
-    @Consumes("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    public Response getSubscriptionDomain(@PathParam("cartridgeType") String cartridgeType,
-                                          @PathParam("subscriptionAlias") String subscriptionAlias,
-                                          @PathParam("domainName") String domainName) throws RestAPIException {
-        SubscriptionDomainBean subscriptionDomainBean =
-                ServiceUtils.getSubscriptionDomain(getConfigContext(), cartridgeType, subscriptionAlias, domainName);
+    @GET @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domains/{domainName}") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") public Response getSubscriptionDomain(
+            @PathParam("cartridgeType") String cartridgeType, @PathParam("subscriptionAlias") String subscriptionAlias,
+            @PathParam("domainName") String domainName) throws RestAPIException {
+        SubscriptionDomainBean subscriptionDomainBean = ServiceUtils
+                .getSubscriptionDomain(getConfigContext(), cartridgeType, subscriptionAlias, domainName);
         if (subscriptionDomainBean.domainName == null) {
             return Response.status(Response.Status.NOT_FOUND).build();
         } else {
@@ -256,14 +184,9 @@ public class MigrationAdmin extends AbstractAdmin {
         }
     }
 
-    @DELETE
-    @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domains/{domainName}")
-    @Consumes("application/json")
-    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
-    public StratosAdminResponse removeSubscriptionDomain(@PathParam("cartridgeType") String cartridgeType,
-                                                         @PathParam("subscriptionAlias") String subscriptionAlias,
-                                                         @PathParam("domainName") String domainName)
-            throws RestAPIException {
+    @DELETE @Path("/cartridge/{cartridgeType}/subscription/{subscriptionAlias}/domains/{domainName}") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") public StratosAdminResponse removeSubscriptionDomain(
+            @PathParam("cartridgeType") String cartridgeType, @PathParam("subscriptionAlias") String subscriptionAlias,
+            @PathParam("domainName") String domainName) throws RestAPIException {
         return ServiceUtils.removeSubscriptionDomain(getConfigContext(), cartridgeType, subscriptionAlias, domainName);
     }
 }

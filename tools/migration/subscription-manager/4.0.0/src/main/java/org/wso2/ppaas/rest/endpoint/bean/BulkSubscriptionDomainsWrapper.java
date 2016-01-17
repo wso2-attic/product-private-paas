@@ -21,8 +21,7 @@ package org.wso2.ppaas.rest.endpoint.bean;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement
-public class BulkSubscriptionDomainsWrapper {
+@XmlRootElement public class BulkSubscriptionDomainsWrapper {
 
     private List<SubscriptionDomainWrapper> subscriptionDomainWrapperList;
 
@@ -30,8 +29,7 @@ public class BulkSubscriptionDomainsWrapper {
         return subscriptionDomainWrapperList;
     }
 
-    public void setSubscriptionDomainWrapperList(
-            List<SubscriptionDomainWrapper> subscriptionDomainWrapperList) {
+    public void setSubscriptionDomainWrapperList(List<SubscriptionDomainWrapper> subscriptionDomainWrapperList) {
         this.subscriptionDomainWrapperList = subscriptionDomainWrapperList;
     }
 }

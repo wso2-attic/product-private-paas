@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <parent>
         <artifactId>artifact-converter</artifactId>
@@ -45,10 +45,10 @@
             <version>4.1.1-SNAPSHOT</version>
         </dependency>
         <!--<dependency>-->
-            <!--<groupId>org.apache.stratos</groupId>-->
-            <!--<artifactId>org.apache.stratos.rest.endpoint</artifactId>-->
-            <!--<version>4.0.0-wso2v1</version>-->
-            <!--<type>war</type>-->
+        <!--<groupId>org.apache.stratos</groupId>-->
+        <!--<artifactId>org.apache.stratos.rest.endpoint</artifactId>-->
+        <!--<version>4.0.0-wso2v1</version>-->
+        <!--<type>war</type>-->
         <!--</dependency>-->
         <dependency>
             <groupId>org.wso2.ppaas</groupId>

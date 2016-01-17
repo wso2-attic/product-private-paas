@@ -20,8 +20,7 @@ package org.wso2.ppaas.rest.endpoint.bean.cartridge.definition;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "property")
-public class PropertyBean {
+@XmlRootElement(name = "property") public class PropertyBean {
 
     public String name;
 

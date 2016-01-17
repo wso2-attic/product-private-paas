@@ -44,27 +44,26 @@ public class MockContext {
     private Map<String, List<SubscriptionDomain>> subscriptionAliasToDomainMap = new HashMap<String, List<SubscriptionDomain>>();
     private Map<Integer, List<String>> tenantIdToAliasesMap = new HashMap<Integer, List<String>>();
     private List<CartridgeDefinitionBean> cartridgeDefinitionBeanList = new LinkedList<CartridgeDefinitionBean>();
-    private Map<String,Cartridge> availableSingleTenantCartridges = new HashMap<String,Cartridge>();
-    private Map<String,Cartridge> availableMultiTenantCartridges = new HashMap<String,Cartridge>();
-    private Map<String,Cartridge> subscribedCartridges = new HashMap<String,Cartridge>();
-    private Map<String,TenantInfoBean> tenantMap = new HashMap<String, TenantInfoBean>();
-    private Map<String,Partition> partitionMap = new HashMap<String, Partition>();
-    private Map<String,AutoscalePolicy> autoscalePolicyMap = new HashMap<String, AutoscalePolicy>();
-    private Map<String,DeploymentPolicy> deploymentPolicyMap = new HashMap<String, DeploymentPolicy>();
-    private Map<String,ServiceDefinitionBean> serviceDefinitionMap = new HashMap<String, ServiceDefinitionBean>();
-    private Map<String,Cluster> clusterMap = new HashMap<String, Cluster>();
+    private Map<String, Cartridge> availableSingleTenantCartridges = new HashMap<String, Cartridge>();
+    private Map<String, Cartridge> availableMultiTenantCartridges = new HashMap<String, Cartridge>();
+    private Map<String, Cartridge> subscribedCartridges = new HashMap<String, Cartridge>();
+    private Map<String, TenantInfoBean> tenantMap = new HashMap<String, TenantInfoBean>();
+    private Map<String, Partition> partitionMap = new HashMap<String, Partition>();
+    private Map<String, AutoscalePolicy> autoscalePolicyMap = new HashMap<String, AutoscalePolicy>();
+    private Map<String, DeploymentPolicy> deploymentPolicyMap = new HashMap<String, DeploymentPolicy>();
+    private Map<String, ServiceDefinitionBean> serviceDefinitionMap = new HashMap<String, ServiceDefinitionBean>();
+    private Map<String, Cluster> clusterMap = new HashMap<String, Cluster>();
 
     private Set<Cartridge> temp = new HashSet<Cartridge>();
 
+    private MockContext() {
+    } // do not allow to initialize
 
-    private MockContext(){} // do not allow to initialize
-
-    public static MockContext getInstance(){
+    public static MockContext getInstance() {
         return mockContext;
     }
 
-
-    public StratosAdminResponse addCartirdgeDefinition(CartridgeDefinitionBean cartridgeDefinitionBean){
+    public StratosAdminResponse addCartirdgeDefinition(CartridgeDefinitionBean cartridgeDefinitionBean) {
         this.cartridgeDefinitionBeanList.add(cartridgeDefinitionBean);
         Cartridge cartridge = new Cartridge();
         cartridge.setCartridgeType(cartridgeDefinitionBean.type);
@@ -74,9 +73,9 @@ public class MockContext {
         cartridge.setProvider(cartridgeDefinitionBean.provider);
         cartridge.setVersion(cartridgeDefinitionBean.version);
 
-        if(cartridge.isMultiTenant()){
+        if (cartridge.isMultiTenant()) {
             availableMultiTenantCartridges.put(cartridge.getCartridgeType(), cartridge);
-        }else{
+        } else {
             availableSingleTenantCartridges.put(cartridge.getCartridgeType(), cartridge);
         }
         System.out.println(availableMultiTenantCartridges.size());
@@ -86,19 +85,15 @@ public class MockContext {
         return stratosAdminResponse;
     }
 
-
-
-    public Cartridge[] getAvailableMultiTenantCartridges() throws RestAPIException{
-       return availableMultiTenantCartridges.values().toArray(new Cartridge[0]);
+    public Cartridge[] getAvailableMultiTenantCartridges() throws RestAPIException {
+        return availableMultiTenantCartridges.values().toArray(new Cartridge[0]);
     }
 
-
-    public Cartridge[] getAvailableSingleTenantCartridges() throws RestAPIException{
+    public Cartridge[] getAvailableSingleTenantCartridges() throws RestAPIException {
         return availableSingleTenantCartridges.values().toArray(new Cartridge[0]);
     }
 
-
-    public Cartridge[] getAvailableLbCartridges() throws RestAPIException{
+    public Cartridge[] getAvailableLbCartridges() throws RestAPIException {
         /*Map<String,Cartridge> availableLbCartridges = new HashMap<String,Cartridge>();
         Iterator it = availableSingleTenantCartridges.entrySet().iterator();
         while(it.hasNext()){
@@ -123,7 +118,7 @@ public class MockContext {
         return availableSingleTenantCartridges.values().toArray(new Cartridge[0]);
     }
 
-    public Cartridge[] getAvailableCartridges() throws RestAPIException{
+    public Cartridge[] getAvailableCartridges() throws RestAPIException {
         /*Map<String, Cartridge> availableCartridges = new HashMap<String,Cartridge>();
         Iterator it = availableSingleTenantCartridges.entrySet().iterator();
         while(it.hasNext()){
@@ -149,25 +144,24 @@ public class MockContext {
         return availableSingleTenantCartridges.values().toArray(new Cartridge[0]);
     }
 
-
-    public Cartridge[] getSubscribedCartridges() throws RestAPIException{
+    public Cartridge[] getSubscribedCartridges() throws RestAPIException {
         return subscribedCartridges.values().toArray(new Cartridge[0]);
     }
 
-    public SubscriptionInfo subscribeToCartridge(CartridgeInfoBean cartridgeInfoBean) throws RestAPIException{
-         String cartridgeType = cartridgeInfoBean.getCartridgeType();
-         String alias = cartridgeInfoBean.getAlias();
-         Cartridge subscribedCartridge;
-         // retrieve the cartridge from available ones
-         if(availableSingleTenantCartridges.containsKey(cartridgeType)){
+    public SubscriptionInfo subscribeToCartridge(CartridgeInfoBean cartridgeInfoBean) throws RestAPIException {
+        String cartridgeType = cartridgeInfoBean.getCartridgeType();
+        String alias = cartridgeInfoBean.getAlias();
+        Cartridge subscribedCartridge;
+        // retrieve the cartridge from available ones
+        if (availableSingleTenantCartridges.containsKey(cartridgeType)) {
             subscribedCartridge = availableSingleTenantCartridges.get(cartridgeType);
 
-         }else if(availableMultiTenantCartridges.containsKey(cartridgeType)){
-             subscribedCartridge = availableMultiTenantCartridges.get(cartridgeType);
-         }else {
-             String msg = "Wrong programme sequence";
-             throw new RestAPIException(msg);
-         }
+        } else if (availableMultiTenantCartridges.containsKey(cartridgeType)) {
+            subscribedCartridge = availableMultiTenantCartridges.get(cartridgeType);
+        } else {
+            String msg = "Wrong programme sequence";
+            throw new RestAPIException(msg);
+        }
         //Proper way is copy construrctor
         Cartridge copy = new Cartridge();
         copy.setCartridgeType(subscribedCartridge.getCartridgeType());
@@ -180,7 +174,7 @@ public class MockContext {
         copy.setHostName("dummy.stratos.com");
         copy.setRepoURL("http://dummy.stratos.com/myrepo.git");
 
-        subscribedCartridges.put(alias,copy);
+        subscribedCartridges.put(alias, copy);
 
         SubscriptionInfo subscriptionInfo = new SubscriptionInfo();
         subscriptionInfo.setHostname(copy.getHostName());
@@ -189,10 +183,10 @@ public class MockContext {
         return subscriptionInfo;
     }
 
-    public StratosAdminResponse unsubscribe(String alias) throws RestAPIException{
-        if(subscribedCartridges.containsKey(alias)){
+    public StratosAdminResponse unsubscribe(String alias) throws RestAPIException {
+        if (subscribedCartridges.containsKey(alias)) {
             subscribedCartridges.remove(alias);
-        }else{
+        } else {
             throw new RestAPIException("Unable to un-subscribe");
         }
         StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
@@ -200,10 +194,10 @@ public class MockContext {
         return stratosAdminResponse;
     }
 
-    public StratosAdminResponse addTenant(TenantInfoBean tenantInfoBean) throws RestAPIException{
-        try{
-            tenantMap.put(tenantInfoBean.getTenantDomain(),tenantInfoBean);
-        }catch (Exception e){
+    public StratosAdminResponse addTenant(TenantInfoBean tenantInfoBean) throws RestAPIException {
+        try {
+            tenantMap.put(tenantInfoBean.getTenantDomain(), tenantInfoBean);
+        } catch (Exception e) {
             throw new RestAPIException(e.getMessage());
         }
         StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
@@ -211,52 +205,52 @@ public class MockContext {
         return stratosAdminResponse;
     }
 
-    public TenantInfoBean getTenant(String tenantDomain) throws RestAPIException{
-        if(!tenantMap.containsKey(tenantDomain)){
+    public TenantInfoBean getTenant(String tenantDomain) throws RestAPIException {
+        if (!tenantMap.containsKey(tenantDomain)) {
             throw new RestAPIException("Information for tenant: " + tenantDomain + " is not available");
         }
         return tenantMap.get(tenantDomain);
     }
 
-    public Cartridge getCartridgeInfo(String alias) throws RestAPIException{
-        if(!subscribedCartridges.containsKey(alias)){
+    public Cartridge getCartridgeInfo(String alias) throws RestAPIException {
+        if (!subscribedCartridges.containsKey(alias)) {
             throw new RestAPIException("Cartridge information is not available.");
         }
         return subscribedCartridges.get(alias);
     }
 
-    public Cartridge getAvailableSingleTenantCartridgeInfo(String cartridgeType) throws RestAPIException{
-        if(!availableSingleTenantCartridges.containsKey(cartridgeType)){
+    public Cartridge getAvailableSingleTenantCartridgeInfo(String cartridgeType) throws RestAPIException {
+        if (!availableSingleTenantCartridges.containsKey(cartridgeType)) {
             throw new RestAPIException("Cartridge is not available.");
         }
         return availableSingleTenantCartridges.get(cartridgeType);
     }
 
     public StratosAdminResponse deleteTenant(String tenantDomain) {
-          tenantMap.remove(tenantDomain);
+        tenantMap.remove(tenantDomain);
         StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
         stratosAdminResponse.setMessage("Successfully deleted tenant");
         return stratosAdminResponse;
     }
 
-    public TenantInfoBean[] getTenants() throws RestAPIException{
+    public TenantInfoBean[] getTenants() throws RestAPIException {
         return tenantMap.values().toArray(new TenantInfoBean[0]);
     }
 
-    public TenantInfoBean[] retrievePartialSearchTenants(String searchDomain) throws RestAPIException{
+    public TenantInfoBean[] retrievePartialSearchTenants(String searchDomain) throws RestAPIException {
         List<TenantInfoBean> searchResult = new LinkedList<TenantInfoBean>();
-        for(String tenantDomain : tenantMap.keySet()){
-            if(tenantDomain.contains(searchDomain)){
-                 searchResult.add(new TenantInfoBean(tenantMap.get(tenantDomain)));
+        for (String tenantDomain : tenantMap.keySet()) {
+            if (tenantDomain.contains(searchDomain)) {
+                searchResult.add(new TenantInfoBean(tenantMap.get(tenantDomain)));
             }
         }
         return searchResult.toArray(new TenantInfoBean[0]);
     }
 
-    public StratosAdminResponse  activateTenant(String tenantDomain) throws RestAPIException{
-        if(tenantMap.containsKey(tenantDomain)){
+    public StratosAdminResponse activateTenant(String tenantDomain) throws RestAPIException {
+        if (tenantMap.containsKey(tenantDomain)) {
             tenantMap.get(tenantDomain).setActive(true);
-        } else{
+        } else {
             throw new RestAPIException("Invalid tenant domain");
         }
         StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
@@ -264,10 +258,10 @@ public class MockContext {
         return stratosAdminResponse;
     }
 
-    public StratosAdminResponse deactivateTenant(String tenantDomain) throws RestAPIException{
-        if(tenantMap.containsKey(tenantDomain)){
+    public StratosAdminResponse deactivateTenant(String tenantDomain) throws RestAPIException {
+        if (tenantMap.containsKey(tenantDomain)) {
             tenantMap.get(tenantDomain).setActive(false);
-        } else{
+        } else {
             throw new RestAPIException("Invalid tenant domain");
         }
         StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
@@ -275,12 +269,12 @@ public class MockContext {
         return stratosAdminResponse;
     }
 
-    public StratosAdminResponse deleteCartridgeDefinition(String cartridgeType) throws RestAPIException{
-        if(availableSingleTenantCartridges.containsKey(cartridgeType)){
+    public StratosAdminResponse deleteCartridgeDefinition(String cartridgeType) throws RestAPIException {
+        if (availableSingleTenantCartridges.containsKey(cartridgeType)) {
             availableSingleTenantCartridges.remove(cartridgeType);
-        } else if(availableMultiTenantCartridges.containsKey(cartridgeType)){
+        } else if (availableMultiTenantCartridges.containsKey(cartridgeType)) {
             availableMultiTenantCartridges.remove(cartridgeType);
-        } else{
+        } else {
             throw new RestAPIException("invalid cartridge type");
         }
         StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
@@ -289,185 +283,187 @@ public class MockContext {
     }
 
     public StratosAdminResponse addPartition(Partition partition) {
-            partitionMap.put(partition.id, partition);
+        partitionMap.put(partition.id, partition);
         StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
         stratosAdminResponse.setMessage("Successfully deployed partition");
         return stratosAdminResponse;
     }
 
     public StratosAdminResponse addAutoScalingPolicyDefinition(AutoscalePolicy autoscalePolicy) {
-            autoscalePolicyMap.put(autoscalePolicy.getId(), autoscalePolicy);
+        autoscalePolicyMap.put(autoscalePolicy.getId(), autoscalePolicy);
         StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
         stratosAdminResponse.setMessage("Successfully deployed auto scaling policy definition");
         return stratosAdminResponse;
     }
 
     public StratosAdminResponse addDeploymentPolicyDefinition(DeploymentPolicy deploymentPolicy) {
-           deploymentPolicyMap.put(deploymentPolicy.id,deploymentPolicy);
+        deploymentPolicyMap.put(deploymentPolicy.id, deploymentPolicy);
         StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
         stratosAdminResponse.setMessage("Successfully deployed deployment policy definition");
         return stratosAdminResponse;
     }
 
-    public Partition[] getPartitions() throws RestAPIException{
+    public Partition[] getPartitions() throws RestAPIException {
         return partitionMap.values().toArray(new Partition[0]);
     }
 
-    public Partition getPartition(String partitionId) throws RestAPIException{
-        if(!partitionMap.containsKey(partitionId)){
+    public Partition getPartition(String partitionId) throws RestAPIException {
+        if (!partitionMap.containsKey(partitionId)) {
             throw new RestAPIException("There is no partition with the id: " + partitionId);
         }
-        return  partitionMap.get(partitionId);
+        return partitionMap.get(partitionId);
     }
 
-
-    public Partition[] getPartitionsOfPolicy(String deploymentPolicyId) throws RestAPIException{
-        if(!deploymentPolicyMap.containsKey(deploymentPolicyId)){
+    public Partition[] getPartitionsOfPolicy(String deploymentPolicyId) throws RestAPIException {
+        if (!deploymentPolicyMap.containsKey(deploymentPolicyId)) {
             throw new RestAPIException("There is no deployment policy with id: " + deploymentPolicyId);
         }
         return deploymentPolicyMap.get(deploymentPolicyId).partition.toArray(new Partition[0]);
     }
 
-    public PartitionGroup[] getPartitionGroups(String deploymentPolicyId)  throws RestAPIException{
-        if(!deploymentPolicyMap.containsKey(deploymentPolicyId)){
+    public PartitionGroup[] getPartitionGroups(String deploymentPolicyId) throws RestAPIException {
+        if (!deploymentPolicyMap.containsKey(deploymentPolicyId)) {
             throw new RestAPIException("There is no policy with id: " + deploymentPolicyId);
         }
         return deploymentPolicyMap.get(deploymentPolicyId).partitionGroup.toArray(new PartitionGroup[0]);
     }
 
-    public AutoscalePolicy[] getAutoscalePolicies()  throws RestAPIException{
-         return autoscalePolicyMap.values().toArray(new AutoscalePolicy[0]);
+    public AutoscalePolicy[] getAutoscalePolicies() throws RestAPIException {
+        return autoscalePolicyMap.values().toArray(new AutoscalePolicy[0]);
     }
 
-    public AutoscalePolicy getAutoscalePolicies(String autoscalePolicyId) throws  RestAPIException{
-        if(!autoscalePolicyMap.containsKey(autoscalePolicyId)){
+    public AutoscalePolicy getAutoscalePolicies(String autoscalePolicyId) throws RestAPIException {
+        if (!autoscalePolicyMap.containsKey(autoscalePolicyId)) {
             throw new RestAPIException("There is no auto scale policy with id: " + autoscalePolicyId);
         }
         return autoscalePolicyMap.get(autoscalePolicyId);
     }
 
-    public DeploymentPolicy[] getDeploymentPolicies() throws RestAPIException{
+    public DeploymentPolicy[] getDeploymentPolicies() throws RestAPIException {
         return deploymentPolicyMap.values().toArray(new DeploymentPolicy[0]);
     }
 
-    public DeploymentPolicy getDeploymentPolicies(String deploymentPolicyId) throws RestAPIException{
-        if(!deploymentPolicyMap.containsKey(deploymentPolicyId)){
+    public DeploymentPolicy getDeploymentPolicies(String deploymentPolicyId) throws RestAPIException {
+        if (!deploymentPolicyMap.containsKey(deploymentPolicyId)) {
             throw new RestAPIException("There is no deployment policy with id: " + deploymentPolicyId);
         }
         return deploymentPolicyMap.get(deploymentPolicyId);
     }
+
     public StratosAdminResponse deployService(ServiceDefinitionBean serviceDefinitionBean) {
-        serviceDefinitionMap.put(serviceDefinitionBean.getCartridgeType(),serviceDefinitionBean);
+        serviceDefinitionMap.put(serviceDefinitionBean.getCartridgeType(), serviceDefinitionBean);
         StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
         stratosAdminResponse.setMessage("Successfully deployed service");
         return stratosAdminResponse;
 
     }
-    public ServiceDefinitionBean[] getServices() throws RestAPIException{
+
+    public ServiceDefinitionBean[] getServices() throws RestAPIException {
         return serviceDefinitionMap.values().toArray(new ServiceDefinitionBean[0]);
     }
 
-    public Partition[] getPartitions(String deploymentPolicyId, String partitionGroupId) throws RestAPIException{
-        if(!deploymentPolicyMap.containsKey(deploymentPolicyId)){
+    public Partition[] getPartitions(String deploymentPolicyId, String partitionGroupId) throws RestAPIException {
+        if (!deploymentPolicyMap.containsKey(deploymentPolicyId)) {
             throw new RestAPIException("There is no deployment policy with id: " + deploymentPolicyId);
         }
         Partition[] partitions = null;
-         DeploymentPolicy deploymentPolicy = deploymentPolicyMap.get(deploymentPolicyId);
-         for(PartitionGroup partitionGroup : deploymentPolicy.partitionGroup){
-             if(partitionGroup.id.equals(partitionGroupId)){
-                 partitions =  partitionGroup.partition.toArray(new Partition[0]);
-             }
-         }
-        if(partitions == null){
+        DeploymentPolicy deploymentPolicy = deploymentPolicyMap.get(deploymentPolicyId);
+        for (PartitionGroup partitionGroup : deploymentPolicy.partitionGroup) {
+            if (partitionGroup.id.equals(partitionGroupId)) {
+                partitions = partitionGroup.partition.toArray(new Partition[0]);
+            }
+        }
+        if (partitions == null) {
             throw new RestAPIException("Partition not found");
         }
         return partitions;
     }
-    public Cluster[] getClusters() throws RestAPIException{
+
+    public Cluster[] getClusters() throws RestAPIException {
         return clusterMap.values().toArray(new Cluster[0]);
     }
-    public DeploymentPolicy[] getDeploymentPoliciesForCartridgeType(String cartridgeType) throws RestAPIException{
+
+    public DeploymentPolicy[] getDeploymentPoliciesForCartridgeType(String cartridgeType) throws RestAPIException {
         return deploymentPolicyMap.values().toArray(new DeploymentPolicy[0]);
     }
 
-	public StratosAdminResponse addSubscriptionDomains(int tenantId, String alias, SubscriptionDomainRequest request) {
-		// populate new alias
-		List<String> aliasList;
-		if(tenantIdToAliasesMap.containsKey(tenantId)) {
-			aliasList = tenantIdToAliasesMap.get(tenantId);
-		} else {
-			aliasList = new ArrayList<String>();
-		}
-		aliasList.add(alias);
-		tenantIdToAliasesMap.put(tenantId, aliasList);
-		
-		// populate domains
-		List<SubscriptionDomain> list;
-		if(subscriptionAliasToDomainMap.containsKey(alias)) {
-			list = subscriptionAliasToDomainMap.get(alias);
-		} else {
-			list = new ArrayList<SubscriptionDomain>();
-		}
-		for (SubscriptionDomainBean bean : request.domains) {
-			
-			SubscriptionDomain subscriptionDomain = new SubscriptionDomain(bean.domainName, bean.applicationContext);
-			list.add(subscriptionDomain);
-		}
-		
-		subscriptionAliasToDomainMap.put(alias, list);
-		
-		StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
+    public StratosAdminResponse addSubscriptionDomains(int tenantId, String alias, SubscriptionDomainRequest request) {
+        // populate new alias
+        List<String> aliasList;
+        if (tenantIdToAliasesMap.containsKey(tenantId)) {
+            aliasList = tenantIdToAliasesMap.get(tenantId);
+        } else {
+            aliasList = new ArrayList<String>();
+        }
+        aliasList.add(alias);
+        tenantIdToAliasesMap.put(tenantId, aliasList);
+
+        // populate domains
+        List<SubscriptionDomain> list;
+        if (subscriptionAliasToDomainMap.containsKey(alias)) {
+            list = subscriptionAliasToDomainMap.get(alias);
+        } else {
+            list = new ArrayList<SubscriptionDomain>();
+        }
+        for (SubscriptionDomainBean bean : request.domains) {
+
+            SubscriptionDomain subscriptionDomain = new SubscriptionDomain(bean.domainName, bean.applicationContext);
+            list.add(subscriptionDomain);
+        }
+
+        subscriptionAliasToDomainMap.put(alias, list);
+
+        StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
         stratosAdminResponse.setMessage("Successfully added subscription domain/s.");
         return stratosAdminResponse;
-	}
+    }
 
-	public List<SubscriptionDomainBean> getSubscriptionDomains(int tenantId, String alias) {
-		List<String> tenantAliases = tenantIdToAliasesMap.get(tenantId);
-		if(tenantAliases != null && tenantAliases.contains(alias)) {
-			
-			return PojoConverter.populateSubscriptionDomainPojos(subscriptionAliasToDomainMap.get(alias));
-		}
+    public List<SubscriptionDomainBean> getSubscriptionDomains(int tenantId, String alias) {
+        List<String> tenantAliases = tenantIdToAliasesMap.get(tenantId);
+        if (tenantAliases != null && tenantAliases.contains(alias)) {
+
+            return PojoConverter.populateSubscriptionDomainPojos(subscriptionAliasToDomainMap.get(alias));
+        }
         return new ArrayList<SubscriptionDomainBean>();
-	}
+    }
 
-	public SubscriptionDomainBean getSubscriptionDomain(int tenantId, String cartridgeType,
-			String subscriptionAlias, String domainName) throws RestAPIException {
-		List<String> tenantAliases = tenantIdToAliasesMap.get(tenantId);
-		if(tenantAliases != null && tenantAliases.contains(subscriptionAlias)) {
-			for (SubscriptionDomain subscriptionDomain : subscriptionAliasToDomainMap.get(subscriptionAlias)) {
-				if(subscriptionDomain.getDomainName().equals(domainName)) {
-					
-					return PojoConverter.populateSubscriptionDomainPojo(subscriptionDomain);
-				}
-			}
-		}
+    public SubscriptionDomainBean getSubscriptionDomain(int tenantId, String cartridgeType, String subscriptionAlias,
+            String domainName) throws RestAPIException {
+        List<String> tenantAliases = tenantIdToAliasesMap.get(tenantId);
+        if (tenantAliases != null && tenantAliases.contains(subscriptionAlias)) {
+            for (SubscriptionDomain subscriptionDomain : subscriptionAliasToDomainMap.get(subscriptionAlias)) {
+                if (subscriptionDomain.getDomainName().equals(domainName)) {
 
-		String message = "Could not find a subscription [domain] " + domainName
-				+ " for Cartridge [type] " + cartridgeType + " and [alias] "
-				+ subscriptionAlias;
-		throw new RestAPIException(Status.NOT_FOUND, message);
-	}
+                    return PojoConverter.populateSubscriptionDomainPojo(subscriptionDomain);
+                }
+            }
+        }
 
-	public StratosAdminResponse removeSubscriptionDomain(int tenantId,
-			String subscriptionAlias, String domainName) {
-		StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
-		
-		List<String> tenantAliases = tenantIdToAliasesMap.get(tenantId);
-		if(tenantAliases != null && tenantAliases.contains(subscriptionAlias)) {
-			for (Iterator<SubscriptionDomain> iterator = subscriptionAliasToDomainMap.get(subscriptionAlias).iterator(); iterator
-					.hasNext();) {
-				SubscriptionDomain subscriptionDomain = (SubscriptionDomain) iterator.next();
-				if (subscriptionDomain.getDomainName().equals(domainName)) {
-					iterator.remove();
-					stratosAdminResponse.setMessage("Successfully removed the subscription domain: "+domainName);
-				}
-			}
-		} else {
-			
-			stratosAdminResponse.setMessage("Failed to remove the subscription domain: "+domainName);
-		}
-		
+        String message =
+                "Could not find a subscription [domain] " + domainName + " for Cartridge [type] " + cartridgeType
+                        + " and [alias] " + subscriptionAlias;
+        throw new RestAPIException(Status.NOT_FOUND, message);
+    }
+
+    public StratosAdminResponse removeSubscriptionDomain(int tenantId, String subscriptionAlias, String domainName) {
+        StratosAdminResponse stratosAdminResponse = new StratosAdminResponse();
+
+        List<String> tenantAliases = tenantIdToAliasesMap.get(tenantId);
+        if (tenantAliases != null && tenantAliases.contains(subscriptionAlias)) {
+            for (Iterator<SubscriptionDomain> iterator = subscriptionAliasToDomainMap.get(subscriptionAlias)
+                    .iterator(); iterator.hasNext(); ) {
+                SubscriptionDomain subscriptionDomain = (SubscriptionDomain) iterator.next();
+                if (subscriptionDomain.getDomainName().equals(domainName)) {
+                    iterator.remove();
+                    stratosAdminResponse.setMessage("Successfully removed the subscription domain: " + domainName);
+                }
+            }
+        } else {
+
+            stratosAdminResponse.setMessage("Failed to remove the subscription domain: " + domainName);
+        }
+
         return stratosAdminResponse;
-	}
+    }
 
 }

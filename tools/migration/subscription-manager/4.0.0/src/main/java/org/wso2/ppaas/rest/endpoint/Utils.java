@@ -19,7 +19,6 @@ package org.wso2.ppaas.rest.endpoint;
 
 public class Utils {
 
-
     public static String buildMessage(int errorCode, String errorMessage) {
         String jsonResponse = "{\"Error\":{" +
                 " \"errorCode\": \" " + errorCode + "\"," +
@@ -37,7 +36,6 @@ public class Utils {
                 "}";
         return jsonResponse;
     }
-
 
     public static String buildAuthenticationSuccessMessage(String jSessionId) {
         String jsonResponse = "{\"Success\":{" +

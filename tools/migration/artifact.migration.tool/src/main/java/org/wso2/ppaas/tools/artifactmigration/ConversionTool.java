@@ -23,6 +23,7 @@ import org.apache.commons.configuration.SystemConfiguration;
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.apache.stratos.common.beans.application.SubscribableInfo;
+import org.wso2.ppaas.tools.artifactmigration.exception.TransformationException;
 
 import java.io.*;
 import java.util.List;
@@ -70,22 +71,17 @@ class ConversionTool {
     /**
      * Method to start transformation
      */
-    public static void startTransformation() {
+    public static void startTransformation() throws TransformationException {
 
         log.info("Artifact Migration started...");
-        try {
-            Transformer.transformNetworkPartitionList();
-            Transformer.transformAutoscalePolicyList();
-            Transformer.transformDeploymentPolicyList();
-            Transformer.addDefaultApplicationPolicies();
-            Transformer.transformCartridgeList();
-            System.out.println("Conversion completed successfully");
-            System.out.println(
-                    "Default values have been used for the port mappings of the cartridges and can be updated in conf/config.properties file.");
-        } catch (Exception e) {
-            log.error("Error while converting the artifacts ", e);
-            System.out.println("Error while transforming NetworkPartition list. See log for more details.");
-        }
+        Transformer.transformNetworkPartitionList();
+        Transformer.transformAutoscalePolicyList();
+        Transformer.transformDeploymentPolicyList();
+        Transformer.addDefaultApplicationPolicies();
+        Transformer.transformCartridgeList();
+        log.info("Conversion completed successfully");
+        System.out.println(
+                "Default values have been used for the port mappings of the cartridges and can be updated in conf/config.properties file.");
     }
 
     /**
@@ -255,9 +251,7 @@ class ConversionTool {
      * Method to get configuration details
      */
     public static void readInitialConfiguration() throws ConfigurationException {
-        final PropertiesConfiguration propsConfig = new PropertiesConfiguration(
-                System.getProperty(Constants.CONFIGURATION_FILE_NAME));
+        final PropertiesConfiguration propsConfig = new PropertiesConfiguration(System.getProperty(Constants.CONFIGURATION_FILE_NAME));
         SystemConfiguration.setSystemProperties(propsConfig);
-
     }
 }

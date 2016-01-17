@@ -26,8 +26,6 @@ import java.lang.annotation.Target;
  * In Carbon admin authorization framework there are super-tenant only
  * admin services. We use below annotation to mark such admin services.
  */
-@Retention(value = RetentionPolicy.RUNTIME)
-@Target(value = ElementType.METHOD)
-public @interface SuperTenantService {
+@Retention(value = RetentionPolicy.RUNTIME) @Target(value = ElementType.METHOD) public @interface SuperTenantService {
     boolean value();
 }

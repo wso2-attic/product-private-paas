@@ -21,24 +21,23 @@ package org.wso2.ppaas.rest.endpoint.bean.cartridge.definition;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement(name = "loadBalancer")
-public class LoadBalancerBean {
+@XmlRootElement(name = "loadBalancer") public class LoadBalancerBean {
 
     public String type;
-    
+
     public String deploymentPolicy;
-    
+
     public String autoscalingPolicy;
 
     public List<PropertyBean> property;
 
-    public String toString () {
+    public String toString() {
 
         StringBuilder lbBuilder = new StringBuilder();
         lbBuilder.append(" Type: " + type);
-        if(property != null && !property.isEmpty()) {
+        if (property != null && !property.isEmpty()) {
             lbBuilder.append(" Properties: ");
-            for(PropertyBean propertyBean : property) {
+            for (PropertyBean propertyBean : property) {
                 lbBuilder.append(propertyBean.name + " : " + propertyBean.value + " | ");
             }
         }
