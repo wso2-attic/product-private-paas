@@ -256,7 +256,7 @@ public class StratosAuthorizingHandler implements RequestHandler {
 
     private boolean getSuperTenantServices(Annotation[] annotations, String tenantAnnotationClassName) {
         for (Annotation ann : annotations) {
-            if (ann.annotationType().getSimpleName().equals(authorizationAnnotationClassName)) {
+            if (ann.annotationType().getName().equals(tenantAnnotationClassName)) {
                 try {
                     Method valueMethod = ann.annotationType().getMethod("value", new Class[] {});
                     boolean isSuperTenantService = (Boolean) valueMethod.invoke(ann, new Object[] {});
@@ -272,7 +272,7 @@ public class StratosAuthorizingHandler implements RequestHandler {
 
     private String getAuthorizationActions(Annotation[] annotations, String authorizationAnnotationClassName) {
         for (Annotation ann : annotations) {
-            if (ann.annotationType().getName().equals(authorizationAnnotationClassName)) {
+            if (ann.annotationType().getSimpleName().equals(authorizationAnnotationClassName)) {
                 try {
                     Method valueMethod = ann.annotationType().getMethod("value", new Class[] {});
                     String[] permissions = (String[]) valueMethod.invoke(ann, new Object[] {});
