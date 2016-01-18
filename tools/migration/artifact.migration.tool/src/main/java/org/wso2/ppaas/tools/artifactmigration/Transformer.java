@@ -54,17 +54,21 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Transforms the artifacts from PPaaS 4.0.0 to 4.1.0
  */
-public class Transformer {
+public class Transformer{
 
     private static final Logger log = Logger.getLogger(Transformer.class);
     private static Map<String, List<String>> memoryMap = new HashMap<>();
     private static Map<String, String> deploymentPolicyToApplicationPolicyMap = new HashMap<>();
     private static List<String> networkPartitionList = new ArrayList<>();
     private static List<String> deploymentPolicyList = new ArrayList<>();
+    private static ExecutorService executorService = Executors.newFixedThreadPool(3);
 
     public static Map<String, List<String>> getMemoryMap() {
         return memoryMap;
@@ -78,48 +82,54 @@ public class Transformer {
      * Method to transform Auto Scale Policies
      */
     public static void transformAutoscalePolicyList() throws TransformationException {
+        Runnable autoscalePolicyRunnable = new Runnable() {
+            @Override public void run() {
+                if (log.isInfoEnabled()) {
+                    log.info("Started autoscaling policy conversion");
+                }
+                List<AutoscalePolicy> autoscalePolicy400List;
+                AutoscalePolicyBean autoscalePolicy410 = new AutoscalePolicyBean();
+                try {
+                    autoscalePolicy400List = ArtifactLoader400.fetchAutoscalePolicyList();
+                    log.info("Fetched Auto Scale Policy from PPaaS 4.0.0");
 
-        List<AutoscalePolicy> autoscalePolicy400List;
-        AutoscalePolicyBean autoscalePolicy410 = new AutoscalePolicyBean();
-        try {
-            autoscalePolicy400List = ArtifactLoader400.fetchAutoscalePolicyList();
-            log.info("Fetched Auto Scale Policy from PPaaS 4.0.0");
+                    File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_AUTOSCALE);
 
-            File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_AUTOSCALE);
+                    for (AutoscalePolicy autoscalePolicy400 : autoscalePolicy400List) {
 
-            for (AutoscalePolicy autoscalePolicy400 : autoscalePolicy400List) {
+                        autoscalePolicy410.setId(autoscalePolicy400.getId());
 
-                autoscalePolicy410.setId(autoscalePolicy400.getId());
+                        //PPaaS 4.1.0 artifacts
+                        LoadThresholdsBean loadThresholds410 = new LoadThresholdsBean();
+                        RequestsInFlightThresholdsBean requestsInFlight410 = new RequestsInFlightThresholdsBean();
+                        MemoryConsumptionThresholdsBean memoryConsumption410 = new MemoryConsumptionThresholdsBean();
+                        LoadAverageThresholdsBean loadAverage410 = new LoadAverageThresholdsBean();
 
-                //PPaaS 4.1.0 artifacts
-                LoadThresholdsBean loadThresholds410 = new LoadThresholdsBean();
-                RequestsInFlightThresholdsBean requestsInFlight410 = new RequestsInFlightThresholdsBean();
-                MemoryConsumptionThresholdsBean memoryConsumption410 = new MemoryConsumptionThresholdsBean();
-                LoadAverageThresholdsBean loadAverage410 = new LoadAverageThresholdsBean();
+                        requestsInFlight410.setThreshold(
+                                autoscalePolicy400.getLoadThresholds().getRequestsInFlight().getUpperLimit());
+                        memoryConsumption410.setThreshold(
+                                autoscalePolicy400.getLoadThresholds().getMemoryConsumption().getUpperLimit());
+                        loadAverage410
+                                .setThreshold(autoscalePolicy400.getLoadThresholds().getLoadAverage().getUpperLimit());
+                        loadThresholds410.setRequestsInFlight(requestsInFlight410);
+                        loadThresholds410.setLoadAverage(loadAverage410);
+                        loadThresholds410.setMemoryConsumption(memoryConsumption410);
 
-                requestsInFlight410
-                        .setThreshold(autoscalePolicy400.getLoadThresholds().getRequestsInFlight().getUpperLimit());
-                memoryConsumption410
-                        .setThreshold(autoscalePolicy400.getLoadThresholds().getMemoryConsumption().getUpperLimit());
-                loadAverage410.setThreshold(autoscalePolicy400.getLoadThresholds().getLoadAverage().getUpperLimit());
-                loadThresholds410.setRequestsInFlight(requestsInFlight410);
-                loadThresholds410.setLoadAverage(loadAverage410);
-                loadThresholds410.setMemoryConsumption(memoryConsumption410);
-
-                autoscalePolicy410.setLoadThresholds(loadThresholds410);
-                JsonWriter.writeFile(directoryName, autoscalePolicy410.getId() + Constants.JSON_EXTENSION,
-                        getGson().toJson(autoscalePolicy410));
+                        autoscalePolicy410.setLoadThresholds(loadThresholds410);
+                        JsonWriter.writeFile(directoryName, autoscalePolicy410.getId() + Constants.JSON_EXTENSION,
+                                getGson().toJson(autoscalePolicy410));
+                    }
+                    log.info("Created Auto Scale Policy 4.1.0 artifacts");
+                } catch (JsonSyntaxException e) {
+                    String msg = "JSON syntax error in retrieving auto scale policies";
+                    log.error(msg,e);
+                } catch (ArtifactLoadingException e) {
+                    String msg = "Artifact Loading error in fetching auto scale policies";
+                    log.error(msg,e);
+                }
             }
-            log.info("Created Auto Scale Policy 4.1.0 artifacts");
-        } catch (JsonSyntaxException e) {
-            String msg = "JSON syntax error in retrieving auto scale policies";
-            log.error(msg);
-            throw new TransformationException(msg, e);
-        } catch (ArtifactLoadingException e) {
-            String msg = "Artifact Loading error in fetching auto scale policies";
-            log.error(msg);
-            throw new TransformationException(msg, e);
-        }
+        };
+        executorService.execute(autoscalePolicyRunnable);
     }
 
     /**
@@ -127,53 +137,60 @@ public class Transformer {
      */
     public static void transformNetworkPartitionList() throws TransformationException {
 
-        List<Partition> networkPartition400List;
-        NetworkPartitionBean networkPartition410 = new NetworkPartitionBean();
-        File directoryName;
-        try {
-            networkPartition400List = ArtifactLoader400.fetchPartitionList();
-            log.info("Fetched Network Partition List from PPaaS 4.0.0");
-
-            for (Partition networkPartition400 : networkPartition400List) {
-                networkPartition410.setId(networkPartition400.getId());
-                networkPartition410.setProvider(networkPartition400.getProvider());
-                List<PartitionBean> partitionsList410 = new ArrayList<>();
-                PartitionBean partition410 = new PartitionBean();
-                partition410.setId(Constants.NETWORK_PARTITION_ID);
-                if (networkPartition400.getProperty() != null) {
-                    List<org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean> property400List = networkPartition400
-                            .getProperty();
-                    List<org.apache.stratos.common.beans.PropertyBean> property410List = new ArrayList<>();
-
-                    for (org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean property400 : property400List) {
-                        org.apache.stratos.common.beans.PropertyBean property = new org.apache.stratos.common.beans.PropertyBean();
-                        property.setName(property400.getName());
-                        property.setValue(property400.getValue());
-                        property410List.add(property);
-                    }
-                    partition410.setProperty(property410List);
-                    partitionsList410.add(0, partition410);
-                    networkPartition410.setPartitions(partitionsList410);
+        Runnable networkPartitionRunnable = new Runnable() {
+            @Override public void run() {
+                if (log.isInfoEnabled()) {
+                    log.info("Started network partition list conversion");
                 }
-                directoryName = new File(
-                        Constants.ROOT_DIRECTORY + Constants.DIRECTORY_NETWORK_PARTITION + File.separator
-                                + networkPartition400.getProvider());
-                JsonWriter.writeFile(directoryName, networkPartition400.getId() + Constants.JSON_EXTENSION,
-                        getGson().toJson(networkPartition410));
-                networkPartitionList.add(networkPartition400.getId());
-            }
-            memoryMap.put("networkPartitions", networkPartitionList);
+                List<Partition> networkPartition400List;
+                NetworkPartitionBean networkPartition410 = new NetworkPartitionBean();
+                File directoryName;
+                try {
+                    networkPartition400List = ArtifactLoader400.fetchPartitionList();
+                    log.info("Fetched Network Partition List from PPaaS 4.0.0");
 
-            log.info("Created Network Partition List 4.1.0 artifacts");
-        } catch (JsonSyntaxException e) {
-            String msg = "JSON syntax error in retrieving network partition lists";
-            log.error(msg);
-            throw new TransformationException(msg, e);
-        } catch (ArtifactLoadingException e) {
-            String msg = "Artifact loading error in fetching network partition lists";
-            log.error(msg);
-            throw new TransformationException(msg, e);
-        }
+                    for (Partition networkPartition400 : networkPartition400List) {
+                        networkPartition410.setId(networkPartition400.getId());
+                        networkPartition410.setProvider(networkPartition400.getProvider());
+                        List<PartitionBean> partitionsList410 = new ArrayList<>();
+                        PartitionBean partition410 = new PartitionBean();
+                        partition410.setId(Constants.NETWORK_PARTITION_ID);
+                        if (networkPartition400.getProperty() != null) {
+                            List<org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean> property400List = networkPartition400
+                                    .getProperty();
+                            List<org.apache.stratos.common.beans.PropertyBean> property410List = new ArrayList<>();
+
+                            for (org.apache.stratos.rest.endpoint.bean.cartridge.definition.PropertyBean property400 : property400List) {
+                                org.apache.stratos.common.beans.PropertyBean property = new org.apache.stratos.common.beans.PropertyBean();
+                                property.setName(property400.getName());
+                                property.setValue(property400.getValue());
+                                property410List.add(property);
+                            }
+                            partition410.setProperty(property410List);
+                            partitionsList410.add(0, partition410);
+                            networkPartition410.setPartitions(partitionsList410);
+                        }
+                        directoryName = new File(
+                                Constants.ROOT_DIRECTORY + Constants.DIRECTORY_NETWORK_PARTITION + File.separator
+                                        + networkPartition400.getProvider());
+                        JsonWriter.writeFile(directoryName, networkPartition400.getId() + Constants.JSON_EXTENSION,
+                                getGson().toJson(networkPartition410));
+                        networkPartitionList.add(networkPartition400.getId());
+                    }
+                    memoryMap.put("networkPartitions", networkPartitionList);
+
+                    log.info("Created Network Partition List 4.1.0 artifacts");
+                } catch (JsonSyntaxException e) {
+                    String msg = "JSON syntax error in retrieving network partition lists";
+                    log.error(msg,e);
+                } catch (ArtifactLoadingException e) {
+                    String msg = "Artifact loading error in fetching network partition lists";
+                    log.error(msg,e);
+                }
+            }
+        };
+        executorService.execute(networkPartitionRunnable);
+
     }
 
     /**
@@ -181,78 +198,87 @@ public class Transformer {
      */
     public static void transformDeploymentPolicyList() throws TransformationException {
 
-        List<DeploymentPolicy> deploymentPolicy400List;
-        DeploymentPolicyBean deploymentPolicy410 = new DeploymentPolicyBean();
-        try {
-            deploymentPolicy400List = ArtifactLoader400.fetchDeploymentPolicyList();
-            log.info("Fetched Deployment Policy from PPaaS 4.0.0");
-            File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_DEPLOYMENT);
+        Runnable deploymentPoliciesRunnable = new Runnable() {
+            @Override public void run() {
 
-            for (DeploymentPolicy deploymentPolicy400 : deploymentPolicy400List) {
-
-                List<String> networkPartitions = new ArrayList<>();
-
-                deploymentPolicy410.setId(deploymentPolicy400.getId());
-                List<PartitionGroup> partitionGroup400List = deploymentPolicy400.getPartitionGroup();
-                List<NetworkPartitionReferenceBean> networkPartitions410List = new ArrayList<>();
-
-                int a = 0;
-                for (PartitionGroup partitionGroup : partitionGroup400List) {
-                    NetworkPartitionReferenceBean tempNetworkPartition = new NetworkPartitionReferenceBean();
-                    tempNetworkPartition.setPartitionAlgo(partitionGroup.getPartitionAlgo());
-
-                    List<Partition> partition400List = partitionGroup.getPartition();
-                    List<PartitionReferenceBean> partitions410List = new ArrayList<>();
-
-                    int partitionIterator = 0;
-                    for (Partition partition : partition400List) {
-
-                        networkPartitions.add(partition.getId());
-
-                        tempNetworkPartition.setId(partition.getId());
-                        PartitionReferenceBean tempPartition = new PartitionReferenceBean();
-                        tempPartition.setId(Constants.NETWORK_PARTITION_ID);
-                        tempPartition.setPartitionMax(partition.getPartitionMax());
-
-                        if (partition.getProperty() != null) {
-                            List<PropertyBean> property400List = partition.getProperty();
-                            List<org.apache.stratos.common.beans.PropertyBean> property410List = new ArrayList<>();
-                            int c = 0;
-                            for (PropertyBean propertyBean400 : property400List) {
-                                org.apache.stratos.common.beans.PropertyBean tempPropertyBean410 = new org.apache.stratos.common.beans.PropertyBean();
-                                tempPropertyBean410.setName(propertyBean400.getName());
-                                tempPropertyBean410.setValue(propertyBean400.getValue());
-                                property410List.add(c++, tempPropertyBean410);
-                            }
-                            tempPartition.setProperty(property410List);
-                        }
-                        partitions410List.add(partitionIterator++, tempPartition);
-                    }
-                    tempNetworkPartition.setPartitions(partitions410List);
-                    networkPartitions410List.add(a, tempNetworkPartition);
-
+                if (log.isInfoEnabled()) {
+                    log.info("Started deployment policy conversion");
                 }
-                deploymentPolicy410.setNetworkPartitions(networkPartitions410List);
 
-                //Adding network partitions specific to a deployment policies
-                memoryMap.put(deploymentPolicy400.getId(), networkPartitions);
-                deploymentPolicyList.add(deploymentPolicy410.getId());
+                List<DeploymentPolicy> deploymentPolicy400List;
+                DeploymentPolicyBean deploymentPolicy410 = new DeploymentPolicyBean();
+                try {
+                    deploymentPolicy400List = ArtifactLoader400.fetchDeploymentPolicyList();
+                    log.info("Fetched Deployment Policy from PPaaS 4.0.0");
+                    File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_DEPLOYMENT);
 
-                JsonWriter.writeFile(directoryName, deploymentPolicy410.getId() + Constants.JSON_EXTENSION,
-                        getGson().toJson(deploymentPolicy410));
+                    for (DeploymentPolicy deploymentPolicy400 : deploymentPolicy400List) {
+
+                        List<String> networkPartitions = new ArrayList<>();
+
+                        deploymentPolicy410.setId(deploymentPolicy400.getId());
+                        List<PartitionGroup> partitionGroup400List = deploymentPolicy400.getPartitionGroup();
+                        List<NetworkPartitionReferenceBean> networkPartitions410List = new ArrayList<>();
+
+                        int a = 0;
+                        for (PartitionGroup partitionGroup : partitionGroup400List) {
+                            NetworkPartitionReferenceBean tempNetworkPartition = new NetworkPartitionReferenceBean();
+                            tempNetworkPartition.setPartitionAlgo(partitionGroup.getPartitionAlgo());
+
+                            List<Partition> partition400List = partitionGroup.getPartition();
+                            List<PartitionReferenceBean> partitions410List = new ArrayList<>();
+
+                            int partitionIterator = 0;
+                            for (Partition partition : partition400List) {
+
+                                networkPartitions.add(partition.getId());
+
+                                tempNetworkPartition.setId(partition.getId());
+                                PartitionReferenceBean tempPartition = new PartitionReferenceBean();
+                                tempPartition.setId(Constants.NETWORK_PARTITION_ID);
+                                tempPartition.setPartitionMax(partition.getPartitionMax());
+
+                                if (partition.getProperty() != null) {
+                                    List<PropertyBean> property400List = partition.getProperty();
+                                    List<org.apache.stratos.common.beans.PropertyBean> property410List = new ArrayList<>();
+                                    int c = 0;
+                                    for (PropertyBean propertyBean400 : property400List) {
+                                        org.apache.stratos.common.beans.PropertyBean tempPropertyBean410 = new org.apache.stratos.common.beans.PropertyBean();
+                                        tempPropertyBean410.setName(propertyBean400.getName());
+                                        tempPropertyBean410.setValue(propertyBean400.getValue());
+                                        property410List.add(c++, tempPropertyBean410);
+                                    }
+                                    tempPartition.setProperty(property410List);
+                                }
+                                partitions410List.add(partitionIterator++, tempPartition);
+                            }
+                            tempNetworkPartition.setPartitions(partitions410List);
+                            networkPartitions410List.add(a, tempNetworkPartition);
+                        }
+                        deploymentPolicy410.setNetworkPartitions(networkPartitions410List);
+
+                        //Adding network partitions specific to a deployment policies
+                        memoryMap.put(deploymentPolicy400.getId(), networkPartitions);
+                        deploymentPolicyList.add(deploymentPolicy410.getId());
+
+                        JsonWriter.writeFile(directoryName, deploymentPolicy410.getId() + Constants.JSON_EXTENSION,
+                                getGson().toJson(deploymentPolicy410));
+                    }
+                    memoryMap.put("deploymentPolicies", deploymentPolicyList);
+                    log.info("Created Deployment Policy 4.1.0 artifacts");
+                } catch (JsonSyntaxException e) {
+                    String msg = "JSON syntax error in retrieving deployment policies";
+                    log.error(msg,e);
+                } catch (ArtifactLoadingException e) {
+                    String msg = "Artifact Loading error in fetching deployment policies";
+                    log.error(msg,e);
+                }
+                if (log.isInfoEnabled()) {
+                    log.info("Deployment policy conversion completed");
+                }
             }
-            memoryMap.put("deploymentPolicies", deploymentPolicyList);
-            log.info("Created Deployment Policy 4.1.0 artifacts");
-        } catch (JsonSyntaxException e) {
-            String msg = "JSON syntax error in retrieving deployment policies";
-            log.error(msg);
-            throw new TransformationException(msg, e);
-
-        } catch (ArtifactLoadingException e) {
-            String msg = "Artifact Loading error in fetching deployment policies";
-            log.error(msg);
-            throw new TransformationException(msg, e);
-        }
+        };
+        executorService.execute(deploymentPoliciesRunnable);
     }
 
     /**
@@ -472,5 +498,14 @@ public class Transformer {
     private static Gson getGson() {
         GsonBuilder gsonBuilder = new GsonBuilder();
         return gsonBuilder.setPrettyPrinting().create();
+    }
+
+    public static void waitForThreadTermination(){
+        executorService.shutdown();
+        try {
+            executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+        } catch (InterruptedException e) {
+            log.info("Interrupted while waiting to terminate the thread pool");
+        }
     }
 }

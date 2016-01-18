@@ -77,6 +77,7 @@ class ConversionTool {
         Transformer.transformNetworkPartitionList();
         Transformer.transformAutoscalePolicyList();
         Transformer.transformDeploymentPolicyList();
+        Transformer.waitForThreadTermination();
         Transformer.addDefaultApplicationPolicies();
         Transformer.transformCartridgeList();
         log.info("Conversion completed successfully");
