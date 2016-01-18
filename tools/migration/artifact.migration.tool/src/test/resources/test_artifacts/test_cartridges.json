@@ -1,0 +1,13 @@
+[{
+  "activeInstances": 0,
+  "cartridgeAlias": "-",
+  "cartridgeType": "php",
+  "description": "PHP Cartridge",
+  "displayName": "PHP",
+  "hostName": "apachestratos.org",
+  "loadBalancer": false,
+  "multiTenant": false,
+  "persistance": false,
+  "provider": "apache",
+  "version": 5
+}]

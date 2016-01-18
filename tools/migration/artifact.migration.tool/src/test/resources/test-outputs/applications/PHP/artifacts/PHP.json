@@ -1,0 +1,36 @@
+{
+  "applicationId": "PHP",
+  "multiTenant": false,
+  "name": "PHP",
+  "description": "PHP Cartridge",
+  "alias": "newphp",
+  "components": {
+    "cartridges": [
+      {
+        "type": "php",
+        "cartridgeMin": 0,
+        "cartridgeMax": 0,
+        "subscribableInfo": {
+          "alias": "newphp",
+          "deploymentPolicy": "economyDeploymentPolicy",
+          "autoscalingPolicy": "simpleAutoscalePolicy",
+          "maxMembers": 0,
+          "minMembers": 0
+        }
+      },
+      {
+        "type": "php",
+        "cartridgeMin": 0,
+        "cartridgeMax": 0,
+        "subscribableInfo": {
+          "alias": "newphp",
+          "deploymentPolicy": "economyDeploymentPolicy",
+          "autoscalingPolicy": "simpleAutoscalePolicy",
+          "maxMembers": 0,
+          "minMembers": 0
+        }
+      }
+    ]
+  },
+  "signUpsExist": false
+}

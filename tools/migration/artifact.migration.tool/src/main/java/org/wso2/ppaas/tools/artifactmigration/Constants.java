@@ -59,10 +59,11 @@ public class Constants {
     public static final String BASE_URL410 = "baseUrl410";
     public static final String USERNAME410 = "username410";
     public static final String PASSWORD410 = "password410";
+    public static final String HOSTNAME = "hostname";
     //Port mapping configuration strings
-    public static final String PORT = "port";
-    public static final String PROXY_PORT = "proxyPort";
-    public static final String PROTOCOL = "protocol";
+    public static final String PORT = "default.port";
+    public static final String PROXY_PORT = "default.proxy.port";
+    public static final String PROTOCOL = "default.protocol";
     //IaaS provider configuration
     public static final String IAAS = "iaas";
     public static final String IAAS_IMAGE_ID = "iaasImageId";
@@ -70,9 +71,8 @@ public class Constants {
     public static final String NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART1 = "curl -X POST -H \"Content-Type: application/json\" -d \"@${network_partitions_path}/";
     public static final String NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART2 = ".json\" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions";
     public static final String NETWORK_PARTITION_UNDEPLOYMENT_COMMAND = "curl -X DELETE -H \"Content-Type: application/json\" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions/";
-    public static final char[] CERTIFICATE_PASSWORD = "wso2carbon".toCharArray();
+    public static final String CERTIFICATE_PASSWORD = "wso2carbon";
     public static final boolean ENABLE_SELF_CERTIFIED = true;
-    public static final String BASIC_AUTH = "Basic ";
     public static final String JSON_EXTENSION = ".json";
     //Default value constants
     public static final String CARTRIDGE_CATEGORY = "default";
@@ -93,15 +93,10 @@ public class Constants {
     public static final String DIRECTORY_SOURCE_SCRIPT_OPENSTACK = "openstack";
 
     //Rest client configurations
-    public static String CERTIFICATE_PATH = StringUtils
-            .removeEnd(System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources",
-                    File.separator) + "/wso2carbon.jks";
+    public static final String CERTIFICATE_PATH = StringUtils.removeEnd(System.getProperty("user.dir"), File.separator) + System
+            .getProperty("certificate.path");
     //PPaaS 4.1.0 directories
     // 4.1.0 outputs root directory
-    public static String ROOT_DIRECTORY =
-            System.getProperty("user.dir") + File.separator + ".." + File.separator + "output-artifacts"
-                    + File.separator;
-    public static String DIRECTORY_SOURCE_SCRIPT =
-            System.getProperty("user.dir") + File.separator + ".." + File.separator + "resources" + File.separator
-                    + "scripts" + File.separator;
+    public static final String ROOT_DIRECTORY =System.getProperty("user.dir") + System.getProperty("output.path");
+    public static final String DIRECTORY_SOURCE_SCRIPT = System.getProperty("user.dir") + System.getProperty("sourcescripts.path");
 }

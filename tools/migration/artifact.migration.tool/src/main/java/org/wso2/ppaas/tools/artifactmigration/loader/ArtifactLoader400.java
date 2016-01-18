@@ -29,11 +29,8 @@ import org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDom
 import org.wso2.ppaas.tools.artifactmigration.Constants;
 import org.wso2.ppaas.tools.artifactmigration.RestClient;
 import org.wso2.ppaas.tools.artifactmigration.exception.ArtifactLoadingException;
-import org.wso2.ppaas.tools.artifactmigration.exception.RestClientException;
 
 import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -51,20 +48,19 @@ public class ArtifactLoader400 {
      * @throws ArtifactLoadingException
      */
     public static List<Partition> fetchPartitionList() throws ArtifactLoadingException {
-        try {
             String partitionString = readUrl(System.getProperty(Constants.BASE_URL400) + Constants.URL_PARTITION);
-            String partitionListString = null;
+            String partitionListString;
             if (partitionString != null) {
                 partitionListString = partitionString
                         .substring(partitionString.indexOf('['), (partitionString.lastIndexOf(']') + 1));
             }
+            else {
+                String msg = "Error while fetching network partition list";
+                log.error(msg);
+                throw new ArtifactLoadingException(msg);
+            }
             return gson.fromJson(partitionListString, new TypeToken<List<Partition>>() {
             }.getType());
-        } catch (RestClientException e) {
-            String msg = "Rest endpoint connection error in fetching partition list";
-            log.error(msg);
-            throw new ArtifactLoadingException(msg, e);
-        }
     }
 
     /**
@@ -74,7 +70,6 @@ public class ArtifactLoader400 {
      * @throws ArtifactLoadingException
      */
     public static List<AutoscalePolicy> fetchAutoscalePolicyList() throws ArtifactLoadingException {
-        try {
             String autoscalePolicyString = readUrl(
                     System.getProperty(Constants.BASE_URL400) + Constants.URL_POLICY_AUTOSCALE);
             String autoscalePolicyListString;
@@ -88,11 +83,6 @@ public class ArtifactLoader400 {
             }
             return gson.fromJson(autoscalePolicyListString, new TypeToken<List<AutoscalePolicy>>() {
             }.getType());
-        } catch (RestClientException e) {
-            String msg = "Rest endpoint connection error in fetching autoscaling policy list";
-            log.error(msg);
-            throw new ArtifactLoadingException(msg, e);
-        }
     }
 
     /**
@@ -102,7 +92,6 @@ public class ArtifactLoader400 {
      * @throws ArtifactLoadingException
      */
     public static List<DeploymentPolicy> fetchDeploymentPolicyList() throws ArtifactLoadingException {
-        try {
             String deploymentPolicyString = readUrl(
                     System.getProperty(Constants.BASE_URL400) + Constants.URL_POLICY_DEPLOYMENT);
             String deploymentPolicyListString;
@@ -116,11 +105,6 @@ public class ArtifactLoader400 {
             }
             return gson.fromJson(deploymentPolicyListString, new TypeToken<List<DeploymentPolicy>>() {
             }.getType());
-        } catch (RestClientException e) {
-            String msg = "Rest endpoint connection error in fetching deployment policy list";
-            log.error(msg);
-            throw new ArtifactLoadingException(msg, e);
-        }
     }
 
     /**
@@ -130,7 +114,6 @@ public class ArtifactLoader400 {
      * @throws ArtifactLoadingException
      */
     public static List<Cartridge> fetchCartridgeList() throws ArtifactLoadingException {
-        try {
             String cartridgeString = readUrl(System.getProperty(Constants.BASE_URL400) + Constants.URL_CARTRIDGE);
             String cartridgeListString;
             if (cartridgeString != null) {
@@ -143,11 +126,6 @@ public class ArtifactLoader400 {
             }
             return gson.fromJson(cartridgeListString, new TypeToken<List<Cartridge>>() {
             }.getType());
-        } catch (RestClientException e) {
-            String msg = "Rest endpoint connection error in fetching deployment policy list";
-            log.error(msg);
-            throw new ArtifactLoadingException(msg, e);
-        }
     }
 
     /**
@@ -157,7 +135,6 @@ public class ArtifactLoader400 {
      * @throws ArtifactLoadingException
      */
     public static List<CartridgeInfoBean> fetchSubscriptionDataList() throws ArtifactLoadingException {
-        try {
             String cartridgeString = readUrl(System.getProperty(Constants.BASE_URL400) + Constants.URL_SUBSCRIPTION);
             String cartridgeListString;
             if (cartridgeString != null) {
@@ -170,12 +147,6 @@ public class ArtifactLoader400 {
             }
             return gson.fromJson(cartridgeListString, new TypeToken<List<CartridgeInfoBean>>() {
             }.getType());
-
-        } catch (RestClientException e) {
-            String msg = "Rest endpoint connection error in fetching deployment policy list";
-            log.error(msg);
-            throw new ArtifactLoadingException(msg, e);
-        }
     }
 
     /**
@@ -188,7 +159,6 @@ public class ArtifactLoader400 {
      */
     public static List<SubscriptionDomainBean> fetchDomainMappingList(String cartridgeType, String subscriptionAlias)
             throws ArtifactLoadingException {
-        try {
             String domainString = readUrl(
                     System.getProperty(Constants.BASE_URL400) + Constants.STRATOS_API_PATH + "cartridge"
                             + File.separator + cartridgeType + File.separator + "subscription" + File.separator
@@ -204,11 +174,6 @@ public class ArtifactLoader400 {
             }
             return gson.fromJson(domainListString, new TypeToken<List<SubscriptionDomainBean>>() {
             }.getType());
-        } catch (RestClientException e) {
-            String msg = "Rest endpoint connection error in fetching deployment policy list";
-            log.error(msg);
-            throw new ArtifactLoadingException(msg, e);
-        }
     }
 
     /**
@@ -217,15 +182,9 @@ public class ArtifactLoader400 {
      * @param serviceEndpoint the endpoint to connect with
      * @return JSON string
      */
-    private static String readUrl(String serviceEndpoint) throws RestClientException {
+    private static String readUrl(String serviceEndpoint) {
         RestClient restclient = new RestClient(System.getProperty(Constants.USERNAME400),
                 System.getProperty(Constants.PASSWORD400));
-        try {
-            return restclient.doGet(new URL(serviceEndpoint));
-        } catch (MalformedURLException e) {
-            String msg = "Error in parsing the URL";
-            log.error(msg);
-            throw new RestClientException(msg, e);
-        }
+            return restclient.doGet(serviceEndpoint);
     }
 }

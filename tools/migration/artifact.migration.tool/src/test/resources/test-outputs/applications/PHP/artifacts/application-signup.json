@@ -1,0 +1,14 @@
+[
+  {
+    "alias": "myphp",
+    "privateRepo": false,
+    "repoUrl": "https://github.com/lakwarus/testphp.git",
+    "repoPassword": ""
+  },
+  {
+    "alias": "newphp",
+    "privateRepo": false,
+    "repoUrl": "https://github.com/lakwarus/testphp.git",
+    "repoPassword": ""
+  }
+]
