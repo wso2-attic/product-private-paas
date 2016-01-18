@@ -20,21 +20,22 @@
 #
 # --------------------------------------------------------------
 #
-var_base_url=base-url
-var_username="uname"
-var_password="pword"
+var_base_url=https://localhost:8443/
+var_username="admin"
+var_password="admin"
 echo "Undeploying application..."
-curl -X POST -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications/application_name/undeploy
+curl -X POST -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications/PHP/undeploy
 sleep 10
 echo "Deleting application..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications/application_name
+curl -X DELETE -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications/PHP
 echo "Removing cartridges..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/cartridges/cartridge_type
+curl -X DELETE -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/cartridges/php
 echo "Removing autoscale policies..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/autoscalingPolicies/autoscaling-policy_name
+curl -X DELETE -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/autoscalingPolicies/simpleAutoscalePolicy
 echo "Removing deployment policies..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/deploymentPolicies/deployment-policy_name
+curl -X DELETE -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/deploymentPolicies/economyDeploymentPolicy
 echo "Removing application policies..."
-curl -X DELETE -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applicationPolicies/application-policy_name
+curl -X DELETE -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applicationPolicies/application-policy-economyDeploymentPolicy
 echo "Removing network partitions..."
 
+curl -X DELETE -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions/os2

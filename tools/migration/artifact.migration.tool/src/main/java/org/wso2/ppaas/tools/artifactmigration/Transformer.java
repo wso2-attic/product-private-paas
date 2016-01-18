@@ -71,7 +71,9 @@ public class Transformer {
     }
 
     public static Map<String, String> getDeploymentPolicyToApplicationPolicyMap() {
+
         return deploymentPolicyToApplicationPolicyMap;
+
     }
 
     /**

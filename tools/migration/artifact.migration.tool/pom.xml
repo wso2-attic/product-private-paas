@@ -26,22 +26,6 @@
                     <groupId>slf4j.wso2</groupId>
                     <artifactId>slf4j</artifactId>
                 </exclusion>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents.wso2</groupId>
-                    <artifactId>httpclient</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.httpcomponents.wso2</groupId>
-                    <artifactId>httpcore</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.apache.axis2.wso2</groupId>
-                    <artifactId>axis2-client</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>commons-httpclient.wso2</groupId>
-                    <artifactId>commons-httpclient</artifactId>
-                </exclusion>
             </exclusions>
         </dependency>
         <dependency>
@@ -58,6 +42,11 @@
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-log4j12</artifactId>
             <version>1.7.7</version>
+        </dependency>
+        <dependency>
+            <groupId>javax.ws.rs</groupId>
+            <artifactId>javax.ws.rs-api</artifactId>
+            <version>2.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.apache.stratos</groupId>
@@ -92,15 +81,17 @@
             <version>9.1.3.v20140225</version>
             <scope>test</scope>
         </dependency>
+
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpclient</artifactId>
-            <version>4.5.1</version>
+            <groupId>org.glassfish.jersey.core</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>2.22.1</version>
         </dependency>
         <dependency>
-            <groupId>org.apache.httpcomponents</groupId>
-            <artifactId>httpcore</artifactId>
-            <version>4.4.4</version>
+            <groupId>org.glassfish.jersey.containers</groupId>
+            <artifactId>jersey-container-servlet-core</artifactId>
+            <version>2.22.1</version>
+            <scope>test</scope>
         </dependency>
     </dependencies>
 
@@ -118,8 +109,20 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <skipTests>true</skipTests>
+                    <!--<skipTests>true</skipTests>-->
                     <systemProperties>
+                        <property>
+                            <name>baseUrl400</name>
+                            <value>https://localhost:8443/</value>
+                        </property>
+                        <property>
+                            <name>baseUrl410</name>
+                            <value>https://localhost:8443/</value>
+                        </property>
+                        <property>
+                            <name>hostname</name>
+                            <value>localhost</value>
+                        </property>
                         <property>
                             <name>endpoint</name>
                             <value>https://localhost:8443</value>
@@ -133,16 +136,12 @@
                             <value>8443</value>
                         </property>
                         <property>
-                            <name>username</name>
+                            <name>username400</name>
                             <value>admin</value>
                         </property>
                         <property>
-                            <name>password</name>
+                            <name>password400</name>
                             <value>admin</value>
-                        </property>
-                        <property>
-                            <name>baseUrl410</name>
-                            <value>https://192.168.30.142:9443/</value>
                         </property>
                         <property>
                             <name>username410</name>
@@ -153,16 +152,28 @@
                             <value>admin</value>
                         </property>
                         <property>
-                            <name>port</name>
+                            <name>default.port</name>
                             <value>22</value>
                         </property>
                         <property>
-                            <name>proxyPort</name>
+                            <name>default.proxy.port</name>
                             <value>8280</value>
                         </property>
                         <property>
-                            <name>protocol</name>
+                            <name>default.protocol</name>
                             <value>http</value>
+                        </property>
+                        <property>
+                            <name>certificate.path</name>
+                            <value>/target/test-classes/wso2carbon.jks</value>
+                        </property>
+                        <property>
+                            <name>output.path</name>
+                            <value>/target/test-classes/output-artifacts/</value>
+                        </property>
+                        <property>
+                            <name>sourcescripts.path</name>
+                            <value>/target/test-classes/scripts/</value>
                         </property>
                     </systemProperties>
                 </configuration>

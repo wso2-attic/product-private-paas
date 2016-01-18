@@ -21,9 +21,9 @@
 # --------------------------------------------------------------
 #
 iaas=$1
-var_base_url=base-url
-var_username="uname"
-var_password="pword"
+var_base_url=https://localhost:8443/
+var_username="admin"
+var_password="admin"
 script_path=`pwd`
 artifacts_path="${script_path}/../../artifacts"
 iaas_cartridges_path="${script_path}/../../../../cartridges"
@@ -33,20 +33,21 @@ deployment_policies_path="${script_path}/../../../../deployment-policies"
 application_policies_path="${script_path}/../../../../application-policies"
 echo ${autoscaling_policies_path}/autoscaling-policy-1.json
 echo "Adding autoscale policy..."
-curl -X POST -H "Content-Type: application/json" -d "@${autoscaling_policies_path}/autoscaling-policy_name.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/autoscalingPolicies
+curl -X POST -H "Content-Type: application/json" -d "@${autoscaling_policies_path}/simpleAutoscalePolicy.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/autoscalingPolicies
 echo "Adding network partitions...*"
+curl -X POST -H "Content-Type: application/json" -d "@${network_partitions_path}/os2.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions
 echo "Adding deployment policy..."
-curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/deployment-policy_name.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/deploymentPolicies
+curl -X POST -H "Content-Type: application/json" -d "@${deployment_policies_path}/economyDeploymentPolicy.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/deploymentPolicies
 echo "Adding cartridge..."
-curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/cartridge_name.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/cartridges
+curl -X POST -H "Content-Type: application/json" -d "@${iaas_cartridges_path}/PHP.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/cartridges
 sleep 1
 echo "Adding application policy..."
-curl -X POST -H "Content-Type: application/json" -d "@${application_policies_path}/application-policy_name.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applicationPolicies
+curl -X POST -H "Content-Type: application/json" -d "@${application_policies_path}/application-policy-economyDeploymentPolicy.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applicationPolicies
 sleep 1
 echo "Adding application..."
-curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/application_name.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications
+curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/PHP.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications
 sleep 1
 echo "Deploying application..."
-curl -X POST -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications/cartridge_name/deploy/application-policy_name
+curl -X POST -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications/PHP/deploy/application-policy-economyDeploymentPolicy
 echo "Adding domain mappings..."
-curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/domain-mapping.json" -k -u ${var_username}:${var_password} ${var_base_url}api/applications/application_name/domainMappings
+curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/domain-mapping.json" -k -u ${var_username}:${var_password} ${var_base_url}api/applications/PHP/domainMappings

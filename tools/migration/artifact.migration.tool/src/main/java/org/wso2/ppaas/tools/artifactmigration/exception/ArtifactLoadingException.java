@@ -18,9 +18,6 @@
 package org.wso2.ppaas.tools.artifactmigration.exception;
 
 public class ArtifactLoadingException extends Exception {
-    public ArtifactLoadingException(String message, Throwable throwable) {
-        super(message, throwable);
-    }
 
     public ArtifactLoadingException(String message) {
         super(message);
