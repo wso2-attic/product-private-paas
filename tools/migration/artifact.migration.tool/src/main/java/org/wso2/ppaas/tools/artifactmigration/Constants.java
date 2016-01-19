@@ -28,20 +28,14 @@ public class Constants {
 
     //PPaaS 4.0.0 REST API endpoints
     public static final String STRATOS_API_PATH = "stratos" + File.separator + "admin" + File.separator;
-    private static final String MIGRATION_API_PATH = "migration" + File.separator + "admin" + File.separator;
-
     // Do not use forward slash at the beginning instead use it in the base url.
     public static final String URL_PARTITION = STRATOS_API_PATH + "partition";
     public static final String URL_POLICY_AUTOSCALE = STRATOS_API_PATH + "policy" + File.separator + "autoscale";
-    public static final String URL_CARTRIDGE = STRATOS_API_PATH + "cartridge" + File.separator + "list";
     public static final String URL_POLICY_DEPLOYMENT = STRATOS_API_PATH + "policy" + File.separator + "deployment";
     public static final String DIRECTORY_OUTPUT_SCRIPT_DEPLOY = File.separator + "scripts" + File.separator + "common";
     public static final String DIRECTORY_ARTIFACTS = "artifacts";
     public static final String FILE_SOURCE_SCRIPT_DEPLOY = File.separator + "deploy.sh";
     public static final String FILE_SOURCE_SCRIPT_UNDEPLOY = File.separator + "undeploy.sh";
-    public static final String URL_SUBSCRIPTION =
-            MIGRATION_API_PATH + "cartridge" + File.separator + "list" + File.separator + "subscribed" + File.separator
-                    + "all";
     //Default values for the application policy
     public static final String APPLICATION_POLICY_ID = "application-policy-";
     public static final String APPLICATION_POLICY_ALGO = "one-after-another";
@@ -50,9 +44,12 @@ public class Constants {
     //Default file names for application policy jsons and domain mapping jsons
     public static final String FILENAME_APPLICATION_SIGNUP = "application-signup.json";
     public static final String FILENAME_DOMAIN_MAPPING = "domain-mapping.json";
+    //Default values for cartridges
+    public static final int CARTRIDGE_MIN_VALUE = 1;
+    public static final int CARTRIDGE_MAX_VALUE = 1;
     //Configuration strings
     //Login credentials configuration strings
-    public static final String CONFIGURATION_FILE_NAME = "config";
+    public static final String CONFIGURATION_FILE_NAME = "config.configuration";
     public static final String BASE_URL400 = "baseUrl400";
     public static final String USERNAME400 = "username400";
     public static final String PASSWORD400 = "password400";
@@ -67,6 +64,7 @@ public class Constants {
     //IaaS provider configuration
     public static final String IAAS = "iaas";
     public static final String IAAS_IMAGE_ID = "iaasImageId";
+    public static final String NETWORK_UUID = "networkUuID";
     //Network partition configuration strings
     public static final String NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART1 = "curl -X POST -H \"Content-Type: application/json\" -d \"@${network_partitions_path}/";
     public static final String NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART2 = ".json\" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions";
@@ -91,12 +89,19 @@ public class Constants {
     public static final String DIRECTORY_SOURCE_SCRIPT_KUBERNETES = "kubernetes";
     public static final String DIRECTORY_SOURCE_SCRIPT_MOCK = "mock";
     public static final String DIRECTORY_SOURCE_SCRIPT_OPENSTACK = "openstack";
-
     //Rest client configurations
-    public static final String CERTIFICATE_PATH = StringUtils.removeEnd(System.getProperty("user.dir"), File.separator) + System
-            .getProperty("certificate.path");
+    public static final String CERTIFICATE_PATH =
+            StringUtils.removeEnd(System.getProperty("user.dir"), File.separator) + System
+                    .getProperty("certificate.path");
     //PPaaS 4.1.0 directories
     // 4.1.0 outputs root directory
-    public static final String ROOT_DIRECTORY =System.getProperty("user.dir") + System.getProperty("output.path");
-    public static final String DIRECTORY_SOURCE_SCRIPT = System.getProperty("user.dir") + System.getProperty("sourcescripts.path");
+    public static final String ROOT_DIRECTORY = System.getProperty("user.dir") + System.getProperty("output.path");
+    public static final String DIRECTORY_SOURCE_SCRIPT =
+            System.getProperty("user.dir") + System.getProperty("sourcescripts.path");
+    private static final String MIGRATION_API_PATH = "migration" + File.separator + "admin" + File.separator;
+    public static final String URL_CARTRIDGE = MIGRATION_API_PATH + "cartridge" + File.separator + "list";
+    public static final String URL_SUBSCRIPTION =
+            MIGRATION_API_PATH + "cartridge" + File.separator + "list" + File.separator + "subscribed" + File.separator
+                    + "all";
+
 }

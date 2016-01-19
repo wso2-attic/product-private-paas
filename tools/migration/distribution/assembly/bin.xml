@@ -67,6 +67,7 @@
                 <include>*:war</include>
             </includes>
             <outputDirectory>/migration-api/4.0.0</outputDirectory>
+            <outputFileNameMapping>migration.war</outputFileNameMapping>
         </dependencySet>
     </dependencySets>
 

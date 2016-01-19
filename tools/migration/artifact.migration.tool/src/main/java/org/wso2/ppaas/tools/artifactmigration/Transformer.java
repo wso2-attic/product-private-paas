@@ -61,10 +61,10 @@ import java.util.concurrent.TimeUnit;
 /**
  * Transforms the artifacts from PPaaS 4.0.0 to 4.1.0
  */
-public class Transformer{
+public class Transformer {
 
     private static final Logger log = Logger.getLogger(Transformer.class);
-    private static Map<String, List<String>> memoryMap = new HashMap<>();
+    private static final Map<String, List<String>> memoryMap = new HashMap<>();
     private static Map<String, String> deploymentPolicyToApplicationPolicyMap = new HashMap<>();
     private static List<String> networkPartitionList = new ArrayList<>();
     private static List<String> deploymentPolicyList = new ArrayList<>();
@@ -75,9 +75,7 @@ public class Transformer{
     }
 
     public static Map<String, String> getDeploymentPolicyToApplicationPolicyMap() {
-
         return deploymentPolicyToApplicationPolicyMap;
-
     }
 
     /**
@@ -124,14 +122,14 @@ public class Transformer{
                     log.info("Created Auto Scale Policy 4.1.0 artifacts");
                 } catch (JsonSyntaxException e) {
                     String msg = "JSON syntax error in retrieving auto scale policies";
-                    log.error(msg,e);
+                    log.error(msg, e);
                 } catch (ArtifactLoadingException e) {
                     String msg = "Artifact Loading error in fetching auto scale policies";
-                    log.error(msg,e);
+                    log.error(msg, e);
                 }
             }
         };
-        executorService.execute(autoscalePolicyRunnable);
+        executorService.submit(autoscalePolicyRunnable);
     }
 
     /**
@@ -184,15 +182,14 @@ public class Transformer{
                     log.info("Created Network Partition List 4.1.0 artifacts");
                 } catch (JsonSyntaxException e) {
                     String msg = "JSON syntax error in retrieving network partition lists";
-                    log.error(msg,e);
+                    log.error(msg, e);
                 } catch (ArtifactLoadingException e) {
                     String msg = "Artifact loading error in fetching network partition lists";
-                    log.error(msg,e);
+                    log.error(msg, e);
                 }
             }
         };
-        executorService.execute(networkPartitionRunnable);
-
+        executorService.submit(networkPartitionRunnable);
     }
 
     /**
@@ -206,7 +203,6 @@ public class Transformer{
                 if (log.isInfoEnabled()) {
                     log.info("Started deployment policy conversion");
                 }
-
                 List<DeploymentPolicy> deploymentPolicy400List;
                 DeploymentPolicyBean deploymentPolicy410 = new DeploymentPolicyBean();
                 try {
@@ -270,17 +266,17 @@ public class Transformer{
                     log.info("Created Deployment Policy 4.1.0 artifacts");
                 } catch (JsonSyntaxException e) {
                     String msg = "JSON syntax error in retrieving deployment policies";
-                    log.error(msg,e);
+                    log.error(msg, e);
                 } catch (ArtifactLoadingException e) {
                     String msg = "Artifact Loading error in fetching deployment policies";
-                    log.error(msg,e);
+                    log.error(msg, e);
                 }
                 if (log.isInfoEnabled()) {
                     log.info("Deployment policy conversion completed");
                 }
             }
         };
-        executorService.execute(deploymentPoliciesRunnable);
+        executorService.submit(deploymentPoliciesRunnable);
     }
 
     /**
@@ -321,8 +317,8 @@ public class Transformer{
                         subscribableInfo.setDeploymentPolicy(subscription.getDeploymentPolicy());
                         subscribableInfo.setAlias(subscription.getAlias());
 
+                        //Adding signup details
                         ArtifactRepositoryBean artifactRepository = new ArtifactRepositoryBean();
-
                         artifactRepository.setAlias(subscription.getAlias());
                         artifactRepository.setPrivateRepo(subscription.isPrivateRepo());
                         artifactRepository.setRepoUrl(subscription.getRepoURL());
@@ -331,9 +327,9 @@ public class Transformer{
 
                         signup410List.add(a++, artifactRepository);
 
+                        //Adding domain mapping details
                         List<SubscriptionDomainBean> domainMapping400 = ArtifactLoader400
                                 .fetchDomainMappingList(cartridge.getCartridgeType(), subscription.getAlias());
-
                         for (SubscriptionDomainBean domainMapping : domainMapping400) {
                             DomainMappingBean domainMappingBean = new DomainMappingBean();
                             domainMappingBean.setCartridgeAlias(subscription.getAlias());
@@ -344,6 +340,8 @@ public class Transformer{
 
                         cartridgeReference410.setSubscribableInfo(subscribableInfo);
                         cartridgeReference410.setType(cartridge.getCartridgeType());
+                        cartridgeReference410.setCartridgeMax(Constants.CARTRIDGE_MAX_VALUE);
+                        cartridgeReference410.setCartridgeMin(Constants.CARTRIDGE_MIN_VALUE);
 
                         cartridges.add(0, cartridgeReference410);
                         components.setCartridges(cartridges);
@@ -407,9 +405,11 @@ public class Transformer{
                     for (PortMapping portMapping : portMapping400List) {
 
                         PortMappingBean portMappingBeanTemp = new PortMappingBean();
-                        portMappingBeanTemp.setPort(Integer.parseInt(portMapping.getPort()));
+                        if (portMapping.getPort() != null)
+                            portMappingBeanTemp.setPort(Integer.parseInt(portMapping.getPort()));
                         portMappingBeanTemp.setProtocol(portMapping.getProtocol());
-                        portMappingBeanTemp.setProxyPort(Integer.parseInt(portMapping.getProxyPort()));
+                        if (portMapping.getProxyPort() != null)
+                            portMappingBeanTemp.setProxyPort(Integer.parseInt(portMapping.getProxyPort()));
 
                         portMapping410List.add(b++, portMappingBeanTemp);
                     }
@@ -426,7 +426,6 @@ public class Transformer{
 
                     int b = 0;
                     for (Volume volume : volume400Array) {
-
                         VolumeBean volumeBeanTemp = new VolumeBean();
                         volumeBeanTemp.setId(volume.getId());
                         volumeBeanTemp.setSize(String.valueOf(volume.getSize()));
@@ -439,13 +438,17 @@ public class Transformer{
                     persistenceBean410.setVolume(volumeBean410List);
                     cartridge410.setPersistence(persistenceBean410);
                 }
-
                 //Setting IaaS provider details
+                List<NetworkInterfaceBean> networkInterfacesList = new ArrayList<>();
+                NetworkInterfaceBean networkInterface = new NetworkInterfaceBean();
+                networkInterface.setNetworkUuid(System.getProperty(Constants.NETWORK_UUID));
+                networkInterfacesList.add(networkInterface);
+
                 List<IaasProviderBean> iaasProviderList = new ArrayList<>();
                 IaasProviderBean iaasProvider = new IaasProviderBean();
                 iaasProvider.setType(System.getProperty(Constants.IAAS));
                 iaasProvider.setImageId(System.getProperty(Constants.IAAS_IMAGE_ID));
-
+                iaasProvider.setNetworkInterfaces(networkInterfacesList);
                 iaasProviderList.add(0, iaasProvider);
                 cartridge410.setIaasProvider(iaasProviderList);
 
@@ -502,7 +505,10 @@ public class Transformer{
         return gsonBuilder.setPrettyPrinting().create();
     }
 
-    public static void waitForThreadTermination(){
+    /**
+     * Method to wait for the termination of the thread pool
+     */
+    public static void waitForThreadTermination() {
         executorService.shutdown();
         try {
             executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);

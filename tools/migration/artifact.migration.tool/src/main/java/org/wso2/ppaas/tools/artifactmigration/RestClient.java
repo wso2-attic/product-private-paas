@@ -28,8 +28,6 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 
 public class RestClient {
-    final private Client client;
-
     /**
      * Override the default host name verifier to allow any certificate. (Constants.ENABLE_SELF_CERTIFIED have
      * to be disabled when in normal use.)
@@ -43,6 +41,8 @@ public class RestClient {
             });
         }
     }
+
+    final private Client client;
 
     /**
      * Constructor to verify the certificate and connect to the rest endpoint
@@ -62,9 +62,8 @@ public class RestClient {
      *
      * @param resourcePath path of the resource
      * @return JSON string
-     *
      */
     public String doGet(String resourcePath) {
-       return client.target(resourcePath).request().get().readEntity(String.class);
+        return client.target(resourcePath).request().get().readEntity(String.class);
     }
 }

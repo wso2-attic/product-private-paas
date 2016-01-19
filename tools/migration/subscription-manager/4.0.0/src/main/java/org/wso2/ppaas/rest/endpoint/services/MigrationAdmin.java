@@ -189,4 +189,11 @@ import java.util.List;
             @PathParam("domainName") String domainName) throws RestAPIException {
         return ServiceUtils.removeSubscriptionDomain(getConfigContext(), cartridgeType, subscriptionAlias, domainName);
     }
+
+    @GET @Path("/cartridge/list") @Produces("application/json") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") public Cartridge[] getAvailableSingleTenantCartridges()
+            throws RestAPIException {
+        List<Cartridge> cartridges = ServiceUtils.getAvailableCartridges(null, false, getConfigContext());
+        return cartridges.isEmpty() ? new Cartridge[0] : cartridges.toArray(new Cartridge[cartridges.size()]);
+    }
+
 }

@@ -44,12 +44,6 @@
             <artifactId>artifact.migration.tool</artifactId>
             <version>4.1.1-SNAPSHOT</version>
         </dependency>
-        <!--<dependency>-->
-        <!--<groupId>org.apache.stratos</groupId>-->
-        <!--<artifactId>org.apache.stratos.rest.endpoint</artifactId>-->
-        <!--<version>4.0.0-wso2v1</version>-->
-        <!--<type>war</type>-->
-        <!--</dependency>-->
         <dependency>
             <groupId>org.wso2.ppaas</groupId>
             <artifactId>ppaas-400-migration</artifactId>

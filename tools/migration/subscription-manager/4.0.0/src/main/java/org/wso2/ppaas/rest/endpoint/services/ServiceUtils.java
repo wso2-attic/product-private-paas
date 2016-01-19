@@ -31,6 +31,7 @@ import org.apache.stratos.manager.exception.*;
 import org.apache.stratos.manager.subscription.*;
 import org.apache.stratos.manager.topology.model.TopologyClusterInformationModel;
 import org.apache.stratos.manager.utils.ApplicationManagementUtil;
+import org.apache.stratos.manager.utils.CartridgeConstants;
 import org.apache.stratos.messaging.domain.topology.Cluster;
 import org.apache.stratos.messaging.domain.topology.Member;
 import org.wso2.ppaas.rest.endpoint.CartridgeSubscriptionManager;
@@ -291,6 +292,20 @@ public class ServiceUtils {
             }
             if (!matches && cartridgeSubscription.getAlias() != null) {
                 matches = pattern.matcher(cartridgeSubscription.getAlias().toLowerCase()).find();
+            }
+            return matches;
+        }
+        return true;
+    }
+
+    static boolean cartridgeMatches(CartridgeInfo cartridgeInfo, Pattern pattern) {
+        if (pattern != null) {
+            boolean matches = false;
+            if (cartridgeInfo.getDisplayName() != null) {
+                matches = pattern.matcher(cartridgeInfo.getDisplayName().toLowerCase()).find();
+            }
+            if (!matches && cartridgeInfo.getDescription() != null) {
+                matches = pattern.matcher(cartridgeInfo.getDescription().toLowerCase()).find();
             }
             return matches;
         }
@@ -814,5 +829,123 @@ public class ServiceUtils {
         privilegedCC.setUsername(username);
 
         return privilegedCC;
+    }
+
+    static List<Cartridge> getAvailableCartridges(String cartridgeSearchString, Boolean multiTenant,
+            ConfigurationContext configurationContext) throws RestAPIException {
+        List<Cartridge> cartridges = new ArrayList<Cartridge>();
+
+        if (log.isDebugEnabled()) {
+            log.debug("Getting available cartridges. Search String: " + cartridgeSearchString + ", Multi-Tenant: "
+                    + multiTenant);
+        }
+
+        boolean allowMultipleSubscription = new Boolean(
+                System.getProperty(CartridgeConstants.FEATURE_MULTI_TENANT_MULTIPLE_SUBSCRIPTION_ENABLED));
+
+        try {
+            Pattern searchPattern = getSearchStringPattern(cartridgeSearchString);
+
+            String[] availableCartridges = CloudControllerServiceClient.getServiceClient().getRegisteredCartridges();
+
+            if (availableCartridges != null) {
+                for (String cartridgeType : availableCartridges) {
+                    CartridgeInfo cartridgeInfo = null;
+                    try {
+                        cartridgeInfo = CloudControllerServiceClient.getServiceClient().getCartridgeInfo(cartridgeType);
+                    } catch (Exception e) {
+                        if (log.isWarnEnabled()) {
+                            log.warn("Error when calling getCartridgeInfo for " + cartridgeType + ", Error: " + e
+                                    .getMessage());
+                        }
+                    }
+                    if (cartridgeInfo == null) {
+                        // This cannot happen. But continue
+                        if (log.isDebugEnabled()) {
+                            log.debug("Cartridge Info not found: " + cartridgeType);
+                        }
+                        continue;
+                    }
+
+                    if (multiTenant != null && !multiTenant && cartridgeInfo.getMultiTenant()) {
+                        // Need only Single-Tenant cartridges
+                        continue;
+                    } else if (multiTenant != null && multiTenant && !cartridgeInfo.getMultiTenant()) {
+                        // Need only Multi-Tenant cartridges
+                        continue;
+                    }
+
+                    if (!ServiceUtils.cartridgeMatches(cartridgeInfo, searchPattern)) {
+                        continue;
+                    }
+
+                    Cartridge cartridge = new Cartridge();
+                    cartridge.setCartridgeType(cartridgeType);
+                    cartridge.setProvider(cartridgeInfo.getProvider());
+                    cartridge.setDisplayName(cartridgeInfo.getDisplayName());
+                    cartridge.setDescription(cartridgeInfo.getDescription());
+                    cartridge.setVersion(cartridgeInfo.getVersion());
+                    cartridge.setMultiTenant(cartridgeInfo.getMultiTenant());
+                    cartridge.setHostName(cartridgeInfo.getHostName());
+                    cartridge.setDefaultAutoscalingPolicy(cartridgeInfo.getDefaultAutoscalingPolicy());
+                    cartridge.setDefaultDeploymentPolicy(cartridgeInfo.getDefaultDeploymentPolicy());
+                    //cartridge.setStatus(CartridgeConstants.NOT_SUBSCRIBED);
+                    cartridge.setCartridgeAlias("-");
+                    cartridge.setPersistence(cartridgeInfo.getPersistence());
+                    cartridge.setServiceGroup(cartridgeInfo.getServiceGroup());
+                    cartridge.setPortMappings(cartridgeInfo.getPortMappings());
+
+                    if (cartridgeInfo.getLbConfig() != null && cartridgeInfo.getProperties() != null) {
+                        for (Property property : cartridgeInfo.getProperties()) {
+                            if (property.getName().equals("load.balancer")) {
+                                cartridge.setLoadBalancer(true);
+                            }
+                        }
+                    }
+                    //cartridge.setActiveInstances(0);
+                    cartridges.add(cartridge);
+
+                    if (cartridgeInfo.getMultiTenant() && !allowMultipleSubscription) {
+                        // If the cartridge is multi-tenant. We should not let users
+                        // createSubscription twice.
+                        if (isAlreadySubscribed(cartridgeType,
+                                ApplicationManagementUtil.getTenantId(configurationContext))) {
+                            if (log.isDebugEnabled()) {
+                                log.debug("Already subscribed to " + cartridgeType
+                                        + ". This multi-tenant cartridge will not be available to createSubscription");
+                            }
+                            //cartridge.setStatus(CartridgeConstants.SUBSCRIBED);
+                        }
+                    }
+                }
+            } else {
+                if (log.isDebugEnabled()) {
+                    log.debug("There are no available cartridges");
+                }
+            }
+        } catch (Exception e) {
+            String msg = "Error while getting available cartridges. Cause: " + e.getMessage();
+            log.error(msg, e);
+            throw new RestAPIException(msg, e);
+        }
+
+        Collections.sort(cartridges);
+
+        if (log.isDebugEnabled()) {
+            log.debug("Returning available cartridges " + cartridges.size());
+        }
+
+        return cartridges;
+    }
+
+    private static boolean isAlreadySubscribed(String cartridgeType, int tenantId) {
+
+        Collection<CartridgeSubscription> subscriptionList = cartridgeSubsciptionManager
+                .isCartridgeSubscribed(tenantId, cartridgeType);
+        if (subscriptionList == null || subscriptionList.isEmpty()) {
+            return false;
+        } else {
+            return true;
+        }
     }
 }

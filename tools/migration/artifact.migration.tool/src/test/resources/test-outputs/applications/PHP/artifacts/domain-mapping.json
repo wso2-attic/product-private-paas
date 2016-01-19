@@ -1,12 +1,14 @@
-{"domainMappings":[
-  {
-    "cartridgeAlias": "myphp",
-    "domainName": "wso2.com",
-    "contextPath": "/wso2as/"
-  },
-  {
-    "cartridgeAlias": "newphp",
-    "domainName": "wso2.com",
-    "contextPath": "/wso2as/"
-  }
-]}
+{
+  "domainMappings": [
+    {
+      "cartridgeAlias": "myphp",
+      "domainName": "wso2.com",
+      "contextPath": "/wso2as/"
+    },
+    {
+      "cartridgeAlias": "newphp",
+      "domainName": "wso2.com",
+      "contextPath": "/wso2as/"
+    }
+  ]
+}

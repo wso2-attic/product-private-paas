@@ -30,36 +30,33 @@ class TestConstants {
     public static final int BUFFER_SIZE = 32768;
     public static final int IDLE_TIMEOUT = 300000;
     public static final String KEYSTORE_PATH = getResourcesFolderPath() + File.separator + "wso2carbon.jks";
-
-    //Configuration StratosV400MockServelet Test
-    private static final String TEST_ARTIFACTS_PATH = "test_artifacts";
-
     //Configuration of path for the folder of the output files created
     public static final String OUTPUT_DIRECTORY =
             System.getProperty("user.dir") + File.separator + "target" + File.separator + "test-classes"
                     + File.separator + "output-artifacts" + File.separator;
-
     //Configuration of path for the folder of the output testing files
     public static final String TEST_OUTPUTS =
             getResourcesFolderPath() + File.separator + "test-outputs" + File.separator;
-
-    public static final String OUTPUT_PARTITION = "network-partitions" + File.separator + "openstack" + File.separator
-            + "os2.json";
-    public static final String OUTPUT_AUTOSCALE = "autoscaling-policies" + File.separator + "simpleAutoscalePolicy.json";
-    public static final String OUTPUT_DEPLOYMENT = "deployment-policies" + File.separator + "economyDeploymentPolicy.json";
+    public static final String OUTPUT_PARTITION =
+            "network-partitions" + File.separator + "openstack" + File.separator + "os2.json";
+    public static final String OUTPUT_AUTOSCALE =
+            "autoscaling-policies" + File.separator + "simpleAutoscalePolicy.json";
+    public static final String OUTPUT_DEPLOYMENT =
+            "deployment-policies" + File.separator + "economyDeploymentPolicy.json";
     public static final String OUTPUT_CARTRIDGE = "cartridges" + File.separator + "PHP.json";
-
+    public static final String ERROR_MSG = "{\"Error\":{ \"errorCode\": \" -1234\", \"errorMessage\": \" Unexpected error. Returned JSON String is a null. Please check the test cases \"}}";
+    //Configuration StratosV400MockServelet Test
+    private static final String TEST_ARTIFACTS_PATH = "test_artifacts";
     //Configuration input test file paths
     private static final String TEST_INPUTS =
             getResourcesFolderPath() + File.separator + TestConstants.TEST_ARTIFACTS_PATH + File.separator;
-    public static final String PARTITION_TEST_INPUT= TEST_INPUTS+ File.separator+"test_partitions.json";
-    public static final String AUTOSCALE_TEST_INPUT=TEST_INPUTS+ File.separator+"test_autoscalepolicies.json";
-    public static final String DEPLOYMENT_TEST_INPUT=TEST_INPUTS+ File.separator+"test_deploymentpolicies.json";
-    public static final String CARTRIDGE_TEST_INPUT=TEST_INPUTS+ File.separator+"test_cartridges.json";
-    public static final String SUBSCRIPTION_TEST_INPUT=TEST_INPUTS+ File.separator+"test_subscription.json";
-    public static final String DOMAIN_MAPPING_TEST_INPUT=TEST_INPUTS+ File.separator+"test_domainmappings.json";
+    public static final String PARTITION_TEST_INPUT = TEST_INPUTS + File.separator + "test_partitions.json";
+    public static final String AUTOSCALE_TEST_INPUT = TEST_INPUTS + File.separator + "test_autoscalepolicies.json";
+    public static final String DEPLOYMENT_TEST_INPUT = TEST_INPUTS + File.separator + "test_deploymentpolicies.json";
+    public static final String CARTRIDGE_TEST_INPUT = TEST_INPUTS + File.separator + "test_cartridges.json";
+    public static final String SUBSCRIPTION_TEST_INPUT = TEST_INPUTS + File.separator + "test_subscription.json";
+    public static final String DOMAIN_MAPPING_TEST_INPUT = TEST_INPUTS + File.separator + "test_domainmappings.json";
 
-    public static final String ERROR_MSG="{\"Error\":{ \"errorCode\": \" -1234\", \"errorMessage\": \" Unexpected error. Returned JSON String is a null. Please check the test cases \"}}";
     private static String getResourcesFolderPath() {
         String path = HttpClientTest.class.getResource("/").getPath();
         return StringUtils.removeEnd(path, File.separator);

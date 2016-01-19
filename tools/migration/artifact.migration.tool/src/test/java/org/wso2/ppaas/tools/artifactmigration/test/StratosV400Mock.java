@@ -3,6 +3,7 @@ package org.wso2.ppaas.tools.artifactmigration.test;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -14,7 +15,8 @@ import java.io.IOException;
 
 @Path("/admin") public class StratosV400Mock {
     private static final Log log = LogFactory.getLog(StratosV400Mock.class);
-    private String readJSON(String FileName){
+
+    private String readJSON(String FileName) {
         File file = new File(FileName);
         String str = null;
         try {
@@ -25,8 +27,8 @@ import java.io.IOException;
         } catch (IOException e) {
             log.error("Error in converting JSONs to a String ", e);
         }
-        if(str!=null)
-        return str;
+        if (str != null)
+            return str;
         else
             return TestConstants.ERROR_MSG;
     }

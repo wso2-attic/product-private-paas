@@ -25,6 +25,7 @@ import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 class HttpClientSetUp {
     private static final Server server = new Server(Integer.getInteger("https.port"));
+
     public HttpClientSetUp() {
         // Create Server
         ServletContextHandler context = new ServletContextHandler();
@@ -62,6 +63,7 @@ class HttpClientSetUp {
         server.setConnectors(new Connector[] { https });
 
     }
+
     public static void startServer() throws Exception {
         // Start Server
         server.start();

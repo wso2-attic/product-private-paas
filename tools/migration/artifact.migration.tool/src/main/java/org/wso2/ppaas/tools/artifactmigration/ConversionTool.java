@@ -44,17 +44,18 @@ class ConversionTool {
 
         log.info("CLI started...");
 
-        validateConfigInputs(Constants.BASE_URL400, "Base URL of PPaaS 4.0.0:");
-        validateConfigInputs(Constants.USERNAME400, "User name of PPaaS 4.0.0:");
-        validateConfigInputs(Constants.PASSWORD400, "Password of PPaaS 4.0.0:");
-        validateConfigInputs(Constants.BASE_URL410, "Base URL of PPaaS 4.1.0:");
-        validateConfigInputs(Constants.USERNAME410, "User name of PPaaS 4.1.0:");
-        validateConfigInputs(Constants.PASSWORD410, "Password of PPaaS 4.1.0:");
-        validateConfigInputs(Constants.IAAS, "IaaS provider name:");
-        validateConfigInputs(Constants.IAAS_IMAGE_ID, "IaaS image id:");
+        validateConfigurationInputs(Constants.BASE_URL400, "Base URL of PPaaS 4.0.0:");
+        validateConfigurationInputs(Constants.USERNAME400, "User name of PPaaS 4.0.0:");
+        validateConfigurationInputs(Constants.PASSWORD400, "Password of PPaaS 4.0.0:");
+        validateConfigurationInputs(Constants.BASE_URL410, "Base URL of PPaaS 4.1.0:");
+        validateConfigurationInputs(Constants.USERNAME410, "User name of PPaaS 4.1.0:");
+        validateConfigurationInputs(Constants.PASSWORD410, "Password of PPaaS 4.1.0:");
+        validateConfigurationInputs(Constants.IAAS, "IaaS provider name:");
+        validateConfigurationInputs(Constants.IAAS_IMAGE_ID, "IaaS image id:");
+        validateConfigurationInputs(Constants.NETWORK_UUID, "Network UUID:");
     }
 
-    private static void validateConfigInputs(String propertyConstant, String propertyName) {
+    private static void validateConfigurationInputs(String propertyConstant, String propertyName) {
 
         Console console = System.console();
         if (System.getProperty(propertyConstant) == null || System.getProperty(propertyConstant).isEmpty()) {
@@ -65,6 +66,7 @@ class ConversionTool {
             } else {
                 System.setProperty(propertyConstant, console.readLine());
             }
+            System.out.println();
         }
     }
 
@@ -74,10 +76,12 @@ class ConversionTool {
     public static void startTransformation() throws TransformationException {
 
         log.info("Artifact Migration started...");
+
         Transformer.transformNetworkPartitionList();
         Transformer.transformAutoscalePolicyList();
         Transformer.transformDeploymentPolicyList();
         Transformer.waitForThreadTermination();
+
         Transformer.addDefaultApplicationPolicies();
         Transformer.transformCartridgeList();
         log.info("Conversion completed successfully");
@@ -252,7 +256,8 @@ class ConversionTool {
      * Method to get configuration details
      */
     public static void readInitialConfiguration() throws ConfigurationException {
-        final PropertiesConfiguration propsConfig = new PropertiesConfiguration(System.getProperty(Constants.CONFIGURATION_FILE_NAME));
+        final PropertiesConfiguration propsConfig = new PropertiesConfiguration(
+                System.getProperty(Constants.CONFIGURATION_FILE_NAME));
         SystemConfiguration.setSystemProperties(propsConfig);
     }
 }

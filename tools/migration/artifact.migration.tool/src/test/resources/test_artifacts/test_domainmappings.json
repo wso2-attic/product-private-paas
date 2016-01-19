@@ -1,1 +1,8 @@
-{"domains":[{ "domainName" : "wso2.com", "applicationContext" : "/wso2as/" }]}
+{
+  "domains": [
+    {
+      "domainName": "wso2.com",
+      "applicationContext": "/wso2as/"
+    }
+  ]
+}
