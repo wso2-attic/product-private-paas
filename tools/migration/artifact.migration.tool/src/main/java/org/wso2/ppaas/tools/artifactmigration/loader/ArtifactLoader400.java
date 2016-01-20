@@ -25,6 +25,7 @@ import org.apache.stratos.rest.endpoint.bean.CartridgeInfoBean;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.autoscale.AutoscalePolicy;
 import org.apache.stratos.rest.endpoint.bean.autoscaler.policy.deployment.DeploymentPolicy;
+import org.apache.stratos.rest.endpoint.bean.cartridge.definition.ServiceDefinitionBean;
 import org.apache.stratos.rest.endpoint.bean.subscription.domain.SubscriptionDomainBean;
 import org.wso2.ppaas.tools.artifactmigration.Constants;
 import org.wso2.ppaas.tools.artifactmigration.RestClient;
@@ -131,6 +132,41 @@ public class ArtifactLoader400 {
         }
         return gson.fromJson(cartridgeListString, new TypeToken<List<Cartridge>>() {
         }.getType());
+    }
+
+    public static List<Cartridge> fetchMultiTenantCartridgeList() throws ArtifactLoadingException {
+
+        String multiTenantCartridgeString = readUrl(
+                System.getProperty(Constants.BASE_URL400) + Constants.URL_MULTI_TENANT_CARTRIDGE);
+        String cartridgeListString;
+        if (multiTenantCartridgeString != null) {
+            cartridgeListString = multiTenantCartridgeString.substring(multiTenantCartridgeString.indexOf('['),
+                    (multiTenantCartridgeString.lastIndexOf(']') + 1));
+        } else {
+            String msg = "Error while fetching cartridge lists";
+            log.error(msg);
+            throw new ArtifactLoadingException(msg);
+        }
+        return gson.fromJson(cartridgeListString, new TypeToken<List<Cartridge>>() {
+        }.getType());
+
+    }
+
+    public static List<ServiceDefinitionBean> fetchMultiTenantServiceList() throws ArtifactLoadingException {
+
+        String serviceString = readUrl(System.getProperty(Constants.BASE_URL400) + Constants.URL_MULTI_TENANT_SERVICE);
+        String serviceListString;
+        if (serviceString != null) {
+            serviceListString = serviceString
+                    .substring(serviceString.indexOf('['), (serviceString.lastIndexOf(']') + 1));
+        } else {
+            String msg = "Error while fetching cartridge lists";
+            log.error(msg);
+            throw new ArtifactLoadingException(msg);
+        }
+        return gson.fromJson(serviceListString, new TypeToken<List<ServiceDefinitionBean>>() {
+        }.getType());
+
     }
 
     /**

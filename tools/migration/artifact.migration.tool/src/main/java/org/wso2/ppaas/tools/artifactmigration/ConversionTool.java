@@ -35,8 +35,9 @@ Class for conversion
 class ConversionTool {
 
     private static final Logger log = Logger.getLogger(ConversionTool.class);
-    private static Map<String, List<String>> memoryMap = Transformer.getMemoryMap();
+    private static final Map<String, List<String>> memoryMap = Transformer.getMemoryMap();
     private static final Map<String, Boolean> domainMappingAvailabilityMap = Transformer.getDomainMappingAvailabilityMap();
+
 
     /**
      * Method to handle console inputs
@@ -85,6 +86,7 @@ class ConversionTool {
 
         Transformer.addDefaultApplicationPolicies();
         Transformer.transformCartridgeList();
+        Transformer.transformMultiTenantCartridgeList();
         log.info("Conversion completed successfully");
         System.out.println(
                 "Default values have been used for the port mappings of the cartridges and can be updated in conf/config.properties file.");

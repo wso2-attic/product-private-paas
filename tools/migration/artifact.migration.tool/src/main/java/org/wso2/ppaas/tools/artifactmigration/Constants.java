@@ -28,10 +28,14 @@ public class Constants {
 
     //PPaaS 4.0.0 REST API endpoints
     public static final String STRATOS_API_PATH = "stratos" + File.separator + "admin" + File.separator;
+    private static final String MIGRATION_API_PATH = "migration" + File.separator + "admin" + File.separator;
     // Do not use forward slash at the beginning instead use it in the base url.
     public static final String URL_PARTITION = STRATOS_API_PATH + "partition";
     public static final String URL_POLICY_AUTOSCALE = STRATOS_API_PATH + "policy" + File.separator + "autoscale";
     public static final String URL_POLICY_DEPLOYMENT = STRATOS_API_PATH + "policy" + File.separator + "deployment";
+    public static final String URL_CARTRIDGE = MIGRATION_API_PATH + "cartridge" + File.separator + "list";
+    public static final String URL_MULTI_TENANT_CARTRIDGE = STRATOS_API_PATH + "cartridge"+ File.separator+"tenanted" + File.separator+ "list";
+    public static final String URL_MULTI_TENANT_SERVICE = STRATOS_API_PATH + "service";
     public static final String DIRECTORY_OUTPUT_SCRIPT_DEPLOY = File.separator + "scripts" + File.separator + "common";
     public static final String DIRECTORY_ARTIFACTS = "artifacts";
     public static final String FILE_SOURCE_SCRIPT_DEPLOY = File.separator + "deploy.sh";
@@ -102,8 +106,8 @@ public class Constants {
     public static final String ROOT_DIRECTORY = System.getProperty("user.dir") + System.getProperty("output.path");
     public static final String DIRECTORY_SOURCE_SCRIPT =
             System.getProperty("user.dir") + System.getProperty("sourcescripts.path");
-    private static final String MIGRATION_API_PATH = "migration" + File.separator + "admin" + File.separator;
-    public static final String URL_CARTRIDGE = MIGRATION_API_PATH + "cartridge" + File.separator + "list";
+
+
     public static final String URL_SUBSCRIPTION =
             MIGRATION_API_PATH + "cartridge" + File.separator + "list" + File.separator + "subscribed" + File.separator
                     + "all";
