@@ -32,6 +32,8 @@ public class Constants {
     public static final String URL_PARTITION = STRATOS_API_PATH + "partition";
     public static final String URL_POLICY_AUTOSCALE = STRATOS_API_PATH + "policy" + File.separator + "autoscale";
     public static final String URL_POLICY_DEPLOYMENT = STRATOS_API_PATH + "policy" + File.separator + "deployment";
+    public static final String URL_MULTI_TENANT_CARTRIDGE = STRATOS_API_PATH + "cartridge"+ File.separator+"tenanted" + File.separator+ "list";
+    public static final String URL_MULTI_TENANT_SERVICE = STRATOS_API_PATH + "service";
     public static final String DIRECTORY_OUTPUT_SCRIPT_DEPLOY = File.separator + "scripts" + File.separator + "common";
     public static final String DIRECTORY_ARTIFACTS = "artifacts";
     public static final String FILE_SOURCE_SCRIPT_DEPLOY = File.separator + "deploy.sh";
