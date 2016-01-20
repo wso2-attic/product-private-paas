@@ -65,6 +65,7 @@ public class Transformer {
 
     private static final Logger log = Logger.getLogger(Transformer.class);
     private static final Map<String, List<String>> memoryMap = new HashMap<>();
+    private static final Map<String, Boolean> domainMappingAvailabilityMap = new HashMap<>();
     private static Map<String, String> deploymentPolicyToApplicationPolicyMap = new HashMap<>();
     private static List<String> networkPartitionList = new ArrayList<>();
     private static List<String> deploymentPolicyList = new ArrayList<>();
@@ -76,6 +77,10 @@ public class Transformer {
 
     public static Map<String, String> getDeploymentPolicyToApplicationPolicyMap() {
         return deploymentPolicyToApplicationPolicyMap;
+    }
+
+    public static Map<String, Boolean> getDomainMappingAvailabilityMap() {
+        return domainMappingAvailabilityMap;
     }
 
     /**
@@ -327,17 +332,6 @@ public class Transformer {
 
                         signup410List.add(a++, artifactRepository);
 
-                        //Adding domain mapping details
-                        List<SubscriptionDomainBean> domainMapping400 = ArtifactLoader400
-                                .fetchDomainMappingList(cartridge.getCartridgeType(), subscription.getAlias());
-                        for (SubscriptionDomainBean domainMapping : domainMapping400) {
-                            DomainMappingBean domainMappingBean = new DomainMappingBean();
-                            domainMappingBean.setCartridgeAlias(subscription.getAlias());
-                            domainMappingBean.setDomainName(domainMapping.getDomainName());
-                            domainMappingBean.setContextPath(domainMapping.getApplicationContext());
-                            domainMapping410List.add(domainMappingIterator++, domainMappingBean);
-                        }
-
                         cartridgeReference410.setSubscribableInfo(subscribableInfo);
                         cartridgeReference410.setType(cartridge.getCartridgeType());
                         cartridgeReference410.setCartridgeMax(Constants.CARTRIDGE_MAX_VALUE);
@@ -357,18 +351,36 @@ public class Transformer {
                         JsonWriter
                                 .writeFile(outputDirectoryNameApp, application410.getName() + Constants.JSON_EXTENSION,
                                         getGson().toJson(application410));
+
                         JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_APPLICATION_SIGNUP,
                                 getGson().toJson(signup410List));
 
-                        //Converting domain mapping list string to the standard format
-                        String domainMappingJsonString =
-                                "{\"domainMappings\":" + getGson().toJson(domainMapping410List) + "}";
-                        JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_DOMAIN_MAPPING,
-                                domainMappingJsonString);
+                        //Adding domain mapping details
+                        List<SubscriptionDomainBean> domainMapping400List = ArtifactLoader400
+                                .fetchDomainMappingList(cartridge.getCartridgeType(), subscription.getAlias());
 
+                        if (!domainMapping400List.isEmpty()) {
+                            domainMappingAvailabilityMap.put(application410.getName(), true);
+                            for (SubscriptionDomainBean domainMapping : domainMapping400List) {
+                                DomainMappingBean domainMappingBean = new DomainMappingBean();
+                                domainMappingBean.setCartridgeAlias(subscription.getAlias());
+                                domainMappingBean.setDomainName(domainMapping.getDomainName());
+                                domainMappingBean.setContextPath(domainMapping.getApplicationContext());
+                                domainMapping410List.add(domainMappingIterator++, domainMappingBean);
+                            }
+                            //Converting domain mapping list string to the standard format
+                            String domainMappingJsonString =
+                                    "{\"domainMappings\":" + getGson().toJson(domainMapping410List) + "}";
+                            JsonWriter.writeFile(outputDirectoryNameApp, Constants.FILENAME_DOMAIN_MAPPING,
+                                    domainMappingJsonString);
+                        }
+                        else {
+                            domainMappingAvailabilityMap.put(application410.getName(), false);
+                        }
                         ConversionTool.addCommonDeployingScript(
                                 Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator
-                                        + application410.getName(), subscribableInfo, cartridge.getDisplayName());
+                                        + application410.getName(), subscribableInfo, cartridge.getDisplayName(),
+                                application410.getName());
                         ConversionTool.addCommonUndeployingScript(
                                 Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator
                                         + application410.getName(), subscribableInfo, cartridge.getDisplayName(),
@@ -407,9 +419,19 @@ public class Transformer {
                         PortMappingBean portMappingBeanTemp = new PortMappingBean();
                         if (portMapping.getPort() != null)
                             portMappingBeanTemp.setPort(Integer.parseInt(portMapping.getPort()));
-                        portMappingBeanTemp.setProtocol(portMapping.getProtocol());
+                        else
+                            portMappingBeanTemp.setPort(Integer.parseInt(System.getProperty(Constants.PORT)));
+
+                        if (portMapping.getProtocol() != null)
+                            portMappingBeanTemp.setProtocol(portMapping.getProtocol());
+                        else
+                            portMappingBeanTemp.setProtocol(System.getProperty(Constants.PROTOCOL));
+
                         if (portMapping.getProxyPort() != null)
                             portMappingBeanTemp.setProxyPort(Integer.parseInt(portMapping.getProxyPort()));
+                        else
+                            portMappingBeanTemp
+                                    .setProxyPort(Integer.parseInt(System.getProperty(Constants.PROXY_PORT)));
 
                         portMapping410List.add(b++, portMappingBeanTemp);
                     }

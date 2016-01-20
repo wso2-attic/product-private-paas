@@ -118,7 +118,13 @@ public class ArtifactLoader400 {
         if (cartridgeString != null) {
             cartridgeListString = cartridgeString
                     .substring(cartridgeString.indexOf('['), (cartridgeString.lastIndexOf(']') + 1));
-        } else {
+            //Updating port, protocol and proxy port names to be compatible with the bean classes
+            cartridgeListString = cartridgeListString.replaceAll("port", "localPort");
+            cartridgeListString = cartridgeListString.replaceAll("protocol", "localProtocol");
+            cartridgeListString = cartridgeListString.replaceAll("proxyPort", "localProxyPort");
+            cartridgeListString = cartridgeListString.replaceAll("localPortMappings", "portMappings");
+        }
+        else {
             String msg = "Error while fetching cartridge lists";
             log.error(msg);
             throw new ArtifactLoadingException(msg);

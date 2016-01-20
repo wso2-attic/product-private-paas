@@ -24,8 +24,11 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
+import javax.ws.rs.HttpMethod;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.core.HttpHeaders;
+import javax.ws.rs.core.MediaType;
 
 public class RestClient {
     /**
@@ -64,6 +67,10 @@ public class RestClient {
      * @return JSON string
      */
     public String doGet(String resourcePath) {
-        return client.target(resourcePath).request().get().readEntity(String.class);
+        return client.target(resourcePath).request()
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.ACCEPT, MediaType.WILDCARD)
+                .get()
+                .readEntity(String.class);
     }
 }

@@ -36,6 +36,7 @@ class ConversionTool {
 
     private static final Logger log = Logger.getLogger(ConversionTool.class);
     private static Map<String, List<String>> memoryMap = Transformer.getMemoryMap();
+    private static final Map<String, Boolean> domainMappingAvailabilityMap = Transformer.getDomainMappingAvailabilityMap();
 
     /**
      * Method to handle console inputs
@@ -123,7 +124,7 @@ class ConversionTool {
      * @param cartridgeName    cartridge name
      */
     public static void addCommonDeployingScript(String outputLocation, SubscribableInfo subscribableInfo,
-            String cartridgeName) {
+            String cartridgeName,String applicationName) {
         BufferedReader reader = null;
         FileWriter writer = null;
         try {
@@ -145,7 +146,7 @@ class ConversionTool {
             }
             if (cartridgeName != null) {
                 scriptText = scriptText.replaceAll("cartridge_name", cartridgeName);
-                scriptText = scriptText.replaceAll("application_name", cartridgeName);
+                scriptText = scriptText.replaceAll("application_name", applicationName);
             }
             scriptText = scriptText.replaceAll("uname", System.getProperty(Constants.USERNAME410));
             scriptText = scriptText.replaceAll("pword", System.getProperty(Constants.PASSWORD410));
@@ -163,8 +164,12 @@ class ConversionTool {
                                 + networkPartitionId + Constants.NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART2;
             }
             modifiedScriptText += endScriptText;
+
             File outputDirectory = new File(outputLocation + Constants.DIRECTORY_OUTPUT_SCRIPT_DEPLOY);
 
+            if(domainMappingAvailabilityMap.get(applicationName)==true){
+                modifiedScriptText += Constants.DOMAIN_MAPPING_DEPLOYMENT_CURL_COMMAND;
+            }
             boolean hasCreated = outputDirectory.mkdirs();
             if (!outputDirectory.exists() && !hasCreated) {
                 throw new IOException("Error in creating the output directory");

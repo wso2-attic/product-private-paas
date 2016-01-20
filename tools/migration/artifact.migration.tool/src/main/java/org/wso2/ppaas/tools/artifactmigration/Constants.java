@@ -69,6 +69,10 @@ public class Constants {
     public static final String NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART1 = "curl -X POST -H \"Content-Type: application/json\" -d \"@${network_partitions_path}/";
     public static final String NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART2 = ".json\" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions";
     public static final String NETWORK_PARTITION_UNDEPLOYMENT_COMMAND = "curl -X DELETE -H \"Content-Type: application/json\" -k -v -u ${var_username}:${var_password} ${var_base_url}api/networkPartitions/";
+    //Domain mapping curl commands
+    public static final String DOMAIN_MAPPING_DEPLOYMENT_CURL_COMMAND = "echo \"Adding domain mappings...\"\n"
+            + "curl -X POST -H \"Content-Type: application/json\" -d \"@${artifacts_path}/domain-mapping.json\" -k -u ${var_username}:${var_password} ${var_base_url}api/applications/application_name/domainMappings";
+
     public static final String CERTIFICATE_PASSWORD = "wso2carbon";
     public static final boolean ENABLE_SELF_CERTIFIED = true;
     public static final String JSON_EXTENSION = ".json";
