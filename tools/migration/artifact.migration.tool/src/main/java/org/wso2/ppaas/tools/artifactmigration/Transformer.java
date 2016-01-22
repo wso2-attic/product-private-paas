@@ -365,8 +365,8 @@ public class Transformer {
                             components.setCartridges(cartridges);
                             application410.setComponents(components);
                             application410.setAlias(cartridgeReference410.getSubscribableInfo().getAlias());
-                            application410.setName(subscription.getAlias() + "-application");
-                            application410.setApplicationId(subscription.getAlias() + "-application");
+                            application410.setName(subscription.getAlias() + Constants.APPLICATION_NAME);
+                            application410.setApplicationId(subscription.getAlias() + Constants.APPLICATION_NAME);
                             application410.setDescription(cartridge.getDescription());
 
                             File outputDirectoryNameApp = new File(
@@ -387,7 +387,7 @@ public class Transformer {
                             List<SubscriptionDomainBean> domainMapping400List = ArtifactLoader400
                                     .fetchDomainMappingList(cartridge.getCartridgeType(), subscription.getAlias());
 
-                            if (!domainMapping400List.isEmpty()) {
+                            if ((domainMapping400List != null)&&(!domainMapping400List.isEmpty())) {
                                 domainMappingAvailabilityMap.put(application410.getName(), true);
                                 for (SubscriptionDomainBean domainMapping : domainMapping400List) {
                                     DomainMappingBean domainMappingBean = new DomainMappingBean();
@@ -412,7 +412,6 @@ public class Transformer {
                                     Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator
                                             + application410.getName(), subscribableInfo, cartridge.getDisplayName(),
                                     cartridge.getCartridgeType());
-
                         }
                     }
 
@@ -439,7 +438,6 @@ public class Transformer {
                     //Overwrite the default mappings if port mappings exist
                     if (cartridge.getPortMappings() != null) {
                         PortMapping[] portMapping400List = cartridge.getPortMappings();
-                        List<PortMappingBean> portMapping410List = new ArrayList<>();
 
                         int b = 0;
                         for (PortMapping portMapping : portMapping400List) {
@@ -460,10 +458,10 @@ public class Transformer {
                             else
                                 portMappingBeanTemp
                                         .setProxyPort(Integer.parseInt(System.getProperty(Constants.PROXY_PORT)));
-
-                            portMapping410List.add(b++, portMappingBeanTemp);
+                            portMappingList.add(b++, portMappingBeanTemp);
                         }
                     }
+                    cartridge410.setPortMapping(portMappingList);
 
                     if (cartridge.getPersistence() != null) {
                         Persistence persistence400 = cartridge.getPersistence();
@@ -507,7 +505,6 @@ public class Transformer {
                         log.info("Created Cartridge " + cartridge410.getType() + " 4.1.0 artifacts");
                 }
             }
-
         } catch (JsonSyntaxException e) {
             String msg = "JSON syntax error in retrieving cartridges";
             log.error(msg);
@@ -556,7 +553,7 @@ public class Transformer {
                             multiTenantSubscribableInfo.setDeploymentPolicy(service.getDeploymentPolicyName());
                             multiTenantSubscribableInfo.setAlias(
                                     multiTenantCartridge.getCartridgeType() + "-" + service.getServiceName()
-                                            + "-application");
+                                            + Constants.APPLICATION_NAME);
 
                             multiTenantCartridgeReference410.setSubscribableInfo(multiTenantSubscribableInfo);
                             multiTenantCartridgeReference410.setType(multiTenantCartridge.getCartridgeType());
@@ -611,7 +608,6 @@ public class Transformer {
                                         domainMappingBean.setContextPath(domainMapping.getApplicationContext());
                                         domainMapping410List.add(domainMappingIterator++, domainMappingBean);
                                     }
-
                                 }
                             }
 
@@ -667,9 +663,19 @@ public class Transformer {
                             PortMappingBean portMappingBeanTemp = new PortMappingBean();
                             if (portMapping.getPort() != null)
                                 portMappingBeanTemp.setPort(Integer.parseInt(portMapping.getPort()));
-                            portMappingBeanTemp.setProtocol(portMapping.getProtocol());
+                            else
+                                portMappingBeanTemp.setPort(Integer.parseInt(System.getProperty(Constants.PORT)));
+
+                            if (portMapping.getProtocol() != null)
+                                portMappingBeanTemp.setProtocol(portMapping.getProtocol());
+                            else
+                                portMappingBeanTemp.setProtocol(System.getProperty(Constants.PROTOCOL));
+
                             if (portMapping.getProxyPort() != null)
                                 portMappingBeanTemp.setProxyPort(Integer.parseInt(portMapping.getProxyPort()));
+                            else
+                                portMappingBeanTemp
+                                        .setProxyPort(Integer.parseInt(System.getProperty(Constants.PROXY_PORT)));
 
                             portMapping410List.add(b++, portMappingBeanTemp);
                         }
@@ -720,7 +726,6 @@ public class Transformer {
                                 + " 4.1.0 artifacts");
                 }
             }
-
         } catch (JsonSyntaxException e) {
             String msg = "JSON syntax error in retrieving multi tenant cartridges";
             log.error(msg);

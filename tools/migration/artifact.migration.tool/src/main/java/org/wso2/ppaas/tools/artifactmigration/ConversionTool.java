@@ -169,7 +169,7 @@ class ConversionTool {
 
             File outputDirectory = new File(outputLocation + Constants.DIRECTORY_OUTPUT_SCRIPT_DEPLOY);
 
-            if(domainMappingAvailabilityMap.get(applicationName)==true){
+            if(domainMappingAvailabilityMap.get(applicationName)){
                 modifiedScriptText += Constants.DOMAIN_MAPPING_DEPLOYMENT_CURL_COMMAND;
             }
             boolean hasCreated = outputDirectory.mkdirs();

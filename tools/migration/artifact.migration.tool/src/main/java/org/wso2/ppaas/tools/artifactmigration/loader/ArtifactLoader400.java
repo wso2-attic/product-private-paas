@@ -205,15 +205,18 @@ public class ArtifactLoader400 {
                         + cartridgeType + File.separator + "subscription" + File.separator + subscriptionAlias
                         + File.separator + "domains");
         String domainListString;
-        if (domainString != null) {
+        if ((domainString != null)&&(!domainString.isEmpty())) {
             domainListString = domainString.substring(domainString.indexOf('['), (domainString.lastIndexOf(']') + 1));
+            return gson.fromJson(domainListString, new TypeToken<List<SubscriptionDomainBean>>() {
+            }.getType());
+
         } else {
-            String msg = "Error while fetching domain mapping lists";
-            log.error(msg);
-            throw new ArtifactLoadingException(msg);
+//            String msg = "Error while fetching domain mapping lists";
+//            log.error(msg);
+//            throw new ArtifactLoadingException(msg);
+              return null;
         }
-        return gson.fromJson(domainListString, new TypeToken<List<SubscriptionDomainBean>>() {
-        }.getType());
+
     }
 
     /**

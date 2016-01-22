@@ -200,4 +200,14 @@ import java.util.List;
         return cartridges.isEmpty() ? new Cartridge[0] : cartridges.toArray(new Cartridge[cartridges.size()]);
     }
 
+    @GET
+    @Path("/cartridge/tenanted/list")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
+    public Cartridge[] getAvailableMultiTenantCartridges() throws RestAPIException {
+        List<Cartridge> cartridges = ServiceUtils.getAvailableCartridges(null, true, getConfigContext());
+        return cartridges.isEmpty() ? new Cartridge[0] : cartridges.toArray(new Cartridge[cartridges.size()]);
+    }
+
 }

@@ -34,7 +34,7 @@ public class Constants {
     public static final String URL_POLICY_AUTOSCALE = STRATOS_API_PATH + "policy" + File.separator + "autoscale";
     public static final String URL_POLICY_DEPLOYMENT = STRATOS_API_PATH + "policy" + File.separator + "deployment";
     public static final String URL_CARTRIDGE = MIGRATION_API_PATH + "cartridge" + File.separator + "list";
-    public static final String URL_MULTI_TENANT_CARTRIDGE = STRATOS_API_PATH + "cartridge"+ File.separator+"tenanted" + File.separator+ "list";
+    public static final String URL_MULTI_TENANT_CARTRIDGE = MIGRATION_API_PATH + "cartridge"+ File.separator+"tenanted" + File.separator+ "list";
     public static final String URL_MULTI_TENANT_SERVICE = STRATOS_API_PATH + "service";
     public static final String DIRECTORY_OUTPUT_SCRIPT_DEPLOY = File.separator + "scripts" + File.separator + "common";
     public static final String DIRECTORY_ARTIFACTS = "artifacts";
@@ -45,6 +45,8 @@ public class Constants {
     public static final String APPLICATION_POLICY_ALGO = "one-after-another";
     //Default value for network partition
     public static final String NETWORK_PARTITION_ID = "partition-1";
+    //Default value for application names
+    public static final String APPLICATION_NAME = "-application";
     //Default file names for application policy jsons and domain mapping jsons
     public static final String FILENAME_APPLICATION_SIGNUP = "application-signup.json";
     public static final String FILENAME_DOMAIN_MAPPING = "domain-mapping.json";
