@@ -1,0 +1,11 @@
+{"serviceDefinitionBean":[]}
+//  {
+//  "serviceName": "newphp",
+//  "cartridgeType": "php",
+//  "deploymentPolicyName": "dep_policy",
+//  "autoscalingPolicyName": "as_policy",
+//  "clusterDomain": "php.hills.com",
+//  "clusterSubDomain": "mgt.php.hills.com",
+//  "tenantRange": "*"
+//}
+

@@ -32,7 +32,7 @@ import java.util.Map;
 /*
 Class for conversion
  */
-class ConversionTool {
+public class ConversionTool {
 
     private static final Logger log = Logger.getLogger(ConversionTool.class);
     private static final Map<String, List<String>> memoryMap = Transformer.getMemoryMap();

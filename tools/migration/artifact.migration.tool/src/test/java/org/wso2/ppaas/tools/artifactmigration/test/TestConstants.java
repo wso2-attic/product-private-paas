@@ -44,6 +44,8 @@ class TestConstants {
     public static final String OUTPUT_DEPLOYMENT =
             "deployment-policies" + File.separator + "economyDeploymentPolicy.json";
     public static final String OUTPUT_CARTRIDGE = "cartridges" + File.separator + "PHP.json";
+    public static final String OUTPUT_APPLICATION= "applications"+ File.separator + "myphp-application"+File.separator + "artifacts"+ File.separator +"myphp-application.json";
+
     public static final String ERROR_MSG = "{\"Error\":{ \"errorCode\": \" -1234\", \"errorMessage\": \" Unexpected error. Returned JSON String is a null. Please check the test cases \"}}";
     //Configuration StratosV400MockServelet Test
     private static final String TEST_ARTIFACTS_PATH = "test_artifacts";
@@ -56,6 +58,8 @@ class TestConstants {
     public static final String CARTRIDGE_TEST_INPUT = TEST_INPUTS + File.separator + "test_cartridges.json";
     public static final String SUBSCRIPTION_TEST_INPUT = TEST_INPUTS + File.separator + "test_subscription.json";
     public static final String DOMAIN_MAPPING_TEST_INPUT = TEST_INPUTS + File.separator + "test_domainmappings.json";
+    public static String MULTI_TENANT_CARTRIDGE_TEST_INPUT=TEST_INPUTS+ File.separator+"test_multitenantcartridges.json";
+    public static String SERVICE_TEST_INPUT=TEST_INPUTS+ File.separator+"test_services.json";
 
     private static String getResourcesFolderPath() {
         String path = HttpClientTest.class.getResource("/").getPath();

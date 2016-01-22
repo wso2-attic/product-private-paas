@@ -45,9 +45,11 @@ echo "Adding application policy..."
 curl -X POST -H "Content-Type: application/json" -d "@${application_policies_path}/application-policy-economyDeploymentPolicy.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applicationPolicies
 sleep 1
 echo "Adding application..."
-curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/PHP.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications
+curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/newphp-application.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications
 sleep 1
 echo "Deploying application..."
 curl -X POST -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications/PHP/deploy/application-policy-economyDeploymentPolicy
 echo "Adding domain mappings..."
-curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/domain-mapping.json" -k -u ${var_username}:${var_password} ${var_base_url}api/applications/PHP/domainMappings
+curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/domain-mapping.json" -k -u ${var_username}:${var_password} ${var_base_url}api/applications/newphp-application/domainMappings
+echo "Adding domain mappings..."
+curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/domain-mapping.json" -k -u ${var_username}:${var_password} ${var_base_url}api/applications/application_name/domainMappings
