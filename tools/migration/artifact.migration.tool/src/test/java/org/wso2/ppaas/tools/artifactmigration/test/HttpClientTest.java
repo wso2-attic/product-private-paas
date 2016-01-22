@@ -21,7 +21,7 @@ import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.wso2.ppaas.tools.artifactmigration.Transformer;
+import org.wso2.ppaas.tools.artifactmigration.ConversionTool;
 
 import java.io.File;
 
@@ -34,38 +34,39 @@ public class HttpClientTest {
         try {
             HttpClientSetUp Client = new HttpClientSetUp();
             Client.startServer();
+            ConversionTool.startTransformation();
         } catch (Exception e) {
             log.error("Error while starting the server", e);
         }
     }
 
     @Test(timeout = 60000) public void transformNetworkPartitionListTest() throws Exception {
-        Transformer.transformNetworkPartitionList();
         File partitionfile1 = new File(TestConstants.OUTPUT_DIRECTORY + TestConstants.OUTPUT_PARTITION);
         File partitionfile2 = new File(TestConstants.TEST_OUTPUTS + TestConstants.OUTPUT_PARTITION);
         assertTrue(FileUtils.contentEquals(partitionfile1, partitionfile2));
     }
 
     @Test(timeout = 60000) public void transformAutoscalePolicyListTest() throws Exception {
-        Transformer.transformAutoscalePolicyList();
         File autoscalefile1 = new File(TestConstants.OUTPUT_DIRECTORY + TestConstants.OUTPUT_AUTOSCALE);
         File autoscalefile2 = new File(TestConstants.TEST_OUTPUTS + TestConstants.OUTPUT_AUTOSCALE);
         assertTrue(FileUtils.contentEquals(autoscalefile1, autoscalefile2));
     }
 
     @Test(timeout = 60000) public void transformDeploymentPolicyList() throws Exception {
-        Transformer.transformDeploymentPolicyList();
         File deploymentfile1 = new File(TestConstants.OUTPUT_DIRECTORY + TestConstants.OUTPUT_DEPLOYMENT);
         File deploymentfile2 = new File(TestConstants.TEST_OUTPUTS + TestConstants.OUTPUT_DEPLOYMENT);
         assertTrue(FileUtils.contentEquals(deploymentfile1, deploymentfile2));
     }
 
     @Test(timeout = 60000) public void transformCartridgeList() throws Exception {
-        Transformer.addDefaultApplicationPolicies();
-        Transformer.transformCartridgeList();
         File cartridgefile1 = new File(TestConstants.OUTPUT_DIRECTORY + TestConstants.OUTPUT_CARTRIDGE);
         File cartridgefile2 = new File(TestConstants.TEST_OUTPUTS + TestConstants.OUTPUT_CARTRIDGE);
         assertTrue(FileUtils.contentEquals(cartridgefile1, cartridgefile2));
+    }
 
+    @Test(timeout = 60000) public void createdApplicationList() throws Exception {
+        File applicationfile1 = new File(TestConstants.OUTPUT_DIRECTORY + TestConstants.OUTPUT_APPLICATION);
+        File applicationfile2 = new File(TestConstants.TEST_OUTPUTS + TestConstants.OUTPUT_APPLICATION);
+        assertTrue(FileUtils.contentEquals(applicationfile1, applicationfile2));
     }
 }

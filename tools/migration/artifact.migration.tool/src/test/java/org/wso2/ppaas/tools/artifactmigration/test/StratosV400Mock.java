@@ -69,4 +69,12 @@ import java.io.IOException;
         return readJSON(TestConstants.SUBSCRIPTION_TEST_INPUT);
     }
 
+    @GET @Path("/cartridge/tenanted/list") @Produces(MediaType.APPLICATION_JSON) public String multiTenantCartridge() {
+        return readJSON(TestConstants.MULTI_TENANT_CARTRIDGE_TEST_INPUT);
+    }
+
+    @GET @Path("/service") @Produces(MediaType.APPLICATION_JSON) public String service() {
+        return readJSON(TestConstants.SERVICE_TEST_INPUT);
+    }
+
 }
