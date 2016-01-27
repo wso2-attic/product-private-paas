@@ -48,9 +48,24 @@
             <fileMode>0600</fileMode>
         </fileSet>
         <fileSet>
-            <directory>contents/</directory>
+            <directory>../../migration/</directory>
             <includes>
                 <include>README.md</include>
+            </includes>
+            <outputDirectory>/</outputDirectory>
+            <fileMode>0600</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>../../migration/</directory>
+            <includes>
+                <include>README.md</include>
+            </includes>
+            <outputDirectory>/</outputDirectory>
+            <fileMode>0600</fileMode>
+        </fileSet>
+        <fileSet>
+            <includes>
+                <include>LICENSE.md</include>
             </includes>
             <outputDirectory>/</outputDirectory>
             <fileMode>0600</fileMode>

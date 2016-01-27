@@ -47,4 +47,4 @@ echo "Adding application..."
 curl -X POST -H "Content-Type: application/json" -d "@${artifacts_path}/application_name.json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications
 sleep 1
 echo "Deploying application..."
-curl -X POST -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications/cartridge_name/deploy/application-policy_name
+curl -X POST -H "Content-Type: application/json" -k -v -u ${var_username}:${var_password} ${var_base_url}api/applications/application_name/deploy/application-policy_name

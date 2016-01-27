@@ -9,10 +9,11 @@ This tool will enable users to import artifact JSON files from PPaaS 4.0.0 and c
 
 2. Extract the generated distribution-4.1.1-SNAPSHOT.zip in distribution/target
 
-3. Deploy the migration-api/4.0.0
-3. Run the stratos.sh in bin folder
+3. Deploy the migration-api/4.0.0/migration.war in PPaaS 4.0.0
 
-4. Deploy the generated artifacts from output-artifacts folder in PPaaS 4.1.x
+4. Run the stratos.sh in bin folder
+
+5. Deploy the generated artifacts from output-artifacts folder in PPaaS 4.1.x
 
 ## Configurations
 

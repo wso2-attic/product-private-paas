@@ -67,10 +67,7 @@ public class RestClient {
      * @return JSON string
      */
     public String doGet(String resourcePath) {
-        return client.target(resourcePath).request()
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .header(HttpHeaders.ACCEPT, MediaType.WILDCARD)
-                .get()
-                .readEntity(String.class);
+        return client.target(resourcePath).request().header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .header(HttpHeaders.ACCEPT, MediaType.WILDCARD).get().readEntity(String.class);
     }
 }

@@ -17,6 +17,9 @@
  */
 package org.wso2.ppaas.tools.artifactmigration.exception;
 
+/**
+ * Exception class to handle artifact loading exceptions
+ */
 public class ArtifactLoadingException extends Exception {
 
     public ArtifactLoadingException(String message) {

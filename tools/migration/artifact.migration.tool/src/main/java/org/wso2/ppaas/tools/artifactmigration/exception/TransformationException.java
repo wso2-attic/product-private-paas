@@ -17,6 +17,9 @@
  */
 package org.wso2.ppaas.tools.artifactmigration.exception;
 
+/**
+ * Exception class to transforming exceptions
+ */
 public class TransformationException extends Exception {
     public TransformationException(String message, Throwable throwable) {
         super(message, throwable);

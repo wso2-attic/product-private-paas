@@ -36,8 +36,8 @@ public class ConversionTool {
 
     private static final Logger log = Logger.getLogger(ConversionTool.class);
     private static final Map<String, List<String>> memoryMap = Transformer.getMemoryMap();
-    private static final Map<String, Boolean> domainMappingAvailabilityMap = Transformer.getDomainMappingAvailabilityMap();
-
+    private static final Map<String, Boolean> domainMappingAvailabilityMap = Transformer
+            .getDomainMappingAvailabilityMap();
 
     /**
      * Method to handle console inputs
@@ -83,13 +83,10 @@ public class ConversionTool {
         Transformer.transformAutoscalePolicyList();
         Transformer.transformDeploymentPolicyList();
         Transformer.waitForThreadTermination();
-
         Transformer.addDefaultApplicationPolicies();
         Transformer.transformCartridgeList();
         Transformer.transformMultiTenantCartridgeList();
         log.info("Conversion completed successfully");
-        System.out.println(
-                "Default values have been used for the port mappings of the cartridges and can be updated in conf/config.properties file.");
     }
 
     /**
@@ -126,7 +123,7 @@ public class ConversionTool {
      * @param cartridgeName    cartridge name
      */
     public static void addCommonDeployingScript(String outputLocation, SubscribableInfo subscribableInfo,
-            String cartridgeName,String applicationName) {
+            String cartridgeName, String applicationName) {
         BufferedReader reader = null;
         FileWriter writer = null;
         try {
@@ -135,6 +132,9 @@ public class ConversionTool {
             String line, scriptText = "";
             while ((line = reader.readLine()) != null) {
                 scriptText += line + System.getProperty("line.separator");
+            }
+            if (domainMappingAvailabilityMap.get(applicationName)) {
+                scriptText += Constants.DOMAIN_MAPPING_DEPLOYMENT_CURL_COMMAND;
             }
 
             if (subscribableInfo.getDeploymentPolicy() != null) {
@@ -162,16 +162,13 @@ public class ConversionTool {
             List<String> networkPartitionIdList = memoryMap.get("networkPartitions");
             for (String networkPartitionId : networkPartitionIdList) {
                 modifiedScriptText +=
-                        System.getProperty("line.separator") + Constants.NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART1
-                                + networkPartitionId + Constants.NETWORK_PARTITION_DEPLOYMENT_COMMAND_PART2;
+                        System.getProperty("line.separator") + Constants.NETWORK_PARTITION_DEPLOYMENT_CURL_COMMAND_PART1
+                                + networkPartitionId + Constants.NETWORK_PARTITION_DEPLOYMENT_CURL_COMMAND_PART2;
             }
             modifiedScriptText += endScriptText;
 
             File outputDirectory = new File(outputLocation + Constants.DIRECTORY_OUTPUT_SCRIPT_DEPLOY);
 
-            if(domainMappingAvailabilityMap.get(applicationName)){
-                modifiedScriptText += Constants.DOMAIN_MAPPING_DEPLOYMENT_CURL_COMMAND;
-            }
             boolean hasCreated = outputDirectory.mkdirs();
             if (!outputDirectory.exists() && !hasCreated) {
                 throw new IOException("Error in creating the output directory");
@@ -201,7 +198,7 @@ public class ConversionTool {
      * @param cartridgeName    cartridge name
      */
     public static void addCommonUndeployingScript(String outputLocation, SubscribableInfo subscribableInfo,
-            String cartridgeName, String cartridgeType) {
+            String cartridgeName, String cartridgeType, String applicationName) {
         BufferedReader reader = null;
         FileWriter writer = null;
         try {
@@ -223,7 +220,7 @@ public class ConversionTool {
             }
             if (cartridgeName != null) {
                 scriptText = scriptText.replaceAll("cartridge_type", cartridgeType);
-                scriptText = scriptText.replaceAll("application_name", cartridgeName);
+                scriptText = scriptText.replaceAll("application_name", applicationName);
             }
             scriptText = scriptText.replaceAll("uname", System.getProperty(Constants.USERNAME410));
             scriptText = scriptText.replaceAll("pword", System.getProperty(Constants.PASSWORD410));
@@ -231,8 +228,8 @@ public class ConversionTool {
 
             List<String> networkPartitionIdList = memoryMap.get("networkPartitions");
             for (String networkPartitionId : networkPartitionIdList) {
-                scriptText += Constants.NETWORK_PARTITION_UNDEPLOYMENT_COMMAND + networkPartitionId + System
-                        .getProperty("line.separator");
+                scriptText += Constants.NETWORK_PARTITION_UNDEPLOYMENT_CURL_COMMAND + networkPartitionId
+                        + System.getProperty("line.separator");
             }
             File outputDirectory = new File(outputLocation + Constants.DIRECTORY_OUTPUT_SCRIPT_DEPLOY);
 

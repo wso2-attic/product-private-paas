@@ -124,8 +124,7 @@ public class ArtifactLoader400 {
             cartridgeListString = cartridgeListString.replaceAll("protocol", "localProtocol");
             cartridgeListString = cartridgeListString.replaceAll("proxyPort", "localProxyPort");
             cartridgeListString = cartridgeListString.replaceAll("localPortMappings", "portMappings");
-        }
-        else {
+        } else {
             String msg = "Error while fetching cartridge lists";
             log.error(msg);
             throw new ArtifactLoadingException(msg);
@@ -196,27 +195,22 @@ public class ArtifactLoader400 {
      * @param cartridgeType     cartridge type
      * @param subscriptionAlias subscription alias
      * @return domain mapping
-     * @throws ArtifactLoadingException
      */
-    public static List<SubscriptionDomainBean> fetchDomainMappingList(String cartridgeType, String subscriptionAlias)
-            throws ArtifactLoadingException {
+    public static List<SubscriptionDomainBean> fetchDomainMappingList(String cartridgeType, String subscriptionAlias) {
         String domainString = readUrl(
                 System.getProperty(Constants.BASE_URL400) + Constants.STRATOS_API_PATH + "cartridge" + File.separator
                         + cartridgeType + File.separator + "subscription" + File.separator + subscriptionAlias
                         + File.separator + "domains");
         String domainListString;
-        if ((domainString != null)&&(!domainString.isEmpty())) {
+        if ((domainString != null) && (!domainString.isEmpty())) {
             domainListString = domainString.substring(domainString.indexOf('['), (domainString.lastIndexOf(']') + 1));
             return gson.fromJson(domainListString, new TypeToken<List<SubscriptionDomainBean>>() {
             }.getType());
 
         } else {
-//            String msg = "Error while fetching domain mapping lists";
-//            log.error(msg);
-//            throw new ArtifactLoadingException(msg);
-              return null;
+            log.info("Domain mappings for " + cartridgeType + " are not available");
+            return null;
         }
-
     }
 
     /**

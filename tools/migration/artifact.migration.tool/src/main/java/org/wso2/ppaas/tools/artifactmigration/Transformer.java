@@ -62,7 +62,7 @@ import java.util.concurrent.TimeUnit;
 /**
  * Transforms the artifacts from PPaaS 4.0.0 to 4.1.0
  */
-public class Transformer {
+class Transformer {
 
     private static final Logger log = Logger.getLogger(Transformer.class);
     private static final Map<String, List<String>> memoryMap = new HashMap<>();
@@ -88,7 +88,7 @@ public class Transformer {
     /**
      * Method to transform Auto Scale Policies
      */
-    public static void transformAutoscalePolicyList() throws TransformationException {
+    public static void transformAutoscalePolicyList() {
         Runnable autoscalePolicyRunnable = new Runnable() {
             @Override public void run() {
                 if (log.isInfoEnabled()) {
@@ -151,7 +151,7 @@ public class Transformer {
     /**
      * Method to transform network partitions
      */
-    public static void transformNetworkPartitionList() throws TransformationException {
+    public static void transformNetworkPartitionList() {
 
         Runnable networkPartitionRunnable = new Runnable() {
             @Override public void run() {
@@ -215,7 +215,7 @@ public class Transformer {
     /**
      * Method to transform DeploymentPolicy
      */
-    public static void transformDeploymentPolicyList() throws TransformationException {
+    public static void transformDeploymentPolicyList() {
 
         Runnable deploymentPoliciesRunnable = new Runnable() {
             @Override public void run() {
@@ -387,7 +387,7 @@ public class Transformer {
                             List<SubscriptionDomainBean> domainMapping400List = ArtifactLoader400
                                     .fetchDomainMappingList(cartridge.getCartridgeType(), subscription.getAlias());
 
-                            if ((domainMapping400List != null)&&(!domainMapping400List.isEmpty())) {
+                            if ((domainMapping400List != null) && (!domainMapping400List.isEmpty())) {
                                 domainMappingAvailabilityMap.put(application410.getName(), true);
                                 for (SubscriptionDomainBean domainMapping : domainMapping400List) {
                                     DomainMappingBean domainMappingBean = new DomainMappingBean();
@@ -411,10 +411,9 @@ public class Transformer {
                             ConversionTool.addCommonUndeployingScript(
                                     Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator
                                             + application410.getName(), subscribableInfo, cartridge.getDisplayName(),
-                                    cartridge.getCartridgeType());
+                                    cartridge.getCartridgeType(), application410.getName());
                         }
                     }
-
                     cartridge410.setDisplayName(cartridge.getDisplayName());
                     cartridge410.setDescription(cartridge.getDescription());
                     cartridge410.setCategory(Constants.CARTRIDGE_CATEGORY);
@@ -583,6 +582,8 @@ public class Transformer {
                             List<ArtifactRepositoryBean> signup410List = new ArrayList<>();
                             int domainMappingIterator = 0;
                             int a = 0;
+
+                            domainMappingAvailabilityMap.put(multiTenantApplication410.getName(), false);
                             for (CartridgeInfoBean subscription : subscription400List) {
                                 if (multiTenantCartridge.getCartridgeType()
                                         .equalsIgnoreCase(subscription.getCartridgeType())) {
@@ -597,25 +598,27 @@ public class Transformer {
 
                                     signup410List.add(a++, artifactRepository);
 
-                                    List<SubscriptionDomainBean> domainMapping400 = ArtifactLoader400
+                                    List<SubscriptionDomainBean> domainMapping400List = ArtifactLoader400
                                             .fetchDomainMappingList(multiTenantCartridge.getCartridgeType(),
                                                     subscription.getAlias());
 
-                                    for (SubscriptionDomainBean domainMapping : domainMapping400) {
-                                        DomainMappingBean domainMappingBean = new DomainMappingBean();
-                                        domainMappingBean.setCartridgeAlias(subscription.getAlias());
-                                        domainMappingBean.setDomainName(domainMapping.getDomainName());
-                                        domainMappingBean.setContextPath(domainMapping.getApplicationContext());
-                                        domainMapping410List.add(domainMappingIterator++, domainMappingBean);
+                                    if ((domainMapping400List != null) && (!domainMapping400List.isEmpty())) {
+                                        domainMappingAvailabilityMap.put(multiTenantApplication410.getName(), true);
+                                        for (SubscriptionDomainBean domainMapping : domainMapping400List) {
+                                            DomainMappingBean domainMappingBean = new DomainMappingBean();
+                                            domainMappingBean.setCartridgeAlias(subscription.getAlias());
+                                            domainMappingBean.setDomainName(domainMapping.getDomainName());
+                                            domainMappingBean.setContextPath(domainMapping.getApplicationContext());
+                                            domainMapping410List.add(domainMappingIterator++, domainMappingBean);
+                                        }
+                                        //Converting domain mapping list string to the standard format
+                                        String domainMappingJsonString =
+                                                "{\"domainMappings\":" + getGson().toJson(domainMapping410List) + "}";
+                                        JsonWriter.writeFile(outputDirectoryNameMultiTenantApp,
+                                                Constants.FILENAME_DOMAIN_MAPPING, domainMappingJsonString);
                                     }
                                 }
                             }
-
-                            //Converting domain mapping list string to the standard format
-                            String domainMappingJsonString =
-                                    "{\"domainMappings\":" + getGson().toJson(domainMapping410List) + "}";
-                            JsonWriter.writeFile(outputDirectoryNameMultiTenantApp, Constants.FILENAME_DOMAIN_MAPPING,
-                                    domainMappingJsonString);
 
                             JsonWriter
                                     .writeFile(outputDirectoryNameMultiTenantApp, Constants.FILENAME_APPLICATION_SIGNUP,
@@ -628,7 +631,8 @@ public class Transformer {
                             ConversionTool.addCommonUndeployingScript(
                                     Constants.ROOT_DIRECTORY + Constants.DIRECTORY_OUTPUT_SCRIPT + File.separator
                                             + multiTenantApplication410.getName(), multiTenantSubscribableInfo,
-                                    multiTenantCartridge.getDisplayName(), multiTenantCartridge.getCartridgeType());
+                                    multiTenantCartridge.getDisplayName(), multiTenantCartridge.getCartridgeType(),
+                                    multiTenantApplication410.getName());
                         }
                     }
 

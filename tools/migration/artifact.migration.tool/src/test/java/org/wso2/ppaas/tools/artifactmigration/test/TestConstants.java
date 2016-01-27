@@ -58,8 +58,8 @@ class TestConstants {
     public static final String CARTRIDGE_TEST_INPUT = TEST_INPUTS + File.separator + "test_cartridges.json";
     public static final String SUBSCRIPTION_TEST_INPUT = TEST_INPUTS + File.separator + "test_subscription.json";
     public static final String DOMAIN_MAPPING_TEST_INPUT = TEST_INPUTS + File.separator + "test_domainmappings.json";
-    public static String MULTI_TENANT_CARTRIDGE_TEST_INPUT=TEST_INPUTS+ File.separator+"test_multitenantcartridges.json";
-    public static String SERVICE_TEST_INPUT=TEST_INPUTS+ File.separator+"test_services.json";
+    public static final String MULTI_TENANT_CARTRIDGE_TEST_INPUT=TEST_INPUTS+ File.separator+"test_multitenantcartridges.json";
+    public static final String SERVICE_TEST_INPUT=TEST_INPUTS+ File.separator+"test_services.json";
 
     private static String getResourcesFolderPath() {
         String path = HttpClientTest.class.getResource("/").getPath();
