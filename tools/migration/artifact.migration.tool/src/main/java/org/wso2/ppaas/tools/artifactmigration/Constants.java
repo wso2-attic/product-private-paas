@@ -96,13 +96,18 @@ public class Constants {
     public static final String DIRECTORY_SOURCE_SCRIPT_OPENSTACK = "openstack";
     //Rest client configurations
     public static final String CERTIFICATE_PATH =
-            StringUtils.removeEnd(System.getProperty("user.dir"), File.separator)
-                    + System.getProperty("certificate.path");
+            StringUtils.removeEnd(System.getProperty("user.dir"), File.separator) + System
+                    .getProperty("certificate.path");
     //PPaaS 4.1.0 directories
     // 4.1.0 outputs root directory
     public static final String ROOT_DIRECTORY = System.getProperty("user.dir") + System.getProperty("output.path");
     public static final String DIRECTORY_SOURCE_SCRIPT =
             System.getProperty("user.dir") + System.getProperty("sourcescripts.path");
+    //Default value for threads
+    public static final int NO_OF_THREADS = 3;
+    //Constant key values for hash maps
+    public static final String NETWORK_PARTITIONS_KEY = "networkPartitions";
+    public static final String DEPLOYMENT_POLICIES_KEY = "deploymentPolicies";
     private static final String MIGRATION_API_PATH = "migration" + File.separator + "admin" + File.separator;
     public static final String URL_CARTRIDGE = MIGRATION_API_PATH + "cartridge" + File.separator + "list";
     public static final String URL_MULTI_TENANT_CARTRIDGE =
@@ -110,10 +115,5 @@ public class Constants {
     public static final String URL_SUBSCRIPTION =
             MIGRATION_API_PATH + "cartridge" + File.separator + "list" + File.separator + "subscribed" + File.separator
                     + "all";
-    //Default value for threads
-    public static final int NO_OF_THREADS = 3;
-    //Constant key values for hash maps
-    public static final String NETWORK_PARTITIONS_KEY = "networkPartitions";
-    public static final String DEPLOYMENT_POLICIES_KEY="deploymentPolicies";
 
 }

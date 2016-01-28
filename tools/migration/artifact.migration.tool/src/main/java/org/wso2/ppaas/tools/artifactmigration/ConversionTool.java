@@ -185,10 +185,10 @@ public class ConversionTool {
             log.error("Error in copying scripts directory ", e);
         } finally {
             try {
-                if (reader != null){
+                if (reader != null) {
                     reader.close();
                 }
-                if (writer != null){
+                if (writer != null) {
                     writer.close();
                 }
             } catch (IOException ignore) {
@@ -235,8 +235,8 @@ public class ConversionTool {
 
             List<String> networkPartitionIdList = memoryMap.get(Constants.NETWORK_PARTITIONS_KEY);
             for (String networkPartitionId : networkPartitionIdList) {
-                scriptText += Constants.NETWORK_PARTITION_UNDEPLOYMENT_CURL_COMMAND + networkPartitionId
-                        + System.getProperty("line.separator");
+                scriptText += Constants.NETWORK_PARTITION_UNDEPLOYMENT_CURL_COMMAND + networkPartitionId + System
+                        .getProperty("line.separator");
             }
             File outputDirectory = new File(outputLocation + Constants.DIRECTORY_OUTPUT_SCRIPT_DEPLOY);
 
@@ -254,10 +254,10 @@ public class ConversionTool {
             log.error("Error in copying scripts directory ", e);
         } finally {
             try {
-                if (reader != null){
+                if (reader != null) {
                     reader.close();
                 }
-                if (writer != null){
+                if (writer != null) {
                     writer.close();
                 }
             } catch (IOException ignore) {

@@ -19,7 +19,7 @@
                     <descriptors>
                         <descriptor>assembly/bin.xml</descriptor>
                     </descriptors>
-                    <finalName>zipName</finalName>
+                    <finalName>wso2ppaas-artifactmigrationtool-1.0.zip</finalName>
                     <archiverConfig>
                         <fileMode>420</fileMode>
                         <directoryMode>493</directoryMode>

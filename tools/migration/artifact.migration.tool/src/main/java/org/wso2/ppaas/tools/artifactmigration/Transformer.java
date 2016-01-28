@@ -104,8 +104,7 @@ class Transformer {
                     autoscalePolicy400List = ArtifactLoader400.fetchAutoscalePolicyList();
                     if (autoscalePolicy400List.isEmpty()) {
                         log.info("Auto Scale Policies not available from PPaaS 4.0.0");
-                    }
-                    else {
+                    } else {
                         log.info("Fetched Auto Scale Policy from PPaaS 4.0.0");
 
                         File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_AUTOSCALE);
@@ -137,7 +136,7 @@ class Transformer {
                                 created410autoscalepolicy = true;
                         }
                     }
-                    if (created410autoscalepolicy){
+                    if (created410autoscalepolicy) {
                         log.info("Created Auto Scale Policy 4.1.0 artifacts");
                     }
                 } catch (JsonSyntaxException e) {
@@ -169,8 +168,7 @@ class Transformer {
                     networkPartition400List = ArtifactLoader400.fetchPartitionList();
                     if (networkPartition400List.isEmpty()) {
                         log.info("Network Partitions not available from PPaaS 4.0.0");
-                    }
-                    else {
+                    } else {
                         log.info("Fetched Network Partition List from PPaaS 4.0.0");
 
                         for (Partition networkPartition400 : networkPartition400List) {
@@ -236,8 +234,7 @@ class Transformer {
                     deploymentPolicy400List = ArtifactLoader400.fetchDeploymentPolicyList();
                     if (deploymentPolicy400List.isEmpty()) {
                         log.info("Deployment Policies not available from PPaaS 4.0.0");
-                    }
-                    else {
+                    } else {
                         log.info("Fetched Deployment Policy from PPaaS 4.0.0");
 
                         File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_DEPLOYMENT);
@@ -256,33 +253,36 @@ class Transformer {
                                 tempNetworkPartition.setPartitionAlgo(partitionGroup.getPartitionAlgo());
 
                                 List<Partition> partition400List = partitionGroup.getPartition();
-                                List<PartitionReferenceBean> partitions410List = new ArrayList<>();
 
-                                int partitionIterator = 0;
-                                for (Partition partition : partition400List) {
+                                if (!partition400List.isEmpty()) {
+                                    List<PartitionReferenceBean> partitions410List = new ArrayList<>();
 
-                                    networkPartitions.add(partition.getId());
+                                    int partitionIterator = 0;
+                                    for (Partition partition : partition400List) {
 
-                                    tempNetworkPartition.setId(partition.getId());
-                                    PartitionReferenceBean tempPartition = new PartitionReferenceBean();
-                                    tempPartition.setId(Constants.NETWORK_PARTITION_ID);
-                                    tempPartition.setPartitionMax(partition.getPartitionMax());
+                                        networkPartitions.add(partition.getId());
 
-                                    if (partition.getProperty() != null) {
-                                        List<PropertyBean> property400List = partition.getProperty();
-                                        List<org.apache.stratos.common.beans.PropertyBean> property410List = new ArrayList<>();
-                                        int c = 0;
-                                        for (PropertyBean propertyBean400 : property400List) {
-                                            org.apache.stratos.common.beans.PropertyBean tempPropertyBean410 = new org.apache.stratos.common.beans.PropertyBean();
-                                            tempPropertyBean410.setName(propertyBean400.getName());
-                                            tempPropertyBean410.setValue(propertyBean400.getValue());
-                                            property410List.add(c++, tempPropertyBean410);
+                                        tempNetworkPartition.setId(partition.getId());
+                                        PartitionReferenceBean tempPartition = new PartitionReferenceBean();
+                                        tempPartition.setId(Constants.NETWORK_PARTITION_ID);
+                                        tempPartition.setPartitionMax(partition.getPartitionMax());
+
+                                        if (partition.getProperty() != null) {
+                                            List<PropertyBean> property400List = partition.getProperty();
+                                            List<org.apache.stratos.common.beans.PropertyBean> property410List = new ArrayList<>();
+                                            int c = 0;
+                                            for (PropertyBean propertyBean400 : property400List) {
+                                                org.apache.stratos.common.beans.PropertyBean tempPropertyBean410 = new org.apache.stratos.common.beans.PropertyBean();
+                                                tempPropertyBean410.setName(propertyBean400.getName());
+                                                tempPropertyBean410.setValue(propertyBean400.getValue());
+                                                property410List.add(c++, tempPropertyBean410);
+                                            }
+                                            tempPartition.setProperty(property410List);
                                         }
-                                        tempPartition.setProperty(property410List);
+                                        partitions410List.add(partitionIterator++, tempPartition);
                                     }
-                                    partitions410List.add(partitionIterator++, tempPartition);
+                                    tempNetworkPartition.setPartitions(partitions410List);
                                 }
-                                tempNetworkPartition.setPartitions(partitions410List);
                                 networkPartitions410List.add(a, tempNetworkPartition);
                             }
                             deploymentPolicy410.setNetworkPartitions(networkPartitions410List);
@@ -296,7 +296,7 @@ class Transformer {
                         }
                     }
                     memoryMap.put(Constants.DEPLOYMENT_POLICIES_KEY, deploymentPolicyList);
-                    if (!deploymentPolicyList.isEmpty()){
+                    if (!deploymentPolicyList.isEmpty()) {
                         log.info("Created Deployment Policy 4.1.0 artifacts");
                     }
                 } catch (JsonSyntaxException e) {
@@ -326,17 +326,15 @@ class Transformer {
             subscription400List = ArtifactLoader400.fetchSubscriptionDataList();
             if (subscription400List.isEmpty()) {
                 log.info("Subscription not available from PPaaS 4.0.0");
-            }
-            else {
+            } else {
                 log.info("Fetched Subscription List");
             }
 
             // Retrieve PPaaS 4.1.0 single tenant cartridges
             cartridge400List = ArtifactLoader400.fetchCartridgeList();
-            if (cartridge400List.isEmpty()){
+            if (cartridge400List.isEmpty()) {
                 log.info("Cartridges not available from PPaaS 4.0.0");
-            }
-            else {
+            } else {
                 log.info("Fetched Cartridge List from PPaaS 4.0.0");
                 File outputDirectoryNameCartridge = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_CARTRIDGE);
 
@@ -393,7 +391,7 @@ class Transformer {
                             JsonWriter.writeFile(outputDirectoryNameApp,
                                     application410.getName() + Constants.JSON_EXTENSION,
                                     getGson().toJson(application410));
-                            if (application410.getApplicationId() != null){
+                            if (application410.getApplicationId() != null) {
                                 log.info("Created Application " + application410.getApplicationId()
                                         + " 4.1.0 artifacts");
                             }
@@ -460,22 +458,19 @@ class Transformer {
                         for (PortMapping portMapping : portMapping400List) {
 
                             PortMappingBean portMappingBeanTemp = new PortMappingBean();
-                            if (portMapping.getPort() != null){
+                            if (portMapping.getPort() != null) {
                                 portMappingBeanTemp.setPort(Integer.parseInt(portMapping.getPort()));
-                            }
-                            else{
+                            } else {
                                 portMappingBeanTemp.setPort(Integer.parseInt(System.getProperty(Constants.PORT)));
                             }
-                            if (portMapping.getProtocol() != null){
+                            if (portMapping.getProtocol() != null) {
                                 portMappingBeanTemp.setProtocol(portMapping.getProtocol());
-                            }
-                            else{
+                            } else {
                                 portMappingBeanTemp.setProtocol(System.getProperty(Constants.PROTOCOL));
                             }
-                            if (portMapping.getProxyPort() != null){
+                            if (portMapping.getProxyPort() != null) {
                                 portMappingBeanTemp.setProxyPort(Integer.parseInt(portMapping.getProxyPort()));
-                            }
-                            else{
+                            } else {
                                 portMappingBeanTemp
                                         .setProxyPort(Integer.parseInt(System.getProperty(Constants.PROXY_PORT)));
                             }
@@ -522,7 +517,7 @@ class Transformer {
 
                     JsonWriter.writeFile(outputDirectoryNameCartridge,
                             cartridge410.getDisplayName() + Constants.JSON_EXTENSION, getGson().toJson(cartridge410));
-                    if (cartridge410.getDisplayName() != null){
+                    if (cartridge410.getDisplayName() != null) {
                         log.info("Created Cartridge " + cartridge410.getType() + " 4.1.0 artifacts");
                     }
                 }
@@ -554,16 +549,14 @@ class Transformer {
             service400List = ArtifactLoader400.fetchMultiTenantServiceList();
             if (service400List.isEmpty()) {
                 log.info("Services not available from PPaaS 4.0.0");
-            }
-            else {
+            } else {
                 log.info("Fetched Service List from PPaaS 4.0.0");
             }
             //Retriewing all the 'multi tenant' cartridges from the rest end point
             multiTenantCartridge400List = ArtifactLoader400.fetchMultiTenantCartridgeList();
             if (multiTenantCartridge400List.isEmpty()) {
                 log.info("Multi Tenant Cartridges not available from PPaaS 4.0.0");
-            }
-            else {
+            } else {
                 log.info("Fetched Multi Tenant Cartridge List from PPaaS 4.0.0");
 
                 File outputDirectoryNameCartridge = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_CARTRIDGE);
@@ -608,7 +601,7 @@ class Transformer {
                                     multiTenantApplication410.getName() + Constants.JSON_EXTENSION,
                                     getGson().toJson(multiTenantApplication410));
                             //if there is at least one application created print this in the log file
-                            if (multiTenantApplication410.getApplicationId() != null){
+                            if (multiTenantApplication410.getApplicationId() != null) {
                                 log.info("Created Multi Tenant Application " + multiTenantApplication410
                                         .getApplicationId() + " 4.1.0 artifacts");
                             }
@@ -656,7 +649,6 @@ class Transformer {
                                     }
                                 }
                             }
-
                             JsonWriter
                                     .writeFile(outputDirectoryNameMultiTenantApp, Constants.FILENAME_APPLICATION_SIGNUP,
                                             getGson().toJson(signup410List));
@@ -706,20 +698,17 @@ class Transformer {
                             PortMappingBean portMappingBeanTemp = new PortMappingBean();
                             if (portMapping.getPort() != null) {
                                 portMappingBeanTemp.setPort(Integer.parseInt(portMapping.getPort()));
-                            }
-                            else {
+                            } else {
                                 portMappingBeanTemp.setPort(Integer.parseInt(System.getProperty(Constants.PORT)));
                             }
                             if (portMapping.getProtocol() != null) {
                                 portMappingBeanTemp.setProtocol(portMapping.getProtocol());
-                            }
-                            else {
+                            } else {
                                 portMappingBeanTemp.setProtocol(System.getProperty(Constants.PROTOCOL));
                             }
                             if (portMapping.getProxyPort() != null) {
                                 portMappingBeanTemp.setProxyPort(Integer.parseInt(portMapping.getProxyPort()));
-                            }
-                            else {
+                            } else {
                                 portMappingBeanTemp
                                         .setProxyPort(Integer.parseInt(System.getProperty(Constants.PROXY_PORT)));
                             }
@@ -767,7 +756,7 @@ class Transformer {
                     JsonWriter.writeFile(outputDirectoryNameCartridge,
                             multiTenantCartridge410.getDisplayName() + Constants.JSON_EXTENSION,
                             getGson().toJson(multiTenantCartridge410));
-                    if (multiTenantCartridge410.getDisplayName() != null){
+                    if (multiTenantCartridge410.getDisplayName() != null) {
                         log.info("Created Multi Tenant Cartridge " + multiTenantCartridge410.getType()
                                 + " 4.1.0 artifacts");
                     }
@@ -791,24 +780,28 @@ class Transformer {
 
         List<String> deploymentPolicyIDList = memoryMap.get(Constants.DEPLOYMENT_POLICIES_KEY);
 
-        for (String deploymentPolicyID : deploymentPolicyIDList) {
-            ApplicationPolicyBean applicationPolicyBean = new ApplicationPolicyBean();
-            applicationPolicyBean.setId(Constants.APPLICATION_POLICY_ID + deploymentPolicyID);
-            applicationPolicyBean.setAlgorithm(Constants.APPLICATION_POLICY_ALGO);
+        if (deploymentPolicyIDList != null) {
+            for (String deploymentPolicyID : deploymentPolicyIDList) {
+                ApplicationPolicyBean applicationPolicyBean = new ApplicationPolicyBean();
+                applicationPolicyBean.setId(Constants.APPLICATION_POLICY_ID + deploymentPolicyID);
+                applicationPolicyBean.setAlgorithm(Constants.APPLICATION_POLICY_ALGO);
 
-            //Adding network partitions specific to a deployment policy
-            List<String> networkPartitionIDList = memoryMap.get(deploymentPolicyID);
-            String[] networkPartitions = new String[networkPartitionIDList.size()];
-            networkPartitions = networkPartitionIDList.toArray(networkPartitions);
+                //Adding network partitions specific to a deployment policy
+                List<String> networkPartitionIDList = memoryMap.get(deploymentPolicyID);
+                String[] networkPartitions = new String[networkPartitionIDList.size()];
+                networkPartitions = networkPartitionIDList.toArray(networkPartitions);
 
-            applicationPolicyBean.setNetworkPartitions(networkPartitions);
+                applicationPolicyBean.setNetworkPartitions(networkPartitions);
 
-            deploymentPolicyToApplicationPolicyMap
-                    .put(deploymentPolicyID, Constants.APPLICATION_POLICY_ID + deploymentPolicyID);
-            File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_APPLICATION);
-            JsonWriter.writeFile(directoryName,
-                    Constants.APPLICATION_POLICY_ID + deploymentPolicyID + Constants.JSON_EXTENSION,
-                    getGson().toJson(applicationPolicyBean));
+                deploymentPolicyToApplicationPolicyMap
+                        .put(deploymentPolicyID, Constants.APPLICATION_POLICY_ID + deploymentPolicyID);
+                File directoryName = new File(Constants.ROOT_DIRECTORY + Constants.DIRECTORY_POLICY_APPLICATION);
+                JsonWriter.writeFile(directoryName,
+                        Constants.APPLICATION_POLICY_ID + deploymentPolicyID + Constants.JSON_EXTENSION,
+                        getGson().toJson(applicationPolicyBean));
+            }
+        } else {
+            log.info("Deployment policies are not available to add application policies");
         }
     }
 

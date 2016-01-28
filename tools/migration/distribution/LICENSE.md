@@ -296,7 +296,7 @@ quartz-2.1.1.wso2v1.jar                                                         
 rampart-core-1.6.1.wso2v9.jar                                                   apache2
 rampart-policy-1.6.1.wso2v9.jar                                                 apache2
 rampart-trust-1.6.1.wso2v9.jar                                                  apache2
-reflections-0.9.9-RC1.jar                                                                               wtfpl
+reflections-0.9.9-RC1.jar                                                       apache2
 regexp-1.3.jar                                                                  apache2
 rocoto-6.2.jar                                                                  apache2
 serp-1.13.1.jar                                                                 bsd
@@ -365,25 +365,25 @@ cddl+gpl       CDDL + GPLv2
                https://glassfish.dev.java.net/public/CDDL+GPL.html
 cpl1           Common Public License
                http://opensource.org/licenses/cpl1.0.php
-snaptree       SNAPTREE
-               https://github.com/nbronson/snaptree/blob/master/LICENSE
-ibmpl          IBM Public License 1.0
-               http://www.ibm.com/developerworks/library/os-ipl.html
-mit            MIT License
-               http://www.opensource.org/licenses/mit-license.php
-epl1           Eclipse Public License
-               http://www.eclipse.org/legal/epl-v10.html
-sax-pd         Sax Public Domain Notice
-               http://spdx.org/licenses/SAX-PD.html
-lgpl           GNU LESSER GENERAL PUBLIC LICENSE
-               http://www.gnu.org/licenses/lgpl.txt
-spl            Sun Public License
-               http://www.netbeans.org/about/legal/spl.html
-icu            ICU License
-               http://source.icu-project.org/repos/icu/icu/trunk/license.html
-mpl11          Mozilla Public License 1.0
-               http://www.mozilla.org/MPL/MPL-1.1.html
+snaptree        SNAPTREE
+                https://github.com/nbronson/snaptree/blob/master/LICENSE
+ibmpl           IBM Public License 1.0
+                http://www.ibm.com/developerworks/library/os-ipl.html
+mit             MIT License
+                http://www.opensource.org/licenses/mit-license.php
+epl1            Eclipse Public License
+                http://www.eclipse.org/legal/epl-v10.html
+sax-pd          Sax Public Domain Notice
+                http://spdx.org/licenses/SAX-PD.html
+lgpl            GNU LESSER GENERAL PUBLIC LICENSE
+                http://www.gnu.org/licenses/lgpl.txt
+spl             Sun Public License
+                http://www.netbeans.org/about/legal/spl.html
+icu             ICU License
+                http://source.icu-project.org/repos/icu/icu/trunk/license.html
+mpl11           Mozilla Public License 1.0
+                http://www.mozilla.org/MPL/MPL-1.1.html
 werken          The Werken Company
                 http://jaxen.org/license.html
-gpl2        GNU General PublicLicense Version 2
+gpl2            GNU General PublicLicense Version 2
                 https://opensource.org/licenses/GPL-2.0
