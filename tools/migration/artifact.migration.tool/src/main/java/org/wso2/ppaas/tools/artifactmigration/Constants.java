@@ -110,5 +110,10 @@ public class Constants {
     public static final String URL_SUBSCRIPTION =
             MIGRATION_API_PATH + "cartridge" + File.separator + "list" + File.separator + "subscribed" + File.separator
                     + "all";
+    //Default value for threads
+    public static final int NO_OF_THREADS = 3;
+    //Constant key values for hash maps
+    public static final String NETWORK_PARTITIONS_KEY = "networkPartitions";
+    public static final String DEPLOYMENT_POLICIES_KEY="deploymentPolicies";
 
 }

@@ -57,8 +57,13 @@ public class ConversionTool {
         validateConfigurationInputs(Constants.NETWORK_UUID, "Network UUID:");
     }
 
+    /**
+     * Method to validate configuration inputs and redirect to console inputs
+     *
+     * @param propertyConstant
+     * @param propertyName
+     */
     private static void validateConfigurationInputs(String propertyConstant, String propertyName) {
-
         Console console = System.console();
         if (System.getProperty(propertyConstant) == null || System.getProperty(propertyConstant).isEmpty()) {
             System.out.print("Enter the " + propertyName);
@@ -159,7 +164,7 @@ public class ConversionTool {
             String endScriptText = scriptText.substring(scriptText.indexOf('*') + 2);
             String modifiedScriptText = beginScriptText;
 
-            List<String> networkPartitionIdList = memoryMap.get("networkPartitions");
+            List<String> networkPartitionIdList = memoryMap.get(Constants.NETWORK_PARTITIONS_KEY);
             for (String networkPartitionId : networkPartitionIdList) {
                 modifiedScriptText +=
                         System.getProperty("line.separator") + Constants.NETWORK_PARTITION_DEPLOYMENT_CURL_COMMAND_PART1
@@ -180,10 +185,12 @@ public class ConversionTool {
             log.error("Error in copying scripts directory ", e);
         } finally {
             try {
-                if (reader != null)
+                if (reader != null){
                     reader.close();
-                if (writer != null)
+                }
+                if (writer != null){
                     writer.close();
+                }
             } catch (IOException ignore) {
             }
         }
@@ -226,7 +233,7 @@ public class ConversionTool {
             scriptText = scriptText.replaceAll("pword", System.getProperty(Constants.PASSWORD410));
             scriptText = scriptText.replaceAll("base-url", System.getProperty(Constants.BASE_URL410));
 
-            List<String> networkPartitionIdList = memoryMap.get("networkPartitions");
+            List<String> networkPartitionIdList = memoryMap.get(Constants.NETWORK_PARTITIONS_KEY);
             for (String networkPartitionId : networkPartitionIdList) {
                 scriptText += Constants.NETWORK_PARTITION_UNDEPLOYMENT_CURL_COMMAND + networkPartitionId
                         + System.getProperty("line.separator");
@@ -247,10 +254,12 @@ public class ConversionTool {
             log.error("Error in copying scripts directory ", e);
         } finally {
             try {
-                if (reader != null)
+                if (reader != null){
                     reader.close();
-                if (writer != null)
+                }
+                if (writer != null){
                     writer.close();
+                }
             } catch (IOException ignore) {
             }
         }

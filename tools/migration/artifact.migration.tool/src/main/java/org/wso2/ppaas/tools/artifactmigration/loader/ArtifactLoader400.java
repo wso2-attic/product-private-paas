@@ -133,6 +133,12 @@ public class ArtifactLoader400 {
         }.getType());
     }
 
+    /**
+     * Method to fetch Multi Tenant Cartridges from PPaaS 4.0.0 API endpoint
+     *
+     * @return multi tenant cartridges
+     * @throws ArtifactLoadingException
+     */
     public static List<Cartridge> fetchMultiTenantCartridgeList() throws ArtifactLoadingException {
 
         String multiTenantCartridgeString = readUrl(
@@ -151,6 +157,12 @@ public class ArtifactLoader400 {
 
     }
 
+    /**
+     * Method to fetch Services from PPaaS 4.0.0. API endpoint
+     *
+     * @return Services List
+     * @throws ArtifactLoadingException
+     */
     public static List<ServiceDefinitionBean> fetchMultiTenantServiceList() throws ArtifactLoadingException {
 
         String serviceString = readUrl(System.getProperty(Constants.BASE_URL400) + Constants.URL_MULTI_TENANT_SERVICE);
