@@ -21,22 +21,21 @@ package org.wso2.ppaas.rest.endpoint.bean.cartridge.definition;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement
-public class PersistenceBean {
+@XmlRootElement public class PersistenceBean {
 
     public boolean isRequired;
 
     public List<VolumeBean> volume;
 
-    public String toString () {
-        return " [ Persistence Required : " +isRequired  + "\n" +
+    public String toString() {
+        return " [ Persistence Required : " + isRequired + "\n" +
                 "volume: " + getVolumes() + "] ";
     }
 
     private String getVolumes() {
         StringBuilder volumeBuilder = new StringBuilder();
-        if(volume != null && !volume.isEmpty()) {
-            for(VolumeBean volumeBean : volume) {
+        if (volume != null && !volume.isEmpty()) {
+            for (VolumeBean volumeBean : volume) {
                 volumeBuilder.append(volumeBean.toString());
             }
         }

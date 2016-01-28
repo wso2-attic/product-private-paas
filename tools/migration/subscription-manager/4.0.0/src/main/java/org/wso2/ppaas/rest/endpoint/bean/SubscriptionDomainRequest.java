@@ -26,8 +26,7 @@ import java.util.List;
 /**
  * Defines subscription domain post request.
  */
-@XmlRootElement
-public class SubscriptionDomainRequest {
+@XmlRootElement public class SubscriptionDomainRequest {
     public List<SubscriptionDomainBean> domains;
 
 }

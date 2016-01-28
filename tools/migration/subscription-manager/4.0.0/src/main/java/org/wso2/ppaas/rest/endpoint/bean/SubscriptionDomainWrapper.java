@@ -20,8 +20,7 @@ package org.wso2.ppaas.rest.endpoint.bean;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement
-public class SubscriptionDomainWrapper {
+@XmlRootElement public class SubscriptionDomainWrapper {
 
     private String cartridgeType;
     private String subscriptionAlias;

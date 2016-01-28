@@ -1,0 +1,14 @@
+[
+  {
+    "id": "os2",
+    "partitionMin": 0,
+    "partitionMax": 0,
+    "provider": "openstack",
+    "property": [
+      {
+        "name": "region",
+        "value": "RegionOne"
+      }
+    ]
+  }
+]

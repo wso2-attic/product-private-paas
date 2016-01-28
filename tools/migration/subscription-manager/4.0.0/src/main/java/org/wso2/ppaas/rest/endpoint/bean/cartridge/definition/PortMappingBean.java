@@ -20,8 +20,7 @@ package org.wso2.ppaas.rest.endpoint.bean.cartridge.definition;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "portMapping")
-public class PortMappingBean {
+@XmlRootElement(name = "portMapping") public class PortMappingBean {
 
     public String protocol;
 
@@ -29,7 +28,7 @@ public class PortMappingBean {
 
     public int proxyPort;
 
-    public String toString () {
+    public String toString() {
         return " [ Protocol: " + protocol + ", Port: " + port + ", Proxy port: " + proxyPort + "] ";
     }
 }

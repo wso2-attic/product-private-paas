@@ -1,0 +1,88 @@
+<!--
+  ~ Licensed to the Apache Software Foundation (ASF) under one
+  ~ or more contributor license agreements.  See the NOTICE file
+  ~ distributed with this work for additional information
+  ~ regarding copyright ownership.  The ASF licenses this file
+  ~ to you under the Apache License, Version 2.0 (the
+  ~ "License"); you may not use this file except in compliance
+  ~ with the License.  You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing,
+  ~ software distributed under the License is distributed on an
+  ~ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  ~ KIND, either express or implied.  See the License for the
+  ~ specific language governing permissions and limitations
+  ~ under the License.
+  -->
+
+<assembly xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0"
+          xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.0 http://maven.apache.org/xsd/assembly-1.1.0.xsd">
+    <id>bin</id>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <fileSets>
+        <fileSet>
+            <directory>contents/bin</directory>
+            <outputDirectory>/bin</outputDirectory>
+            <fileMode>0755</fileMode>
+            <includes>
+                <include>stratos.sh</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>contents/conf</directory>
+            <outputDirectory>/conf</outputDirectory>
+            <fileMode>0600</fileMode>
+            <includes>
+                <include>log4j.properties</include>
+                <include>config.properties</include>
+            </includes>
+        </fileSet>
+        <fileSet>
+            <directory>contents/resources</directory>
+            <outputDirectory>/resources</outputDirectory>
+            <fileMode>0600</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>../../migration/</directory>
+            <includes>
+                <include>README.md</include>
+            </includes>
+            <outputDirectory>/</outputDirectory>
+            <fileMode>0600</fileMode>
+        </fileSet>
+        <fileSet>
+            <directory>../../migration/</directory>
+            <includes>
+                <include>README.md</include>
+            </includes>
+            <outputDirectory>/</outputDirectory>
+            <fileMode>0600</fileMode>
+        </fileSet>
+        <fileSet>
+            <includes>
+                <include>LICENSE.md</include>
+            </includes>
+            <outputDirectory>/</outputDirectory>
+            <fileMode>0600</fileMode>
+        </fileSet>
+    </fileSets>
+    <dependencySets>
+        <dependencySet>
+            <outputDirectory>/lib</outputDirectory>
+            <useProjectArtifact>true</useProjectArtifact>
+            <scope>runtime</scope>
+        </dependencySet>
+        <dependencySet>
+            <includes>
+                <include>*:war</include>
+            </includes>
+            <outputDirectory>/migration-api/4.0.0</outputDirectory>
+            <outputFileNameMapping>migration.war</outputFileNameMapping>
+        </dependencySet>
+    </dependencySets>
+</assembly>

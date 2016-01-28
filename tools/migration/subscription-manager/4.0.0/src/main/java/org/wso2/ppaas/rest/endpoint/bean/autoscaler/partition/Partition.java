@@ -23,8 +23,7 @@ import org.wso2.ppaas.rest.endpoint.bean.cartridge.definition.PropertyBean;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement
-public class Partition {
+@XmlRootElement public class Partition {
 
     public String id;
 

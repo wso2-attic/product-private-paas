@@ -21,22 +21,21 @@ package org.wso2.ppaas.rest.endpoint.bean.cartridge.definition;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement(name = "deployment")
-public class DeploymentBean {
+@XmlRootElement(name = "deployment") public class DeploymentBean {
 
     public String baseDir;
 
     public List<String> dir;
 
-    public String toString () {
-         return " Base Directory: " + baseDir + " Directories: " + getDirectories();
+    public String toString() {
+        return " Base Directory: " + baseDir + " Directories: " + getDirectories();
     }
 
-    private String getDirectories () {
+    private String getDirectories() {
 
         StringBuilder directoryBuilder = new StringBuilder();
-        if(dir != null) {
-            for(String directory : dir) {
+        if (dir != null) {
+            for (String directory : dir) {
                 directoryBuilder.append(directory + " | ");
             }
         }

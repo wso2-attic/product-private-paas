@@ -21,8 +21,7 @@ package org.wso2.ppaas.rest.endpoint.bean.autoscaler.partition;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement
-public class PartitionGroup {
+@XmlRootElement public class PartitionGroup {
 
     public String id;
 

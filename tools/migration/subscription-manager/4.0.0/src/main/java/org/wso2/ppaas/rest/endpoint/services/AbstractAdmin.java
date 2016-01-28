@@ -37,8 +37,8 @@ public class AbstractAdmin {
 
         // If a tenant has been set, then try to get the ConfigurationContext of that tenant
         PrivilegedCarbonContext carbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        ConfigurationContextService configurationContextService =
-                (ConfigurationContextService) carbonContext.getOSGiService(ConfigurationContextService.class);
+        ConfigurationContextService configurationContextService = (ConfigurationContextService) carbonContext
+                .getOSGiService(ConfigurationContextService.class);
         ConfigurationContext mainConfigContext = configurationContextService.getServerConfigContext();
         String domain = carbonContext.getTenantDomain();
         if (domain != null && !MultitenantConstants.SUPER_TENANT_DOMAIN_NAME.equals(domain)) {
@@ -53,15 +53,15 @@ public class AbstractAdmin {
         }
     }
 
-    protected String getTenantDomain(){
+    protected String getTenantDomain() {
         return CarbonContext.getThreadLocalCarbonContext().getTenantDomain();
     }
 
-    protected String getUsername(){
+    protected String getUsername() {
         return CarbonContext.getThreadLocalCarbonContext().getUsername();
     }
-    
-    protected int getTenantId(){
+
+    protected int getTenantId() {
         return CarbonContext.getThreadLocalCarbonContext().getTenantId();
     }
 }
