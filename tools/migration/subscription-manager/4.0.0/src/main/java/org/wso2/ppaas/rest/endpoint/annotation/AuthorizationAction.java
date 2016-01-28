@@ -17,10 +17,12 @@
  */
 package org.wso2.ppaas.rest.endpoint.annotation;
 
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 
 /**
  * Carbon kernel handles permissions by means of permission strings.
@@ -28,6 +30,8 @@ import java.lang.annotation.Target;
  * service developer has to specify authorization requirements using
  * the below annotation
  */
-@Retention(value = RetentionPolicy.RUNTIME) @Target(value = ElementType.METHOD) public @interface AuthorizationAction {
+@Retention(value = RetentionPolicy.RUNTIME)
+@Target(value = ElementType.METHOD)
+public @interface AuthorizationAction {
     String[] value();
 }

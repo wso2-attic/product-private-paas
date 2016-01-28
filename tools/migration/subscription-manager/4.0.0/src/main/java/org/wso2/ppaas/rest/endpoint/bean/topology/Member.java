@@ -19,7 +19,8 @@ package org.wso2.ppaas.rest.endpoint.bean.topology;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement public class Member {
+@XmlRootElement
+public class Member {
     public String serviceName;
     public String clusterId;
     public String networkPartitionId;

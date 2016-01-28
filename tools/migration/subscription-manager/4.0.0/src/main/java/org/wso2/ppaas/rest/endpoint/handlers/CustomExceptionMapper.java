@@ -27,14 +27,12 @@ import javax.ws.rs.ext.ExceptionMapper;
 public class CustomExceptionMapper implements ExceptionMapper<RestAPIException> {
     public Response toResponse(RestAPIException restAPIException) {
         // if no specific error message specified, spitting out a generaic error message
-        String errorMessage = (restAPIException.getMessage() != null) ?
-                restAPIException.getMessage() :
-                "Error while fullfilling the request";
+        String errorMessage = (restAPIException.getMessage() != null)?
+                restAPIException.getMessage():"Error while fullfilling the request";
         // if no specific error specified we are throwing the bad request http status code by default
-        Response.Status httpStatus = (restAPIException.getHTTPStatusCode() != null) ?
-                restAPIException.getHTTPStatusCode() :
-                Response.Status.BAD_REQUEST;
+        Response.Status httpStatus= (restAPIException.getHTTPStatusCode() != null)?
+                restAPIException.getHTTPStatusCode():Response.Status.BAD_REQUEST;
         return Response.status(Response.Status.BAD_REQUEST).type(MediaType.APPLICATION_JSON).
-                entity(Utils.buildMessage(httpStatus.getStatusCode(), errorMessage)).build();
+                entity(Utils.buildMessage(httpStatus.getStatusCode(),errorMessage)).build();
     }
 }

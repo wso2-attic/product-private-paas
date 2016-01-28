@@ -20,17 +20,19 @@ package org.wso2.ppaas.rest.endpoint.context;
 public class AuthenticationContext {
     // maintaining the authenticated state in threadLocal. We want to skip subsequent authentication handlers
     // once a request get authenticated by a handler.
-    private static final ThreadLocal<Boolean> authenticated = new ThreadLocal<Boolean>() {
-        @Override protected Boolean initialValue() {
+    private static final ThreadLocal<Boolean> authenticated = new ThreadLocal<Boolean>(){
+        @Override
+        protected Boolean initialValue() {
             return false;
         }
     };
 
-    public static boolean isAthenticated() {
+
+    public static boolean isAthenticated(){
         return authenticated.get();
     }
 
-    public static void setAuthenticated(boolean isAuthenticated) {
+    public static void setAuthenticated(boolean isAuthenticated){
         authenticated.set(isAuthenticated);
     }
 }

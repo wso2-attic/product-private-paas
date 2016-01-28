@@ -1,7 +1,0 @@
-{
-  "id": "application-policy-economyDeploymentPolicy",
-  "algorithm": "one-after-another",
-  "networkPartitions": [
-    "os1"
-  ]
-}

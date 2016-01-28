@@ -22,7 +22,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 import java.util.List;
 
-@XmlRootElement(name = "cartridgeDefinitionBean") public class CartridgeDefinitionBean {
+@XmlRootElement(name = "cartridgeDefinitionBean")
+public class CartridgeDefinitionBean {
 
     public String type;
 
@@ -41,7 +42,7 @@ import java.util.List;
     public DeploymentBean deployment;
 
     public List<PortMappingBean> portMapping;
-
+    
     public PersistenceBean persistence;
 
     public List<IaasProviderBean> iaasProvider;
@@ -49,25 +50,24 @@ import java.util.List;
     public LoadBalancerBean loadBalancer;
 
     public List<PropertyBean> property;
-
+    
     public String defaultAutoscalingPolicy;
 
     public String defaultDeploymentPolicy;
-
+    
     public String serviceGroup;
 
-    public String toString() {
+    public String toString () {
 
         return "Type: " + type + ", Provider: " + provider + ", Host: " + host + ", Display Name: " + displayName +
-                ", Description: " + description + ", Version: " + version + ", Multitenant " + multiTenant + "\n" +
+                ", Description: " + description +  ", Version: " + version + ", Multitenant " + multiTenant + "\n" +
                 getDeploymentDetails() + "\n PortMapping: " + getPortMappings() + "\n IaaS: " + getIaasProviders() +
-                "\n LoadBalancer: " + getLoadBalancerInfo() + "\n Properties: " + getProperties()
-                + "\n VolumeBean mappings " + persistence.toString();
+                "\n LoadBalancer: " + getLoadBalancerInfo() + "\n Properties: " + getProperties() +"\n VolumeBean mappings "+ persistence.toString();
     }
 
-    private String getDeploymentDetails() {
+	private String getDeploymentDetails () {
 
-        if (deployment != null) {
+        if(deployment != null) {
             return deployment.toString();
         }
         return null;
@@ -75,39 +75,39 @@ import java.util.List;
 
     private String getLoadBalancerInfo() {
 
-        if (loadBalancer != null) {
+        if(loadBalancer != null) {
             return loadBalancer.toString();
         }
         return null;
     }
 
-    private String getPortMappings() {
+    private String getPortMappings () {
 
         StringBuilder portMappingBuilder = new StringBuilder();
-        if (portMapping != null && !portMapping.isEmpty()) {
-            for (PortMappingBean portMappingBean : portMapping) {
+        if(portMapping != null && !portMapping.isEmpty()) {
+            for(PortMappingBean portMappingBean : portMapping) {
                 portMappingBuilder.append(portMappingBean.toString());
             }
         }
         return portMappingBuilder.toString();
     }
 
-    private String getIaasProviders() {
+    private String getIaasProviders () {
 
         StringBuilder iaasBuilder = new StringBuilder();
-        if (iaasProvider != null && !iaasProvider.isEmpty()) {
-            for (IaasProviderBean iaasProviderBean : iaasProvider) {
+        if(iaasProvider != null && !iaasProvider.isEmpty()) {
+            for(IaasProviderBean iaasProviderBean : iaasProvider) {
                 iaasBuilder.append(iaasProviderBean.toString());
             }
         }
         return iaasBuilder.toString();
     }
 
-    private String getProperties() {
+    private String getProperties () {
 
         StringBuilder propertyBuilder = new StringBuilder();
-        if (property != null) {
-            for (PropertyBean propertyBean : property) {
+        if(property != null) {
+            for(PropertyBean propertyBean : property) {
                 propertyBuilder.append(propertyBean.name + " : " + propertyBean.value + " | ");
             }
         }

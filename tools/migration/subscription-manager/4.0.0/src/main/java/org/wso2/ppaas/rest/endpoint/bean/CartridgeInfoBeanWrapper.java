@@ -20,14 +20,16 @@ package org.wso2.ppaas.rest.endpoint.bean;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement public class CartridgeInfoBeanWrapper {
+@XmlRootElement
+public class CartridgeInfoBeanWrapper {
     private List<CartridgeInfoBean> cartridgeInfoBean;
 
     public List<CartridgeInfoBean> getCartridgeInfoBean() {
         return cartridgeInfoBean;
     }
 
-    public void setCartridgeInfoBean(List<CartridgeInfoBean> cartridgeInfoBean) {
+    public void setCartridgeInfoBean(
+            List<CartridgeInfoBean> cartridgeInfoBean) {
         this.cartridgeInfoBean = cartridgeInfoBean;
     }
 }

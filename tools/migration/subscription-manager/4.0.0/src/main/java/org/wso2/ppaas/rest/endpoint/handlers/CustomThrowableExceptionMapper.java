@@ -29,13 +29,12 @@ public class CustomThrowableExceptionMapper implements ExceptionMapper<Throwable
     private static Log log = LogFactory.getLog(CustomThrowableExceptionMapper.class);
 
     public Response toResponse(Throwable throwable) {
-        if (log.isDebugEnabled()) {
+        if(log.isDebugEnabled()){
             log.debug("Internal server error", throwable);
         }
 
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON).
                 entity(Utils
-                        .buildMessage(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "Internal server error"))
-                .build();
+                        .buildMessage(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), "Internal server error")).build();
     }
 }

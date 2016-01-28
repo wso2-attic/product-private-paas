@@ -21,7 +21,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 import java.util.ArrayList;
 import java.util.List;
 
-@XmlRootElement public class CartridgeInfoBean {
+@XmlRootElement
+public class CartridgeInfoBean {
     String cartridgeType;
     String alias;
     String autoscalePolicy;
@@ -153,29 +154,25 @@ import java.util.List;
         this.removeOnTermination = removeOnTermination;
     }
 
-    public boolean isCommitsEnabled() {
-        return commitsEnabled;
-    }
+	public boolean isCommitsEnabled() {
+		return commitsEnabled;
+	}
 
-    public void setCommitsEnabled(boolean commitsEnabled) {
-        this.commitsEnabled = commitsEnabled;
-    }
+	public void setCommitsEnabled(boolean commitsEnabled) {
+		this.commitsEnabled = commitsEnabled;
+	}
 
-    public String getServiceGroup() {
-        return serviceGroup;
-    }
+	public String getServiceGroup() {
+		return serviceGroup;
+	}
 
-    public void setServiceGroup(String serviceGroup) {
-        this.serviceGroup = serviceGroup;
-    }
+	public void setServiceGroup(String serviceGroup) {
+		this.serviceGroup = serviceGroup;
+	}
+    
+    public List<String> getDomains() { return domains; }
 
-    public List<String> getDomains() {
-        return domains;
-    }
-
-    public void setDomains(List<String> domains) {
-        this.domains = domains;
-    }
+    public void setDomains(List<String> domains) { this.domains = domains; }
 
     public String getSubscribingTenantDomain() {
         return subscribingTenantDomain;

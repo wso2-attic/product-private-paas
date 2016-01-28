@@ -21,9 +21,11 @@ package org.wso2.ppaas.rest.endpoint.bean.util.type.map;
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlValue;
 
-public class MapEntryType<S, T> {
+public class MapEntryType <S,T> {
 
-    @XmlAttribute public S key;
+    @XmlAttribute
+    public S key;
 
-    @XmlValue public T value;
+    @XmlValue
+    public T value;
 }

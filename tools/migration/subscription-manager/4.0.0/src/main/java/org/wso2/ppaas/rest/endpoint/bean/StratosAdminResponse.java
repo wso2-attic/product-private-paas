@@ -20,7 +20,8 @@ package org.wso2.ppaas.rest.endpoint.bean;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement public class StratosAdminResponse {
+@XmlRootElement
+public class StratosAdminResponse {
 
     private String message;
 

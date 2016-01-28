@@ -20,7 +20,8 @@ package org.wso2.ppaas.rest.endpoint.bean.autoscaler.policy.autoscale;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement public class AutoscalePolicy {
+@XmlRootElement
+public class AutoscalePolicy {
 
     private String id;
 

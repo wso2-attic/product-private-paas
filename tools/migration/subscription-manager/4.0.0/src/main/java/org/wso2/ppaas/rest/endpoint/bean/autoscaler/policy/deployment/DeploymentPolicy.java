@@ -18,13 +18,15 @@
 
 package org.wso2.ppaas.rest.endpoint.bean.autoscaler.policy.deployment;
 
+
 import org.wso2.ppaas.rest.endpoint.bean.autoscaler.partition.Partition;
 import org.wso2.ppaas.rest.endpoint.bean.autoscaler.partition.PartitionGroup;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement public class DeploymentPolicy {
+@XmlRootElement
+public class DeploymentPolicy {
 
     public String id;
 

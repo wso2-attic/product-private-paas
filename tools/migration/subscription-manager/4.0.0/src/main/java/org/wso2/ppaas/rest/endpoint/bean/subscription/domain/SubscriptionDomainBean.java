@@ -20,7 +20,8 @@ package org.wso2.ppaas.rest.endpoint.bean.subscription.domain;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "domains") public class SubscriptionDomainBean {
+@XmlRootElement(name = "domains")
+public class SubscriptionDomainBean {
     public String domainName;
     public String applicationContext;
 

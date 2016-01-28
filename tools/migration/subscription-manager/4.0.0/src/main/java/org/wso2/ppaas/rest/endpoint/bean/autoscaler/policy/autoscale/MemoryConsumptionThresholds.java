@@ -20,9 +20,10 @@ package org.wso2.ppaas.rest.endpoint.bean.autoscaler.policy.autoscale;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement public class MemoryConsumptionThresholds {
+@XmlRootElement
+public class MemoryConsumptionThresholds {
 
-    public float upperLimit;
+	public float upperLimit;
 
     public float lowerLimit;
 }

@@ -59,8 +59,8 @@ public class OAuthHandler extends AbstractAuthenticationAuthorizationHandler {
     public Response handle(Message message, ClassResourceInfo classResourceInfo) {
         try {
             OAuth2TokenValidationResponseDTO respDTO;
-            ValidationServiceClient validationServiceClient = new ValidationServiceClient(oauthValidationEndpoint,
-                    username, password);
+            ValidationServiceClient validationServiceClient = new
+                    ValidationServiceClient(oauthValidationEndpoint, username, password);
             HttpHeaders httpHeaders = new HttpHeadersImpl(message);
             String header = httpHeaders.getRequestHeaders().getFirst("Authorization");
             // if the authorization token has Bearer..

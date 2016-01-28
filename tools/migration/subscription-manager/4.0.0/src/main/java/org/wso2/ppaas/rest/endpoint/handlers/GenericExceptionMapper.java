@@ -33,13 +33,12 @@ public class GenericExceptionMapper implements ExceptionMapper<WebApplicationExc
     private static Log log = LogFactory.getLog(GenericExceptionMapper.class);
 
     public Response toResponse(WebApplicationException webApplicationException) {
-        if (log.isDebugEnabled()) {
+        if(log.isDebugEnabled()){
             log.debug("Internal erver error", webApplicationException);
         }
         // if no specific error message specified, spitting out a generaic error message
-        String errorMessage = (webApplicationException.getMessage() != null) ?
-                webApplicationException.getMessage() :
-                "Internal server error";
+        String errorMessage = (webApplicationException.getMessage() != null)?
+                webApplicationException.getMessage():"Internal server error";
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON).
                 entity(Utils.buildMessage(Response.Status.INTERNAL_SERVER_ERROR.getStatusCode(), errorMessage)).build();
     }

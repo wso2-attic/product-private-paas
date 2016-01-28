@@ -33,10 +33,13 @@ import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-@Path("/auth/") public class AuthenticationAdmin extends AbstractAdmin {
+@Path("/auth/")
+public class AuthenticationAdmin extends AbstractAdmin {
     Log log = LogFactory.getLog(AuthenticationAdmin.class);
     // TODO: investigate on the thread safety of this apprach...
-    @Context HttpServletRequest httpServletRequest;
+    @Context
+    HttpServletRequest httpServletRequest;
+
 
     /*
     This method gets called by the client who are interested in using session mechanism to authenticate themselves in
@@ -44,16 +47,22 @@ import javax.ws.rs.core.Response;
     Once the authenticated call received, the method creates a session.
 
      */
-    @GET @Path("/cookie") @Produces("application/json") @Consumes("application/json") @AuthorizationAction("/permission/protected/manage/monitor/tenants") public Response getCookie() {
-        HttpSession httpSession = httpServletRequest.getSession(true);//create session if not found
-        PrivilegedCarbonContext carbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
-        httpSession.setAttribute("userName", carbonContext.getUsername());
-        httpSession.setAttribute("tenantDomain", carbonContext.getTenantDomain());
-        httpSession.setAttribute("tenantId", carbonContext.getTenantId());
+    @GET
+    @Path("/cookie")
+    @Produces("application/json")
+    @Consumes("application/json")
+    @AuthorizationAction("/permission/protected/manage/monitor/tenants")
+    public Response getCookie(){
+       HttpSession httpSession = httpServletRequest.getSession(true);//create session if not found
+       PrivilegedCarbonContext carbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
+       httpSession.setAttribute("userName",carbonContext.getUsername());
+       httpSession.setAttribute("tenantDomain",carbonContext.getTenantDomain());
+       httpSession.setAttribute("tenantId",carbonContext.getTenantId());
 
-        String sessionId = httpSession.getId();
+       String sessionId = httpSession.getId();
         return Response.ok().header("WWW-Authenticate", "Basic").type(MediaType.APPLICATION_JSON).
                 entity(Utils.buildAuthenticationSuccessMessage(sessionId)).build();
     }
+
 
 }

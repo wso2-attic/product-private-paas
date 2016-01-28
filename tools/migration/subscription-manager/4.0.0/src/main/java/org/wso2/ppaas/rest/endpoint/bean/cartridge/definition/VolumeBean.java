@@ -19,7 +19,8 @@ package org.wso2.ppaas.rest.endpoint.bean.cartridge.definition;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement public class VolumeBean {
+@XmlRootElement
+public class VolumeBean {
 
     public String size;
 
@@ -29,7 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
     public String mappingPath;
 
-    public String toString() {
+    public String toString () {
         return " [ Persistence Required : " + ", Size: " + size + ", device: " +
                 device + " remove on termination " + removeOnTermination +
                 ", mappingPath : " + mappingPath + "] ";
