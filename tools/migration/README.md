@@ -17,5 +17,10 @@ This tool will enable users to import artifact JSON files from PPaaS 4.0.0 and c
 
 ## Configurations
 
-Default values, that have been used for the iaas provider details can be updated in distribution/contents/conf/config.properties file.
-Base URLs of PPaaS 4.0.0 and PPaaS 4.1.X and login credentials should be updated in distribution/contents/conf/config.properties file.
+1. Default values, that have been used for the iaas provider details can be updated in distribution/contents/conf/config.properties file.
+2. Base URLs of PPaaS 4.0.0 and PPaaS 4.1.X and login credentials should be updated in distribution/contents/conf/config.properties file.
+3. If a self signed certificate is used, set the constant 'enable.selfsigned.certificate=true' in distribution/contents/conf/config.properties file.
+
+## Tests
+
+1. To test the tool with a signed certificate, set the constant 'enable.selfsigned.certificate=false' in pom.xml and add the certificate to the jetty server.

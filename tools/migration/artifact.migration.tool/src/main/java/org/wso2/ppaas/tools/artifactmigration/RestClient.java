@@ -24,7 +24,6 @@ import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSession;
-import javax.ws.rs.HttpMethod;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.core.HttpHeaders;
@@ -36,7 +35,7 @@ public class RestClient {
      * to be disabled when in normal use.)
      */
     static {
-        if (Constants.ENABLE_SELF_CERTIFIED) {
+        if (Boolean.parseBoolean(System.getProperty(Constants.ENABLE_SELF_CERTIFIED))) {
             HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
                 public boolean verify(String hostname, SSLSession session) {
                     return hostname.equals(System.getProperty(Constants.HOSTNAME));

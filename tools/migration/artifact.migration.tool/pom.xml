@@ -175,6 +175,10 @@
                             <name>sourcescripts.path</name>
                             <value>/target/test-classes/scripts/</value>
                         </property>
+                        <property>
+                            <name>enable.selfsigned.certificates</name>
+                            <value>true</value>
+                        </property>
                     </systemProperties>
                 </configuration>
             </plugin>

@@ -13,7 +13,8 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-@Path("/admin") public class StratosV400Mock {
+@Path("/admin")
+public class StratosV400Mock {
     private static final Log log = LogFactory.getLog(StratosV400Mock.class);
 
     private String readJSON(String FileName) {
@@ -33,47 +34,79 @@ import java.io.IOException;
             return TestConstants.ERROR_MSG;
     }
 
-    @GET @Path("/partition") @Produces(MediaType.APPLICATION_JSON) public String partition() {
+    @GET
+    @Path("/partition")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String partition() {
         return readJSON(TestConstants.PARTITION_TEST_INPUT);
     }
 
-    @GET @Path("/policy/autoscale") @Produces(MediaType.APPLICATION_JSON) public String autoscale() {
+    @GET
+    @Path("/policy/autoscale")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String autoscale() {
         return readJSON(TestConstants.AUTOSCALE_TEST_INPUT);
     }
 
-    @GET @Path("/policy/deployment") @Produces(MediaType.APPLICATION_JSON) public String deployment() {
+    @GET
+    @Path("/policy/deployment")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String deployment() {
         return readJSON(TestConstants.DEPLOYMENT_TEST_INPUT);
     }
 
-    @GET @Path("/cartridge/list") @Produces(MediaType.APPLICATION_JSON) public String cartridge() {
+    @GET
+    @Path("/cartridge/list")
+    @Produces(MediaType.APPLICATION_JSON) public String cartridge() {
         return readJSON(TestConstants.CARTRIDGE_TEST_INPUT);
     }
 
-    @GET @Path("/cartridge/php/subscription/myphp/domains") @Produces(MediaType.APPLICATION_JSON) public String domainmyphp() {
+    @GET
+    @Path("/cartridge/php/subscription/myphp/domains")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String domainmyphp() {
         return readJSON(TestConstants.DOMAIN_MAPPING_TEST_INPUT);
     }
 
-    @GET @Path("/cartridge/php/subscription/newphp/domains") @Produces(MediaType.APPLICATION_JSON) public String domainnewphp() {
+    @GET
+    @Path("/cartridge/php/subscription/newphp/domains")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String domainnewphp() {
         return readJSON(TestConstants.DOMAIN_MAPPING_TEST_INPUT);
     }
 
-    @GET @Path("/cartridge/tomcat/subscription/mytomcat/domains") @Produces(MediaType.APPLICATION_JSON) public String domainmytomcat() {
+    @GET
+    @Path("/cartridge/tomcat/subscription/mytomcat/domains")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String domainmytomcat() {
         return readJSON(TestConstants.DOMAIN_MAPPING_TEST_INPUT);
     }
 
-    @GET @Path("/cartridge/tomcat/subscription/newtomcat/domains") @Produces(MediaType.APPLICATION_JSON) public String domainnewtomcat() {
+    @GET
+    @Path("/cartridge/tomcat/subscription/newtomcat/domains")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String domainnewtomcat() {
         return readJSON(TestConstants.DOMAIN_MAPPING_TEST_INPUT);
     }
 
-    @GET @Path("/cartridge/list/subscribed/all") @Produces(MediaType.APPLICATION_JSON) public String subscription() {
+    @GET
+    @Path("/cartridge/list/subscribed/all")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String subscription() {
         return readJSON(TestConstants.SUBSCRIPTION_TEST_INPUT);
     }
 
-    @GET @Path("/cartridge/tenanted/list") @Produces(MediaType.APPLICATION_JSON) public String multiTenantCartridge() {
+    @GET
+    @Path("/cartridge/tenanted/list")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String multiTenantCartridge() {
         return readJSON(TestConstants.MULTI_TENANT_CARTRIDGE_TEST_INPUT);
     }
 
-    @GET @Path("/service") @Produces(MediaType.APPLICATION_JSON) public String service() {
+    @GET
+    @Path("/service")
+    @Produces(MediaType.APPLICATION_JSON)
+    public String service() {
         return readJSON(TestConstants.SERVICE_TEST_INPUT);
     }
 

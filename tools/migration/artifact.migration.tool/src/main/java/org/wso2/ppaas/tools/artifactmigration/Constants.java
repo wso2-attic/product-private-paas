@@ -76,7 +76,7 @@ public class Constants {
     public static final String DOMAIN_MAPPING_DEPLOYMENT_CURL_COMMAND = "echo \"Adding domain mappings...\"\n"
             + "curl -X POST -H \"Content-Type: application/json\" -d \"@${artifacts_path}/domain-mapping.json\" -k -u ${var_username}:${var_password} ${var_base_url}api/applications/application_name/domainMappings";
     public static final String CERTIFICATE_PASSWORD = "wso2carbon";
-    public static final boolean ENABLE_SELF_CERTIFIED = true;
+    public static final String ENABLE_SELF_CERTIFIED = "enable.selfcertified.certificates";
     public static final String JSON_EXTENSION = ".json";
     //Constants for default values for deploying scripts
     public static final String CARTRIDGE_CATEGORY = "default";
