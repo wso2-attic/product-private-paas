@@ -85,5 +85,4 @@
             <outputFileNameMapping>migration.war</outputFileNameMapping>
         </dependencySet>
     </dependencySets>
-
 </assembly>

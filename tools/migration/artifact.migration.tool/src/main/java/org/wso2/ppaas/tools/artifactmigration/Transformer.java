@@ -558,7 +558,8 @@ class Transformer {
                             multiTenantCartridgeReference410.setType(multiTenantCartridge.getCartridgeType());
                             multiTenantCartridgeReference410.setCartridgeMax(Constants.CARTRIDGE_MAX_VALUE);
                             multiTenantCartridgeReference410.setCartridgeMin(Constants.CARTRIDGE_MIN_VALUE);
-                            multiTenantCartridges.add(0, multiTenantCartridgeReference410);
+                           // multiTenantCartridges.add(0, multiTenantCartridgeReference410);
+                            multiTenantCartridges.add(multiTenantCartridgeReference410);
                             multiTenantComponents.setCartridges(multiTenantCartridges);
 
                             multiTenantApplication410.setComponents(multiTenantComponents);

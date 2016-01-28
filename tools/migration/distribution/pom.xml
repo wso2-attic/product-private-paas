@@ -19,6 +19,7 @@
                     <descriptors>
                         <descriptor>assembly/bin.xml</descriptor>
                     </descriptors>
+                    <finalName>zipName</finalName>
                     <archiverConfig>
                         <fileMode>420</fileMode>
                         <directoryMode>493</directoryMode>
