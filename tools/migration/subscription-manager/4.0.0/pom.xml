@@ -26,7 +26,7 @@
 
     <artifactId>ppaas-400-migration</artifactId>
     <packaging>war</packaging>
-    <name>WSO2 PPaaS - 4.0.0 to 4.1.x Migration Tool</name>
+    <name>WSO2 PPaaS - Artifact Migration Subscription Manager</name>
 
     <build>
         <plugins>
