@@ -90,7 +90,7 @@ public class ConversionTool {
         Transformer.waitForThreadTermination();
         Transformer.addDefaultApplicationPolicies();
         Transformer.transformCartridgeList();
-        Transformer.transformMultiTenantCartridgeList();
+        // Transformer.transformMultiTenantCartridgeList();
         log.info("Conversion completed successfully");
     }
 
