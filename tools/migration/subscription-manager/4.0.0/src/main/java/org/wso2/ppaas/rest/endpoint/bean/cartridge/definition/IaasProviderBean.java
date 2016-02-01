@@ -21,8 +21,7 @@ package org.wso2.ppaas.rest.endpoint.bean.cartridge.definition;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement (name = "iaasProvider")
-public class IaasProviderBean {
+@XmlRootElement(name = "iaasProvider") public class IaasProviderBean {
 
     public String type;
 
@@ -41,33 +40,33 @@ public class IaasProviderBean {
     public String credential;
 
     public List<PropertyBean> property;
-    
+
     public List<NetworkInterfaceBean> networkInterfaces;
 
-    public String toString () {
+    public String toString() {
         return " [ Type: " + type + ", Name: " + name + ", Class Name: " + className + ", Image Id: " + imageId +
                 ", Max Instance Limit: " + maxInstanceLimit + ", Provider: " + provider + ", Identity: " + identity +
                 ", Credentials: " + credential + ", Properties: " + getIaasProperties() + ", Network Interfaces: " +
                 getNetworkInterfaces() + " ] ";
     }
 
-    private String getIaasProperties () {
+    private String getIaasProperties() {
 
         StringBuilder iaasPropertyBuilder = new StringBuilder();
-        if(property != null) {
+        if (property != null) {
             for (PropertyBean propertyBean : property) {
                 iaasPropertyBuilder.append(propertyBean.name + " : " + propertyBean.value + " | ");
             }
         }
         return iaasPropertyBuilder.toString();
     }
-    
+
     private String getNetworkInterfaces() {
         StringBuilder sb = new StringBuilder();
         if (networkInterfaces != null) {
             sb.append('[');
             String delimeter = "";
-            for (NetworkInterfaceBean nib:networkInterfaces) {
+            for (NetworkInterfaceBean nib : networkInterfaces) {
                 sb.append(delimeter).append(nib);
                 delimeter = ", ";
             }

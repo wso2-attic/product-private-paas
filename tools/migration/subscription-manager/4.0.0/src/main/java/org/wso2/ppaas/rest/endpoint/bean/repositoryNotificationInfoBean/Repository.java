@@ -19,8 +19,7 @@ package org.wso2.ppaas.rest.endpoint.bean.repositoryNotificationInfoBean;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name = "repository")
-public class Repository {
+@XmlRootElement(name = "repository") public class Repository {
     private String url;
     private String description;
 

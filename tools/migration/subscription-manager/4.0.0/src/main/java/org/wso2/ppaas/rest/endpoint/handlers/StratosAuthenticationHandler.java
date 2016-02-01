@@ -48,22 +48,23 @@ public class StratosAuthenticationHandler extends AbstractAuthenticationAuthoriz
     private static Log log = LogFactory.getLog(StratosAuthenticationHandler.class);
     private static String SUPPORTED_AUTHENTICATION_TYPE = "Basic";
 
-    public boolean canHandle(String authHeaderPrefix){
+    public boolean canHandle(String authHeaderPrefix) {
         return SUPPORTED_AUTHENTICATION_TYPE.equals(authHeaderPrefix);
     }
 
     /**
      * Authenticate the user against the user store. Once authenticate, populate the {@link org.wso2.carbon.context.CarbonContext}
      * to be used by the downstream code.
+     *
      * @param message
      * @param classResourceInfo
      * @return
      */
     public Response handle(Message message, ClassResourceInfo classResourceInfo) {
-    	// If Mutual SSL is enabled
+        // If Mutual SSL is enabled
         HttpServletRequest request = (HttpServletRequest) message.get("HTTP.REQUEST");
         Object certObject = request.getAttribute("javax.servlet.request.X509Certificate");
-        
+
         AuthorizationPolicy policy = (AuthorizationPolicy) message.get(AuthorizationPolicy.class);
         String username = policy.getUserName().trim();
         String password = policy.getPassword().trim();
@@ -71,34 +72,33 @@ public class StratosAuthenticationHandler extends AbstractAuthenticationAuthoriz
         //sanity check
         if ((username == null) || username.equals("")) {
             log.error("username is seen as null/empty values.");
-            return Response.status(Response.Status.UNAUTHORIZED)
-                           .header("WWW-Authenticate", "Basic").type(MediaType.APPLICATION_JSON)
-                           .entity(Utils.buildMessage("Username cannot be null")).build();
+            return Response.status(Response.Status.UNAUTHORIZED).header("WWW-Authenticate", "Basic")
+                    .type(MediaType.APPLICATION_JSON).entity(Utils.buildMessage("Username cannot be null")).build();
         } else if (certObject == null && ((password == null) || password.equals(""))) {
             log.error("password is seen as null/empty values.");
-            return Response.status(Response.Status.UNAUTHORIZED)
-                           .header("WWW-Authenticate", "Basic").type(MediaType.APPLICATION_JSON)
-                           .entity(Utils.buildMessage("password cannot be null")).build();
+            return Response.status(Response.Status.UNAUTHORIZED).header("WWW-Authenticate", "Basic")
+                    .type(MediaType.APPLICATION_JSON).entity(Utils.buildMessage("password cannot be null")).build();
         }
-        
+
         try {
             RealmService realmService = ServiceHolder.getRealmService();
             RegistryService registryService = ServiceHolder.getRegistryService();
             String tenantDomain = MultitenantUtils.getTenantDomain(username);
             int tenantId = realmService.getTenantManager().getTenantId(tenantDomain);
-            
+
             UserRealm userRealm = null;
             if (certObject == null) {
                 userRealm = AnonymousSessionUtil.getRealmByTenantDomain(registryService, realmService, tenantDomain);
                 if (userRealm == null) {
-                    log .error("Invalid domain or unactivated tenant login");
+                    log.error("Invalid domain or unactivated tenant login");
                     // is this the correct HTTP code for this scenario ? (401)
                     return Response.status(Response.Status.UNAUTHORIZED).header("WWW-Authenticate", "Basic").
                             type(MediaType.APPLICATION_JSON).entity(Utils.buildMessage("Tenant not found")).build();
                 }
             }
             username = MultitenantUtils.getTenantAwareUsername(username);
-            if (certObject != null || userRealm.getUserStoreManager().authenticate(username, password)) {  // if authenticated
+            if (certObject != null || userRealm.getUserStoreManager()
+                    .authenticate(username, password)) {  // if authenticated
 
                 // setting the correct tenant info for downstream code..
                 PrivilegedCarbonContext carbonContext = PrivilegedCarbonContext.getThreadLocalCarbonContext();
@@ -112,7 +112,8 @@ public class StratosAuthenticationHandler extends AbstractAuthenticationAuthoriz
                 // set the authenticated flag and let the request to continue
                 AuthenticationContext.setAuthenticated(true);
                 if (log.isDebugEnabled()) {
-                    log.debug("authenticated using the " + CookieBasedAuthenticationHandler.class.getName() + "for username  :" +
+                    log.debug("authenticated using the " + CookieBasedAuthenticationHandler.class.getName()
+                            + "for username  :" +
                             username + "tenantDomain : " + tenantDomain + " tenantId : " + tenantId);
                 }
                 return null;
@@ -120,11 +121,12 @@ public class StratosAuthenticationHandler extends AbstractAuthenticationAuthoriz
                 log.warn("unable to authenticate the request");
                 // authentication failed, request the authetication, add the realm name if needed to the value of WWW-Authenticate
                 return Response.status(Response.Status.UNAUTHORIZED).header("WWW-Authenticate", "Basic").
-                        type(MediaType.APPLICATION_JSON).entity(Utils.buildMessage("Authentication failed. Please " +
-                        "check your username/password")).build();
+                        type(MediaType.APPLICATION_JSON)
+                        .entity(Utils.buildMessage("Authentication failed. Please " + "check your username/password"))
+                        .build();
             }
         } catch (Exception exception) {
-            log.error("Authentication failed",exception);
+            log.error("Authentication failed", exception);
             // server error in the eyes of the client. Hence 5xx HTTP code.
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).type(MediaType.APPLICATION_JSON).
                     entity(Utils.buildMessage("Unexpected error. Please contact the system admin")).build();

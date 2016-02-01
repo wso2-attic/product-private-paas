@@ -32,11 +32,10 @@ import java.rmi.RemoteException;
  * Service class wrapper for OAuthTokenValidation endpoint.
  */
 public class ValidationServiceClient {
-    private OAuth2TokenValidationServiceStub stub = null;
     private static final Log log = LogFactory.getLog(OAuth2TokenValidationServiceStub.class);
+    private OAuth2TokenValidationServiceStub stub = null;
 
-
-    public ValidationServiceClient(String backendServerURL, String username, String password) throws Exception{
+    public ValidationServiceClient(String backendServerURL, String username, String password) throws Exception {
         String serviceURL = backendServerURL + "OAuth2TokenValidationService";
         try {
             stub = new OAuth2TokenValidationServiceStub(serviceURL);
@@ -47,9 +46,8 @@ public class ValidationServiceClient {
         }
     }
 
-
-    public OAuth2TokenValidationResponseDTO validateAuthenticationRequest(String accessToken) throws Exception{
-        OAuth2TokenValidationRequestDTO  oauthReq = new OAuth2TokenValidationRequestDTO();
+    public OAuth2TokenValidationResponseDTO validateAuthenticationRequest(String accessToken) throws Exception {
+        OAuth2TokenValidationRequestDTO oauthReq = new OAuth2TokenValidationRequestDTO();
         oauthReq.setAccessToken(accessToken);
         oauthReq.setTokenType(OAuthConstants.BEARER_TOKEN_TYPE);
         try {
@@ -59,6 +57,5 @@ public class ValidationServiceClient {
             throw new Exception("Error while validating OAuth2 request", e);
         }
     }
-
 
 }

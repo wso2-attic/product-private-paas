@@ -22,13 +22,11 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.util.List;
 
-@XmlRootElement(name = "List")
-public class ListType<T> {
+@XmlRootElement(name = "List") public class ListType<T> {
 
     private List<T> list;
 
-    @XmlElement(name="Item")
-    public List<T> getList() {
+    @XmlElement(name = "Item") public List<T> getList() {
         return list;
     }
 

@@ -1,9 +1,9 @@
-## WSO Private PaaS Migration Tool
+# WSO2 Private PaaS Migration Tool
 
 
 This tool will enable users to export tenant subscriptions to a file and import them to another deployment.
 
-# Instructions
+## Instructions
 
 1. Build the ppaas-migration tool by running the following command
 
@@ -19,7 +19,7 @@ mvn clean install
 
 
 
-# Clean Subscriptions in a Private PaaS deployment
+## Clean Subscriptions in a Private PaaS deployment
 
 Run the following command to clean all subscriptions from all tenants
 
@@ -27,6 +27,6 @@ Run the following command to clean all subscriptions from all tenants
 
 
 
-# Retrieve all subscriptions in a Private PaaS deployment
+## Retrieve all subscriptions in a Private PaaS deployment
 
    curl -k -u <username>:<password> https://<hostname>:<port>/migration/admin/cartridge/list/subscribed/all
