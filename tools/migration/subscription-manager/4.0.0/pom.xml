@@ -19,9 +19,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.wso2.ppaas</groupId>
-        <artifactId>tools</artifactId>
+        <artifactId>artifact-converter</artifactId>
         <version>4.1.1-SNAPSHOT</version>
-        <relativePath>../../../pom.xml</relativePath>
     </parent>
 
     <artifactId>ppaas-400-migration</artifactId>
@@ -74,6 +73,8 @@
             <version>4.2.0</version>
             <scope>provided</scope>
         </dependency>
+
+        <!-- tool specific imports from Stratos 4.0.0 -->
         <dependency>
             <groupId>org.apache.stratos</groupId>
             <artifactId>org.apache.stratos.tenant.mgt</artifactId>
