@@ -18,20 +18,22 @@
          xmlns="http://maven.apache.org/POM/4.0.0"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <packaging>pom</packaging>
-    <modules>
-        <module>distribution</module>
-        <module>artifact.migration.tool</module>
-        <module>subscription-manager/4.0.0</module>
-    </modules>
     <parent>
         <groupId>org.wso2.ppaas</groupId>
         <artifactId>tools</artifactId>
         <version>4.1.1-SNAPSHOT</version>
     </parent>
 
+    <packaging>pom</packaging>
+
     <artifactId>artifact-converter</artifactId>
     <name>WSO2 PPaaS - 4.0.0 to 4.1.x Migration Tool</name>
+
+    <modules>
+        <module>distribution</module>
+        <module>artifact.migration.tool</module>
+        <module>subscription-manager/4.0.0</module>
+    </modules>
 
     <build>
         <plugins>
