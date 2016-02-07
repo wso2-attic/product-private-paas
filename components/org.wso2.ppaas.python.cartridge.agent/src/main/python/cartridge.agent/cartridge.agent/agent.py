@@ -23,6 +23,7 @@ from threading import Thread
 
 import publisher
 from logpublisher import *
+from httplogpublisher import *
 from modules.event.application.signup.events import *
 from modules.event.domain.mapping.events import *
 import modules.event.eventhandler as event_handler
@@ -108,22 +109,30 @@ class CartridgeAgent(object):
             event_handler.volume_mount_extension(persistence_mapping_payload)
 
         # start log publishing thread
-        log_publish_manager = None
-        if DataPublisherConfiguration.get_instance().enabled:
+        thrift_log_publish_manager = None
+        http_log_publish_manager = None
+
+        if DataPublisherConfiguration.get_instance().enabled or HttpLogAnalyzerConfiguration.get_instance().enabled:
             log_file_paths = Config.log_file_paths
             if log_file_paths is None:
                 self.__log.exception("No valid log file paths found, no logs will be published")
             else:
                 self.__log.debug("Starting Log Publisher Manager: [Log file paths] %s" % ", ".join(log_file_paths))
-                log_publish_manager = LogPublisherManager(log_file_paths)
-                log_publish_manager.start()
+                if DataPublisherConfiguration.get_instance().enabled:
+                    thrift_log_publish_manager = LogPublisherManager(log_file_paths)
+                    thrift_log_publish_manager.start()
+
+                if HttpLogAnalyzerConfiguration.get_instance().enabled:
+                    http_log_publish_manager = HttpLogPublisherManager(log_file_paths)
+                    http_log_publish_manager.start()
 
         # run until terminated
         while not self.__terminated:
             time.sleep(5)
 
-        if DataPublisherConfiguration.get_instance().enabled:
-            log_publish_manager.terminate_all_publishers()
+        if DataPublisherConfiguration.get_instance().enabled or HttpLogAnalyzerConfiguration.get_instance().enabled :
+            http_log_publish_manager.terminate_all_publishers()
+            thrift_log_publish_manager.terminate_all_publishers()
 
     def terminate(self):
         """
