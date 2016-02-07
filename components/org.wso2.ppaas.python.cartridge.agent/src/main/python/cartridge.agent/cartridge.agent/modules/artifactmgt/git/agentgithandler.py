@@ -19,11 +19,10 @@ import shutil
 import subprocess
 import tempfile
 import urllib
-import os
 from distutils.dir_util import copy_tree
 from threading import current_thread
 
-import constants
+import os
 import time
 from config import Config
 from exception import GitRepositorySynchronizationException
@@ -121,7 +120,7 @@ class AgentGitHandler:
         (init_head, init_errors) = AgentGitHandler.execute_git_command(["rev-parse", "HEAD"], git_repo.local_repo_path)
 
         repo = Repo(git_repo.local_repo_path)
-        AgentGitHandler.execute_git_command(["pull", "--rebase", "origin", "master"], git_repo.local_repo_path)
+        AgentGitHandler.execute_git_command(["pull", "--rebase", "origin", git_repo.branch], git_repo.local_repo_path)
         AgentGitHandler.log.debug("Git pull rebase executed in checkout job")
         if repo.is_dirty():
             AgentGitHandler.log.error("Git pull operation in checkout job left the repository in dirty state")
@@ -152,7 +151,7 @@ class AgentGitHandler:
             # clone the repo to a temporary location first to avoid conflicts
             AgentGitHandler.log.debug(
                 "Cloning artifacts from URL: %s to temp location: %s" % (git_repo.repo_url, temp_repo_path))
-            Repo.clone_from(git_repo.auth_url, temp_repo_path)
+            Repo.clone_from(git_repo.auth_url, temp_repo_path, branch=git_repo.branch)
 
             # move the cloned dir to application path
             copy_tree(temp_repo_path, git_repo.local_repo_path)
@@ -161,6 +160,35 @@ class AgentGitHandler:
         except GitCommandError as e:
             raise GitRepositorySynchronizationException("Error while cloning repository for tenant %s: %s" % (
                 git_repo.tenant_id, e))
+
+    # @staticmethod
+    # def checkout_remote_branch(git_repo):
+    #     try:
+    #         # create a temporary location to clone
+    #         temp_repo_path = os.path.join(tempfile.gettempdir(), "pca_temp_" + git_repo.tenant_id)
+    #         if os.path.isdir(temp_repo_path) and os.listdir(temp_repo_path) != []:
+    #             GitUtils.delete_folder_tree(temp_repo_path)
+    #             GitUtils.create_dir(temp_repo_path)
+    #
+    #         # clone the repo to a temporary location first to avoid conflicts
+    #         AgentGitHandler.log.debug(
+    #             "Cloning artifacts from URL: %s to temp location: %s" % (git_repo.repo_url, temp_repo_path))
+    #         Repo.clone_from(git_repo.auth_url, temp_repo_path)
+    #
+    #         local_repo = Repo.init(temp_repo_path)
+    #         origin = local_repo.create_remote('origin', local_repo.auth_url)
+    #         assert origin.exists()
+    #         # branch name = "tenant_<tenant_id>"
+    #         origin.fetch("+refs/heads/" + git_repo.branch + ":refs/remotes/origin/" + git_repo.branch)
+    #         AgentGitHandler.execute_git_command(["checkout", git_repo.branch], temp_repo_path)
+    #
+    #         # move the cloned dir to application path
+    #         copy_tree(temp_repo_path, git_repo.local_repo_path)
+    #         AgentGitHandler.log.info("Git clone operation for tenant %s successful" % git_repo.tenant_id)
+    #         return git_repo
+    #     except GitCommandError as e:
+    #         raise GitRepositorySynchronizationException("Error while cloning repository for tenant %s: %s" % (
+    #             git_repo.tenant_id, e))
 
     @staticmethod
     def retry_clone(git_repo):
@@ -212,7 +240,7 @@ class AgentGitHandler:
             del AgentGitHandler.__git_repositories[tenant_id]
 
     @staticmethod
-    def create_git_repo(repo_info):
+    def create_git_repo(repo_info, branch=None):
         git_repo = GitRepository()
         git_repo.tenant_id = repo_info.tenant_id
         git_repo.local_repo_path = repo_info.repo_path
@@ -221,6 +249,11 @@ class AgentGitHandler:
         git_repo.repo_username = repo_info.repo_username
         git_repo.repo_password = repo_info.repo_password
         git_repo.commit_enabled = repo_info.commit_enabled
+        if branch:
+            git_repo.branch = branch
+        else:
+            git_repo.branch = 'master'
+
 
         git_repo.cloned = False
 
@@ -401,6 +434,8 @@ class GitRepository:
         """ :type : bool  """
         self.scheduled_update_task = None
         """:type : ScheduledExecutor """
+        self.branch = None
+        """ :type : str  """
 
 
 class GitUtils:
