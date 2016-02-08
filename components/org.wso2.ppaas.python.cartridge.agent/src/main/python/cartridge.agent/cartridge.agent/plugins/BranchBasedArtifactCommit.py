@@ -85,29 +85,43 @@ class BranchBasedArtifactCommit(IArtifactCommitPlugin):
             AgentGitHandler.execute_git_command(["reset", "--hard", init_head], git_repo.local_repo_path)
             return
 
+        #AgentGitHandler.execute_git_command(["pull", "--rebase", "origin", git_repo.branch], git_repo.local_repo_path)
         # pull accepting remote's changes before pushing to remote repo
         AgentGitHandler.execute_git_command(["pull", "-Xtheirs", "origin", git_repo.branch], git_repo.local_repo_path)
-        # push to remote
-        try:
-            push_info_list = repo.remotes.origin.push()
-            if (len(push_info_list)) == 0:
-                AgentGitHandler.log.error("Failed to push artifacts to remote repo for tenant: %s remote: %s" %
-                                          (git_repo.tenant_id, git_repo.repo_url))
-                # revert to the initial commit
-                AgentGitHandler.execute_git_command(["reset", "--hard", init_head], git_repo.local_repo_path)
-                return
+        AgentGitHandler.log.debug("Git pull executed, merge strategy=theirs")
+        if repo.is_dirty():
+            AgentGitHandler.log.error("Git pull operation in commit job left the repository in dirty state")
+            AgentGitHandler.log.error(
+                "Git pull rebase operation on remote %s for tenant %s failed" % (git_repo.repo_url, git_repo.tenant_id))
 
-            for push_info in push_info_list:
-                AgentGitHandler.log.debug("Push info summary: %s" % push_info.summary)
-                if push_info.flags & PushInfo.ERROR == PushInfo.ERROR:
-                    AgentGitHandler.log.error("Failed to push artifacts to remote repo for tenant: %s remote: %s" % (git_repo.tenant_id, git_repo.repo_url))
+            AgentGitHandler.log.warn("The working directory will be reset to the last known good commit")
+            # revert to the initial commit
+            AgentGitHandler.execute_git_command(["reset", "--hard", init_head], git_repo.local_repo_path)
+            return
+        else:
+            # push to remote
+            try:
+                push_info_list = repo.remotes.origin.push()
+                if (len(push_info_list)) == 0:
+                    AgentGitHandler.log.error("Failed to push artifacts to remote repo for tenant: %s remote: %s" %
+                                              (git_repo.tenant_id, git_repo.repo_url))
                     # revert to the initial commit
                     AgentGitHandler.execute_git_command(["reset", "--hard", init_head], git_repo.local_repo_path)
                     return
-                AgentGitHandler.log.debug("Successfully pushed artifacts for tenant: %s remote: %s" % (git_repo.tenant_id, git_repo.repo_url))
 
-        except Exception as e:
-            AgentGitHandler.log.error("Failed to push artifacts to remote repo for tenant: %s remote: %s exception: %s" %
+                for push_info in push_info_list:
+                    AgentGitHandler.log.debug("Push info summary: %s" % push_info.summary)
+                    if push_info.flags & PushInfo.ERROR == PushInfo.ERROR:
+                        AgentGitHandler.log.error("Failed to push artifacts to remote repo for tenant: %s remote: %s" %
+                                                  (git_repo.tenant_id, git_repo.repo_url))
+                        # revert to the initial commit
+                        AgentGitHandler.execute_git_command(["reset", "--hard", init_head], git_repo.local_repo_path)
+                        return
+                AgentGitHandler.log.debug(
+                    "Successfully pushed artifacts for tenant: %s remote: %s" % (git_repo.tenant_id, git_repo.repo_url))
+            except Exception as e:
+                AgentGitHandler.log.error(
+                    "Failed to push artifacts to remote repo for tenant: %s remote: %s exception: %s" %
                     (git_repo.tenant_id, git_repo.repo_url, e))
-            # revert to the initial commit
-            AgentGitHandler.execute_git_command(["reset", "--hard", init_head], git_repo.local_repo_path)
+                # revert to the initial commit
+                AgentGitHandler.execute_git_command(["reset", "--hard", init_head], git_repo.local_repo_path)
