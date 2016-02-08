@@ -131,8 +131,13 @@ class CartridgeAgent(object):
             time.sleep(5)
 
         if DataPublisherConfiguration.get_instance().enabled or HttpLogAnalyzerConfiguration.get_instance().enabled :
-            http_log_publish_manager.terminate_all_publishers()
-            thrift_log_publish_manager.terminate_all_publishers()
+
+            if DataPublisherConfiguration.get_instance().enabled:
+                thrift_log_publish_manager.terminate_all_publishers()
+
+            if HttpLogAnalyzerConfiguration.get_instance().enabled:
+                http_log_publish_manager.terminate_all_publishers()
+
 
     def terminate(self):
         """

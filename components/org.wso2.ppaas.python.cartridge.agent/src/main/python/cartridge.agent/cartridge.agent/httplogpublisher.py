@@ -58,7 +58,7 @@ class HttpLogPublisher(Thread):
             log_analyzer_username = HttpLogAnalyzerConfiguration.get_instance().log_analyzer_username
             log_analyzer_password = HttpLogAnalyzerConfiguration.get_instance().log_analyzer_password
             auth = base64.encodestring('%s:%s' % (log_analyzer_username, log_analyzer_password)).replace('\n', '')
-            
+
             while not self.terminated:
                 where = read_file.tell()  # where the seeker is in the file
                 line = read_file.readline()  # read the current line
@@ -71,7 +71,7 @@ class HttpLogPublisher(Thread):
                     self.log.debug("Log entry/entries detected. Publishing to Analyzing server.")
 
                     payload = {
-                        "@logstream": "['member_id', '%s']" % self.member_id,
+                        "@logstream": "['%s', '%s']" % (self.application_id, self.member_id),
                         "@timestamp": "%s" % self.date_time,
                         "message": "%s" % line,
                         "alias": "%s" % self.alias,
@@ -80,7 +80,7 @@ class HttpLogPublisher(Thread):
                         "application_id": "%s" % self.application_id
                     }
 
-                    request = urllib2.Request(log_analyzer_url,json.dumps(payload))
+                    request = urllib2.Request(log_analyzer_url, json.dumps(payload))
                     request.add_header('Content-Type', 'application/json')
                     request.add_header('Authorization', 'Basic %s' % auth)
 
