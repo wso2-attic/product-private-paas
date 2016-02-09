@@ -94,6 +94,11 @@ public abstract class PythonAgentIntegrationTest {
      * Setup method for test method testPythonCartridgeAgent
      */
     protected void setup(int timeout) throws Exception {
+        setupWithoutStarting();
+        start(timeout);
+    }
+
+    protected void setupWithoutStarting() throws Exception {
         messageBrokers = new HashMap<>();
 
         distributionName = integrationProperties.getProperty(DISTRIBUTION_NAME);
@@ -172,6 +177,9 @@ public abstract class PythonAgentIntegrationTest {
 
         agentPath = setupPythonAgent();
         log.info("Python agent working directory name: " + PYTHON_AGENT_DIR_NAME);
+    }
+
+    protected void start (int timeout) {
         log.info("Starting python cartridge agent...");
         this.outputStream = executeCommand("python " + agentPath + PATH_SEP + "agent.py", timeout);
     }
