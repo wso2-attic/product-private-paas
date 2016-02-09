@@ -78,6 +78,8 @@ class Config:
     """ :type : str  """
     cartridge_key = None
     """ :type : str  """
+    cartridge_alias = None
+    """ :type : str  """
     app_path = None
     """ :type : str  """
     repo_url = None
@@ -337,6 +339,7 @@ class Config:
             Config.partition_id = Config.read_property(constants.PARTITION_ID, False)
             Config.app_path = Config.read_property(constants.APPLICATION_PATH, False)
             Config.repo_url = Config.read_property(constants.REPO_URL, False)
+            Config.cartridge_alias = Config.read_property(constants.CARTRIDGE_ALIAS)
 
             if Config.repo_url is not None:
                 Config.cartridge_key = Config.read_property(constants.CARTRIDGE_KEY)
@@ -422,6 +425,7 @@ class Config:
         Config.log.debug("network-partition-id: %r" % Config.network_partition_id)
         Config.log.debug("partition-id: %r" % Config.partition_id)
         Config.log.debug("cartridge-key: %r" % Config.cartridge_key)
+        Config.log.debug("cartridge-alias: %r" % Config.cartridge_alias)
         Config.log.debug("app-path: %r" % Config.app_path)
         Config.log.debug("repo-url: %r" % Config.repo_url)
         Config.log.debug("ports: %r" % str(Config.ports))

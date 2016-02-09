@@ -26,8 +26,8 @@ import constants
 
 
 class LogPublisher(Thread):
-
-    def __init__(self, file_path, stream_definition, tenant_id, alias, date_time, member_id):
+    def __init__(self, file_path, stream_definition, tenant_id, alias, date_time, member_id, cartridge_alias,
+                 application_id):
         Thread.__init__(self)
         self.log = LogFactory().get_log(__name__)
         self.file_path = file_path
@@ -41,6 +41,8 @@ class LogPublisher(Thread):
         self.alias = alias
         self.date_time = date_time
         self.member_id = member_id
+        self.cartridge_alias = cartridge_alias
+        self.application_id = application_id
 
         self.terminated = False
         self.setName("LogPublisherThread")
@@ -54,11 +56,10 @@ class LogPublisher(Thread):
             # open file and keep reading for new entries
             # with open(self.file_path, "r") as read_file:
             read_file = open(self.file_path, "r")
-            read_file.seek(os.stat(self.file_path)[6])  # go to the end of the file
 
             while not self.terminated:
                 where = read_file.tell()  # where the seeker is in the file
-                line = read_file.readline()   # read the current line
+                line = read_file.readline()  # read the current line
                 if not line:
                     # no new line entered
                     self.log.debug("No new log entries detected to publish.")
@@ -69,6 +70,8 @@ class LogPublisher(Thread):
                     self.log.debug("Log entry/entries detected. Publishing to monitoring server.")
                     event = ThriftEvent()
                     event.metaData.append(self.member_id)
+                    event.payloadData.append(self.application_id)
+                    event.payloadData.append(self.cartridge_alias)
                     event.payloadData.append(self.tenant_id)
                     event.payloadData.append(self.alias)
                     event.payloadData.append("")
@@ -103,7 +106,7 @@ class LogPublisherManager(Thread):
     """
 
     @staticmethod
-    def define_stream(tenant_id, alias, date_time):
+    def define_stream(tenant_id, alias):
         """
         Creates a stream definition for Log Publishing
         :param date_time:
@@ -114,7 +117,7 @@ class LogPublisherManager(Thread):
         """
         # stream definition
         stream_definition = StreamDefinition()
-        stream_name = "logs." + tenant_id + "." + alias + "." + date_time
+        stream_name = "logs." + tenant_id + "." + alias
         stream_version = "1.0.0"
         stream_nickname = "log entries from instance"
         stream_description = "Apache Stratos Instance Log Publisher"
@@ -124,6 +127,8 @@ class LogPublisherManager(Thread):
         stream_definition.description = stream_description
         stream_definition.nickname = stream_nickname
         stream_definition.add_metadata_attribute("memberId", StreamDefinition.STRING)
+        stream_definition.add_payloaddata_attribute("applicationID", StreamDefinition.STRING)
+        stream_definition.add_payloaddata_attribute("cartridgeAlias", StreamDefinition.STRING)
         stream_definition.add_payloaddata_attribute("tenantID", StreamDefinition.STRING)
         stream_definition.add_payloaddata_attribute("serverName", StreamDefinition.STRING)
         stream_definition.add_payloaddata_attribute("appName", StreamDefinition.STRING)
@@ -164,7 +169,7 @@ class LogPublisherManager(Thread):
         self.alias = LogPublisherManager.get_alias(Config.cluster_id)
         self.date_time = LogPublisherManager.get_current_date()
 
-        self.stream_definition = self.define_stream(self.tenant_id, self.alias, self.date_time)
+        self.stream_definition = self.define_stream(self.tenant_id, self.alias)
         self.setName("LogPublisherManagerThread")
         self.log.debug("Created a LogPublisherManager thread")
 
@@ -192,7 +197,9 @@ class LogPublisherManager(Thread):
                 self.tenant_id,
                 self.alias,
                 self.date_time,
-                Config.member_id)
+                Config.member_id,
+                Config.cartridge_alias,
+                Config.application_id)
 
         return self.publishers[log_path]
 
@@ -234,7 +241,7 @@ class LogPublisherManager(Thread):
         :return: Formatted date string
         :rtype : str
         """
-        return datetime.date.today().strftime(constants.DATE_FORMAT)
+        return datetime.datetime.today().strftime(constants.DATE_FORMAT)
 
 
 class DataPublisherConfiguration:

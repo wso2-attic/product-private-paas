@@ -29,15 +29,16 @@ import traceback
 
 
 class HttpLogPublisher(Thread):
-    def __init__(self, file_path, tenant_id, alias, date_time, member_id, application_id):
+    def __init__(self, file_path, tenant_id, cluster_id, date_time, member_id, application_id, cartridge_alias):
         Thread.__init__(self)
         self.log = LogFactory().get_log(__name__)
         self.file_path = file_path
         self.tenant_id = tenant_id
-        self.alias = alias
+        self.cluster_id = cluster_id
         self.date_time = date_time
         self.member_id = member_id
         self.application_id = application_id
+        self.cartridge_alias = cartridge_alias
 
         self.terminated = False
         self.setName("HttpLogPublisherThread")
@@ -52,7 +53,6 @@ class HttpLogPublisher(Thread):
             # open file and keep reading for new entries
             # with open(self.file_path, "r") as read_file:
             read_file = open(self.file_path, "r")
-            # read_file.seek(os.stat(self.file_path)[6])  # go to the end of the file
 
             log_analyzer_url = HttpLogAnalyzerConfiguration.get_instance().log_analyzer_url
             log_analyzer_username = HttpLogAnalyzerConfiguration.get_instance().log_analyzer_username
@@ -68,16 +68,17 @@ class HttpLogPublisher(Thread):
                     time.sleep(1)
                     read_file.seek(where)  # set seeker
                 else:
-                    self.log.debug("Log entry/entries detected. Publishing to Analyzing server.")
+                    self.log.debug("Log entry/entries detected. Publishing to Analyzing Server.")
 
                     payload = {
                         "@logstream": "['%s', '%s']" % (self.application_id, self.member_id),
                         "@timestamp": "%s" % self.date_time,
                         "message": "%s" % line,
-                        "alias": "%s" % self.alias,
+                        "cluster_id": "%s" % self.cluster_id,
                         "tenant_id": "%s" % self.tenant_id,
                         "member_id": "%s" % self.member_id,
-                        "application_id": "%s" % self.application_id
+                        "application_id": "%s" % self.application_id,
+                        "cartridge_alias": "%s" % self.application_id
                     }
 
                     request = urllib2.Request(log_analyzer_url, json.dumps(payload))
@@ -86,6 +87,7 @@ class HttpLogPublisher(Thread):
 
                     try:
                         urllib2.urlopen(request)
+                        self.log.debug("Published to Analyzing Server.")
                     except Exception:
                         self.log.error("Failed to publish event.")
                         self.log.error(traceback.format_exc())
@@ -113,7 +115,7 @@ class HttpLogPublisherManager(Thread):
         self.http_publishers = {}
 
         self.tenant_id = HttpLogPublisherManager.get_valid_tenant_id(Config.tenant_id)
-        self.alias = HttpLogPublisherManager.get_alias(Config.cluster_id)
+        self.cluster_id = HttpLogPublisherManager.get_alias(Config.cluster_id)
         self.date_time = HttpLogPublisherManager.get_current_date()
 
         self.setName("HttpLogPublisherManagerThread")
@@ -139,10 +141,11 @@ class HttpLogPublisherManager(Thread):
             self.http_publishers[log_path] = HttpLogPublisher(
                 log_path,
                 self.tenant_id,
-                self.alias,
+                self.cluster_id,
                 self.date_time,
                 Config.member_id,
-                Config.application_id)
+                Config.application_id,
+                Config.cartridge_alias)
 
         return self.http_publishers[log_path]
 
