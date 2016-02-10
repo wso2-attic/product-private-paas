@@ -78,7 +78,7 @@ class HttpLogPublisher(Thread):
                         "tenant_id": "%s" % self.tenant_id,
                         "member_id": "%s" % self.member_id,
                         "application_id": "%s" % self.application_id,
-                        "cartridge_alias": "%s" % self.application_id
+                        "cartridge_alias": "%s" % self.cartridge_alias
                     }
 
                     request = urllib2.Request(log_analyzer_url, json.dumps(payload))
