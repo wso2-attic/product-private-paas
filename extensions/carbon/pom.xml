@@ -29,5 +29,6 @@
 
     <modules>
         <module>ppaas-membership-scheme</module>
+        <module>kubernetes-membership-scheme</module>
     </modules>
 </project>
