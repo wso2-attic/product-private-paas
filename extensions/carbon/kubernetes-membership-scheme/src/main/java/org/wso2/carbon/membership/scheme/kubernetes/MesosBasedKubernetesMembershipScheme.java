@@ -301,14 +301,6 @@ public class MesosBasedKubernetesMembershipScheme extends KubernetesMembershipSc
         log.info("Status of the Pod: " + podName + " -> phase: " + pod.getStatus().getPhase() +
                 ", host IP: " + pod.getStatus().getHostIP());
 
-        // set host machine IP as the public address of nwConfig,
-        // if the pod with name 'podName' is relevant to this JVM
-        if (memberId.equals(pod.getMetadata().getAnnotations().getMemberId())) {
-            log.info("Pod name relevant to this member: " + podName + ", setting host IP " + pod
-                    .getStatus().getHostIP() + " as the public address");
-            nwConfig.setPublicAddress(pod.getStatus().getHostIP());
-        }
-
         String exposedClusteringPortByHost;
         try {
             // get the port by manually parsing annotations section; this is done to avoid the
@@ -318,12 +310,18 @@ public class MesosBasedKubernetesMembershipScheme extends KubernetesMembershipSc
             if (exposedClusteringPortByHost == null) {
                 throw new KubernetesMembershipSchemeException("Unable to find clustering port for pod: " + podName);
             }
-            nwConfig.setPort(Integer.parseInt(exposedClusteringPortByHost.trim()));
-
         } finally {
             apiEndpoint.disconnect();
         }
 
+        // set host machine IP as the public address and port of nwConfig,
+        // if the pod with name 'podName' is relevant to this JVM
+        if (memberId.equals(pod.getMetadata().getAnnotations().getMemberId())) {
+            log.info("Pod name relevant to this member: " + podName + ", setting host IP " + pod
+                    .getStatus().getHostIP() + " as the public address");
+            nwConfig.setPublicAddress(pod.getStatus().getHostIP());
+            nwConfig.setPort(Integer.parseInt(exposedClusteringPortByHost.trim()));
+        }
         return pod.getStatus().getHostIP() + ":" + exposedClusteringPortByHost.trim();
     }
 
