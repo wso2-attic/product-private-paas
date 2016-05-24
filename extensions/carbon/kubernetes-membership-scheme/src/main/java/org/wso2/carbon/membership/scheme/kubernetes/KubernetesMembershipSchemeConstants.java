@@ -28,4 +28,7 @@ public class KubernetesMembershipSchemeConstants {
     public static final String PARAMETER_NAME_KUBERNETES_SERVICES = "KUBERNETES_SERVICES";
     public static final String PARAMETER_NAME_KUBERNETES_MASTER_SKIP_SSL_VERIFICATION = "KUBERNETES_MASTER_SKIP_SSL_VERIFICATION";
     public static final String ENDPOINTS_API_CONTEXT = "/api/v1/namespaces/%s/endpoints/";
+    public static final String DEFAULT_THREAD_POOL_SIZE = "100";
+    public static final String TCP_FORWARDER_THREAD_POOL_SIZE = "DEFAULT_THREAD_POOL_SIZE";
+
 }

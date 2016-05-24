@@ -103,31 +103,31 @@ public class KubernetesMembershipScheme implements HazelcastMembershipScheme {
             String skipMasterVerificationValue = System.getenv(KubernetesMembershipSchemeConstants.PARAMETER_NAME_KUBERNETES_MASTER_SKIP_SSL_VERIFICATION);
 
             // If not available read from clustering configuration
-            if(StringUtils.isEmpty(kubernetesMaster)) {
+            if (StringUtils.isEmpty(kubernetesMaster)) {
                 kubernetesMaster = getParameterValue(KubernetesMembershipSchemeConstants.PARAMETER_NAME_KUBERNETES_MASTER);
-                if(StringUtils.isEmpty(kubernetesMaster)) {
+                if (StringUtils.isEmpty(kubernetesMaster)) {
                     throw new ClusteringFault("Kubernetes master parameter not found");
                 }
             }
-            if(StringUtils.isEmpty(kubernetesNamespace)) {
+            if (StringUtils.isEmpty(kubernetesNamespace)) {
                 kubernetesNamespace = getParameterValue(KubernetesMembershipSchemeConstants.PARAMETER_NAME_KUBERNETES_NAMESPACE, "default");
             }
-            if(StringUtils.isEmpty(kubernetesServices)) {
+            if (StringUtils.isEmpty(kubernetesServices)) {
                 kubernetesServices = getParameterValue(KubernetesMembershipSchemeConstants.PARAMETER_NAME_KUBERNETES_SERVICES);
-                if(StringUtils.isEmpty(kubernetesServices)) {
+                if (StringUtils.isEmpty(kubernetesServices)) {
                     throw new ClusteringFault("Kubernetes services parameter not found");
                 }
             }
 
-            if(StringUtils.isEmpty(kubernetesMasterUsername)) {
+            if (StringUtils.isEmpty(kubernetesMasterUsername)) {
                 kubernetesMasterUsername = getParameterValue(KubernetesMembershipSchemeConstants.PARAMETER_NAME_KUBERNETES_MASTER_USERNAME, "");
             }
 
-            if(StringUtils.isEmpty(kubernetesMasterPassword)) {
+            if (StringUtils.isEmpty(kubernetesMasterPassword)) {
                 kubernetesMasterPassword = getParameterValue(KubernetesMembershipSchemeConstants.PARAMETER_NAME_KUBERNETES_MASTER_PASSWORD, "");
             }
 
-            if (StringUtils.isEmpty(skipMasterVerificationValue)){
+            if (StringUtils.isEmpty(skipMasterVerificationValue)) {
                 skipMasterVerificationValue = getParameterValue(KubernetesMembershipSchemeConstants.PARAMETER_NAME_KUBERNETES_MASTER_SKIP_SSL_VERIFICATION, "false");
             }
 
@@ -140,7 +140,7 @@ public class KubernetesMembershipScheme implements HazelcastMembershipScheme {
             for (String kubernetesService : kubernetesServicesArray) {
                 List<String> containerIPs = findContainerIPs(kubernetesMaster,
                         kubernetesNamespace, kubernetesService, kubernetesMasterUsername, kubernetesMasterPassword);
-                for(String containerIP : containerIPs) {
+                for (String containerIP : containerIPs) {
                     tcpIpConfig.addMember(containerIP);
                     log.info("Member added to cluster configuration: [container-ip] " + containerIP);
                 }
@@ -169,13 +169,13 @@ public class KubernetesMembershipScheme implements HazelcastMembershipScheme {
     }
 
     protected List<String> findContainerIPs(String kubernetesMaster, String namespace, String serviceName,
-                                          String username, String password) throws KubernetesMembershipSchemeException {
+                                            String username, String password) throws KubernetesMembershipSchemeException {
 
         final String apiContext = String.format(KubernetesMembershipSchemeConstants.ENDPOINTS_API_CONTEXT, namespace);
         final List<String> containerIPs = new ArrayList<String>();
 
         // Create k8s api endpoint URL
-        URL apiEndpointUrl = createUrl(kubernetesMaster, apiContext + serviceName);
+        URL apiEndpointUrl = generateKubernetesUrl(kubernetesMaster, apiContext + serviceName);
 
         // Create http/https k8s api endpoint
         KubernetesApiEndpoint apiEndpoint = createAPIEndpoint(apiEndpointUrl);
@@ -206,7 +206,7 @@ public class KubernetesMembershipScheme implements HazelcastMembershipScheme {
         return containerIPs;
     }
 
-    protected URL createUrl (String master, String context)
+    protected URL generateKubernetesUrl(String master, String context)
             throws KubernetesMembershipSchemeException {
 
         // concatenate and generate the String url
@@ -226,7 +226,7 @@ public class KubernetesMembershipScheme implements HazelcastMembershipScheme {
         return apiEndpointUrl;
     }
 
-    protected KubernetesApiEndpoint createAPIEndpoint (URL url) throws KubernetesMembershipSchemeException {
+    protected KubernetesApiEndpoint createAPIEndpoint(URL url) throws KubernetesMembershipSchemeException {
 
         KubernetesApiEndpoint apiEndpoint;
 
@@ -241,7 +241,7 @@ public class KubernetesMembershipScheme implements HazelcastMembershipScheme {
         return apiEndpoint;
     }
 
-    protected InputStream connectAndRead (KubernetesApiEndpoint endpoint, String
+    protected InputStream connectAndRead(KubernetesApiEndpoint endpoint, String
             username, String password) throws KubernetesMembershipSchemeException {
 
         try {
@@ -259,11 +259,11 @@ public class KubernetesMembershipScheme implements HazelcastMembershipScheme {
         try {
             return endpoint.read();
         } catch (IOException e) {
-            throw new KubernetesMembershipSchemeException("Could not connect to Kubernetes API", e);
+            throw new KubernetesMembershipSchemeException("Could not read Kubernetes endpoints", e);
         }
     }
 
-    protected Endpoints getEndpoints (InputStream inputStream) throws IOException {
+    protected Endpoints getEndpoints(InputStream inputStream) throws IOException {
         ObjectMapper mapper = new ObjectMapper();
         return mapper.readValue(inputStream, Endpoints.class);
     }

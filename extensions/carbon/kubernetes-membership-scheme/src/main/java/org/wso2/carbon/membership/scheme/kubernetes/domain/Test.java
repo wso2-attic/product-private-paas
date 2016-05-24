@@ -16,8 +16,6 @@
 
 package org.wso2.carbon.membership.scheme.kubernetes.domain;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,10 +40,7 @@ public class Test {
                  "            \"k8s.mesosphere.io/taskId\": \"pod.22c48583-db19-11e5-a78c-005056ad6f59\",\n" +
                  "            \"memberId\": \"wso2am-191-uacc-application-with-is.gateway-manager.wso2am-191-gw-manager.domain7cdce2a8-107e-411f-9943-a242fe04ee30\"\n" +
                  "        }";
-       // String json =  "k8s.mesosphere.io/portName_TCP_https-9443\": \"1029\",\n";
 
-       // String strJson = inputStream.toString();
-       // String regex = "(\"k8s.mesosphere.io/portName_TCP_https-9443\"*:)(\")(\\d+)(\",)";
         String regex = "(http-9763\":)(\\s*)(\")(\\d*)(\",)";
         Pattern r = Pattern.compile(regex);
         Matcher m = r.matcher(json);

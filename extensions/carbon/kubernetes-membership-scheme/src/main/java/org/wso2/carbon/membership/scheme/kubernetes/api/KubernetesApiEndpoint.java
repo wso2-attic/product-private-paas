@@ -35,21 +35,25 @@ public abstract class KubernetesApiEndpoint {
         this.url = url;
     }
 
-    public abstract void createConnection () throws IOException;
+    public abstract void createConnection() throws IOException;
 
-    public abstract void createConnection (String username, String password) throws IOException;
+    public abstract void createConnection(String username, String password) throws IOException;
 
-    public InputStream read () throws IOException {
+    public InputStream read() throws IOException {
         return connection.getInputStream();
     }
 
-    public abstract void disconnect ();
+    public abstract void disconnect();
 
     protected void createBasicAuthenticationHeader(String username, String password) {
-        log.debug("Generating basic auth header...");
+        if (log.isDebugEnabled()) {
+            log.debug("Generating basic auth header...");
+        }
         String userpass = username + ":" + password;
         String basicAuth = "Basic " + javax.xml.bind.DatatypeConverter.printBase64Binary(userpass.getBytes());
         connection.setRequestProperty("Authorization", basicAuth);
-        log.debug("Basic auth header generated");
+        if (log.isDebugEnabled()) {
+            log.debug("Basic auth header generated");
+        }
     }
 }
