@@ -796,7 +796,7 @@
         <carbon.kernel.package.import.version.range>[4.2.0, 4.5.0)</carbon.kernel.package.import.version.range>
         <carbon.deployment.version>4.2.3</carbon.deployment.version>
         <carbon.automation.version>4.4.2</carbon.automation.version>
-        <carbon.automationutils.version>4.4.2</carbon.automationutils.version>
+        <carbon.automationutils.version>4.4.3</carbon.automationutils.version>
         <carbon.analytics.common.version>5.0.0</carbon.analytics.common.version>
         <axis2.osgi.version>1.6.1.wso2v10</axis2.osgi.version>
         <carbon.p2.plugin.version>1.5.4</carbon.p2.plugin.version>
@@ -845,7 +845,7 @@
         <activemq.version>5.10.0</activemq.version>
         <httpcore.version>4.3.0.wso2v1</httpcore.version>
         <httpclient.version>4.2.5.wso2v1</httpclient.version>
-        <jacoco.agent.version>0.7.4.201502262128</jacoco.agent.version>
+        <jacoco.agent.version>0.7.5.201505241946</jacoco.agent.version>
         <commons.logging.version>1.0.4</commons.logging.version>
         <xmlbeans.xpath.version>2.3.0</xmlbeans.xpath.version>
         <testng.version>6.1.1</testng.version>
